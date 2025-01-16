@@ -39,10 +39,10 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             #start pdfplumber
-            with pdfplumber.open(file) as les:
-                text = les.extract_text()
-                print(text)
-
+            with pdfplumber.open("C:/Users/blue/Documents/GitHub/PayLES/upload/LES_Template.pdf") as les:
+                page = les.pages[0]
+                #text = page.extract_text(x_tolerance=3, x_tolerance_ratio=None, y_tolerance=3, layout=False, x_density=7.25, y_density=13, line_dir_render=None, char_dir_render=None)
+                text = page.extract_text()
 
             return render_template('index.html', filename_display=filename, file_display=file, text_display=text)
     return 'File upload failed'
