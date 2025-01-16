@@ -1,7 +1,5 @@
 <!--
-**PayLES/PayLES** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-https://realpython.com/python-web-applications/
+PayLES readme
 
 Steps to run Flask application:
 1. Open command prompt
@@ -9,4 +7,7 @@ Steps to run Flask application:
 3. Run: venv\Scripts\activate
 4. run python main.py
 5. Open on browser: http://127.0.0.1:8080/
+
+flask basics: https://realpython.com/python-web-applications/
+file upload: https://stackabuse.com/step-by-step-guide-to-file-upload-with-flask/
 -->
