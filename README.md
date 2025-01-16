@@ -10,4 +10,7 @@ Steps to run Flask application:
 
 flask basics: https://realpython.com/python-web-applications/
 file upload: https://stackabuse.com/step-by-step-guide-to-file-upload-with-flask/
+flask templates: https://www.geeksforgeeks.org/flask-templates/
+serving static flask files: https://stackabuse.com/serving-static-files-with-flask/
+get/post with flask: https://stackabuse.com/how-to-get-and-parse-http-post-body-in-flask-json-and-form-data/
 -->

@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\app.yaml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:application\\app.yaml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:application\\requirements.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:application\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,53 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "app.yaml",
-              "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\app.yaml",
-              "RelativeDocumentMoniker": "application\\app.yaml",
-              "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\app.yaml",
-              "RelativeToolTip": "application\\app.yaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
-              "WhenOpened": "2025-01-15T03:47:52.678Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "requirements.txt",
-              "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\requirements.txt",
-              "RelativeDocumentMoniker": "application\\requirements.txt",
-              "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\requirements.txt",
-              "RelativeToolTip": "application\\requirements.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-01-15T03:47:48.275Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "main.py",
-              "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\main.py",
-              "RelativeDocumentMoniker": "application\\main.py",
-              "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\application\\main.py",
-              "RelativeToolTip": "application\\main.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAtAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py",
+              "RelativeDocumentMoniker": "app\\main.py",
+              "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py",
+              "RelativeToolTip": "app\\main.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-01-15T03:47:40.12Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-15T03:42:33.531Z",
+              "WhenOpened": "2025-01-15T03:49:52.475Z",
               "EditorCaption": ""
             }
           ]

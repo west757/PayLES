@@ -1,14 +1,17 @@
 from flask import Flask
-from flask import request, render_template, request, abort, make_response, jsonify
+from flask import request, render_template, request, make_response, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 
-app = Flask(__name__)
-
-
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+import pdfplumber
+import os
 
 ALLOWED_EXTENSIONS = {'pdf'}
+UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
 
 @app.route('/')
@@ -33,9 +36,10 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
 
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             #start pdfplumber
-            with pdfplumber.open(filename) as les:
+            with pdfplumber.open(file) as les:
                 text = les.extract_text()
                 print(text)
 
