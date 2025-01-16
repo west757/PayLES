@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>PayLES</title>
+  </head>
+
 <body>
 
 	<h2>Upload File</h2>
@@ -9,11 +15,10 @@
 		<input type = "submit"/>
 	</form>
 
-	<h2>{{file_upload_success}}</h2>
+	<h2>{{filename_display}}</h2>
+	<iframe src={{file_display}}, frameBorder="0", scrolling="auto", height="100%", width="100%"></iframe>
 
-	<!--
-	<iframe src="LES_Template.pdf", frameBorder="0", scrolling="auto", height="100%", width="100%"></iframe>
-	-->
+	<p>{{text_display}}</p>
 
 </body>
 </html>

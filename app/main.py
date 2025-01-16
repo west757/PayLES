@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = {'pdf'}
 
 @app.route('/')
 def home():
-    return render_template('index.html', file_upload_success="no upload yet")
+    return render_template('index.html')
 
 
 @app.route('/index', methods=['POST'])
@@ -33,7 +33,14 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
 
-            return render_template('index.html', file_upload_success="file uploaded")
+
+            #start pdfplumber
+            with pdfplumber.open(filename) as les:
+                text = les.extract_text()
+                print(text)
+
+
+            return render_template('index.html', filename_display=filename, file_display=file, text_display=text)
     return 'File upload failed'
 
 def allowed_file(filename):
