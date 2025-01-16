@@ -10,19 +10,13 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
 ALLOWED_EXTENSIONS = {'pdf'}
 
-#app.config['UPLOAD_FOLDER'] = 'C:\Users\blue\Documents\GitHub\PayLES\upload'
-
-
-#import os
-#file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename))
-
 
 @app.route('/')
 def home():
-    return render_template('upload_form.html')
+    return render_template('index.html', file_upload_success="no upload yet")
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/index', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -39,15 +33,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
 
-            #try:
-            #    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #except Exception as e:
-            #    return f'Error saving file: {str(e)}', 500
-
-            #file.save(UPLOAD_FOLDER)
-            return 'File uploaded successfully'
+            return render_template('index.html', file_upload_success="file uploaded")
     return 'File upload failed'
-
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -62,35 +49,7 @@ def too_large(e):
 
 @app.errorhandler(RequestEntityTooLarge)
 def file_too_large(e):
-    return 'File is too large, custom message', 413
-
-
-
-#
-#@app.route("/")
-#def index():
-#    celsius = request.args.get("celsius", "")
-#    if celsius:
-#        fahrenheit = fahrenheit_from(celsius)
-#    else:
-#        fahrenheit = ""
-#    return (
-#        """<form action="" method="get">
-#                Celsius temperature: <input type="text" name="celsius">
-#                <input type="submit" value="Convert to Fahrenheit">
-#            </form>"""
-#        + "Fahrenheit: "
-#        + fahrenheit
-#    )
-
-#def fahrenheit_from(celsius):
-#    """Convert Celsius to Fahrenheit degrees."""
-#    try:
-#        fahrenheit = float(celsius) * 9 / 5 + 32
-#        fahrenheit = round(fahrenheit, 3)  # Round to three decimal places
-#        return str(fahrenheit)
-#    except ValueError:
-#        return "invalid input"
+    return 'File is too large', 413
 
 
 if __name__ == "__main__":
