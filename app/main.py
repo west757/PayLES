@@ -6,18 +6,36 @@ from werkzeug.exceptions import RequestEntityTooLarge
 import pdfplumber
 import os
 
+#file extensions allowed
 ALLOWED_EXTENSIONS = {'pdf'}
+#location where files are uploaded to and stored for them to be accessed by the program
 UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+#sets the max content length of the uploaded file to 16MB, prevents massive files from overloading the server
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+#variable_pos is the index of the start of that word in the text from the pdf
+#variable is the representation of the value associated with it
+grade_pos = 0
+grade = ""
 basepay_pos = 0
 basepay = 0.0
+bas_pos = 0
 bas = 0.0
+bah_pos = 0
 bah = 0.0
-test = ""
+federaltaxes_pos = 0
+federaltaxes = 0.0
+ficasocsecurity_pos = 0
+ficasocsecurity = 0.0
+ficamedicare_pos = 0
+ficamedicare = 0.0
+sgli_pos = 0
+sgli = 0.0
+rothtsp_pos = 0
+rothtsp = 0.0
 
 @app.route('/')
 def home():
@@ -32,9 +50,12 @@ def upload_file():
     if 'file' in request.files:
         file = request.files['file']
 
+        #checks to see if  there is a file, if not then returns an error
         if file.filename == '':
             return 'No selected file', 400
 
+        #checks to see if the file type is allowed, if not then returns an error
+        #file types allowed defined in ALLOWED_EXTENSIONS variable
         if file and not allowed_file(file.filename):
             return 'File type not allowed', 400
 
@@ -45,14 +66,132 @@ def upload_file():
 
             #start pdfplumber
             with pdfplumber.open("C:/Users/blue/Documents/GitHub/PayLES/upload/LES_Template.pdf") as les:
+                #gets all the content of the first page of the LES
                 page = les.pages[0]
                 #text = page.extract_text(x_tolerance=3, x_tolerance_ratio=None, y_tolerance=3, layout=False, x_density=7.25, y_density=13, line_dir_render=None, char_dir_render=None)
-                text = page.extract_text()
+                #creates a string of all text from the LES
+                textstring = page.extract_text()
+                #creates an array of all text separated by a space
+                #avoids the problem of using specific indexes because indexes may change depending on text size
+                text = textstring.split()
 
-                basepay_pos = text.find("BASE PAY")
-                basepay = float(text[(basepay_pos +9):(basepay_pos + 16)])
+                #find grade
+                if 'E1' in text:
+                    grade_pos = text.index('E1')
+                    grade = text[(grade_pos)]
+                elif 'E2' in text:
+                    grade_pos = text.index('E2')
+                    grade = text[(grade_pos)]
+                elif 'E3' in text:
+                    grade_pos = text.index('E3')
+                    grade = text[(grade_pos)]
+                elif 'E4' in text:
+                    grade_pos = text.index('E4')
+                    grade = text[(grade_pos)]
+                elif 'E5' in text:
+                    grade_pos = text.index('E5')
+                    grade = text[(grade_pos)]
+                elif 'E6' in text:
+                    grade_pos = text.index('E6')
+                    grade = text[(grade_pos)]
+                elif 'E7' in text:
+                    grade_pos = text.index('E7')
+                    grade = text[(grade_pos)]
+                elif 'E8' in text:
+                    grade_pos = text.index('E8')
+                    grade = text[(grade_pos)]
+                elif 'E9' in text:
+                    grade_pos = text.index('E9')
+                    grade = text[(grade_pos)]
+                elif 'O1' in text:
+                    grade_pos = text.index('O1')
+                    grade = text[(grade_pos)]
+                elif 'O2' in text:
+                    grade_pos = text.index('O2')
+                    grade = text[(grade_pos)]
+                elif 'O3' in text:
+                    grade_pos = text.index('O3')
+                    grade = text[(grade_pos)]
+                elif 'O4' in text:
+                    grade_pos = text.index('O4')
+                    grade = text[(grade_pos)]
+                elif 'O5' in text:
+                    grade_pos = text.index('O5')
+                    grade = text[(grade_pos)]
+                elif 'O6' in text:
+                    grade_pos = text.index('O6')
+                    grade = text[(grade_pos)]
+                elif 'O7' in text:
+                    grade_pos = text.index('O7')
+                    grade = text[(grade_pos)]
+                elif 'O8' in text:
+                    grade_pos = text.index('O8')
+                    grade = text[(grade_pos)]
+                elif 'O9' in text:
+                    grade_pos = text.index('O9')
+                    grade = text[(grade_pos)]
+                else:
+                    grade = "no grade found"
 
-            return render_template('index.html', filename_display=filename, file_display=file, text_display=text, var_to_find=basepay_pos, value=basepay)
+                #find base pay
+                if 'BASE' in text:
+                    basepay_pos = text.index('BASE')
+                    basepay = text[(basepay_pos+2)]
+                else:
+                    basepay = -1
+
+                #find BAS
+                if 'BAS' in text:
+                    bas_pos = text.index('BAS')
+                    bas = text[(bas_pos+1)]
+                else:
+                    bas = -1
+
+                #find BAH
+                if 'BAH' in text:
+                    bah_pos = text.index('BAH')
+                    bah = text[(bah_pos+1)]
+                else:
+                    bah = -1
+
+                #find federal taxes
+                if 'TAXES' in text:
+                    federaltaxes_pos = text.index('TAXES')
+                    federaltaxes = text[(federaltaxes_pos+1)]
+                else:
+                    federaltaxes = -1
+
+                #find FICA - Social Security
+                if 'SECURITY' in text:
+                    ficasocsecurity_pos = text.index('SECURITY')
+                    ficasocsecurity = text[(ficasocsecurity_pos+1)]
+                else:
+                    ficasocsecurity = -1
+
+                #find FICA - Medicare
+                if 'FICA-MEDICARE' in text:
+                    ficamedicare_pos = text.index('FICA-MEDICARE')
+                    ficamedicare = text[(ficamedicare_pos+1)]
+                else:
+                    ficamedicare = -1
+
+                #find SGLI
+                if 'SGLI' in text:
+                    sgli_pos = text.index('SGLI')
+                    sgli = text[(sgli_pos+1)]
+                else:
+                    sgli = -1
+
+                #find Roth TPS
+                if 'ROTH' in text:
+                    rothtsp_pos = text.index('ROTH')
+                    rothtsp = text[(rothtsp_pos+2)]
+                else:
+                    rothtsp = -1
+
+
+            return render_template('index.html', filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp)
     return 'File upload failed'
 
 def allowed_file(filename):
