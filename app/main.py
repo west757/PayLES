@@ -13,6 +13,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
+basepay_pos = 0
+basepay = 0.0
+bas = 0.0
+bah = 0.0
+test = ""
 
 @app.route('/')
 def home():
@@ -44,7 +49,10 @@ def upload_file():
                 #text = page.extract_text(x_tolerance=3, x_tolerance_ratio=None, y_tolerance=3, layout=False, x_density=7.25, y_density=13, line_dir_render=None, char_dir_render=None)
                 text = page.extract_text()
 
-            return render_template('index.html', filename_display=filename, file_display=file, text_display=text)
+                basepay_pos = text.find("BASE PAY")
+                basepay = float(text[(basepay_pos +9):(basepay_pos + 16)])
+
+            return render_template('index.html', filename_display=filename, file_display=file, text_display=text, var_to_find=basepay_pos, value=basepay)
     return 'File upload failed'
 
 def allowed_file(filename):
