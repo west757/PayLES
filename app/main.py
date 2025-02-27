@@ -46,9 +46,6 @@ grosspay = 0
 netpay_pos = 0
 netpay = 0
 
-print(type(netpay_pos))
-print(type(netpay))
-
 @app.route('/')
 def home():
     return render_template('index.html')
