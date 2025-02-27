@@ -18,6 +18,8 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 #variable_pos is the index of the start of that word in the text from the pdf
 #variable is the representation of the value associated with it
+month_pos = 0
+month = ""
 grade_pos = 0
 grade = ""
 basepay_pos = 0
@@ -65,7 +67,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             #start pdfplumber
-            with pdfplumber.open("C:/Users/blue/Documents/GitHub/PayLES/upload/LES_Template.pdf") as les:
+            with pdfplumber.open(file) as les:
                 #gets all the content of the first page of the LES
                 page = les.pages[0]
                 #text = page.extract_text(x_tolerance=3, x_tolerance_ratio=None, y_tolerance=3, layout=False, x_density=7.25, y_density=13, line_dir_render=None, char_dir_render=None)
@@ -74,6 +76,46 @@ def upload_file():
                 #creates an array of all text separated by a space
                 #avoids the problem of using specific indexes because indexes may change depending on text size
                 text = textstring.split()
+
+                #find month
+                if 'JAN' in text:
+                    month_pos = text.index('JAN')
+                    month = text[(month_pos)]
+                elif 'FEB' in text:
+                    month_pos = text.index('FEB')
+                    month = text[(month_pos)]
+                elif 'MAR' in text:
+                    month_pos = text.index('MAR')
+                    month = text[(month_pos)]
+                elif 'APR' in text:
+                    month_pos = text.index('APR')
+                    month = text[(month_pos)]
+                elif 'MAY' in text:
+                    month_pos = text.index('MAY')
+                    month = text[(month_pos)]
+                elif 'JUN' in text:
+                    month_pos = text.index('JUN')
+                    month = text[(month_pos)]
+                elif 'JUL' in text:
+                    month_pos = text.index('JUL')
+                    month = text[(month_pos)]
+                elif 'AUG' in text:
+                    month_pos = text.index('AUG')
+                    month = text[(month_pos)]
+                elif 'SEP' in text:
+                    month_pos = text.index('SEP')
+                    month = text[(month_pos)]
+                elif 'OCT' in text:
+                    month_pos = text.index('OCT')
+                    month = text[(month_pos)]
+                elif 'NOV' in text:
+                    month_pos = text.index('NOV')
+                    month = text[(month_pos)]
+                elif 'DEC' in text:
+                    month_pos = text.index('DEC')
+                    month = text[(month_pos)]
+                else:
+                    month = "no month found"
 
                 #find grade
                 if 'E1' in text:
@@ -190,7 +232,7 @@ def upload_file():
                     rothtsp = -1
 
 
-            return render_template('index.html', filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
+            return render_template('index.html', filename_display=filename, textarray_display=text, month=month, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp)
     return 'File upload failed'
 
