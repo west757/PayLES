@@ -46,6 +46,11 @@ grosspay = 0
 netpay_pos = 0
 netpay = 0
 
+month1 = ""
+month2 = ""
+month3 = ""
+month4 = ""
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -260,16 +265,82 @@ def upload_file():
                 else:
                     netpay = -1
 
+            #calculate months
+            if month == "JAN":
+                month1 = "January"
+                month2 = "February"
+                month3 = "March"
+                month4 = "April"
+            elif month == "FEB":
+                month1 = "February"
+                month2 = "March"
+                month3 = "April"
+                month4 = "May"
+            elif month == "MAR":
+                month1 = "March"
+                month2 = "April"
+                month3 = "May"
+                month4 = "June"
+            elif month == "APR":
+                month1 = "April"
+                month2 = "May"
+                month3 = "June"
+                month4 = "July"
+            elif month == "MAY":
+                month1 = "May"
+                month2 = "June"
+                month3 = "July"
+                month4 = "August"
+            elif month == "JUN":
+                month1 = "June"
+                month2 = "July"
+                month3 = "August"
+                month4 = "September"
+            elif month == "JUL":
+                month1 = "July"
+                month2 = "August"
+                month3 = "September"
+                month4 = "October"
+            elif month == "AUG":
+                month1 = "August"
+                month2 = "September"
+                month3 = "October"
+                month4 = "November"
+            elif month == "SEP":
+                month1 = "September"
+                month2 = "October"
+                month3 = "November"
+                month4 = "December"
+            elif month == "OCT":
+                month1 = "October"
+                month2 = "November"
+                month3 = "December"
+                month4 = "January"
+            elif month == "NOV":
+                month1 = "November"
+                month2 = "December"
+                month3 = "January"
+                month4 = "February"
+            elif month == "DEC":
+                month1 = "December"
+                month2 = "January"
+                month3 = "February"
+                month4 = "March"
+            else:
+                month = "no month found"
+
+
 
 
             return render_template('index.html', filename_display=filename, textarray_display=text, month=month, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
-                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay)
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                                   month1=month1, month2=month2, month3=month3, month4=month4)
     return 'File upload failed'
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 
 @app.errorhandler(413)
