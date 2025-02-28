@@ -14,4 +14,5 @@ flask templates: https://www.geeksforgeeks.org/flask-templates/
 serving static flask files: https://stackabuse.com/serving-static-files-with-flask/
 get/post with flask: https://stackabuse.com/how-to-get-and-parse-http-post-body-in-flask-json-and-form-data/
 pdfplumber: https://pypi.org/project/pdfplumber/
+table template: https://www.freshdesignweb.com/free-css-table.html
 -->
