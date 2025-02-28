@@ -1,7 +1,95 @@
 body {
-    background-color: lightblue;
+    background-color: lightgray;
 }
 
-h2 {
-    color: red;
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
 }
+
+.table-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #f1f1f1;
+}
+
+/* Highlighting selected product row */
+tr.selected {
+    background-color: #ffd54f;
+    font-weight: bold;
+}
+
+/* Hover effect for rows */
+tr:hover {
+    background-color: #ddd;
+    transform: scale(1.02);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Features section */
+.feature-list {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+}
+
+    .feature-list li {
+        margin: 5px 0;
+    }
+
+/* Compare button */
+.compare-btn {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+    .compare-btn:hover {
+        background-color: #0b7dda;
+    }
+
+/* Styling the table borders */
+td, th {
+    border-left: 1px solid #ddd;
+}
+
+    td:last-child, th:last-child {
+        border-right: 1px solid #ddd;
+    }

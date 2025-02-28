@@ -16,6 +16,7 @@
 		<input type = "submit"/>
 	</form>
 
+    <!--
 	<h2>{{filename_display}}</h2>
 
 	<p>{{textarray_display}}</p>
@@ -33,6 +34,137 @@
 	<p>Mid Month Pay: {{midmonthpay}}</p>
 	<p>Gross Pay: {{grosspay}}</p>
 	<p>Net Pay: {{netpay}}</p>
+    -->
+
+
+
+
+	<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{month}}</th>
+                <th>month 2</th>
+                <th>month 3</th>
+                <th>month 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Grade</td>
+                <td>{{grade}}</td>
+                <td>{{grade}}</td>
+                <td>{{grade}}</td>
+                <td>{{grade}}</td>
+            </tr>
+            <tr>
+                <td>Base Pay</td>
+                <td>{{basepay}}</td>
+                <td>{{basepay}}</td>
+                <td>{{basepay}}</td>
+                <td>{{basepay}}</td>
+            </tr>
+            <tr>
+                <td>BAS</td>
+                <td>{{bas}}</td>
+                <td>{{bas}}</td>
+                <td>{{bas}}</td>
+                <td>{{bas}}</td>
+            </tr>
+            <tr>
+                <td>BAH</td>
+                <td>{{bah}}</td>
+                <td>{{bah}}</td>
+                <td>{{bah}}</td>
+                <td>{{bah}}</td>
+            </tr>
+            <tr>
+                <td>Federal Taxes</td>
+                <td>{{federaltaxes}}</td>
+                <td>{{federaltaxes}}</td>
+                <td>{{federaltaxes}}</td>
+                <td>{{federaltaxes}}</td>
+            </tr>
+            <tr>
+                <td>FICA - Social Security</td>
+                <td>{{ficasocsecurity}}</td>
+                <td>{{ficasocsecurity}}</td>
+                <td>{{ficasocsecurity}}</td>
+                <td>{{ficasocsecurity}}</td>
+            </tr>
+            <tr>
+                <td>FICA - Medicare</td>
+                <td>{{ficamedicare}}</td>
+                <td>{{ficamedicare}}</td>
+                <td>{{ficamedicare}}</td>
+                <td>{{ficamedicare}}</td>
+            </tr>
+            <tr>
+                <td>SGLI</td>
+                <td>{{sgli}}</td>
+                <td>{{sgli}}</td>
+                <td>{{sgli}}</td>
+                <td>{{sgli}}</td>
+            </tr>
+            <tr>
+                <td>Roth TSP</td>
+                <td>{{rothtsp}}</td>
+                <td>{{rothtsp}}</td>
+                <td>{{rothtsp}}</td>
+                <td>{{rothtsp}}</td>
+            </tr>
+            <tr>
+                <td>Gross Pay</td>
+                <td>{{grosspay}}</td>
+                <td>{{grosspay}}</td>
+                <td>{{grosspay}}</td>
+                <td>{{grosspay}}</td>
+            </tr>
+            <tr>
+                <td>Net Pay</td>
+                <td>{{netpay}}</td>
+                <td>{{netpay}}</td>
+                <td>{{netpay}}</td>
+                <td>{{netpay}}</td>
+            </tr>
+            <!--
+            <tr>
+                <td>Features</td>
+                <td><ul class="feature-list">
+                        <li>Fast Charging</li>
+                        <li>Water Resistant</li>
+                        <li>5G Enabled</li>
+                    </ul></td>
+                <td><ul class="feature-list">
+                        <li>Fast Charging</li>
+                        <li>Water Resistant</li>
+                        <li>4G LTE</li>
+                    </ul></td>
+                <td><ul class="feature-list">
+                        <li>Fast Charging</li>
+                        <li>Water Resistant</li>
+                        <li>5G Enabled</li>
+                    </ul></td>
+            </tr>
+            -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Adding selection behavior for rows
+    document.querySelectorAll("tr").forEach(function(row) {
+        row.addEventListener("click", function() {
+            document.querySelectorAll("tr").forEach(function(innerRow) {
+                innerRow.classList.remove("selected");
+            });
+            row.classList.add("selected");
+        });
+    });
+</script>
+
+
 
 </body>
 </html>
