@@ -1,16 +1,11 @@
 body {
-    background-color: lightgray;
-}
-
-
-body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
     margin: 0;
     padding: 20px;
 }
 
-.table-container {
+.maintable {
     max-width: 1000px;
     margin: auto;
     padding: 20px;
@@ -66,30 +61,15 @@ tr:hover {
     text-align: left;
 }
 
-    .feature-list li {
-        margin: 5px 0;
-    }
-
-/* Compare button */
-.compare-btn {
-    padding: 10px 20px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+.feature-list li {
+    margin: 5px 0;
 }
-
-    .compare-btn:hover {
-        background-color: #0b7dda;
-    }
 
 /* Styling the table borders */
 td, th {
     border-left: 1px solid #ddd;
 }
 
-    td:last-child, th:last-child {
-        border-right: 1px solid #ddd;
-    }
+td:last-child, th:last-child {
+    border-right: 1px solid #ddd;
+}
