@@ -9,32 +9,10 @@
 
 <body>
 
-	<h2>Upload File</h2>
-	<form action = "/index" method = "POST" 
-		  enctype = "multipart/form-data">
+	<form action = "/index" method = "POST" enctype = "multipart/form-data">
 		<input type = "file" name = "file" />
-		<input type = "submit"/>
+		<input type = "submit" value="Upload LES"/>
 	</form>
-
-    <!--
-	<h2>{{filename_display}}</h2>
-
-	<p>{{textarray_display}}</p>
-	&nbsp;
-	<p>Month: {{month}}</p>
-	<p>Grade: {{grade}}</p>
-	<p>Base Pay: {{basepay}}</p>
-	<p>BAS: {{bas}}</p>
-	<p>BAH: {{bah}}</p>
-	<p>Federal taxes: {{federaltaxes}}</p>
-	<p>FICA - Social Security: {{ficasocsecurity}}</p>
-	<p>FICA - Medicare: {{ficamedicare}}</p>
-	<p>SGLI: {{sgli}}</p>
-	<p>Roth TSP: {{rothtsp}}</p>
-	<p>Mid Month Pay: {{midmonthpay}}</p>
-	<p>Gross Pay: {{grosspay}}</p>
-	<p>Net Pay: {{netpay}}</p>
-    -->
 
 
 	<div class="maintable">
@@ -126,29 +104,17 @@
                 <td>{{netpay}}</td>
                 <td>{{netpay}}</td>
             </tr>
-            <!--
-            <tr>
-                <td>Features</td>
-                <td><ul class="feature-list">
-                        <li>Fast Charging</li>
-                        <li>Water Resistant</li>
-                        <li>5G Enabled</li>
-                    </ul></td>
-                <td><ul class="feature-list">
-                        <li>Fast Charging</li>
-                        <li>Water Resistant</li>
-                        <li>4G LTE</li>
-                    </ul></td>
-                <td><ul class="feature-list">
-                        <li>Fast Charging</li>
-                        <li>Water Resistant</li>
-                        <li>5G Enabled</li>
-                    </ul></td>
-            </tr>
-            -->
         </tbody>
     </table>
 </div>
+
+
+<p>Change grade:</p>
+<p>Change zip code:</p>
+<p>Change state of record:</p>
+<p>Change SGLI:</p>
+<p>Change Roth TSP:</p>
+
 
 <script>
     // Adding selection behavior for rows
@@ -161,8 +127,6 @@
         });
     });
 </script>
-
-
 
 </body>
 </html>
