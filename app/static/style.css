@@ -7,7 +7,7 @@ body {
 }
 
 
-div.st {
+div.matrix {
     margin: auto;
     padding: 20px;
     background-color: white;
@@ -15,14 +15,14 @@ div.st {
     border-radius: 8px;
 }
 
-table.st {
+table.matrix {
     width: 100%;
     border-collapse: collapse;
     border-radius: 8px;
     overflow: hidden;
 }
 
-th.st {
+th.matrix {
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -32,7 +32,7 @@ th.st {
     border-left: 1px solid #ddd;
 }
 
-td.st {
+td.matrix {
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
@@ -40,29 +40,29 @@ td.st {
     border-left: 1px solid #ddd;
 }
 
-tr.st:nth-child(even) td.st {
+tr.matrix:nth-child(even) td.matrix {
     background-color: #f1f1f1;
 }
 
-tr.st.selected {
+tr.matrix.selected {
     background-color: #ffd54f;
     font-weight: bold;
 }
 
 /*
-tr.st:hover {
+tr.matrix:hover {
     background-color: #ddd;
     transform: scale(1.02);
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
     */
 
-td.st:last-child, th.st:last-child {
+td.matrix:last-child, th.matrix:last-child {
     border-right: 1px solid #ddd;
 }
 
 
-.tableselect {
+select.matrix {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
@@ -74,7 +74,7 @@ td.st:last-child, th.st:last-child {
     text-align: center;
 }
 
-.tableinput {
+input.matrix {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;

@@ -14,46 +14,46 @@
 		    <input type = "submit" value="Upload LES"/>
     </form>
 
-    <div class="st">
-        <table class="st">
-            <thead class="st">
-                <tr class="st">
-                    <th class="st"></th>
-                    <th class="st">{{month}}</th>
-                    <th class="st">{{month1}}</th>
-                    <th class="st">{{month2}}</th>
-                    <th class="st">{{month3}}</th>
-                    <th class="st">{{month4}}</th>
-                    <th class="st">{{month5}}</th>
-                    <th class="st">{{month6}}</th>
-                    <th class="st"></th>
-                    <th class="st">Current</th>
-                    <th class="st">Future</th>
-                    <th class="st">Changing Month</th>
+    <div class="matrix">
+        <table class="matrix">
+            <thead class="matrix">
+                <tr class="matrix">
+                    <th class="matrix"></th>
+                    <th class="matrix">{{month}}</th>
+                    <th class="matrix">{{month1}}</th>
+                    <th class="matrix">{{month2}}</th>
+                    <th class="matrix">{{month3}}</th>
+                    <th class="matrix">{{month4}}</th>
+                    <th class="matrix">{{month5}}</th>
+                    <th class="matrix">{{month6}}</th>
+                    <th class="matrix"></th>
+                    <th class="matrix">Current</th>
+                    <th class="matrix">Future</th>
+                    <th class="matrix">Changing Month</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="st">
-                    <td class="st">Base Pay</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st">{{basepay}}</td>
-                    <td class="st" rowspan="12"></td>
-                    <td class="st">{{grade}}</td>
-                    <td class="st">
-                        <select class="tableselect" name="ranks" method="GET" action="/index">
+                <tr class="matrix">
+                    <td class="matrix">Base Pay</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix">{{basepay}}</td>
+                    <td class="matrix" rowspan="12"></td>
+                    <td class="matrix">{{grade}}</td>
+                    <td class="matrix">
+                        <select class="matrix" name="ranks" method="GET" action="/index">
                         <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
                             {% for rank in ranks[1:] %}
                             <option value="{{rank}}">{{rank}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="st">
-                        <select class="tableselect" name="monthsafter" method="GET" action="/index">
+                    <td class="matrix">
+                        <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
@@ -62,30 +62,30 @@
                     </td>
 
                 </tr>
-                <tr class="st">
-                    <td class="st">BAS</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st">{{bas}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">BAS</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix">{{bas}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">BAH</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{bah}}</td>
-                    <td class="st">{{zipcode}}</td>
-                    <td class="st"><input class="tableinput" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
-                    <td class="st">
-                        <select class="tableselect" name="monthsafter" method="GET" action="/index">
+                <tr class="matrix">
+                    <td class="matrix">BAH</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{bah}}</td>
+                    <td class="matrix">{{zipcode}}</td>
+                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
+                    <td class="matrix">
+                        <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
@@ -93,52 +93,52 @@
                         </select>
                     </td>
                 </tr>
-                <tr class="st">
-                    <td class="st">Federal Taxes</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st">{{federaltaxes}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">Federal Taxes</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix">{{federaltaxes}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">FICA - Social Security</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st">{{ficasocsecurity}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">FICA - Social Security</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix">{{ficasocsecurity}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">FICA - Medicare</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st">{{ficamedicare}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">FICA - Medicare</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix">{{ficamedicare}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">SGLI</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st">{{sgli}}</td>
-                    <td class="st"><input class="tableinput" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
-                    <td class="st">
-                        <select class="tableselect" name="monthsafter" method="GET" action="/index">
+                <tr class="matrix">
+                    <td class="matrix">SGLI</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix">{{sgli}}</td>
+                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
+                    <td class="matrix">
+                        <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
@@ -146,26 +146,26 @@
                         </select>
                     </td>
                 </tr>
-                <tr class="st">
-                    <td class="st">State Taxes</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{statetaxes}}</td>
-                    <td class="st">{{state}}</td>
-                    <td class="st">
-                        <select class="tableselect" name="states" method="GET" action="/index">
+                <tr class="matrix">
+                    <td class="matrix">State Taxes</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{statetaxes}}</td>
+                    <td class="matrix">{{state}}</td>
+                    <td class="matrix">
+                        <select class="matrix" name="states" method="GET" action="/index">
                         <option value="{{states[0]}}" selected>{{states[0]}}</option>
                             {% for state in states[1:] %}
                             <option value="{{state}}">{{state}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="st">
-                        <select class="tableselect" name="monthsafter" method="GET" action="/index">
+                    <td class="matrix">
+                        <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
@@ -173,19 +173,19 @@
                         </select>
                     </td>
                 </tr>
-                <tr class="st">
-                    <td class="st">Roth TSP</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st">{{rothtsp}}</td>
-                    <td class="st"><input class="tableinput" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
-                    <td class="st">
-                        <select class="tableselect" name="monthsafter" method="GET" action="/index">
+                <tr class="matrix">
+                    <td class="matrix">Roth TSP</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix">{{rothtsp}}</td>
+                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
+                    <td class="matrix">
+                        <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
@@ -193,30 +193,30 @@
                         </select>
                     </td>
                 </tr>
-                <tr class="st">
-                    <td class="st" colspan="12"></td>
+                <tr class="matrix">
+                    <td class="matrix" colspan="12"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">Gross Pay</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st">{{grosspay}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">Gross Pay</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix">{{grosspay}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
-                <tr class="st">
-                    <td class="st">Net Pay</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st">{{netpay}}</td>
-                    <td class="st" colspan="3"></td>
+                <tr class="matrix">
+                    <td class="matrix">Net Pay</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix">{{netpay}}</td>
+                    <td class="matrix" colspan="3"></td>
                 </tr>
             </tbody>
         </table>
