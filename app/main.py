@@ -31,23 +31,7 @@ ranks = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
          'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9',
          'W1', 'W2', 'W3', 'W4', 'W5']
 
-
-#variable_pos is the index of the start of that word in the text from the pdf
-#variable is the representation of the value associated with it
-grade = ""
-basepay = 0
-bas = 0
-bah = 0
-federaltaxes = 0
-ficasocsecurity = 0
-ficamedicare = 0
-sgli = 0
-rothtsp = 0
-midmonthpay = 0
-grosspay = 0
-netpay = 0
-zipcode = 0
-
+#variables
 month = ""
 month1 = ""
 month2 = ""
@@ -55,8 +39,38 @@ month3 = ""
 month4 = ""
 month5 = ""
 month6 = ""
-
+monthsafter = [month1, month2, month3, month4, month5, month6]
 state = ""
+grade = ""
+zipcode = 0
+
+#entitlements
+basepay = 0
+bas = 0
+bah = 0
+ueainitial = 0
+advancedebt = 0
+pcsmember = 0
+
+#deductions
+federaltaxes = 0
+ficasocsecurity = 0
+ficamedicare = 0
+sgli = 0
+statetaxes = 0
+rothtsp = 0
+midmonthpay = 0
+debt = 0
+partialpay = 0
+pcsmembers = 0
+
+#allotments
+
+
+#calculations
+grosspay = 0
+netpay = 0
+
 
 @app.route('/')
 def home():
@@ -108,6 +122,7 @@ def upload_file():
                         month4 = months[(months.index(x)+4) % 12]
                         month5 = months[(months.index(x)+5) % 12]
                         month6 = months[(months.index(x)+6) % 12]
+                        monthsafter = [month1, month2, month3, month4, month5, month6]
                         break
                     else:
                         month = "no month found"
@@ -139,8 +154,8 @@ def upload_file():
                     bah = -1
 
                 #find federal taxes
-                if 'TAXES' in text:
-                    federaltaxes = Decimal(text[(text.index('TAXES')+1)])
+                if 'FEDERAL' in text and text[text.index('FEDERAL')+1] == "TAXES":
+                    federaltaxes = Decimal(text[(text.index('FEDERAL')+2)])
                 else:
                     federaltaxes = -1
 
@@ -162,7 +177,13 @@ def upload_file():
                 else:
                     sgli = -1
 
-                #find Roth TPS
+                #find state taxes
+                if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
+                    statetaxes = Decimal(text[(text.index('STATE')+2)])
+                else:
+                    statetaxes = -1
+
+                #find Roth TSP
                 if 'ROTH' in text:
                     rothtsp = Decimal(text[(text.index('ROTH')+2)])
                 else:
@@ -203,9 +224,10 @@ def upload_file():
 
 
             return render_template('index.html', months=months, states=states, ranks=ranks, 
-                                   filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
+                                   filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, state=state, zipcode=zipcode)
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                                   state=state, zipcode=zipcode)
     return 'File upload failed'
 
 
