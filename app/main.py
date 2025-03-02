@@ -1,3 +1,4 @@
+from calendar import month_name
 from flask import Flask
 from flask import request, render_template, request, make_response, jsonify
 from werkzeug.utils import secure_filename
@@ -16,6 +17,9 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #sets the max content length of the uploaded file to 16MB, prevents massive files from overloading the server
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+#months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
 #variable_pos is the index of the start of that word in the text from the pdf
 #variable is the representation of the value associated with it
@@ -90,44 +94,17 @@ def upload_file():
                 text = textstring.split()
 
                 #find month
-                if 'JAN' in text:
-                    month_pos = text.index('JAN')
-                    month = text[(month_pos)]
-                elif 'FEB' in text:
-                    month_pos = text.index('FEB')
-                    month = text[(month_pos)]
-                elif 'MAR' in text:
-                    month_pos = text.index('MAR')
-                    month = text[(month_pos)]
-                elif 'APR' in text:
-                    month_pos = text.index('APR')
-                    month = text[(month_pos)]
-                elif 'MAY' in text:
-                    month_pos = text.index('MAY')
-                    month = text[(month_pos)]
-                elif 'JUN' in text:
-                    month_pos = text.index('JUN')
-                    month = text[(month_pos)]
-                elif 'JUL' in text:
-                    month_pos = text.index('JUL')
-                    month = text[(month_pos)]
-                elif 'AUG' in text:
-                    month_pos = text.index('AUG')
-                    month = text[(month_pos)]
-                elif 'SEP' in text:
-                    month_pos = text.index('SEP')
-                    month = text[(month_pos)]
-                elif 'OCT' in text:
-                    month_pos = text.index('OCT')
-                    month = text[(month_pos)]
-                elif 'NOV' in text:
-                    month_pos = text.index('NOV')
-                    month = text[(month_pos)]
-                elif 'DEC' in text:
-                    month_pos = text.index('DEC')
-                    month = text[(month_pos)]
-                else:
-                    month = "no month found"
+                for x in months:
+                    if x in text:
+                        month_pos = text.index(x)
+                        month = text[(month_pos)]
+                        month1 = month
+                        month2 = months[(months.index(x)+1) % 12]
+                        month3 = months[(months.index(x)+2) % 12]
+                        month4 = months[(months.index(x)+3) % 12]
+                    else:
+                        month = "no month found"
+
 
                 #find grade
                 if 'E1' in text:
@@ -264,73 +241,6 @@ def upload_file():
                     netpay = netpay + midmonthpay
                 else:
                     netpay = -1
-
-            #calculate months
-            if month == "JAN":
-                month1 = "January"
-                month2 = "February"
-                month3 = "March"
-                month4 = "April"
-            elif month == "FEB":
-                month1 = "February"
-                month2 = "March"
-                month3 = "April"
-                month4 = "May"
-            elif month == "MAR":
-                month1 = "March"
-                month2 = "April"
-                month3 = "May"
-                month4 = "June"
-            elif month == "APR":
-                month1 = "April"
-                month2 = "May"
-                month3 = "June"
-                month4 = "July"
-            elif month == "MAY":
-                month1 = "May"
-                month2 = "June"
-                month3 = "July"
-                month4 = "August"
-            elif month == "JUN":
-                month1 = "June"
-                month2 = "July"
-                month3 = "August"
-                month4 = "September"
-            elif month == "JUL":
-                month1 = "July"
-                month2 = "August"
-                month3 = "September"
-                month4 = "October"
-            elif month == "AUG":
-                month1 = "August"
-                month2 = "September"
-                month3 = "October"
-                month4 = "November"
-            elif month == "SEP":
-                month1 = "September"
-                month2 = "October"
-                month3 = "November"
-                month4 = "December"
-            elif month == "OCT":
-                month1 = "October"
-                month2 = "November"
-                month3 = "December"
-                month4 = "January"
-            elif month == "NOV":
-                month1 = "November"
-                month2 = "December"
-                month3 = "January"
-                month4 = "February"
-            elif month == "DEC":
-                month1 = "December"
-                month2 = "January"
-                month3 = "February"
-                month4 = "March"
-            else:
-                month = "no month found"
-
-
-
 
             return render_template('index.html', filename_display=filename, textarray_display=text, month=month, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
