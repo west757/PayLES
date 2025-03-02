@@ -74,7 +74,7 @@ netpay = 0
 
 @app.route('/')
 def home():
-    return render_template('index.html', months=months, states=states, ranks=ranks)
+    return render_template('index.html', months=months, states=states, ranks=ranks, monthsafter=monthsafter)
 
 
 @app.route('/index', methods=['POST'])
@@ -224,7 +224,7 @@ def upload_file():
                     zipcode = -1
 
 
-            return render_template('index.html', months=months, states=states, ranks=ranks, 
+            return render_template('index.html', months=months, states=states, ranks=ranks,
                                    filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
