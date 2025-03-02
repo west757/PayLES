@@ -14,245 +14,219 @@
 		    <input type = "submit" value="Upload LES"/>
     </form>
 
-    <div id="container">
+    <!-- static table -->
+    <div class="st">
+        <table class="st">
+            <thead class="st">
+                <tr class="st">
+                    <th class="st"></th>
+                    <th class="st">{{month}}</th>
+                    <th class="st">{{month1}}</th>
+                    <th class="st">{{month2}}</th>
+                    <th class="st">{{month3}}</th>
+                    <th class="st">{{month4}}</th>
+                    <th class="st">{{month5}}</th>
+                    <th class="st">{{month6}}</th>
+                    <th class="st" rowspan="13"</th>
+                    <th class="st">Current</th>
+                    <th class="st">Future</th>
+                    <th class="st">Changing Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="st">
+                    <td class="st">Base Pay</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st"></td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">
+                        <select name="ranks" method="GET" action="/index">
+                        <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
+                            {% for rank in ranks[1:] %}
+                            <option value="{{rank}}">{{rank}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="st">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
 
-        <!-- static table -->
-        <div class="st">
-            <table class="st">
-                <thead class="st">
-                    <tr class="st">
-                        <th class="st"></th>
-                        <th class="st">{{month}}</th>
-                        <th class="st">{{month1}}</th>
-                        <th class="st">{{month2}}</th>
-                        <th class="st">{{month3}}</th>
-                        <th class="st">{{month4}}</th>
-                        <th class="st">{{month5}}</th>
-                        <th class="st">{{month6}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="st">
-                        <td class="st">Base Pay</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                        <td class="st">{{basepay}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">BAS</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                        <td class="st">{{bas}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">BAH</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                        <td class="st">{{bah}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">Federal Taxes</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                        <td class="st">{{federaltaxes}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">FICA - Social Security</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                        <td class="st">{{ficasocsecurity}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">FICA - Medicare</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                        <td class="st">{{ficamedicare}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">SGLI</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                        <td class="st">{{sgli}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">State Taxes</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                        <td class="st">{{statetaxes}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">Roth TSP</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                        <td class="st">{{rothtsp}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st" colspan="8"></td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">Gross Pay</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                        <td class="st">{{grosspay}}</td>
-                    </tr>
-                    <tr class="st">
-                        <td class="st">Net Pay</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                        <td class="st">{{netpay}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        &nbsp;
-
-        <!-- change table -->
-        <div class="ct">
-            <table class="ct">
-                <thead class="ct">
-                    <tr class="ct">
-                        <th class="ct">Current</th>
-                        <th class="ct">Future</th>
-                        <th class="ct">Month</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="ct">
-                        <td class="ct">{{grade}}</td>
-                        <td class="ct">
-                            <select name="ranks" method="GET" action="/index">
-                            <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
-                                {% for rank in ranks[1:] %}
-                                <option value="{{rank}}">{{rank}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="ct">
-                            <select name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                                {% for mon in monthsafter[1:] %}
-                                <option value="{{mon}}">{{mon}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct" colspan="3"><p></p></td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct">{{zipcode}}</td>
-                        <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
-                        <td class="ct">
-                            <select name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                                {% for mon in monthsafter[1:] %}
-                                <option value="{{mon}}">{{mon}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct" colspan="3"><p></p></td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct" colspan="3"><p></p></td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct" colspan="3"><p></p></td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct">{{sgli}}</td>
-                        <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
-                        <td class="ct">
-                            <select name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                                {% for mon in monthsafter[1:] %}
-                                <option value="{{mon}}">{{mon}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct">{{state}}</td>
-                        <td class="ct">
-                            <select name="states" method="GET" action="/index">
-                            <option value="{{states[0]}}" selected>{{states[0]}}</option>
-                                {% for state in states[1:] %}
-                                <option value="{{state}}">{{state}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="ct">
-                            <select name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                                {% for mon in monthsafter[1:] %}
-                                <option value="{{mon}}">{{mon}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="ct">
-                        <td class="ct">{{rothtsp}}</td>
-                        <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
-                        <td class="ct">
-                            <select name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                                {% for mon in monthsafter[1:] %}
-                                <option value="{{mon}}">{{mon}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
+                </tr>
+                <tr class="st">
+                    <td class="st">BAS</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">BAH</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st"></td>
+                    <td class="st">{{zipcode}}</td>
+                    <td class="st"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
+                    <td class="st">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Federal Taxes</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">FICA - Social Security</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">FICA - Medicare</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">SGLI</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st"></td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
+                    <td class="st">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr class="st">
+                    <td class="st">State Taxes</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st"></td>
+                    <td class="st">{{state}}</td>
+                    <td class="st">
+                        <select name="states" method="GET" action="/index">
+                        <option value="{{states[0]}}" selected>{{states[0]}}</option>
+                            {% for state in states[1:] %}
+                            <option value="{{state}}">{{state}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="st">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Roth TSP</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st"></td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
+                    <td class="st">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr class="st">
+                    <td class="st" colspan="13"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Gross Pay</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Net Pay</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st" colspan="4"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
 
     <script>
         // Adding selection behavior for rows
