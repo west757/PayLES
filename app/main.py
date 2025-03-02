@@ -34,30 +34,19 @@ ranks = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
 
 #variable_pos is the index of the start of that word in the text from the pdf
 #variable is the representation of the value associated with it
-grade_pos = 0
 grade = ""
-basepay_pos = 0
 basepay = 0
-bas_pos = 0
 bas = 0
-bah_pos = 0
 bah = 0
-federaltaxes_pos = 0
 federaltaxes = 0
-ficasocsecurity_pos = 0
 ficasocsecurity = 0
-ficamedicare_pos = 0
 ficamedicare = 0
-sgli_pos = 0
 sgli = 0
-rothtsp_pos = 0
 rothtsp = 0
-midmonthpay_pos = 0
 midmonthpay = 0
-grosspay_pos = 0
 grosspay = 0
-netpay_pos = 0
 netpay = 0
+zipcode = 0
 
 month = ""
 month1 = ""
@@ -133,97 +122,90 @@ def upload_file():
 
                 #find base pay
                 if 'BASE' in text:
-                    basepay_pos = text.index('BASE')
-                    basepay = Decimal(text[(basepay_pos+2)])
+                    basepay = Decimal(text[(text.index('BASE')+2)])
                 else:
                     basepay = -1
 
                 #find BAS
                 if 'BAS' in text:
-                    bas_pos = text.index('BAS')
-                    bas = Decimal(text[(bas_pos+1)])
+                    bas = Decimal(text[(text.index('BAS')+1)])
                 else:
                     bas = -1
 
                 #find BAH
                 if 'BAH' in text:
-                    bah_pos = text.index('BAH')
-                    bah = Decimal(text[(bah_pos+1)])
+                    bah = Decimal(text[(text.index('BAH')+1)])
                 else:
                     bah = -1
 
                 #find federal taxes
                 if 'TAXES' in text:
-                    federaltaxes_pos = text.index('TAXES')
-                    federaltaxes = Decimal(text[(federaltaxes_pos+1)])
+                    federaltaxes = Decimal(text[(text.index('TAXES')+1)])
                 else:
                     federaltaxes = -1
 
                 #find FICA - Social Security
                 if 'SECURITY' in text:
-                    ficasocsecurity_pos = text.index('SECURITY')
-                    ficasocsecurity = Decimal(text[(ficasocsecurity_pos+1)])
+                    ficasocsecurity = Decimal(text[(text.index('SECURITY')+1)])
                 else:
                     ficasocsecurity = -1
 
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in text:
-                    ficamedicare_pos = text.index('FICA-MEDICARE')
-                    ficamedicare = Decimal(text[(ficamedicare_pos+1)])
+                    ficamedicare = Decimal(text[(text.index('FICA-MEDICARE')+1)])
                 else:
                     ficamedicare = -1
 
                 #find SGLI
                 if 'SGLI' in text:
-                    sgli_pos = text.index('SGLI')
-                    sgli = Decimal(text[(sgli_pos+1)])
+                    sgli = Decimal(text[(text.index('SGLI')+1)])
                 else:
                     sgli = -1
 
                 #find Roth TPS
                 if 'ROTH' in text:
-                    rothtsp_pos = text.index('ROTH')
-                    rothtsp = Decimal(text[(rothtsp_pos+2)])
+                    rothtsp = Decimal(text[(text.index('ROTH')+2)])
                 else:
                     rothtsp = -1
 
                 #find mid-month-pay
                 if 'MID-MONTH-PAY' in text:
-                    midmonthpay_pos = text.index('MID-MONTH-PAY')
-                    midmonthpay = Decimal(text[(midmonthpay_pos+1)])
+                    midmonthpay = Decimal(text[(text.index('MID-MONTH-PAY')+1)])
                 else:
                     midmonthpay = -1
 
                 #find gross pay
                 if 'ENT' in text:
-                    grosspay_pos = text.index('ENT')
-                    grosspay = Decimal(text[(grosspay_pos+1)])
+                    grosspay = Decimal(text[(text.index('ENT')+1)])
                 else:
                     grosspay = -1
 
                 #find net pay (takes mid-month pay into account)
                 if '=NET' in text:
-                    netpay_pos = text.index('=NET')
-                    netpay = Decimal(text[(netpay_pos+2)])
+                    netpay = Decimal(text[(text.index('=NET')+2)])
                     netpay = netpay + midmonthpay
                 else:
                     netpay = -1
 
-
-
                 #find state
                 for x in states:
-                    if x in text:
+                    if (x in text) and (text[text.index(x)-1] == "TAXES"):
                         state = x
                         break
                     else:
                         state = "no state found"
 
+                #find zip code
+                if 'PACIDN' in text:
+                    zipcode = Decimal(text[(text.index('PACIDN')+3)])
+                else:
+                    zipcode = -1
+
 
             return render_template('index.html', months=months, states=states, ranks=ranks, 
                                    filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, state=state)
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, state=state, zipcode=zipcode)
     return 'File upload failed'
 
 
