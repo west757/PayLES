@@ -18,13 +18,22 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #sets the max content length of the uploaded file to 16MB, prevents massive files from overloading the server
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-#months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+monthslong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+stateslong = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
+              'Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
+              'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina',
+              'North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas',
+              'Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
+states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO',
+          'MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+ranks = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
+         'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9',
+         'W1', 'W2', 'W3', 'W4', 'W5']
+
 
 #variable_pos is the index of the start of that word in the text from the pdf
 #variable is the representation of the value associated with it
-month_pos = 0
-month = ""
 grade_pos = 0
 grade = ""
 basepay_pos = 0
@@ -50,12 +59,15 @@ grosspay = 0
 netpay_pos = 0
 netpay = 0
 
+month = ""
 month1 = ""
 month2 = ""
 month3 = ""
 month4 = ""
 month5 = ""
 month6 = ""
+
+state = ""
 
 @app.route('/')
 def home():
@@ -95,12 +107,11 @@ def upload_file():
                 #avoids the problem of using specific indexes because indexes may change depending on text size
                 text = textstring.split()
 
+                print(text)
+
                 #find month
                 for x in months:
                     if x in text:
-                        month_pos = text.index(x)
-                        month = text[(month_pos)]
-                        month = months[(months.index(x)) % 12]
                         month = x
                         month1 = months[(months.index(x)+1) % 12]
                         month2 = months[(months.index(x)+2) % 12]
@@ -113,62 +124,12 @@ def upload_file():
                         month = "no month found"
 
                 #find grade
-                if 'E1' in text:
-                    grade_pos = text.index('E1')
-                    grade = text[(grade_pos)]
-                elif 'E2' in text:
-                    grade_pos = text.index('E2')
-                    grade = text[(grade_pos)]
-                elif 'E3' in text:
-                    grade_pos = text.index('E3')
-                    grade = text[(grade_pos)]
-                elif 'E4' in text:
-                    grade_pos = text.index('E4')
-                    grade = text[(grade_pos)]
-                elif 'E5' in text:
-                    grade_pos = text.index('E5')
-                    grade = text[(grade_pos)]
-                elif 'E6' in text:
-                    grade_pos = text.index('E6')
-                    grade = text[(grade_pos)]
-                elif 'E7' in text:
-                    grade_pos = text.index('E7')
-                    grade = text[(grade_pos)]
-                elif 'E8' in text:
-                    grade_pos = text.index('E8')
-                    grade = text[(grade_pos)]
-                elif 'E9' in text:
-                    grade_pos = text.index('E9')
-                    grade = text[(grade_pos)]
-                elif 'O1' in text:
-                    grade_pos = text.index('O1')
-                    grade = text[(grade_pos)]
-                elif 'O2' in text:
-                    grade_pos = text.index('O2')
-                    grade = text[(grade_pos)]
-                elif 'O3' in text:
-                    grade_pos = text.index('O3')
-                    grade = text[(grade_pos)]
-                elif 'O4' in text:
-                    grade_pos = text.index('O4')
-                    grade = text[(grade_pos)]
-                elif 'O5' in text:
-                    grade_pos = text.index('O5')
-                    grade = text[(grade_pos)]
-                elif 'O6' in text:
-                    grade_pos = text.index('O6')
-                    grade = text[(grade_pos)]
-                elif 'O7' in text:
-                    grade_pos = text.index('O7')
-                    grade = text[(grade_pos)]
-                elif 'O8' in text:
-                    grade_pos = text.index('O8')
-                    grade = text[(grade_pos)]
-                elif 'O9' in text:
-                    grade_pos = text.index('O9')
-                    grade = text[(grade_pos)]
-                else:
-                    grade = "no grade found"
+                for x in ranks:
+                    if x in text:
+                        grade = x
+                        break
+                    else:
+                        grade = "no grade found"
 
                 #find base pay
                 if 'BASE' in text:
@@ -248,9 +209,20 @@ def upload_file():
                 else:
                     netpay = -1
 
-            return render_template('index.html', filename_display=filename, textarray_display=text, month=month, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
+
+
+                #find state
+                for x in states:
+                    if x in text:
+                        state = x
+                        break
+                    else:
+                        state = "no state found"
+
+
+            return render_template('index.html', filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6)
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, state=state)
     return 'File upload failed'
 
 
