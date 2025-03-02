@@ -5,7 +5,7 @@ body {
     padding: 20px;
 }
 
-.maintable {
+div.st {
     max-width: 1000px;
     margin: auto;
     padding: 20px;
@@ -14,62 +14,51 @@ body {
     border-radius: 8px;
 }
 
-table {
+table.st {
     width: 100%;
     border-collapse: collapse;
     border-radius: 8px;
     overflow: hidden;
 }
 
-th, td {
+th.st, td.st {
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
-th {
+th.st {
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
 }
 
-td {
+td.st {
     background-color: #f9f9f9;
 }
 
-tr:nth-child(even) td {
+tr.st:nth-child(even) td.st {
     background-color: #f1f1f1;
 }
 
 /* Highlighting selected product row */
-tr.selected {
+tr.st.selected {
     background-color: #ffd54f;
     font-weight: bold;
 }
 
 /* Hover effect for rows */
-tr:hover {
+tr.st:hover {
     background-color: #ddd;
     transform: scale(1.02);
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Features section */
-.feature-list {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-}
-
-.feature-list li {
-    margin: 5px 0;
-}
-
 /* Styling the table borders */
-td, th {
+td.st, th.st {
     border-left: 1px solid #ddd;
 }
 
-td:last-child, th:last-child {
+td.st:last-child, th.st:last-child {
     border-right: 1px solid #ddd;
 }
