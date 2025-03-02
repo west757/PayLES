@@ -5,6 +5,10 @@ body {
     padding: 20px;
 }
 
+#container {
+    display: flex;
+    flex-wrap: wrap;
+}
 
 /* static table */
 div.st {
@@ -14,6 +18,7 @@ div.st {
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    flex: 0 0 80%;
 }
 
 table.st {
@@ -74,6 +79,7 @@ div.ct {
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    flex: 0 0 20%;
 }
 
 table.ct {
