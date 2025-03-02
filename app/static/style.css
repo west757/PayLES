@@ -1,5 +1,6 @@
 body {
     font-family: Arial, sans-serif;
+    font-size: 16px;
     background-color: #f4f4f9;
     margin: 0;
     padding: 20px;
@@ -8,12 +9,14 @@ body {
 #container {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
+
 
 /* static table */
 div.st {
     max-width: 1000px;
-    margin: auto;
+    margin: 5px;
     padding: 20px;
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -48,20 +51,17 @@ tr.st:nth-child(even) td.st {
     background-color: #f1f1f1;
 }
 
-/* Highlighting selected product row */
 tr.st.selected {
     background-color: #ffd54f;
     font-weight: bold;
 }
 
-/* Hover effect for rows */
 tr.st:hover {
     background-color: #ddd;
     transform: scale(1.02);
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Styling the table borders */
 td.st, th.st {
     border-left: 1px solid #ddd;
 }
@@ -70,11 +70,15 @@ td.st:last-child, th.st:last-child {
     border-right: 1px solid #ddd;
 }
 
+#stspacing {
+    padding: 5px;
+}
+
 
 /* change table */
 div.ct {
     max-width: 1000px;
-    margin: auto;
+    margin: 5px;
     padding: 20px;
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -115,4 +119,15 @@ td.ct, th.ct {
 
 td.ct:last-child, th.ct:last-child {
     border-right: 1px solid #ddd;
+}
+
+
+select {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    padding: 2px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
 }
