@@ -220,7 +220,8 @@ def upload_file():
                         state = "no state found"
 
 
-            return render_template('index.html', filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
+            return render_template('index.html', months=months, states=states, ranks=ranks, 
+                                   filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, state=state)
     return 'File upload failed'
