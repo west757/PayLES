@@ -111,6 +111,16 @@
                     <td class="st">{{sgli}}</td>
                 </tr>
                 <tr class="st">
+                    <td class="st">State Taxes</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                    <td class="st">{{statetaxes}}</td>
+                </tr>
+                <tr class="st">
                     <td class="st">Roth TSP</td>
                     <td class="st">{{rothtsp}}</td>
                     <td class="st">{{rothtsp}}</td>
@@ -169,13 +179,27 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="ct">{{month}}</td>
+                    <td class="ct">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
                 <tr class="ct">
                     <td class="ct">Zip Code</td>
                     <td class="ct">{{zipcode}}</td>
                     <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
-                    <td class="ct">{{month}}</td>
+                    <td class="ct">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
                 <tr class="ct">
                     <td class="ct">State of Record</td>
@@ -188,19 +212,40 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="ct">{{month}}</td>
+                    <td class="ct">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
                 <tr class="ct">
                     <td class="ct">SGLI</td>
                     <td class="ct">{{sgli}}</td>
                     <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
-                    <td class="ct">{{month}}</td>
+                    <td class="ct">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
                 <tr class="ct">
                     <td class="ct">Roth TSP</td>
                     <td class="ct">{{rothtsp}}</td>
                     <td class="ct"><input type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
-                    <td class="ct">{{month}}</td>
+                    <td class="ct">
+                        <select name="monthsafter" method="GET" action="/index">
+                        <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                            {% for mon in monthsafter[1:] %}
+                            <option value="{{mon}}">{{mon}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
             </tbody>
         </table>
