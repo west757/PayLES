@@ -54,6 +54,8 @@ month1 = ""
 month2 = ""
 month3 = ""
 month4 = ""
+month5 = ""
+month6 = ""
 
 @app.route('/')
 def home():
@@ -98,13 +100,17 @@ def upload_file():
                     if x in text:
                         month_pos = text.index(x)
                         month = text[(month_pos)]
-                        month1 = month
-                        month2 = months[(months.index(x)+1) % 12]
-                        month3 = months[(months.index(x)+2) % 12]
-                        month4 = months[(months.index(x)+3) % 12]
+                        month = months[(months.index(x)) % 12]
+                        month = x
+                        month1 = months[(months.index(x)+1) % 12]
+                        month2 = months[(months.index(x)+2) % 12]
+                        month3 = months[(months.index(x)+3) % 12]
+                        month4 = months[(months.index(x)+4) % 12]
+                        month5 = months[(months.index(x)+5) % 12]
+                        month6 = months[(months.index(x)+6) % 12]
+                        break
                     else:
                         month = "no month found"
-
 
                 #find grade
                 if 'E1' in text:
@@ -244,7 +250,7 @@ def upload_file():
 
             return render_template('index.html', filename_display=filename, textarray_display=text, month=month, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month1=month1, month2=month2, month3=month3, month4=month4)
+                                   month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6)
     return 'File upload failed'
 
 
