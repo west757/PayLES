@@ -71,7 +71,7 @@ state = ""
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', months=months, states=states, ranks=ranks)
 
 
 @app.route('/index', methods=['POST'])
