@@ -1,3 +1,5 @@
+/* global CSS */
+
 body {
     font-family: Arial, sans-serif;
     font-size: 16px;
@@ -6,6 +8,8 @@ body {
     padding: 20px;
 }
 
+
+/* matrix CSS */
 
 div.matrix {
     margin: auto;
@@ -49,18 +53,9 @@ tr.matrix.selected {
     font-weight: bold;
 }
 
-/*
-tr.matrix:hover {
-    background-color: #ddd;
-    transform: scale(1.02);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-    */
-
 td.matrix:last-child, th.matrix:last-child {
     border-right: 1px solid #ddd;
 }
-
 
 select.matrix {
     font-family: Arial, sans-serif;
@@ -85,3 +80,11 @@ input.matrix {
     width: 70px;
     text-align: center;
 }
+
+/*
+tr.matrix:hover {
+    background-color: #ddd;
+    transform: scale(1.02);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+*/
