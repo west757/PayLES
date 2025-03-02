@@ -129,7 +129,7 @@ def upload_file():
 
                 #find grade
                 for x in ranks:
-                    if x in text:
+                    if x in text and text[text.index(x)+9] == "ENTITLEMENTS":
                         grade = x
                         break
                     else:
