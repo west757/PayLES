@@ -204,7 +204,8 @@ def upload_file():
                 #find net pay (takes mid-month pay into account)
                 if '=NET' in text:
                     netpay = Decimal(text[(text.index('=NET')+2)])
-                    netpay = netpay + midmonthpay
+                    if midmonthpay != -1:
+                        netpay = netpay + midmonthpay
                 else:
                     netpay = -1
 
