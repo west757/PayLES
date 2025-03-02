@@ -107,7 +107,7 @@ def upload_file():
                 #avoids the problem of using specific indexes because indexes may change depending on text size
                 text = textstring.split()
 
-                print(text)
+                #print(text)
 
                 #find month
                 for x in months:

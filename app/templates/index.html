@@ -9,184 +9,201 @@
 
 <body>
 
-	<form action = "/index" method = "POST" enctype = "multipart/form-data">
-		<input type = "file" name = "file" />
-		<input type = "submit" value="Upload LES"/>
-	</form>
+    <form action = "/index" method = "POST" enctype = "multipart/form-data">
+		    <input type = "file" name = "file" />
+		    <input type = "submit" value="Upload LES"/>
+    </form>
+
+    <!-- static table -->
+    <div class="st">
+        <table class="st">
+            <thead class="st">
+                <tr class="st">
+                    <th class="st"></th>
+                    <th class="st">{{month}}</th>
+                    <th class="st">{{month1}}</th>
+                    <th class="st">{{month2}}</th>
+                    <th class="st">{{month3}}</th>
+                    <th class="st">{{month4}}</th>
+                    <th class="st">{{month5}}</th>
+                    <th class="st">{{month6}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="st">
+                    <td class="st">Grade</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                    <td class="st">{{grade}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Base Pay</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                    <td class="st">{{basepay}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">BAS</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                    <td class="st">{{bas}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">BAH</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                    <td class="st">{{bah}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Federal Taxes</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                    <td class="st">{{federaltaxes}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">FICA - Social Security</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                    <td class="st">{{ficasocsecurity}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">FICA - Medicare</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                    <td class="st">{{ficamedicare}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">SGLI</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                    <td class="st">{{sgli}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Roth TSP</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                    <td class="st">{{rothtsp}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Gross Pay</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                    <td class="st">{{grosspay}}</td>
+                </tr>
+                <tr class="st">
+                    <td class="st">Net Pay</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                    <td class="st">{{netpay}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    &nbsp;
+
+    <!-- change table -->
+    <div class="ct">
+        <table class="ct">
+            <thead class="ct">
+                <tr class="ct">
+                    <th class="ct">Editable Fields</th>
+                    <th class="ct">Current</th>
+                    <th class="ct">Future</th>
+                    <th class="ct">Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="ct">
+                    <td class="ct">Grade</td>
+                    <td class="ct">{{grade}}</td>
+                    <td class="ct">future grade</td>
+                    <td class="ct">{{month}}</td>
+                </tr>
+                <tr class="ct">
+                    <td class="ct">Zip Code</td>
+                    <td class="ct">current zip code</td>
+                    <td class="ct">future zip code</td>
+                    <td class="ct">{{month}}</td>
+                </tr>
+                <tr class="ct">
+                    <td class="ct">State of Record</td>
+                    <td class="ct">{{state}}</td>
+                    <td class="ct">future state</td>
+                    <td class="ct">{{month}}</td>
+                </tr>
+                <tr class="ct">
+                    <td class="ct">SGLI</td>
+                    <td class="ct">{{sgli}}</td>
+                    <td class="ct">future sgli</td>
+                    <td class="ct">{{month}}</td>
+                </tr>
+                <tr class="ct">
+                    <td class="ct">Roth TSP</td>
+                    <td class="ct">{{rothtsp}}</td>
+                    <td class="ct">future tsp</td>
+                    <td class="ct">{{month}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
-	<div class="st">
-    <table class="st">
-        <thead class="st">
-            <tr class="st">
-                <th class="st"></th>
-                <th class="st">{{month}}</th>
-                <th class="st">{{month1}}</th>
-                <th class="st">{{month2}}</th>
-                <th class="st">{{month3}}</th>
-                <th class="st">{{month4}}</th>
-                <th class="st">{{month5}}</th>
-                <th class="st">{{month6}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="st">
-                <td class="st">Grade</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-                <td class="st">{{grade}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">Base Pay</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-                <td class="st">{{basepay}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">BAS</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-                <td class="st">{{bas}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">BAH</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-                <td class="st">{{bah}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">Federal Taxes</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-                <td class="st">{{federaltaxes}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">FICA - Social Security</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-                <td class="st">{{ficasocsecurity}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">FICA - Medicare</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-                <td class="st">{{ficamedicare}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">SGLI</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-                <td class="st">{{sgli}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">Roth TSP</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-                <td class="st">{{rothtsp}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">Gross Pay</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-                <td class="st">{{grosspay}}</td>
-            </tr>
-            <tr class="st">
-                <td class="st">Net Pay</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-                <td class="st">{{netpay}}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-
-<div id="ctd">
-    <table id="ct">
-        <tr>
-            <td>Change Grade:</td>
-            <td>{{grade}}</td>
-            <td>{{month}}</td>
-        </tr>
-        <tr>
-            <td>Change Zip Code:</td>
-            <td>{{grade}}</td>
-            <td>{{month}}</td>
-        </tr>
-        <tr>
-            <td>Change State of Record:</td>
-            <td>{{state}}</td>
-            <td>{{month}}</td>
-        </tr>
-        <tr>
-            <td>Change SGLI:</td>
-            <td>{{sgli}}</td>
-            <td>{{month}}</td>
-        </tr>
-        <tr>
-            <td>Change Roth TSP Amount:</td>
-            <td>{{rothtsp}}</td>
-            <td>{{month}}</td>
-        </tr>
-    </table>
-</div>
-
-
-<script>
-    // Adding selection behavior for rows
-    document.querySelectorAll("tr").forEach(function(row) {
-        row.addEventListener("click", function() {
-            document.querySelectorAll("tr").forEach(function(innerRow) {
-                innerRow.classList.remove("selected");
+    <script>
+        // Adding selection behavior for rows
+        document.querySelectorAll("tr").forEach(function(row) {
+            row.addEventListener("click", function() {
+                document.querySelectorAll("tr").forEach(function(innerRow) {
+                    innerRow.classList.remove("selected");
+                });
+                row.classList.add("selected");
             });
-            row.classList.add("selected");
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>
