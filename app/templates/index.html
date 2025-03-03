@@ -135,12 +135,12 @@
                     <td class="matrix">{{"${:,.2f}".format(sgli)}}</td>
                     <td class="matrix">{{"${:,.2f}".format(sgli)}}</td>
                     <td class="matrix">{{"${:,.2f}".format(sgli)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sglicoverage)}}</td>
+                    <td class="matrix">{{"${:,.2f}".format(sgli)}}</td>
                     <td class="matrix">
-                    <select class="matrix" name="sglicoverageafter" method="GET" action="/index">
-                        <option value="{{sglicoverages[0]}}" selected>{{sglicoverages[0]}}</option>
-                            {% for sglival in sglicoverages[1:] %}
-                            <option value="{{sglival}}">{{sglival}}</option>
+                    <select class="matrix" name="sglipremiumsafter" method="GET" action="/index">
+                        <option value="{{sglipremiums[0]}}" selected>{{"${:,.2f}".format(sglipremiums[0])}}</option>
+                            {% for sglival in sglipremiums[1:] %}
+                            <option value="{{sglival}}">{{"${:,.2f}".format(sglival)}}</option>
                             {% endfor %}
                         </select>
                     </td>
