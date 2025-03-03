@@ -135,8 +135,15 @@
                     <td class="matrix">{{sgli}}</td>
                     <td class="matrix">{{sgli}}</td>
                     <td class="matrix">{{sgli}}</td>
-                    <td class="matrix">{{sgli}}</td>
-                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futuresgli"/></td>
+                    <td class="matrix">{{sglicoverage}}</td>
+                    <td class="matrix">
+                    <select class="matrix" name="sglicoverageafter" method="GET" action="/index">
+                        <option value="{{sglicoverages[0]}}" selected>{{sglicoverages[0]}}</option>
+                            {% for sglival in sglicoverages[1:] %}
+                            <option value="{{sglival}}">{{sglival}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                     <td class="matrix">
                         <select class="matrix" name="monthsafter" method="GET" action="/index">
                         <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
