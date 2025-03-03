@@ -15,4 +15,6 @@ serving static flask files: https://stackabuse.com/serving-static-files-with-fla
 get/post with flask: https://stackabuse.com/how-to-get-and-parse-http-post-body-in-flask-json-and-form-data/
 pdfplumber: https://pypi.org/project/pdfplumber/
 table template: https://www.freshdesignweb.com/free-css-table.html
+
+SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
 -->
