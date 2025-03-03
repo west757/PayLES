@@ -184,7 +184,7 @@ def upload_file():
                 if 'SGLI' in text:
                     sgli = Decimal(text[(text.index('SGLI')+1)])
                     for x in sglipremiums:
-                        if x in sglipremiums:
+                        if x == sgli:
                             sglicoverage = sglicoverages[sglipremiums.index(int(sgli))]
                             break
                         else:
