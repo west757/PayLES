@@ -232,10 +232,13 @@
 
     &nbsp;
 
+
+
+
     <div class="containertest">
-        <form hx-get="/update-fields" hx-target="#dynamic-fields">
+        <form class="formtest" hx-get="/update-fields" hx-target="#dynamic-fields">
             <div class="form-group">
-                <label for="type">Form Type:</label>
+                <label class="labeltest" for="type">Form Type:</label>
                 <select id="type" name="type" class="form-control">
                     <option value="basic">Basic</option>
                     <option value="advanced">Advanced</option>
@@ -243,34 +246,29 @@
             </div>
         </form>
 
-        <form hx-post="/submit" hx-target="#response" hx-swap="innerHTML">
+        <form class="formtest" hx-post="/submit" hx-target="#response" hx-swap="innerHTML">
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label class="labeltest" for="name">Name:</label>
                 <input type="text" id="name" name="name" class="form-control" required>
             </div>
 
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label class="labeltest" for="email">Email:</label>
                 <input type="email" id="email" name="email" class="form-control" required>
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone:</label>
+                <label class="labeltest" for="phone">Phone:</label>
                 <input type="tel" id="phone" name="phone" class="form-control">
             </div>
-
-            <div class="form-group">
-                <label for="address">Address:</label>
-                <textarea id="address" name="address" class="form-control"></textarea>
-            </div>
-
-            <div id="dynamic-fields"></div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
         <div id="response"></div>
     </div>
+
+
 
 
 
