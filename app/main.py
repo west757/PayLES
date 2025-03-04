@@ -73,12 +73,13 @@ pcsmembers = 0
 grosspay = 0
 netpay = 0
 sglicoverage = 0
-sglirate1 = 0
-sglirate2 = 0
-sglirate3 = 0
-sglirate4 = 0
-sglirate5 = 0
-sglirate6 = 0
+sgli0 = 0
+sgli1 = 0
+sgli2 = 0
+sgli3 = 0
+sgli4 = 0
+sgli5 = 0
+sgli6 = 0
 
 
 @app.route('/')
@@ -182,15 +183,21 @@ def upload_file():
 
                 #find SGLI
                 if 'SGLI' in text:
-                    sgli = Decimal(text[(text.index('SGLI')+1)])
+                    sgli0 = Decimal(text[(text.index('SGLI')+1)])
                     for x in sglipremiums:
-                        if x == sgli:
-                            sglicoverage = sglicoverages[sglipremiums.index(int(sgli))]
+                        if x == sgli0:
+                            sglicoverage = sglicoverages[sglipremiums.index(int(sgli0))]
+                            sgli1 = sgli0
+                            sgli2 = sgli0
+                            sgli3 = sgli0
+                            sgli4 = sgli0
+                            sgli5 = sgli0
+                            sgli6 = sgli0
                             break
                         else:
                             sglicoverage = 0
                 else:
-                    sgli = 0
+                    sgli0 = 0
 
                 #find state taxes
                 if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
@@ -242,7 +249,8 @@ def upload_file():
             return render_template('index.html', months=months, states=states, ranks=ranks,
                                    filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli=sgli, sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6,
+                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
                                    rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
                                    state=state, zipcode=zipcode)
