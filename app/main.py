@@ -266,24 +266,6 @@ def upload_file():
 
 
 
-
-@app.route('/update-fields')
-def update_fields():
-    type_ = request.args.get('type')
-    if type_ == 'advanced':
-        fields = '''
-        <div class="form-group">
-            <label for="extra">Additional Information:</label>
-            <input type="text" id="extra" name="extra" class="form-control">
-        </div>
-        '''
-    else:
-        fields = ''
-    return fields
-
-
-
-
 @app.route('/submit', methods=['POST'])
 def submit():
     name = request.form.get('name')
@@ -303,6 +285,20 @@ def submit():
     return response
 
 
+
+#@app.route('/update-fields')
+#def update_fields():
+#    type_ = request.args.get('type')
+#    if type_ == 'advanced':
+#        fields = '''
+#        <div class="form-group">
+#            <label for="extra">Additional Information:</label>
+#            <input type="text" id="extra" name="extra" class="form-control">
+#        </div>
+#        '''
+#    else:
+#        fields = ''
+#    return fields
 
 
 
