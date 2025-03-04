@@ -84,7 +84,14 @@ sgli6 = 0
 
 @app.route('/')
 def home():
-    return render_template('index.html', months=months, states=states, ranks=ranks, monthsafter=monthsafter, sglicoverages=sglicoverages, sglipremiums=sglipremiums)
+    return render_template('index.html', months=months, states=states, ranks=ranks,
+                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6,
+                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
+                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                                   state=state, zipcode=zipcode)
 
 
 @app.route('/index', methods=['POST'])
@@ -255,6 +262,51 @@ def upload_file():
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
                                    state=state, zipcode=zipcode)
     return 'File upload failed'
+
+
+
+
+
+@app.route('/update-fields')
+def update_fields():
+    type_ = request.args.get('type')
+    if type_ == 'advanced':
+        fields = '''
+        <div class="form-group">
+            <label for="extra">Additional Information:</label>
+            <input type="text" id="extra" name="extra" class="form-control">
+        </div>
+        '''
+    else:
+        fields = ''
+    return fields
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    address = request.form.get('address')
+    extra = request.form.get('extra', '')
+    
+    if not name or not email:
+        return "<p>Error: Name and Email are required!</p>", 400
+    
+    response = f"""
+    <div class="alert alert-success">
+        <h4>Submission Successful!</h4>
+        <p><strong>Name:</strong> {name}</p>
+        <p><strong>Email:</strong> {email}</p>
+        <p><strong>Phone:</strong> {phone}</p>
+        <p><strong>Address:</strong> {address}</p>
+        <p><strong>Additional Info:</strong> {extra}</p>
+    </div>
+    """
+    return response
+
+
+
+
 
 
 def allowed_file(filename):
