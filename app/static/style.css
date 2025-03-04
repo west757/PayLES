@@ -103,7 +103,7 @@ tr.matrix:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-form {
+.formtest {
     margin-bottom: 20px;
 }
 
@@ -111,28 +111,17 @@ form {
     margin-bottom: 15px;
 }
 
-label {
+.labeltest {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
 }
 
 textarea {
     height: 100px;
 }
 
-button {
+.btn btn-primary {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -142,9 +131,9 @@ button {
     cursor: pointer;
 }
 
-    button:hover {
-        background-color: #0056b3;
-    }
+.btn btn-primary:hover {
+    background-color: #0056b3;
+}
 
 .alert {
     padding: 15px;

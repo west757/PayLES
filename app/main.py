@@ -281,25 +281,23 @@ def update_fields():
         fields = ''
     return fields
 
+
+
+
 @app.route('/submit', methods=['POST'])
 def submit():
     name = request.form.get('name')
     email = request.form.get('email')
     phone = request.form.get('phone')
-    address = request.form.get('address')
-    extra = request.form.get('extra', '')
     
     if not name or not email:
         return "<p>Error: Name and Email are required!</p>", 400
     
     response = f"""
     <div class="alert alert-success">
-        <h4>Submission Successful!</h4>
         <p><strong>Name:</strong> {name}</p>
         <p><strong>Email:</strong> {email}</p>
         <p><strong>Phone:</strong> {phone}</p>
-        <p><strong>Address:</strong> {address}</p>
-        <p><strong>Additional Info:</strong> {extra}</p>
     </div>
     """
     return response
