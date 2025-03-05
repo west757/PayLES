@@ -266,8 +266,8 @@ def upload_file():
 
 
 
-@app.route('/submit', methods=['POST'])
-def submit():
+@app.route('/submit123', methods=['POST'])
+def submit123():
     name = request.form.get('name')
     email = request.form.get('email')
     phone = request.form.get('phone')
