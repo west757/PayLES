@@ -109,6 +109,9 @@ tr.matrix.selected {
     font-size: 16px;
 }
 
+.updatebutton:hover {
+    background-color: #0056b3;
+}
 
 
 
