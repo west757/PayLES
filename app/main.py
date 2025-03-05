@@ -42,6 +42,7 @@ month4 = ""
 month5 = ""
 month6 = ""
 monthsafter = [month1, month2, month3, month4, month5, month6]
+monthsafter2 = ["", "", "", "", "", ""]
 state = ""
 grade = ""
 zipcode = 0
@@ -81,13 +82,15 @@ sgli4 = 0
 sgli5 = 0
 sgli6 = 0
 
+sgliarray = [0, 0, 0, 0, 0, 0, 0]
+
 
 @app.route('/')
 def home():
     return render_template('index.html', months=months, states=states, ranks=ranks,
                                    grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6,
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray,
                                    sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
                                    rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
@@ -128,6 +131,8 @@ def upload_file():
                 text = textstring.split()
 
                 #print(text)
+
+                global monthsafter
 
                 #find month
                 for x in months:
@@ -191,6 +196,15 @@ def upload_file():
                 #find SGLI
                 if 'SGLI' in text:
                     sgli0 = Decimal(text[(text.index('SGLI')+1)])
+                    
+                    sgliarray[0] = sgli0
+                    sgliarray[1] = sgli0
+                    sgliarray[2] = sgli0
+                    sgliarray[3] = sgli0
+                    sgliarray[4] = sgli0
+                    sgliarray[5] = sgli0
+                    sgliarray[6] = sgli0
+
                     for x in sglipremiums:
                         if x == sgli0:
                             sglicoverage = sglicoverages[sglipremiums.index(int(sgli0))]
@@ -252,16 +266,54 @@ def upload_file():
                 else:
                     zipcode = 0
 
-
             return render_template('index.html', months=months, states=states, ranks=ranks,
                                    filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
                                    ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6,
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray,
                                    sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
                                    rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
                                    month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
                                    state=state, zipcode=zipcode)
     return 'File upload failed'
+
+
+
+@app.route('/updatematrix', methods=['POST'])
+def updatematrix():
+    global sgliarray
+    global monthsafter
+    updatedsgli = request.form.get('sglipremiumafter')
+    sglimonthafter = request.form.get('sglimonthafter')
+    
+    print("updated sgli: ", updatedsgli)
+    print("sglimonthafter: ", sglimonthafter)
+
+    for x in monthsafter:
+        print("month: ", x)
+
+    sglimonthafterindex = monthsafter.index(sglimonthafter)
+    print("sglimonthafterindex: ", sglimonthafterindex)
+
+
+    for i in range(len(sgliarray) - 1):
+        if i >= sglimonthafterindex:
+            sgliarray[i] = Decimal(updatedsgli)
+
+    print("sgliarray[0]: ", sgliarray[0])
+    print("sgliarray[1]: ", sgliarray[1])
+    print("sgliarray[2]: ", sgliarray[2])
+    print("sgliarray[3]: ", sgliarray[3])
+    print("sgliarray[4]: ", sgliarray[4])
+    print("sgliarray[5]: ", sgliarray[5])
+
+    return render_template('index.html', months=months, states=states, ranks=ranks,
+                            grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+                            ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+                            sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray,
+                            sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
+                            rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                            month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                            state=state, zipcode=zipcode)
 
 
 
