@@ -357,7 +357,7 @@ def updatesgli():
     sglimonthupdate = sglimonthafter
     print("sglimonthupdate: ", sglimonthupdate)
 
-    return sgliupdate
+    return sgliarray
 
 
 
@@ -373,9 +373,9 @@ def submit123():
     
     response = f"""
     <div class="alert alert-success">
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Phone:</strong> {phone}</p>
+        <p>Name: {name}</p>
+        <p>Email: {email}</p>
+        <p>Phone: {phone}</p>
     </div>
     """
     return response

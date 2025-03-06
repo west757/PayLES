@@ -145,7 +145,8 @@
 
                 <!-- SGLI -->
                 <tr class="matrix">
-                    <form action="/updatesgli" method="POST" id="sgliform">
+                    <!--<form action="/updatesgli" method="POST" id="sgliform">-->
+                    <form hx-post="/updatesgli" id="updatesgliID" hx-swap="innerHTML">
                         <td class="matrix">SGLI</td>
                         <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
                         <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
@@ -158,7 +159,7 @@
                     
                         <!-- SGLI update premium -->
                         <td class="matrix">
-                            <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
+                            <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter" onchange="updatesgliID.updatesgli()">
                                 {% for x in sglipremiums[0:] %}
                                 <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
                                 {% endfor %}
@@ -167,7 +168,7 @@
 
                         <!-- SGLI update month -->
                         <td class="matrix">
-                            <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
+                            <select class="matrix" id="sglimonthafterid" name="sglimonthafter" onchange="updatesgliID.updatesgli()">
                                 {% for x in montharray[1:] %}
                                 <option value="{{x}}">{{x}}</option>
                                 {% endfor %}
@@ -306,23 +307,23 @@
     <script>
 
 
-        const sglivaluedropdown = document.getElementById("sglipremiumafterid");
-        sglivaluedropdown.addEventListener("change", function() {
-            document.getElementById("sgliform").submit();
-        });
+        //const sglivaluedropdown = document.getElementById("sglipremiumafterid");
+        //sglivaluedropdown.addEventListener("change", function() {
+        //    document.getElementById("sgliform").submit();
+        //});
 
-        const sglimonthdropdown = document.getElementById("sglimonthafterid");
-        sglimonthdropdown.addEventListener("change", function() {
-            document.getElementById("sgliform").submit();
-        });
+        //const sglimonthdropdown = document.getElementById("sglimonthafterid");
+        //sglimonthdropdown.addEventListener("change", function() {
+        //    document.getElementById("sgliform").submit();
+        //});
 
 
         
-        function selectElement(id, valueToSelect) {    
-            document.getElementById(id).value = valueToSelect;
-        }
-        selectElement('sglipremiumafterid', {{sgliupdate}});
-        selectElement('sglimonthafterid', {{sglimonthupdate}});
+        //function selectElement(id, valueToSelect) {    
+        //    document.getElementById(id).value = valueToSelect;
+        //}
+        //selectElement('sglipremiumafterid', {{sgliupdate}});
+        //selectElement('sglimonthafterid', {{sglimonthupdate}});
         
 
 
