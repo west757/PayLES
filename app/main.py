@@ -132,7 +132,44 @@ def upload_file():
 
                 #print(text)
 
+                global month
+                global month1
+                global month2
+                global month3
+                global month4
+                global month5
+                global month6
                 global monthsafter
+                global monthsafter2
+                global state
+                global grade
+                global zipcode
+                global basepay
+                global bas
+                global bah
+                global ueainitial
+                global advancedebt
+                global federaltaxes
+                global ficasocsecurity
+                global ficamedicare
+                global sgli
+                global statetaxes
+                global rothtsp
+                global midmonthpay
+                global debt
+                global partialpay
+                global pcsmembers
+                global grosspay
+                global netpay
+                global sglicoverage
+                global sgli0
+                global sgli1
+                global sgli2
+                global sgli3
+                global sgli4
+                global sgli5
+                global sgli6
+                global sgliarray
 
                 #find month
                 for x in months:
@@ -282,9 +319,11 @@ def upload_file():
 def updatematrix():
     global sgliarray
     global monthsafter
-    updatedsgli = request.form.get('sglipremiumafter')
-    sglimonthafter = request.form.get('sglimonthafter')
+    #updatedsgli = request.form.get('sglipremiumafter')
+    updatedsgli = request.form['sglipremiumafter']
+    sglimonthafter = request.form['sglimonthafter']
     
+
     print("updated sgli: ", updatedsgli)
     print("sglimonthafter: ", sglimonthafter)
 
@@ -306,14 +345,15 @@ def updatematrix():
     print("sgliarray[4]: ", sgliarray[4])
     print("sgliarray[5]: ", sgliarray[5])
 
+
     return render_template('index.html', months=months, states=states, ranks=ranks,
-                            grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
-                            ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                            sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray,
-                            sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
-                            rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                            month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-                            state=state, zipcode=zipcode)
+                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray,
+                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages,
+                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                                   state=state, zipcode=zipcode)
 
 
 
