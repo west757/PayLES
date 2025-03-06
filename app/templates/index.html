@@ -145,42 +145,34 @@
 
                 <!-- SGLI -->
                 <tr class="matrix">
-                    <td class="matrix">SGLI</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[2])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[3])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[4])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[5])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[6])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
+                    <form action="/updatesgli" method="POST" id="sgliform">
+                        <td class="matrix">SGLI</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[2])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[3])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[4])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[5])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[6])}}</td>
+                        <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
                     
-                    <!-- SGLI update premium -->
-                    <td class="matrix">
-                        <form action="/updatematrix" method="POST" id="sgliform">
-                            <!--<label class="labelclassforcss" for="sglipremiumafter"></label>-->
-                            <!--<select class="matrix form-control" id="sglipremiumafter" name="sglipremiumafter" method="GET" action="/index">-->
+                        <!-- SGLI update premium -->
+                        <td class="matrix">
                             <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
-                                <option value="{{sglipremiums[0]}}" selected>{{"${:,.2f}".format(sglipremiums[0])}}</option>
-                                {% for sglival in sglipremiums[1:] %}
-                                <option value="{{sglival}}">{{"${:,.2f}".format(sglival)}}</option>
+                                {% for x in sglipremiums[0:] %}
+                                <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
                                 {% endfor %}
                             </select>
-                        
-                    </td>
+                        </td>
 
-
-                    <!-- SGLI update month -->
-                    <td class="matrix">
-                        <!--<label class="labelclassforcss" for="sglimonthafter"></label>-->
-                        <!--<select class="matrix form-control" id="sglimonthafter" name="sglimonthafter" method="GET" action="/index">-->
-                        <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
+                        <!-- SGLI update month -->
+                        <td class="matrix">
+                            <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
+                                {% for x in montharray[1:] %}
+                                <option value="{{x}}">{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
                     </form>
                 </tr>
                 
@@ -278,9 +270,6 @@
     </div>
     
     <!--</form>-->
-    
-
-
 
 
     <div class="containertest">
@@ -317,17 +306,24 @@
     <script>
 
 
-        const dropdown123 = document.getElementById("sglipremiumafterid");
-        dropdown123.addEventListener("change", function() {
+        const sglivaluedropdown = document.getElementById("sglipremiumafterid");
+        sglivaluedropdown.addEventListener("change", function() {
             document.getElementById("sgliform").submit();
         });
 
-        const dropdown456 = document.getElementById("sglimonthafterid");
-        dropdown456.addEventListener("change", function() {
+        const sglimonthdropdown = document.getElementById("sglimonthafterid");
+        sglimonthdropdown.addEventListener("change", function() {
             document.getElementById("sgliform").submit();
         });
 
 
+        
+        function selectElement(id, valueToSelect) {    
+            document.getElementById(id).value = valueToSelect;
+        }
+        selectElement('sglipremiumafterid', {{sgliupdate}});
+        selectElement('sglimonthafterid', {{sglimonthupdate}});
+        
 
 
 
