@@ -15,8 +15,9 @@
 		    <input type = "submit" value="Upload LES"/>
     </form>
 
-    <form hx-post="/updatematrix">
-
+    
+    <!-- <form hx-post="/updatematrix"> -->
+    
     <div class="matrix">
         <table class="matrix">
             <thead class="matrix">
@@ -144,7 +145,6 @@
 
                 <!-- SGLI -->
                 <tr class="matrix">
-                    
                     <td class="matrix">SGLI</td>
                     <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
                     <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
@@ -157,28 +157,33 @@
                     
                     <!-- SGLI update premium -->
                     <td class="matrix">
-                        <label class="labelclassforcss" for="sglipremiumafter"></label>
-                        <!--<select class="matrix form-control" id="sglipremiumafter" name="sglipremiumafter" method="GET" action="/index">-->
-                        <select class="matrix form-control" id="sglipremiumafter" name="sglipremiumafter">
-                            <option value="{{sglipremiums[0]}}" selected>{{"${:,.2f}".format(sglipremiums[0])}}</option>
-                            {% for sglival in sglipremiums[1:] %}
-                            <option value="{{sglival}}">{{"${:,.2f}".format(sglival)}}</option>
-                            {% endfor %}
-                        </select>
+                        <form action="/updatematrix" method="POST" id="sgliform">
+                            <!--<label class="labelclassforcss" for="sglipremiumafter"></label>-->
+                            <!--<select class="matrix form-control" id="sglipremiumafter" name="sglipremiumafter" method="GET" action="/index">-->
+                            <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
+                                <option value="{{sglipremiums[0]}}" selected>{{"${:,.2f}".format(sglipremiums[0])}}</option>
+                                {% for sglival in sglipremiums[1:] %}
+                                <option value="{{sglival}}">{{"${:,.2f}".format(sglival)}}</option>
+                                {% endfor %}
+                            </select>
+                        
                     </td>
+
 
                     <!-- SGLI update month -->
                     <td class="matrix">
-                        <label class="labelclassforcss" for="sglimonthafter"></label>
+                        <!--<label class="labelclassforcss" for="sglimonthafter"></label>-->
                         <!--<select class="matrix form-control" id="sglimonthafter" name="sglimonthafter" method="GET" action="/index">-->
-                        <select class="matrix form-control" id="sglimonthafter" name="sglimonthafter">
+                        <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
                             <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
                             {% for mon in monthsafter[1:] %}
                             <option value="{{mon}}">{{mon}}</option>
                             {% endfor %}
                         </select>
                     </td>
+                    </form>
                 </tr>
+                
 
                 <!-- State Taxes -->
                 <tr class="matrix">
@@ -271,8 +276,9 @@
     <div class="updatebuttondiv">
         <button class="updatebutton" type="submit">Update</button>
     </div>
-
-    </form>
+    
+    <!--</form>-->
+    
 
 
 
@@ -309,6 +315,22 @@
 
 
     <script>
+
+
+        const dropdown123 = document.getElementById("sglipremiumafterid");
+        dropdown123.addEventListener("change", function() {
+            document.getElementById("sgliform").submit();
+        });
+
+        const dropdown456 = document.getElementById("sglimonthafterid");
+        dropdown456.addEventListener("change", function() {
+            document.getElementById("sgliform").submit();
+        });
+
+
+
+
+
         // Adding selection behavior for rows
         document.querySelectorAll("tr").forEach(function(row) {
             row.addEventListener("click", function() {
