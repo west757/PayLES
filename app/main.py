@@ -420,8 +420,6 @@ def buildmatrix():
     global grosspayarray
     global netpayarray
 
-    monthsafter = [month1, month2, month3, month4, month5, month6]
-
     matrix = f"""
     <table class="matrix">
         <thead class="matrix">
@@ -438,7 +436,6 @@ def buildmatrix():
         </thead>
         <tbody>
             <tr class="matrix">
-                <!-- Base Pay -->
                 <td class="matrix">Base Pay</td>
                 <td class="matrix">{'${:,.2f}'.format(basepayarray[0])}</td>
                 <td class="matrix">{'${:,.2f}'.format(basepayarray[1])}</td>
@@ -449,7 +446,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(basepayarray[6])}</td>
             </tr>
 
-            <!-- BAS -->
             <tr class="matrix">
                 <td class="matrix">BAS</td>
                 <td class="matrix">{'${:,.2f}'.format(basarray[0])}</td>
@@ -461,7 +457,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(basarray[6])}</td>
             </tr>
 
-            <!-- BAH -->
             <tr class="matrix">
                 <td class="matrix">BAH</td>
                 <td class="matrix">{'${:,.2f}'.format(baharray[0])}</td>
@@ -473,7 +468,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(baharray[6])}</td>
             </tr>
 
-            <!-- Federal Taxes -->
             <tr class="matrix">
                 <td class="matrix">Federal Taxes</td>
                 <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[0])}</td>
@@ -485,7 +479,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[6])}</td>
             </tr>
 
-            <!-- FICA - Social Security -->
             <tr class="matrix">
                 <td class="matrix">FICA - Social Security</td>
                 <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[0])}</td>
@@ -497,7 +490,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[6])}</td>
             </tr>
 
-            <!-- FICA - Medicare -->
             <tr class="matrix">
                 <td class="matrix">FICA - Medicare</td>
                 <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[0])}</td>
@@ -509,7 +501,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[6])}</td>
             </tr>
 
-            <!-- SGLI -->
             <tr class="matrix">
                 <td class="matrix">SGLI</td>
                 <td class="matrix">{'${:,.2f}'.format(sgliarray[0])}</td>
@@ -521,7 +512,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(sgliarray[6])}</td>
             </tr>
                 
-            <!-- State Taxes -->
             <tr class="matrix">
                 <td class="matrix">State Taxes</td>
                 <td class="matrix">{'${:,.2f}'.format(statetaxesarray[0])}</td>
@@ -533,7 +523,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(statetaxesarray[6])}</td>
             </tr>
 
-            <!-- Roth TSP -->
             <tr class="matrix">
                 <td class="matrix">Roth TSP</td>
                 <td class="matrix">{'${:,.2f}'.format(rothtsparray[0])}</td>
@@ -545,12 +534,10 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(rothtsparray[6])}</td>
             </tr>
 
-            <!-- Spacer -->
             <tr class="matrix">
                 <td class="matrix" colspan="8" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
             </tr>
 
-            <!-- Gross Pay -->
             <tr class="matrix">
                 <td class="matrix">Gross Pay</td>
                 <td class="matrix">{'${:,.2f}'.format(grosspayarray[0])}</td>
@@ -562,7 +549,6 @@ def buildmatrix():
                 <td class="matrix">{'${:,.2f}'.format(grosspayarray[6])}</td>
             </tr>
 
-            <!-- Net Pay -->
             <tr class="matrix">
                 <td class="matrix">Net Pay</td>
                 <td class="matrix">{'${:,.2f}'.format(netpayarray[0])}</td>
@@ -577,6 +563,75 @@ def buildmatrix():
     </table>
     """
     return matrix
+
+
+
+
+
+
+@app.route('/buildtest', methods=['POST'])
+def buildtest():
+
+
+    global month
+    global month1
+    global month2
+    global month3
+    global month4
+    global month5
+    global month6
+    global monthsafter
+    global monthsafter2
+    global state
+    global grade
+    global zipcode
+    global basepay
+    global bas
+    global bah
+    global ueainitial
+    global advancedebt
+    global federaltaxes
+    global ficasocsecurity
+    global ficamedicare
+    global sgli
+    global statetaxes
+    global rothtsp
+    global midmonthpay
+    global debt
+    global partialpay
+    global pcsmembers
+    global grosspay
+    global netpay
+    global sglicoverage
+    global sgli0
+    global sgli1
+    global sgli2
+    global sgli3
+    global sgli4
+    global sgli5
+    global sgli6
+    global sgliarray
+    global montharray
+    global sgliupdate
+    global sglimonthupdate
+    global basepayarray
+    global basarray
+    global baharray
+    global federaltaxesarray
+    global ficasocialsecurityarray
+    global ficamedicarearray
+    global statetaxesarray
+    global rothtsparray
+    global grosspayarray
+    global netpayarray
+
+    test = f"""
+    <p>test</p>
+    """
+    return test
+
+
+
 
 
 
