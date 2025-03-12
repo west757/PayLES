@@ -358,7 +358,19 @@ def uploadfile():
                 else:
                     zipcode = 0
 
-            return buildmatrix()
+
+            #return buildmatrix()
+            return render_template('les.html', months=months, states=states, ranks=ranks, montharray=montharray,
+                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
+                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
+                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                                   state=state, zipcode=zipcode,
+                                   basepayarray=basepayarray, basarray=basarray, baharray=baharray, federaltaxesarray=federaltaxesarray, 
+                                   ficasocialsecurityarray=ficasocialsecurityarray, statetaxesarray=statetaxesarray, rothtsparray=rothtsparray, grosspayarray=grosspayarray,
+                                   netpayarray=netpayarray, ficamedicarearray=ficamedicarearray)
 
     return 'File upload failed'
 
@@ -566,77 +578,6 @@ def buildmatrix():
 
 
 
-
-
-
-@app.route('/buildtest', methods=['POST'])
-def buildtest():
-
-
-    global month
-    global month1
-    global month2
-    global month3
-    global month4
-    global month5
-    global month6
-    global monthsafter
-    global monthsafter2
-    global state
-    global grade
-    global zipcode
-    global basepay
-    global bas
-    global bah
-    global ueainitial
-    global advancedebt
-    global federaltaxes
-    global ficasocsecurity
-    global ficamedicare
-    global sgli
-    global statetaxes
-    global rothtsp
-    global midmonthpay
-    global debt
-    global partialpay
-    global pcsmembers
-    global grosspay
-    global netpay
-    global sglicoverage
-    global sgli0
-    global sgli1
-    global sgli2
-    global sgli3
-    global sgli4
-    global sgli5
-    global sgli6
-    global sgliarray
-    global montharray
-    global sgliupdate
-    global sglimonthupdate
-    global basepayarray
-    global basarray
-    global baharray
-    global federaltaxesarray
-    global ficasocialsecurityarray
-    global ficamedicarearray
-    global statetaxesarray
-    global rothtsparray
-    global grosspayarray
-    global netpayarray
-
-    test = f"""
-    <p>test</p>
-    """
-    return test
-
-
-
-
-
-
-
-
 @app.route('/updatematrix', methods=['POST'])
 def updatematrix():
 
@@ -707,7 +648,18 @@ def updatematrix():
 
     sglimonthupdate = sglimonthafter
 
-    return buildmatrix()
+    #return buildmatrix()
+    return render_template('les.html', months=months, states=states, ranks=ranks, montharray=montharray,
+                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
+                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
+                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+                                   state=state, zipcode=zipcode,
+                                   basepayarray=basepayarray, basarray=basarray, baharray=baharray, federaltaxesarray=federaltaxesarray, 
+                                   ficasocialsecurityarray=ficasocialsecurityarray, statetaxesarray=statetaxesarray, rothtsparray=rothtsparray, grosspayarray=grosspayarray,
+                                   netpayarray=netpayarray, ficamedicarearray=ficamedicarearray)
 
 
 
