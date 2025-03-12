@@ -10,9 +10,9 @@
 
 <body>
 
-    <form hx-post="/uploadfile" hx-target="#matrixid" hx-swap="innerHTML" enctype = "multipart/form-data">
-		    <input type = "file" name = "file" />
-		    <input type = "submit" value="Upload LES"/>
+    <form hx-post="/uploadfile" hx-target="#matrixid" hx-swap="innerHTML" enctype="multipart/form-data">
+		    <input type="file" name="file"/>
+		    <input type="submit" value="Upload LES"/>
     </form>
 
 
@@ -21,7 +21,7 @@
 
     
     
-    <div class="inputs">
+    <div class="inputs" id="inputsid">
         <form hx-post="/updatematrix" hx-target="#matrixid" hx-swap="innerHTML">
             <table class="matrix">
                 <thead class="matrix">
@@ -145,7 +145,7 @@
     </div>
     
 
-
+    <!--
     <div class="containertest">
         <form hx-post="/submit123" hx-target="#response" hx-swap="innerHTML">
             <label class="labeltest" for="name">Name:</label>
@@ -177,7 +177,7 @@
             </div>
         </div>
     </div>
-
+    -->
 
 
 
