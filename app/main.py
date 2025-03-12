@@ -193,7 +193,6 @@ def uploadfile():
                 global montharray
                 global sgliupdate
                 global sglimonthupdate
-
                 global basepayarray
                 global basarray
                 global baharray
@@ -362,15 +361,6 @@ def uploadfile():
 
             return buildmatrix()
 
-            #return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
-            #                      filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, 
-            #                      statetaxes=statetaxes,
-            #                      ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-            #                      sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
-            #                      sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
-            #                      rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-            #                      month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-            #                      state=state, zipcode=zipcode)
     return 'File upload failed'
 
 
@@ -431,6 +421,7 @@ def buildmatrix():
     global grosspayarray
     global netpayarray
 
+    monthsafter = [month1, month2, month3, month4, month5, month6]
 
     matrix = f"""
     <table class="matrix">
@@ -591,40 +582,78 @@ def buildmatrix():
 
 
 
-#@app.route('/updatematrix', methods=['POST'])
-#def updatematrix():
-#    global sgliarray
-#    global monthsafter
-#    global montharray
-#    global sgliupdate
-#    global sglimonthupdate
-#    updatedsgli = request.form['sglipremiumafter']
-#    sglimonthafter = request.form['sglimonthafter']
-#    sglimonthafterindex = montharray.index(sglimonthafter)
+@app.route('/updatematrix', methods=['POST'])
+def updatematrix():
 
-#    print("sglimonthafter: ", sglimonthafter)
 
-#    for i in range(len(sgliarray)):
-#        if i >= sglimonthafterindex and i > 0:
-#            sgliarray[i] = Decimal(updatedsgli)
-#        else:
-#            sgliarray[i] = sgliarray[0]
+    global month
+    global month1
+    global month2
+    global month3
+    global month4
+    global month5
+    global month6
+    global monthsafter
+    global monthsafter2
+    global state
+    global grade
+    global zipcode
+    global basepay
+    global bas
+    global bah
+    global ueainitial
+    global advancedebt
+    global federaltaxes
+    global ficasocsecurity
+    global ficamedicare
+    global sgli
+    global statetaxes
+    global rothtsp
+    global midmonthpay
+    global debt
+    global partialpay
+    global pcsmembers
+    global grosspay
+    global netpay
+    global sglicoverage
+    global sgli0
+    global sgli1
+    global sgli2
+    global sgli3
+    global sgli4
+    global sgli5
+    global sgli6
+    global sgliarray
+    global montharray
+    global sgliupdate
+    global sglimonthupdate
+    global basepayarray
+    global basarray
+    global baharray
+    global federaltaxesarray
+    global ficasocialsecurityarray
+    global ficamedicarearray
+    global statetaxesarray
+    global rothtsparray
+    global grosspayarray
+    global netpayarray
 
-#    sgliupdate = updatedsgli
+    updatedsgli = request.form['sglipremiumafter']
+    sglimonthafter = request.form['sglimonthafter']
+    sglimonthafterindex = montharray.index(sglimonthafter)
 
-#    sglimonthupdate = sglimonthafter
-#    print("sglimonthupdate: ", sglimonthupdate)
+    for i in range(len(sgliarray)):
+        if i >= sglimonthafterindex and i > 0:
+            sgliarray[i] = Decimal(updatedsgli)
+        else:
+            sgliarray[i] = sgliarray[0]
 
-#    sglidisplay = f"""
-#        <td class="matrix">{sgliarray[1]}</td>
-#        <td class="matrix">{sgliarray[2]}</td>
-#        <td class="matrix">{sgliarray[3]}</td>
-#        <td class="matrix">{sgliarray[4]}</td>
-#        <td class="matrix">{sgliarray[5]}</td>
-#        <td class="matrix">{sgliarray[6]}</td>
-#    """
+    sgliupdate = updatedsgli
 
-#   return sglidisplay
+    sglimonthupdate = sglimonthafter
+    print("sglimonthupdate: ", sglimonthupdate)
+
+    return buildmatrix()
 
 
 
