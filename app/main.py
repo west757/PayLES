@@ -28,7 +28,7 @@ stateslong = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','C
 states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO',
           'MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
 ranks = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
-         'W1', 'W2', 'W3', 'W4', 'W5', 
+         'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
          'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
 sglicoverages = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
 sglipremiums = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
@@ -144,7 +144,6 @@ def uploadfile():
             with pdfplumber.open(file) as les:
                 #gets all the content of the first page of the LES
                 page = les.pages[0]
-                #text = page.extract_text(x_tolerance=3, x_tolerance_ratio=None, y_tolerance=3, layout=False, x_density=7.25, y_density=13, line_dir_render=None, char_dir_render=None)
                 #creates a string of all text from the LES
                 textstring = page.extract_text()
                 #creates an array of all text separated by a space
@@ -240,49 +239,43 @@ def uploadfile():
 
                 #find base pay
                 if 'BASE' in text:
-                    basepay = Decimal(text[(text.index('BASE')+2)])
                     for i in range(len(basepayarray)):
-                        basepayarray[i] = basepay
+                        basepayarray[i] = Decimal(text[(text.index('BASE')+2)])
                 else:
                     basepay = 0
 
                 #find BAS
                 if 'BAS' in text:
-                    bas = Decimal(text[(text.index('BAS')+1)])
                     for i in range(len(basarray)):
-                        basarray[i] = bas
+                        basarray[i] = Decimal(text[(text.index('BAS')+1)])
                 else:
                     bas = 0
 
                 #find BAH
                 if 'BAH' in text:
-                    bah = Decimal(text[(text.index('BAH')+1)])
                     for i in range(len(baharray)):
-                        baharray[i] = bah
+                        baharray[i] = Decimal(text[(text.index('BAH')+1)])
                 else:
                     bah = 0
 
                 #find federal taxes
                 if 'FEDERAL' in text and text[text.index('FEDERAL')+1] == "TAXES":
-                    federaltaxes = Decimal(text[(text.index('FEDERAL')+2)])
                     for i in range(len(federaltaxesarray)):
-                        federaltaxesarray[i] = federaltaxes
+                        federaltaxesarray[i] = Decimal(text[(text.index('FEDERAL')+2)])
                 else:
                     federaltaxes = 0
 
                 #find FICA - Social Security
                 if 'SECURITY' in text:
-                    ficasocsecurity = Decimal(text[(text.index('SECURITY')+1)])
                     for i in range(len(ficasocialsecurityarray)):
-                        ficasocialsecurityarray[i] = ficasocsecurity
+                        ficasocialsecurityarray[i] = Decimal(text[(text.index('SECURITY')+1)])
                 else:
                     ficasocsecurity = 0
 
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in text:
-                    ficamedicare = Decimal(text[(text.index('FICA-MEDICARE')+1)])
                     for i in range(len(ficamedicarearray)):
-                        ficamedicarearray[i] = ficamedicare
+                        ficamedicarearray[i] = Decimal(text[(text.index('FICA-MEDICARE')+1)])
                 else:
                     ficamedicare = 0
 
@@ -318,17 +311,15 @@ def uploadfile():
 
                 #find state taxes
                 if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
-                    statetaxes = Decimal(text[(text.index('STATE')+2)])
                     for i in range(len(statetaxesarray)):
-                        statetaxesarray[i] = statetaxes
+                        statetaxesarray[i] = Decimal(text[(text.index('STATE')+2)])
                 else:
                     statetaxes = 0
 
                 #find Roth TSP
                 if 'ROTH' in text:
-                    rothtsp = Decimal(text[(text.index('ROTH')+2)])
                     for i in range(len(rothtsparray)):
-                        rothtsparray[i] = rothtsp
+                        rothtsparray[i] = Decimal(text[(text.index('ROTH')+2)])
                 else:
                     rothtsp = 0
 
@@ -340,9 +331,8 @@ def uploadfile():
 
                 #find gross pay
                 if 'ENT' in text:
-                    grosspay = Decimal(text[(text.index('ENT')+1)])
                     for i in range(len(grosspayarray)):
-                        grosspayarray[i] = grosspay
+                        grosspayarray[i] = Decimal(text[(text.index('ENT')+1)])
                 else:
                     grosspay = 0
 
@@ -373,7 +363,8 @@ def uploadfile():
             return buildmatrix()
 
             #return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
-            #                      filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+            #                      filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, 
+            #                      statetaxes=statetaxes,
             #                      ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
             #                      sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
             #                      sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
