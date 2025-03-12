@@ -118,7 +118,6 @@ def home():
 
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
-    #file = request.form.get('file')
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -651,7 +650,6 @@ def updatematrix():
     sgliupdate = updatedsgli
 
     sglimonthupdate = sglimonthafter
-    print("sglimonthupdate: ", sglimonthupdate)
 
     return buildmatrix()
 
