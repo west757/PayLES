@@ -10,7 +10,6 @@
 
 <body>
 
-    <!--<form action = "/uploadfile" method = "POST" enctype = "multipart/form-data">-->
     <form hx-post="/uploadfile" hx-target="#matrixid" hx-swap="innerHTML" enctype = "multipart/form-data">
 		    <input type = "file" name = "file" />
 		    <input type = "submit" value="Upload LES"/>
@@ -21,9 +20,9 @@
     </div>
 
     
-    <!--
+    
     <div class="inputs">
-        <form hx-post="/buildmatrix" hx-target="#matrixid" hx-swap="innerHTML">
+        <form hx-post="/updatematrix" hx-target="#matrixid" hx-swap="innerHTML">
             <table class="matrix">
                 <thead class="matrix">
                     <tr class="matrix">
@@ -35,7 +34,6 @@
 
                 <tbody>
                     <tr class="matrix">
-
                         <td class="matrix">{{grade}}</td>
                         <td class="matrix">
                             <select class="matrix" name="ranks" method="GET" action="/index">
@@ -56,24 +54,24 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">BAS</td>
+                        <td class="matrix" colspan=3>BAS</td>
                     </tr>
 
 
                     <tr class="matrix">
-                        <td class="matrix">BAH</td>
+                        <td class="matrix" colspan=3>BAH</td>
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Federal Taxes</td>
+                        <td class="matrix" colspan=3>Federal Taxes</td>
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">FICA - Social Security</td>
+                        <td class="matrix" colspan=3>FICA - Social Security</td>
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">FICA - Medicare</td>
+                        <td class="matrix" colspan=3>FICA - Medicare</td>
                     </tr>
 
                     <tr class="matrix">
@@ -93,12 +91,8 @@
                                     <option value="{{x}}">{{x}}</option>
                                     {% endfor %}
                                 </select>
-
-                                <button type="submit">Submit</button>
                             </td>
                     </tr>
-        
-
 
                     <tr class="matrix">
                         <td class="matrix">State Taxes</td>
@@ -139,22 +133,16 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Gross Pay</td>
-                    </tr>
-
-
-                    <tr class="matrix">
-                        <td class="matrix">
-                                <div class="updatebuttondiv">
-                                    <button class="updatebutton" type="submit">Update</button>
-                                </div>
-                            </td>
+                        <td class="matrix" colspan=3>
+                            <div class="updatebuttondiv">
+                                <button class="updatebutton" type="submit">Update</button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </form>
     </div>
-        -->
     
 
 
