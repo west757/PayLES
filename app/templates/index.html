@@ -10,529 +10,155 @@
 
 <body>
 
-    <form action = "/index" method = "POST" enctype = "multipart/form-data">
+    <!--<form action = "/uploadfile" method = "POST" enctype = "multipart/form-data">-->
+    <form hx-post="/uploadfile" hx-target="#matrixid" hx-swap="innerHTML" enctype = "multipart/form-data">
 		    <input type = "file" name = "file" />
 		    <input type = "submit" value="Upload LES"/>
     </form>
 
 
-    <div class="matrix" id="mainmatrix">
-        <table class="matrix">
-            <thead class="matrix">
-                <tr class="matrix">
-                    <th class="matrix"></th>
-                    <th class="matrix">{{month}}</th>
-                    <th class="matrix">{{month1}}</th>
-                    <th class="matrix">{{month2}}</th>
-                    <th class="matrix">{{month3}}</th>
-                    <th class="matrix">{{month4}}</th>
-                    <th class="matrix">{{month5}}</th>
-                    <th class="matrix">{{month6}}</th>
-                    <td class="matrix" style="background-color: #CFD8DC; width: 8px; padding: 0px;"></td>
-                    <th class="matrix">Current</th>
-                    <th class="matrix">Future</th>
-                    <th class="matrix">Changing Month</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr class="matrix">
-
-                    <!-- Base Pay -->
-                    <td class="matrix">Base Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix" rowspan="12" style="background-color: #CFD8DC; width: 8px; padding: 0px;"></td>
-                    <td class="matrix">{{grade}}</td>
-                    <td class="matrix">
-                        <select class="matrix" name="ranks" method="GET" action="/index">
-                            <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
-                            {% for rank in ranks[1:] %}
-                            <option value="{{rank}}">{{rank}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- BAS -->
-                <tr class="matrix">
-                    <td class="matrix">BAS</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- BAH -->
-                <tr class="matrix">
-                    <td class="matrix">BAH</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{zipcode}}</td>
-                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- Federal Taxes -->
-                <tr class="matrix">
-                    <td class="matrix">Federal Taxes</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- FICA - Social Security -->
-                <tr class="matrix">
-                    <td class="matrix">FICA - Social Security</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- FICA - Medicare -->
-                <tr class="matrix">
-                    <td class="matrix">FICA - Medicare</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- SGLI -->
-                <tr class="matrix">
-                    <td class="matrix">SGLI</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[2])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[3])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[4])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[5])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[6])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-
-                    <!--<form hx-post="/updatesgli" hx-target="#sglidisplay" hx-swap="innerHTML">-->
-                        <!-- SGLI update premium -->
-                        <td class="matrix">
-                            <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
-                                {% for x in sglipremiums[0:] %}
-                                <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-
-                        <!-- SGLI update month -->
-                        <td class="matrix">
-                            <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
-                                {% for x in montharray[1:] %}
-                                <option value="{{x}}">{{x}}</option>
-                                {% endfor %}
-                            </select>
-
-                            <button type="submit">Submit</button>
-                        </td>
-                    <!--</form>-->
-                </tr>
-                
-
-                <!-- State Taxes -->
-                <tr class="matrix">
-                    <td class="matrix">State Taxes</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{state}}</td>
-                    <td class="matrix">
-                        <select class="matrix" name="states" method="GET" action="/index">
-                            <option value="{{states[0]}}" selected>{{states[0]}}</option>
-                            {% for state in states[1:] %}
-                            <option value="{{state}}">{{state}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- Roth TSP -->
-                <tr class="matrix">
-                    <td class="matrix">Roth TSP</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- Spacer -->
-                <tr class="matrix">
-                    <td class="matrix" colspan="12" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                </tr>
-
-                <!-- Gross Pay -->
-                <tr class="matrix">
-                    <td class="matrix">Gross Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- Net Pay -->
-                <tr class="matrix">
-                    <td class="matrix">Net Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="matrix" id="matrixid">
     </div>
 
     
-
+    <!--
     <div class="inputs">
-        <table class="matrix">
-            <thead class="matrix">
-                <tr class="matrix">
-                    <th class="matrix"></th>
-                    <th class="matrix">{{month}}</th>
-                    <th class="matrix">{{month1}}</th>
-                    <th class="matrix">{{month2}}</th>
-                    <th class="matrix">{{month3}}</th>
-                    <th class="matrix">{{month4}}</th>
-                    <th class="matrix">{{month5}}</th>
-                    <th class="matrix">{{month6}}</th>
-                    <td class="matrix" style="background-color: #CFD8DC; width: 8px; padding: 0px;"></td>
-                    <th class="matrix">Current</th>
-                    <th class="matrix">Future</th>
-                    <th class="matrix">Changing Month</th>
-                </tr>
-            </thead>
+        <form hx-post="/buildmatrix" hx-target="#matrixid" hx-swap="innerHTML">
+            <table class="matrix">
+                <thead class="matrix">
+                    <tr class="matrix">
+                        <th class="matrix">Current</th>
+                        <th class="matrix">Future</th>
+                        <th class="matrix">Changing Month</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr class="matrix">
+                <tbody>
+                    <tr class="matrix">
 
-                    <!-- Base Pay -->
-                    <td class="matrix">Base Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                    <td class="matrix" rowspan="12" style="background-color: #CFD8DC; width: 8px; padding: 0px;"></td>
-                    <td class="matrix">{{grade}}</td>
-                    <td class="matrix">
-                        <select class="matrix" name="ranks" method="GET" action="/index">
-                            <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
-                            {% for rank in ranks[1:] %}
-                            <option value="{{rank}}">{{rank}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- BAS -->
-                <tr class="matrix">
-                    <td class="matrix">BAS</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- BAH -->
-                <tr class="matrix">
-                    <td class="matrix">BAH</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                    <td class="matrix">{{zipcode}}</td>
-                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 title="futurezipcode"/></td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-
-                <!-- Federal Taxes -->
-                <tr class="matrix">
-                    <td class="matrix">Federal Taxes</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- FICA - Social Security -->
-                <tr class="matrix">
-                    <td class="matrix">FICA - Social Security</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- FICA - Medicare -->
-                <tr class="matrix">
-                    <td class="matrix">FICA - Medicare</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-
-                <!-- SGLI -->
-                <tr class="matrix">
-                    <td class="matrix">SGLI</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[2])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[3])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[4])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[5])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[6])}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-
-                    <!--<form hx-post="/updatesgli" hx-target="#sglidisplay" hx-swap="innerHTML">-->
-                        <!-- SGLI update premium -->
+                        <td class="matrix">{{grade}}</td>
                         <td class="matrix">
-                            <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
-                                {% for x in sglipremiums[0:] %}
-                                <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
+                            <select class="matrix" name="ranks" method="GET" action="/index">
+                                <option value="{{ranks[0]}}" selected>{{ranks[0]}}</option>
+                                {% for rank in ranks[1:] %}
+                                <option value="{{rank}}">{{rank}}</option>
                                 {% endfor %}
                             </select>
                         </td>
-
-                        <!-- SGLI update month -->
                         <td class="matrix">
-                            <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
-                                {% for x in montharray[1:] %}
-                                <option value="{{x}}">{{x}}</option>
+                            <select class="matrix" name="monthsafter" method="GET" action="/index">
+                                <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                                {% for mon in monthsafter[1:] %}
+                                <option value="{{mon}}">{{mon}}</option>
                                 {% endfor %}
                             </select>
-
-                            <button type="submit">Submit</button>
                         </td>
-                    <!--</form>-->
-                </tr>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">BAS</td>
+                    </tr>
+
+
+                    <tr class="matrix">
+                        <td class="matrix">BAH</td>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">Federal Taxes</td>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">FICA - Social Security</td>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">FICA - Medicare</td>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">SGLI</td>
+
+                            <td class="matrix">
+                                <select class="matrix" id="sglipremiumafterid" name="sglipremiumafter">
+                                    {% for x in sglipremiums[0:] %}
+                                    <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+
+                            <td class="matrix">
+                                <select class="matrix" id="sglimonthafterid" name="sglimonthafter">
+                                    {% for x in montharray[1:] %}
+                                    <option value="{{x}}">{{x}}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <button type="submit">Submit</button>
+                            </td>
+                    </tr>
         
 
-                <!-- State Taxes -->
-                <tr class="matrix">
-                    <td class="matrix">State Taxes</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                    <td class="matrix">{{state}}</td>
-                    <td class="matrix">
-                        <select class="matrix" name="states" method="GET" action="/index">
-                            <option value="{{states[0]}}" selected>{{states[0]}}</option>
-                            {% for state in states[1:] %}
-                            <option value="{{state}}">{{state}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
 
-                <!-- Roth TSP -->
-                <tr class="matrix">
-                    <td class="matrix">Roth TSP</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                    <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
-                    <td class="matrix">
-                        <select class="matrix" name="monthsafter" method="GET" action="/index">
-                            <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
-                            {% for mon in monthsafter[1:] %}
-                            <option value="{{mon}}">{{mon}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
+                    <tr class="matrix">
+                        <td class="matrix">State Taxes</td>
+                        <td class="matrix">
+                            <select class="matrix" name="states" method="GET" action="/index">
+                                <option value="{{states[0]}}" selected>{{states[0]}}</option>
+                                {% for state in states[1:] %}
+                                <option value="{{state}}">{{state}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="matrix">
+                            <select class="matrix" name="monthsafter" method="GET" action="/index">
+                                <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                                {% for mon in monthsafter[1:] %}
+                                <option value="{{mon}}">{{mon}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
 
-                <!-- Spacer -->
-                <tr class="matrix">
-                    <td class="matrix" colspan="12" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                </tr>
 
-                <!-- Gross Pay -->
-                <tr class="matrix">
-                    <td class="matrix">Gross Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
+                    <tr class="matrix">
+                        <td class="matrix">Roth TSP</td>
+                        <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=6 title="futurerothtsp"/></td>
+                        <td class="matrix">
+                            <select class="matrix" name="monthsafter" method="GET" action="/index">
+                                <option value="{{monthsafter[0]}}" selected>{{monthsafter[0]}}</option>
+                                {% for mon in monthsafter[1:] %}
+                                <option value="{{mon}}">{{mon}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
 
-                <!-- Net Pay -->
-                <tr class="matrix">
-                    <td class="matrix">Net Pay</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                    <td class="matrix" colspan="3"></td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr class="matrix">
+                        <td class="matrix" colspan="3" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+                    </tr>
+
+                    <tr class="matrix">
+                        <td class="matrix">Gross Pay</td>
+                    </tr>
+
+
+                    <tr class="matrix">
+                        <td class="matrix">
+                                <div class="updatebuttondiv">
+                                    <button class="updatebutton" type="submit">Update</button>
+                                </div>
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
     </div>
-
-
-
-
-
-
-    <div class="updatebuttondiv">
-        <button class="updatebutton" type="submit">Update</button>
-    </div>
+        -->
     
-    </form>
 
 
     <div class="containertest">
-        <!--
-        <form hx-get="/update-fields" hx-target="#dynamic-fields">
-            <label class="labeltest" for="type">Form Type:</label>
-            <select id="type" name="type" class="form-control">
-                <option value="basic">Basic</option>
-                <option value="advanced">Advanced</option>
-            </select>
-        </form>
-        -->
-
         <form hx-post="/submit123" hx-target="#response" hx-swap="innerHTML">
             <label class="labeltest" for="name">Name:</label>
             <input type="text" id="name" name="name" class="form-control" required>
@@ -569,29 +195,6 @@
 
 
     <script>
-
-
-        //const sglivaluedropdown = document.getElementById("sglipremiumafterid");
-        //sglivaluedropdown.addEventListener("change", function() {
-        //    document.getElementById("sgliform").submit();
-        //});
-
-        //const sglimonthdropdown = document.getElementById("sglimonthafterid");
-        //sglimonthdropdown.addEventListener("change", function() {
-        //    document.getElementById("sgliform").submit();
-        //});
-
-
-        
-        //function selectElement(id, valueToSelect) {    
-        //    document.getElementById(id).value = valueToSelect;
-        //}
-        //selectElement('sglipremiumafterid', {{sgliupdate}});
-        //selectElement('sglimonthafterid', {{sglimonthupdate}});
-        
-
-
-
         // Adding selection behavior for rows
         document.querySelectorAll("tr").forEach(function(row) {
             row.addEventListener("click", function() {

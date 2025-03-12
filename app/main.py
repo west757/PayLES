@@ -50,19 +50,27 @@ zipcode = 0
 
 #entitlements
 basepay = 0
+basepayarray = [0, 0, 0, 0, 0, 0, 0]
 bas = 0
+basarray = [0, 0, 0, 0, 0, 0, 0]
 bah = 0
+baharray = [0, 0, 0, 0, 0, 0, 0]
 ueainitial = 0
 advancedebt = 0
 pcsmember = 0
 
 #deductions
 federaltaxes = 0
+federaltaxesarray = [0, 0, 0, 0, 0, 0, 0]
 ficasocsecurity = 0
+ficasocialsecurityarray = [0, 0, 0, 0, 0, 0, 0]
 ficamedicare = 0
+ficamedicarearray = [0, 0, 0, 0, 0, 0, 0]
 sgli = 0
 statetaxes = 0
+statetaxesarray = [0, 0, 0, 0, 0, 0, 0]
 rothtsp = 0
+rothtsparray = [0, 0, 0, 0, 0, 0, 0]
 midmonthpay = 0
 debt = 0
 partialpay = 0
@@ -73,7 +81,9 @@ pcsmembers = 0
 
 #calculations
 grosspay = 0
+grosspayarray = [0, 0, 0, 0, 0, 0, 0]
 netpay = 0
+netpayarray = [0, 0, 0, 0, 0, 0, 0]
 sglicoverage = 0
 sgli0 = 0
 sgli1 = 0
@@ -88,6 +98,12 @@ montharray = ["", "", "", "", "", "", ""]
 sgliupdate = 0
 sglimonthupdate = ""
 
+
+
+
+
+
+
 @app.route('/')
 def home():
     return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
@@ -100,8 +116,10 @@ def home():
                                    state=state, zipcode=zipcode)
 
 
-@app.route('/index', methods=['POST'])
-def upload_file():
+@app.route('/uploadfile', methods=['POST'])
+def uploadfile():
+    #file = request.form.get('file')
+
     if 'file' not in request.files:
         return 'No file part in the request', 400
 
@@ -177,6 +195,17 @@ def upload_file():
                 global sgliupdate
                 global sglimonthupdate
 
+                global basepayarray
+                global basarray
+                global baharray
+                global federaltaxesarray
+                global ficasocialsecurityarray
+                global ficamedicarearray
+                global statetaxesarray
+                global rothtsparray
+                global grosspayarray
+                global netpayarray
+
                 #find month
                 for x in months:
                     if x in text:
@@ -212,36 +241,48 @@ def upload_file():
                 #find base pay
                 if 'BASE' in text:
                     basepay = Decimal(text[(text.index('BASE')+2)])
+                    for i in range(len(basepayarray)):
+                        basepayarray[i] = basepay
                 else:
                     basepay = 0
 
                 #find BAS
                 if 'BAS' in text:
                     bas = Decimal(text[(text.index('BAS')+1)])
+                    for i in range(len(basarray)):
+                        basarray[i] = bas
                 else:
                     bas = 0
 
                 #find BAH
                 if 'BAH' in text:
                     bah = Decimal(text[(text.index('BAH')+1)])
+                    for i in range(len(baharray)):
+                        baharray[i] = bah
                 else:
                     bah = 0
 
                 #find federal taxes
                 if 'FEDERAL' in text and text[text.index('FEDERAL')+1] == "TAXES":
                     federaltaxes = Decimal(text[(text.index('FEDERAL')+2)])
+                    for i in range(len(federaltaxesarray)):
+                        federaltaxesarray[i] = federaltaxes
                 else:
                     federaltaxes = 0
 
                 #find FICA - Social Security
                 if 'SECURITY' in text:
                     ficasocsecurity = Decimal(text[(text.index('SECURITY')+1)])
+                    for i in range(len(ficasocialsecurityarray)):
+                        ficasocialsecurityarray[i] = ficasocsecurity
                 else:
                     ficasocsecurity = 0
 
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in text:
                     ficamedicare = Decimal(text[(text.index('FICA-MEDICARE')+1)])
+                    for i in range(len(ficamedicarearray)):
+                        ficamedicarearray[i] = ficamedicare
                 else:
                     ficamedicare = 0
 
@@ -278,12 +319,16 @@ def upload_file():
                 #find state taxes
                 if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
                     statetaxes = Decimal(text[(text.index('STATE')+2)])
+                    for i in range(len(statetaxesarray)):
+                        statetaxesarray[i] = statetaxes
                 else:
                     statetaxes = 0
 
                 #find Roth TSP
                 if 'ROTH' in text:
                     rothtsp = Decimal(text[(text.index('ROTH')+2)])
+                    for i in range(len(rothtsparray)):
+                        rothtsparray[i] = rothtsp
                 else:
                     rothtsp = 0
 
@@ -296,6 +341,8 @@ def upload_file():
                 #find gross pay
                 if 'ENT' in text:
                     grosspay = Decimal(text[(text.index('ENT')+1)])
+                    for i in range(len(grosspayarray)):
+                        grosspayarray[i] = grosspay
                 else:
                     grosspay = 0
 
@@ -304,6 +351,8 @@ def upload_file():
                     netpay = Decimal(text[(text.index('=NET')+2)])
                     if midmonthpay != 0:
                         netpay = netpay + midmonthpay
+                    for i in range(len(netpayarray)):
+                        netpayarray[i] = netpay
                 else:
                     netpay = 0
 
@@ -321,175 +370,227 @@ def upload_file():
                 else:
                     zipcode = 0
 
-            return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
-                                   filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
-                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
-                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
-                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-                                   state=state, zipcode=zipcode)
+            return buildmatrix()
+
+            #return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
+            #                      filename_display=filename, textarray_display=text, grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
+            #                      ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
+            #                      sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
+            #                      sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
+            #                      rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
+            #                      month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
+            #                      state=state, zipcode=zipcode)
     return 'File upload failed'
 
 
 
 @app.route('/buildmatrix', methods=['POST'])
 def buildmatrix():
+
+
+    global month
+    global month1
+    global month2
+    global month3
+    global month4
+    global month5
+    global month6
+    global monthsafter
+    global monthsafter2
+    global state
+    global grade
+    global zipcode
+    global basepay
+    global bas
+    global bah
+    global ueainitial
+    global advancedebt
+    global federaltaxes
+    global ficasocsecurity
+    global ficamedicare
+    global sgli
+    global statetaxes
+    global rothtsp
+    global midmonthpay
+    global debt
+    global partialpay
+    global pcsmembers
+    global grosspay
+    global netpay
+    global sglicoverage
+    global sgli0
+    global sgli1
+    global sgli2
+    global sgli3
+    global sgli4
+    global sgli5
+    global sgli6
+    global sgliarray
+    global montharray
+    global sgliupdate
+    global sglimonthupdate
+    global basepayarray
+    global basarray
+    global baharray
+    global federaltaxesarray
+    global ficasocialsecurityarray
+    global ficamedicarearray
+    global statetaxesarray
+    global rothtsparray
+    global grosspayarray
+    global netpayarray
+
+
     matrix = f"""
     <table class="matrix">
         <thead class="matrix">
             <tr class="matrix">
                 <th class="matrix"></th>
-                <th class="matrix">{{month}}</th>
-                <th class="matrix">{{month1}}</th>
-                <th class="matrix">{{month2}}</th>
-                <th class="matrix">{{month3}}</th>
-                <th class="matrix">{{month4}}</th>
-                <th class="matrix">{{month5}}</th>
-                <th class="matrix">{{month6}}</th>
+                <th class="matrix">{month}</th>
+                <th class="matrix">{month1}</th>
+                <th class="matrix">{month2}</th>
+                <th class="matrix">{month3}</th>
+                <th class="matrix">{month4}</th>
+                <th class="matrix">{month5}</th>
+                <th class="matrix">{month6}</th>
             </tr>
         </thead>
-
         <tbody>
             <tr class="matrix">
-
                 <!-- Base Pay -->
                 <td class="matrix">Base Pay</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(basepay)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basepayarray[6])}</td>
             </tr>
 
             <!-- BAS -->
             <tr class="matrix">
                 <td class="matrix">BAS</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bas)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(basarray[6])}</td>
             </tr>
 
             <!-- BAH -->
             <tr class="matrix">
                 <td class="matrix">BAH</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(bah)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(baharray[6])}</td>
             </tr>
 
             <!-- Federal Taxes -->
             <tr class="matrix">
                 <td class="matrix">Federal Taxes</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(federaltaxes)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(federaltaxesarray[6])}</td>
             </tr>
 
             <!-- FICA - Social Security -->
             <tr class="matrix">
                 <td class="matrix">FICA - Social Security</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficasocsecurity)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficasocialsecurityarray[6])}</td>
             </tr>
 
             <!-- FICA - Medicare -->
             <tr class="matrix">
                 <td class="matrix">FICA - Medicare</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(ficamedicare)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(ficamedicarearray[6])}</td>
             </tr>
 
             <!-- SGLI -->
             <tr class="matrix">
                 <td class="matrix">SGLI</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[1])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[2])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[3])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[4])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[5])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[6])}}</td>
-                <td class="matrix">{{"${:,.2f}".format(sgliarray[0])}}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(sgliarray[6])}</td>
             </tr>
                 
-
             <!-- State Taxes -->
             <tr class="matrix">
                 <td class="matrix">State Taxes</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(statetaxes)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(statetaxesarray[6])}</td>
             </tr>
 
             <!-- Roth TSP -->
             <tr class="matrix">
                 <td class="matrix">Roth TSP</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(rothtsp)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(rothtsparray[6])}</td>
             </tr>
 
             <!-- Spacer -->
             <tr class="matrix">
-                <td class="matrix" colspan="7" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+                <td class="matrix" colspan="8" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
             </tr>
 
             <!-- Gross Pay -->
             <tr class="matrix">
                 <td class="matrix">Gross Pay</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(grosspay)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(grosspayarray[6])}</td>
             </tr>
 
             <!-- Net Pay -->
             <tr class="matrix">
                 <td class="matrix">Net Pay</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
-                <td class="matrix">{{"${:,.2f}".format(netpay)}}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[0])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[1])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[2])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[3])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[4])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[5])}</td>
+                <td class="matrix">{'${:,.2f}'.format(netpayarray[6])}</td>
             </tr>
         </tbody>
     </table>
@@ -499,40 +600,40 @@ def buildmatrix():
 
 
 
-@app.route('/updatematrix', methods=['POST'])
-def updatematrix():
-    global sgliarray
-    global monthsafter
-    global montharray
-    global sgliupdate
-    global sglimonthupdate
-    updatedsgli = request.form['sglipremiumafter']
-    sglimonthafter = request.form['sglimonthafter']
-    sglimonthafterindex = montharray.index(sglimonthafter)
+#@app.route('/updatematrix', methods=['POST'])
+#def updatematrix():
+#    global sgliarray
+#    global monthsafter
+#    global montharray
+#    global sgliupdate
+#    global sglimonthupdate
+#    updatedsgli = request.form['sglipremiumafter']
+#    sglimonthafter = request.form['sglimonthafter']
+#    sglimonthafterindex = montharray.index(sglimonthafter)
 
-    print("sglimonthafter: ", sglimonthafter)
+#    print("sglimonthafter: ", sglimonthafter)
 
-    for i in range(len(sgliarray)):
-        if i >= sglimonthafterindex and i > 0:
-            sgliarray[i] = Decimal(updatedsgli)
-        else:
-            sgliarray[i] = sgliarray[0]
+#    for i in range(len(sgliarray)):
+#        if i >= sglimonthafterindex and i > 0:
+#            sgliarray[i] = Decimal(updatedsgli)
+#        else:
+#            sgliarray[i] = sgliarray[0]
 
-    sgliupdate = updatedsgli
+#    sgliupdate = updatedsgli
 
-    sglimonthupdate = sglimonthafter
-    print("sglimonthupdate: ", sglimonthupdate)
+#    sglimonthupdate = sglimonthafter
+#    print("sglimonthupdate: ", sglimonthupdate)
 
-    sglidisplay = f"""
-        <td class="matrix">{sgliarray[1]}</td>
-        <td class="matrix">{sgliarray[2]}</td>
-        <td class="matrix">{sgliarray[3]}</td>
-        <td class="matrix">{sgliarray[4]}</td>
-        <td class="matrix">{sgliarray[5]}</td>
-        <td class="matrix">{sgliarray[6]}</td>
-    """
+#    sglidisplay = f"""
+#        <td class="matrix">{sgliarray[1]}</td>
+#        <td class="matrix">{sgliarray[2]}</td>
+#        <td class="matrix">{sgliarray[3]}</td>
+#        <td class="matrix">{sgliarray[4]}</td>
+#        <td class="matrix">{sgliarray[5]}</td>
+#        <td class="matrix">{sgliarray[6]}</td>
+#    """
 
-    return sglidisplay
+#   return sglidisplay
 
 
 
@@ -557,21 +658,6 @@ def submit123():
     """
     return response
 
-
-
-#@app.route('/update-fields')
-#def update_fields():
-#    type_ = request.args.get('type')
-#    if type_ == 'advanced':
-#        fields = '''
-#        <div class="form-group">
-#            <label for="extra">Additional Information:</label>
-#            <input type="text" id="extra" name="extra" class="form-control">
-#        </div>
-#        '''
-#    else:
-#        fields = ''
-#    return fields
 
 
 
