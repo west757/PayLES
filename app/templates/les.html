@@ -102,6 +102,7 @@
                         <td class="matrix">{{'${:,.2f}'.format(sgli[6])}}</td>
                     </tr>
 
+                    {% if statetaxes[0] != 0: %}
                     <tr class="matrix">
                         <td class="matrix">State Taxes</td>
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[0])}}</td>
@@ -112,6 +113,7 @@
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[5])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[6])}}</td>
                     </tr>
+                    {% endif %}
 
                     <tr class="matrix">
                         <td class="matrix">Roth TSP</td>
