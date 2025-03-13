@@ -71,13 +71,10 @@ netpay = [0, 0, 0, 0, 0, 0, 0]
 
 rank_selected = ""
 rank_month_selected = ""
-
 sgli_selected = 0
 sgli_month_selected = ""
-
 state_selected = 0
 state_month_selected = ""
-
 rothtsp_selected = 0
 rothtsp_month_selected = ""
 
@@ -248,20 +245,6 @@ def uploadfile():
                     for i in range(len(sgli)):
                         sgli[i] = 0
 
-                    #for x in SGLI_PREMIUMS:
-                    #    if x == sgli0:
-                    #        sglicoverage = SGLI_COVERAGES[SGLI_PREMIUMS.index(int(sgli0))]
-                    #        sgli1 = sgli0
-                    #        sgli2 = sgli0
-                    #        sgli3 = sgli0
-                    #        sgli4 = sgli0
-                    #        sgli5 = sgli0
-                    #        sgli6 = sgli0
-                    #        break
-                    #    else:
-                    #        sglicoverage = 0
-
-
                 #find state taxes
                 if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
                     for i in range(len(statetaxes)):
@@ -379,11 +362,22 @@ def updatematrix():
     sgli_selected = request.form['sglipremiumafter']
     sgli_month_selected = request.form['sglimonthafter']
 
+
+    #update SGLI
     for i in range(len(sgli)):
         if i >= months.index(sgli_month_selected) and i > 0:
             sgli[i] = Decimal(sgli_selected)
         else:
             sgli[i] = sgli[0]
+
+    #update gross pay:
+    for i in range(len(grosspay)):
+        grosspay[i] = basepay[i] + bas[i] + bah[i]
+
+    #update net pay:
+    for i in range(len(netpay)):
+        netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i]
+
 
     return render_template('les.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,

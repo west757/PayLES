@@ -18,4 +18,5 @@ table template: https://www.freshdesignweb.com/free-css-table.html
 dynamic AJAX with flask: https://www.geeksforgeeks.org/dynamic-forms-handling-with-htmx-and-python-flask/
 
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
+military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tables/
 -->
