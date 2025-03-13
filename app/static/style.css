@@ -1,22 +1,31 @@
-/* global CSS */
+/* global */
 
 body {
     font-family: Arial, sans-serif;
     font-size: 16px;
-    background-color: #f4f4f9;
+    background-color: lightsteelblue;
     margin: 0;
     padding: 20px;
 }
 
 
-/* matrix CSS */
+
+/* container */
+
+.container {
+    display: grid;
+    grid-template-columns: 75% 25%;
+}
+
+
+/* matrix */
 
 div.matrix {
     margin: auto;
     padding: 20px;
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 20px;
 }
 
 table.matrix {
@@ -95,7 +104,7 @@ tr.matrix.selected {
 
 .updatebuttondiv {
     margin: auto;
-    width: 100px;
+    width: 200px;
 }
 
 .updatebutton {
@@ -111,56 +120,4 @@ tr.matrix.selected {
 
 .updatebutton:hover {
     background-color: #0056b3;
-}
-
-
-
-.containertest {
-    width: 80%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.labeltest {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-textarea {
-    height: 100px;
-}
-
-.btn btn-primary {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.btn btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.alert {
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 4px;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
 }

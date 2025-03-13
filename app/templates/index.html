@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayLES Index</title>
+    <title>PayLES</title>
     <script src="https://unpkg.com/htmx.org@1.8.0"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <form hx-post="/uploadfile" hx-target="#matrixid" hx-swap="innerHTML" enctype="multipart/form-data">
+    <form hx-post="/uploadfile" hx-target="#les-core-id" hx-swap="innerHTML" enctype="multipart/form-data">
 		    <input type="file" name="file"/>
 		    <input type="submit" value="Upload LES"/>
     </form>
 
 
-    <div class="matrix" id="matrixid">
-    </div>
+    <div id="les-core-id"></div>
 
 </body>
 </html>
