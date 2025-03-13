@@ -18,59 +18,44 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #sets the max content length of the uploaded file to 16MB, prevents massive files from overloading the server
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-monthslong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-stateslong = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
-              'Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
-              'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina',
-              'North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas',
-              'Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
-states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO',
-          'MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
-ranks = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
-         'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
-         'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-sglicoverages = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
-sglipremiums = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
+
+MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
+               'Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
+               'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina',
+               'North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas',
+               'Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
+STATES_SHORT = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO',
+                'MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+RANKS_SHORT = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
+               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
+               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
+SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
+SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
 
 
 #variables
-month = ""
-month1 = ""
-month2 = ""
-month3 = ""
-month4 = ""
-month5 = ""
-month6 = ""
-monthsafter = [month1, month2, month3, month4, month5, month6]
-monthsafter2 = ["", "", "", "", "", ""]
+months = ["", "", "", "", "", "", ""]
 state = ""
 grade = ""
 zipcode = 0
 
 #entitlements
-basepay = 0
-basepayarray = [0, 0, 0, 0, 0, 0, 0]
-bas = 0
-basarray = [0, 0, 0, 0, 0, 0, 0]
-bah = 0
-baharray = [0, 0, 0, 0, 0, 0, 0]
+basepay = [0, 0, 0, 0, 0, 0, 0]
+bas = [0, 0, 0, 0, 0, 0, 0]
+bah = [0, 0, 0, 0, 0, 0, 0]
 ueainitial = 0
 advancedebt = 0
 pcsmember = 0
 
 #deductions
-federaltaxes = 0
-federaltaxesarray = [0, 0, 0, 0, 0, 0, 0]
-ficasocsecurity = 0
-ficasocialsecurityarray = [0, 0, 0, 0, 0, 0, 0]
-ficamedicare = 0
-ficamedicarearray = [0, 0, 0, 0, 0, 0, 0]
-sgli = 0
-statetaxes = 0
-statetaxesarray = [0, 0, 0, 0, 0, 0, 0]
-rothtsp = 0
-rothtsparray = [0, 0, 0, 0, 0, 0, 0]
+federaltaxes = [0, 0, 0, 0, 0, 0, 0]
+ficasocsecurity = [0, 0, 0, 0, 0, 0, 0]
+ficamedicare = [0, 0, 0, 0, 0, 0, 0]
+sgli = [0, 0, 0, 0, 0, 0, 0]
+statetaxes = [0, 0, 0, 0, 0, 0, 0]
+rothtsp = [0, 0, 0, 0, 0, 0, 0]
 midmonthpay = 0
 debt = 0
 partialpay = 0
@@ -80,44 +65,82 @@ pcsmembers = 0
 
 
 #calculations
-grosspay = 0
-grosspayarray = [0, 0, 0, 0, 0, 0, 0]
-netpay = 0
-netpayarray = [0, 0, 0, 0, 0, 0, 0]
-sglicoverage = 0
-sgli0 = 0
-sgli1 = 0
-sgli2 = 0
-sgli3 = 0
-sgli4 = 0
-sgli5 = 0
-sgli6 = 0
-
-sgliarray = [0, 0, 0, 0, 0, 0, 0]
-montharray = ["", "", "", "", "", "", ""]
-sgliupdate = 0
-sglimonthupdate = ""
+grosspay = [0, 0, 0, 0, 0, 0, 0]
+netpay = [0, 0, 0, 0, 0, 0, 0]
 
 
+rank_selected = ""
+rank_month_selected = ""
 
+sgli_selected = 0
+sgli_month_selected = ""
+
+state_selected = 0
+state_month_selected = ""
+
+rothtsp_selected = 0
+rothtsp_month_selected = ""
 
 
 
 
 @app.route('/')
 def home():
-    return render_template('index.html', months=months, states=states, ranks=ranks, montharray=montharray,
-                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
-                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
-                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
-                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-                                   state=state, zipcode=zipcode)
+    return render_template('index.html', 
+                           MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
+                           SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
+                           months=months, state=state, grade=grade, zipcode=zipcode,
+                           basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
+                           federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
+                           midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
+                           grosspay=grosspay, netpay=netpay,
+                           rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                           sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
+                           state_selected=state_selected, state_month_selected=state_month_selected,
+                           rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
 
 
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
+
+    global MONTHS_LONG
+    global MONTHS_SHORT
+    global STATES_LONG
+    global STATES_SHORT
+    global RANKS_SHORT
+    global SGLI_COVERAGES
+    global SGLI_PREMIUMS
+    global months
+    global state
+    global grade
+    global zipcode
+    global basepay
+    global bas
+    global bah
+    global ueainitial
+    global advancedebt
+    global pcsmember
+    global federaltaxes
+    global ficasocsecurity
+    global ficamedicare
+    global sgli
+    global statetaxes
+    global rothtsp
+    global midmonthpay
+    global debt
+    global partialpay
+    global pcsmembers
+    global grosspay
+    global netpay
+    global rank_selected
+    global rank_month_selected
+    global sgli_selected
+    global sgli_month_selected
+    global state_selected
+    global state_month_selected
+    global rothtsp_selected
+    global rothtsp_month_selected
+
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -151,84 +174,18 @@ def uploadfile():
 
                 #print(text)
 
-                global month
-                global month1
-                global month2
-                global month3
-                global month4
-                global month5
-                global month6
-                global monthsafter
-                global monthsafter2
-                global state
-                global grade
-                global zipcode
-                global basepay
-                global bas
-                global bah
-                global ueainitial
-                global advancedebt
-                global federaltaxes
-                global ficasocsecurity
-                global ficamedicare
-                global sgli
-                global statetaxes
-                global rothtsp
-                global midmonthpay
-                global debt
-                global partialpay
-                global pcsmembers
-                global grosspay
-                global netpay
-                global sglicoverage
-                global sgli0
-                global sgli1
-                global sgli2
-                global sgli3
-                global sgli4
-                global sgli5
-                global sgli6
-                global sgliarray
-                global montharray
-                global sgliupdate
-                global sglimonthupdate
-                global basepayarray
-                global basarray
-                global baharray
-                global federaltaxesarray
-                global ficasocialsecurityarray
-                global ficamedicarearray
-                global statetaxesarray
-                global rothtsparray
-                global grosspayarray
-                global netpayarray
-
                 #find month
-                for x in months:
+                for x in MONTHS_SHORT:
                     if x in text:
-                        month = x
-                        month1 = months[(months.index(x)+1) % 12]
-                        month2 = months[(months.index(x)+2) % 12]
-                        month3 = months[(months.index(x)+3) % 12]
-                        month4 = months[(months.index(x)+4) % 12]
-                        month5 = months[(months.index(x)+5) % 12]
-                        month6 = months[(months.index(x)+6) % 12]
-                        monthsafter = [month1, month2, month3, month4, month5, month6]
-
-                        montharray[0] = month
-                        montharray[1] = month1
-                        montharray[2] = month2
-                        montharray[3] = month3
-                        montharray[4] = month4
-                        montharray[5] = month5
-                        montharray[6] = month6
-
+                        for i in range(len(months)):
+                            months[i] = MONTHS_SHORT[(MONTHS_SHORT.index(x)+i) % 12]
                         break
                     else:
-                        month = "no month found"
+                        for i in range(len(months)):
+                            months[i] = "no month"
 
                 #find grade
-                for x in ranks:
+                for x in RANKS_SHORT:
                     if x in text and text[text.index(x)+9] == "ENTITLEMENTS":
                         grade = x
                         break
@@ -237,89 +194,89 @@ def uploadfile():
 
                 #find base pay
                 if 'BASE' in text:
-                    for i in range(len(basepayarray)):
-                        basepayarray[i] = Decimal(text[(text.index('BASE')+2)])
+                    for i in range(len(basepay)):
+                        basepay[i] = Decimal(text[(text.index('BASE')+2)])
                 else:
-                    basepay = 0
+                    for i in range(len(basepay)):
+                        basepay[i] = 0
 
                 #find BAS
                 if 'BAS' in text:
-                    for i in range(len(basarray)):
-                        basarray[i] = Decimal(text[(text.index('BAS')+1)])
+                    for i in range(len(bas)):
+                        bas[i] = Decimal(text[(text.index('BAS')+1)])
                 else:
-                    bas = 0
+                    for i in range(len(bas)):
+                        bas[i] = 0
 
                 #find BAH
                 if 'BAH' in text:
-                    for i in range(len(baharray)):
-                        baharray[i] = Decimal(text[(text.index('BAH')+1)])
+                    for i in range(len(bah)):
+                        bah[i] = Decimal(text[(text.index('BAH')+1)])
                 else:
-                    bah = 0
+                    for i in range(len(bah)):
+                        bah[i] = 0
 
                 #find federal taxes
                 if 'FEDERAL' in text and text[text.index('FEDERAL')+1] == "TAXES":
-                    for i in range(len(federaltaxesarray)):
-                        federaltaxesarray[i] = Decimal(text[(text.index('FEDERAL')+2)])
+                    for i in range(len(federaltaxes)):
+                        federaltaxes[i] = Decimal(text[(text.index('FEDERAL')+2)])
                 else:
-                    federaltaxes = 0
+                    for i in range(len(federaltaxes)):
+                        federaltaxes[i] = 0
 
                 #find FICA - Social Security
                 if 'SECURITY' in text:
-                    for i in range(len(ficasocialsecurityarray)):
-                        ficasocialsecurityarray[i] = Decimal(text[(text.index('SECURITY')+1)])
+                    for i in range(len(ficasocsecurity)):
+                        ficasocsecurity[i] = Decimal(text[(text.index('SECURITY')+1)])
                 else:
-                    ficasocsecurity = 0
+                    for i in range(len(ficasocsecurity)):
+                        ficasocsecurity[i] = 0
 
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in text:
-                    for i in range(len(ficamedicarearray)):
-                        ficamedicarearray[i] = Decimal(text[(text.index('FICA-MEDICARE')+1)])
+                    for i in range(len(ficamedicare)):
+                        ficamedicare[i] = Decimal(text[(text.index('FICA-MEDICARE')+1)])
                 else:
-                    ficamedicare = 0
+                    for i in range(len(ficamedicare)):
+                        ficamedicare[i] = 0
 
                 #find SGLI
                 if 'SGLI' in text:
-                    sgli0 = Decimal(text[(text.index('SGLI')+1)])
-                    
-                    sgliarray[0] = sgli0
-                    sgliarray[1] = sgli0
-                    sgliarray[2] = sgli0
-                    sgliarray[3] = sgli0
-                    sgliarray[4] = sgli0
-                    sgliarray[5] = sgli0
-                    sgliarray[6] = sgli0
-
-                    for x in sglipremiums:
-                        if x == sgli0:
-                            sglicoverage = sglicoverages[sglipremiums.index(int(sgli0))]
-                            sgli1 = sgli0
-                            sgli2 = sgli0
-                            sgli3 = sgli0
-                            sgli4 = sgli0
-                            sgli5 = sgli0
-                            sgli6 = sgli0
-                            break
-                        else:
-                            sglicoverage = 0
+                    for i in range(len(sgli)):
+                        sgli[i] = Decimal(text[(text.index('SGLI')+1)])
                 else:
-                    sgli0 = 0
+                    for i in range(len(sgli)):
+                        sgli[i] = 0
 
-                sgliupdate = sgliarray[0]
-                sglimonthupdate = montharray[1]
+                    #for x in SGLI_PREMIUMS:
+                    #    if x == sgli0:
+                    #        sglicoverage = SGLI_COVERAGES[SGLI_PREMIUMS.index(int(sgli0))]
+                    #        sgli1 = sgli0
+                    #        sgli2 = sgli0
+                    #        sgli3 = sgli0
+                    #        sgli4 = sgli0
+                    #        sgli5 = sgli0
+                    #        sgli6 = sgli0
+                    #        break
+                    #    else:
+                    #        sglicoverage = 0
+
 
                 #find state taxes
                 if 'STATE' in text and text[text.index('STATE')+1] == "TAXES":
-                    for i in range(len(statetaxesarray)):
-                        statetaxesarray[i] = Decimal(text[(text.index('STATE')+2)])
+                    for i in range(len(statetaxes)):
+                        statetaxes[i] = Decimal(text[(text.index('STATE')+2)])
                 else:
-                    statetaxes = 0
+                    for i in range(len(statetaxes)):
+                        statetaxes[i] = 0
 
                 #find Roth TSP
                 if 'ROTH' in text:
-                    for i in range(len(rothtsparray)):
-                        rothtsparray[i] = Decimal(text[(text.index('ROTH')+2)])
+                    for i in range(len(rothtsp)):
+                        rothtsp[i] = Decimal(text[(text.index('ROTH')+2)])
                 else:
-                    rothtsp = 0
+                    for i in range(len(rothtsp)):
+                        rothtsp[i] = 0
 
                 #find mid-month-pay
                 if 'MID-MONTH-PAY' in text:
@@ -329,23 +286,25 @@ def uploadfile():
 
                 #find gross pay
                 if 'ENT' in text:
-                    for i in range(len(grosspayarray)):
-                        grosspayarray[i] = Decimal(text[(text.index('ENT')+1)])
+                    for i in range(len(grosspay)):
+                        grosspay[i] = Decimal(text[(text.index('ENT')+1)])
                 else:
-                    grosspay = 0
+                    for i in range(len(grosspay)):
+                        grosspay[i] = 0
 
                 #find net pay (takes mid-month pay into account)
                 if '=NET' in text:
-                    netpay = Decimal(text[(text.index('=NET')+2)])
+                    netpayinitial = Decimal(text[(text.index('=NET')+2)])
                     if midmonthpay != 0:
-                        netpay = netpay + midmonthpay
-                    for i in range(len(netpayarray)):
-                        netpayarray[i] = netpay
+                        netpayinitial = netpayinitial + midmonthpay
+                    for i in range(len(netpay)):
+                        netpay[i] = netpayinitial
                 else:
-                    netpay = 0
+                    for i in range(len(netpay)):
+                        netpay[i] = 0
 
                 #find state
-                for x in states:
+                for x in STATES_SHORT:
                     if (x in text) and (text[text.index(x)-1] == "TAXES"):
                         state = x
                         break
@@ -359,17 +318,18 @@ def uploadfile():
                     zipcode = 0
 
 
-            return render_template('les.html', months=months, states=states, ranks=ranks, montharray=montharray,
-                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
-                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
-                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
-                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-                                   state=state, zipcode=zipcode,
-                                   basepayarray=basepayarray, basarray=basarray, baharray=baharray, federaltaxesarray=federaltaxesarray, 
-                                   ficasocialsecurityarray=ficasocialsecurityarray, statetaxesarray=statetaxesarray, rothtsparray=rothtsparray, grosspayarray=grosspayarray,
-                                   netpayarray=netpayarray, ficamedicarearray=ficamedicarearray)
+            return render_template('les.html', 
+                                    MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
+                                    SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
+                                    months=months, state=state, grade=grade, zipcode=zipcode,
+                                    basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
+                                    federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
+                                    midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
+                                    grosspay=grosspay, netpay=netpay,
+                                    rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                                    sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
+                                    state_selected=state_selected, state_month_selected=state_month_selected,
+                                    rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
 
     return 'File upload failed'
 
@@ -378,16 +338,14 @@ def uploadfile():
 @app.route('/updatematrix', methods=['POST'])
 def updatematrix():
 
-
-    global month
-    global month1
-    global month2
-    global month3
-    global month4
-    global month5
-    global month6
-    global monthsafter
-    global monthsafter2
+    global MONTHS_LONG
+    global MONTHS_SHORT
+    global STATES_LONG
+    global STATES_SHORT
+    global RANKS_SHORT
+    global SGLI_COVERAGES
+    global SGLI_PREMIUMS
+    global months
     global state
     global grade
     global zipcode
@@ -396,6 +354,7 @@ def updatematrix():
     global bah
     global ueainitial
     global advancedebt
+    global pcsmember
     global federaltaxes
     global ficasocsecurity
     global ficamedicare
@@ -408,54 +367,36 @@ def updatematrix():
     global pcsmembers
     global grosspay
     global netpay
-    global sglicoverage
-    global sgli0
-    global sgli1
-    global sgli2
-    global sgli3
-    global sgli4
-    global sgli5
-    global sgli6
-    global sgliarray
-    global montharray
-    global sgliupdate
-    global sglimonthupdate
-    global basepayarray
-    global basarray
-    global baharray
-    global federaltaxesarray
-    global ficasocialsecurityarray
-    global ficamedicarearray
-    global statetaxesarray
-    global rothtsparray
-    global grosspayarray
-    global netpayarray
+    global rank_selected
+    global rank_month_selected
+    global sgli_selected
+    global sgli_month_selected
+    global state_selected
+    global state_month_selected
+    global rothtsp_selected
+    global rothtsp_month_selected
 
-    updatedsgli = request.form['sglipremiumafter']
-    sglimonthafter = request.form['sglimonthafter']
-    sglimonthafterindex = montharray.index(sglimonthafter)
+    sgli_selected = request.form['sglipremiumafter']
+    sgli_month_selected = request.form['sglimonthafter']
 
-    for i in range(len(sgliarray)):
-        if i >= sglimonthafterindex and i > 0:
-            sgliarray[i] = Decimal(updatedsgli)
+    for i in range(len(sgli)):
+        if i >= months.index(sgli_month_selected) and i > 0:
+            sgli[i] = Decimal(sgli_selected)
         else:
-            sgliarray[i] = sgliarray[0]
+            sgli[i] = sgli[0]
 
-    sgliupdate = updatedsgli
-
-    sglimonthupdate = sglimonthafter
-
-    return render_template('les.html', months=months, states=states, ranks=ranks, montharray=montharray,
-                                   grade=grade, basepay=basepay, bas=bas, bah=bah, federaltaxes=federaltaxes, statetaxes=statetaxes,
-                                   ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, 
-                                   sgli0=sgli0, sgli1=sgli1, sgli2=sgli2, sgli3=sgli3, sgli4=sgli4, sgli5=sgli5, sgli6=sgli6, sgliarray=sgliarray, sgliupdate=sgliupdate,
-                                   sglicoverage=sglicoverage, sglipremiums=sglipremiums, sglicoverages=sglicoverages, sglimonthupdate=sglimonthupdate,
-                                   rothtsp=rothtsp, midmonthpay=midmonthpay, grosspay=grosspay, netpay=netpay,
-                                   month=month, month1=month1, month2=month2, month3=month3, month4=month4, month5=month5, month6=month6, monthsafter=monthsafter,
-                                   state=state, zipcode=zipcode,
-                                   basepayarray=basepayarray, basarray=basarray, baharray=baharray, federaltaxesarray=federaltaxesarray, 
-                                   ficasocialsecurityarray=ficasocialsecurityarray, statetaxesarray=statetaxesarray, rothtsparray=rothtsparray, grosspayarray=grosspayarray,
-                                   netpayarray=netpayarray, ficamedicarearray=ficamedicarearray)
+    return render_template('les.html', 
+                           MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
+                           SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
+                           months=months, state=state, grade=grade, zipcode=zipcode,
+                           basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
+                           federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
+                           midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
+                           grosspay=grosspay, netpay=netpay,
+                           rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                           sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
+                           state_selected=state_selected, state_month_selected=state_month_selected,
+                           rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
 
 
 
