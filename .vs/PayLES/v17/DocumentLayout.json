@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "app\\templates\\les.html",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\les.html",
               "RelativeToolTip": "app\\templates\\les.html",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2025-03-12T22:42:43.647Z",
               "EditorCaption": ""
@@ -59,8 +59,7 @@
               "RelativeToolTip": "app\\templates\\index.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-01-16T00:25:58.502Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-16T00:25:58.502Z"
             },
             {
               "$type": "Document",
@@ -72,8 +71,7 @@
               "RelativeToolTip": "app\\static\\style.css",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-02-27T01:33:48.884Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T01:33:48.884Z"
             },
             {
               "$type": "Document",
@@ -85,8 +83,7 @@
               "RelativeToolTip": "app\\main.py",
               "ViewState": "AgIAAEgBAAAAAAAAAAAmwHMBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-01-15T03:49:52.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T03:49:52.475Z"
             },
             {
               "$type": "Document",
@@ -98,8 +95,7 @@
               "RelativeToolTip": "README.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-15T23:31:37.711Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T23:31:37.711Z"
             }
           ]
         }
