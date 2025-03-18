@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\app",
+    "\\app\\static",
+    "\\app\\templates"
   ],
-  "SelectedNode": "\\C:\\Users\\blue\\Documents\\GitHub\\PayLES",
+  "SelectedNode": "\\app\\main.py",
   "PreviewInSolutionExplorer": false
 }

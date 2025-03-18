@@ -3,7 +3,7 @@
 body {
     font-family: Arial, sans-serif;
     font-size: 16px;
-    background-color: lightsteelblue;
+    background-color: #F5E7DE;
     margin: 0;
     padding: 20px;
 }
@@ -25,6 +25,7 @@ div.matrix {
     padding: 10px;
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
 }
 
 table.matrix {

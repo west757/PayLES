@@ -176,6 +176,7 @@ def uploadfile():
                     if x in text:
                         for i in range(len(months)):
                             months[i] = MONTHS_SHORT[(MONTHS_SHORT.index(x)+i) % 12]
+                        sgli_month_selected = months[1]
                         break
                     else:
                         for i in range(len(months)):
@@ -359,8 +360,8 @@ def updatematrix():
     global rothtsp_selected
     global rothtsp_month_selected
 
-    sgli_selected = request.form['sglipremiumafter']
-    sgli_month_selected = request.form['sglimonthafter']
+    sgli_selected = request.form['sgli_selected']
+    sgli_month_selected = request.form['sgli_month_selected']
 
 
     #update SGLI
