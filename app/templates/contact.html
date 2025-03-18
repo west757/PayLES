@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <div class="topnav">
         <a class="active" href="{{ url_for('index') }}">Index</a>
         <a href="{{ url_for('faq') }}">FAQ</a>
@@ -18,14 +17,7 @@
     </div>
 
     &nbsp;
-
-    <form hx-post="/uploadfile" hx-target="#matrix-id" hx-swap="innerHTML" enctype="multipart/form-data">
-		    <input type="file" name="file"/>
-		    <input type="submit" value="Upload LES"/>
-    </form>
-
-
-    <div id="matrix-id"></div>
+    <h1>contact</h1>
 
     <p>footer</p>
 
