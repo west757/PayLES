@@ -1,6 +1,6 @@
 from calendar import month_name
 from flask import Flask
-from flask import request, render_template, request, make_response, jsonify, session
+from flask import request, render_template, request, make_response, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
@@ -82,7 +82,7 @@ rothtsp_month_selected = ""
 
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
                            SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
@@ -386,7 +386,6 @@ def updatematrix():
             sgli[i] = Decimal(sgli_selected)
         else:
             sgli[i] = sgli[0]
-    print("sgli_selected: ", sgli_selected)
 
     #update gross pay:
     for i in range(len(grosspay)):
@@ -411,6 +410,20 @@ def updatematrix():
                            rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
 
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+@app.route('/resources')
+def resources():
+    return render_template('resources.html')
+
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -425,6 +438,11 @@ def too_large(e):
 @app.errorhandler(RequestEntityTooLarge)
 def file_too_large(e):
     return 'File is too large', 413
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
