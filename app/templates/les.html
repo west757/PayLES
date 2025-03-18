@@ -198,18 +198,18 @@
 
                     <tbody>
                         <tr class="matrix">
-                            <td class="matrix">{{grade}}</td>
+                            <td class="matrix">{{rank}}</td>
                             <td class="matrix">
-                                <select class="matrix" name="ranks">
+                                <select class="matrix" id="rank_selected" name="rank_selected">
                                     {% for x in RANKS_SHORT[0:] %}
-                                    <option value="{{x}}">{{x}}</option>
+                                    <option value="{{x}}" {% if x==rank_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                             <td class="matrix">
-                                <select class="matrix" name="monthsafter">
+                                <select class="matrix" id="rank_month_selected" name="rank_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}">{{x}}</option>
+                                    <option value="{{x}}" {% if x==rank_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -217,11 +217,10 @@
 
                         <tr class="matrix">
                             <td class="matrix">SGLI</td>
-
                             <td class="matrix">
                                 <select class="matrix" id="sgli_selected" name="sgli_selected">
                                     {% for x in SGLI_PREMIUMS[0:] %}
-                                    <option value="{{x}}">{{"${:,.2f}".format(x)}}</option>
+                                    <option value="{{x}}" {% if x==sgli_selected %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -239,16 +238,16 @@
                         <tr class="matrix">
                             <td class="matrix">State Taxes</td>
                             <td class="matrix">
-                                <select class="matrix" name="states">
+                                <select class="matrix" id="state_selected" name="state_selected">
                                     {% for x in STATES_SHORT[0:] %}
-                                    <option value="{{x}}">{{x}}</option>
+                                    <option value="{{x}}" {% if x==state_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                             <td class="matrix">
-                                <select class="matrix" name="monthsafter">
+                                <select class="matrix" id="state_month_selected" name="state_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}">{{x}}</option>
+                                    <option value="{{x}}" {% if x==state_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -257,11 +256,13 @@
 
                         <tr class="matrix">
                             <td class="matrix">Roth TSP</td>
-                            <td class="matrix"><input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 title="futurerothtsp" /></td>
                             <td class="matrix">
-                                <select class="matrix" name="monthsafter">
+                                <input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2  id="rothtsp_selected" name="rothtsp_selected" />
+                            </td>
+                            <td class="matrix">
+                                <select class="matrix" id="rothtsp_month_selected" name="rothtsp_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}">{{x}}</option>
+                                    <option value="{{x}}" {% if x==rothtsp_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
