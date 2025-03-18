@@ -1,6 +1,6 @@
 from calendar import month_name
 from flask import Flask
-from flask import request, render_template, request, make_response, jsonify
+from flask import request, render_template, request, make_response, jsonify, session
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
