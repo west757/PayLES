@@ -366,10 +366,9 @@ def updatematrix():
     global rothtsp_selected
     global rothtsp_month_selected
 
-
     rank_selected = request.form['rank_selected']
     rank_month_selected = request.form['rank_month_selected']
-    sgli_selected = request.form['sgli_selected']
+    sgli_selected = Decimal(request.form['sgli_selected'])
     sgli_month_selected = request.form['sgli_month_selected']
 
     if statetaxes[1] != 0:
@@ -378,7 +377,6 @@ def updatematrix():
 
     rothtsp_selected = request.form['rothtsp_selected']
     rothtsp_month_selected = request.form['rothtsp_month_selected']
-
 
     #update SGLI
     for i in range(len(sgli)):
@@ -395,7 +393,6 @@ def updatematrix():
     for i in range(len(netpay)):
         netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i]
 
-
     return render_template('les.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
                            SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
@@ -408,6 +405,7 @@ def updatematrix():
                            sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                            state_selected=state_selected, state_month_selected=state_month_selected,
                            rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
+
 
 
 @app.route('/contact')
