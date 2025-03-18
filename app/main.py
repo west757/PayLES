@@ -38,7 +38,7 @@ SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
 #variables
 months = ["", "", "", "", "", "", ""]
 state = ""
-grade = ""
+rank = ""
 zipcode = 0
 
 #entitlements
@@ -73,7 +73,7 @@ rank_selected = ""
 rank_month_selected = ""
 sgli_selected = 0
 sgli_month_selected = ""
-state_selected = 0
+state_selected = ""
 state_month_selected = ""
 rothtsp_selected = 0
 rothtsp_month_selected = ""
@@ -86,7 +86,7 @@ def home():
     return render_template('index.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
                            SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
-                           months=months, state=state, grade=grade, zipcode=zipcode,
+                           months=months, state=state, rank=rank, zipcode=zipcode,
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                            federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
@@ -109,7 +109,7 @@ def uploadfile():
     global SGLI_PREMIUMS
     global months
     global state
-    global grade
+    global rank
     global zipcode
     global basepay
     global bas
@@ -176,19 +176,23 @@ def uploadfile():
                     if x in text:
                         for i in range(len(months)):
                             months[i] = MONTHS_SHORT[(MONTHS_SHORT.index(x)+i) % 12]
+                        rank_month_selected = months[1]
                         sgli_month_selected = months[1]
+                        state_month_selected = months[1]
+                        rothtsp_month_selected = months[1]
                         break
                     else:
                         for i in range(len(months)):
                             months[i] = "no month"
 
-                #find grade
+                #find rank
                 for x in RANKS_SHORT:
                     if x in text and text[text.index(x)+9] == "ENTITLEMENTS":
-                        grade = x
+                        rank = x
+                        rank_selected = x
                         break
                     else:
-                        grade = "no grade found"
+                        rank = "no rank found"
 
                 #find base pay
                 if 'BASE' in text:
@@ -242,6 +246,7 @@ def uploadfile():
                 if 'SGLI' in text:
                     for i in range(len(sgli)):
                         sgli[i] = Decimal(text[(text.index('SGLI')+1)])
+                    sgli_selected = sgli[1]
                 else:
                     for i in range(len(sgli)):
                         sgli[i] = 0
@@ -291,6 +296,7 @@ def uploadfile():
                 for x in STATES_SHORT:
                     if (x in text) and (text[text.index(x)-1] == "TAXES"):
                         state = x
+                        state_selected = x
                         break
                     else:
                         state = "no state found"
@@ -305,7 +311,7 @@ def uploadfile():
             return render_template('les.html', 
                                     MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
                                     SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
-                                    months=months, state=state, grade=grade, zipcode=zipcode,
+                                    months=months, state=state, rank=rank, zipcode=zipcode,
                                     basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                                     federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                                     midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
@@ -331,7 +337,7 @@ def updatematrix():
     global SGLI_PREMIUMS
     global months
     global state
-    global grade
+    global rank
     global zipcode
     global basepay
     global bas
@@ -360,8 +366,18 @@ def updatematrix():
     global rothtsp_selected
     global rothtsp_month_selected
 
+
+    rank_selected = request.form['rank_selected']
+    rank_month_selected = request.form['rank_month_selected']
     sgli_selected = request.form['sgli_selected']
     sgli_month_selected = request.form['sgli_month_selected']
+
+    if statetaxes[1] != 0:
+        state_selected = request.form['state_selected']
+        state_month_selected = request.form['state_month_selected']
+
+    rothtsp_selected = request.form['rothtsp_selected']
+    rothtsp_month_selected = request.form['rothtsp_month_selected']
 
 
     #update SGLI
@@ -370,6 +386,7 @@ def updatematrix():
             sgli[i] = Decimal(sgli_selected)
         else:
             sgli[i] = sgli[0]
+    print("sgli_selected: ", sgli_selected)
 
     #update gross pay:
     for i in range(len(grosspay)):
@@ -383,7 +400,7 @@ def updatematrix():
     return render_template('les.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
                            SGLI_COVERAGES=SGLI_COVERAGES, SGLI_PREMIUMS=SGLI_PREMIUMS,
-                           months=months, state=state, grade=grade, zipcode=zipcode,
+                           months=months, state=state, rank=rank, zipcode=zipcode,
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                            federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
