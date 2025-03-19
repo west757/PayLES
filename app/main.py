@@ -145,12 +145,9 @@ def uploadfile():
     if 'file' in request.files:
         file = request.files['file']
 
-        #checks to see if  there is a file, if not then returns an error
         if file.filename == '':
             return 'No selected file', 400
 
-        #checks to see if the file type is allowed, if not then returns an error
-        #file types allowed defined in ALLOWED_EXTENSIONS variable
         if file and not allowed_file(file.filename):
             return 'File type not allowed', 400
 
@@ -159,14 +156,9 @@ def uploadfile():
 
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            #start pdfplumber
             with pdfplumber.open(file) as les:
-                #gets all the content of the first page of the LES
                 page = les.pages[0]
-                #creates a string of all text from the LES
                 textstring = page.extract_text()
-                #creates an array of all text separated by a space
-                #avoids the problem of using specific indexes because indexes may change depending on text size
                 text = textstring.split()
 
                 #print(text)

@@ -17,6 +17,7 @@ pdfplumber: https://pypi.org/project/pdfplumber/
 table template: https://www.freshdesignweb.com/free-css-table.html
 dynamic AJAX with flask: https://www.geeksforgeeks.org/dynamic-forms-handling-with-htmx-and-python-flask/
 
+military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
 military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tables/
 -->

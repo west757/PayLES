@@ -65,8 +65,8 @@ th.matrix {
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #333;
+    color: #f2f2f2;
     font-weight: bold;
     border-left: 1px solid #ddd;
 }
