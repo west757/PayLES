@@ -87,6 +87,22 @@ td.matrix:last-child, th.matrix:last-child {
     border-right: 1px solid #ddd;
 }
 
+#entitlements {
+    background-color: #04AA6D;
+    text-align: center;
+    text-orientation: upright;
+    writing-mode: vertical-lr;
+    font-size: 10px;
+}
+
+#deductions {
+    background-color: lightcoral;
+    text-align: center;
+    text-orientation: upright;
+    writing-mode: vertical-lr;
+    font-size: 10px;
+}
+
 select.matrix {
     font-family: Arial, sans-serif;
     font-size: 15px;
