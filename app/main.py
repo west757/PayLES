@@ -1,4 +1,3 @@
-from calendar import month_name
 from flask import Flask
 from flask import request, render_template, request, make_response, jsonify
 from werkzeug.utils import secure_filename
@@ -362,11 +361,8 @@ def updatematrix():
     rank_month_selected = request.form['rank_month_selected']
     sgli_selected = Decimal(request.form['sgli_selected'])
     sgli_month_selected = request.form['sgli_month_selected']
-
-    if statetaxes[1] != 0:
-        state_selected = request.form['state_selected']
-        state_month_selected = request.form['state_month_selected']
-
+    state_selected = request.form['state_selected']
+    state_month_selected = request.form['state_month_selected']
     rothtsp_selected = request.form['rothtsp_selected']
     rothtsp_month_selected = request.form['rothtsp_month_selected']
 
