@@ -64,6 +64,9 @@ pcsmembers = [0, 0, 0, 0, 0, 0, 0]
 
 
 #calculations
+taxablepay = [0, 0, 0, 0, 0, 0, 0]
+nontaxablepay = [0, 0, 0, 0, 0, 0, 0]
+totaltaxes = [0, 0, 0, 0, 0, 0, 0]
 grosspay = [0, 0, 0, 0, 0, 0, 0]
 netpay = [0, 0, 0, 0, 0, 0, 0]
 
@@ -89,7 +92,7 @@ def index():
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                            federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                           grosspay=grosspay, netpay=netpay,
+                           taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                            rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
                            sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                            state_selected=state_selected, state_month_selected=state_month_selected,
@@ -126,6 +129,9 @@ def uploadfile():
     global debt
     global partialpay
     global pcsmembers
+    global taxablepay
+    global nontaxablepay
+    global totaltaxes
     global grosspay
     global netpay
     global rank_selected
@@ -316,6 +322,10 @@ def uploadfile():
                     zipcode = 0
 
 
+                #update total taxes
+                for i in range(len(totaltaxes)):
+                    totaltaxes[i] = federaltaxes[i] + statetaxes[i]
+
                 #update gross pay:
                 for i in range(len(grosspay)):
                     grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
@@ -332,7 +342,7 @@ def uploadfile():
                                     basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                                     federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                                     midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                                    grosspay=grosspay, netpay=netpay,
+                                    taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                                     rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
                                     sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                                     state_selected=state_selected, state_month_selected=state_month_selected,
@@ -372,6 +382,9 @@ def updatematrix():
     global debt
     global partialpay
     global pcsmembers
+    global taxablepay
+    global nontaxablepay
+    global totaltaxes
     global grosspay
     global netpay
     global rank_selected
@@ -399,6 +412,10 @@ def updatematrix():
         else:
             sgli[i] = sgli[0]
 
+    #update total taxes
+    for i in range(len(totaltaxes)):
+        totaltaxes[i] = federaltaxes[i] + statetaxes[i]
+
     #update gross pay:
     for i in range(len(grosspay)):
         grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
@@ -414,7 +431,7 @@ def updatematrix():
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
                            federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                           grosspay=grosspay, netpay=netpay,
+                           taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                            rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
                            sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                            state_selected=state_selected, state_month_selected=state_month_selected,
