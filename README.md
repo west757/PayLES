@@ -16,6 +16,7 @@ get/post with flask: https://stackabuse.com/how-to-get-and-parse-http-post-body-
 pdfplumber: https://pypi.org/project/pdfplumber/
 table template: https://www.freshdesignweb.com/free-css-table.html
 dynamic AJAX with flask: https://www.geeksforgeeks.org/dynamic-forms-handling-with-htmx-and-python-flask/
+css modal: https://codepen.io/anon/embed/DdeoeW?height=600&theme-id=0&slug-hash=DdeoeW&default-tab=result&animations=run&editable=&name=cp_embed_4#html-box
 
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/

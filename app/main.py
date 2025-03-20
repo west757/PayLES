@@ -44,9 +44,9 @@ zipcode = 0
 basepay = [0, 0, 0, 0, 0, 0, 0]
 bas = [0, 0, 0, 0, 0, 0, 0]
 bah = [0, 0, 0, 0, 0, 0, 0]
-ueainitial = 0
-advancedebt = 0
-pcsmember = 0
+ueainitial = [0, 0, 0, 0, 0, 0, 0]
+advancedebt = [0, 0, 0, 0, 0, 0, 0]
+pcsmember = [0, 0, 0, 0, 0, 0, 0]
 
 #deductions
 federaltaxes = [0, 0, 0, 0, 0, 0, 0]
@@ -56,9 +56,9 @@ sgli = [0, 0, 0, 0, 0, 0, 0]
 statetaxes = [0, 0, 0, 0, 0, 0, 0]
 rothtsp = [0, 0, 0, 0, 0, 0, 0]
 midmonthpay = 0
-debt = 0
-partialpay = 0
-pcsmembers = 0
+debt = [0, 0, 0, 0, 0, 0, 0]
+partialpay = [0, 0, 0, 0, 0, 0, 0]
+pcsmembers = [0, 0, 0, 0, 0, 0, 0]
 
 #allotments
 
@@ -264,24 +264,43 @@ def uploadfile():
                 else:
                     midmonthpay = 0
 
-                #find gross pay
-                if 'ENT' in text:
-                    for i in range(len(grosspay)):
-                        grosspay[i] = Decimal(text[(text.index('ENT')+1)])
-                else:
-                    for i in range(len(grosspay)):
-                        grosspay[i] = 0
 
-                #find net pay (takes mid-month pay into account)
-                if '=NET' in text:
-                    netpayinitial = Decimal(text[(text.index('=NET')+2)])
-                    if midmonthpay != 0:
-                        netpayinitial = netpayinitial + midmonthpay
-                    for i in range(len(netpay)):
-                        netpay[i] = netpayinitial
+
+                #find uea initial
+                if 'UEA' in text and text[text.index('UEA')+1] == "INITIAL":
+                    ueainitial[0] = Decimal(text[(text.index('UEA')+2)])
                 else:
-                    for i in range(len(netpay)):
-                        netpay[i] = 0
+                    ueainitial[0] = 0
+
+                #find advance debt
+                if 'ADVANCE' in text and text[text.index('ADVANCE')+1] == "DEBT":
+                    advancedebt[0] = Decimal(text[(text.index('ADVANCE')+2)])
+                else:
+                    advancedebt[0] = 0
+
+                #find pcs member
+                if 'PCS' in text and text[text.index('PCS')+1] == "MEMBER":
+                    pcsmember[0] = Decimal(text[(text.index('PCS')+2)])
+                else:
+                    pcsmember[0] = 0
+
+                #find partial pay
+                if 'PARTIAL' in text and text[text.index('PARTIAL')+1] == "PAY":
+                    partialpay[0] = Decimal(text[(text.index('PARTIAL')+2)])
+                else:
+                    partialpay[0] = 0
+
+                #find pcs members
+                if 'PCS' in text and text[text.index('PCS')+1] == "MEMBERS":
+                    pcsmembers[0] = Decimal(text[(text.index('PCS')+2)])
+                else:
+                    pcsmembers[0] = 0
+
+                #find debt
+                if 'DEBT' in text and text[text.index('DEBT')-1] != "ADVANCE":
+                    debt[0] = Decimal(text[(text.index('DEBT')+1)])
+                else:
+                    debt[0] = 0
 
                 #find state
                 for x in STATES_SHORT:
@@ -297,6 +316,15 @@ def uploadfile():
                     zipcode = Decimal(text[(text.index('PACIDN')+3)])
                 else:
                     zipcode = 0
+
+
+                #update gross pay:
+                for i in range(len(grosspay)):
+                    grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
+
+                #update net pay:
+                for i in range(len(netpay)):
+                    netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i] - debt[i] - partialpay[i] - pcsmembers[i]
 
 
             return render_template('les.html', 
@@ -375,11 +403,11 @@ def updatematrix():
 
     #update gross pay:
     for i in range(len(grosspay)):
-        grosspay[i] = basepay[i] + bas[i] + bah[i]
+        grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
 
     #update net pay:
     for i in range(len(netpay)):
-        netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i]
+        netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i] - debt[i] - partialpay[i] - pcsmembers[i]
 
     return render_template('les.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,

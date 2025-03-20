@@ -25,6 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Entitlements -->
                     <tr class="matrix">
                         <td class="matrix">Base Pay</td>
                         <td class="matrix">{{'${:,.2f}'.format(basepay[0])}}</td>
@@ -58,6 +59,47 @@
                         <td class="matrix">{{'${:,.2f}'.format(bah[6])}}</td>
                     </tr>
 
+                    {% if ueainitial[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">UEA Initial</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(ueainitial[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+                    {% if advancedebt[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">Advance Debt</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(advancedebt[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+                    {% if pcsmember[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">PCS Member</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmember[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+
+                    <!-- Deductions -->
                     <tr class="matrix">
                         <td class="matrix">Federal Taxes</td>
                         <td class="matrix">{{'${:,.2f}'.format(federaltaxes[0])}}</td>
@@ -124,6 +166,48 @@
                         <td class="matrix">{{'${:,.2f}'.format(rothtsp[6])}}</td>
                     </tr>
 
+
+                    {% if partialpay[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">Partial Pay</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(partialpay[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+                    {% if pcsmembers[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">PCS Members</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(pcsmembers[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+                    {% if debt[0] != 0 %}
+                    <tr class="matrix">
+                        <td class="matrix">Debt</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[0])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[1])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[2])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[3])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[4])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[5])}}</td>
+                        <td class="matrix">{{'${:,.2f}'.format(debt[6])}}</td>
+                    </tr>
+                    {% endif %}
+
+
+                    <!-- Spacer -->
                     <tr class="matrix">
                         <td class="matrix" colspan="8" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
                     </tr>
