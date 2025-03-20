@@ -45,20 +45,17 @@ body {
 
 /* matrix */
 
-div.matrix {
-    margin: 10px;
+div.matrix-div {
+    margin: auto;
     padding: 10px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
 }
 
+/*
 table.matrix {
     width: 100%;
     border-collapse: collapse;
     border-radius: 20px;
     overflow: hidden;
-    /*border: 5px solid;*/
 }
 
 th.matrix {
@@ -86,22 +83,75 @@ tr.matrix:nth-child(even) td.matrix {
 td.matrix:last-child, th.matrix:last-child {
     border-right: 1px solid #ddd;
 }
+*/
 
-#entitlements {
-    background-color: #04AA6D;
-    text-align: center;
-    text-orientation: upright;
-    writing-mode: vertical-lr;
-    font-size: 10px;
+
+
+table.matrix-table {
+    border-collapse: separate;
+    border-spacing: 0px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #f9f9f9;
 }
 
-#deductions {
-    background-color: lightcoral;
+tr.matrix-header {
     text-align: center;
-    text-orientation: upright;
-    writing-mode: vertical-lr;
-    font-size: 10px;
+    font-weight: bold;
+    border-left: 1px solid #ddd;
+    padding: 20px;
 }
+
+td.matrix-header {
+    background: #333;
+    color: #f2f2f2;
+    text-align: center;
+    font-weight: bold;
+    border-left: 1px solid #ddd;
+    border-radius: 0px;
+    padding: 20px;
+}
+
+tr.matrix, td.matrix {
+    text-align: center;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+}
+
+td.matrix:first-child, td.matrix-header:first-child {
+    border-left: none;
+}
+
+td.matrix-header:first-child {
+    border-radius: 20px 0 0 0;
+}
+
+td.matrix-header:last-child {
+    border-radius: 0 20px 0 0;
+}
+
+/*
+td.hover01:hover {
+    background-color: #dde6ee;
+}
+
+td.hover02:hover {
+    background-color: #dde6ee;
+}
+
+td.hover02:first-child {
+    border-radius: 0 0 0 6px;
+}
+
+td.hover02:last-child {
+    border-radius: 0 0 6px 0;
+}
+*/
+
+
+
+
 
 select.matrix {
     font-family: Arial, sans-serif;

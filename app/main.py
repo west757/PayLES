@@ -209,6 +209,24 @@ def uploadfile():
                     for i in range(len(bah)):
                         bah[i] = 0
 
+                #find uea initial
+                if 'UEA' in text and text[text.index('UEA')+1] == "INITIAL":
+                    ueainitial[0] = Decimal(text[(text.index('UEA')+2)])
+                else:
+                    ueainitial[0] = 0
+
+                #find advance debt
+                if 'ADVANCE' in text and text[text.index('ADVANCE')+1] == "DEBT":
+                    advancedebt[0] = Decimal(text[(text.index('ADVANCE')+2)])
+                else:
+                    advancedebt[0] = 0
+
+                #find pcs member
+                if 'PCS' in text and text[text.index('PCS')+1] == "MEMBER":
+                    pcsmember[0] = Decimal(text[(text.index('PCS')+2)])
+                else:
+                    pcsmember[0] = 0
+
                 #find federal taxes
                 if 'FEDERAL' in text and text[text.index('FEDERAL')+1] == "TAXES":
                     for i in range(len(federaltaxes)):
@@ -263,26 +281,6 @@ def uploadfile():
                     midmonthpay = Decimal(text[(text.index('MID-MONTH-PAY')+1)])
                 else:
                     midmonthpay = 0
-
-
-
-                #find uea initial
-                if 'UEA' in text and text[text.index('UEA')+1] == "INITIAL":
-                    ueainitial[0] = Decimal(text[(text.index('UEA')+2)])
-                else:
-                    ueainitial[0] = 0
-
-                #find advance debt
-                if 'ADVANCE' in text and text[text.index('ADVANCE')+1] == "DEBT":
-                    advancedebt[0] = Decimal(text[(text.index('ADVANCE')+2)])
-                else:
-                    advancedebt[0] = 0
-
-                #find pcs member
-                if 'PCS' in text and text[text.index('PCS')+1] == "MEMBER":
-                    pcsmember[0] = Decimal(text[(text.index('PCS')+2)])
-                else:
-                    pcsmember[0] = 0
 
                 #find partial pay
                 if 'PARTIAL' in text and text[text.index('PARTIAL')+1] == "PAY":
