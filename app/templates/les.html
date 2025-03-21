@@ -25,7 +25,9 @@
                 <tbody>
                     <!-- Entitlements -->
                     <tr class="matrix">
-                        <td class="matrix">Base Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-basepay">Base Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(basepay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(basepay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(basepay[2])}}</td>
@@ -36,7 +38,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">BAS</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-bas">BAS</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(bas[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(bas[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(bas[2])}}</td>
@@ -47,7 +51,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">BAH</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-bah">BAH</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(bah[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(bah[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(bah[2])}}</td>
@@ -59,7 +65,9 @@
 
                     {% if ueainitial[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">UEA Initial</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-ueainitial">UEA Initial</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(ueainitial[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ueainitial[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ueainitial[2])}}</td>
@@ -72,7 +80,9 @@
 
                     {% if advancedebt[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">Advance Debt</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-advancedebt">Advance Debt</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(advancedebt[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(advancedebt[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(advancedebt[2])}}</td>
@@ -85,7 +95,9 @@
 
                     {% if pcsmember[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">PCS Member</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-pcsmember">PCS Member</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmember[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmember[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmember[2])}}</td>
@@ -99,7 +111,9 @@
 
                     <!-- Deductions -->
                     <tr class="matrix">
-                        <td class="matrix">Federal Taxes</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-federaltaxes">Federal Taxes</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(federaltaxes[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(federaltaxes[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(federaltaxes[2])}}</td>
@@ -110,7 +124,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">FICA - Social Security</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-ficasocsecurity">FICA - Social Security</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(ficasocsecurity[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ficasocsecurity[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ficasocsecurity[2])}}</td>
@@ -121,7 +137,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">FICA - Medicare</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-ficamedicare">FICA - Medicare</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(ficamedicare[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ficamedicare[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(ficamedicare[2])}}</td>
@@ -132,7 +150,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">SGLI</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-sgli">SGLI</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(sgli[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(sgli[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(sgli[2])}}</td>
@@ -143,7 +163,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">State Taxes</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-statetaxes">State Taxes</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(statetaxes[2])}}</td>
@@ -154,7 +176,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Roth TSP</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-rothtsp">Roth TSP</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(rothtsp[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(rothtsp[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(rothtsp[2])}}</td>
@@ -167,7 +191,9 @@
 
                     {% if partialpay[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">Partial Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-partialpay">Partial Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(partialpay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(partialpay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(partialpay[2])}}</td>
@@ -180,7 +206,9 @@
 
                     {% if pcsmembers[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">PCS Members</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-pcsmembers">PCS Members</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmembers[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmembers[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(pcsmembers[2])}}</td>
@@ -193,7 +221,9 @@
 
                     {% if debt[0] != 0 %}
                     <tr class="matrix">
-                        <td class="matrix">Debt</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-debt">Debt</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(debt[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(debt[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(debt[2])}}</td>
@@ -211,7 +241,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Taxable Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-taxablepay">Taxable Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(taxablepay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(taxablepay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(taxablepay[2])}}</td>
@@ -222,7 +254,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Non Taxable Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-nontaxablepay">Non-Taxable Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(nontaxablepay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(nontaxablepay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(nontaxablepay[2])}}</td>
@@ -233,7 +267,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Total Taxes</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-totaltaxes">Total Taxes</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(totaltaxes[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(totaltaxes[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(totaltaxes[2])}}</td>
@@ -244,7 +280,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Gross Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-grosspay">Gross Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(grosspay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(grosspay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(grosspay[2])}}</td>
@@ -255,7 +293,9 @@
                     </tr>
 
                     <tr class="matrix">
-                        <td class="matrix">Net Pay</td>
+                        <td class="matrix">
+                            <label class="modalbutton" for="modal-netpay">Net Pay</label>
+                        </td>
                         <td class="matrix">{{'${:,.2f}'.format(netpay[0])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(netpay[1])}}</td>
                         <td class="matrix">{{'${:,.2f}'.format(netpay[2])}}</td>
@@ -367,44 +407,204 @@
         </div>
 
 
-        <div class="additions" id="additions-id">
-            <table class="additions" id="additions-table-id">
-                <tr class="additions">
-                    <td class="additions">Additions 1</td>
-                    <td class="additions">Additions 2</td>
-                    <td class="additions">Additions 3</td>
-                </tr>
-                <tr class="additions">
-                    <td class="additions">Additions 4</td>
-                    <td class="additions">Additions 5</td>
-                    <td class="additions">Additions 6</td>
-                </tr>
-                <tr class="additions">
-                    <td class="additions">Additions 7</td>
-                    <td class="additions">Additions 8</td>
-                    <td class="additions">Additions 9</td>
-                </tr>
-            </table>
-        </div>
 
-        <div class="additions" id="additions-id">
-            <table class="additions" id="additions-table-id">
-                <tr class="additions">
-                    <td class="additions">Additions 1</td>
-                    <td class="additions">Additions 2</td>
-                    <td class="additions">Additions 3</td>
-                </tr>
-                <tr class="additions">
-                    <td class="additions">Additions 4</td>
-                    <td class="additions">Additions 5</td>
-                    <td class="additions">Additions 6</td>
-                </tr>
-                <tr class="additions">
-                    <td class="additions">Additions 7</td>
-                    <td class="additions">Additions 8</td>
-                    <td class="additions">Additions 9</td>
-                </tr>
-            </table>
+    <input class="modal-state" id="modal-basepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-basepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-basepay"></label>
+            <h2>Base Pay</h2>
+            <p>Base pay is calculated from a variety of factors.</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-bas" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-bas"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-bas"></label>
+            <h2>Basic Allowance for Subsistence</h2>
+            <p>BAS</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-bah" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-bah"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-bah"></label>
+            <h2>Basic Allowance for Housing</h2>
+            <p>BAH</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ueainitial" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ueainitial"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ueainitial"></label>
+            <h2>UEA Initial</h2>
+            <p>UEA initial</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-advancedebt" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-advancedebt"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-advancedebt"></label>
+            <h2>Advance Debt</h2>
+            <p>Advance debt</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-pcsmember" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-pcsmember"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-pcsmember"></label>
+            <h2>PCS Member</h2>
+            <p>PCS member</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-federaltaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-federaltaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-federaltaxes"></label>
+            <h2>Federal Taxes</h2>
+            <p>Federal taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ficasocsecurity" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ficasocsecurity"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ficasocsecurity"></label>
+            <h2>FICA - Social Security</h2>
+            <p>FICA social security</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ficamedicare" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ficamedicare"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ficamedicare"></label>
+            <h2>FICA - Medicare</h2>
+            <p>FICA medicare</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-sgli" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-sgli"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-sgli"></label>
+            <h2>Service Members Group Life Insurance</h2>
+            <p>SGLI</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-statetaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-statetaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-statetaxes"></label>
+            <h2>State Taxes</h2>
+            <p>State taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-rothtsp" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-rothtsp"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-rothtsp"></label>
+            <h2>Roth Thrift Savings Plan</h2>
+            <p>Roth TSP</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-partialpay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-partialpay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-partialpay"></label>
+            <h2>Partial Pay</h2>
+            <p>partial pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-pcsmembers" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-pcsmembers"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-pcsmembers"></label>
+            <h2>Permanent Change of Station - Members</h2>
+            <p>PCS members</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-debt" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-debt"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-debt"></label>
+            <h2>Debt</h2>
+            <p>Debt</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-taxablepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-taxablepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-taxablepay"></label>
+            <h2>Taxable Pay</h2>
+            <p>Taxable pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-nontaxablepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-nontaxablepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-nontaxablepay"></label>
+            <h2>Non-Taxable Pay</h2>
+            <p>Non-taxable pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-totaltaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-totaltaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-totaltaxes"></label>
+            <h2>Total Taxes</h2>
+            <p>Total taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-grosspay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-grosspay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-grosspay"></label>
+            <h2>Gross Pay</h2>
+            <p>Gross pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-netpay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-netpay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-netpay"></label>
+            <h2>Net Pay</h2>
+            <p>Net pay</p>
         </div>
     </div>
 
