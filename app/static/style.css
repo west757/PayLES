@@ -39,13 +39,13 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 75% 25%;
+    grid-template-columns: 65% 35%;
 }
 
 
 /* matrix */
 
-div.matrix-div {
+div.table-div {
     margin: auto;
     padding: 10px;
 }
@@ -86,7 +86,7 @@ td.matrix:last-child, th.matrix:last-child {
 */
 
 
-
+/* matrix */
 table.matrix-table {
     border-collapse: separate;
     border-spacing: 0px;
@@ -156,8 +156,55 @@ td.hover02:last-child {
 
 
 
+/* inputs */
 
-select.matrix {
+table.inputs-table {
+    border-collapse: separate;
+    border-spacing: 0px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #f9f9f9;
+}
+
+tr.inputs-header {
+    text-align: center;
+    font-weight: bold;
+    border-left: 1px solid #ddd;
+}
+
+td.inputs-header {
+    background: #333;
+    color: #f2f2f2;
+    text-align: center;
+    font-weight: bold;
+    border-left: 1px solid #ddd;
+    border-radius: 0px;
+    padding: 20px;
+}
+
+tr.inputs, td.inputs {
+    text-align: center;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+tr.inputs:not(:first-child), td.inputs:not(:first-child) {
+    padding: 17px;
+}
+
+td.inputs:first-child, td.inputs-header:first-child {
+    border-left: none;
+}
+
+td.inputs-header:first-child {
+    border-radius: 20px 0 0 0;
+}
+
+td.inputs-header:last-child {
+    border-radius: 0 20px 0 0;
+}
+
+select.inputs {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
@@ -169,7 +216,7 @@ select.matrix {
     text-align: center;
 }
 
-input.matrix {
+input.inputs {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
@@ -191,11 +238,10 @@ tr.matrix:hover {
 
 
 
-
-
 .updatebuttondiv {
     margin: auto;
-    width: 200px;
+    width: 300px;
+    padding: 10px;
 }
 
 .updatebutton {
