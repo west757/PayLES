@@ -315,7 +315,7 @@
                 <table class="inputs-table">
                     <tbody>
                         <tr class="inputs-header">
-                            <td class="inputs-header">Variable</td>
+                            <td class="inputs-header"></td>
                             <td class="inputs-header">Current</td>
                             <td class="inputs-header">Future</td>
                             <td class="inputs-header">Changing Month</td>
@@ -328,14 +328,14 @@
                             <td class="inputs">
                                 <select class="inputs" id="rank_selected" name="rank_selected">
                                     {% for x in RANKS_SHORT[0:] %}
-                                    <option value="{{x}}" {% if x == rank_selected %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x==rank_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                             <td class="inputs">
                                 <select class="inputs" id="rank_month_selected" name="rank_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}" {% if x == rank_month_selected %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x==rank_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -352,7 +352,7 @@
                             <td class="inputs">
                                 <select class="inputs" id="zipcode_month_selected" name="zipcode_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}" {% if x == zipcode_month_selected %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x==zipcode_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -437,6 +437,13 @@
             </form>
         </div>
     </div>
+
+
+
+    <div>
+        <iframe class="pdf" src="../static/LES_Template1.pdf" style="width: 100%;height: 100%;border: none;"></iframe>
+    </div>
+
 
 
     <input class="modal-state" id="modal-basepay" type="checkbox" />
