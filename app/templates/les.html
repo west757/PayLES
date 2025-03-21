@@ -10,19 +10,20 @@
 
 <body>
     <div class="container" id="container-id">
-        <div class="matrix-div" id="matrix-id">
+        <div class="table-div" id="matrix-id">
             <table class="matrix-table">
-                <tr class="matrix-header">
-                    <td class="matrix-header"></td>
-                    <td class="matrix-header">{{months[0]}}</td>
-                    <td class="matrix-header">{{months[1]}}</td>
-                    <td class="matrix-header">{{months[2]}}</td>
-                    <td class="matrix-header">{{months[3]}}</td>
-                    <td class="matrix-header">{{months[4]}}</td>
-                    <td class="matrix-header">{{months[5]}}</td>
-                    <td class="matrix-header">{{months[6]}}</td>
-                </tr>
                 <tbody>
+                    <tr class="matrix-header">
+                        <td class="matrix-header"></td>
+                        <td class="matrix-header">{{months[0]}}</td>
+                        <td class="matrix-header">{{months[1]}}</td>
+                        <td class="matrix-header">{{months[2]}}</td>
+                        <td class="matrix-header">{{months[3]}}</td>
+                        <td class="matrix-header">{{months[4]}}</td>
+                        <td class="matrix-header">{{months[5]}}</td>
+                        <td class="matrix-header">{{months[6]}}</td>
+                    </tr>
+
                     <!-- Entitlements -->
                     <tr class="matrix">
                         <td class="matrix">
@@ -309,48 +310,68 @@
         </div>
 
 
-        <div class="matrix" id="inputs-id">
+        <div class="table-div" id="inputs-id">
             <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="innerHTML">
-                <table class="matrix">
-                    <thead class="matrix">
-                        <tr class="matrix">
-                            <th class="matrix">Current</th>
-                            <th class="matrix">Future</th>
-                            <th class="matrix">Changing Month</th>
-                        </tr>
-                    </thead>
-
+                <table class="inputs-table">
                     <tbody>
-                        <tr class="matrix">
-                            <td class="matrix">{{rank}}</td>
-                            <td class="matrix">
-                                <select class="matrix" id="rank_selected" name="rank_selected">
+                        <tr class="inputs-header">
+                            <td class="inputs-header">Variable</td>
+                            <td class="inputs-header">Current</td>
+                            <td class="inputs-header">Future</td>
+                            <td class="inputs-header">Changing Month</td>
+                        </tr>
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-basepay">Rank</label>
+                            </td>
+                            <td class="inputs">{{rank}}</td>
+                            <td class="inputs">
+                                <select class="inputs" id="rank_selected" name="rank_selected">
                                     {% for x in RANKS_SHORT[0:] %}
-                                    <option value="{{x}}" {% if x==rank_selected %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x == rank_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td class="matrix">
-                                <select class="matrix" id="rank_month_selected" name="rank_month_selected">
+                            <td class="inputs">
+                                <select class="inputs" id="rank_month_selected" name="rank_month_selected">
                                     {% for x in months[1:] %}
-                                    <option value="{{x}}" {% if x==rank_month_selected %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x == rank_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
                         </tr>
 
-                        <tr class="matrix">
-                            <td class="matrix">SGLI</td>
-                            <td class="matrix">
-                                <select class="matrix" id="sgli_selected" name="sgli_selected">
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-bah">Zipcode</label>
+                            </td>
+                            <td class="inputs">{{zipcode}}</td>
+                            <td class="inputs">
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 id="zipcode_selected" name="zipcode_selected" />
+                            </td>
+                            <td class="inputs">
+                                <select class="inputs" id="zipcode_month_selected" name="zipcode_month_selected">
+                                    {% for x in months[1:] %}
+                                    <option value="{{x}}" {% if x == zipcode_month_selected %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-sgli">SGLI</label>
+                            </td>
+                            <td class="inputs">{{'${:,.2f}'.format(sgli[0])}}</td>
+                            <td class="inputs">
+                                <select class="inputs" id="sgli_selected" name="sgli_selected">
                                     {% for x in SGLI_PREMIUMS[0:] %}
                                     <option value="{{x}}" {% if x==sgli_selected %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
-
-                            <td class="matrix">
-                                <select class="matrix" id="sgli_month_selected" name="sgli_month_selected">
+                            <td class="inputs">
+                                <select class="inputs" id="sgli_month_selected" name="sgli_month_selected">
                                     {% for x in months[1:] %}
                                     <option value="{{x}}" {% if x==sgli_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
@@ -358,17 +379,20 @@
                             </td>
                         </tr>
 
-                        <tr class="matrix">
-                            <td class="matrix">State Taxes</td>
-                            <td class="matrix">
-                                <select class="matrix" id="state_selected" name="state_selected">
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-statetaxes">Home of Record</label>
+                            </td>
+                            <td class="inputs">{{state}}</td>
+                            <td class="inputs">
+                                <select class="inputs" id="state_selected" name="state_selected">
                                     {% for x in STATES_SHORT[0:] %}
                                     <option value="{{x}}" {% if x==state_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td class="matrix">
-                                <select class="matrix" id="state_month_selected" name="state_month_selected">
+                            <td class="inputs">
+                                <select class="inputs" id="state_month_selected" name="state_month_selected">
                                     {% for x in months[1:] %}
                                     <option value="{{x}}" {% if x==state_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
@@ -376,13 +400,16 @@
                             </td>
                         </tr>
 
-                        <tr class="matrix">
-                            <td class="matrix">Roth TSP</td>
-                            <td class="matrix">
-                                <input class="matrix" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_selected" name="rothtsp_selected" />
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-rothtsp">Roth TSP</label>
                             </td>
-                            <td class="matrix">
-                                <select class="matrix" id="rothtsp_month_selected" name="rothtsp_month_selected">
+                            <td class="inputs">{{'${:,.2f}'.format(rothtsp[0])}}</td>
+                            <td class="inputs">
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_selected" name="rothtsp_selected" />
+                            </td>
+                            <td class="inputs">
+                                <select class="inputs" id="rothtsp_month_selected" name="rothtsp_month_selected">
                                     {% for x in months[1:] %}
                                     <option value="{{x}}" {% if x==rothtsp_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
@@ -390,14 +417,18 @@
                             </td>
                         </tr>
 
-                        <tr class="matrix">
-                            <td class="matrix" colspan="3" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                        </tr>
-
-                        <tr class="matrix">
-                            <td class="matrix" colspan=3>
+                        <tr class="inputs">
+                            <td class="inputs" colspan="4">
                                 <div class="updatebuttondiv">
                                     <button class="updatebutton" type="submit">Update LES</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="inputs">
+                            <td class="inputs" colspan="4">
+                                <div class="updatebuttondiv">
+                                    <button class="updatebutton" type="submit">Export to Excel</button>
                                 </div>
                             </td>
                         </tr>
@@ -405,7 +436,7 @@
                 </table>
             </form>
         </div>
-
+    </div>
 
 
     <input class="modal-state" id="modal-basepay" type="checkbox" />
@@ -513,7 +544,7 @@
         <label class="modal-bg" for="modal-statetaxes"></label>
         <div class="modal-inner">
             <label class="modal-close" for="modal-statetaxes"></label>
-            <h2>State Taxes</h2>
+            <h2>State Taxes and Home of Record</h2>
             <p>State taxes</p>
         </div>
     </div>

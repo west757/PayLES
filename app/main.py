@@ -73,6 +73,8 @@ netpay = [0, 0, 0, 0, 0, 0, 0]
 
 rank_selected = ""
 rank_month_selected = ""
+zipcode_selected = ""
+zipcode_month_selected = ""
 sgli_selected = 0
 sgli_month_selected = ""
 state_selected = ""
@@ -94,6 +96,7 @@ def index():
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
                            taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                            rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                           zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
                            sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                            state_selected=state_selected, state_month_selected=state_month_selected,
                            rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
@@ -136,6 +139,8 @@ def uploadfile():
     global netpay
     global rank_selected
     global rank_month_selected
+    global zipcode_selected
+    global zipcode_month_selected
     global sgli_selected
     global sgli_month_selected
     global state_selected
@@ -344,6 +349,7 @@ def uploadfile():
                                     midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
                                     taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                                     rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                                    zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
                                     sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                                     state_selected=state_selected, state_month_selected=state_month_selected,
                                     rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
@@ -389,6 +395,8 @@ def updatematrix():
     global netpay
     global rank_selected
     global rank_month_selected
+    global zipcode_selected
+    global zipcode_month_selected
     global sgli_selected
     global sgli_month_selected
     global state_selected
@@ -398,6 +406,8 @@ def updatematrix():
 
     rank_selected = request.form['rank_selected']
     rank_month_selected = request.form['rank_month_selected']
+    zipcode_selected = request.form['zipcode_selected']
+    zipcode_month_selected = request.form['zipcode_month_selected']
     sgli_selected = Decimal(request.form['sgli_selected'])
     sgli_month_selected = request.form['sgli_month_selected']
     state_selected = request.form['state_selected']
@@ -433,6 +443,7 @@ def updatematrix():
                            midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
                            taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
                            rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
+                           zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
                            sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
                            state_selected=state_selected, state_month_selected=state_month_selected,
                            rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
