@@ -21,4 +21,15 @@ table: https://stackoverflow.com/questions/4932181/rounded-table-corners-css-onl
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
 military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tables/
+MHA zipcodes: https://veteran.com/bah-rates-state/
+
+
+todo:
+- display LES at bottom of table as image
+- overlay of selectable things on les dispaly
+- have first input be a placeholder for inputs, then actual value (if-then)
+- css styling
+- building out modals
+- building out pages
+- additional rows to be added
 -->

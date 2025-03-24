@@ -347,12 +347,30 @@
                             </td>
                             <td class="inputs">{{zipcode}}</td>
                             <td class="inputs">
-                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=5 id="zipcode_selected" name="zipcode_selected" />
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_selected" name="zipcode_selected" placeholder="{{zipcode_selected}}"/>
                             </td>
                             <td class="inputs">
                                 <select class="inputs" id="zipcode_month_selected" name="zipcode_month_selected">
                                     {% for x in months[1:] %}
                                     <option value="{{x}}" {% if x==zipcode_month_selected %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+
+
+                        <tr class="inputs">
+                            <td class="inputs">
+                                <label class="modalbutton" for="modal-bah">Dependents</label>
+                            </td>
+                            <td class="inputs">{{dependents[0]}}</td>
+                            <td class="inputs">
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_selected" name="dependents_selected" placeholder="{{dependents_selected}}" />
+                            </td>
+                            <td class="inputs">
+                                <select class="inputs" id="dependents_month_selected" name="dependents_month_selected">
+                                    {% for x in months[1:] %}
+                                    <option value="{{x}}" {% if x==dependents_month_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
                             </td>
@@ -406,7 +424,7 @@
                             </td>
                             <td class="inputs">{{'${:,.2f}'.format(rothtsp[0])}}</td>
                             <td class="inputs">
-                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_selected" name="rothtsp_selected" />
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_selected" name="rothtsp_selected" placeholder="{{rothtsp_selected}}"/>
                             </td>
                             <td class="inputs">
                                 <select class="inputs" id="rothtsp_month_selected" name="rothtsp_month_selected">
