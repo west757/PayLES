@@ -3,6 +3,7 @@ from flask import request, render_template, request, make_response, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
+#from pdf2image import convert_from_path
 
 import pdfplumber
 import os
@@ -11,6 +12,7 @@ import os
 ALLOWED_EXTENSIONS = {'pdf'}
 #location where files are uploaded to and stored for them to be accessed by the program
 UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
+STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -165,6 +167,9 @@ def uploadfile():
             filename = secure_filename(file.filename)
 
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            #image = convert_from_path(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #image[0].save(os.path.join(app.config['STATIC_FOLDER'], filename, 'a.jpg'))
 
             with pdfplumber.open(file) as les:
                 page = les.pages[0]
@@ -414,6 +419,14 @@ def updatematrix():
     state_month_selected = request.form['state_month_selected']
     rothtsp_selected = request.form['rothtsp_selected']
     rothtsp_month_selected = request.form['rothtsp_month_selected']
+
+    #update rank
+
+    #update zipcode
+    
+    #print("zipcode: ", zipcode_selected)
+    #print(type(zipcode_selected))
+    #print(type(int(zipcode_selected)))
 
     #update SGLI
     for i in range(len(sgli)):
