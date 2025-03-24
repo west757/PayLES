@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 #from pdf2image import convert_from_path
+import xlrd
 
 import pdfplumber
 import os
@@ -98,7 +99,8 @@ MHA_SHORT = ['AK400', 'AK401', 'AK402', 'AK403', 'AK404', 'AK405', 'AL001', 'AL0
             'WA312', 'WA313', 'WI316', 'WI317', 'WI318', 'WI359', 'WV320', 'WV322', 'WV323', 'WV454', 'WY324', 'ZZ510', 'ZZ520', 'ZZ530', 'ZZ540', 'ZZ550', 'ZZ560', 'ZZ570', 
             'ZZ580', 'ZZ590', 'ZZ600', 'ZZ610', 'ZZ620', 'ZZ630', 'ZZ640', 'ZZ650', 'ZZ660', 'ZZ670', 'ZZ680', 'ZZ690', 'ZZ700', 'ZZ710', 'ZZ720', 'ZZ730', 'ZZ740', 'ZZ750', 
             'ZZ760', 'ZZ770', 'ZZ780', 'ZZ790', 'ZZ800', 'ZZ810', 'ZZ820', 'ZZ830', 'ZZ840', 'ZZ850', 'ZZ860', 'ZZ870', 'ZZ880', 'ZZ890']
-BAH_FILE_PDF = "BAH_2025.pdf"
+BAH_FILE = "bah_2025.xls"
+
 
 
 #variables
@@ -107,6 +109,8 @@ state = ""
 rank = ""
 zipcode = 0
 dependents = [0, 0, 0, 0, 0, 0, 0]
+BAH_WITH_DEPENDENTS = []
+BAH_WITHOUT_DEPENDENTS = []
 
 #entitlements
 basepay = [0, 0, 0, 0, 0, 0, 0]
@@ -155,18 +159,14 @@ rothtsp_month_selected = ""
 
 
 
-
 @app.route('/')
 def index():
+    bah_2025 = xlrd.open_workbook(os.path.join(app.config['STATIC_FOLDER'], BAH_FILE))
+    dependents_with_sheet = bah_2025.sheet_by_name('With')
+    dependents_without_sheet = bah_2025.sheet_by_name('Without')
+    bah_with_dependents = [[dependents_with_sheet.cell_value(r, c) for c in range(dependents_with_sheet.ncols)] for r in range(dependents_with_sheet.nrows)]
+    bah_without_dependents = [[dependents_without_sheet.cell_value(r, c) for c in range(dependents_without_sheet.ncols)] for r in range(dependents_without_sheet.nrows)]
 
-    with pdfplumber.open(os.path.join(app.config['STATIC_FOLDER'], BAH_FILE_PDF)) as bah_pdf:
-        bah_page = bah_pdf.pages[0]
-        bah_textstring = page.extract_text()
-        bah_text = bah_textstring.split()
-
-        #print(les_text)
-
-        bah_pdf.close()
 
     return render_template('index.html', 
                            MONTHS_LONG=MONTHS_LONG, MONTHS_SHORT=MONTHS_SHORT, STATES_LONG=STATES_LONG, STATES_SHORT=STATES_SHORT, RANKS_SHORT=RANKS_SHORT,
@@ -525,8 +525,25 @@ def updatematrix():
 
     #update rank
 
+
+
     #update zipcode
-    
+    #if zipcode_selected:
+
+
+
+        #with pdfplumber.open(os.path.join(app.config['STATIC_FOLDER'], BAH_FILE_PDF)) as bah_pdf:
+        #    bah_page = bah_pdf.pages[0]
+        #    bah_textstring = bah_page.extract_text()
+        #    bah_text = bah_textstring.split()
+
+            #print(les_text)
+
+        #    bah_pdf.close()
+
+
+
+
 
     #update SGLI
     for i in range(len(sgli)):
