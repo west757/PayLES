@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\templates\\les.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\static\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\static\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\index.html||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\templates\\index.html||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
@@ -25,18 +37,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\faq.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\templates\\faq.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\index.html||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\templates\\index.html||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\static\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\static\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,13 +54,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 1,
               "Title": "main.py",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py",
               "RelativeDocumentMoniker": "app\\main.py",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py",
               "RelativeToolTip": "app\\main.py",
-              "ViewState": "AgIAALMBAAAAAAAAAAAmwJkBAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2025-01-15T03:49:52.475Z",
               "EditorCaption": ""
@@ -73,14 +73,14 @@
               "RelativeDocumentMoniker": "app\\templates\\les.html",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\les.html",
               "RelativeToolTip": "app\\templates\\les.html",
-              "ViewState": "AgIAACkBAAAAAAAAAADwv0EBAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAJYBAAAAAAAAAADwv7sBAAB9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2025-03-12T22:42:43.647Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "style.css",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\static\\style.css",
               "RelativeDocumentMoniker": "app\\static\\style.css",
@@ -93,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\index.html",
               "RelativeDocumentMoniker": "app\\templates\\index.html",
@@ -106,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "faq.html",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\faq.html",
               "RelativeDocumentMoniker": "app\\templates\\faq.html",
@@ -114,12 +114,11 @@
               "RelativeToolTip": "app\\templates\\faq.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-18T01:54:58.053Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T01:54:58.053Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "resources.html",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\resources.html",
               "RelativeDocumentMoniker": "app\\templates\\resources.html",
@@ -127,12 +126,11 @@
               "RelativeToolTip": "app\\templates\\resources.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-18T01:55:06.97Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T01:55:06.97Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "contact.html",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\contact.html",
               "RelativeDocumentMoniker": "app\\templates\\contact.html",
@@ -140,12 +138,11 @@
               "RelativeToolTip": "app\\templates\\contact.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-18T01:54:47.685Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T01:54:47.685Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "404.html",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\404.html",
               "RelativeDocumentMoniker": "app\\templates\\404.html",
@@ -153,12 +150,11 @@
               "RelativeToolTip": "app\\templates\\404.html",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-18T02:01:23.776Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T02:01:23.776Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md",
               "RelativeDocumentMoniker": "README.md",
@@ -166,8 +162,7 @@
               "RelativeToolTip": "README.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-15T23:31:37.711Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T23:31:37.711Z"
             }
           ]
         }
