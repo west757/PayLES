@@ -327,7 +327,7 @@
                             <td class="inputs">{{rank}}</td>
                             <td class="inputs">
                                 <select class="inputs" id="rank_selected" name="rank_selected">
-                                    {% for x in RANKS_SHORT[0:] %}
+                                    {% for x in config['RANKS_SHORT'][0:] %}
                                     <option value="{{x}}" {% if x==rank_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
@@ -383,7 +383,7 @@
                             <td class="inputs">{{'${:,.2f}'.format(sgli[0])}}</td>
                             <td class="inputs">
                                 <select class="inputs" id="sgli_selected" name="sgli_selected">
-                                    {% for x in SGLI_PREMIUMS[0:] %}
+                                    {% for x in config['SGLI_PREMIUMS'][0:] %}
                                     <option value="{{x}}" {% if x==sgli_selected %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
                                     {% endfor %}
                                 </select>
@@ -404,7 +404,7 @@
                             <td class="inputs">{{state}}</td>
                             <td class="inputs">
                                 <select class="inputs" id="state_selected" name="state_selected">
-                                    {% for x in STATES_SHORT[0:] %}
+                                    {% for x in config['STATES_SHORT'][0:] %}
                                     <option value="{{x}}" {% if x==state_selected %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
                                 </select>
