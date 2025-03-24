@@ -5,8 +5,6 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 #from pdf2image import convert_from_path
-import xlrd
-
 import pdfplumber
 import os
 
@@ -75,13 +73,6 @@ rothtsp_month_selected = ""
 
 @app.route('/')
 def index():
-    bah_2025 = xlrd.open_workbook(os.path.join(app.config['STATIC_FOLDER'], app.config['BAH_FILE']))
-    dependents_with_sheet = bah_2025.sheet_by_name('With')
-    dependents_without_sheet = bah_2025.sheet_by_name('Without')
-    bah_with_dependents = [[dependents_with_sheet.cell_value(r, c) for c in range(dependents_with_sheet.ncols)] for r in range(dependents_with_sheet.nrows)]
-    bah_without_dependents = [[dependents_without_sheet.cell_value(r, c) for c in range(dependents_without_sheet.ncols)] for r in range(dependents_without_sheet.nrows)]
-
-
     return render_template('index.html', 
                            months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
