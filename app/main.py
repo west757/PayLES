@@ -1,5 +1,6 @@
 from flask import Flask
-from flask import request, render_template, request, make_response, jsonify
+from flask import request, render_template, make_response, jsonify, session
+from flask_session import Session
 from config import Config
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
@@ -10,6 +11,7 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
+Session(app)
 
 
 #variables
@@ -68,8 +70,10 @@ rothtsp_month_selected = ""
 
 @app.route('/')
 def index():
-    
-    print(app.config['ZIPCODES'])
+
+    session["rank_current"] = ""
+    session["rank_future"] = ""
+    session["rank_future_month"] = ""
 
     return render_template('index.html', 
                            months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
@@ -413,19 +417,6 @@ def updatematrix():
 
 
     #update zipcode
-    #if zipcode_selected:
-
-
-
-        #with pdfplumber.open(os.path.join(app.config['STATIC_FOLDER'], BAH_FILE_PDF)) as bah_pdf:
-        #    bah_page = bah_pdf.pages[0]
-        #    bah_textstring = bah_page.extract_text()
-        #    bah_text = bah_textstring.split()
-
-            #print(les_text)
-
-        #    bah_pdf.close()
-
 
 
 

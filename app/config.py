@@ -1,14 +1,18 @@
 import os
+import secrets
 import pandas as pd
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = secrets.token_hex(16)
+    SESSION_PERMANENT = False
+    SESSION_TYPE = "filesystem"
     ALLOWED_EXTENSIONS = {'pdf'}
-    UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
-    STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
 
-    BAH_FILE = "bah_2025.xls"
+    UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
+    STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
+    BAH_FILE = "bah_2025.xlsx"
+    MHA_ZIPCODE_FILE = "mha_zipcodes.xlsx"
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -25,6 +29,6 @@ class Config:
     SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
     SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
 
-    MHA_ZIPCODES = pd.read_excel('mha_zipcodes.xlsx')
-    BAH_WITH_DEPENDENTS = pd.read_excel('bah_2025', sheet_name="With")
-    BAH_WITHOUT_DEPENDENTS = pd.read_excel('bah_2025', sheet_name="Without")
+    #MHA_ZIPCODES = pd.read_excel(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
+    #BAH_WITH_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=0)
+    #BAH_WITHOUT_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=1)

@@ -19,6 +19,7 @@ css modal: https://codepen.io/anon/embed/DdeoeW?height=600&theme-id=0&slug-hash=
 table: https://stackoverflow.com/questions/4932181/rounded-table-corners-css-only
 pull data from excel: https://stackoverflow.com/questions/22542442/extract-excel-columns-into-python-array
 flask config file: https://flask.palletsprojects.com/en/stable/config/
+flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
 
 
 
