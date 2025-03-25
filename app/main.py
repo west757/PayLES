@@ -14,12 +14,6 @@ app.config.from_object(Config)
 Session(app)
 
 
-#variables
-months = ["", "", "", "", "", "", ""]
-state = ""
-rank = ""
-zipcode = 0
-dependents = [0, 0, 0, 0, 0, 0, 0]
 
 #entitlements
 basepay = [0, 0, 0, 0, 0, 0, 0]
@@ -52,85 +46,60 @@ grosspay = [0, 0, 0, 0, 0, 0, 0]
 netpay = [0, 0, 0, 0, 0, 0, 0]
 
 
-#inputs
-rank_selected = ""
-rank_month_selected = ""
-zipcode_selected = ""
-zipcode_month_selected = ""
-dependents_selected = 0
-dependents_month_selected = ""
-sgli_selected = 0
-sgli_month_selected = ""
-state_selected = ""
-state_month_selected = ""
-rothtsp_selected = 0
-rothtsp_month_selected = ""
-
-
 
 @app.route('/')
 def index():
 
-    session["rank_current"] = ""
-    session["rank_future"] = ""
-    session["rank_future_month"] = ""
+    #entitlements
+    session['basepay'] = [0, 0, 0, 0, 0, 0, 0]
+    session['bas'] = [0, 0, 0, 0, 0, 0, 0]
+    session['bah'] = [0, 0, 0, 0, 0, 0, 0]
+    session['ueainitial'] = [0, 0, 0, 0, 0, 0, 0]
+    session['advancedebt'] = [0, 0, 0, 0, 0, 0, 0]
+    session['pcsmember'] = [0, 0, 0, 0, 0, 0, 0]
 
-    return render_template('index.html', 
-                           months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
-                           basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
-                           federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
-                           midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                           taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
-                           rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
-                           zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
-                           dependents_selected=dependents_selected, dependents_month_selected=dependents_month_selected,
-                           sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
-                           state_selected=state_selected, state_month_selected=state_month_selected,
-                           rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
+    #deductions
+    session['federaltaxes'] = [0, 0, 0, 0, 0, 0, 0]
+    session['ficasocsecurity'] = [0, 0, 0, 0, 0, 0, 0]
+    session['ficamedicare'] = [0, 0, 0, 0, 0, 0, 0]
+    session['sgli'] = [0, 0, 0, 0, 0, 0, 0]
+    session['statetaxes'] = [0, 0, 0, 0, 0, 0, 0]
+    session['rothtsp'] = [0, 0, 0, 0, 0, 0, 0]
+    session['midmonthpay'] = 0
+    session['debt'] = [0, 0, 0, 0, 0, 0, 0]
+    session['partialpay'] = [0, 0, 0, 0, 0, 0, 0]
+    session['pcsmembers'] = [0, 0, 0, 0, 0, 0, 0]
+
+
+    session['months'] = ["", "", "", "", "", "", ""]
+    session['state_current'] = ""
+    session['state_future'] = ""
+    session['state_future_month'] = ""
+    session['rank_current'] = ""
+    session['rank_future'] = ""
+    session['rank_future_month'] = ""
+    session['zipcode_current'] = 0
+    session['zipcode_future'] = 0
+    session['zipcode_future_month'] = ""
+    session['sgli_future'] = 0
+    session['sgli_future_month'] = ""
+    session['rothtsp_future'] = 0
+    session['rothtsp_future_month'] = ""
+    session['dependents_current'] = 0
+    session['dependents_future'] = 0
+    session['dependents_future_month'] = ""
+
+    session['taxablepay'] = [0, 0, 0, 0, 0, 0, 0]
+    session['nontaxablepay'] = [0, 0, 0, 0, 0, 0, 0]
+    session['totaltaxes'] = [0, 0, 0, 0, 0, 0, 0]
+    session['grosspay'] = [0, 0, 0, 0, 0, 0, 0]
+    session['netpay'] = [0, 0, 0, 0, 0, 0, 0]
+
+    return render_template('index.html')
 
 
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
-
-    global months
-    global state
-    global rank
-    global zipcode
-    global dependents
-    global basepay
-    global bas
-    global bah
-    global ueainitial
-    global advancedebt
-    global pcsmember
-    global federaltaxes
-    global ficasocsecurity
-    global ficamedicare
-    global sgli
-    global statetaxes
-    global rothtsp
-    global midmonthpay
-    global debt
-    global partialpay
-    global pcsmembers
-    global taxablepay
-    global nontaxablepay
-    global totaltaxes
-    global grosspay
-    global netpay
-    global rank_selected
-    global rank_month_selected
-    global zipcode_selected
-    global zipcode_month_selected
-    global dependents_selected
-    global dependents_month_selected
-    global sgli_selected
-    global sgli_month_selected
-    global state_selected
-    global state_month_selected
-    global rothtsp_selected
-    global rothtsp_month_selected
-
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -162,162 +131,161 @@ def uploadfile():
                 #find month
                 for x in app.config['MONTHS_SHORT']:
                     if x in les_text:
-                        for i in range(len(months)):
-                            months[i] = app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12]
-                        rank_month_selected = months[1]
-                        zipcode_month_selected = months[1]
-                        dependents_month_selecetd = months[1]
-                        sgli_month_selected = months[1]
-                        state_month_selected = months[1]
-                        rothtsp_month_selected = months[1]
+                        for i in range(len(session['months'])):
+                            session['months'][i] = app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12]
+                        session['state_future_month'] = session['months'][1]
+                        session['rank_future_month'] = session['months'][1]
+                        session['zipcode_future_month'] = session['months'][1]
+                        session['sgli_future_month'] = session['months'][1]
+                        session['rothtsp_future_month'] = session['months'][1]
+                        session['dependents_future_month'] = session['months'][1]
                         break
                     else:
-                        for i in range(len(months)):
-                            months[i] = "no month"
+                        for i in range(len(session['months'])):
+                            session['months[i]'] = "no month"
 
                 #find rank
                 for x in app.config['RANKS_SHORT']:
                     if x in les_text and les_text[les_text.index(x)+9] == "ENTITLEMENTS":
-                        rank = x
-                        rank_selected = x
+                        session['rank_current'] = x
                         break
                     else:
-                        rank = "no rank found"
+                        session['rank_current'] = "no rank found"
+                session['rank_future'] = session['rank_current']
 
                 #find zip code
                 if 'PACIDN' in les_text:
-                    zipcode = Decimal(les_text[(les_text.index('PACIDN')+3)])
-                    zipcode_selected = zipcode
+                    session['zipcode_current'] = Decimal(les_text[(les_text.index('PACIDN')+3)])
                 else:
-                    zipcode = 0
+                    session['zipcode_current'] = 0
+                session['zipcode_future'] = session['zipcode_current']
 
                 #find dependents
                 if 'Depns' in les_text:
-                    for i in range(len(dependents)):
-                        dependents[i] = Decimal(les_text[(les_text.index('PACIDN')+7)])
-                    dependents_selected = dependents[0]
+                    session['dependents_current'] = Decimal(les_text[(les_text.index('PACIDN')+7)])
                 else:
-                    for i in range(len(dependents)):
-                        dependents[i] = 0
+                    session['dependents_current'] = 0
+                session['dependents_future'] = session['dependents_current']
 
                 #find state
                 for x in app.config['STATES_SHORT']:
                     if x in les_text and les_text[(les_text.index(x)-1)] == "TAXES":
-                        state = x
-                        state_selected = x
+                        session['state_current'] = x
                         break
                     else:
-                        state = "no state found"
+                        session['state_current'] = "no state found"
+                session['state_future'] = session['state_current']
 
                 #find base pay
                 if 'BASE' in les_text:
-                    for i in range(len(basepay)):
-                        basepay[i] = Decimal(les_text[(les_text.index('BASE')+2)])
+                    for i in range(len(session['basepay'])):
+                        session['basepay'][i] = Decimal(les_text[(les_text.index('BASE')+2)])
                 else:
-                    for i in range(len(basepay)):
-                        basepay[i] = 0
+                    for i in range(len(session['basepay'])):
+                        session['basepay'][i] = 0
 
                 #find BAS
                 if 'BAS' in les_text:
-                    for i in range(len(bas)):
-                        bas[i] = Decimal(les_text[(les_text.index('BAS')+1)])
+                    for i in range(len(session['bas'])):
+                        session['bas'][i] = Decimal(les_text[(les_text.index('BAS')+1)])
                 else:
-                    for i in range(len(bas)):
-                        bas[i] = 0
+                    for i in range(len(session['bas'])):
+                        session['bas'][i] = 0
 
                 #find BAH
                 if 'BAH' in les_text:
-                    for i in range(len(bah)):
-                        bah[i] = Decimal(les_text[(les_text.index('BAH')+1)])
+                    for i in range(len(session['bah'])):
+                        session['bah'][i] = Decimal(les_text[(les_text.index('BAH')+1)])
                 else:
-                    for i in range(len(bah)):
-                        bah[i] = 0
+                    for i in range(len(session['bah'])):
+                        session['bah'][i] = 0
 
                 #find uea initial
                 if 'UEA' in les_text and les_text[les_text.index('UEA')+1] == "INITIAL":
-                    ueainitial[0] = Decimal(les_text[(les_text.index('UEA')+2)])
+                    session['ueainitial'][0] = Decimal(les_text[(les_text.index('UEA')+2)])
                 else:
-                    ueainitial[0] = 0
+                    session['ueainitial'][0] = 0
 
                 #find advance debt
                 if 'ADVANCE' in les_text and les_text[les_text.index('ADVANCE')+1] == "DEBT":
-                    advancedebt[0] = Decimal(les_text[(les_text.index('ADVANCE')+2)])
+                    session['advancedebt'][0] = Decimal(les_text[(les_text.index('ADVANCE')+2)])
                 else:
-                    advancedebt[0] = 0
+                    session['advancedebt'][0] = 0
 
                 #find pcs member
                 if 'PCS' in les_text and les_text[les_text.index('PCS')+1] == "MEMBER":
-                    pcsmember[0] = Decimal(les_text[(les_text.index('PCS')+2)])
+                    session['pcsmember'][0] = Decimal(les_text[(les_text.index('PCS')+2)])
                 else:
-                    pcsmember[0] = 0
+                    session['pcsmember'][0] = 0
 
                 #find federal taxes
                 if 'FEDERAL' in les_text and les_text[les_text.index('FEDERAL')+1] == "TAXES":
-                    for i in range(len(federaltaxes)):
-                        federaltaxes[i] = Decimal(les_text[(les_text.index('FEDERAL')+2)])
+                    for i in range(len(session['federaltaxes'])):
+                        session['federaltaxes'][i] = Decimal(les_text[(les_text.index('FEDERAL')+2)])
                 else:
-                    for i in range(len(federaltaxes)):
-                        federaltaxes[i] = 0
+                    for i in range(len(session['federaltaxes'])):
+                        session['federaltaxes'][i] = 0
 
                 #find FICA - Social Security
                 if 'SECURITY' in les_text:
-                    for i in range(len(ficasocsecurity)):
-                        ficasocsecurity[i] = Decimal(les_text[(les_text.index('SECURITY')+1)])
+                    for i in range(len(session['ficasocsecurity'])):
+                        session['ficasocsecurity'][i] = Decimal(les_text[(les_text.index('SECURITY')+1)])
                 else:
-                    for i in range(len(ficasocsecurity)):
-                        ficasocsecurity[i] = 0
+                    for i in range(len(session['ficasocsecurity'])):
+                        session['ficasocsecurity'][i] = 0
 
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in les_text:
-                    for i in range(len(ficamedicare)):
-                        ficamedicare[i] = Decimal(les_text[(les_text.index('FICA-MEDICARE')+1)])
+                    for i in range(len(session['ficamedicare'])):
+                        session['ficamedicare'][i] = Decimal(les_text[(les_text.index('FICA-MEDICARE')+1)])
                 else:
-                    for i in range(len(ficamedicare)):
-                        ficamedicare[i] = 0
+                    for i in range(len(session['ficamedicare'])):
+                        session['ficamedicare'][i] = 0
 
                 #find SGLI
                 if 'SGLI' in les_text:
                     for i in range(len(sgli)):
-                        sgli[i] = Decimal(les_text[(les_text.index('SGLI')+1)])
+                        session['sgli'][i] = Decimal(les_text[(les_text.index('SGLI')+1)])
                     sgli_selected = sgli[1]
                 else:
                     for i in range(len(sgli)):
-                        sgli[i] = 0
+                        session['sgli'][i] = 0
+                session['sgli_future'] = session['sgli'][0]
 
                 #find state taxes
                 if 'STATE' in les_text and les_text[les_text.index('STATE')+1] == "TAXES":
                     for i in range(len(statetaxes)):
-                        statetaxes[i] = Decimal(les_text[(les_text.index('STATE')+2)])
+                        session['statetaxes'][i] = Decimal(les_text[(les_text.index('STATE')+2)])
                 else:
                     for i in range(len(statetaxes)):
-                        statetaxes[i] = 0
+                        session['statetaxes'][i] = 0
 
                 #find Roth TSP
                 if 'ROTH' in les_text:
-                    for i in range(len(rothtsp)):
-                        rothtsp[i] = Decimal(les_text[(les_text.index('ROTH')+2)])
-                    rothtsp_selected = rothtsp[0]
+                    for i in range(len(session['rothtsp'])):
+                        session['rothtsp'][i] = Decimal(les_text[(les_text.index('ROTH')+2)])
                 else:
-                    for i in range(len(rothtsp)):
-                        rothtsp[i] = 0
+                    for i in range(len(session['rothtsp'])):
+                        session['rothtsp'][i] = 0
+                session['rothtsp_future'] = session['rothtsp'][0]
 
                 #find mid-month-pay
                 if 'MID-MONTH-PAY' in les_text:
-                    midmonthpay = Decimal(les_text[(les_text.index('MID-MONTH-PAY')+1)])
+                    session['midmonthpay'] = Decimal(les_text[(les_text.index('MID-MONTH-PAY')+1)])
                 else:
-                    midmonthpay = 0
+                    session['midmonthpay'] = 0
 
                 #find partial pay
                 if 'PARTIAL' in les_text and les_text[les_text.index('PARTIAL')+1] == "PAY":
-                    partialpay[0] = Decimal(les_text[(les_text.index('PARTIAL')+2)])
+                    session['partialpay'][0] = Decimal(les_text[(les_text.index('PARTIAL')+2)])
                 else:
-                    partialpay[0] = 0
+                    session['partialpay'][0] = 0
 
                 #find pcs members
                 if 'PCS' in les_text and les_text[les_text.index('PCS')+1] == "MEMBERS":
-                    pcsmembers[0] = Decimal(les_text[(les_text.index('PCS')+2)])
+                    session['pcsmembers'][0] = Decimal(les_text[(les_text.index('PCS')+2)])
                 else:
-                    pcsmembers[0] = 0
+                    session['pcsmembers'][0] = 0
 
                 #find debt
                 if 'DEBT' in les_text and les_text[les_text.index('DEBT')-1] != "ADVANCE":
@@ -326,32 +294,21 @@ def uploadfile():
                     debt[0] = 0
 
                 #update total taxes
-                for i in range(len(totaltaxes)):
-                    totaltaxes[i] = federaltaxes[i] + statetaxes[i]
+                for i in range(len(session['totaltaxes'])):
+                    session['totaltaxes'][i] = session['federaltaxes'][i] + session['statetaxes'][i]
 
                 #update gross pay:
-                for i in range(len(grosspay)):
-                    grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
+                for i in range(len(session['grosspay'])):
+                    session['grosspay'][i] = session['basepay'][i] + session['bas'][i] + session['bah'][i] + session['ueainitial'][i] + session['advancedebt'][i] + session['pcsmember'][i]
 
                 #update net pay:
-                for i in range(len(netpay)):
-                    netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i] - debt[i] - partialpay[i] - pcsmembers[i]
+                for i in range(len(session['netpay'])):
+                    session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
 
 
                 les_pdf.close()
 
-            return render_template('les.html', 
-                                    months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
-                                    basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
-                                    federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
-                                    midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                                    taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
-                                    rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
-                                    zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
-                                    dependents_selected=dependents_selected, dependents_month_selected=dependents_month_selected,
-                                    sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
-                                    state_selected=state_selected, state_month_selected=state_month_selected,
-                                    rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
+            return render_template('les.html')
 
     return 'File upload failed'
 
@@ -360,60 +317,18 @@ def uploadfile():
 @app.route('/updatematrix', methods=['POST'])
 def updatematrix():
 
-    global months
-    global state
-    global rank
-    global zipcode
-    global dependents
-    global basepay
-    global bas
-    global bah
-    global ueainitial
-    global advancedebt
-    global pcsmember
-    global federaltaxes
-    global ficasocsecurity
-    global ficamedicare
-    global sgli
-    global statetaxes
-    global rothtsp
-    global midmonthpay
-    global debt
-    global partialpay
-    global pcsmembers
-    global taxablepay
-    global nontaxablepay
-    global totaltaxes
-    global grosspay
-    global netpay
-    global rank_selected
-    global rank_month_selected
-    global zipcode_selected
-    global zipcode_month_selected
-    global dependents_selected
-    global dependents_month_selected
-    global sgli_selected
-    global sgli_month_selected
-    global state_selected
-    global state_month_selected
-    global rothtsp_selected
-    global rothtsp_month_selected
-
-    rank_selected = request.form['rank_selected']
-    rank_month_selected = request.form['rank_month_selected']
-    zipcode_selected = request.form['zipcode_selected']
-    zipcode_month_selected = request.form['zipcode_month_selected']
-    dependents_selected = request.form['dependents_selected']
-    dependents_month_selected = request.form['dependents_month_selected']
-    sgli_selected = Decimal(request.form['sgli_selected'])
-    sgli_month_selected = request.form['sgli_month_selected']
-    state_selected = request.form['state_selected']
-    state_month_selected = request.form['state_month_selected']
-    rothtsp_selected = request.form['rothtsp_selected']
-    rothtsp_month_selected = request.form['rothtsp_month_selected']
-
-    #update rank
-
+    session['rank_future'] = request.form['rank_future']
+    session['rank_future_month'] = request.form['rank_future_month']
+    session['zipcode_future'] = request.form['zipcode_future']
+    session['zipcode_future_month'] = request.form['zipcode_future_month']
+    session['dependents_future'] = request.form['dependents_future']
+    session['dependents_future_month'] = request.form['dependents_future_month']
+    session['sgli_future'] = request.form['sgli_future']
+    session['sgli_future_month'] = request.form['sgli_future_month']
+    session['state_future'] = request.form['state_future']
+    session['state_future_month'] = request.form['state_future_month']
+    session['rothtsp_future'] = request.form['rothtsp_future']
+    session['rothtsp_future_month'] = request.form['rothtsp_future_month']
 
 
     #update zipcode
@@ -422,36 +337,25 @@ def updatematrix():
 
 
     #update SGLI
-    for i in range(len(sgli)):
-        if i >= months.index(sgli_month_selected) and i > 0:
-            sgli[i] = Decimal(sgli_selected)
+    for i in range(len(session['sgli'])):
+        if i >= session['months'].index(session['sgli_future_month']) and i > 0:
+            session['sgli'][i] = Decimal(session['sgli_future'])
         else:
-            sgli[i] = sgli[0]
+            session['sgli'][i] = session['sgli'][0]
 
     #update total taxes
-    for i in range(len(totaltaxes)):
-        totaltaxes[i] = federaltaxes[i] + statetaxes[i]
+    for i in range(len(session['totaltaxes'])):
+        session['totaltaxes'][i] = session['federaltaxes'][i] + session['statetaxes'][i]
 
     #update gross pay:
-    for i in range(len(grosspay)):
-        grosspay[i] = basepay[i] + bas[i] + bah[i] + ueainitial[i] + advancedebt[i] + pcsmember[i]
+    for i in range(len(session['grosspay'])):
+        session['grosspay'][i] = session['basepay'][i] + session['bas'][i] + session['bah'][i] + session['ueainitial'][i] + session['advancedebt'][i] + session['pcsmember'][i]
 
     #update net pay:
-    for i in range(len(netpay)):
-        netpay[i] = grosspay[i] - federaltaxes[i] - ficasocsecurity[i] - ficamedicare[i] - sgli[i] - statetaxes[i] - rothtsp[i] - debt[i] - partialpay[i] - pcsmembers[i]
+    for i in range(len(session['netpay'])):
+        session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
 
-    return render_template('les.html', 
-                           months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
-                           basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
-                           federaltaxes=federaltaxes, ficasocsecurity=ficasocsecurity, ficamedicare=ficamedicare, sgli=sgli, statetaxes=statetaxes, rothtsp=rothtsp,
-                           midmonthpay=midmonthpay, debt=debt, partialpay=partialpay, pcsmembers=pcsmembers,
-                           taxablepay=taxablepay, nontaxablepay=nontaxablepay, totaltaxes=totaltaxes, grosspay=grosspay, netpay=netpay,
-                           rank_selected=rank_selected, rank_month_selected=rank_month_selected, 
-                           zipcode_selected=zipcode_selected, zipcode_month_selected=zipcode_month_selected,
-                           dependents_selected=dependents_selected, dependents_month_selected=dependents_month_selected,
-                           sgli_selected=sgli_selected,sgli_month_selected=sgli_month_selected,
-                           state_selected=state_selected, state_month_selected=state_month_selected,
-                           rothtsp_selected=rothtsp_selected, rothtsp_month_selected=rothtsp_month_selected)
+    return render_template('les.html')
 
 
 
