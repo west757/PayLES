@@ -19,13 +19,14 @@ css modal: https://codepen.io/anon/embed/DdeoeW?height=600&theme-id=0&slug-hash=
 table: https://stackoverflow.com/questions/4932181/rounded-table-corners-css-only
 pull data from excel: https://stackoverflow.com/questions/22542442/extract-excel-columns-into-python-array
 flask config file: https://flask.palletsprojects.com/en/stable/config/
-https://pytutorial.com/flask-appconfig-master-application-configuration-management/
+
 
 
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
 military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tables/
 MHA zipcodes: https://veteran.com/bah-rates-state/
+bah table: https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/
 
 
 
