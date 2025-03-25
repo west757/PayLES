@@ -8,11 +8,8 @@ from decimal import Decimal
 import pdfplumber
 import os
 
-
-
 app = Flask(__name__)
 app.config.from_object(Config)
-
 
 
 #variables
@@ -21,8 +18,6 @@ state = ""
 rank = ""
 zipcode = 0
 dependents = [0, 0, 0, 0, 0, 0, 0]
-BAH_WITH_DEPENDENTS = []
-BAH_WITHOUT_DEPENDENTS = []
 
 #entitlements
 basepay = [0, 0, 0, 0, 0, 0, 0]
@@ -73,6 +68,9 @@ rothtsp_month_selected = ""
 
 @app.route('/')
 def index():
+    
+    print(app.config['ZIPCODES'])
+
     return render_template('index.html', 
                            months=months, state=state, rank=rank, zipcode=zipcode, dependents=dependents,
                            basepay=basepay, bas=bas, bah=bah, ueainitial=ueainitial, advancedebt=advancedebt, pcsmember=pcsmember,
