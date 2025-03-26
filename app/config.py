@@ -29,6 +29,6 @@ class Config:
     SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
     SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
 
-    #MHA_ZIPCODES = pd.read_excel(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
-    #BAH_WITH_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=0)
-    #BAH_WITHOUT_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=1)
+    MHA_ZIPCODES = pd.read_excel(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
+    BAH_WITH_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=0)
+    BAH_WITHOUT_DEPENDENTS = pd.read_excel((os.path.join(STATIC_FOLDER, BAH_FILE)), sheet_name=1)

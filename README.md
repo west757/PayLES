@@ -20,7 +20,7 @@ table: https://stackoverflow.com/questions/4932181/rounded-table-corners-css-onl
 pull data from excel: https://stackoverflow.com/questions/22542442/extract-excel-columns-into-python-array
 flask config file: https://flask.palletsprojects.com/en/stable/config/
 flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
-
+searching through dataframes: https://rowannicholls.github.io/python/advanced/data_frames_searching.html
 
 
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
@@ -30,10 +30,9 @@ MHA zipcodes: https://veteran.com/bah-rates-state/
 bah table: https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/
 
 
-
 todo:
 - display LES at bottom of table as image
-- overlay of selectable things on les dispaly
+- overlay of selectable things on les display
 - have first input be a placeholder for inputs, then actual value (if-then)
 - css styling
 - building out modals
