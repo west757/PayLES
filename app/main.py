@@ -13,8 +13,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 Session(app)
 
-
-
 #entitlements
 basepay = [0, 0, 0, 0, 0, 0, 0]
 bas = [0, 0, 0, 0, 0, 0, 0]
@@ -81,6 +79,10 @@ def index():
     session['zipcode_current'] = 0
     session['zipcode_future'] = 0
     session['zipcode_future_month'] = ""
+    session['mha_current'] = ""
+    session['mha_current_name'] = ""
+    session['mha_future'] = ""
+    session['mha_future_name'] = ""
     session['sgli_future'] = 0
     session['sgli_future_month'] = ""
     session['rothtsp_future'] = 0
@@ -160,6 +162,19 @@ def uploadfile():
                     session['zipcode_current'] = 0
                 session['zipcode_future'] = session['zipcode_current']
 
+                #find MHA
+                mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_current']])].stack()
+                mha_search_row = mha_search.index[0][0]
+                mha_search_col = mha_search.index[0][1]
+
+                session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+                session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+                session['mha_future'] = session['mha_current']
+                session['mha_future_name'] = session['mha_current_name']
+
+
+
+
                 #find dependents
                 if 'Depns' in les_text:
                     session['dependents_current'] = Decimal(les_text[(les_text.index('PACIDN')+7)])
@@ -175,6 +190,7 @@ def uploadfile():
                     else:
                         session['state_current'] = "no state found"
                 session['state_future'] = session['state_current']
+
 
                 #find base pay
                 if 'BASE' in les_text:
@@ -319,11 +335,11 @@ def updatematrix():
 
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
-    session['zipcode_future'] = request.form['zipcode_future']
+    session['zipcode_future'] = Decimal(request.form['zipcode_future'])
     session['zipcode_future_month'] = request.form['zipcode_future_month']
     session['dependents_future'] = request.form['dependents_future']
     session['dependents_future_month'] = request.form['dependents_future_month']
-    session['sgli_future'] = request.form['sgli_future']
+    session['sgli_future'] = Decimal(request.form['sgli_future'])
     session['sgli_future_month'] = request.form['sgli_future_month']
     session['state_future'] = request.form['state_future']
     session['state_future_month'] = request.form['state_future_month']
@@ -331,8 +347,15 @@ def updatematrix():
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
 
 
-    #update zipcode
+    #update bah
 
+    
+    mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
+    mha_search_row = mha_search.index[0][0]
+    mha_search_col = mha_search.index[0][1]
+
+    session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+    session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
 
 
 

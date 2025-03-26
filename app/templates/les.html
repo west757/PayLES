@@ -347,7 +347,7 @@
                             </td>
                             <td class="inputs">{{session.zipcode_current}}</td>
                             <td class="inputs">
-                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}"/>
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}" />
                             </td>
                             <td class="inputs">
                                 <select class="inputs" id="zipcode_future_month" name="zipcode_future_month">
@@ -356,6 +356,16 @@
                                     {% endfor %}
                                 </select>
                             </td>
+                        </tr>
+
+                        <tr class="inputs">
+                            <td class="inputs" rowspan=2>
+                                <label class="modalbutton" for="modal-bah">MHA</label>
+                            </td>
+                            <td class="inputs" colspan=3 style="text-align: left; padding: 6px;">Current: {{session.mha_current}} - {{session.mha_current_name}}</td>
+                        </tr>
+                        <tr class="inputs">
+                            <td class="inputs" colspan=3 style="text-align: left; padding: 6px; border-left: 1px solid #ddd;">Future: {{session.mha_future}} - {{session.mha_future_name}}</td>
                         </tr>
 
 
@@ -424,7 +434,7 @@
                             </td>
                             <td class="inputs">{{'${:,.2f}'.format(session.rothtsp[0])}}</td>
                             <td class="inputs">
-                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{session.rothtsp_future}}"/>
+                                <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{session.rothtsp_future}}" />
                             </td>
                             <td class="inputs">
                                 <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
