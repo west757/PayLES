@@ -2,10 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\flask_session",
     "\\app\\static",
     "\\app\\templates",
     "\\upload"
   ],
-  "SelectedNode": "\\app\\config.py",
+  "SelectedNode": "\\app\\main.py",
   "PreviewInSolutionExplorer": false
 }

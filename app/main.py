@@ -97,6 +97,10 @@ def index():
     session['grosspay'] = [0, 0, 0, 0, 0, 0, 0]
     session['netpay'] = [0, 0, 0, 0, 0, 0, 0]
 
+    for i in range(len(session['bah'])):
+        print(session['bah'][i])
+        print(type(session['bah'][i]))
+
     return render_template('index.html')
 
 
@@ -321,6 +325,9 @@ def uploadfile():
                 for i in range(len(session['netpay'])):
                     session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
 
+                for i in range(len(session['bah'])):
+                    print(session['bah'][i])
+                    print(type(session['bah'][i]))
 
                 les_pdf.close()
 
@@ -337,7 +344,7 @@ def updatematrix():
     session['rank_future_month'] = request.form['rank_future_month']
     session['zipcode_future'] = Decimal(request.form['zipcode_future'])
     session['zipcode_future_month'] = request.form['zipcode_future_month']
-    session['dependents_future'] = request.form['dependents_future']
+    session['dependents_future'] = Decimal(request.form['dependents_future'])
     session['dependents_future_month'] = request.form['dependents_future_month']
     session['sgli_future'] = Decimal(request.form['sgli_future'])
     session['sgli_future_month'] = request.form['sgli_future_month']
@@ -348,20 +355,34 @@ def updatematrix():
 
 
     #update bah
-
-    
     mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
     mha_search_row = mha_search.index[0][0]
     mha_search_col = mha_search.index[0][1]
-
     session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
     session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+
+    if session['dependents_future'] > 0:
+        bah_search_row = app.config['BAH_WITH_DEPENDENTS'][app.config['BAH_WITH_DEPENDENTS']["MHA"] == session['mha_future']].index
+        bah_search_col = app.config['BAH_WITH_DEPENDENTS'].loc[bah_search_row, session['rank_future']]
+        for i in range(len(session['bah'])):
+            if i > 0 and i >= session['months'].index(session['zipcode_future_month']):
+                session['bah'][i] = bah_search_col.apply(Decimal)
+            else:
+                session['bah'][i] = session['bah'][0]
+    else:
+        bah_search_row = app.config['BAH_WITHOUT_DEPENDENTS'][app.config['BAH_WITHOUT_DEPENDENTS']["MHA"] == session['mha_future']].index
+        bah_search_col = app.config['BAH_WITHOUT_DEPENDENTS'].loc[bah_search_row, session['rank_future']]
+        for i in range(len(session['bah'])):
+            if i > 0 and i >= session['months'].index(session['zipcode_future_month']):
+                session['bah'][i] = bah_search_col.apply(Decimal)
+            else:
+                session['bah'][i] = session['bah'][0]
 
 
 
     #update SGLI
     for i in range(len(session['sgli'])):
-        if i >= session['months'].index(session['sgli_future_month']) and i > 0:
+        if i > 0 and i >= session['months'].index(session['sgli_future_month']):
             session['sgli'][i] = Decimal(session['sgli_future'])
         else:
             session['sgli'][i] = session['sgli'][0]
