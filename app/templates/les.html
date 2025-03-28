@@ -9,6 +9,14 @@
 </head>
 
 <body>
+
+    <div>
+        {% block content %}
+        {{session['matrix_html'] | safe}}
+        {% endblock %}
+    </div>
+
+
     <div class="container" id="container-id">
         <div class="table-div" id="matrix-id">
             <table class="matrix-table">
@@ -465,7 +473,6 @@
             </form>
         </div>
     </div>
-
 
 
     <div>

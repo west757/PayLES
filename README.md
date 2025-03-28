@@ -21,6 +21,7 @@ pull data from excel: https://stackoverflow.com/questions/22542442/extract-excel
 flask config file: https://flask.palletsprojects.com/en/stable/config/
 flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
 searching through dataframes: https://rowannicholls.github.io/python/advanced/data_frames_searching.html
+python dataframe add column: https://www.geeksforgeeks.org/dealing-with-rows-and-columns-in-pandas-dataframe/
 
 
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
