@@ -410,39 +410,55 @@ def uploadfile():
                 #taxable pay
                 row = ["Taxable Pay"]
                 for i in range(session['months_display']+1):
-                    x = 0
+                    x = 200
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #non-taxable pay
                 row = ["Non-Taxable Pay"]
                 for i in range(session['months_display']+1):
-                    x = 0
+                    x = 500
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #total taxes
                 row = ["Total Taxes"]
                 for i in range(session['months_display']+1):
-                    x = 0
+                    x = 1000
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
+
+                column_headers = list(session['matrix'].columns)
 
                 #gross pay
-                row = ["Net Pay"]
-                for i in range(session['months_display']+1):
-                    x = 0
-                    row.append(x)
-                session['matrix'].loc[len(session['matrix'])] = row
+                row_grosspay = ["Gross Pay"]
+                for column in session['matrix'].columns[1:]:
+                    total = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
+                    row_grosspay.append(total)
+
+                #for i in range(session['months_display']+1):
+                #    total_grosspay = session['matrix'].loc[(session['matrix'][column_headers[i+1]] > 0, column_headers[i+1]) & ()].sum()   
+                #    row_grosspay.append(total_grosspay)
+
+                session['matrix'].loc[len(session['matrix'])] = row_grosspay
+
 
                 #net pay
-                row = ["Gross Pay"]
-                for i in range(session['months_display']+1):
-                    x = 0
-                    row.append(x)
-                session['matrix'].loc[len(session['matrix'])] = row
+                row_netpay = ["Net Pay"]
+                for column in session['matrix'].columns[1:]:
+                    net_pay = session['matrix'][column][:-4].sum()
+                    row_netpay.append(net_pay)
+                session['matrix'].loc[len(session['matrix'])] = row_netpay
+
+                #row_netpay = ["Net Pay"]
+                #for i in range(session['months_display']+1):
+                #    total_netpaypay = session['matrix'].loc[session['matrix'][column_headers[i+1]]].sum()   
+                #    row_netpay.append(total_netpaypay)
+                #session['matrix'].loc[len(session['matrix'])] = row_netpay
 
                 
+
+
 
                 session['matrix_html'] = session['matrix'].to_html()
 
