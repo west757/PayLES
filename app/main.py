@@ -8,42 +8,12 @@ from decimal import Decimal
 #from pdf2image import convert_from_path
 import pdfplumber
 import os
+import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 app.config.from_object(Config)
 Session(app)
-
-#entitlements
-basepay = [0, 0, 0, 0, 0, 0, 0]
-bas = [0, 0, 0, 0, 0, 0, 0]
-bah = [0, 0, 0, 0, 0, 0, 0]
-ueainitial = [0, 0, 0, 0, 0, 0, 0]
-advancedebt = [0, 0, 0, 0, 0, 0, 0]
-pcsmember = [0, 0, 0, 0, 0, 0, 0]
-
-#deductions
-federaltaxes = [0, 0, 0, 0, 0, 0, 0]
-ficasocsecurity = [0, 0, 0, 0, 0, 0, 0]
-ficamedicare = [0, 0, 0, 0, 0, 0, 0]
-sgli = [0, 0, 0, 0, 0, 0, 0]
-statetaxes = [0, 0, 0, 0, 0, 0, 0]
-rothtsp = [0, 0, 0, 0, 0, 0, 0]
-midmonthpay = 0
-debt = [0, 0, 0, 0, 0, 0, 0]
-partialpay = [0, 0, 0, 0, 0, 0, 0]
-pcsmembers = [0, 0, 0, 0, 0, 0, 0]
-
-#allotments
-
-
-#calculations
-taxablepay = [0, 0, 0, 0, 0, 0, 0]
-nontaxablepay = [0, 0, 0, 0, 0, 0, 0]
-totaltaxes = [0, 0, 0, 0, 0, 0, 0]
-grosspay = [0, 0, 0, 0, 0, 0, 0]
-netpay = [0, 0, 0, 0, 0, 0, 0]
-
-
 
 @app.route('/')
 def index():
@@ -97,9 +67,7 @@ def index():
     session['grosspay'] = [0, 0, 0, 0, 0, 0, 0]
     session['netpay'] = [0, 0, 0, 0, 0, 0, 0]
 
-    for i in range(len(session['bah'])):
-        print(session['bah'][i])
-        print(type(session['bah'][i]))
+    session['months_display'] = 6
 
     return render_template('index.html')
 
@@ -137,6 +105,10 @@ def uploadfile():
                 #find month
                 for x in app.config['MONTHS_SHORT']:
                     if x in les_text:
+                        matrix_months = ["Type", "Variable"]
+                        for i in range(session['months_display']+1):
+                           matrix_months.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12])
+
                         for i in range(len(session['months'])):
                             session['months'][i] = app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12]
                         session['state_future_month'] = session['months'][1]
@@ -196,16 +168,40 @@ def uploadfile():
                 session['state_future'] = session['state_current']
 
 
+
                 #find base pay
                 if 'BASE' in les_text:
+                    #x = Decimal(les_text[(les_text.index('BASE')+2)])
+                    x = (les_text[(les_text.index('BASE')+2)])
+                    matrix_basepay = ["E", "Base Pay"]
+                    for i in range(session['months_display']+1):
+                        matrix_basepay.append(x)
+                        
+                    matrix_basepay2 = [matrix_basepay]
+                    session['matrix'] = pd.DataFrame(matrix_basepay2, columns=matrix_months)
+
+                    #session['matrix'].loc[len(session['matrix'])] = matrix_basepay
+
+
                     for i in range(len(session['basepay'])):
                         session['basepay'][i] = Decimal(les_text[(les_text.index('BASE')+2)])
                 else:
                     for i in range(len(session['basepay'])):
                         session['basepay'][i] = 0
 
+                
+
+
                 #find BAS
                 if 'BAS' in les_text:
+
+                    matrix_bas = ["E", "BAS"]
+                    for i in range(session['months_display']+1):
+                        matrix_bas.append(Decimal(les_text[(les_text.index('BAS')+1)]))
+                    
+                    session['matrix'].loc[len(session['matrix'])] = matrix_bas
+
+
                     for i in range(len(session['bas'])):
                         session['bas'][i] = Decimal(les_text[(les_text.index('BAS')+1)])
                 else:
@@ -264,20 +260,20 @@ def uploadfile():
 
                 #find SGLI
                 if 'SGLI' in les_text:
-                    for i in range(len(sgli)):
+                    for i in range(len(session['sgli'])):
                         session['sgli'][i] = Decimal(les_text[(les_text.index('SGLI')+1)])
-                    sgli_selected = sgli[1]
+                    session['sgli_future'] = session['sgli'][1]
                 else:
-                    for i in range(len(sgli)):
+                    for i in range(len(session['sgli'])):
                         session['sgli'][i] = 0
                 session['sgli_future'] = session['sgli'][0]
 
                 #find state taxes
                 if 'STATE' in les_text and les_text[les_text.index('STATE')+1] == "TAXES":
-                    for i in range(len(statetaxes)):
+                    for i in range(len(session['statetaxes'])):
                         session['statetaxes'][i] = Decimal(les_text[(les_text.index('STATE')+2)])
                 else:
-                    for i in range(len(statetaxes)):
+                    for i in range(len(session['statetaxes'])):
                         session['statetaxes'][i] = 0
 
                 #find Roth TSP
@@ -309,9 +305,9 @@ def uploadfile():
 
                 #find debt
                 if 'DEBT' in les_text and les_text[les_text.index('DEBT')-1] != "ADVANCE":
-                    debt[0] = Decimal(les_text[(les_text.index('DEBT')+1)])
+                    session['debt'][0] = Decimal(les_text[(les_text.index('DEBT')+1)])
                 else:
-                    debt[0] = 0
+                    session['debt'][0] = 0
 
                 #update total taxes
                 for i in range(len(session['totaltaxes'])):
@@ -325,9 +321,12 @@ def uploadfile():
                 for i in range(len(session['netpay'])):
                     session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
 
-                for i in range(len(session['bah'])):
-                    print(session['bah'][i])
-                    print(type(session['bah'][i]))
+                
+
+                session['matrix_html'] = session['matrix'].to_html()
+
+
+
 
                 les_pdf.close()
 
