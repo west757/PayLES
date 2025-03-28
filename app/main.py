@@ -410,36 +410,29 @@ def uploadfile():
                 #taxable pay
                 row = ["Taxable Pay"]
                 for i in range(session['months_display']+1):
-                    x = 200
+                    x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #non-taxable pay
                 row = ["Non-Taxable Pay"]
                 for i in range(session['months_display']+1):
-                    x = 500
+                    x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #total taxes
                 row = ["Total Taxes"]
                 for i in range(session['months_display']+1):
-                    x = 1000
+                    x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
-
-                column_headers = list(session['matrix'].columns)
 
                 #gross pay
                 row_grosspay = ["Gross Pay"]
                 for column in session['matrix'].columns[1:]:
                     total = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
                     row_grosspay.append(total)
-
-                #for i in range(session['months_display']+1):
-                #    total_grosspay = session['matrix'].loc[(session['matrix'][column_headers[i+1]] > 0, column_headers[i+1]) & ()].sum()   
-                #    row_grosspay.append(total_grosspay)
-
                 session['matrix'].loc[len(session['matrix'])] = row_grosspay
 
 
@@ -450,18 +443,11 @@ def uploadfile():
                     row_netpay.append(net_pay)
                 session['matrix'].loc[len(session['matrix'])] = row_netpay
 
-                #row_netpay = ["Net Pay"]
-                #for i in range(session['months_display']+1):
-                #    total_netpaypay = session['matrix'].loc[session['matrix'][column_headers[i+1]]].sum()   
-                #    row_netpay.append(total_netpaypay)
-                #session['matrix'].loc[len(session['matrix'])] = row_netpay
-
                 
 
 
 
                 session['matrix_html'] = session['matrix'].to_html()
-
 
 
 
@@ -516,12 +502,31 @@ def updatematrix():
 
 
 
+    column_headers = list(session['matrix'].columns)
+    print(column_headers)
+    index_to_change = column_headers.index(session['sgli_future_month'])
+    print(index_to_change)
+    row_headers = list(session['matrix'][session['matrix'].columns[0]])
+    print(row_headers)
+    for i in range(1, len(session['matrix'].columns)):
+        if i >= index_to_change:
+            session['matrix'][row_headers.index("SGLI"), i] = session['sgli_future']
+
+            #session['matrix'].iat[session['matrix'].index.get_loc("SGLI"), i] = session['sgli_future']
+        else:
+            session['matrix'][row_headers.index("SGLI"), i] = session['matrix'].at[row_headers.index("SGLI"), 1]
+            #session['matrix'].iat[session['matrix'].index.get_loc("SGLI"), i] = session['matrix'].iat[session['matrix'].index.get_loc('SGLI'), 1]
+
+
+
+
     #update SGLI
     for i in range(len(session['sgli'])):
         if i > 0 and i >= session['months'].index(session['sgli_future_month']):
             session['sgli'][i] = Decimal(session['sgli_future'])
         else:
             session['sgli'][i] = session['sgli'][0]
+
 
     #update total taxes
     for i in range(len(session['totaltaxes'])):
