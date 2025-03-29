@@ -453,7 +453,7 @@ def uploadfile():
 
                 les_pdf.close()
 
-            return render_template('les.html')
+            return render_template('les.html') + render_template('inputs.html')
 
     return 'File upload failed'
 
