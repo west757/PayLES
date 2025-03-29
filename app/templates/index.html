@@ -20,13 +20,215 @@
 
     &nbsp;
 
-    <form hx-post="/uploadfile" hx-target="#matrix-id" hx-swap="innerHTML" enctype="multipart/form-data">
+    <form hx-post="/uploadfile" hx-target="#matrix-inputs-id" hx-swap="innerHTML" enctype="multipart/form-data">
 		    <input type="file" name="file"/>
 		    <input type="submit" value="Upload LES"/>
     </form>
 
 
-    <div id="matrix-id"></div>
+    <div id="matrix-inputs-id"></div>
+
+
+    <input class="modal-state" id="modal-basepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-basepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-basepay"></label>
+            <h2>Base Pay</h2>
+            <p>Base pay is calculated from a variety of factors.</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-bas" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-bas"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-bas"></label>
+            <h2>Basic Allowance for Subsistence</h2>
+            <p>BAS</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-bah" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-bah"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-bah"></label>
+            <h2>Basic Allowance for Housing</h2>
+            <p>BAH</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ueainitial" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ueainitial"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ueainitial"></label>
+            <h2>UEA Initial</h2>
+            <p>UEA initial</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-advancedebt" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-advancedebt"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-advancedebt"></label>
+            <h2>Advance Debt</h2>
+            <p>Advance debt</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-pcsmember" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-pcsmember"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-pcsmember"></label>
+            <h2>PCS Member</h2>
+            <p>PCS member</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-federaltaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-federaltaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-federaltaxes"></label>
+            <h2>Federal Taxes</h2>
+            <p>Federal taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ficasocsecurity" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ficasocsecurity"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ficasocsecurity"></label>
+            <h2>FICA - Social Security</h2>
+            <p>FICA social security</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-ficamedicare" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-ficamedicare"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-ficamedicare"></label>
+            <h2>FICA - Medicare</h2>
+            <p>FICA medicare</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-sgli" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-sgli"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-sgli"></label>
+            <h2>Service Members Group Life Insurance</h2>
+            <p>SGLI</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-statetaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-statetaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-statetaxes"></label>
+            <h2>State Taxes and Home of Record</h2>
+            <p>State taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-rothtsp" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-rothtsp"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-rothtsp"></label>
+            <h2>Roth Thrift Savings Plan</h2>
+            <p>Roth TSP</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-partialpay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-partialpay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-partialpay"></label>
+            <h2>Partial Pay</h2>
+            <p>partial pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-pcsmembers" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-pcsmembers"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-pcsmembers"></label>
+            <h2>Permanent Change of Station - Members</h2>
+            <p>PCS members</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-debt" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-debt"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-debt"></label>
+            <h2>Debt</h2>
+            <p>Debt</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-taxablepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-taxablepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-taxablepay"></label>
+            <h2>Taxable Pay</h2>
+            <p>Taxable pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-nontaxablepay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-nontaxablepay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-nontaxablepay"></label>
+            <h2>Non-Taxable Pay</h2>
+            <p>Non-taxable pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-totaltaxes" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-totaltaxes"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-totaltaxes"></label>
+            <h2>Total Taxes</h2>
+            <p>Total taxes</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-grosspay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-grosspay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-grosspay"></label>
+            <h2>Gross Pay</h2>
+            <p>Gross pay</p>
+        </div>
+    </div>
+
+    <input class="modal-state" id="modal-netpay" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-netpay"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-netpay"></label>
+            <h2>Net Pay</h2>
+            <p>Net pay</p>
+        </div>
+    </div>
+
 
     <p>footer</p>
 
