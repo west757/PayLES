@@ -462,6 +462,9 @@ def uploadfile():
 @app.route('/updatematrix', methods=['POST'])
 def updatematrix():
 
+    col_headers = list(session['matrix'].columns)
+    row_headers = list(session['matrix'][session['matrix'].columns[0]])
+
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
     session['zipcode_future'] = Decimal(request.form['zipcode_future'])
@@ -474,6 +477,8 @@ def updatematrix():
     session['state_future_month'] = request.form['state_future_month']
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
+
+
 
 
     #update bah
@@ -502,19 +507,11 @@ def updatematrix():
 
 
     #update sgli
-    column_headers = list(session['matrix'].columns)
-    index_to_change = column_headers.index(session['sgli_future_month'])
-    row_headers = list(session['matrix'][session['matrix'].columns[0]])
-    print("header index sgli: ", row_headers.index("SGLI"))
     for i in range(1, len(session['matrix'].columns)):
-        if i >= index_to_change:
-            session['matrix'].at[row_headers.index("SGLI"), column_headers[i]] = -session['sgli_future']
-            print(session['matrix'].at[row_headers.index("SGLI"), column_headers[i]])
-            #session['matrix'][row_headers.index("SGLI"), i] = session['sgli_future']
-
-            #session['matrix'].iat[session['matrix'].index.get_loc("SGLI"), i] = session['sgli_future']
+        if i >= col_headers.index(session['sgli_future_month']):
+            session['matrix'].at[row_headers.index("SGLI"), col_headers[i]] = -session['sgli_future']
         else:
-            session['matrix'].at[row_headers.index("SGLI"), column_headers[i]] = session['matrix'].at[row_headers.index("SGLI"), column_headers[1]]
+            session['matrix'].at[row_headers.index("SGLI"), col_headers[i]] = session['matrix'].at[row_headers.index("SGLI"), col_headers[1]]
 
 
 
