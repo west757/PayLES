@@ -501,22 +501,20 @@ def updatematrix():
                 session['bah'][i] = session['bah'][0]
 
 
-
+    #update sgli
     column_headers = list(session['matrix'].columns)
-    print(column_headers)
     index_to_change = column_headers.index(session['sgli_future_month'])
-    print(index_to_change)
     row_headers = list(session['matrix'][session['matrix'].columns[0]])
-    print(row_headers)
+    print("header index sgli: ", row_headers.index("SGLI"))
     for i in range(1, len(session['matrix'].columns)):
         if i >= index_to_change:
-            session['matrix'][row_headers.index("SGLI"), i] = session['sgli_future']
+            session['matrix'].at[row_headers.index("SGLI"), column_headers[i]] = -session['sgli_future']
+            print(session['matrix'].at[row_headers.index("SGLI"), column_headers[i]])
+            #session['matrix'][row_headers.index("SGLI"), i] = session['sgli_future']
 
             #session['matrix'].iat[session['matrix'].index.get_loc("SGLI"), i] = session['sgli_future']
         else:
-            session['matrix'][row_headers.index("SGLI"), i] = session['matrix'].at[row_headers.index("SGLI"), 1]
-            #session['matrix'].iat[session['matrix'].index.get_loc("SGLI"), i] = session['matrix'].iat[session['matrix'].index.get_loc('SGLI'), 1]
-
+            session['matrix'].at[row_headers.index("SGLI"), column_headers[i]] = session['matrix'].at[row_headers.index("SGLI"), column_headers[1]]
 
 
 
@@ -539,6 +537,9 @@ def updatematrix():
     #update net pay:
     for i in range(len(session['netpay'])):
         session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
+
+
+    session['matrix_html'] = session['matrix'].to_html()
 
     return render_template('les.html')
 
