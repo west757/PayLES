@@ -33,7 +33,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="rank_future_month" name="rank_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
@@ -50,7 +50,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="zipcode_future_month" name="zipcode_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
@@ -78,7 +78,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="dependents_future_month" name="dependents_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
@@ -99,7 +99,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="sgli_future_month" name="sgli_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
@@ -120,7 +120,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="state_future_month" name="state_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
@@ -137,7 +137,7 @@
                         </td>
                         <td class="inputs">
                             <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
-                                {% for x in session.months[1:] %}
+                                {% for x in session.col_headers[2:] %}
                                 <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>

@@ -2,7 +2,6 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\flask_session",
     "\\app\\static",
     "\\app\\templates",
     "\\upload"

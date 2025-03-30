@@ -67,7 +67,7 @@ def index():
     session['grosspay'] = [0, 0, 0, 0, 0, 0, 0]
     session['netpay'] = [0, 0, 0, 0, 0, 0, 0]
 
-    session['months_display'] = 6
+    session['months_display'] = 12
 
     return render_template('index.html')
 
@@ -106,7 +106,7 @@ def uploadfile():
                 for x in app.config['MONTHS_SHORT']:
                     if x in les_text:
                         matrix_months = ["Variable"]
-                        for i in range(session['months_display']+1):
+                        for i in range(session['months_display']):
                            matrix_months.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12])
 
                         for i in range(len(session['months'])):
@@ -172,13 +172,12 @@ def uploadfile():
                 #find base pay
                 if 'BASE' in les_text:
                     matrix_basepay = ["Base Pay"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         matrix_basepay.append(Decimal(les_text[(les_text.index('BASE')+2)]))
                         
                     matrix_basepay2 = [matrix_basepay]
                     session['matrix'] = pd.DataFrame(matrix_basepay2, columns=matrix_months)
 
-                    #session['matrix'].loc[len(session['matrix'])] = matrix_basepay
 
 
                     for i in range(len(session['basepay'])):
@@ -193,7 +192,7 @@ def uploadfile():
                 #find BAS
                 if 'BAS' in les_text:
                     row = ["BAS"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(Decimal(les_text[(les_text.index('BAS')+1)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -207,7 +206,7 @@ def uploadfile():
                 #find BAH
                 if 'BAH' in les_text:
                     row = ["BAH"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(Decimal(les_text[(les_text.index('BAH')+1)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -220,7 +219,7 @@ def uploadfile():
                 #find uea initial
                 if 'UEA' in les_text and les_text[les_text.index('UEA')+1] == "INITIAL":
                     row = ["UEA Initial", Decimal(les_text[(les_text.index('UEA')+2)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -231,7 +230,7 @@ def uploadfile():
                 #find advance debt
                 if 'ADVANCE' in les_text and les_text[les_text.index('ADVANCE')+1] == "DEBT":
                     row = ["Advance Debt", Decimal(les_text[(les_text.index('ADVANCE')+2)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -243,7 +242,7 @@ def uploadfile():
                 #find pcs member
                 if 'PCS' in les_text and les_text[les_text.index('PCS')+1] == "MEMBER":
                     row = ["PCS Member", Decimal(les_text[(les_text.index('PCS')+2)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -257,7 +256,7 @@ def uploadfile():
                 #find federal taxes
                 if 'FEDERAL' in les_text and les_text[les_text.index('FEDERAL')+1] == "TAXES":
                     row = ["Federal Taxes"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('FEDERAL')+2)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -271,7 +270,7 @@ def uploadfile():
                 #find FICA - Social Security
                 if 'SECURITY' in les_text:
                     row = ["FICA - Social Security"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('SECURITY')+1)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -285,7 +284,7 @@ def uploadfile():
                 #find FICA - Medicare
                 if 'FICA-MEDICARE' in les_text:
                     row = ["FICA - Medicare"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('FICA-MEDICARE')+1)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -299,7 +298,7 @@ def uploadfile():
                 #find SGLI
                 if 'SGLI' in les_text:
                     row = ["SGLI"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('SGLI')+1)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -315,7 +314,7 @@ def uploadfile():
                 #find state taxes
                 if 'STATE' in les_text and les_text[les_text.index('STATE')+1] == "TAXES":
                     row = ["State Taxes"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('STATE')+2)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -324,7 +323,7 @@ def uploadfile():
                         session['statetaxes'][i] = Decimal(les_text[(les_text.index('STATE')+2)])
                 else:
                     row = ["State Taxes"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
                     
@@ -335,7 +334,7 @@ def uploadfile():
                 #find Roth TSP
                 if 'ROTH' in les_text:
                     row = ["Roth TSP"]
-                    for i in range(session['months_display']+1):
+                    for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('ROTH')+2)]))
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -349,8 +348,6 @@ def uploadfile():
 
                 #find mid-month-pay
                 if 'MID-MONTH-PAY' in les_text:
-
-
                     session['midmonthpay'] = Decimal(les_text[(les_text.index('MID-MONTH-PAY')+1)])
                 else:
                     session['midmonthpay'] = 0
@@ -358,7 +355,7 @@ def uploadfile():
                 #find partial pay
                 if 'PARTIAL' in les_text and les_text[les_text.index('PARTIAL')+1] == "PAY":
                     row = ["Partial Pay", -Decimal(les_text[(les_text.index('PARTIAL')+2)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -370,7 +367,7 @@ def uploadfile():
                 #find pcs members
                 if 'PCS' in les_text and les_text[les_text.index('PCS')+1] == "MEMBERS":
                     row = ["PCS Members", -Decimal(les_text[(les_text.index('PCS')+2)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -382,7 +379,7 @@ def uploadfile():
                 #find debt
                 if 'DEBT' in les_text and les_text[les_text.index('DEBT')-1] != "ADVANCE":
                     row = ["Debt", -Decimal(les_text[(les_text.index('DEBT')+1)])]
-                    for i in range(session['months_display']):
+                    for i in range(session['months_display']-1):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
 
@@ -409,21 +406,21 @@ def uploadfile():
 
                 #taxable pay
                 row = ["Taxable Pay"]
-                for i in range(session['months_display']+1):
+                for i in range(session['months_display']):
                     x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #non-taxable pay
                 row = ["Non-Taxable Pay"]
-                for i in range(session['months_display']+1):
+                for i in range(session['months_display']):
                     x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #total taxes
                 row = ["Total Taxes"]
-                for i in range(session['months_display']+1):
+                for i in range(session['months_display']):
                     x = 0
                     row.append(x)
                 session['matrix'].loc[len(session['matrix'])] = row
@@ -431,22 +428,23 @@ def uploadfile():
                 #gross pay
                 row_grosspay = ["Gross Pay"]
                 for column in session['matrix'].columns[1:]:
-                    total = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
-                    row_grosspay.append(total)
+                    #total = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
+                    row_grosspay.append(calculate_grosspay(column))
                 session['matrix'].loc[len(session['matrix'])] = row_grosspay
 
 
                 #net pay
                 row_netpay = ["Net Pay"]
                 for column in session['matrix'].columns[1:]:
-                    net_pay = session['matrix'][column][:-4].sum()
-                    row_netpay.append(net_pay)
+                    #net_pay = session['matrix'][column][:-4].sum()
+                    row_netpay.append(calculate_netpay(column))
                 session['matrix'].loc[len(session['matrix'])] = row_netpay
 
                 
 
 
-
+                session['col_headers'] = list(session['matrix'].columns)
+                session['row_headers'] = list(session['matrix'][session['matrix'].columns[0]])
                 session['matrix_html'] = session['matrix'].to_html()
 
 
@@ -462,8 +460,7 @@ def uploadfile():
 @app.route('/updatematrix', methods=['POST'])
 def updatematrix():
 
-    col_headers = list(session['matrix'].columns)
-    row_headers = list(session['matrix'][session['matrix'].columns[0]])
+    
 
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
@@ -507,33 +504,29 @@ def updatematrix():
 
 
     #update sgli
-    for i in range(1, len(session['matrix'].columns)):
-        if i >= col_headers.index(session['sgli_future_month']):
-            session['matrix'].at[row_headers.index("SGLI"), col_headers[i]] = -session['sgli_future']
+    for i in range(1, len(session['col_headers'])):
+        if i >= session['col_headers'].index(session['sgli_future_month']):
+            session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = -session['sgli_future']
         else:
-            session['matrix'].at[row_headers.index("SGLI"), col_headers[i]] = session['matrix'].at[row_headers.index("SGLI"), col_headers[1]]
-
-
-
-    #update SGLI
-    for i in range(len(session['sgli'])):
-        if i > 0 and i >= session['months'].index(session['sgli_future_month']):
-            session['sgli'][i] = Decimal(session['sgli_future'])
-        else:
-            session['sgli'][i] = session['sgli'][0]
+            session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
 
 
     #update total taxes
     for i in range(len(session['totaltaxes'])):
         session['totaltaxes'][i] = session['federaltaxes'][i] + session['statetaxes'][i]
-
     #update gross pay:
     for i in range(len(session['grosspay'])):
         session['grosspay'][i] = session['basepay'][i] + session['bas'][i] + session['bah'][i] + session['ueainitial'][i] + session['advancedebt'][i] + session['pcsmember'][i]
-
     #update net pay:
     for i in range(len(session['netpay'])):
         session['netpay'][i] = session['grosspay'][i] - session['federaltaxes'][i] - session['ficasocsecurity'][i] - session['ficamedicare'][i] - session['sgli'][i] - session['statetaxes'][i] - session['rothtsp'][i] - session['debt'][i] - session['partialpay'][i] - session['pcsmembers'][i]
+
+
+    #update net pay
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
+        session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = calculate_netpay(session['col_headers'][i])
+
 
 
     session['matrix_html'] = session['matrix'].to_html()
@@ -555,6 +548,14 @@ def resources():
     return render_template('resources.html')
 
 
+
+def calculate_grosspay(column):
+    gp = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
+    return gp
+
+def calculate_netpay(column):
+    np = session['matrix'][column][:-4].sum()
+    return np
 
 
 def allowed_file(filename):
