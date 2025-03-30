@@ -9,10 +9,179 @@
 </head>
 
 <body>
+
+
     <div class="table-div" id="matrix-id">
-        {% block content %}
-        {{session['matrix_html'] | safe}}
-        {% endblock %}
+        <table class="matrix-table">
+            <tbody>
+                <tr class="matrix-header">
+                    <td class="matrix-header"></td>
+                    {% for x in session.col_headers[1:] %}
+                    <td class="matrix-header">{{x}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-basepay">Base Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-bas">BAS</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-bah">BAH</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                {% if session.ueainitial[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-ueainitial">UEA Initial</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("UEA Initial"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                {% if session.advancedebt[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-advancedebt">Advance Debt</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Advance Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                {% if session.pcsmember[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-pcsmember">PCS Member</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("PCS Member"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-federaltaxes">Federal Taxes</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-ficasocsecurity">FICA - Social Security</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-ficamedicare">FICA - Medicare</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-sgli">SGLI</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-statetaxes">State Taxes</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("State Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-rothtsp">Roth TSP</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+
+
+                {% if session.partialpay[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-partialpay">Partial Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Partial Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                {% if session.pcsmembers[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix">label class="modalbutton" for="modal-pcsmembers">PCS Members</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("PCS Members"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                {% if session.debt[0] != 0 %}
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-debt">Debt</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+
+                <!--
+                <tr class="matrix">
+                    <td class="matrix" colspan="8" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+                </tr>
+                -->
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-taxablepay">Taxable Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][x]])}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-nontaxablepay">Non-Taxable Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][x]])}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-totaltaxes">Total Taxes</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][x]])}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-grosspay">Gross Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][x]])}}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr class="matrix">
+                    <td class="matrix"><label class="modalbutton" for="modal-netpay">Net Pay</label></td>
+                    {% for x in range(1, session['matrix'].shape[1]) %}
+                    <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][x]])}}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 
