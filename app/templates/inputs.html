@@ -89,7 +89,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-sgli">SGLI</label>
                         </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session.sgli[0])}}</td>
+                        <td class="inputs">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]).replace('$-','$')}}</td>
                         <td class="inputs">
                             <select class="inputs" id="sgli_future" name="sgli_future">
                                 {% for x in config['SGLI_PREMIUMS'][0:] %}
