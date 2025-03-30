@@ -11,9 +11,11 @@ class Config:
 
     UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
+    MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
+    PAY_ACTIVEDUTY_FILE = "pay_activeduty_2025.csv"
+    PAY_DRILL_FILE = "pay_drill_2025.csv"
     BAH_WITH_DEPENDENTS_FILE = "bah_with_dependents_2025.csv"
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
-    MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -29,7 +31,10 @@ class Config:
                    'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
     SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
     SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
+    BAS_AMOUNT = [320.78, 465.77, 931.54]   #officers, enlisted, enlisted BAS 2
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
+    PAY_ACTIVEDUTY =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVEDUTY_FILE))
+    PAY_DRILL =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
     BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
