@@ -42,7 +42,11 @@ todo:
 -->
 
 
-
+    <div class="table-div" id="matrix-id">
+        {% block content %}
+        {{session['matrix_html'] | safe}}
+        {% endblock %}
+    </div>
 <!--
 old table:
 -->

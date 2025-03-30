@@ -46,8 +46,10 @@ body {
 /* matrix */
 
 div.table-div {
-    margin: auto;
-    padding: 30px;
+    /*margin: auto;*/
+    padding: 10px;
+    width: fit-content;
+    float: left;
 }
 
 /*

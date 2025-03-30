@@ -67,7 +67,7 @@ def index():
     session['grosspay'] = [0, 0, 0, 0, 0, 0, 0]
     session['netpay'] = [0, 0, 0, 0, 0, 0, 0]
 
-    session['months_display'] = 12
+    session['months_display'] = 6
 
     return render_template('index.html')
 
@@ -428,7 +428,6 @@ def uploadfile():
                 #gross pay
                 row_grosspay = ["Gross Pay"]
                 for column in session['matrix'].columns[1:]:
-                    #total = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
                     row_grosspay.append(calculate_grosspay(column))
                 session['matrix'].loc[len(session['matrix'])] = row_grosspay
 
@@ -436,7 +435,6 @@ def uploadfile():
                 #net pay
                 row_netpay = ["Net Pay"]
                 for column in session['matrix'].columns[1:]:
-                    #net_pay = session['matrix'][column][:-4].sum()
                     row_netpay.append(calculate_netpay(column))
                 session['matrix'].loc[len(session['matrix'])] = row_netpay
 
