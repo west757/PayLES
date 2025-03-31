@@ -42,7 +42,7 @@
                     {% endfor %}
                 </tr>
 
-                {% if session.ueainitial[0] != 0 %}
+                {% if "UEA Initial" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-ueainitial">UEA Initial</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
@@ -51,7 +51,7 @@
                 </tr>
                 {% endif %}
 
-                {% if session.advancedebt[0] != 0 %}
+                {% if "Advance Debt" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-advancedebt">Advance Debt</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
@@ -60,7 +60,7 @@
                 </tr>
                 {% endif %}
 
-                {% if session.pcsmember[0] != 0 %}
+                {% if "PCS Member" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-pcsmember">PCS Member</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
@@ -113,7 +113,7 @@
                 </tr>
 
 
-                {% if session.partialpay[0] != 0 %}
+                {% if "Partial Pay" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-partialpay">Partial Pay</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
@@ -122,16 +122,16 @@
                 </tr>
                 {% endif %}
 
-                {% if session.pcsmembers[0] != 0 %}
+                {% if "PCS Members" in session['row_headers'] %}
                 <tr class="matrix">
-                    <td class="matrix">label class="modalbutton" for="modal-pcsmembers">PCS Members</label></td>
+                    <td class="matrix"><label class="modalbutton" for="modal-pcsmembers">PCS Members</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
                     <td class="matrix">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("PCS Members"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                     {% endfor %}
                 </tr>
                 {% endif %}
 
-                {% if session.debt[0] != 0 %}
+                {% if "Debt" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-debt">Debt</label></td>
                     {% for x in range(1, session['matrix'].shape[1]) %}
@@ -189,6 +189,18 @@
         <!--<iframe class="pdf" src="../static/LES_Template1.pdf" style="width: 100%;height: 100%;border: none;"></iframe>-->
     </div>
 
+
+    <input class="modal-state" id="modal-bah" type="checkbox" />
+    <div class="modal">
+        <label class="modal-bg" for="modal-bah"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="modal-bah"></label>
+            <h2>Basic Allowance for Housing</h2>
+            <p>Military Housing Area: MHA</p>
+            <p>Current: {{session.mha_current}} - {{session.mha_current_name}}</p>
+            <p>Future: {{session.mha_future}} - {{session.mha_future_name}}</p>
+        </div>
+    </div>
 
 </body>
 </html>
