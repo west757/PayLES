@@ -22,6 +22,8 @@ def index():
     session['rank_current'] = ""
     session['rank_future'] = ""
     session['rank_future_month'] = ""
+    session['paydate'] = ""
+    session['serviceyears_current'] = 0
     session['serviceyears_future'] = 0
     session['serviceyears_future_month'] = ""
     session['zipcode_current'] = 0
@@ -73,11 +75,37 @@ def uploadfile():
                 les_text = les_textstring.split()
 
                 #print(les_text)
+                #les_rects = les_page.rects
+                #print(les_rects)
+                #print("")
+                #print("")
+
+                #x0, top, x1, bottom
+                bounding_box = (170, 43, 215, 53)
+                crop_area = les_page.crop(bounding_box)
+                crop_text = crop_area.extract_text().split('\n')
+                for text in crop_text:
+                    print(text)
+
+
+                #rects_text = []
+                #for x in les_rects:
+                    #print(x)
+                    #print("")
+                #    rects_text.append(les_page.crop((x.x0, x.top, x.x1, x.bottom)).extract_text())
+                
+                #les_rect = les_page.crop((320, 52, 457, 66))
+                #les_rect_textstring = les_rect.extract_text()
+                #les_rect_text = les_rect_textstring.split()
+                #print(les_rect_text)
+
+                #print(rects_text)
+                #session['paydate'] = les_page.crop((x0, top, x1, bottom)).extract_text()
 
                 #find month
                 for x in app.config['MONTHS_SHORT']:
                     if x in les_text:
-                        matrix_months = ["Variable"]
+                        matrix_months = [""]
                         for i in range(session['months_display']):
                            matrix_months.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12])
 
@@ -89,6 +117,9 @@ def uploadfile():
                     else:
                         session['rank_current'] = "no rank found"
                 session['rank_future'] = session['rank_current']
+
+                #find pay date
+
 
                 #find years of service
                 #if 'PACIDN' in les_text:
@@ -328,12 +359,7 @@ def updatematrix():
     #        session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]]
 
 
-    #update bah
-    #mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
-    #mha_search_row = mha_search.index[0][0]
-    #session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-    #session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
-    
+    #update BAH
     rank_over_months = []
     zipcode_over_months = []
     dependents_over_months = []
@@ -353,7 +379,6 @@ def updatematrix():
         else:
             dependents_over_months.append(session['dependents_current'])
 
-
     for i in range(1, len(session['col_headers'])):
         mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([zipcode_over_months[i-1]])].stack()
         mha_search_row = mha_search.index[0][0]
@@ -369,59 +394,6 @@ def updatematrix():
         bah_value = bah_value.iloc[0]
 
         session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_value
-
-    #if session['dependents_future'] > 0:
-    #    bah_df = app.config['BAH_WITH_DEPENDENTS']
-    #else:
-    #    bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
-
-    #bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], session['rank_future']]
-    #bah_value = bah_value.iloc[0]
-    #print("bah value after iloc: ", bah_value)
-    #print("")
-
-    #bah_row_index = session['row_headers'].index("BAH")
-
-    #for i in range(1, len(session['col_headers'])):
-    #    if (i >= session['col_headers'].index(session['zipcode_future_month'])) or (i >= session['col_headers'].index(session['dependents_future_month'])):
-    #        session['matrix'].at[bah_row_index, session['col_headers'][i]] = bah_value
-    #    else:
-    #        session['matrix'].at[bah_row_index, session['col_headers'][i]] = session['matrix'].at[bah_row_index, session['col_headers'][1]]
-
-        
-
-
-    #mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
-    #mha_search_row = mha_search.index[0][0]
-    #mha_search_col = mha_search.index[0][1]
-    #session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-    #session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
-
-    #if session['dependents_future'] > 0:
-    #    bah_search_row = app.config['BAH_WITH_DEPENDENTS'][app.config['BAH_WITH_DEPENDENTS']["MHA"] == session['mha_future']].index
-    #    bah_search_col = app.config['BAH_WITH_DEPENDENTS'].loc[bah_search_row, session['rank_future']]
-    #    for i in range(1, len(session['col_headers'])):
-    #        if i >= session['col_headers'].index(session['zipcode_future_month']):
-    #            session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_search_col.apply(Decimal)
-    #        else:
-    #            session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][1]]
-            
-            #if i > 0 and i >= session['months'].index(session['zipcode_future_month']):
-            #    session['bah'][i] = bah_search_col.apply(Decimal)
-            #else:
-            #    session['bah'][i] = session['bah'][0]
-    #else:
-    #    bah_search_row = app.config['BAH_WITHOUT_DEPENDENTS'][app.config['BAH_WITHOUT_DEPENDENTS']["MHA"] == session['mha_future']].index
-    #    bah_search_col = app.config['BAH_WITHOUT_DEPENDENTS'].loc[bah_search_row, session['rank_future']]
-    #    for i in range(1, len(session['col_headers'])):
-    #        if i >= session['col_headers'].index(session['zipcode_future_month']):
-    #            session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_search_col.apply(Decimal)
-    #        else:
-    #            session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][1]]
-            #if i > 0 and i >= session['months'].index(session['zipcode_future_month']):
-            #    session['bah'][i] = bah_search_col.apply(Decimal)
-            #else:
-            #    session['bah'][i] = session['bah'][0]
 
 
     #update sgli
