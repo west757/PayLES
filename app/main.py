@@ -107,7 +107,6 @@ def uploadfile():
                 #find MHA
                 mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_current']])].stack()
                 mha_search_row = mha_search.index[0][0]
-                mha_search_col = mha_search.index[0][1]
 
                 session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
                 session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
@@ -330,32 +329,66 @@ def updatematrix():
 
 
     #update bah
-    mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
-    mha_search_row = mha_search.index[0][0]
-    session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-    session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+    #mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
+    #mha_search_row = mha_search.index[0][0]
+    #session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+    #session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+    
+    rank_over_months = []
+    zipcode_over_months = []
+    dependents_over_months = []
+    for i in range(1, len(session['col_headers'])):
+        if i >= session['col_headers'].index(session['rank_future_month']):
+            rank_over_months.append(session['rank_future'])
+        else:
+            rank_over_months.append(session['rank_current'])
 
-    if session['dependents_future'] > 0:
-        bah_df = app.config['BAH_WITH_DEPENDENTS']
-    else:
-        bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
+        if i >= session['col_headers'].index(session['zipcode_future_month']):
+            zipcode_over_months.append(session['zipcode_future'])
+        else:
+            zipcode_over_months.append(session['zipcode_current'])
 
-    # Find the BAH value based on MHA and rank
-    bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], session['rank_future']]
-    print("bah value before iloc: ", bah_value)
-    bah_value = bah_value.iloc[0]
-    print("bah value after iloc: ", bah_value)
-    print("")
+        if i >= session['col_headers'].index(session['dependents_future_month']):
+            dependents_over_months.append(session['dependents_future'])
+        else:
+            dependents_over_months.append(session['dependents_current'])
 
-    bah_row_index = session['row_headers'].index("BAH")
 
     for i in range(1, len(session['col_headers'])):
-        # If the current month is greater than or equal to the future month of the zipcode or dependents
-        if (i >= session['col_headers'].index(session['zipcode_future_month'])) or (i >= session['col_headers'].index(session['dependents_future_month'])):
-            session['matrix'].at[bah_row_index, session['col_headers'][i]] = bah_value
+        mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([zipcode_over_months[i-1]])].stack()
+        mha_search_row = mha_search.index[0][0]
+        session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+        session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+        
+        if dependents_over_months[i-1] > 0:
+            bah_df = app.config['BAH_WITH_DEPENDENTS']
         else:
-            session['matrix'].at[bah_row_index, session['col_headers'][i]] = session['matrix'].at[bah_row_index, session['col_headers'][1]]
+            bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
 
+        bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], rank_over_months[i-1]]
+        bah_value = bah_value.iloc[0]
+
+        session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_value
+
+    #if session['dependents_future'] > 0:
+    #    bah_df = app.config['BAH_WITH_DEPENDENTS']
+    #else:
+    #    bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
+
+    #bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], session['rank_future']]
+    #bah_value = bah_value.iloc[0]
+    #print("bah value after iloc: ", bah_value)
+    #print("")
+
+    #bah_row_index = session['row_headers'].index("BAH")
+
+    #for i in range(1, len(session['col_headers'])):
+    #    if (i >= session['col_headers'].index(session['zipcode_future_month'])) or (i >= session['col_headers'].index(session['dependents_future_month'])):
+    #        session['matrix'].at[bah_row_index, session['col_headers'][i]] = bah_value
+    #    else:
+    #        session['matrix'].at[bah_row_index, session['col_headers'][i]] = session['matrix'].at[bah_row_index, session['col_headers'][1]]
+
+        
 
 
     #mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([session['zipcode_future']])].stack()
