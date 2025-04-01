@@ -5,6 +5,7 @@ from config import Config
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
+from datetime import datetime
 #from pdf2image import convert_from_path
 import pdfplumber
 import os
@@ -22,7 +23,9 @@ def index():
     session['rank_current'] = ""
     session['rank_future'] = ""
     session['rank_future_month'] = ""
-    session['paydate'] = ""
+    session['pay_date'] = ""
+    session['les_date'] = ""
+    session['months_in_service'] = 0
     session['serviceyears_current'] = 0
     session['serviceyears_future'] = 0
     session['serviceyears_future_month'] = ""
@@ -119,22 +122,22 @@ def uploadfile():
                 session['rank_future'] = session['rank_current']
 
                 #find pay date
-                if "ENTITLEMENTS" in les_text:
-                    session['paydate'] = les_text[(les_text.index("ENTITLEMENTS")-8)]
-                print(session['paydate'])
+                session['pay_date'] = datetime.strptime(les_text[(les_text.index("ENTITLEMENTS")-8)], '%y%m%d')
+                print(session['pay_date'])
 
                 #find years of service
-                #if 'PACIDN' in les_text:
-                #    session['zipcode_current'] = Decimal(les_text[(les_text.index('ENTITLEMENTS')+5)])
-                #else:
-                #    session['zipcode_current'] = 0
-                #session['zipcode_future'] = session['zipcode_current']
+                session['serviceyears_current'] = Decimal(les_text[(les_text.index("ENTITLEMENTS")-7)])
+                session['serviceyears_future'] = session['serviceyears_current']
+
+                #find les date
+                les_year = les_text[(les_text.index("ENTITLEMENTS")-1)]
+                les_month = les_text[(les_text.index("ENTITLEMENTS")-2)]
+                les_date_temp = les_year + les_month + "1"
+                session['les_date'] = datetime.strptime(les_date_temp, '%y%b%d')
+                print(session['les_date'])
 
                 #find zip code
-                if "PACIDN" in les_text:
-                    session['zipcode_current'] = Decimal(les_text[(les_text.index("PACIDN")+3)])
-                else:
-                    session['zipcode_current'] = 0
+                session['zipcode_current'] = Decimal(les_text[(les_text.index("PACIDN")+3)])
                 session['zipcode_future'] = session['zipcode_current']
 
                 #find MHA
@@ -428,6 +431,11 @@ def resources():
     return render_template('resources.html')
 
 
+
+def calculate_basepay():
+    bp = 0
+    return bp
+
 def calculate_grosspay(column):
     gp = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
     return gp
@@ -435,6 +443,9 @@ def calculate_grosspay(column):
 def calculate_netpay(column):
     np = session['matrix'][column][:-4].sum()
     return np
+
+
+
 
 
 def allowed_file(filename):
