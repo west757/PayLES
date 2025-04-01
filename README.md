@@ -31,14 +31,6 @@ military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tab
 MHA zipcodes: https://veteran.com/bah-rates-state/
 bah table: https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/
 usps zipcode lookup: https://tools.usps.com/go/ZipLookupAction!input.action
-
-
-todo:
-- display LES at bottom of table as image
-- overlay of selectable things on les display
-- have first input be a placeholder for inputs, then actual value (if-then)
-- css styling
-- building out modals
-- building out pages
-- additional rows to be added
+state tax brackets and rates: https://taxfoundation.org/data/all/state/state-income-tax-rates/
+federal income tax table: https://itfp.com/wp-content/uploads/2024/11/Federal-Income-Tax-Tables-2024-A048S.pdf
 -->
