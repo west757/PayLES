@@ -17,6 +17,13 @@ Session(app)
 
 @app.route('/')
 def index():
+    session['months_display'] = 6
+
+    return render_template('index.html')
+
+
+@app.route('/uploadfile', methods=['POST'])
+def uploadfile():
     session['state_current'] = ""
     session['state_future'] = ""
     session['state_future_month'] = ""
@@ -43,14 +50,6 @@ def index():
     session['dependents_current'] = 0
     session['dependents_future'] = 0
     session['dependents_future_month'] = ""
-
-    session['months_display'] = 6
-
-    return render_template('index.html')
-
-
-@app.route('/uploadfile', methods=['POST'])
-def uploadfile():
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -123,18 +122,17 @@ def uploadfile():
 
                 #find pay date
                 session['pay_date'] = datetime.strptime(les_text[(les_text.index("ENTITLEMENTS")-8)], '%y%m%d')
-                print(session['pay_date'])
 
                 #find years of service
                 session['serviceyears_current'] = Decimal(les_text[(les_text.index("ENTITLEMENTS")-7)])
                 session['serviceyears_future'] = session['serviceyears_current']
 
                 #find les date
-                les_year = les_text[(les_text.index("ENTITLEMENTS")-1)]
-                les_month = les_text[(les_text.index("ENTITLEMENTS")-2)]
-                les_date_temp = les_year + les_month + "1"
+                les_date_temp = les_text[(les_text.index("ENTITLEMENTS")-1)] + les_text[(les_text.index("ENTITLEMENTS")-2)] + "1"
                 session['les_date'] = datetime.strptime(les_date_temp, '%y%b%d')
-                print(session['les_date'])
+
+                #find months in service
+                session['months_in_service'] = months_in_service(session['les_date'], session['pay_date'])
 
                 #find zip code
                 session['zipcode_current'] = Decimal(les_text[(les_text.index("PACIDN")+3)])
@@ -357,11 +355,22 @@ def updatematrix():
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
 
     #update base pay
-    #for i in range(1, len(session['col_headers'])):
-    #    if i >= session['col_headers'].index(session['rank_future_month']):
-    #        session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = -session['sgli_future']
-    #    else:
-    #        session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]]
+    basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))
+    basepay_headers.append(504) #add check for over 40+ years
+    basepay_col = 0
+    for i in range(1, len(session['col_headers'])):
+        for j in range(len(session['col_headers'])):
+            if basepay_headers[j] <= session['months_in_service'] < basepay_headers[j+1]:
+                basepay_col = basepay_headers[j]
+
+        basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
+        basepay_value = Decimal(basepay_value.iloc[0])
+
+        if i >= session['col_headers'].index(session['rank_future_month']):
+            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = basepay_value
+        else:
+            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]]
+
 
 
     #update BAH
@@ -384,7 +393,7 @@ def updatematrix():
         else:
             dependents_over_months.append(session['dependents_current'])
 
-    for i in range(1, len(session['col_headers'])):
+    #for i in range(1, len(session['col_headers'])):
         mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([zipcode_over_months[i-1]])].stack()
         mha_search_row = mha_search.index[0][0]
         session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
@@ -437,14 +446,18 @@ def calculate_basepay():
     return bp
 
 def calculate_grosspay(column):
-    gp = session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()
+    gp = Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum())
     return gp
 
 def calculate_netpay(column):
-    np = session['matrix'][column][:-4].sum()
+    np = Decimal(session['matrix'][column][:-4].sum())
     return np
 
 
+
+
+def months_in_service(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
 
