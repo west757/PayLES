@@ -297,22 +297,21 @@ def uploadfile():
 
                 #total taxes
                 row = ["Total Taxes"]
-                for i in range(session['months_display']):
-                    x = 0
-                    row.append(x)
+                for column in session['matrix'].columns[1:]:
+                    row.append(calculate_totaltaxes(column))
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #gross pay
-                row_grosspay = ["Gross Pay"]
+                row = ["Gross Pay"]
                 for column in session['matrix'].columns[1:]:
-                    row_grosspay.append(calculate_grosspay(column))
-                session['matrix'].loc[len(session['matrix'])] = row_grosspay
+                    row.append(calculate_grosspay(column))
+                session['matrix'].loc[len(session['matrix'])] = row
 
                 #net pay
-                row_netpay = ["Net Pay"]
+                row = ["Net Pay"]
                 for column in session['matrix'].columns[1:]:
-                    row_netpay.append(calculate_netpay(column))
-                session['matrix'].loc[len(session['matrix'])] = row_netpay
+                    row.append(calculate_netpay(column))
+                session['matrix'].loc[len(session['matrix'])] = row
 
 
                 session['col_headers'] = list(session['matrix'].columns)
@@ -400,6 +399,10 @@ def updatematrix():
         session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_value
 
 
+    #update gross pay
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
+
     #update sgli
     for i in range(1, len(session['col_headers'])):
         if i >= session['col_headers'].index(session['sgli_future_month']):
@@ -408,9 +411,9 @@ def updatematrix():
             session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
 
 
-    #update gross pay, net pay
+    #update total taxes, net pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
+        session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
         session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = calculate_netpay(session['col_headers'][i])
 
     return render_template('les.html')
@@ -435,13 +438,14 @@ def calculate_basepay():
     bp = 0
     return bp
 
+def calculate_totaltaxes(column):
+    return Decimal((session['matrix'].at[session['row_headers'].index("Federal Taxes"), column]) + (session['matrix'].at[session['row_headers'].index("State Taxes"), column]))
+
 def calculate_grosspay(column):
-    gp = Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum())
-    return gp
+    return Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum())
 
 def calculate_netpay(column):
-    np = Decimal(session['matrix'][column][:-4].sum())
-    return np
+    return Decimal(session['matrix'][column][:-4].sum())
 
 
 
