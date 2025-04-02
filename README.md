@@ -33,4 +33,5 @@ bah table: https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH
 usps zipcode lookup: https://tools.usps.com/go/ZipLookupAction!input.action
 state tax brackets and rates: https://taxfoundation.org/data/all/state/state-income-tax-rates/
 federal income tax table: https://itfp.com/wp-content/uploads/2024/11/Federal-Income-Tax-Tables-2024-A048S.pdf
+fica tax rates for military: https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/
 -->
