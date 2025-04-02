@@ -18,7 +18,6 @@ Session(app)
 @app.route('/')
 def index():
     session['months_display'] = 6
-
     return render_template('index.html')
 
 
@@ -148,10 +147,7 @@ def uploadfile():
                 session['mha_future_name'] = session['mha_current_name']
 
                 #find dependents
-                if "Depns" in les_text:
-                    session['dependents_current'] = Decimal(les_text[(les_text.index('PACIDN')+7)])
-                else:
-                    session['dependents_current'] = 0
+                session['dependents_current'] = Decimal(les_text[(les_text.index('PACIDN')+7)])
                 session['dependents_future'] = session['dependents_current']
 
                 #find state
@@ -262,12 +258,6 @@ def uploadfile():
                     for i in range(session['months_display']):
                         row.append(0)
                     session['matrix'].loc[len(session['matrix'])] = row
-
-                #find mid-month-pay
-                #if 'MID-MONTH-PAY' in les_text:
-                #    session['midmonthpay'] = Decimal(les_text[(les_text.index('MID-MONTH-PAY')+1)])
-                #else:
-                #    session['midmonthpay'] = 0
 
                 #find partial pay
                 if "PARTIAL" in les_text and les_text[les_text.index('PARTIAL')+1] == "PAY":
@@ -393,7 +383,7 @@ def updatematrix():
         else:
             dependents_over_months.append(session['dependents_current'])
 
-    #for i in range(1, len(session['col_headers'])):
+    for i in range(1, len(session['col_headers'])):
         mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([zipcode_over_months[i-1]])].stack()
         mha_search_row = mha_search.index[0][0]
         session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
