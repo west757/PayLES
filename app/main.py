@@ -232,8 +232,8 @@ def uploadfile():
                     row = ["SGLI"]
                     for i in range(session['months_display']):
                         row.append(-Decimal(les_text[(les_text.index('SGLI')+1)]))
+                    session['sgli_future'] = -row[1]
                     session['matrix'].loc[len(session['matrix'])] = row
-
 
                 #find state taxes
                 if "STATE" in les_text and les_text[les_text.index('STATE')+1] == "TAXES":
