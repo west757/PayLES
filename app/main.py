@@ -361,6 +361,18 @@ def updatematrix():
             session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]]
 
 
+    #update bas
+    for i in range(1, len(session['col_headers'])):
+        if i >= session['col_headers'].index(session['rank_future_month']):
+            rank_index = app.config['RANKS_SHORT'].index(session['rank_future'])
+            if rank_index > 8:
+                bas_value = app.config['BAS_AMOUNT'][0]
+            else:
+                bas_value = app.config['BAS_AMOUNT'][1]
+            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = Decimal(bas_value)
+        else:
+            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][1]]
+
 
     #update BAH
     rank_over_months = []
