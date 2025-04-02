@@ -32,9 +32,9 @@ class Config:
     RANKS_SHORT = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
                    'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
                    'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-    SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
-    SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
-    BAS_AMOUNT = [320.78, 465.77, 931.54]   #officers, enlisted, enlisted BAS 2
+    SGLI_COVERAGES = list(map(Decimal, [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]))
+    SGLI_PREMIUMS = list(map(Decimal, [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]))
+    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))   #officers, enlisted, enlisted BAS 2
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
 
