@@ -415,6 +415,14 @@ def updatematrix():
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
 
+    #update fica - social security
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = -Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE'])
+
+    #update fica-medicare
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = -Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE'])
+
     #update sgli
     for i in range(1, len(session['col_headers'])):
         if i >= session['col_headers'].index(session['sgli_future_month']):

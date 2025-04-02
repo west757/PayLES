@@ -1,3 +1,4 @@
+from decimal import Decimal
 import os
 import secrets
 import pandas as pd
@@ -34,6 +35,8 @@ class Config:
     SGLI_COVERAGES = [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]
     SGLI_PREMIUMS = [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]
     BAS_AMOUNT = [320.78, 465.77, 931.54]   #officers, enlisted, enlisted BAS 2
+    FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
+    FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
