@@ -12,7 +12,7 @@ class Config:
     UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
-    PAY_ACTIVEDUTY_FILE = "pay_activeduty_2025.csv"
+    PAY_ACTIVE_FILE = "pay_active_2025.csv"
     PAY_DRILL_FILE = "pay_drill_2025.csv"
     BAH_WITH_DEPENDENTS_FILE = "bah_with_dependents_2025.csv"
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
@@ -34,7 +34,7 @@ class Config:
     BAS_AMOUNT = [320.78, 465.77, 931.54]   #officers, enlisted, enlisted BAS 2
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
-    PAY_ACTIVEDUTY =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVEDUTY_FILE))
+    PAY_ACTIVE =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
     PAY_DRILL =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
     BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
