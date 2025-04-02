@@ -140,9 +140,38 @@
                             </div>
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+
+    <div class="table-div" id="settings-id">
+        <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="outerHTML">
+            <table class="inputs-table">
+                <tbody>
+                    <tr class="inputs-header">
+                        <td class="inputs-header">Settings</td>
+                    </tr>
 
                     <tr class="inputs">
-                        <td class="inputs" colspan="4">
+                        <td class="inputs">Color-Code</td>
+                    </tr>
+
+                    <tr class="inputs">
+                        <td class="inputs">Display Year</td>
+                    </tr>
+
+
+
+                    <tr class="inputs">
+                        <td class="inputs">
+                            <label for="export">Export as:</label>
+                            <select name="export" id="export" class="inputs">
+                                <option value="csv">CSV</option>
+                                <option value="excel">Excel</option>
+                            </select>
                             <div class="updatebuttondiv">
                                 <button class="updatebutton" type="submit">Export to Excel</button>
                             </div>
@@ -152,6 +181,7 @@
             </table>
         </form>
     </div>
+
 
 
 </body>
