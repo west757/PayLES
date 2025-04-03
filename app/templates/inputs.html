@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <div class="table-div" id="inputs-id">
-        <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="outerHTML">
+    <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="outerHTML">
+        <div class="table-div" id="inputs-id">
             <table class="inputs-table">
                 <tbody>
                     <tr class="inputs-header">
@@ -142,13 +142,11 @@
                     </tr>
                 </tbody>
             </table>
-        </form>
-    </div>
+        </div>
 
 
 
-    <div class="table-div" id="settings-id">
-        <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="outerHTML">
+        <div class="table-div" id="settings-id">
             <table class="inputs-table">
                 <tbody>
                     <tr class="inputs-header">
@@ -158,7 +156,7 @@
                     <tr class="inputs">
                         <td class="inputs">
                             <p>Months Displayed:</p>
-                            <select class="inputs" id="months-display" name="months-display" style="width: 40px;">
+                            <select class="inputs" id="months_display" name="months_display" style="width: 40px;" onchange="this.form.submit()">
                                 {% for x in range(1, 13) %}
                                 <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
@@ -199,16 +197,17 @@
                     </tr>
                 </tbody>
             </table>
-        </form>
-    </div>
+        </div>
+    </form>
 
 
-<script>
-    function change_monthsdisplay() {
-        var md = document.getElementById("months-display").value;
-        
-    }
-</script>
+
+    <script>
+        function change_monthsdisplay() {
+            var md = document.getElementById("months-display").value;
+
+        }
+    </script>
 
 
 
