@@ -459,7 +459,7 @@ def calculate_basepay():
     return bp
 
 def calculate_totaltaxes(column):
-    return Decimal((session['matrix'].at[session['row_headers'].index("Federal Taxes"), column]) + (session['matrix'].at[session['row_headers'].index("State Taxes"), column]))
+    return Decimal((session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Federal Taxes"), column]) + (session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("State Taxes"), column]))
 
 def calculate_grosspay(column):
     return Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum())
