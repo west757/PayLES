@@ -121,6 +121,12 @@ tr.matrix, td.matrix {
     border-top: 1px solid #ddd;
 }
 
+/*
+tr.matrix:nth-child(even) td.matrix {
+    background-color: #f1f1f1;
+}
+*/
+
 tr.matrix:not(:first-child), td.matrix:not(:first-child) {
     padding: 20px;
 }
@@ -190,8 +196,14 @@ tr.inputs, td.inputs {
     border-top: 1px solid #ddd;
 }
 
+/*
+tr.inputs:nth-child(even) td.inputs {
+    background-color: #f1f1f1;
+}
+*/
+
 tr.inputs:not(:first-child), td.inputs:not(:first-child) {
-    padding: 17px;
+    padding: 20px;
 }
 
 td.inputs:first-child, td.inputs-header:first-child {
@@ -216,6 +228,8 @@ select.inputs {
     box-shadow: 1px 1px 2px #999;
     width: 80px;
     text-align: center;
+    height: 30px;
+    margin: -10px;
 }
 
 input.inputs {
@@ -228,6 +242,8 @@ input.inputs {
     box-shadow: 1px 1px 2px #999;
     width: 70px;
     text-align: center;
+    height: 20px;
+    margin: -10px;
 }
 
 input.inputcheckbox {
@@ -369,6 +385,7 @@ tr.matrix:hover {
     cursor: pointer;
     display: block;
     padding: 20px;
+    margin: -1px;
 }
 
 .modalbutton:hover, .modalbutton:focus {
