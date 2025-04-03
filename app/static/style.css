@@ -230,6 +230,17 @@ input.inputs {
     text-align: center;
 }
 
+input.inputcheckbox {
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    height: 20px;
+    width: 20px;
+    accent-color: #04AA6D;
+}
+
 /*
 tr.matrix:hover {
     background-color: #ddd;
