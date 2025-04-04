@@ -196,7 +196,7 @@
                         <td class="inputs-header"></td>
                         <td class="inputs-header">Current</td>
                         <td class="inputs-header">Future</td>
-                        <td class="inputs-header">Changing Month</td>
+                        <td class="inputs-header">Month Changing</td>
                     </tr>
                     <tr class="inputs">
                         <td class="inputs">
@@ -335,13 +335,11 @@
                 <tr class="inputs">
                     <td class="inputs">
                         <p>Months Displayed:</p>
-                        <!--<form hx-post="/buildmatrix" hx-target="#matrix-id" hx-swap="innerHTML">-->
-                            <select class="inputs" id="months_display" name="months_display" style="width: 40px;" hx-post="/updatematrixmonths" hx-target="#matrix-id" hx-swap="innerHTML" hx-trigger="change">
-                                {% for x in range(2, 13) %}
-                                <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        <!--</form>-->
+                        <select class="inputs" id="months_display" name="months_display" style="width: 40px;" hx-post="/updatematrixmonths" hx-target="#matrix-id" hx-swap="innerHTML" hx-trigger="change">
+                            {% for x in range(2, 13) %}
+                            <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
+                            {% endfor %}
+                        </select>
                     </td>
                     <td class="inputs">
                         <p>Years Displayed: </p>
@@ -379,19 +377,6 @@
             </tbody>
         </table>
     </div>
-
-
-
-
-    <script>
-        function change_monthsdisplay() {
-            var md = document.getElementById("months-display").value;
-
-        }
-    </script>
-
-
-
 
 
 
