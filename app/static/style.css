@@ -34,15 +34,6 @@ body {
 
 
 
-
-/* container */
-
-.container {
-    display: grid;
-    grid-template-columns: 65% 35%;
-}
-
-
 /* matrix */
 
 div.table-div {
@@ -247,17 +238,6 @@ input.inputs {
     margin: -10px;
 }
 
-input.inputcheckbox {
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    height: 20px;
-    width: 20px;
-    accent-color: #04AA6D;
-}
-
 /*
 tr.matrix:hover {
     background-color: #ddd;
@@ -288,6 +268,58 @@ tr.matrix:hover {
 .updatebutton:hover {
     background-color: #0056b3;
 }
+
+
+
+
+
+
+.settings-div {
+    display: inline-block;
+    margin: 0px;
+}
+
+select.settings {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    height: 30px;
+    margin: -10px;
+}
+
+input.settings {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 70px;
+    text-align: center;
+    height: 18px;
+    margin: -10px;
+}
+
+input.settingcheckbox {
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    height: 20px;
+    width: 20px;
+    accent-color: #04AA6D;
+}
+
+
+
 
 
 
