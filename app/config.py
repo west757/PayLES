@@ -12,13 +12,16 @@ class Config:
 
     UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
+    LOGO_FILE = "logo.png"
+    LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
+
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
     PAY_DRILL_FILE = "pay_drill_2025.csv"
     BAH_WITH_DEPENDENTS_FILE = "bah_with_dependents_2025.csv"
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
     FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
-    STATE_TAX_RATE_FILE = "satte_tax_rate_2025.csv"
+    STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -39,7 +42,9 @@ class Config:
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
-    PAY_ACTIVE =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
-    PAY_DRILL =  pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
+    PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
+    PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
     BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
+    FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
+    STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
