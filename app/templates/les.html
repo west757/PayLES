@@ -11,7 +11,7 @@
 <body>
 
 
-    <div class="table-div" id="matrix-id">
+    <div class="table-div" id="core-id">
         <table class="matrix-table">
             <tbody>
                 <tr class="matrix-header">
@@ -188,7 +188,7 @@
 
 
 
-    <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="innerHTML">
+    <form hx-post="/updatematrix" hx-target="#core-id" hx-swap="innerHTML">
         <div class="table-div" id="inputs-id">
             <table class="inputs-table">
                 <tbody>
@@ -338,7 +338,7 @@
                             <label>Months Displayed: &nbsp;</label>
                         </div>
                         <div class="settings-div">
-                            <select class="settings" id="months_display" name="months_display" style="width: 40px;" hx-post="/updatematrixmonths" hx-target="#matrix-id" hx-swap="innerHTML" hx-trigger="change">
+                            <select class="settings" id="months_display" name="months_display" style="width: 40px;" hx-post="/updatematrixmonths" hx-target="#core-id" hx-swap="innerHTML" hx-trigger="change">
                                 {% for x in range(2, 13) %}
                                 <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
@@ -399,7 +399,7 @@
                             <label>Upload New LES</label>
                         </div>
                         <div class="settings-div">
-                            <form hx-post="/uploadfile" hx-target="#matrix-id" hx-swap="innerHTML" enctype="multipart/form-data">
+                            <form hx-post="/uploadfile" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
                                 <input type="file" name="file" />
                                 <input type="submit" value="Upload" />
                             </form>
