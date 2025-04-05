@@ -28,13 +28,14 @@
 
     &nbsp;
 
-    <form hx-post="/uploadfile" hx-target="#matrix-id" hx-swap="innerHTML" enctype="multipart/form-data">
-		    <input type="file" name="file"/>
-		    <input type="submit" value="Upload LES"/>
-    </form>
-
-
-    <div id="matrix-id"></div>
+    <div id="core-id">
+        <div id="core-home-id">
+            <form hx-post="/uploadfile" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
+	            <input type="file" name="file"/>
+	            <input type="submit" value="Upload LES"/>
+            </form>
+        </div>
+    </div>
 
 
     <input class="modal-state" id="modal-basepay" type="checkbox" />

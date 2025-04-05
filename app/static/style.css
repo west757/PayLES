@@ -28,9 +28,8 @@ body {
 
 #header-logo {
     float: left;
-    padding-top: 10px;
-    padding-bottom: 6px;
     text-align: center;
+    transform: scale(0.8);
 }
 
 #header-text {
@@ -60,6 +59,12 @@ body {
 #header-nav a.active {
     background-color: #04AA6D;
     color: white;
+}
+
+
+/* home */
+#core-home-id {
+    text-align: center;
 }
 
 
