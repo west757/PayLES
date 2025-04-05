@@ -9,12 +9,20 @@
 </head>
 
 <body>
-    <div class="topnav">
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('faq') }}">FAQ</a>
-        <a href="{{ url_for('resources') }}">Resources</a>
-        <a class="active" href="{{ url_for('contact') }}">Contact</a>
-        <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
+    <div class="header">
+        <div class="header-item" id="header-logo">
+            <img src="/static/logo.png">
+        </div>
+        <div class="header-item" id="header-text">
+            <p>program analyzing your LES</p>
+        </div>
+        <div class="header-item" id="header-nav">
+            <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+            <a href="{{ url_for('faq') }}">FAQ</a>
+            <a href="{{ url_for('index') }}">Home</a>
+        </div>
     </div>
 
     &nbsp;
