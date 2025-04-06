@@ -487,10 +487,9 @@ def updatematrix():
     return render_template('les.html')
 
 
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/faq')
 def faq():
@@ -499,6 +498,16 @@ def faq():
 @app.route('/resources')
 def resources():
     return render_template('resources.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/404')
+def page404():
+    return render_template('404.html')
+
+
 
 
 
