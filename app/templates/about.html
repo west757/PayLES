@@ -6,11 +6,9 @@
     <title>PayLES</title>
     <script src="https://unpkg.com/htmx.org@1.8.0"></script>
     <link rel="stylesheet" href="/static/style.css">
-
 </head>
 
 <body>
-
     <div class="header">
         <div class="header-item" id="header-logo">
             <img src="/static/logo.png">
@@ -29,20 +27,9 @@
     </div>
 
     &nbsp;
+    <h1>about</h1>
 
-    <div id="core-id">
-        <div id="core-home-id">
-            
-            <p>Welcome to PayLES, the program analyzing your U.S. military Leave & Earnings Statement (LES)</p>
-            <p></p>
-
-            <form hx-post="/uploadfile" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".pdf" required />
-                <input type="submit" value="Upload LES"/>
-            </form>
-        </div>
-    </div>
-
+    <p>footer</p>
 
 </body>
 </html>

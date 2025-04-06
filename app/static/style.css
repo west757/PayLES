@@ -1,7 +1,9 @@
 /* colors:
     Pale: #f5e7de
+    White: #f9f9f9
     Gray: #393939
-    Light Green: #04a96d
+    Green: #04a96d
+    Green shade: #0c9a65
 */
 
 
@@ -53,19 +55,50 @@ body {
 
 #header-nav a:hover {
     background-color: #ddd;
-    color: black;
+    color: #393939;
 }
 
 #header-nav a.active {
     background-color: #04AA6D;
-    color: white;
+    color: #f9f9f9;
 }
 
 
 /* home */
+
 #core-home-id {
     text-align: center;
 }
+
+input[type=file] {
+    width: 400px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #393939;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input[type=file]::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: #04a96d;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #f9f9f9;
+    transition: background .2s ease-in-out;
+    font-size: 16px;
+    box-shadow: 1px 1px 2px #999;
+}
+
+input[type=file]::file-selector-button:hover {
+    background: #0c9a65;
+}
+
+
+
+
 
 
 
@@ -300,7 +333,7 @@ tr.matrix:hover {
 }
 
 .updatebutton:hover {
-    background-color: #0056b3;
+    background-color: #0c9a65;
 }
 
 
