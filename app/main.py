@@ -50,6 +50,12 @@ def uploadfile():
     session['dependents_current'] = 0
     session['dependents_future'] = 0
     session['dependents_future_month'] = ""
+    session['federaltaxes_status_current'] = ""
+    session['federaltaxes_status_future'] = ""
+    session['federaltaxes_status_future_month'] = ""
+    session['statetaxes_status_current'] = ""
+    session['statetaxes_status_future'] = ""
+    session['statetaxes_status_future_month'] = ""
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -160,6 +166,28 @@ def uploadfile():
                     else:
                         session['state_current'] = "no state found"
                 session['state_future'] = session['state_current']
+
+                #find federal tax status
+                if (les_text[les_text.index('Income')+6]) == "S":
+                    session['federaltaxes_status_current'] = app.config['TAX_FILING_TYPES'][0]
+                elif (les_text[les_text.index('Income')+6]) == "M":
+                    session['federaltaxes_status_current'] = app.config['TAX_FILING_TYPES'][1]
+                elif (les_text[les_text.index('Income')+6]) == "H":
+                    session['federaltaxes_status_current'] = app.config['TAX_FILING_TYPES'][2]
+                else:
+                    session['federaltaxes_status_current'] = "no federal tax filing type found"
+                
+                session['federaltaxes_status_future'] = session['federaltaxes_status_current']
+
+                #find state tax status
+                if (les_text[les_text.index('BAQ')-4]) == "S":
+                    session['statetaxes_status_current'] = app.config['TAX_FILING_TYPES'][0]
+                elif (les_text[les_text.index('BAQ')-4]) == "M":
+                    session['statetaxes_status_current'] = app.config['TAX_FILING_TYPES'][1]
+                else:
+                    session['statetaxes_status_current'] = "no state tax filing type found"
+
+                session['statetaxes_status_future'] = session['statetaxes_status_current']
 
 
                 #find base pay
@@ -390,6 +418,11 @@ def updatematrix():
     session['state_future_month'] = request.form['state_future_month']
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
+
+    session['federaltaxes_status_future'] = request.form['federaltaxes_status_future']
+    session['federaltaxes_status_future_month'] = request.form['federaltaxes_status_future_month']
+    session['statetaxes_status_future'] = request.form['statetaxes_status_future']
+    session['statetaxes_status_future_month'] = request.form['statetaxes_status_future_month']
 
     #update base pay
     basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))

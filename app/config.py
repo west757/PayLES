@@ -40,6 +40,7 @@ class Config:
     BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))   #officers, enlisted, enlisted BAS 2
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
+    TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
