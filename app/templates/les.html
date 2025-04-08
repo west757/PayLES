@@ -312,6 +312,59 @@
                         </td>
                     </tr>
 
+
+
+
+                    <tr class="inputs">
+                        <td class="inputs">
+                            <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
+                        </td>
+                        <td class="inputs">{{session.federaltaxes_status_current}}</td>
+                        <td class="inputs">
+                            <select class="inputs" id="federaltaxes_status_future" name="federaltaxes_status_future">
+                                {% for x in config['TAX_FILING_TYPES'][0:] %}
+                                <option value="{{x}}" {% if x==session.federaltaxes_status_future %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="inputs">
+                            <select class="inputs" id="federaltaxes_status_future_month" name="federaltaxes_status_future_month">
+                                {% for x in session.col_headers[2:] %}
+                                <option value="{{x}}" {% if x==session.federaltaxes_status_future_month %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr class="inputs">
+                        <td class="inputs">
+                            <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
+                        </td>
+                        <td class="inputs">{{session.statetaxes_status_current}}</td>
+                        <td class="inputs">
+                            <select class="inputs" id="statetaxes_status_future" name="statetaxes_status_future">
+                                {% for x in config['TAX_FILING_TYPES'][0:2] %}
+                                <option value="{{x}}" {% if x==session.statetaxes_status_future %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="inputs">
+                            <select class="inputs" id="statetaxes_status_future_month" name="statetaxes_status_future_month">
+                                {% for x in session.col_headers[2:] %}
+                                <option value="{{x}}" {% if x==session.statetaxes_status_future_month %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+
+
+
+
+
+
+
+
                     <tr class="inputs">
                         <td class="inputs" colspan="4">
                             <div class="updatebuttondiv">
@@ -323,6 +376,8 @@
             </table>
         </div>
     </form>
+
+
 
 
     <div class="table-div" id="settings-id">
