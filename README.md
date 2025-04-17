@@ -39,4 +39,6 @@ fica tax rates for military: https://www.dfas.mil/MilitaryMembers/payentitlement
 taxed military income: https://www.hrblock.com/tax-center/income/other-income/taxable-military-income/
 non-taxable military income: https://themilitarywallet.com/non-taxable-military-pay-benefits/
 military clothing allowance: https://militarypay.defense.gov/PAY/Allowances/clothing.aspx
+les entitlements: https://www.military.com/paycheck-chronicles/2015/04/07/entitlements-on-your-les
+les deductions: https://www.military.com/paycheck-chronicles/2015/04/28/deductions-on-your-les
 -->
