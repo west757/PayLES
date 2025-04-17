@@ -415,17 +415,21 @@ def updatematrix():
     session['state_future_month'] = request.form['state_future_month']
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
-
     session['federaltaxes_status_future'] = request.form['federaltaxes_status_future']
     session['federaltaxes_status_future_month'] = request.form['federaltaxes_status_future_month']
     session['statetaxes_status_future'] = request.form['statetaxes_status_future']
     session['statetaxes_status_future_month'] = request.form['statetaxes_status_future_month']
 
-    #update base pay
+
+    #variables
     basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))
     basepay_headers.append(504) #add check for over 40+ years
     basepay_col = 0
+
+
     for i in range(1, len(session['col_headers'])):
+
+        #update base pay
         for j in range(len(session['col_headers'])):
             if basepay_headers[j] <= session['months_in_service'] < basepay_headers[j+1]:
                 basepay_col = basepay_headers[j]
@@ -439,8 +443,7 @@ def updatematrix():
             session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
 
 
-    #update bas
-    for i in range(1, len(session['col_headers'])):
+        #update bas
         if i >= session['col_headers'].index(session['rank_future_month']):
             rank_index = app.config['RANKS_SHORT'].index(session['rank_future'])
             if rank_index > 8:
@@ -456,6 +459,7 @@ def updatematrix():
     rank_over_months = []
     zipcode_over_months = []
     dependents_over_months = []
+
     for i in range(1, len(session['col_headers'])):
         if i >= session['col_headers'].index(session['rank_future_month']):
             rank_over_months.append(session['rank_future'])
@@ -516,6 +520,17 @@ def updatematrix():
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i], i)), 2)
 
+
+    #update state tax rate
+    session['statetaxes_status_over_months'] = []
+    for i in range(1, len(session['col_headers'])):
+        if i >= session['col_headers'].index(session['statetaxes_status_future_month']):
+            session['statetaxes_status_over_months'].append(session['statetaxes_status_future'])
+        else:
+            session['statetaxes_status_over_months'].append(session['stateltaxes_status_current'])
+
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("State Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_statetaxes(session['col_headers'][i], i)), 2)
 
 
     #update fica - social security
@@ -580,6 +595,38 @@ def calculate_federaltaxes(column, i):
         print("no standard deduction found")
 
     brackets = app.config['FEDERAL_TAX_RATE'][app.config['FEDERAL_TAX_RATE']['Status'].str.lower() == session['federaltaxes_status_over_months'][i].lower()]
+    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
+
+    tax = Decimal(0)
+
+    for i in range(len(brackets)):
+        lower = brackets.at[i, 'Bracket']
+        rate = brackets.at[i, 'Rate']
+
+        if i + 1 < len(brackets):
+            upper = brackets.at[i + 1, 'Bracket']
+        else:
+            upper = float('inf')
+
+        if taxable_income <= Decimal(float(lower)):
+            break
+
+        taxable_amount = min(taxable_income, upper) - lower
+        tax += taxable_amount * Decimal(rate)
+
+    tax = tax / 12
+    return round(tax, 2)
+
+
+
+
+
+def calculate_statetaxes(column, i):
+    i = i - 1
+    taxable_income = session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Taxable Pay"), column] * 12
+    taxable_income = round(taxable_income, 2)
+
+    brackets = app.config['STATE_TAX_RATE'][app.config['STATE_TAX_RATE']['Status'].str.lower() == session['statetaxes_status_over_months'][i].lower()]
     brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
 
     tax = Decimal(0)
