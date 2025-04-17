@@ -493,7 +493,7 @@ def updatematrix():
 
     #update gross pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
+        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = round(Decimal(session['matrix'][session['col_headers'][i]][:-5][session['matrix'][session['col_headers'][i]][:-5] > 0].sum()), 2)
 
     #update taxable pay
     for i in range(1, len(session['col_headers'])):
@@ -537,7 +537,7 @@ def updatematrix():
     #update total taxes, net pay
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
-        session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = calculate_netpay(session['col_headers'][i])
+        session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['matrix'][session['col_headers'][i]][:-5].sum()), 2)
 
     return render_template('les.html')
 
@@ -588,16 +588,14 @@ def calculate_federaltaxes(column, i):
         lower = brackets.at[i, 'Bracket']
         rate = brackets.at[i, 'Rate']
 
-        # Define the upper limit of this bracket
         if i + 1 < len(brackets):
             upper = brackets.at[i + 1, 'Bracket']
         else:
-            upper = float('inf')  # Last bracket has no upper limit
+            upper = float('inf')
 
         if taxable_income <= Decimal(float(lower)):
             break
 
-        # Calculate income taxed in this bracket
         taxable_amount = min(taxable_income, upper) - lower
         tax += taxable_amount * Decimal(rate)
 
@@ -619,15 +617,6 @@ def calculate_nontaxablepay(column):
 
 def calculate_totaltaxes(column):
     return Decimal((session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Federal Taxes"), column]) + (session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("State Taxes"), column]))
-
-
-def calculate_grosspay(column):
-    return round(Decimal(session['matrix'][column][:-5][session['matrix'][column][:-5] > 0].sum()), 2)
-
-
-def calculate_netpay(column):
-    return round(Decimal(session['matrix'][column][:-5].sum()), 2)
-
 
 
 
