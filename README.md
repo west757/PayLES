@@ -26,6 +26,7 @@ file upload drag and drop: https://codepen.io/nikitahl/embed/oNqYaaQ?height=360&
 
 
 irs tax doc for military: https://www.irs.gov/pub/irs-pdf/p3.pdf
+another irs tax doc for military: https://apps.irs.gov/app/vita/content/globalmedia/4491_military_income.pdf
 military les: https://www.dfas.mil/Portals/98/Documents/Military%20Members/Payentitlements/aboutpay/Army_reading_your_LES.pdf?ver=2020-04-22-134400-497
 SGLI website: https://www.va.gov/life-insurance/options-eligibility/sgli/
 military pay table: https://www.dfas.mil/militarymembers/payentitlements/Pay-Tables/
@@ -35,4 +36,7 @@ usps zipcode lookup: https://tools.usps.com/go/ZipLookupAction!input.action
 state tax brackets and rates: https://taxfoundation.org/data/all/state/state-income-tax-rates/
 federal income tax table: https://itfp.com/wp-content/uploads/2024/11/Federal-Income-Tax-Tables-2024-A048S.pdf
 fica tax rates for military: https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/
+taxed military income: https://www.hrblock.com/tax-center/income/other-income/taxable-military-income/
+non-taxable military income: https://themilitarywallet.com/non-taxable-military-pay-benefits/
+military clothing allowance: https://militarypay.defense.gov/PAY/Allowances/clothing.aspx
 -->

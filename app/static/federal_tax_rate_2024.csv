@@ -1,22 +1,22 @@
-﻿Status,Low,High,Pay,Excess
-Single,0,11600,0,0.1
-Single,11600,47150,1160,0.12
-Single,47150,100525,5426,0.22
-Single,100525,191950,17168.5,0.24
-Single,191950,243725,39110.5,0.32
-Single,243725,609350,55678.5,0.35
-Single,609350,Up,183647.25,0.37
-Married,0,23200,0,0.1
-Married,23200,94300,2320,0.12
-Married,94300,201050,10852,0.22
-Married,201050,383900,34337,0.24
-Married,383900,487450,78221,0.32
-Married,487450,731200,111357,0.35
-Married,731200,Up,196669.5,0.37
-HeadHousehold,0,16550,0,0.1
-HeadHousehold,16550,63100,1655,0.12
-HeadHousehold,63100,100500,7241,0.22
-HeadHousehold,100500,191950,15469,0.24
-HeadHousehold,191950,243700,37417,0.32
-HeadHousehold,243700,609350,53977,0.35
-HeadHousehold,609350,Up,181954.5,0.37
+﻿Status,Bracket,Rate
+Single,0,0.1
+Single,11600,0.12
+Single,47150,0.22
+Single,100525,0.24
+Single,191950,0.32
+Single,243725,0.35
+Single,609350,0.37
+Married,0,0.1
+Married,23200,0.12
+Married,94300,0.22
+Married,201050,0.24
+Married,383900,0.32
+Married,487450,0.35
+Married,731200,0.37
+Head of Household,0,0.1
+Head of Household,16550,0.12
+Head of Household,63100,0.22
+Head of Household,100500,0.24
+Head of Household,191950,0.32
+Head of Household,243700,0.35
+Head of Household,609350,0.37
