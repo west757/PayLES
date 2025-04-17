@@ -23,6 +23,7 @@ def index():
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
     session['months_display'] = 6
+    session['export_type'] = ""
 
     session['state_current'] = ""
     session['state_future'] = ""
@@ -313,16 +314,14 @@ def uploadfile():
 
                 #taxable pay
                 row = ["Taxable Pay"]
-                for i in range(session['months_display']):
-                    x = 0
-                    row.append(x)
+                for column in session['matrix'].columns[1:]:
+                    row.append(calculate_taxablepay(column))
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #non-taxable pay
                 row = ["Non-Taxable Pay"]
-                for i in range(session['months_display']):
-                    x = 0
-                    row.append(x)
+                for column in session['matrix'].columns[1:]:
+                    row.append(calculate_nontaxablepay(column))
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #total taxes
@@ -334,22 +333,22 @@ def uploadfile():
                 #gross pay
                 row = ["Gross Pay"]
                 for column in session['matrix'].columns[1:]:
-                    row.append(calculate_grosspay(column))
+                    row.append(Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum()))
                 session['matrix'].loc[len(session['matrix'])] = row
 
                 #net pay
                 row = ["Net Pay"]
                 for column in session['matrix'].columns[1:]:
-                    row.append(calculate_netpay(column))
+                    row.append(Decimal(session['matrix'][column][:-4].sum()))
                 session['matrix'].loc[len(session['matrix'])] = row
 
 
                 session['col_headers'] = list(session['matrix'].columns)
                 session['row_headers'] = list(session['matrix'][session['matrix'].columns[0]])
 
-
-
                 les_pdf.close()
+
+                print(session['matrix'])
 
                 #matrix_csv = session['matrix'].to_csv("matrix.csv", index=False)
                 #file.save(os.path.join(app.config['UPLOAD_FOLDER'], matrix_csv))
@@ -437,9 +436,9 @@ def updatematrix():
         basepay_value = Decimal(basepay_value.iloc[0])
 
         if i >= session['col_headers'].index(session['rank_future_month']):
-            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = basepay_value
+            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(basepay_value, 2)
         else:
-            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]]
+            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
 
 
     #update bas
@@ -450,9 +449,9 @@ def updatematrix():
                 bas_value = app.config['BAS_AMOUNT'][0]
             else:
                 bas_value = app.config['BAS_AMOUNT'][1]
-            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = Decimal(bas_value)
+            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(bas_value, 2)
         else:
-            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][1]]
+            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][1]], 2)
 
 
     #update BAH
@@ -488,21 +487,46 @@ def updatematrix():
 
         bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], rank_over_months[i-1]]
         bah_value = bah_value.iloc[0]
+        bah_value = Decimal(float(bah_value))
 
-        session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = bah_value
+        session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = round(bah_value, 2)
+
 
 
     #update gross pay
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = calculate_grosspay(session['col_headers'][i])
 
+    #update taxable pay
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] = calculate_taxablepay(session['col_headers'][i])
+
+    #update non-taxable pay
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][i]] = calculate_nontaxablepay(session['col_headers'][i])
+
+
+
+    #update federal tax rate
+    session['federaltaxes_status_over_months'] = []
+    for i in range(1, len(session['col_headers'])):
+        if i >= session['col_headers'].index(session['federaltaxes_status_future_month']):
+            session['federaltaxes_status_over_months'].append(session['federaltaxes_status_future'])
+        else:
+            session['federaltaxes_status_over_months'].append(session['federaltaxes_status_current'])
+
+    for i in range(1, len(session['col_headers'])):
+        session['matrix'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i], i)), 2)
+
+
+
     #update fica - social security
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = -Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE'])
+        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
 
     #update fica-medicare
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = -Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE'])
+        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE']), 2)
 
     #update sgli
     for i in range(1, len(session['col_headers'])):
@@ -516,6 +540,8 @@ def updatematrix():
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
         session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = calculate_netpay(session['col_headers'][i])
+
+    print(session['matrix'])
 
     return render_template('les.html')
 
@@ -543,25 +569,76 @@ def page404():
 
 
 
+def calculate_federaltaxes(column, i):
+    tax = 0
+    taxable_income = session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Taxable Pay"), column] * 12
+    tax_status = session['federaltaxes_status_over_months'][i-1]
 
-def calculate_basepay():
-    bp = 0
-    return bp
+    taxable_income = round(taxable_income, 2)
+
+    for idx, row in app.config['FEDERAL_TAX_RATE'].iterrows():
+        if row['Status'] == tax_status:
+            bracket = row['Bracket']
+            rate = Decimal(row['Rate'])
+            rate = round(rate, 2)
+
+            if taxable_income > bracket:
+                taxable_amount = min(taxable_income - bracket, bracket - tax)
+                tax += taxable_amount * rate
+                tax = round(tax, 2)
+            else:
+                break
+    
+    tax = tax / 12   
+    tax = round(tax, 2)
+    return tax
+
+
+
+def calculate_taxablepay(column):
+    tp = 0
+    tp += Decimal(session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Base Pay"), column])
+    return round(tp, 2)
+
+def calculate_nontaxablepay(column):
+    ntp = 0
+    ntp += session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("BAS"), column]
+    ntp += session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("BAH"), column]
+    return round(ntp, 2)
 
 def calculate_totaltaxes(column):
     return Decimal((session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Federal Taxes"), column]) + (session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("State Taxes"), column]))
 
+
 def calculate_grosspay(column):
-    return Decimal(session['matrix'][column][:-3][session['matrix'][column][:-3] > 0].sum())
+    return round(Decimal(session['matrix'][column][:-5][session['matrix'][column][:-5] > 0].sum()), 2)
+
 
 def calculate_netpay(column):
-    return Decimal(session['matrix'][column][:-4].sum())
+    return round(Decimal(session['matrix'][column][:-5].sum()), 2)
 
 
 
 
 def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+
+@app.route('/exportmatrix', methods=['POST'])
+def exportmatrix():
+    session['export_type'] = request.form['export_type']
+
+    print("export type: ", session['export_type'])
+
+    if session['export_type'] == "excel":
+        session['matrix'].to_excel("payles.xlsx")
+    elif session['export_type'] == "csv":
+        session['matrix'].to_csv("payles.csv", index=False)
+    else:
+        print("no export type found")
+
+    return ('', 204)
+
 
 
 

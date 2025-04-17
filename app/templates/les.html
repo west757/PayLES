@@ -312,9 +312,6 @@
                         </td>
                     </tr>
 
-
-
-
                     <tr class="inputs">
                         <td class="inputs">
                             <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
@@ -336,7 +333,6 @@
                         </td>
                     </tr>
 
-
                     <tr class="inputs">
                         <td class="inputs">
                             <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
@@ -357,13 +353,6 @@
                             </select>
                         </td>
                     </tr>
-
-
-
-
-
-
-
 
                     <tr class="inputs">
                         <td class="inputs" colspan="4">
@@ -430,22 +419,24 @@
                 </tr>
 
                 <tr class="inputs">
-                    <td class="inputs" colspan=2>
-                        <div class="settings-div">
-                            <label>Export as: &nbsp;</label>
-                        </div>
-                        <div class="settings-div">
-                            <select name="export" id="export" class="inputs">
-                                <option value="excel">Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                        </div>
-                        <div class="settings-div">
-                            <div class="updatebuttondiv">
-                                <button class="updatebutton" type="submit">Export to Excel</button>
+                    <form hx-post="/exportmatrix">
+                        <td class="inputs" colspan=2>
+                            <div class="settings-div">
+                                <label>Export as: &nbsp;</label>
                             </div>
-                        </div>
-                    </td>
+                            <div class="settings-div">
+                                <select name="export_type" id="export_type" class="inputs">
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                            <div class="settings-div">
+                                <div class="updatebuttondiv">
+                                    <button class="updatebutton" type="submit">Export to Excel</button>
+                                </div>
+                            </div>
+                        </td>
+                    </form>
                 </tr>
 
                 <tr class="inputs">
