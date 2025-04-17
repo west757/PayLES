@@ -521,18 +521,6 @@ def updatematrix():
         session['matrix'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i], i)), 2)
 
 
-    #update state tax rate
-    session['statetaxes_status_over_months'] = []
-    for i in range(1, len(session['col_headers'])):
-        if i >= session['col_headers'].index(session['statetaxes_status_future_month']):
-            session['statetaxes_status_over_months'].append(session['statetaxes_status_future'])
-        else:
-            session['statetaxes_status_over_months'].append(session['stateltaxes_status_current'])
-
-    for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("State Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_statetaxes(session['col_headers'][i], i)), 2)
-
-
     #update fica - social security
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
@@ -595,38 +583,6 @@ def calculate_federaltaxes(column, i):
         print("no standard deduction found")
 
     brackets = app.config['FEDERAL_TAX_RATE'][app.config['FEDERAL_TAX_RATE']['Status'].str.lower() == session['federaltaxes_status_over_months'][i].lower()]
-    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
-
-    tax = Decimal(0)
-
-    for i in range(len(brackets)):
-        lower = brackets.at[i, 'Bracket']
-        rate = brackets.at[i, 'Rate']
-
-        if i + 1 < len(brackets):
-            upper = brackets.at[i + 1, 'Bracket']
-        else:
-            upper = float('inf')
-
-        if taxable_income <= Decimal(float(lower)):
-            break
-
-        taxable_amount = min(taxable_income, upper) - lower
-        tax += taxable_amount * Decimal(rate)
-
-    tax = tax / 12
-    return round(tax, 2)
-
-
-
-
-
-def calculate_statetaxes(column, i):
-    i = i - 1
-    taxable_income = session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Taxable Pay"), column] * 12
-    taxable_income = round(taxable_income, 2)
-
-    brackets = app.config['STATE_TAX_RATE'][app.config['STATE_TAX_RATE']['Status'].str.lower() == session['statetaxes_status_over_months'][i].lower()]
     brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
 
     tax = Decimal(0)
