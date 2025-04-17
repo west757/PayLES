@@ -41,6 +41,7 @@ class Config:
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
+    STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))

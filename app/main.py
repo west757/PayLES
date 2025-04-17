@@ -348,8 +348,6 @@ def uploadfile():
 
                 les_pdf.close()
 
-                print(session['matrix'])
-
                 #matrix_csv = session['matrix'].to_csv("matrix.csv", index=False)
                 #file.save(os.path.join(app.config['UPLOAD_FOLDER'], matrix_csv))
 
@@ -522,11 +520,11 @@ def updatematrix():
 
     #update fica - social security
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
+        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
 
     #update fica-medicare
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE']), 2)
+        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE']), 2)
 
     #update sgli
     for i in range(1, len(session['col_headers'])):
@@ -540,8 +538,6 @@ def updatematrix():
     for i in range(1, len(session['col_headers'])):
         session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
         session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = calculate_netpay(session['col_headers'][i])
-
-    print(session['matrix'])
 
     return render_template('les.html')
 
@@ -570,28 +566,43 @@ def page404():
 
 
 def calculate_federaltaxes(column, i):
-    tax = 0
+    i = i - 1
     taxable_income = session['matrix'].at[list(session['matrix'][session['matrix'].columns[0]]).index("Taxable Pay"), column] * 12
-    tax_status = session['federaltaxes_status_over_months'][i-1]
-
     taxable_income = round(taxable_income, 2)
 
-    for idx, row in app.config['FEDERAL_TAX_RATE'].iterrows():
-        if row['Status'] == tax_status:
-            bracket = row['Bracket']
-            rate = Decimal(row['Rate'])
-            rate = round(rate, 2)
+    if session['federaltaxes_status_over_months'][i] == "Single":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][0]
+    elif session['federaltaxes_status_over_months'][i] == "Married":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][1]
+    elif session['federaltaxes_status_over_months'][i] == "Head of Household":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][2]
+    else:
+        print("no standard deduction found")
 
-            if taxable_income > bracket:
-                taxable_amount = min(taxable_income - bracket, bracket - tax)
-                tax += taxable_amount * rate
-                tax = round(tax, 2)
-            else:
-                break
-    
-    tax = tax / 12   
-    tax = round(tax, 2)
-    return tax
+    brackets = app.config['FEDERAL_TAX_RATE'][app.config['FEDERAL_TAX_RATE']['Status'].str.lower() == session['federaltaxes_status_over_months'][i].lower()]
+    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
+
+    tax = Decimal(0)
+
+    for i in range(len(brackets)):
+        lower = brackets.at[i, 'Bracket']
+        rate = brackets.at[i, 'Rate']
+
+        # Define the upper limit of this bracket
+        if i + 1 < len(brackets):
+            upper = brackets.at[i + 1, 'Bracket']
+        else:
+            upper = float('inf')  # Last bracket has no upper limit
+
+        if taxable_income <= Decimal(float(lower)):
+            break
+
+        # Calculate income taxed in this bracket
+        taxable_amount = min(taxable_income, upper) - lower
+        tax += taxable_amount * Decimal(rate)
+
+    tax = tax / 12
+    return round(tax, 2)
 
 
 
