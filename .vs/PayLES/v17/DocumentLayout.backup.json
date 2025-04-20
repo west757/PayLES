@@ -68,7 +68,7 @@
               "RelativeDocumentMoniker": "app\\config.py",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\config.py",
               "RelativeToolTip": "app\\config.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACsAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2025-04-01T02:20:36.918Z",
               "EditorCaption": ""
@@ -81,7 +81,7 @@
               "RelativeDocumentMoniker": "app\\main.py",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\main.py",
               "RelativeToolTip": "app\\main.py",
-              "ViewState": "AgIAABUCAAAAAAAAAAAowDcCAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAowGcAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2025-01-15T03:49:52.475Z",
               "EditorCaption": ""
@@ -94,9 +94,10 @@
               "RelativeDocumentMoniker": "app\\templates\\les.html",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\les.html",
               "RelativeToolTip": "app\\templates\\les.html",
-              "ViewState": "AgIAACcBAAAAAAAAAAAAADgBAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAALYAAAAAAAAAAADwv7YAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-12T22:42:43.647Z"
+              "WhenOpened": "2025-03-12T22:42:43.647Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -190,9 +191,10 @@
               "RelativeDocumentMoniker": "README.md",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-15T23:31:37.711Z"
+              "WhenOpened": "2025-01-15T23:31:37.711Z",
+              "EditorCaption": ""
             }
           ]
         }
