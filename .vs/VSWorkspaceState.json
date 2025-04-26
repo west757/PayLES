@@ -3,9 +3,8 @@
     "",
     "\\app",
     "\\app\\static",
-    "\\app\\templates",
-    "\\upload"
+    "\\app\\templates"
   ],
-  "SelectedNode": "\\app\\main.py",
+  "SelectedNode": "\\app\\config.py",
   "PreviewInSolutionExplorer": false
 }
