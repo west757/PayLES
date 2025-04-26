@@ -79,6 +79,7 @@ input[type=file] {
     background-color: #f9f9f9;
     font-size: 14px;
     cursor: pointer;
+    height: 38px;
 }
 
 input[type=file]::file-selector-button {
@@ -95,6 +96,17 @@ input[type=file]::file-selector-button {
 
 input[type=file]::file-selector-button:hover {
     background: #0c9a65;
+}
+
+input[type=submit] {
+    width: 100px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #393939;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    cursor: pointer;
+    height: 60px;
 }
 
 
@@ -511,7 +523,7 @@ input.settingcheckbox {
 .modal-table {
     text-align: center;
     border: 1px solid black;
-    padding: 12px;
+    padding: 12px 36px 12px 36px;
     border-collapse: collapse;
     margin: auto;
 }
