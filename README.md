@@ -40,8 +40,21 @@ non-taxable military income: https://themilitarywallet.com/non-taxable-military-
 military clothing allowance: https://militarypay.defense.gov/PAY/Allowances/clothing.aspx
 les entitlements: https://www.military.com/paycheck-chronicles/2015/04/07/entitlements-on-your-les
 les deductions: https://www.military.com/paycheck-chronicles/2015/04/28/deductions-on-your-les
+pcs fact sheet: https://home.army.mil/wood/6815/9862/5687/PCS_Fact_Sheet_August_2020.pdf
 
 
-
+base pay: https://militarypay.defense.gov/Pay/Basic-Pay/
 bas: https://militarypay.defense.gov/pay/allowances/bas.aspx
+bah: https://militarypay.defense.gov/PAY/ALLOWANCES/bah.aspx
+dtmo bah: https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate/
+uea initial: https://militarypay.defense.gov/PAY/Allowances/clothing.aspx
+federal taxes: https://www.irs.gov/individuals/military
+federal tax eligibility: https://www.irs.gov/individuals/military/eligibility-for-military-tax-benefits
+irs fica: https://www.irs.gov/taxtopics/tc751
+dfas fica: https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/
+military state taxes: https://myairforcebenefits.us.af.mil/Which-states-tax-my-Active-Duty-or-Reserve-military-pay
+tsp types: https://www.tsp.gov/making-contributions/traditional-and-roth-contributions/
+tsp contribution limits: https://www.tsp.gov/making-contributions/contribution-limits/
+dfas pcs pay: https://www.dfas.mil/MilitaryMembers/travelpay/armypcs/PCS-Information/
+gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 -->
