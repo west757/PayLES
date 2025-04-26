@@ -22,7 +22,6 @@ flask config file: https://flask.palletsprojects.com/en/stable/config/
 flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
 searching through dataframes: https://rowannicholls.github.io/python/advanced/data_frames_searching.html
 python dataframe add column: https://www.geeksforgeeks.org/dealing-with-rows-and-columns-in-pandas-dataframe/
-file upload drag and drop: https://codepen.io/nikitahl/embed/oNqYaaQ?height=360&default-tab=result&slug-hash=oNqYaaQ&user=nikitahl&name=cp_embed_1#result-box
 
 
 irs tax doc for military: https://www.irs.gov/pub/irs-pdf/p3.pdf
@@ -41,4 +40,8 @@ non-taxable military income: https://themilitarywallet.com/non-taxable-military-
 military clothing allowance: https://militarypay.defense.gov/PAY/Allowances/clothing.aspx
 les entitlements: https://www.military.com/paycheck-chronicles/2015/04/07/entitlements-on-your-les
 les deductions: https://www.military.com/paycheck-chronicles/2015/04/28/deductions-on-your-les
+
+
+
+bas: https://militarypay.defense.gov/pay/allowances/bas.aspx
 -->

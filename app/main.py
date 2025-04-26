@@ -88,35 +88,7 @@ def uploadfile():
                 les_text = les_textstring.split()
 
 
-
-                page = les_pdf.pages[0]
-                lines = page.lines
-                chars = page.chars
-
-                # Step 1: Detect all rectangles from lines
-                all_rects = find_rectangles_from_lines(lines)
-
-                # Step 2: Keep only leaf rectangles (not containing others)
-                leaf_rects = [r for r in all_rects if not contains_other(r, all_rects)]
-
-                # Step 3: Extract text from each rectangle
-                results = []
-                for rect in leaf_rects:
-                    content = [c for c in chars if rect_contains_char(rect, c)]
-                    if content:
-                        content.sort(key=lambda c: (round(c["top"], 1), c["x0"]))
-                        text = "".join(c["text"] for c in content)
-                        results.append((rect, text.strip()))
-
-                # Step 4: Output
-                #for rect, text in results:
-                #    print(f"Rectangle {rect} contains:")
-                #    print(f"  - {text}")
-
-
-
-                
-
+   
                 #find month
                 for x in app.config['MONTHS_SHORT']:
                     if x in les_text:
@@ -569,68 +541,6 @@ def contact():
 @app.route('/404')
 def page404():
     return render_template('404.html')
-
-
-
-
-
-
-
-TOL = 2.0  # coordinate tolerance for alignment
-
-def close(a, b, tol=TOL):
-    return abs(a - b) <= tol
-
-def find_rectangles_from_lines(lines):
-    """Find rectangles using 2 horizontal and 2 vertical lines."""
-    h_lines = [l for l in lines if close(l["y0"], l["y1"])]
-    v_lines = [l for l in lines if close(l["x0"], l["x1"])]
-    rects = []
-
-    for top in h_lines:
-        for bottom in h_lines:
-            if not close(top["y0"], bottom["y0"]) and bottom["y0"] > top["y0"]:
-                y0, y1 = top["y0"], bottom["y0"]
-
-                # Get vertical lines that span y0 to y1
-                span_v_lines = [
-                    v for v in v_lines
-                    if v["y0"] <= y0 + TOL and v["y1"] >= y1 - TOL
-                ]
-
-                # Try pairs of verticals to make sides
-                for left in span_v_lines:
-                    for right in span_v_lines:
-                        if left["x0"] < right["x0"]:
-                            x0, x1 = left["x0"], right["x0"]
-
-                            # Confirm top and bottom lines span x0 to x1
-                            top_ok = close(top["x0"], x0) and close(top["x1"], x1)
-                            bot_ok = close(bottom["x0"], x0) and close(bottom["x1"], x1)
-                            if top_ok and bot_ok:
-                                rects.append((x0, y0, x1, y1))
-    return rects
-
-def contains_other(rect, rects, tol=TOL):
-    x0, y0, x1, y1 = rect
-    for ox0, oy0, ox1, oy1 in rects:
-        if (x0, y0, x1, y1) == (ox0, oy0, ox1, oy1):
-            continue
-        if (
-            ox0 <= x0 + tol and oy0 <= y0 + tol and
-            ox1 >= x1 - tol and oy1 >= y1 - tol
-        ):
-            return True
-    return False
-
-def rect_contains_char(rect, char, tol=TOL):
-    x0, y0, x1, y1 = rect
-    return (
-        char["x0"] >= x0 - tol and char["x1"] <= x1 + tol and
-        char["top"] >= y0 - tol and char["bottom"] <= y1 + tol
-    )
-
-
 
 
 

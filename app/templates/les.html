@@ -411,7 +411,6 @@
                     </td>
                 </tr>
                     -->
-
                 <!--
                 <tr class="inputs">
                     <div class="settings-div">
@@ -424,22 +423,22 @@
 
                 <tr class="inputs">
                     <form hx-post="/exportmatrix">
-                        <td class="inputs" colspan=2>
-                            <div class="settings-div">
-                                <label>Export as: &nbsp;</label>
+                    <td class="inputs" colspan=2>
+                        <div class="settings-div">
+                            <label>Export as: &nbsp;</label>
+                        </div>
+                        <div class="settings-div">
+                            <select name="export_type" id="export_type" class="inputs">
+                                <option value="excel">Excel</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+                        <div class="settings-div">
+                            <div class="updatebuttondiv">
+                                <button class="updatebutton" type="submit">Export</button>
                             </div>
-                            <div class="settings-div">
-                                <select name="export_type" id="export_type" class="inputs">
-                                    <option value="excel">Excel</option>
-                                    <option value="csv">CSV</option>
-                                </select>
-                            </div>
-                            <div class="settings-div">
-                                <div class="updatebuttondiv">
-                                    <button class="updatebutton" type="submit">Export to Excel</button>
-                                </div>
-                            </div>
-                        </td>
+                        </div>
+                    </td>
                     </form>
                 </tr>
 
@@ -485,8 +484,37 @@
         <label class="modal-bg" for="modal-bas"></label>
         <div class="modal-inner">
             <label class="modal-close" for="modal-bas"></label>
-            <h2>Basic Allowance for Subsistence</h2>
-            <p>BAS</p>
+            <p class="modal-text-big">Basic Allowance for Subsistence</p>
+            <p class="modal-text-medium">
+                BAS is meant to offset the cost of food for service members. This allowance is based on the historic origins of the military in which the
+                military provided room and board (or rations) as part of a member's pay. This allowance is not intended to offset the costs of meals for family members.
+                Beginning on January 1, 2002, all enlisted members get full BAS, but pay for their meals (including those provided by the government).
+                This is the culmination of the BAS Reform transition period. Since BAS is intended to defray a portion of the cost of food for the service member,
+                its level is linked to the USDA’s food cost index. Therefore, each year the BAS rate is adjusted based upon the percentage increase of the price of
+                food as identified by the USDA. This is why the increase to BAS will not necessarily be the same percentage as that applied to the increase in the pay
+                table, as annual pay raises are linked to the increase of private sector wages.
+            </p>
+            <table class="modal-table">
+                <tr class="modal-table">
+                    <td class="modal-table">Officers</td>
+                    <td class="modal-table">Enlisted</td>
+                    <td class="modal-table">Enlisted II*</td>
+                </tr>
+                <tr class="modal-table">
+                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][0]).replace('$-','$')}}</td>
+                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][1]).replace('$-','$')}}</td>
+                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][2]).replace('$-','$')}}</td>
+                </tr>
+            </table>
+            <p class="modal-text-small">
+                *BAS II is the monthly rate that may be payable to enlisted members on duty at a permanent station and assigned to single (unaccompanied) Government
+                quarters, which do not have adequate food storage or preparation facilities, and where a Government mess is not available, and the Government  cannot
+                otherwise make meals available.  The BAS II rate is twice the rate of standard enlisted BAS and must be authorized the Secretary of the Military Department concern.
+            <p>
+            <p class="modal-text-medium">More Resources:</p>
+            <ul>
+                <li><a href="https://militarypay.defense.gov/pay/allowances/bas.aspx" target="_blank">Official DoD BAS Rates</a></li>
+            </ul>
         </div>
     </div>
 
