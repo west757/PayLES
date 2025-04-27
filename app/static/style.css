@@ -13,7 +13,6 @@
 
 body {
     font-family: Arial, sans-serif;
-    font-size: 16px;
     background-color: #F5E7DE;
     margin: 0;
 }
@@ -538,7 +537,7 @@ input.settingcheckbox {
 
 details {
     transition: 0.2s background linear;
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid #393939;
     margin: 20px;
 }
 
@@ -554,13 +553,13 @@ summary {
 }
 
 summary:hover {
-    color: blue;
+    color: #393939;
     transition: 0.5s ease;
 }
 
 summary::after {
     content: '';
-    border-top: 12px solid green;
+    border-top: 12px solid #393939;
     border-inline: 9px solid transparent;
     transition: 0.5s;
     margin: 0px;
