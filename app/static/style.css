@@ -18,6 +18,10 @@ body {
     margin: 0;
 }
 
+main {
+    margin: auto;
+    width: 60%;
+}
 
 
 .header {
@@ -111,11 +115,6 @@ input[type=submit] {
     height: 60px;
 }
 
-
-main {
-    margin: auto;
-    width: 60%;
-}
 
 
 
@@ -421,7 +420,7 @@ input.settingcheckbox {
     left: 0;
     text-align: left;
     background: rgba(0,0,0, .9);
-    transition: opacity .25s ease;
+    transition: opacity .3s ease;
 }
 
 .modal-bg {
@@ -447,7 +446,7 @@ input.settingcheckbox {
 }
 
 .modal-inner {
-    transition: top .25s ease;
+    transition: top .3s ease;
     position: absolute;
     top: -20%;
     right: 0;
@@ -540,6 +539,7 @@ input.settingcheckbox {
 details {
     transition: 0.2s background linear;
     border-bottom: 1px solid blue;
+    margin: 20px;
 }
 
 summary {
@@ -550,6 +550,7 @@ summary {
     cursor: pointer;
     padding: 8px;
     font-size: 24px;
+    font-weight: bold;
 }
 
 summary:hover {
@@ -559,8 +560,8 @@ summary:hover {
 
 summary::after {
     content: '';
-    border-top: 10px solid green;
-    border-inline: 7px solid transparent;
+    border-top: 12px solid green;
+    border-inline: 9px solid transparent;
     transition: 0.5s;
     margin: 0px;
 }
