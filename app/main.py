@@ -6,10 +6,6 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 from datetime import datetime
-
-from itertools import combinations
-from collections import defaultdict
-
 #from pdf2image import convert_from_path
 import pdfplumber
 import os
@@ -28,7 +24,6 @@ def index():
 def uploadfile():
     session['months_display'] = 6
     session['export_type'] = ""
-
     session['state_current'] = ""
     session['state_future'] = ""
     session['state_future_month'] = ""
