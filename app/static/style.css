@@ -7,6 +7,9 @@
 */
 
 
+* {
+    box-sizing: border-box;
+}
 
 body {
     font-family: Arial, sans-serif;
@@ -79,7 +82,6 @@ input[type=file] {
     background-color: #f9f9f9;
     font-size: 14px;
     cursor: pointer;
-    height: 38px;
 }
 
 input[type=file]::file-selector-button {
@@ -109,6 +111,11 @@ input[type=submit] {
     height: 60px;
 }
 
+
+main {
+    margin: auto;
+    width: 60%;
+}
 
 
 
@@ -312,9 +319,8 @@ input.inputs {
     background-color: #eee;
     border-radius: 5px;
     box-shadow: 1px 1px 2px #999;
-    width: 70px;
+    width: 80px;
     text-align: center;
-    height: 18px;
     margin: -10px;
 }
 
@@ -514,6 +520,7 @@ input.settingcheckbox {
 .modal-text-big {
     font-size: 24px;
     font-weight: bold;
+    margin-top: 4px;
 }
 
 .modal-text-small {
@@ -527,3 +534,38 @@ input.settingcheckbox {
     border-collapse: collapse;
     margin: auto;
 }
+
+
+
+details {
+    transition: 0.2s background linear;
+    border-bottom: 1px solid blue;
+}
+
+summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 24px;
+}
+
+summary:hover {
+    color: blue;
+    transition: 0.5s ease;
+}
+
+summary::after {
+    content: '';
+    border-top: 10px solid green;
+    border-inline: 7px solid transparent;
+    transition: 0.5s;
+    margin: 0px;
+}
+
+details[open] > summary::after {
+    transform: rotate(-180deg);
+}
+

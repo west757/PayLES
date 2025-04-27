@@ -22,6 +22,7 @@ flask config file: https://flask.palletsprojects.com/en/stable/config/
 flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
 searching through dataframes: https://rowannicholls.github.io/python/advanced/data_frames_searching.html
 python dataframe add column: https://www.geeksforgeeks.org/dealing-with-rows-and-columns-in-pandas-dataframe/
+css details: https://codepen.io/SitePoint/embed/poGzWrb?default-tab=result&height=600&slug-hash=poGzWrb&user=SitePoint&name=cp_embed_13#result-box
 
 
 irs tax doc for military: https://www.irs.gov/pub/irs-pdf/p3.pdf
