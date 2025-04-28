@@ -11,7 +11,7 @@
 <body>
     <div class="header">
         <div class="header-item" id="header-logo">
-            <img src="/static/logo.png">
+            <a href="{{ url_for('index') }}"><img src="/static/logo.png"></a>
         </div>
         <div class="header-item" id="header-text">
             <p>program analyzing your LES</p>
@@ -34,21 +34,21 @@
         <details>
             <summary>How can I get an LES?</summary>
             <article>
-                Go to mypay.com.
+                Visit mypay.com and download the LES from the main homepage.
             </article>
         </details>
 
         <details>
             <summary>Is PayLES secure?</summary>
             <article>
-                Yes.
+                Yes. PayLES will be using a SSL certificate to ensure security. Additionally, no persistent storage of any kind exists for using PayLES.
             </article>
         </details>
 
         <details>
             <summary>Is PayLES free and open-source?</summary>
             <article>
-                Yes.
+                Yes. PayLES is hosted on GitHub with all code available.
             </article>
         </details>
 
