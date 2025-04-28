@@ -400,51 +400,66 @@
                 </tr>
 
                 <!--
-                <tr class="inputs">
-                    <td class="inputs" colspan=2>
-                        <div class="settings-div">
-                            <label>Color Table</label>
-                        </div>
-                        <div class="settings-div">
-                            <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
-                        </div>
-                    </td>
-                </tr>
-                    -->
+    <tr class="inputs">
+        <td class="inputs" colspan=2>
+            <div class="settings-div">
+                <label>Color Table</label>
+            </div>
+            <div class="settings-div">
+                <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
+            </div>
+        </td>
+    </tr>
+        -->
                 <!--
-                <tr class="inputs">
-                    <div class="settings-div">
-                        <td class="inputs" colspan=2>
-                            <label>Add row</label>
-                        </td>
-                    </div>
-                </tr>
-                    -->
-
+    <tr class="inputs">
+        <div class="settings-div">
+            <td class="inputs" colspan=2>
+                <label>Add row</label>
+            </td>
+        </div>
+    </tr>
+        -->
                 <!--
-                    add row for show difference of previous month
-                -->
+        add row for show difference of previous month
+    -->
+
+
+
 
                 <tr class="inputs">
-                    <form hx-post="/exportmatrix">
+                    <!--<form hx-post="/exportmatrix">-->
                     <td class="inputs" colspan=2>
                         <div class="settings-div">
                             <label>Export as: &nbsp;</label>
                         </div>
                         <div class="settings-div">
-                            <select name="export_type" id="export_type" class="inputs">
-                                <option value="excel">Excel</option>
+                            <select id="filetype" class="inputs">
+                                <option value="xlsx" selected>Excel</option>
                                 <option value="csv">CSV</option>
                             </select>
                         </div>
                         <div class="settings-div">
                             <div class="updatebuttondiv">
-                                <button class="updatebutton" type="submit">Export</button>
+                                <!--<button class="updatebutton" type="submit">Export</button>-->
+                                <button class="updatebutton" onclick="downloadFile()">Export</button>
                             </div>
                         </div>
                     </td>
-                    </form>
+                    <!--</form>-->
                 </tr>
+
+
+                <!--
+                <label for="filetype">Choose file format:</label>
+                <select id="filetype">
+                    <option value="xlsx" selected>Excel (.xlsx)</option>
+                    <option value="csv">CSV (.csv)</option>
+                </select>
+
+                <button onclick="downloadFile()">Export</button>
+                -->
+
 
                 <tr class="inputs">
                     <td class="inputs" colspan=2>
@@ -480,7 +495,7 @@
             <label class="modal-close" for="modal-basepay"></label>
             <p class="modal-text-big">Base Pay</p>
             <p>
-                Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay. 
+                Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay.
                 A member's grade (usually the same as rank) and years of service determines the amount of basic pay received.
             </p>
             <p>More Resources:</p>
@@ -536,11 +551,11 @@
             <label class="modal-close" for="modal-bah"></label>
             <p class="modal-text-big">Basic Allowance for Housing</p>
             <p>
-                BAH provides uniformed service members equitable housing compensation based on housing costs in local 
-                civilian housing markets within the 50 U.S. states when government quarters are not provided. BAH is not intended to cover all of a service member’s 
-                housing costs. The opportunity for Service members to choose their off-base housing is important to DoD. Each member has the freedom to decide how to 
-                allocate their income (including the housing allowance) without a penalty for deciding to conserve some dollars on rent to pay other expenses. Therefore, 
-                actual out-of-pocket expense for an individual may be higher or lower than the prescribed rate based on choice of housing. Allowances reflect the costs 
+                BAH provides uniformed service members equitable housing compensation based on housing costs in local
+                civilian housing markets within the 50 U.S. states when government quarters are not provided. BAH is not intended to cover all of a service member’s
+                housing costs. The opportunity for Service members to choose their off-base housing is important to DoD. Each member has the freedom to decide how to
+                allocate their income (including the housing allowance) without a penalty for deciding to conserve some dollars on rent to pay other expenses. Therefore,
+                actual out-of-pocket expense for an individual may be higher or lower than the prescribed rate based on choice of housing. Allowances reflect the costs
                 associated with household rental. Generally, rental prices change between 2%-5% from year to year. Housing allowances typically change accordingly.
             </p>
             <p>More Resources:</p>
@@ -563,7 +578,7 @@
                 Clothing allowances may be issued to help members pay for their uniforms. There are four main types of clothing allowance: Initial, Replacement, Maintenance, and Extra.
             </p>
             <p>
-                Both officers and enlisted members of the U.S. Armed Forces are entitled to an initial clothing allowance. This allowance is provided to 
+                Both officers and enlisted members of the U.S. Armed Forces are entitled to an initial clothing allowance. This allowance is provided to
                 enlisted members upon initial enlistment or upon special qualification. Office , however, are only entitled to the allowance once except in the situation noted below:
             </p>
             <ul>
@@ -573,16 +588,16 @@
                 <li>Upon reporting for the first period of active duty required of a member of the Armed Forces Health Professions Scholarship Program.</li>
             </ul>
             <p>
-                Cash Clothing Replacement Allowance is payable only to enlisted members annually following initial clothing allowance on the anniversary month. This is 
+                Cash Clothing Replacement Allowance is payable only to enlisted members annually following initial clothing allowance on the anniversary month. This is
                 for the replacement of uniforms based on normal wear and tear.
             </p>
             <p>
-                Extra Clothing Allowance are additional to the other two and do not affect them. These allowances are for situations in which a member may need additional 
+                Extra Clothing Allowance are additional to the other two and do not affect them. These allowances are for situations in which a member may need additional
                 uniforms or is required to have civilian clothing to perform their duties.
             </p>
             <p>
-                Military Clothing Maintenance Allowance is for replacement and maintenance of military items during and after three years of active duty. 
-                If a member has a break in military service, he/she will start over with the initial clothing allowance upon returning to the service. They will then 
+                Military Clothing Maintenance Allowance is for replacement and maintenance of military items during and after three years of active duty.
+                If a member has a break in military service, he/she will start over with the initial clothing allowance upon returning to the service. They will then
                 receive Cash Clothing Replacement Allowance and Military Clothing Maintenance Allowance as applicable.
             </p>
             <p>More Resources:</p>
@@ -599,8 +614,8 @@
             <label class="modal-close" for="modal-federaltaxes"></label>
             <p class="modal-text-big">Federal Taxes</p>
             <p>
-                All U.S. citizens pay a federal income tax. Citizens pay tax as a percentage of your income in layers called tax brackets. As income goes up, 
-                the tax rate on the next layer of income is higher. When income jumps to a higher tax bracket, citizens don't pay the higher rate on their entire income. 
+                All U.S. citizens pay a federal income tax. Citizens pay tax as a percentage of your income in layers called tax brackets. As income goes up,
+                the tax rate on the next layer of income is higher. When income jumps to a higher tax bracket, citizens don't pay the higher rate on their entire income.
                 Citizens pay the higher rate only on the part that's in the new tax bracket. Members of the U.S. Armed Forces have special tax situations and benefits.
             </p>
             <p>More Resources:</p>
@@ -618,8 +633,8 @@
             <label class="modal-close" for="modal-fica"></label>
             <p class="modal-text-big">Federal Insurance Contributions Act</p>
             <p>
-                FICA is a U.S. federal payroll tax that is automatically deducted from an employee’s paycheck. Taxes under FICA are composed of the old-age, survivors, and 
-                disability insurance taxes, also known as Social Security taxes, and the hospital insurance taxes, also known as Medicare taxes. FICA generates money for Social 
+                FICA is a U.S. federal payroll tax that is automatically deducted from an employee’s paycheck. Taxes under FICA are composed of the old-age, survivors, and
+                disability insurance taxes, also known as Social Security taxes, and the hospital insurance taxes, also known as Medicare taxes. FICA generates money for Social
                 Security and Medicare programs through taxes imposed on nearly every employee and employer in the United States.
             </p>
             <p>More Resources:</p>
@@ -673,37 +688,37 @@
             <label class="modal-close" for="modal-statetaxes"></label>
             <p class="modal-text-big">State Taxes and Tax Residency State</p>
             <p>
-                The distinction between a service member’s home of record and tax residency can be confusing. The home of record is the state recorded when an 
-                individual enlists or is commissioned in the military. It generally remains unchanged unless there is a break in service and is used for administrative 
-                purposes, such as determining travel entitlements upon separation. However, it does not automatically dictate where state taxes must be filed. 
-                Tax residency, on the other hand, is determined by where an individual has established a permanent home and intends to return when absent. Factors 
-                like physical presence, voter registration, and property ownership play a role. The Servicemembers Civil Relief Act (SCRA) allows military personnel to 
-                maintain their tax residency in their home state even when stationed elsewhere, which can be advantageous if the home state has no income tax, such as 
-                Texas or Florida. For example, a service member stationed in California but with a home of record in Nevada may avoid California state income taxes if 
-                they do not establish residency there. Similarly, military spouses may benefit from the Military Spouses Residency Relief Act, which lets them retain their 
+                The distinction between a service member’s home of record and tax residency can be confusing. The home of record is the state recorded when an
+                individual enlists or is commissioned in the military. It generally remains unchanged unless there is a break in service and is used for administrative
+                purposes, such as determining travel entitlements upon separation. However, it does not automatically dictate where state taxes must be filed.
+                Tax residency, on the other hand, is determined by where an individual has established a permanent home and intends to return when absent. Factors
+                like physical presence, voter registration, and property ownership play a role. The Servicemembers Civil Relief Act (SCRA) allows military personnel to
+                maintain their tax residency in their home state even when stationed elsewhere, which can be advantageous if the home state has no income tax, such as
+                Texas or Florida. For example, a service member stationed in California but with a home of record in Nevada may avoid California state income taxes if
+                they do not establish residency there. Similarly, military spouses may benefit from the Military Spouses Residency Relief Act, which lets them retain their
                 original state of residency for tax purposes, even after relocating due to military orders.
             </p>
             <p>
-                Receiving Permanent Change of Station (PCS) orders provides an opportunity to reassess tax residency. This can have significant financial implications, 
-                especially when moving from a high-tax state to one with lower or no income tax. To change tax residency, you must meet criteria such as physical presence, 
-                intent to remain indefinitely, and actions like obtaining a driver’s license or registering to vote in the new state. Evaluating the tax benefits of the new 
-                state compared to the current one is essential. States like Washington and Nevada, which have no state income tax, can offer considerable savings. Some states 
+                Receiving Permanent Change of Station (PCS) orders provides an opportunity to reassess tax residency. This can have significant financial implications,
+                especially when moving from a high-tax state to one with lower or no income tax. To change tax residency, you must meet criteria such as physical presence,
+                intent to remain indefinitely, and actions like obtaining a driver’s license or registering to vote in the new state. Evaluating the tax benefits of the new
+                state compared to the current one is essential. States like Washington and Nevada, which have no state income tax, can offer considerable savings. Some states
                 also provide specific tax incentives for military personnel. Researching state tax codes and regulations thoroughly is critical to making an informed decision.
             </p>
             <p>
-                Once tax residency is established, understanding your chosen state’s tax laws and filing requirements is essential. Familiarize yourself with the state’s tax 
-                deadlines, forms, and electronic filing options. States have varying income tax rates, deductions, and credits, which can significantly impact your tax liability. 
-                For example, some states offer unique tax credits, such as Oregon’s credit for retirement income. Being aware of state-specific penalties for late filing or 
+                Once tax residency is established, understanding your chosen state’s tax laws and filing requirements is essential. Familiarize yourself with the state’s tax
+                deadlines, forms, and electronic filing options. States have varying income tax rates, deductions, and credits, which can significantly impact your tax liability.
+                For example, some states offer unique tax credits, such as Oregon’s credit for retirement income. Being aware of state-specific penalties for late filing or
                 underpayment can help avoid unnecessary costs. Proper preparation ensures compliance and maximizes potential tax benefits.
             </p>
             <p>
-                Military personnel and their spouses often need to file nonresident state tax returns when earning income in states where they are not tax residents. 
-                This includes wages from off-duty jobs, rental income, or business income. Understanding how to allocate taxable income to the appropriate state is essential 
-                to avoid double taxation. Nonresident returns generally require reporting income earned within the state’s borders. For example, if you work part-time in 
-                Virginia while maintaining residency in Florida, Virginia may require a nonresident return for the wages earned there. Many states offer worksheets to help 
-                calculate taxable income. Additionally, your resident state may provide credits for taxes paid to nonresident states, which can reduce your overall tax burden. 
+                Military personnel and their spouses often need to file nonresident state tax returns when earning income in states where they are not tax residents.
+                This includes wages from off-duty jobs, rental income, or business income. Understanding how to allocate taxable income to the appropriate state is essential
+                to avoid double taxation. Nonresident returns generally require reporting income earned within the state’s borders. For example, if you work part-time in
+                Virginia while maintaining residency in Florida, Virginia may require a nonresident return for the wages earned there. Many states offer worksheets to help
+                calculate taxable income. Additionally, your resident state may provide credits for taxes paid to nonresident states, which can reduce your overall tax burden.
                 State tax rates and thresholds vary widely. For instance, rental income from a property in California could be subject to one of the highest state tax rates in
-                the country. Keeping detailed records of income and tax withholdings is critical for accuracy. Consulting a tax professional familiar with multi-state filings 
+                the country. Keeping detailed records of income and tax withholdings is critical for accuracy. Consulting a tax professional familiar with multi-state filings
                 can simplify the process.
             </p>
             <p>More Resources:</p>
@@ -720,8 +735,8 @@
             <label class="modal-close" for="modal-tsp"></label>
             <p class="modal-text-big">Thrift Savings Plan</p>
             <p>
-                Your decision about Roth and traditional TSP is a choice of when you pay income tax on your TSP contributions and earnings. You can pay taxes either when 
-                you earn and contribute the money or when you take it out. There isn’t a set formula to determine which choice is best for everyone, and your decision may 
+                Your decision about Roth and traditional TSP is a choice of when you pay income tax on your TSP contributions and earnings. You can pay taxes either when
+                you earn and contribute the money or when you take it out. There isn’t a set formula to determine which choice is best for everyone, and your decision may
                 change as your income and needs change over time. Here are a few questions you’ll want to ask yourself to get started:
             </p>
             <ul>
@@ -731,27 +746,27 @@
             </ul>
             </p>
             <p>
-                With Roth TSP, your contributions go into the TSP after tax withholding. That means you pay taxes on your contributions at your current income tax rate. 
-                The advantage of the Roth TSP is that you won’t pay taxes later when you take out your contributions and any qualified earnings. Earnings are considered 
-                qualified after both of these Internal Revenue Code (IRC) requirements are met: 5 years have passed since January 1 of the calendar year when you made your 
-                first Roth TSP contribution and you are at least age 59½, permanently disabled, or deceased. Also, your Roth balance isn’t subject to IRS required minimum 
+                With Roth TSP, your contributions go into the TSP after tax withholding. That means you pay taxes on your contributions at your current income tax rate.
+                The advantage of the Roth TSP is that you won’t pay taxes later when you take out your contributions and any qualified earnings. Earnings are considered
+                qualified after both of these Internal Revenue Code (IRC) requirements are met: 5 years have passed since January 1 of the calendar year when you made your
+                first Roth TSP contribution and you are at least age 59½, permanently disabled, or deceased. Also, your Roth balance isn’t subject to IRS required minimum
                 distributions (RMDs), which means you can keep your Roth contributions and earnings in your TSP account as long as you want.
             </p>
             <p>
-                With traditional TSP, your contributions go into the TSP before tax withholding, which can potentially lower your current income tax rate. But when you take 
+                With traditional TSP, your contributions go into the TSP before tax withholding, which can potentially lower your current income tax rate. But when you take
                 money from your traditional TSP, you’ll pay taxes on both your contributions and earnings at the income tax rate of the year you make the withdrawal.
             </p>
             <p>
-                You may consider splitting your contributions between Roth and traditional. You can change your contribution type through your agency or service payroll 
-                system. Note that if you receive automatic or matching contributions from your agency or service, those contributions will always go into your traditional 
+                You may consider splitting your contributions between Roth and traditional. You can change your contribution type through your agency or service payroll
+                system. Note that if you receive automatic or matching contributions from your agency or service, those contributions will always go into your traditional
                 TSP balance and cannot be converted to Roth within your TSP account.
             </p>
             <p>
-                The TSP elective deferral limit is $23,500. This limit applies to the combined total of traditional and Roth contributions. For uniformed services members, 
-                this does not apply to traditional contributions from combat-zone pay. The annual additions limit is $70,000. The annual additions limit is the total amount 
-                of all the contributions you make in a calendar year. This limit is per employer and includes money from all sources: employee contributions (tax-deferred, 
-                after-tax, and tax-exempt), Agency/Service Automatic (1%) Contributions, and Agency/Service Matching Contributions. It does not include catch-up contributions. 
-                The annual additions limit affects mostly members of the uniformed services who can exceed the annual elective deferral limit. The excess contributions go 
+                The TSP elective deferral limit is $23,500. This limit applies to the combined total of traditional and Roth contributions. For uniformed services members,
+                this does not apply to traditional contributions from combat-zone pay. The annual additions limit is $70,000. The annual additions limit is the total amount
+                of all the contributions you make in a calendar year. This limit is per employer and includes money from all sources: employee contributions (tax-deferred,
+                after-tax, and tax-exempt), Agency/Service Automatic (1%) Contributions, and Agency/Service Matching Contributions. It does not include catch-up contributions.
+                The annual additions limit affects mostly members of the uniformed services who can exceed the annual elective deferral limit. The excess contributions go
                 into the traditional portion of your account from tax-exempt pay earned in a combat zone.
             </p>
             <p>More Resources:</p>
@@ -781,8 +796,8 @@
             <label class="modal-close" for="modal-pcspay"></label>
             <p class="modal-text-big">Permanent Change of Station</p>
             <p>
-                Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not 
-                specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used 
+                Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not
+                specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used
                 for all other PCS travel expenses. For additional information, please see this memo.
             </p>
             <p>More Resources:</p>
@@ -804,7 +819,7 @@
                 The wider the gap between those dates, the more time the debt has to accrue.
             </p>
             <p>
-                Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed 
+                Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed
                 package must be turned in within 30 days from notification in order to suspend the debt from collection.
             </p>
             <p>
@@ -825,7 +840,7 @@
             <label class="modal-close" for="modal-taxpay"></label>
             <p class="modal-text-big">Taxable and Non-Taxable Pay</p>
             <p>
-               
+
             </p>
             <p>More Resources:</p>
             <ul>
@@ -844,8 +859,8 @@
                 Gross pay is the amount an employee earns before all deductions, including taxes, benefits, wage attachments and any other payroll deductions.
             </p>
             <p>
-                Net pay, or take-home pay, is the amount of an employee’s paycheck after deductions are taken out of their gross pay. Deductions include things, 
-                such as payroll taxes, income tax, health insurance premiums, retirement account contributions, wage attachments (garnishments) and other voluntary 
+                Net pay, or take-home pay, is the amount of an employee’s paycheck after deductions are taken out of their gross pay. Deductions include things,
+                such as payroll taxes, income tax, health insurance premiums, retirement account contributions, wage attachments (garnishments) and other voluntary
                 or obligatory deductions.
             </p>
             <p>More Resources:</p>
@@ -854,6 +869,50 @@
             </ul>
         </div>
     </div>
+
+
+
+
+    <script>
+        async function downloadFile() {
+            try {
+                const filetype = document.getElementById('filetype').value;
+
+                const formData = new FormData();
+                formData.append('filetype', filetype);
+
+                const response = await fetch('/export', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+
+                // Set filename dynamically
+                a.download = filetype === 'csv' ? 'payles_csv.csv' : 'payles_excel.xlsx';
+
+                document.body.appendChild(a);
+                a.click();
+
+                // Cleanup
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error during file download:', error);
+            }
+        }
+    </script>
+
+
+
+
 
 </body>
 </html>

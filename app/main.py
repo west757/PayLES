@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, render_template, make_response, jsonify, session
+from flask import request, render_template, make_response, jsonify, session, send_file
 from flask_session import Session
 from config import Config
 from werkzeug.utils import secure_filename
@@ -9,6 +9,7 @@ from datetime import datetime
 #from pdf2image import convert_from_path
 import pdfplumber
 import os
+import io
 import pandas as pd
 
 app = Flask(__name__)
@@ -602,20 +603,46 @@ def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
-@app.route('/exportmatrix', methods=['POST'])
-def exportmatrix():
-    session['export_type'] = request.form['export_type']
+@app.route('/export', methods=['POST'])
+def export_dataframe():
 
-    print("export type: ", session['export_type'])
+    filetype = request.form.get('filetype')
 
-    if session['export_type'] == "excel":
-        session['matrix'].to_excel("payles.xlsx")
-    elif session['export_type'] == "csv":
-        session['matrix'].to_csv("payles.csv", index=False)
-    else:
-        print("no export type found")
+    if filetype not in ['csv', 'xlsx']:
+        return "Invalid file type requested", 400
 
-    return ('', 204)
+    buffer = io.BytesIO()
+
+    if filetype == 'csv':
+        session['matrix'].to_csv(buffer, index=False)
+        buffer.seek(0)
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name='payles_csv.csv',
+            mimetype='text/csv'
+        )
+    else:  # xlsx
+        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+            session['matrix'].to_excel(writer, index=False, sheet_name='Sheet1')
+        buffer.seek(0)
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name='payles_excel.xlsx',
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+
+
+
+    #session['export_type'] = request.form['export_type']
+    #if session['export_type'] == "excel":
+    #    session['matrix'].to_excel("payles.xlsx")
+    #elif session['export_type'] == "csv":
+    #    session['matrix'].to_csv("payles.csv", index=False)
+    #else:
+    #    print("no export type found")
+    #return ('', 204)
 
 
 
