@@ -20,6 +20,8 @@ def index():
     return render_template('index.html')
 
 
+#test
+
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
     session['months_display'] = 6
