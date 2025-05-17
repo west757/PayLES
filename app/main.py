@@ -82,23 +82,15 @@ def uploadfile():
                 les_textstring = les_page.extract_text()
                 les_text = les_textstring.split()
 
-
-                source_width=2550
-                source_height=3300
                 results = ["les text"]
 
                 page = les_pdf.pages[0]
-                pdf_width = page.width    # 612
-                pdf_height = page.height  # 792
-
-                scale_x = pdf_width / source_width   # 612 / 2550
-                scale_y = pdf_height / source_height # 792 / 3300
 
                 for i, row in app.config['RECTANGLES'].iterrows():
-                    x0 = float(row['x1']) * scale_x
-                    x1 = float(row['x2']) * scale_x
-                    y0 = float(row['y1']) * scale_y
-                    y1 = float(row['y2']) * scale_y
+                    x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
+                    x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
+                    y0 = float(row['y1']) * app.config['LES_COORD_SCALE']
+                    y1 = float(row['y2']) * app.config['LES_COORD_SCALE']
                     top = min(y0, y1)
                     bottom = max(y0, y1)
 
