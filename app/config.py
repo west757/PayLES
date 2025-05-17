@@ -14,6 +14,7 @@ class Config:
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
     LOGO_FILE = "logo.png"
     LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
+    RECTANGLES_FILE = "rectangles.csv"
 
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
@@ -43,6 +44,7 @@ class Config:
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
+    RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, RECTANGLES_FILE))
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
     PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))

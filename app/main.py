@@ -1,4 +1,4 @@
-from flask import Flask
+﻿from flask import Flask
 from flask import request, render_template, make_response, jsonify, session, send_file
 from flask_session import Session
 from config import Config
@@ -11,6 +11,8 @@ import pdfplumber
 import os
 import io
 import pandas as pd
+import io
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -20,8 +22,6 @@ Session(app)
 def index():
     return render_template('index.html')
 
-
-#test
 
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
@@ -77,13 +77,43 @@ def uploadfile():
 
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            #image = convert_from_path(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #image[0].save(os.path.join(app.config['STATIC_FOLDER'], filename, 'a.jpg'))
-
             with pdfplumber.open(file) as les_pdf:
                 les_page = les_pdf.pages[0]
                 les_textstring = les_page.extract_text()
                 les_text = les_textstring.split()
+
+
+                source_width=2550
+                source_height=3300
+                results = ["les text"]
+
+                page = les_pdf.pages[0]
+                pdf_width = page.width    # 612
+                pdf_height = page.height  # 792
+
+                scale_x = pdf_width / source_width   # 612 / 2550
+                scale_y = pdf_height / source_height # 792 / 3300
+
+                for i, row in app.config['RECTANGLES'].iterrows():
+                    x0 = float(row['x1']) * scale_x
+                    x1 = float(row['x2']) * scale_x
+                    y0 = float(row['y1']) * scale_y
+                    y1 = float(row['y2']) * scale_y
+                    top = min(y0, y1)
+                    bottom = max(y0, y1)
+
+                    text = page.within_bbox((x0, top, x1, bottom)).extract_text()
+                    clean_text = text.replace("\n", " ")
+                    results.append(clean_text.strip() if text else "")
+
+                inum = 0
+                for x in results:
+                    print("rectangle ",inum,": ",x,"\n")
+                    inum += 1
+
+
+
+
 
 
    
@@ -483,7 +513,6 @@ def updatematrix():
         session['matrix'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][i]] = calculate_nontaxablepay(session['col_headers'][i])
 
 
-
     #update federal tax rate
     session['federaltaxes_status_over_months'] = []
     for i in range(1, len(session['col_headers'])):
@@ -539,6 +568,7 @@ def contact():
 @app.route('/404')
 def page404():
     return render_template('404.html')
+
 
 
 
@@ -619,7 +649,7 @@ def export_dataframe():
         return send_file(
             buffer,
             as_attachment=True,
-            download_name='payles_csv.csv',
+            download_name='payles.csv',
             mimetype='text/csv'
         )
     else:  # xlsx
@@ -629,22 +659,9 @@ def export_dataframe():
         return send_file(
             buffer,
             as_attachment=True,
-            download_name='payles_excel.xlsx',
+            download_name='payles.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-
-
-
-    #session['export_type'] = request.form['export_type']
-    #if session['export_type'] == "excel":
-    #    session['matrix'].to_excel("payles.xlsx")
-    #elif session['export_type'] == "csv":
-    #    session['matrix'].to_csv("payles.csv", index=False)
-    #else:
-    #    print("no export type found")
-    #return ('', 204)
-
-
 
 
 def allowed_file(filename):

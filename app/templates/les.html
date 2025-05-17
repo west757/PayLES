@@ -425,8 +425,6 @@
     -->
 
 
-
-
                 <tr class="inputs">
                     <!--<form hx-post="/exportmatrix">-->
                     <td class="inputs" colspan=2>
@@ -448,17 +446,6 @@
                     </td>
                     <!--</form>-->
                 </tr>
-
-
-                <!--
-                <label for="filetype">Choose file format:</label>
-                <select id="filetype">
-                    <option value="xlsx" selected>Excel (.xlsx)</option>
-                    <option value="csv">CSV (.csv)</option>
-                </select>
-
-                <button onclick="downloadFile()">Export</button>
-                -->
 
 
                 <tr class="inputs">
@@ -895,13 +882,10 @@
                 const a = document.createElement('a');
                 a.href = url;
 
-                // Set filename dynamically
-                a.download = filetype === 'csv' ? 'payles_csv.csv' : 'payles_excel.xlsx';
+                a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
 
                 document.body.appendChild(a);
                 a.click();
-
-                // Cleanup
                 a.remove();
                 window.URL.revokeObjectURL(url);
             } catch (error) {
