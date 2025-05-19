@@ -382,9 +382,9 @@
                             <label>Months Displayed: &nbsp;</label>
                         </div>
                         <div class="settings-div">
-                            <select class="settings" id="months_display" name="months_display" style="width: 40px;" hx-post="/updatematrixmonths" hx-target="#core-id" hx-swap="innerHTML" hx-trigger="change">
+                            <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core-id" hx-swap="innerHTML" hx-trigger="change">
                                 {% for x in range(2, 13) %}
-                                <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
+                                <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
                         </div>
