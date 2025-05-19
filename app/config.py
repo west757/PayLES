@@ -9,15 +9,11 @@ class Config:
     SESSION_TYPE = "filesystem"
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
-    LES_COORD_SCALE = 0.24
-    DEFAULT_MONTHS_NUM = 6
-
     UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
+    
     LOGO_FILE = "logo.png"
-    LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
     RECTANGLES_FILE = "rectangles.csv"
-
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
     PAY_DRILL_FILE = "pay_drill_2025.csv"
@@ -26,6 +22,8 @@ class Config:
     FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
 
+    LES_COORD_SCALE = 0.24
+    DEFAULT_MONTHS_NUM = 6
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
@@ -46,6 +44,7 @@ class Config:
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
+    LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
     RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, RECTANGLES_FILE))
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
