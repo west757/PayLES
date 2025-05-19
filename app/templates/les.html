@@ -202,7 +202,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-basepay">Rank</label>
                         </td>
-                        <td class="inputs">{{session.rank_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <select class="inputs" id="rank_future" name="rank_future">
                                 {% for x in config['RANKS_SHORT'][0:] %}
@@ -223,7 +223,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-bah">Zipcode</label>
                         </td>
-                        <td class="inputs">{{session.zipcode_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}" />
                         </td>
@@ -240,7 +240,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-bah">Dependents</label>
                         </td>
-                        <td class="inputs">{{session.dependents_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_future" name="dependents_future" value="{{session.dependents_future}}" />
                         </td>
@@ -278,7 +278,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
                         </td>
-                        <td class="inputs">{{session.state_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <select class="inputs" id="state_future" name="state_future">
                                 {% for x in config['STATES_SHORT'][0:] %}
@@ -316,7 +316,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
                         </td>
-                        <td class="inputs">{{session.federaltaxes_status_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <select class="inputs" id="federaltaxes_status_future" name="federaltaxes_status_future">
                                 {% for x in config['TAX_FILING_TYPES'][0:] %}
@@ -337,7 +337,7 @@
                         <td class="inputs">
                             <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
                         </td>
-                        <td class="inputs">{{session.statetaxes_status_current}}</td>
+                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]}}</td>
                         <td class="inputs">
                             <select class="inputs" id="statetaxes_status_future" name="statetaxes_status_future">
                                 {% for x in config['TAX_FILING_TYPES'][0:2] %}

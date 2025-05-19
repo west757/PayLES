@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 from datetime import datetime
-#from pdf2image import convert_from_path
 import pdfplumber
 import os
 import io
@@ -26,43 +25,35 @@ def index():
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
     session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
-
-
-
-    session['months_display'] = 6
     session['export_type'] = ""
-    session['state_current'] = ""
+
     session['state_future'] = ""
     session['state_future_month'] = ""
-    session['rank_current'] = ""
     session['rank_future'] = ""
     session['rank_future_month'] = ""
     session['pay_date'] = ""
     session['les_date'] = ""
     session['months_in_service'] = 0
-    session['serviceyears_current'] = 0
     session['serviceyears_future'] = 0
     session['serviceyears_future_month'] = ""
-    session['zipcode_current'] = 0
     session['zipcode_future'] = 0
     session['zipcode_future_month'] = ""
+
     session['mha_current'] = ""
     session['mha_current_name'] = ""
     session['mha_future'] = ""
     session['mha_future_name'] = ""
+
     session['sgli_future'] = 0
     session['sgli_future_month'] = ""
     session['rothtsp_future'] = 0
     session['rothtsp_future_month'] = ""
-    session['dependents_current'] = 0
     session['dependents_future'] = 0
     session['dependents_future_month'] = ""
-    session['federaltaxes_status_current'] = ""
-    session['federaltaxes_status_future'] = ""
-    session['federaltaxes_status_future_month'] = ""
-    session['statetaxes_status_current'] = ""
-    session['statetaxes_status_future'] = ""
-    session['statetaxes_status_future_month'] = ""
+    session['federal_filing_status_future'] = ""
+    session['federal_filing_status_future_month'] = ""
+    session['state_filing_status_future'] = ""
+    session['state_filing_status_future_month'] = ""
 
     if 'file' not in request.files:
         return 'No file part in the request', 400
@@ -83,11 +74,7 @@ def uploadfile():
 
             with pdfplumber.open(file) as les_pdf:
                 les_page = les_pdf.pages[0]
-                #les_textstring = les_page.extract_text()
-                #les_text = les_textstring.split()
-
-
-                les_text = ["les text per rectangle"]
+                les_text = ["text per rectangle"]
 
                 for i, row in app.config['RECTANGLES'].iterrows():
                     x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
@@ -97,10 +84,8 @@ def uploadfile():
                     top = min(y0, y1)
                     bottom = max(y0, y1)
 
-                    les_cropped_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
-                    les_clean_text = les_cropped_text.replace("\n", " ")
-                    les_clean_text_substrings = les_clean_text.split()
-                    les_text.append(les_clean_text_substrings)
+                    les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
+                    les_text.append(les_rect_text.replace("\n", " ").split())
 
 
                 #print to console
@@ -111,129 +96,31 @@ def uploadfile():
 
 
 
-                #month
-                #grade
-                #paydate
-                #years of service
-                #branch
-                #diems
-                #retirement plan
-                #federal tax married, single, household
-                #indicator of multiple jobs
-                #dependents under 17
-                #other dependents
-                #additional tax calculated by martial status and exemptions
-                #other deductions
-                #other income
-                #state used for taxes
-                #married/single for state taxes
-                #exemptions for state taxes
-                #Basic allowance for quarters used
-                #allowance for quarters dependents
-                #housing allowance zip code
-                #rent amount
-                #number of people member uses to share housing costs
-                #STAT VHA status, accompanied or unaccompanied
-                #JFTR used for COLA purposes
-                #Dependents for VHA purposes
-                #2d JFTR code based on members dependents for COLA
-                #BAS type
-                #charity YTD
-                #traditional TSP base pay rate
-                #traditional TSP special pay rate
-                #traditional TSP incentive pay rate
-                #traditional TSP bonus pay rate
-                #roth TSP base pay rate
-                #roth TSP special pay rate
-                #roth TSP incentive pay rate
-                #roth TSP bonus pay rate
-
-                #amount forwarded
-                #entitlements
-                #deductions
-                #allotments
-                #total entitlements
-                #total deductions
-                #total allotments
-                #cr forward
-
-                #taxable pay amount
-                #non-taxable pay amount
-                #total taxes
-                #net pay
-                #gross pay
-
-
-                #bf leave balance at beginning of fiscal year
-                #earned leave in current fiscal year
-                #used leave in current fiscal year
-                #current balance of leave
-                #ets balance
-                #lost days of leave
-                #paid days of leave
-                #use/lose of leave before end of fiscal year
-
-
-   
-                #find month
-                #for x in app.config['MONTHS_SHORT']:
-                #    if x in les_text:
-                #        matrix_months = [""]
-                #        for i in range(session['months_display']):
-                #            matrix_months.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(x)+i) % 12])
-
-
-                paydf_month = ["Month"]
+                paydf_month = [""]
                 for i in range(session['months_num']):
                     paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[11][3])+i) % 12])
 
                 paydf_year = ["Year"]
                 for i in range(session['months_display']):
                     paydf_year.append(les_text[11][4])
-                paydf_year2 = [paydf_year]
 
+                session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
 
-                #create pay dataframe from months as column headers and populate rank in first row
-                session['paydf'] = pd.DataFrame(paydf_year2, columns=paydf_month)
-
-
-                #find rank
-                #for x in app.config['RANKS_SHORT']:
-                #    if x in les_text and les_text[les_text.index(x)+9] == "ENTITLEMENTS":
-                #        session['rank_current'] = x
-                #        break
-                #    else:
-                #       session['rank_current'] = "no rank found"
-                #session['rank_future'] = session['rank_current']
-
-
-                #paydf_rank = ["Rank"]
-                #for i in range(session['months_display']):
-                #    paydf_rank.append(les_text[5][1])
-                #paydf_rank2 = [paydf_rank]
                 
 
                 row = ["Rank"]
                 for i in range(session['months_num']):
                     row.append(les_text[5][1])
                 session['paydf'].loc[len(session['paydf'])] = row
-
-                #create pay dataframe from months as column headers and populate rank in first row
-                #session['paydf'] = pd.DataFrame(paydf_rank2, columns=paydf_column_headers)
+                session['rank_future'] = les_text[5][1]
 
 
-
-
-
-                row = ["Pay Date"]
+                paydate = datetime.strptime(les_text[6][2], '%y%m%d')
+                row = ["Months of Service"]
                 for i in range(session['months_num']):
-                    row.append(les_text[6][2])
+                    lesdate = pd.to_datetime(datetime.strptime((les_text[11][4] + les_text[11][3] + "1"), '%y%b%d'))+pd.DateOffset(months=i)
+                    row.append(months_in_service(lesdate, paydate))
                 session['paydf'].loc[len(session['paydf'])] = row
-
-                #row = ["Months in Service"]
-                #for i in range(session['months_num']):
-                #    row.append(les_text[6][2])
-                #session['paydf'].loc[len(session['paydf'])] = row
 
 
                 row = ["Branch"]
@@ -241,106 +128,60 @@ def uploadfile():
                     row.append(les_text[9][1])
                 session['paydf'].loc[len(session['paydf'])] = row
 
-
-                row = ["DIEMS"]
-                for i in range(session['months_num']):
-                    row.append(les_text[34][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-
                 row = ["Retirement Plan"]
                 for i in range(session['months_num']):
                     row.append(les_text[35][2])
                 session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Federal Tax Filing Status"]
+                row = ["Federal Filing Status"]
                 for i in range(session['months_num']):
                     row.append(les_text[39][1])
                 session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Multiple Jobs"]
-                for i in range(session['months_num']):
-                    row.append(les_text[40][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Dependents Under 17"]
-                for i in range(session['months_num']):
-                    row.append(les_text[41][3])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Additional Dependents"]
-                for i in range(session['months_num']):
-                    row.append(les_text[42][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Additional Taxes"]
-                for i in range(session['months_num']):
-                    row.append(les_text[43][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Other Deductions"]
-                for i in range(session['months_num']):
-                    row.append(les_text[44][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Other Income"]
-                for i in range(session['months_num']):
-                    row.append(les_text[45][2])
-                session['paydf'].loc[len(session['paydf'])] = row
+                session['federal_filing_status_future'] = les_text[39][1]
 
                 row = ["Tax Residency State"]
                 for i in range(session['months_num']):
                     row.append(les_text[54][1])
                 session['paydf'].loc[len(session['paydf'])] = row
+                session['state_future'] = les_text[54][1]
 
-                row = ["State Tax Filing Status"]
+                row = ["State Filing Status"]
                 for i in range(session['months_num']):
                     row.append(les_text[57][1])
                 session['paydf'].loc[len(session['paydf'])] = row
+                session['state_filing_status_future'] = les_text[57][1]
 
-                row = ["State Tax Number of Exemptions"]
-                for i in range(session['months_num']):
-                    row.append(les_text[58][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Basic Allowance for Quarters Category"]
+                row = ["BAQ Type"]
                 for i in range(session['months_num']):
                     row.append(les_text[61][2])
                 session['paydf'].loc[len(session['paydf'])] = row
 
-                #row = ["Basic Allowance for Quarters Number of Dependents"]
+                #row = ["BAQ Dependent Type"]
                 #for i in range(session['months_num']):
                 #    row.append(les_text[62][1])
                 #session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Housing Allowance Zip Code"]
+                row = ["Zip Code"]
                 for i in range(session['months_num']):
                     row.append(les_text[63][2])
                 session['paydf'].loc[len(session['paydf'])] = row
+                session['zipcode_future'] = les_text[63][2]
 
-                row = ["Rent Amount"]
-                for i in range(session['months_num']):
-                    row.append(les_text[64][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Roommates"]
-                for i in range(session['months_num']):
-                    row.append(les_text[65][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["VHA Status"]
-                for i in range(session['months_num']):
-                    row.append(les_text[66][1])
-                session['paydf'].loc[len(session['paydf'])] = row
+                #row = ["VHA Status"]
+                #for i in range(session['months_num']):
+                #    row.append(les_text[66][1])
+                #session['paydf'].loc[len(session['paydf'])] = row
 
                 #row = ["JFTR"]
                 #for i in range(session['months_num']):
                 #    row.append(les_text[67][1])
                 #session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["VHA Dependents"]
+                row = ["Dependents"]
                 for i in range(session['months_num']):
-                    row.append(les_text[68][1])
+                    row.append(int(les_text[68][1]))
                 session['paydf'].loc[len(session['paydf'])] = row
+                session['dependents_future'] = int(les_text[68][1])
 
                 #row = ["JFTR 2"]
                 #for i in range(session['months_num']):
@@ -457,6 +298,7 @@ def uploadfile():
                     for i in range(session['months_num']):
                         row.append(Decimal(les_text[23][les_text[23].index("SGLI")+1]))
                     session['paydf'].loc[len(session['paydf'])] = row
+                session['sgli_future'] = Decimal(les_text[23][les_text[23].index("SGLI")+1])
 
                 if "STATE" in les_text[23]:
                     row = ["State Taxes"]
@@ -952,6 +794,8 @@ def updatematrix():
     return render_template('les.html')
 
 
+
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -1032,13 +876,15 @@ def calculate_totaltaxes(column):
 
 
 
+
 def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
+
+
 @app.route('/export', methods=['POST'])
 def export_dataframe():
-
     filetype = request.form.get('filetype')
 
     if filetype not in ['csv', 'xlsx']:
@@ -1055,7 +901,7 @@ def export_dataframe():
             download_name='payles.csv',
             mimetype='text/csv'
         )
-    else:  # xlsx
+    else:
         with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
             session['paydf'].to_excel(writer, index=False, sheet_name='Sheet1')
         buffer.seek(0)
@@ -1065,6 +911,8 @@ def export_dataframe():
             download_name='payles.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
+
+
 
 
 def allowed_file(filename):
