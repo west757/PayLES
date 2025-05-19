@@ -27,12 +27,8 @@ def uploadfile():
     session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
     session['export_type'] = ""
 
-    session['state_future'] = ""
-    session['state_future_month'] = ""
     session['rank_future'] = ""
     session['rank_future_month'] = ""
-    session['serviceyears_future'] = 0
-    session['serviceyears_future_month'] = ""
     session['zipcode_future'] = 0
     session['zipcode_future_month'] = ""
     session['mha_current'] = ""
@@ -41,6 +37,8 @@ def uploadfile():
     session['mha_future_name'] = ""
     session['sgli_future'] = 0
     session['sgli_future_month'] = ""
+    session['state_future'] = ""
+    session['state_future_month'] = ""
     session['rothtsp_future'] = 0
     session['rothtsp_future_month'] = ""
     session['dependents_future'] = 0
@@ -266,61 +264,61 @@ def uploadfile():
                 if "FEDERAL" in les_text[23]:
                     row = ["Federal Taxes"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("FEDERAL")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("FEDERAL")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "FICA-SOC" in les_text[23]:
                     row = ["FICA - Social Security"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("FICA-SOC")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("FICA-SOC")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "FICA-MEDICARE" in les_text[23]:
                     row = ["FICA - Medicare"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("FICA-MEDICARE")+1]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("FICA-MEDICARE")+1]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "SGLI" in les_text[23]:
                     row = ["SGLI"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("SGLI")+1]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("SGLI")+1]))
                     session['paydf'].loc[len(session['paydf'])] = row
                 session['sgli_future'] = Decimal(les_text[23][les_text[23].index("SGLI")+1])
 
                 if "STATE" in les_text[23]:
                     row = ["State Taxes"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("STATE")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("STATE")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
                 else:
                     row = ["State Taxes"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(0))
+                        row.append(-Decimal(0))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "ROTH" in les_text[23]:
                     row = ["Roth TSP"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("ROTH")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("ROTH")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "PARTIAL" in les_text[23]:
                     row = ["Partial Pay"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("PARTIAL")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("PARTIAL")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "PCS" in les_text[23]:
                     row = ["PCS Members"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("PCS")+2]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("PCS")+2]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
                 if "DEBT" in les_text[23]:
                     row = ["Debt"]
                     for i in range(session['months_num']):
-                        row.append(Decimal(les_text[23][les_text[23].index("DEBT")+1]))
+                        row.append(-Decimal(les_text[23][les_text[23].index("DEBT")+1]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
 
@@ -337,51 +335,18 @@ def uploadfile():
 
                 row = ["Total Taxes"]
                 for column in session['paydf'].columns[1:]:
-                    row.append(calculate_totaltaxes(column))
+                    row.append(-calculate_totaltaxes(column))
                 session['paydf'].loc[len(session['paydf'])] = row
 
                 row = ["Gross Pay"]
-                for i in range(session['months_num']):
-                    row.append(0)
+                for column in session['paydf'].columns[1:]:
+                    row.append(Decimal(session['paydf'][column][20:-3][session['paydf'][column][20:-3] > 0].sum()))
                 session['paydf'].loc[len(session['paydf'])] = row
 
                 row = ["Net Pay"]
-                for i in range(session['months_num']):
-                    row.append(0)
+                for column in session['paydf'].columns[1:]:
+                    row.append(Decimal(session['paydf'][column][20:-4].sum()))
                 session['paydf'].loc[len(session['paydf'])] = row
-                
-
-
-
-                #taxable pay
-                #row = ["Taxable Pay"]
-                #for column in session['matrix'].columns[1:]:
-                #    row.append(calculate_taxablepay(column))
-                #session['matrix'].loc[len(session['matrix'])] = row
-
-                #non-taxable pay
-                #row = ["Non-Taxable Pay"]
-                #for column in session['matrix'].columns[1:]:
-                #    row.append(calculate_nontaxablepay(column))
-                #session['matrix'].loc[len(session['matrix'])] = row
-
-                #total taxes
-                #row = ["Total Taxes"]
-                #for column in session['matrix'].columns[1:]:
-                #    row.append(calculate_totaltaxes(column))
-                #session['matrix'].loc[len(session['matrix'])] = row
-
-                #gross pay
-                #row = ["Gross Pay"]
-                #for column in session['matrix'].columns[1:]:
-                #    row.append(Decimal(session['matrix'][column][3:-3][session['matrix'][column][3:-3] > 0].sum()))
-                #session['matrix'].loc[len(session['matrix'])] = row
-
-                #net pay
-                #row = ["Net Pay"]
-                #for column in session['matrix'].columns[1:]:
-                #    row.append(Decimal(session['matrix'][column][3:-4].sum()))
-                #session['matrix'].loc[len(session['matrix'])] = row
 
 
                 session['col_headers'] = list(session['paydf'].columns)
@@ -396,8 +361,8 @@ def uploadfile():
 
 
 @app.route('/updatemonths', methods=['POST'])
-def updatematrixmonths():
-    session['months_num'] = int(request.form['months_display'])
+def updatemonths():
+    session['months_num'] = int(request.form['months_num'])
     
     df = session['paydf'].copy()
     first_col = df.iloc[:, 0:1]
@@ -440,8 +405,8 @@ def updatematrixmonths():
 
 
 
-@app.route('/updatematrix', methods=['POST'])
-def updatematrix():
+@app.route('/updatepaydf', methods=['POST'])
+def updatepaydf():
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
     session['zipcode_future'] = Decimal(request.form['zipcode_future'])
@@ -454,10 +419,10 @@ def updatematrix():
     session['state_future_month'] = request.form['state_future_month']
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
-    session['federaltaxes_status_future'] = request.form['federaltaxes_status_future']
-    session['federaltaxes_status_future_month'] = request.form['federaltaxes_status_future_month']
-    session['statetaxes_status_future'] = request.form['statetaxes_status_future']
-    session['statetaxes_status_future_month'] = request.form['statetaxes_status_future_month']
+    session['federal_filing_status_future'] = request.form['federal_filing_status_future']
+    session['federal_filing_status_future_month'] = request.form['federal_filing_status_future_month']
+    session['state_filing_status_future'] = request.form['state_filing_status_future']
+    session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
 
 
     #variables
@@ -470,16 +435,16 @@ def updatematrix():
 
         #update base pay
         for j in range(len(session['col_headers'])):
-            if basepay_headers[j] <= session['months_in_service'] < basepay_headers[j+1]:
+            if basepay_headers[j] <= session['paydf'].at[session['row_headers'].index("Months of Service"), session['col_headers'][i]] < basepay_headers[j+1]:
                 basepay_col = basepay_headers[j]
 
         basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
         basepay_value = Decimal(basepay_value.iloc[0])
 
         if i >= session['col_headers'].index(session['rank_future_month']):
-            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(basepay_value, 2)
+            session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(basepay_value, 2)
         else:
-            session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['matrix'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
+            session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
 
 
         #update bas
@@ -489,96 +454,76 @@ def updatematrix():
                 bas_value = app.config['BAS_AMOUNT'][0]
             else:
                 bas_value = app.config['BAS_AMOUNT'][1]
-            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(bas_value, 2)
+            session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(bas_value, 2)
         else:
-            session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(session['matrix'].at[session['row_headers'].index("BAS"), session['col_headers'][1]], 2)
+            session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][1]], 2)
 
 
     #update BAH
-    rank_over_months = []
-    zipcode_over_months = []
-    dependents_over_months = []
-
     for i in range(1, len(session['col_headers'])):
-        if i >= session['col_headers'].index(session['rank_future_month']):
-            rank_over_months.append(session['rank_future'])
-        else:
-            rank_over_months.append(session['rank_current'])
-
-        if i >= session['col_headers'].index(session['zipcode_future_month']):
-            zipcode_over_months.append(session['zipcode_future'])
-        else:
-            zipcode_over_months.append(session['zipcode_current'])
-
-        if i >= session['col_headers'].index(session['dependents_future_month']):
-            dependents_over_months.append(session['dependents_future'])
-        else:
-            dependents_over_months.append(session['dependents_current'])
-
-    for i in range(1, len(session['col_headers'])):
-        mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([zipcode_over_months[i-1]])].stack()
+        mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]])])].stack()
         mha_search_row = mha_search.index[0][0]
         session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
         session['mha_future_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
         
-        if dependents_over_months[i-1] > 0:
+        if session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][i]] > 0:
             bah_df = app.config['BAH_WITH_DEPENDENTS']
         else:
             bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
 
-        bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], rank_over_months[i-1]]
+        bah_value = bah_df.loc[bah_df["MHA"] == session['mha_future'], session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][i]]]
         bah_value = bah_value.iloc[0]
         bah_value = Decimal(float(bah_value))
 
-        session['matrix'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = round(bah_value, 2)
+        session['paydf'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = round(bah_value, 2)
 
 
 
     #update gross pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = round(Decimal(session['matrix'][session['col_headers'][i]][:-5][session['matrix'][session['col_headers'][i]][:-5] > 0].sum()), 2)
+        session['paydf'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-5][session['paydf'][session['col_headers'][i]][20:-5] > 0].sum()), 2)
 
     #update taxable pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] = calculate_taxablepay(session['col_headers'][i])
+        session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] = calculate_taxablepay(session['col_headers'][i])
 
     #update non-taxable pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][i]] = calculate_nontaxablepay(session['col_headers'][i])
+        session['paydf'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][i]] = calculate_nontaxablepay(session['col_headers'][i])
 
 
     #update federal tax rate
-    session['federaltaxes_status_over_months'] = []
-    for i in range(1, len(session['col_headers'])):
-        if i >= session['col_headers'].index(session['federaltaxes_status_future_month']):
-            session['federaltaxes_status_over_months'].append(session['federaltaxes_status_future'])
-        else:
-            session['federaltaxes_status_over_months'].append(session['federaltaxes_status_current'])
-
-    for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i], i)), 2)
+    #session['federaltaxes_status_over_months'] = []
+    #for i in range(1, len(session['col_headers'])):
+    #    if i >= session['col_headers'].index(session['federaltaxes_status_future_month']):
+    #        session['federaltaxes_status_over_months'].append(session['federaltaxes_status_future'])
+    #    else:
+    #        session['federaltaxes_status_over_months'].append(session['federaltaxes_status_current'])
+#
+#    for i in range(1, len(session['col_headers'])):
+#        session['paydf'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i], i)), 2)
 
 
     #update fica - social security
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
+        session['paydf'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
 
     #update fica-medicare
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = round(-Decimal(session['matrix'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE']), 2)
+        session['paydf'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][i]] = round(-Decimal(session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_MEDICARE_TAX_RATE']), 2)
 
     #update sgli
     for i in range(1, len(session['col_headers'])):
         if i >= session['col_headers'].index(session['sgli_future_month']):
-            session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = -session['sgli_future']
+            session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = -session['sgli_future']
         else:
-            session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
+            session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
 
 
     #update total taxes, net pay
     for i in range(1, len(session['col_headers'])):
-        session['matrix'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
-        session['matrix'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['matrix'][session['col_headers'][i]][:-5].sum()), 2)
+        session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
+        session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-5].sum()), 2)
 
     return render_template('les.html')
 
