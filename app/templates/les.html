@@ -21,6 +21,7 @@
                     {% endfor %}
                 </tr>
 
+                <!-- entitlements -->
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-basepay">Base Pay</label></td>
                     {% for x in range(1, session['paydf'].shape[1]) %}
@@ -70,6 +71,7 @@
                 {% endif %}
 
 
+                <!-- deductions -->
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-federaltaxes">Federal Taxes</label></td>
                     {% for x in range(1, session['paydf'].shape[1]) %}
@@ -77,19 +79,23 @@
                     {% endfor %}
                 </tr>
 
+                {% if "FICA - Social Security" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-fica">FICA - Social Security</label></td>
                     {% for x in range(1, session['paydf'].shape[1]) %}
                     <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                     {% endfor %}
                 </tr>
+                {% endif %}
 
+                {% if "FICA - Medicare" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-fica">FICA - Medicare</label></td>
                     {% for x in range(1, session['paydf'].shape[1]) %}
                     <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                     {% endfor %}
                 </tr>
+                {% endif %}
 
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-sgli">SGLI</label></td>
@@ -105,13 +111,14 @@
                     {% endfor %}
                 </tr>
 
+                {% if "Roth TSP" in session['row_headers'] %}
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-tsp">Roth TSP</label></td>
                     {% for x in range(1, session['paydf'].shape[1]) %}
                     <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                     {% endfor %}
                 </tr>
-
+                {% endif %}
 
                 {% if "Partial Pay" in session['row_headers'] %}
                 <tr class="matrix">
@@ -196,7 +203,7 @@
                         <td class="inputs-header"></td>
                         <td class="inputs-header">Current</td>
                         <td class="inputs-header">Future</td>
-                        <td class="inputs-header">Month Changing</td>
+                        <td class="inputs-header">Month</td>
                     </tr>
                     <tr class="inputs">
                         <td class="inputs">
@@ -295,6 +302,7 @@
                         </td>
                     </tr>
 
+                    {% if "Roth TSP" in session['row_headers'] %}
                     <tr class="inputs">
                         <td class="inputs">
                             <label class="modalbutton" for="modal-tsp">Roth TSP</label>
@@ -311,6 +319,7 @@
                             </select>
                         </td>
                     </tr>
+                    {% endif %}
 
                     <tr class="inputs">
                         <td class="inputs">

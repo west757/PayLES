@@ -91,7 +91,7 @@ def uploadfile():
                     paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[11][3])+i) % 12])
 
                 paydf_year = ["Year"]
-                for i in range(session['months_display']):
+                for i in range(session['months_num']):
                     paydf_year.append("20" + les_text[11][4])
 
                 session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
@@ -130,8 +130,12 @@ def uploadfile():
                 session['state_filing_status_future'] = les_text[57][1]
 
                 row = ["BAQ Type"]
-                for i in range(session['months_num']):
-                    row.append(les_text[61][2])
+                if len(les_text[61]) == 3:
+                    for i in range(session['months_num']):
+                        row.append(les_text[61][2])
+                else:
+                    for i in range(session['months_num']):
+                        row.append("")
                 session['paydf'].loc[len(session['paydf'])] = row
 
                 row = ["Zip Code"]
@@ -141,12 +145,18 @@ def uploadfile():
                 session['zipcode_future'] = les_text[63][2]
 
                 #find MHA
-                mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(les_text[63][2])])].stack()
-                mha_search_row = mha_search.index[0][0]
-                session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-                session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
-                session['mha_future'] = session['mha_current']
-                session['mha_future_name'] = session['mha_current_name']
+                if les_text[63][2] != "00000":
+                    mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(les_text[63][2])])].stack()
+                    mha_search_row = mha_search.index[0][0]
+                    session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+                    session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+                    session['mha_future'] = session['mha_current']
+                    session['mha_future_name'] = session['mha_current_name']
+                else:
+                    session['mha_current'] = "no MHA found"
+                    session['mha_current_name'] = "no MHA found"
+                    session['mha_future'] = "no MHA found"
+                    session['mha_future_name'] = "no MHA found"
 
                 row = ["JFTR"]
                 if len(les_text[67]) == 2:
@@ -223,23 +233,32 @@ def uploadfile():
                 
 
                 #entitlements
+                row = ["Base Pay"]
                 if "BASE" in les_text[22]:
-                    row = ["Base Pay"]
                     for i in range(session['months_num']):
                         row.append(Decimal(les_text[22][les_text[22].index("BASE")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
+                else:
+                    for i in range(session['months_num']):
+                        row.append(Decimal(0))
+                session['paydf'].loc[len(session['paydf'])] = row
 
+                row = ["BAS"]
                 if "BAS" in les_text[22]:
-                    row = ["BAS"]
                     for i in range(session['months_num']):
                         row.append(Decimal(les_text[22][les_text[22].index("BAS")+1]))
-                    session['paydf'].loc[len(session['paydf'])] = row
+                else:
+                    for i in range(session['months_num']):
+                        row.append(Decimal(0))
+                session['paydf'].loc[len(session['paydf'])] = row
 
+                row = ["BAH"]
                 if "BAH" in les_text[22]:
-                    row = ["BAH"]
                     for i in range(session['months_num']):
                         row.append(Decimal(les_text[22][les_text[22].index("BAH")+1]))
-                    session['paydf'].loc[len(session['paydf'])] = row
+                else:
+                    for i in range(session['months_num']):
+                        row.append(Decimal(0))
+                session['paydf'].loc[len(session['paydf'])] = row
 
                 if "UEA" in les_text[22]:
                     row = ["UEA Initial"]
@@ -279,23 +298,24 @@ def uploadfile():
                         row.append(-Decimal(les_text[23][les_text[23].index("FICA-MEDICARE")+1]))
                     session['paydf'].loc[len(session['paydf'])] = row
 
+                row = ["SGLI"]
                 if "SGLI" in les_text[23]:
-                    row = ["SGLI"]
                     for i in range(session['months_num']):
                         row.append(-Decimal(les_text[23][les_text[23].index("SGLI")+1]))
-                    session['paydf'].loc[len(session['paydf'])] = row
+                else:
+                    for i in range(session['months_num']):
+                        row.append(Decimal(0))
+                session['paydf'].loc[len(session['paydf'])] = row
                 session['sgli_future'] = Decimal(les_text[23][les_text[23].index("SGLI")+1])
 
+                row = ["State Taxes"]
                 if "STATE" in les_text[23]:
-                    row = ["State Taxes"]
                     for i in range(session['months_num']):
                         row.append(-Decimal(les_text[23][les_text[23].index("STATE")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
                 else:
-                    row = ["State Taxes"]
                     for i in range(session['months_num']):
-                        row.append(-Decimal(0))
-                    session['paydf'].loc[len(session['paydf'])] = row
+                        row.append(Decimal(0))
+                session['paydf'].loc[len(session['paydf'])] = row
 
                 if "ROTH" in les_text[23]:
                     row = ["Roth TSP"]

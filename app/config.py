@@ -12,7 +12,7 @@ class Config:
     UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
     STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
     
-    LOGO_FILE = "logo.png"
+    LOGO_FILE = "logo_2.png"
     RECTANGLES_FILE = "rectangles.csv"
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
