@@ -1,20 +1,29 @@
-/* colors:
-    Pale: #f5e7de
-    White: #f9f9f9
-    Gray: #393939
-    Green: #04a96d
-    Green shade: #0c9a65
-*/
+:root {
+    --white: #F8F9FA;
+    --pale: #f5e7de;
+    --black: #000000;
+    --darkgray: #393939;
+    --gray: #5F6368;
+    --lightgray: #C2C3C5;
+    --lightgreen: #04a96d;
+    --darkgreen: #0c9a65;
+}
 
-
-* {
+html {
     box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #F5E7DE;
-    margin: 0;
+    background-color: var(--pale);
+    color: var(--black);
+    overflow-y: scroll;
+    margin: 0px;
+    padding: 0px;
 }
 
 main {
@@ -25,7 +34,9 @@ main {
 
 .header {
     display: flex;
-    background-color: #393939;
+    background-color: var(--darkgray);
+    height: 90px;
+    width: 100%;
 }
 
 .header-item {
@@ -36,14 +47,13 @@ main {
 
 #header-logo {
     float: left;
-    text-align: center;
     transform: scale(0.5);
-    margin: -30px;
+    margin: -30px -50px -30px 0px;
 }
 
 #header-text {
     text-align: left;
-    font-size: 24px;
+    font-size: 26px;
     line-height: 4px;
 }
 
@@ -53,25 +63,19 @@ main {
 
 #header-nav a {
     float: right;
-    color: #f2f2f2;
+    color: var(--white);
     text-align: center;
-    padding: 14px 16px;
+    padding: 60px 12px 15px 12px;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 17px;
+    vertical-align: bottom;
 }
 
 #header-nav a:hover {
-    background-color: #ddd;
-    color: #393939;
-}
-
-#header-nav a.active {
-    background-color: #04AA6D;
-    color: #f9f9f9;
+    background-color: var(--darkgreen);
 }
 
 
-/* home */
 
 #core-home-id {
     text-align: center;
@@ -154,10 +158,6 @@ td.matrix {
     border-left: 1px solid #ddd;
 }
 
-tr.matrix:nth-child(even) td.matrix {
-    background-color: #f1f1f1;
-}
-
 td.matrix:last-child, th.matrix:last-child {
     border-right: 1px solid #ddd;
 }
@@ -170,7 +170,7 @@ table.matrix-table {
     border-spacing: 0px;
     border: 1px solid #ddd;
     border-radius: 20px;
-    background: #f9f9f9;
+    background: var(--white);
 }
 
 tr.matrix-header {
@@ -183,7 +183,7 @@ tr.matrix-header {
 
 td.matrix-header {
     background: #333;
-    color: #f2f2f2;
+    color: var(--white);
     text-align: center;
     font-weight: bold;
     border-left: 1px solid #ddd;
@@ -197,11 +197,9 @@ tr.matrix, td.matrix {
     border-top: 1px solid #ddd;
 }
 
-/*
 tr.matrix:nth-child(even) td.matrix {
     background-color: #f1f1f1;
 }
-*/
 
 tr.matrix:not(:first-child), td.matrix:not(:first-child) {
     padding: 20px;
