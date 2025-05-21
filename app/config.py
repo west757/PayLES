@@ -1,4 +1,5 @@
 from decimal import Decimal
+from pathlib import Path
 import os
 import secrets
 import pandas as pd
@@ -9,10 +10,10 @@ class Config:
     SESSION_TYPE = "filesystem"
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
-    UPLOAD_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/upload'
-    STATIC_FOLDER = 'C:/Users/blue/Documents/GitHub/PayLES/app/static'
-    
+    STATIC_FOLDER = Path.cwd() / "static"
+
     LOGO_FILE = "logo_2.png"
+    EXAMPLE_LES_FILE = "les_example.pdf"
     RECTANGLES_FILE = "rectangles.csv"
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
@@ -45,6 +46,7 @@ class Config:
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
     LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
+    EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
     RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, RECTANGLES_FILE))
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
