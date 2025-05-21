@@ -46,8 +46,7 @@ def submit_les():
 
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
-    les_file = open(app.config['EXAMPLE_LES_FILE'], 'r')
-    read_les(les_file)    
+    read_les(app.config['EXAMPLE_LES'])
     return render_template('les.html')
 
 
