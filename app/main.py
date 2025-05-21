@@ -19,14 +19,15 @@ Session(app)
 
 @app.route('/')
 def index():
+    session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
+    session['export_type'] = ""
     return render_template('index.html')
 
 
+#change upload to submit
+
 @app.route('/uploadfile', methods=['POST'])
 def uploadfile():
-    session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
-    session['export_type'] = ""
-
     session['rank_future'] = ""
     session['rank_future_month'] = ""
     session['zipcode_future'] = 0
@@ -53,7 +54,6 @@ def uploadfile():
 
     if 'file' in request.files:
         file = request.files['file']
-
         if file.filename == '':
             return 'No selected file', 400
 
@@ -61,10 +61,6 @@ def uploadfile():
             return 'File type not allowed', 400
 
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
             with pdfplumber.open(file) as les_pdf:
                 les_page = les_pdf.pages[0]
                 les_text = ["text per rectangle"]
