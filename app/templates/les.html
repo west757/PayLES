@@ -463,9 +463,9 @@
                             <label>Upload New LES</label>
                         </div>
                         <div class="settings-div">
-                            <form hx-post="/uploadfile" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
-                                <input type="file" name="file" />
-                                <input type="submit" value="Upload" />
+                            <form hx-post="/submit_les" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
+                                <input type="file" name="file" accept=".pdf" required />
+                                <input type="submit" value="Submit New LES" />
                             </form>
                         </div>
                     </td>
