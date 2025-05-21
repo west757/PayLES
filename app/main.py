@@ -24,10 +24,36 @@ def index():
     return render_template('index.html')
 
 
-#change upload to submit
+@app.route('/submit_les', methods=['POST'])
+def submit_les():
+    if 'file' not in request.files:
+        return 'No file part in the request', 400
 
-@app.route('/uploadfile', methods=['POST'])
-def uploadfile():
+    if 'file' in request.files:
+        les_file = request.files['file']
+        if les_file.filename == '':
+            return 'No selected file', 400
+
+        if les_file and not allowed_file(les_file.filename):
+            return 'File type not allowed', 400
+
+        if les_file and allowed_file(les_file.filename):
+            read_les(les_file)
+            return render_template('les.html')
+
+    return 'LES submission failed'
+
+
+@app.route('/submit_example', methods=['POST'])
+def submit_example():
+    les_file = open(app.config['EXAMPLE_LES_FILE'], 'r')
+    read_les(les_file)    
+    return render_template('les.html')
+
+
+
+@app.route('/read_les', methods=['POST'])
+def read_les(les_file):
     session['rank_future'] = ""
     session['rank_future_month'] = ""
     session['zipcode_future'] = 0
@@ -49,331 +75,320 @@ def uploadfile():
     session['state_filing_status_future'] = ""
     session['state_filing_status_future_month'] = ""
 
-    if 'file' not in request.files:
-        return 'No file part in the request', 400
+    with pdfplumber.open(les_file) as les_pdf:
+        les_page = les_pdf.pages[0]
+        les_text = ["text per rectangle"]
 
-    if 'file' in request.files:
-        file = request.files['file']
-        if file.filename == '':
-            return 'No selected file', 400
+        title_crop = les_page.crop((18, 18, 593, 29))
+        title_text = title_crop.extract_text_simple()
+        if title_text != "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
+            print("file submitted is not an LES")
+        else:
+            for i, row in app.config['RECTANGLES'].iterrows():
+                x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
+                x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
+                y0 = float(row['y1']) * app.config['LES_COORD_SCALE']
+                y1 = float(row['y2']) * app.config['LES_COORD_SCALE']
+                top = min(y0, y1)
+                bottom = max(y0, y1)
 
-        if file and not allowed_file(file.filename):
-            return 'File type not allowed', 400
+                les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
+                les_text.append(les_rect_text.replace("\n", " ").split())
 
-        if file and allowed_file(file.filename):
-            with pdfplumber.open(file) as les_pdf:
-                les_page = les_pdf.pages[0]
-                les_text = ["text per rectangle"]
-
-                for i, row in app.config['RECTANGLES'].iterrows():
-                    x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
-                    x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
-                    y0 = float(row['y1']) * app.config['LES_COORD_SCALE']
-                    y1 = float(row['y2']) * app.config['LES_COORD_SCALE']
-                    top = min(y0, y1)
-                    bottom = max(y0, y1)
-
-                    les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
-                    les_text.append(les_rect_text.replace("\n", " ").split())
-
-                #inum = 0
-                #for x in les_text:
-                #    print("rectangle ",inum,": ",x)
-                #    inum += 1
+            #inum = 0
+            #for x in les_text:
+            #    print("rectangle ",inum,": ",x)
+            #    inum += 1
 
 
-                paydf_month = [""]
-                for i in range(session['months_num']):
-                    paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[11][3])+i) % 12])
+            paydf_month = [""]
+            for i in range(session['months_num']):
+                paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[11][3])+i) % 12])
 
-                paydf_year = ["Year"]
-                for i in range(session['months_num']):
-                    paydf_year.append("20" + les_text[11][4])
+            paydf_year = ["Year"]
+            for i in range(session['months_num']):
+                paydf_year.append("20" + les_text[11][4])
 
-                session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
+            session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
 
                 
-                #variables
-                row = ["Rank"]
+            #variables
+            row = ["Rank"]
+            for i in range(session['months_num']):
+                row.append(les_text[5][1])
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['rank_future'] = les_text[5][1]
+
+            paydate = datetime.strptime(les_text[6][2], '%y%m%d')
+            row = ["Months of Service"]
+            for i in range(session['months_num']):
+                lesdate = pd.to_datetime(datetime.strptime((les_text[11][4] + les_text[11][3] + "1"), '%y%b%d'))+pd.DateOffset(months=i)
+                row.append(months_in_service(lesdate, paydate))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Federal Filing Status"]
+            for i in range(session['months_num']):
+                row.append(les_text[39][1])
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['federal_filing_status_future'] = les_text[39][1]
+
+            row = ["Tax Residency State"]
+            for i in range(session['months_num']):
+                row.append(les_text[54][1])
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['state_future'] = les_text[54][1]
+
+            row = ["State Filing Status"]
+            for i in range(session['months_num']):
+                row.append(les_text[57][1])
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['state_filing_status_future'] = les_text[57][1]
+
+            row = ["BAQ Type"]
+            if len(les_text[61]) == 3:
                 for i in range(session['months_num']):
-                    row.append(les_text[5][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['rank_future'] = les_text[5][1]
-
-                paydate = datetime.strptime(les_text[6][2], '%y%m%d')
-                row = ["Months of Service"]
+                    row.append(les_text[61][2])
+            else:
                 for i in range(session['months_num']):
-                    lesdate = pd.to_datetime(datetime.strptime((les_text[11][4] + les_text[11][3] + "1"), '%y%b%d'))+pd.DateOffset(months=i)
-                    row.append(months_in_service(lesdate, paydate))
-                session['paydf'].loc[len(session['paydf'])] = row
+                    row.append("")
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Federal Filing Status"]
+            row = ["Zip Code"]
+            for i in range(session['months_num']):
+                row.append(les_text[63][2])
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['zipcode_future'] = les_text[63][2]
+
+            #find MHA
+            if les_text[63][2] != "00000":
+                mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(les_text[63][2])])].stack()
+                mha_search_row = mha_search.index[0][0]
+                session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+                session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+                session['mha_future'] = session['mha_current']
+                session['mha_future_name'] = session['mha_current_name']
+            else:
+                session['mha_current'] = "no MHA found"
+                session['mha_current_name'] = "no MHA found"
+                session['mha_future'] = "no MHA found"
+                session['mha_future_name'] = "no MHA found"
+
+            row = ["JFTR"]
+            if len(les_text[67]) == 2:
                 for i in range(session['months_num']):
-                    row.append(les_text[39][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['federal_filing_status_future'] = les_text[39][1]
-
-                row = ["Tax Residency State"]
+                    row.append(les_text[67][1])
+            else:
                 for i in range(session['months_num']):
-                    row.append(les_text[54][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['state_future'] = les_text[54][1]
+                    row.append("")
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["State Filing Status"]
+            row = ["Dependents"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[68][1]))
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['dependents_future'] = int(les_text[68][1])
+
+            row = ["JFTR 2"]
+            if len(les_text[69]) == 3:
                 for i in range(session['months_num']):
-                    row.append(les_text[57][1])
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['state_filing_status_future'] = les_text[57][1]
-
-                row = ["BAQ Type"]
-                if len(les_text[61]) == 3:
-                    for i in range(session['months_num']):
-                        row.append(les_text[61][2])
-                else:
-                    for i in range(session['months_num']):
-                        row.append("")
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Zip Code"]
+                    row.append(les_text[69][2])
+            else:
                 for i in range(session['months_num']):
-                    row.append(les_text[63][2])
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['zipcode_future'] = les_text[63][2]
+                    row.append("")
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                #find MHA
-                if les_text[63][2] != "00000":
-                    mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(les_text[63][2])])].stack()
-                    mha_search_row = mha_search.index[0][0]
-                    session['mha_current'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-                    session['mha_current_name'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
-                    session['mha_future'] = session['mha_current']
-                    session['mha_future_name'] = session['mha_current_name']
-                else:
-                    session['mha_current'] = "no MHA found"
-                    session['mha_current_name'] = "no MHA found"
-                    session['mha_future'] = "no MHA found"
-                    session['mha_future_name'] = "no MHA found"
-
-                row = ["JFTR"]
-                if len(les_text[67]) == 2:
-                    for i in range(session['months_num']):
-                        row.append(les_text[67][1])
-                else:
-                    for i in range(session['months_num']):
-                        row.append("")
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Dependents"]
+            row = ["BAS Type"]
+            if len(les_text[70]) == 3:
                 for i in range(session['months_num']):
-                    row.append(int(les_text[68][1]))
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['dependents_future'] = int(les_text[68][1])
-
-                row = ["JFTR 2"]
-                if len(les_text[69]) == 3:
-                    for i in range(session['months_num']):
-                        row.append(les_text[69][2])
-                else:
-                    for i in range(session['months_num']):
-                        row.append("")
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["BAS Type"]
-                if len(les_text[70]) == 3:
-                    for i in range(session['months_num']):
-                        row.append(les_text[70][2])
-                else:
-                    for i in range(session['months_num']):
-                        row.append("")
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Traditional TSP Base Pay Rate"]
+                    row.append(les_text[70][2])
+            else:
                 for i in range(session['months_num']):
-                    row.append(int(les_text[75][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+                    row.append("")
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Traditional TSP Specialty Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[77][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Traditional TSP Base Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[75][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Traditional TSP Incentive Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[79][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Traditional TSP Specialty Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[77][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Traditional TSP Bonus Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[81][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Traditional TSP Incentive Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[79][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Roth TSP Base Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[84][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Traditional TSP Bonus Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[81][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Roth TSP Specialty Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[86][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Roth TSP Base Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[84][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Roth TSP Incentive Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[88][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Roth TSP Specialty Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[86][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["Roth TSP Bonus Pay Rate"]
-                for i in range(session['months_num']):
-                    row.append(int(les_text[90][3]))
-                session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Roth TSP Incentive Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[88][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Roth TSP Bonus Pay Rate"]
+            for i in range(session['months_num']):
+                row.append(int(les_text[90][3]))
+            session['paydf'].loc[len(session['paydf'])] = row
                 
 
-                #entitlements
-                row = ["Base Pay"]
-                if "BASE" in les_text[22]:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("BASE")+2]))
-                else:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(0))
+            #entitlements
+            row = ["Base Pay"]
+            if "BASE" in les_text[22]:
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("BASE")+2]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["BAS"]
+            if "BAS" in les_text[22]:
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("BAS")+1]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["BAH"]
+            if "BAH" in les_text[22]:
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("BAH")+1]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            if "UEA" in les_text[22]:
+                row = ["UEA Initial"]
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("UEA")+2]))
                 session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["BAS"]
-                if "BAS" in les_text[22]:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("BAS")+1]))
-                else:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(0))
+            if "ADVANCE" in les_text[22]:
+                row = ["Advance Debt"]
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("ADVANCE")+2]))
                 session['paydf'].loc[len(session['paydf'])] = row
 
-                row = ["BAH"]
-                if "BAH" in les_text[22]:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("BAH")+1]))
-                else:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(0))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                if "UEA" in les_text[22]:
-                    row = ["UEA Initial"]
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("UEA")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "ADVANCE" in les_text[22]:
-                    row = ["Advance Debt"]
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("ADVANCE")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "PCS" in les_text[22]:
-                    row = ["PCS Member"]
-                    for i in range(session['months_num']):
-                        row.append(Decimal(les_text[22][les_text[22].index("PCS")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-
-                #deductions
-                if "FEDERAL" in les_text[23]:
-                    row = ["Federal Taxes"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("FEDERAL")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "FICA-SOC" in les_text[23]:
-                    row = ["FICA - Social Security"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("FICA-SOC")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "FICA-MEDICARE" in les_text[23]:
-                    row = ["FICA - Medicare"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("FICA-MEDICARE")+1]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["SGLI"]
-                if "SGLI" in les_text[23]:
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("SGLI")+1]))
-                else:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(0))
-                session['paydf'].loc[len(session['paydf'])] = row
-                session['sgli_future'] = Decimal(les_text[23][les_text[23].index("SGLI")+1])
-
-                row = ["State Taxes"]
-                if "STATE" in les_text[23]:
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("STATE")+2]))
-                else:
-                    for i in range(session['months_num']):
-                        row.append(Decimal(0))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                if "ROTH" in les_text[23]:
-                    row = ["Roth TSP"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("ROTH")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "PARTIAL" in les_text[23]:
-                    row = ["Partial Pay"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("PARTIAL")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "PCS" in les_text[23]:
-                    row = ["PCS Members"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("PCS")+2]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-                if "DEBT" in les_text[23]:
-                    row = ["Debt"]
-                    for i in range(session['months_num']):
-                        row.append(-Decimal(les_text[23][les_text[23].index("DEBT")+1]))
-                    session['paydf'].loc[len(session['paydf'])] = row
-
-
-                #calculations
-                row = ["Taxable Pay"]
-                for column in session['paydf'].columns[1:]:
-                    row.append(calculate_taxablepay(column))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Non-Taxable Pay"]
-                for column in session['paydf'].columns[1:]:
-                    row.append(calculate_nontaxablepay(column))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Total Taxes"]
-                for column in session['paydf'].columns[1:]:
-                    row.append(-calculate_totaltaxes(column))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Gross Pay"]
-                for column in session['paydf'].columns[1:]:
-                    row.append(Decimal(session['paydf'][column][20:-3][session['paydf'][column][20:-3] > 0].sum()))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-                row = ["Net Pay"]
-                for column in session['paydf'].columns[1:]:
-                    row.append(Decimal(session['paydf'][column][20:-4].sum()))
+            if "PCS" in les_text[22]:
+                row = ["PCS Member"]
+                for i in range(session['months_num']):
+                    row.append(Decimal(les_text[22][les_text[22].index("PCS")+2]))
                 session['paydf'].loc[len(session['paydf'])] = row
 
 
-                session['col_headers'] = list(session['paydf'].columns)
-                session['row_headers'] = list(session['paydf'][session['paydf'].columns[0]])
+            #deductions
+            if "FEDERAL" in les_text[23]:
+                row = ["Federal Taxes"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("FEDERAL")+2]))
+                session['paydf'].loc[len(session['paydf'])] = row
 
-                les_pdf.close()
+            if "FICA-SOC" in les_text[23]:
+                row = ["FICA - Social Security"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("FICA-SOC")+2]))
+                session['paydf'].loc[len(session['paydf'])] = row
 
-            return render_template('les.html')
+            if "FICA-MEDICARE" in les_text[23]:
+                row = ["FICA - Medicare"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("FICA-MEDICARE")+1]))
+                session['paydf'].loc[len(session['paydf'])] = row
 
-    return 'File upload failed'
+            row = ["SGLI"]
+            if "SGLI" in les_text[23]:
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("SGLI")+1]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['sgli_future'] = Decimal(les_text[23][les_text[23].index("SGLI")+1])
 
+            row = ["State Taxes"]
+            if "STATE" in les_text[23]:
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("STATE")+2]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            if "ROTH" in les_text[23]:
+                row = ["Roth TSP"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("ROTH")+2]))
+                session['paydf'].loc[len(session['paydf'])] = row
+
+            if "PARTIAL" in les_text[23]:
+                row = ["Partial Pay"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("PARTIAL")+2]))
+                session['paydf'].loc[len(session['paydf'])] = row
+
+            if "PCS" in les_text[23]:
+                row = ["PCS Members"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("PCS")+2]))
+                session['paydf'].loc[len(session['paydf'])] = row
+
+            if "DEBT" in les_text[23]:
+                row = ["Debt"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[23][les_text[23].index("DEBT")+1]))
+                session['paydf'].loc[len(session['paydf'])] = row
+
+
+            #calculations
+            row = ["Taxable Pay"]
+            for column in session['paydf'].columns[1:]:
+                row.append(calculate_taxablepay(column))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Non-Taxable Pay"]
+            for column in session['paydf'].columns[1:]:
+                row.append(calculate_nontaxablepay(column))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Total Taxes"]
+            for column in session['paydf'].columns[1:]:
+                row.append(-calculate_totaltaxes(column))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Gross Pay"]
+            for column in session['paydf'].columns[1:]:
+                row.append(Decimal(session['paydf'][column][20:-3][session['paydf'][column][20:-3] > 0].sum()))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+            row = ["Net Pay"]
+            for column in session['paydf'].columns[1:]:
+                row.append(Decimal(session['paydf'][column][20:-4].sum()))
+            session['paydf'].loc[len(session['paydf'])] = row
+
+
+            session['col_headers'] = list(session['paydf'].columns)
+            session['row_headers'] = list(session['paydf'][session['paydf'].columns[0]])
+
+        les_pdf.close()
+    return None
 
 
 @app.route('/updatemonths', methods=['POST'])
