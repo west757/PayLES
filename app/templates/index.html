@@ -29,18 +29,26 @@
         </div>
     </div>
 
-    <div id="core-id">
-        <div id="core-home-id">
+    <div id="core">
+        <div class="core-home">
             <p>Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
-            <form hx-post="/submit_les" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".pdf" required/>
-                <input type="submit" value="Submit LES"/>
-            </form>
 
-            <form hx-post="/submit_example" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
-                <input type="submit" value="Submit Example LES"/>
-            </form>
-            
+            <div class="core-submit">
+                <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                    <div class="submit-upload">
+                        <input type="file" name="file" accept=".pdf" required/>
+                    </div>
+                    <div class="submit-les">
+                        <input type="submit" value="Submit LES"/>
+                    </div>
+                </form>
+
+                <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                    <div class="submit-example">
+                        <input type="submit" value="Submit Example LES"/>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
