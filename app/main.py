@@ -454,7 +454,6 @@ def updatepaydf():
     session['state_filing_status_future'] = request.form['state_filing_status_future']
     session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
 
-
     #variables
     basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))
     basepay_headers.append(504) #add check for over 40+ years
@@ -554,6 +553,8 @@ def updatepaydf():
     for i in range(1, len(session['col_headers'])):
         session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
         session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-5].sum()), 2)
+
+    session['zipcode_future'] = f'{session['zipcode_future']:05}'
 
     return render_template('les.html')
 

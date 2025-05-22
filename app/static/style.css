@@ -76,14 +76,38 @@ main {
 }
 
 
-
-#core-home-id {
+.core-home {
     text-align: center;
-    border: 2px solid blue;
 }
 
+.core-submit {
+    display: inline-grid;
+    grid-template-areas:
+        "submit-upload submit-les"
+        "submit-upload submit-example";
+    grid-template-columns: 4fr 1fr;
+    border: 2px solid red;
+}
+
+.core-submit > div {
+    border: 2px solid yellow;
+}
+
+.core-submit > div.submit-upload {
+    grid-area: submit-upload;
+}
+.core-submit > div.submit-les {
+    grid-area: submit-les;
+}
+.core-submit > submit-example {
+    grid-area: submit-example;
+}
+
+/*https://www.w3schools.com/css/css_grid.asp*/
+
+
+
 input[type=file] {
-    width: 400px;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #393939;
@@ -109,7 +133,6 @@ input[type=file]::file-selector-button:hover {
 }
 
 input[type=submit] {
-    width: 100px;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #393939;

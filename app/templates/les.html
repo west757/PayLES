@@ -11,7 +11,7 @@
 <body>
 
 
-    <div class="table-div" id="core-id">
+    <div class="table-div" id="core">
         <table class="matrix-table">
             <tbody>
                 <tr class="matrix-header">
@@ -195,7 +195,7 @@
 
 
 
-    <form hx-post="/updatepaydf" hx-target="#core-id" hx-swap="innerHTML">
+    <form hx-post="/updatepaydf" hx-target="#core" hx-swap="innerHTML">
         <div class="table-div" id="inputs-id">
             <table class="inputs-table">
                 <tbody>
@@ -281,6 +281,25 @@
                         </td>
                     </tr>
 
+                    {% if "Roth TSP" in session['row_headers'] %}
+                    <tr class="inputs">
+                        <td class="inputs">
+                            <label class="modalbutton" for="modal-tsp">Roth TSP</label>
+                        </td>
+                        <td class="inputs">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}</td>
+                        <td class="inputs">
+                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}" />
+                        </td>
+                        <td class="inputs">
+                            <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
+                                {% for x in session.col_headers[2:] %}
+                                <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+
                     <tr class="inputs">
                         <td class="inputs">
                             <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
@@ -301,25 +320,6 @@
                             </select>
                         </td>
                     </tr>
-
-                    {% if "Roth TSP" in session['row_headers'] %}
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-tsp">Roth TSP</label>
-                        </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    {% endif %}
 
                     <tr class="inputs">
                         <td class="inputs">
@@ -391,7 +391,7 @@
                             <label>Months Displayed: &nbsp;</label>
                         </div>
                         <div class="settings-div">
-                            <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core-id" hx-swap="innerHTML" hx-trigger="change">
+                            <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
                                 {% for x in range(2, 13) %}
                                 <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
@@ -463,7 +463,7 @@
                             <label>Upload New LES</label>
                         </div>
                         <div class="settings-div">
-                            <form hx-post="/submit_les" hx-target="#core-id" hx-swap="innerHTML" enctype="multipart/form-data">
+                            <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
                                 <input type="file" name="file" accept=".pdf" required />
                                 <input type="submit" value="Submit New LES" />
                             </form>
