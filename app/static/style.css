@@ -76,72 +76,63 @@ main {
 }
 
 
-.core-home {
+#core-home {
     text-align: center;
 }
 
-.core-submit {
-    display: inline-grid;
-    grid-template-areas:
-        "submit-upload submit-les"
-        "submit-upload submit-example";
-    grid-template-columns: 4fr 1fr;
-    border: 2px solid red;
+#core-submit {
+    margin: auto;
 }
 
-.core-submit > div {
-    border: 2px solid yellow;
+#submit-upload {
 }
 
-.core-submit > div.submit-upload {
-    grid-area: submit-upload;
-}
-.core-submit > div.submit-les {
-    grid-area: submit-les;
-}
-.core-submit > submit-example {
-    grid-area: submit-example;
+#submit-les {
+    width: 100px;
 }
 
-/*https://www.w3schools.com/css/css_grid.asp*/
+#submit-example {
+    width: 200px;
+}
+
+#input-submit {
+    border: 3px dashed var(--darkgray);
+    height: 140px;
+    width: 400px;
+    border-radius: 20px;
+}
 
 
 
 input[type=file] {
     padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #393939;
-    background-color: #f9f9f9;
     font-size: 14px;
     cursor: pointer;
+    text-align: center;
+}
+
+input[type=file]:hover {
+    background-color: var(--lightgreen);
+    transition: background .2s ease-in-out;
 }
 
 input[type=file]::file-selector-button {
-    margin-right: 20px;
-    border: none;
-    background: #04a96d;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: #f9f9f9;
-    transition: background .2s ease-in-out;
-    font-size: 16px;
-    box-shadow: 1px 1px 2px #999;
+    display: none;
 }
 
-input[type=file]::file-selector-button:hover {
-    background: #0c9a65;
-}
 
 input[type=submit] {
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid #393939;
-    background-color: #f9f9f9;
-    font-size: 14px;
+    border: 1px solid var(--darkgray);
     cursor: pointer;
-    height: 60px;
+    width: 200px;
 }
 
+input[type=submit]:hover {
+    background-color: var(--lightgreen);
+    transition: background .2s ease-in-out;
+}
 
 
 

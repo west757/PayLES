@@ -30,25 +30,29 @@
     </div>
 
     <div id="core">
-        <div class="core-home">
+        <div id="core-home">
             <p>Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
 
-            <div class="core-submit">
-                <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                    <div class="submit-upload">
-                        <input type="file" name="file" accept=".pdf" required/>
-                    </div>
-                    <div class="submit-les">
-                        <input type="submit" value="Submit LES"/>
-                    </div>
-                </form>
+            <table id="core-submit">
+                <tr>
+                    <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                        <td id="submit-upload" rowspan=2>
+                            <input id="input-submit" type="file" name="file" accept=".pdf" required/>
+                        </td>
+                        <td id="submit-les">
+                            <input type="submit" value="Submit LES"/>
+                        </td>
+                    </form>
+                </tr>
 
-                <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                    <div class="submit-example">
-                        <input type="submit" value="Submit Example LES"/>
-                    </div>
-                </form>
-            </div>
+                <tr>
+                    <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                        <td id="submit-example">
+                            <input type="submit" value="Submit Example LES"/>
+                        </td>
+                    </form>
+                </tr>
+            </table>
         </div>
     </div>
 
