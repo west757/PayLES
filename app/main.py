@@ -5,12 +5,12 @@ from config import Config
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 from datetime import datetime
+from PIL import Image
 import pdfplumber
 import os
 import io
 import pandas as pd
-import io
-
+import base64
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -73,8 +73,12 @@ def read_les(les_file):
     session['state_filing_status_future'] = ""
     session['state_filing_status_future_month'] = ""
 
+    session['les_image'] = None
+    session['rect_overlay'] = 0
+
     with pdfplumber.open(les_file) as les_pdf:
-        les_page = les_pdf.pages[0]
+        les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
+        #page = pdf.pages[0].crop(bbox=crop_coords)
         les_text = ["text per rectangle"]
 
         title_crop = les_page.crop((18, 18, 593, 29))
@@ -82,11 +86,43 @@ def read_les(les_file):
         if title_text != "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
             print("file submitted is not an LES")
         else:
+            
+            
+
+
+
+            temp_image = les_page.to_image(resolution=300).original
+
+            new_width = int(temp_image.width * app.config['LES_IMAGE_SCALE'])
+            new_height = int(temp_image.height * app.config['LES_IMAGE_SCALE'])
+            resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
+
+            img_io = io.BytesIO()
+            resized_image.save(img_io, format='PNG')
+            img_io.seek(0)
+            encoded_img = base64.b64encode(img_io.read()).decode("utf-8")
+
+            scaled_rects = []
+            for box in app.config['RECTANGLES'].to_dict(orient="records"):
+                scaled_rects.append({
+                    "index": box["index"],
+                    "x1": box["x1"] * app.config['LES_IMAGE_SCALE'],
+                    "y1": box["y1"] * app.config['LES_IMAGE_SCALE'],
+                    "x2": box["x2"] * app.config['LES_IMAGE_SCALE'],
+                    "y2": box["y2"] * app.config['LES_IMAGE_SCALE'],
+                })
+            session['les_image'] = encoded_img
+            session['rect_overlay'] = scaled_rects
+
+
+
+            
+            
             for i, row in app.config['RECTANGLES'].iterrows():
-                x0 = float(row['x1'])
-                x1 = float(row['x2'])
-                y0 = float(row['y1'])
-                y1 = float(row['y2'])
+                x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
+                x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
+                y0 = float(row['y1']) * app.config['LES_COORD_SCALE']
+                y1 = float(row['y2']) * app.config['LES_COORD_SCALE']
                 top = min(y0, y1)
                 bottom = max(y0, y1)
 

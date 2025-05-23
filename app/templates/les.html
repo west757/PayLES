@@ -149,10 +149,10 @@
                         {% endif %}
 
                         <!--
-                    <tr class="core">
-                        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                    </tr>
-                    -->
+                        <tr class="core">
+                            <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+                        </tr>
+                        -->
 
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
@@ -210,12 +210,16 @@
                                     <td class="core">{{session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][1]]}}</td>
                                     <td class="core">
                                         <select class="core" id="rank_future" name="rank_future">
-                                            {% for x in config['RANKS_SHORT'][0:] %}<option value="{{x}}" {% if x==session.rank_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in config['RANKS_SHORT'][0:] %}
+                                            <option value="{{x}}" {% if x==session.rank_future %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                     <td class="core">
                                         <select class="core" id="rank_future_month" name="rank_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -230,7 +234,9 @@
                                     </td>
                                     <td class="core">
                                         <select class="core" id="zipcode_future_month" name="zipcode_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -245,7 +251,9 @@
                                     </td>
                                     <td class="core">
                                         <select class="core" id="dependents_future_month" name="dependents_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -257,12 +265,16 @@
                                     <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]).replace('$-','$')}}</td>
                                     <td class="core">
                                         <select class="core" id="sgli_future" name="sgli_future">
-                                            {% for x in config['SGLI_PREMIUMS'][0:] %}<option value="{{x}}" {% if x==session.sgli_future %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>{% endfor %}
+                                            {% for x in config['SGLI_PREMIUMS'][0:] %}
+                                            <option value="{{x}}" {% if x==session.sgli_future %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                     <td class="core">
                                         <select class="core" id="sgli_future_month" name="sgli_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -278,7 +290,9 @@
                                     </td>
                                     <td class="core">
                                         <select class="core" id="rothtsp_future_month" name="rothtsp_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -291,12 +305,16 @@
                                     <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
                                     <td class="core">
                                         <select class="core" id="state_future" name="state_future">
-                                            {% for x in config['STATES_SHORT'][0:] %}<option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in config['STATES_SHORT'][0:] %}
+                                            <option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                     <td class="core">
                                         <select class="core" id="state_future_month" name="state_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -308,12 +326,16 @@
                                     <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")|replace("H","HoH")}}</td>
                                     <td class="core">
                                         <select class="core" id="federal_filing_status_future" name="federal_filing_status_future">
-                                            {% for x in config['TAX_FILING_TYPES'][0:] %}<option value="{{x}}" {% if x==session.federal_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in config['TAX_FILING_TYPES'][0:] %}
+                                            <option value="{{x}}" {% if x==session.federal_filing_status_future %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                     <td class="core">
                                         <select class="core" id="federal_filing_status_future_month" name="federal_filing_status_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.federal_filing_status_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.federal_filing_status_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -325,12 +347,16 @@
                                     <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")}}</td>
                                     <td class="core">
                                         <select class="core" id="state_filing_status_future" name="state_filing_status_future">
-                                            {% for x in config['TAX_FILING_TYPES'][0:2] %}<option value="{{x}}" {% if x==session.state_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in config['TAX_FILING_TYPES'][0:2] %}
+                                            <option value="{{x}}" {% if x==session.state_filing_status_future %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                     <td class="core">
                                         <select class="core" id="state_filing_status_future_month" name="state_filing_status_future_month">
-                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.state_filing_status_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.state_filing_status_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -361,7 +387,9 @@
                                     </div>
                                     <div class="settings-div">
                                         <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
-                                            {% for x in range(2, 13) %}<option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                            {% for x in range(2, 13) %}
+                                            <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </td>
@@ -376,29 +404,29 @@
                             </tr>
 
                             <!--
-                        <tr class="core">
-                            <td class="core" colspan=2>
-                                <div class="settings-div">
-                                    <label>Color Table</label>
-                                </div>
-                                <div class="settings-div">
-                                    <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
-                                </div>
-                            </td>
-                        </tr>
-                            -->
-                            <!--
-                        <tr class="core">
-                            <div class="settings-div">
+                            <tr class="core">
                                 <td class="core" colspan=2>
-                                    <label>Add row</label>
+                                    <div class="settings-div">
+                                        <label>Color Table</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
+                                    </div>
                                 </td>
-                            </div>
-                        </tr>
-                            -->
+                            </tr>
+                                -->
                             <!--
-                            add row for show difference of previous month
-                        -->
+                            <tr class="core">
+                                <div class="settings-div">
+                                    <td class="core" colspan=2>
+                                        <label>Add row</label>
+                                    </td>
+                                </div>
+                            </tr>
+                                -->
+                            <!--
+                                add row for show difference of previous month
+                            -->
 
 
                             <tr class="core">
@@ -442,17 +470,36 @@
 
         </div>
 
+
+
         <div id="les-display">
-            <p>les display</p>
+            {% if session['les_image'] %}
+            <div class="pdf-container" id="pdfContainer">
+                <img id="pdfImage" src="data:image/png;base64,{{session['les_image']}}" />
+
+                {% for rect in session['rect_overlay'] %}
+                <div class="highlight-rect"
+                     style="
+                    left: {{ rect.x1 }}px;
+                    top: {{ rect.y1 }}px;
+                    width: {{ rect.x2 - rect.x1 }}px;
+                    height: {{ rect.y2 - rect.y1 }}px;
+                 "
+                     title="Rect {{ rect.index }}"
+                     onclick="showModal('Details for rect {{ rect.index }}')">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="modal-image" id="infoModal">
+                <div class="modal-content-image">
+                    <span id="modalText"></span>
+                    <br><br>
+                    <button onclick="closeModal()">Close</button>
+                </div>
+            </div>
         </div>
-
-    </div>
-
-
-
-
-    <div>
-        <!--<iframe class="pdf" src="../static/LES_Template1.pdf" style="width: 100%;height: 100%;border: none;"></iframe>-->
     </div>
 
 
@@ -878,7 +925,15 @@
 
 
 
-
+    <script>
+        function showModal(text) {
+            document.getElementById('modalText').innerText = text;
+            document.getElementById('infoModal').style.display = 'block';
+        }
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
