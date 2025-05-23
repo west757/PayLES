@@ -22,7 +22,7 @@ body {
     background-color: var(--pale);
     color: var(--black);
     overflow-y: scroll;
-    margin: 0px;
+    margin: 0;
     padding: 0px;
 }
 
@@ -76,6 +76,15 @@ main {
 }
 
 
+#core {
+    margin: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+}
+
 #core-home {
     text-align: center;
 }
@@ -126,7 +135,6 @@ input[type=submit] {
     border-radius: 10px;
     border: 1px solid var(--darkgray);
     cursor: pointer;
-    width: 200px;
 }
 
 input[type=submit]:hover {
@@ -136,15 +144,38 @@ input[type=submit]:hover {
 
 
 
-
-
-div.table-div {
-    padding: 10px;
-    width: fit-content;
-    float: left;
+#paydf-options-settings {
+    display: flex;
+    align-items: flex-start;
+    max-width: 100%;
+    gap: 1rem;
 }
 
-table.matrix-table {
+#paydf {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 1rem;
+    flex-shrink: 1;
+}
+
+#options-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-shrink: 0;
+    padding: 1rem;
+}
+
+#les-display {
+    background-color: #e6ffd0;
+    text-align: center;
+}
+
+
+
+
+
+table.core {
     border-collapse: separate;
     border-spacing: 0px;
     border: 1px solid #ddd;
@@ -152,15 +183,15 @@ table.matrix-table {
     background: var(--white);
 }
 
-tr.matrix-header {
+tr.core-header {
     text-align: center;
     font-weight: bold;
     border-left: 1px solid #ddd;
-    position: sticky;
     top: 0;
+    /*position: sticky;*/
 }
 
-td.matrix-header {
+td.core-header {
     background: #333;
     color: var(--white);
     text-align: center;
@@ -170,29 +201,29 @@ td.matrix-header {
     padding: 20px;
 }
 
-tr.matrix, td.matrix {
+tr.core, td.core {
     text-align: center;
     border-left: 1px solid #ddd;
     border-top: 1px solid #ddd;
 }
 
-tr.matrix:nth-child(even) td.matrix {
+tr.core:nth-child(even) td.core {
     background-color: #f1f1f1;
 }
 
-tr.matrix:not(:first-child), td.matrix:not(:first-child) {
+tr.core:not(:first-child), td.core:not(:first-child) {
     padding: 20px;
 }
 
-td.matrix:first-child, td.matrix-header:first-child {
+td.core:first-child, td.core-header:first-child {
     border-left: none;
 }
 
-td.matrix-header:first-child {
+td.core-header:first-child {
     border-radius: 20px 0 0 0;
 }
 
-td.matrix-header:last-child {
+td.core-header:last-child {
     border-radius: 0 20px 0 0;
 }
 
@@ -214,6 +245,14 @@ td.hover02:last-child {
 }
 */
 
+
+#options-table {
+    width: 490px;
+}
+
+#settings-table {
+    width: 490px;
+}
 
 
 
@@ -272,7 +311,7 @@ td.inputs-header:last-child {
     border-radius: 0 20px 0 0;
 }
 
-select.inputs {
+select.core {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
@@ -286,7 +325,7 @@ select.inputs {
     margin: -10px;
 }
 
-input.inputs {
+input.core {
     font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;

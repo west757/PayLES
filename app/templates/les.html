@@ -10,467 +10,443 @@
 
 <body>
 
+    <div id="core">
+        <div id="paydf-options-settings">
+            <div id="paydf">
+                <table class="core" id="paydf-table">
+                    <tbody>
+                        <tr class="core-header">
+                            <td class="core-header"></td>
+                            {% for x in session.col_headers[1:] %}
+                            <td class="core-header">{{x}}</td>
+                            {% endfor %}
+                        </tr>
 
-    <div class="table-div" id="core">
-        <table class="matrix-table">
-            <tbody>
-                <tr class="matrix-header">
-                    <td class="matrix-header"></td>
-                    {% for x in session.col_headers[1:] %}
-                    <td class="matrix-header">{{x}}</td>
-                    {% endfor %}
-                </tr>
+                        <!-- entitlements -->
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-basepay">Base Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
 
-                <!-- entitlements -->
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-basepay">Base Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-bas">BAS</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
 
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-bas">BAS</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-bah">BAH</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("BAH"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
 
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-bah">BAH</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("BAH"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
+                        {% if "UEA Initial" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-ueainitial">UEA Initial</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("UEA Initial"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
 
-                {% if "UEA Initial" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-ueainitial">UEA Initial</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("UEA Initial"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
+                        {% if "Advance Debt" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-debts">Advance Debt</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Advance Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
 
-                {% if "Advance Debt" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-debts">Advance Debt</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Advance Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                {% if "PCS Member" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-pcspay">PCS Member</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("PCS Member"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-
-                <!-- deductions -->
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-federaltaxes">Federal Taxes</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-
-                {% if "FICA - Social Security" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-fica">FICA - Social Security</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                {% if "FICA - Medicare" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-fica">FICA - Medicare</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-sgli">SGLI</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-statetaxes">State Taxes</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("State Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-
-                {% if "Roth TSP" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-tsp">Roth TSP</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                {% if "Partial Pay" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-partialpay">Partial Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Partial Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                {% if "PCS Members" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-pcspay">PCS Members</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("PCS Members"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                {% if "Debt" in session['row_headers'] %}
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-debts">Debt</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
-                    {% endfor %}
-                </tr>
-                {% endif %}
-
-                <!--
-                <tr class="matrix">
-                    <td class="matrix" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                </tr>
-                -->
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][x]])}}</td>
-                    {% endfor %}
-                </tr>
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-taxpay">Non-Taxable Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][x]])}}</td>
-                    {% endfor %}
-                </tr>
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-taxpay">Total Taxes</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][x]])}}</td>
-                    {% endfor %}
-                </tr>
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-grossnetpay">Gross Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][x]])}}</td>
-                    {% endfor %}
-                </tr>
-
-                <tr class="matrix">
-                    <td class="matrix"><label class="modalbutton" for="modal-grossnetpay">Net Pay</label></td>
-                    {% for x in range(1, session['paydf'].shape[1]) %}
-                    <td class="matrix">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][x]])}}</td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                        {% if "PCS Member" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-pcspay">PCS Member</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("PCS Member"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
 
 
+                        <!-- deductions -->
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-federaltaxes">Federal Taxes</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
 
+                        {% if "FICA - Social Security" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-fica">FICA - Social Security</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
 
+                        {% if "FICA - Medicare" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-fica">FICA - Medicare</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("FICA - Medicare"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
 
-    <form hx-post="/updatepaydf" hx-target="#core" hx-swap="innerHTML">
-        <div class="table-div" id="inputs-id">
-            <table class="inputs-table">
-                <tbody>
-                    <tr class="inputs-header">
-                        <td class="inputs-header"></td>
-                        <td class="inputs-header">Current</td>
-                        <td class="inputs-header">Future</td>
-                        <td class="inputs-header">Month</td>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-sgli">SGLI</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-statetaxes">State Taxes</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("State Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        {% if "Roth TSP" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
+                        {% if "Partial Pay" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-partialpay">Partial Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Partial Pay"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
+                        {% if "PCS Members" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-pcspay">PCS Members</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("PCS Members"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
+                        {% if "Debt" in session['row_headers'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-debts">Debt</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Debt"), session['col_headers'][x]]).replace('$-','-$')}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
+                        <!--
+                    <tr class="core">
+                        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
                     </tr>
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-basepay">Rank</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="rank_future" name="rank_future">
-                                {% for x in config['RANKS_SHORT'][0:] %}
-                                <option value="{{x}}" {% if x==session.rank_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="rank_future_month" name="rank_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
+                    -->
 
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-bah">Zip Code</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="zipcode_future_month" name="zipcode_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
 
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-bah">Dependents</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_future" name="dependents_future" value="{{session.dependents_future}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="dependents_future_month" name="dependents_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-taxpay">Non-Taxable Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
 
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-sgli">SGLI</label>
-                        </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]).replace('$-','$')}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="sgli_future" name="sgli_future">
-                                {% for x in config['SGLI_PREMIUMS'][0:] %}
-                                <option value="{{x}}" {% if x==session.sgli_future %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="sgli_future_month" name="sgli_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-taxpay">Total Taxes</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
 
-                    {% if "Roth TSP" in session['row_headers'] %}
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-tsp">Roth TSP</label>
-                        </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    {% endif %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-grossnetpay">Gross Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
 
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_future" name="state_future">
-                                {% for x in config['STATES_SHORT'][0:] %}
-                                <option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_future_month" name="state_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="federal_filing_status_future" name="federal_filing_status_future">
-                                {% for x in config['TAX_FILING_TYPES'][0:] %}
-                                <option value="{{x}}" {% if x==session.federal_filing_status_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="federal_filing_status_future_month" name="federal_filing_status_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.federal_filing_status_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
-                        </td>
-                        <td class="inputs">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_filing_status_future" name="state_filing_status_future">
-                                {% for x in config['TAX_FILING_TYPES'][0:2] %}
-                                <option value="{{x}}" {% if x==session.state_filing_status_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_filing_status_future_month" name="state_filing_status_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.state_filing_status_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan="4">
-                            <div class="updatebuttondiv">
-                                <button class="updatebutton" type="submit">Update LES</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
-
-
-
-
-    <div class="table-div" id="settings-id">
-        <table class="inputs-table">
-            <tbody>
-                <tr class="inputs-header">
-                    <td class="inputs-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
-                </tr>
-
-                <tr class="inputs">
-                    <td class="inputs" style="width: 50%;">
-                        <div class="settings-div">
-                            <label>Months Displayed: &nbsp;</label>
-                        </div>
-                        <div class="settings-div">
-                            <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
-                                {% for x in range(2, 13) %}
-                                <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </td>
-                    <td class="inputs" style="width: 50%;">
-                        <div class="settings-div">
-                            <label>Years Displayed:</label>
-                        </div>
-                        <div class="settings-div">
-                            <input type="checkbox" class="settingcheckbox" id="displayyears" name="displayyears" value="False">
-                        </div>
-                    </td>
-                </tr>
-
-                <!--
-    <tr class="inputs">
-        <td class="inputs" colspan=2>
-            <div class="settings-div">
-                <label>Color Table</label>
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-grossnetpay">Net Pay</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="settings-div">
-                <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
-            </div>
-        </td>
-    </tr>
-        -->
-                <!--
-    <tr class="inputs">
-        <div class="settings-div">
-            <td class="inputs" colspan=2>
-                <label>Add row</label>
-            </td>
-        </div>
-    </tr>
-        -->
-                <!--
-        add row for show difference of previous month
-    -->
 
+            <div id="options-settings">
+                <div id="options">
+                    <form hx-post="/updatepaydf" hx-target="#core" hx-swap="innerHTML">
+                        <table class="core" id="options-table">
+                            <tbody>
+                                <tr class="core-header">
+                                    <td class="core-header"></td>
+                                    <td class="core-header">Current</td>
+                                    <td class="core-header">Future</td>
+                                    <td class="core-header">Month</td>
+                                </tr>
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-basepay">Rank</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <select class="core" id="rank_future" name="rank_future">
+                                            {% for x in config['RANKS_SHORT'][0:] %}<option value="{{x}}" {% if x==session.rank_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="rank_future_month" name="rank_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
 
-                <tr class="inputs">
-                    <td class="inputs" colspan=2>
-                        <div class="settings-div">
-                            <label>Export as:</label>
-                        </div>
-                        <div class="settings-div">
-                            <select id="filetype" class="inputs">
-                                <option value="xlsx" selected>Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                        </div>
-                        <div class="settings-div">
-                            <div class="updatebuttondiv">
-                                <button class="updatebutton" onclick="downloadFile()">Export</button>
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-bah">Zip Code</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}" />
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="zipcode_future_month" name="zipcode_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-bah">Dependents</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_future" name="dependents_future" value="{{session.dependents_future}}" />
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="dependents_future_month" name="dependents_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-sgli">SGLI</label>
+                                    </td>
+                                    <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]).replace('$-','$')}}</td>
+                                    <td class="core">
+                                        <select class="core" id="sgli_future" name="sgli_future">
+                                            {% for x in config['SGLI_PREMIUMS'][0:] %}<option value="{{x}}" {% if x==session.sgli_future %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="sgli_future_month" name="sgli_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                {% if "Roth TSP" in session['row_headers'] %}
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-tsp">Roth TSP</label>
+                                    </td>
+                                    <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}</td>
+                                    <td class="core">
+                                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}" />
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="rothtsp_future_month" name="rothtsp_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endif %}
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <select class="core" id="state_future" name="state_future">
+                                            {% for x in config['STATES_SHORT'][0:] %}<option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="state_future_month" name="state_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <select class="core" id="federal_filing_status_future" name="federal_filing_status_future">
+                                            {% for x in config['TAX_FILING_TYPES'][0:] %}<option value="{{x}}" {% if x==session.federal_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="federal_filing_status_future_month" name="federal_filing_status_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.federal_filing_status_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <select class="core" id="state_filing_status_future" name="state_filing_status_future">
+                                            {% for x in config['TAX_FILING_TYPES'][0:2] %}<option value="{{x}}" {% if x==session.state_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="state_filing_status_future_month" name="state_filing_status_future_month">
+                                            {% for x in session.col_headers[2:] %}<option value="{{x}}" {% if x==session.state_filing_status_future_month %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core" colspan="4">
+                                        <div class="updatebuttondiv">
+                                            <button class="updatebutton" type="submit">Update LES</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+                <div id="settings">
+                    <table class="core" id="settings-table">
+                        <tbody>
+                            <tr class="core-header">
+                                <td class="core-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
+                            </tr>
+
+                            <tr class="core">
+                                <td class="core" style="width: 50%;">
+                                    <div class="settings-div">
+                                        <label>Months Displayed: &nbsp;</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                                            {% for x in range(2, 13) %}<option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>{% endfor %}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="core" style="width: 50%;">
+                                    <div class="settings-div">
+                                        <label>Years Displayed:</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <input type="checkbox" class="settingcheckbox" id="displayyears" name="displayyears" value="False">
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!--
+                        <tr class="core">
+                            <td class="core" colspan=2>
+                                <div class="settings-div">
+                                    <label>Color Table</label>
+                                </div>
+                                <div class="settings-div">
+                                    <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
+                                </div>
+                            </td>
+                        </tr>
+                            -->
+                            <!--
+                        <tr class="core">
+                            <div class="settings-div">
+                                <td class="core" colspan=2>
+                                    <label>Add row</label>
+                                </td>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </tr>
+                            -->
+                            <!--
+                            add row for show difference of previous month
+                        -->
 
 
-                <tr class="inputs">
-                    <td class="inputs" colspan=2>
-                        <div class="settings-div">
-                            <label>Upload New LES</label>
-                        </div>
-                        <div class="settings-div">
-                            <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                                <input type="file" name="file" accept=".pdf" required />
-                                <input type="submit" value="Submit New LES" />
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <tr class="core">
+                                <td class="core" colspan=2>
+                                    <div class="settings-div">
+                                        <label>Export as:</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <select id="filetype" class="core">
+                                            <option value="xlsx" selected>Excel</option>
+                                            <option value="csv">CSV</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-div">
+                                        <div class="updatebuttondiv">
+                                            <button class="updatebutton" onclick="downloadFile()">Export</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <tr class="core">
+                                <td class="core" colspan=2>
+                                    <div class="settings-div">
+                                        <label>Upload New LES</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                                            <input type="file" name="file" accept=".pdf" required />
+                                            <input type="submit" value="Submit New LES" />
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="les-display">
+            <p>les display</p>
+        </div>
+
     </div>
-
 
 
 
