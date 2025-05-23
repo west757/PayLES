@@ -138,48 +138,12 @@ input[type=submit]:hover {
 
 
 
-
-/* matrix */
-
 div.table-div {
     padding: 10px;
     width: fit-content;
     float: left;
 }
 
-/*
-table.matrix {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-th.matrix {
-    padding: 20px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    background-color: #333;
-    color: #f2f2f2;
-    font-weight: bold;
-    border-left: 1px solid #ddd;
-}
-
-td.matrix {
-    padding: 20px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    background-color: #f9f9f9;
-    border-left: 1px solid #ddd;
-}
-
-td.matrix:last-child, th.matrix:last-child {
-    border-right: 1px solid #ddd;
-}
-*/
-
-
-/* matrix */
 table.matrix-table {
     border-collapse: separate;
     border-spacing: 0px;
