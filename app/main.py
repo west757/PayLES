@@ -178,7 +178,7 @@ def read_les(les_file):
                     row.append(les_text[67][1])
             else:
                 for i in range(session['months_num']):
-                    row.append("")
+                    row.append("None")
             session['paydf'].loc[len(session['paydf'])] = row
 
             row = ["Dependents"]
@@ -193,7 +193,7 @@ def read_les(les_file):
                     row.append(les_text[69][2])
             else:
                 for i in range(session['months_num']):
-                    row.append("")
+                    row.append("None")
             session['paydf'].loc[len(session['paydf'])] = row
 
             row = ["BAS Type"]
@@ -202,7 +202,7 @@ def read_les(les_file):
                     row.append(les_text[70][2])
             else:
                 for i in range(session['months_num']):
-                    row.append("")
+                    row.append("None")
             session['paydf'].loc[len(session['paydf'])] = row
 
             row = ["Traditional TSP Base Pay Rate"]

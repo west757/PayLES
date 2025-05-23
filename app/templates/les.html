@@ -147,11 +147,11 @@
                 </tr>
                 {% endif %}
 
-
+                <!--
                 <tr class="matrix">
                     <td class="matrix" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
                 </tr>
-
+                -->
 
                 <tr class="matrix">
                     <td class="matrix"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
@@ -435,10 +435,9 @@
 
 
                 <tr class="inputs">
-                    <!--<form hx-post="/exportmatrix">-->
                     <td class="inputs" colspan=2>
                         <div class="settings-div">
-                            <label>Export as: &nbsp;</label>
+                            <label>Export as:</label>
                         </div>
                         <div class="settings-div">
                             <select id="filetype" class="inputs">
@@ -448,12 +447,10 @@
                         </div>
                         <div class="settings-div">
                             <div class="updatebuttondiv">
-                                <!--<button class="updatebutton" type="submit">Export</button>-->
                                 <button class="updatebutton" onclick="downloadFile()">Export</button>
                             </div>
                         </div>
                     </td>
-                    <!--</form>-->
                 </tr>
 
 
