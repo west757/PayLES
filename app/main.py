@@ -2,7 +2,6 @@
 from flask import request, render_template, make_response, jsonify, session, send_file
 from flask_session import Session
 from config import Config
-from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 from datetime import datetime
@@ -84,10 +83,10 @@ def read_les(les_file):
             print("file submitted is not an LES")
         else:
             for i, row in app.config['RECTANGLES'].iterrows():
-                x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
-                x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
-                y0 = float(row['y1']) * app.config['LES_COORD_SCALE']
-                y1 = float(row['y2']) * app.config['LES_COORD_SCALE']
+                x0 = float(row['x1'])
+                x1 = float(row['x2'])
+                y0 = float(row['y1'])
+                y1 = float(row['y2'])
                 top = min(y0, y1)
                 bottom = max(y0, y1)
 
@@ -275,21 +274,21 @@ def read_les(les_file):
             session['paydf'].loc[len(session['paydf'])] = row
 
             if "UEA" in les_text[22]:
-                row = ["UEA Initial"]
-                for i in range(session['months_num']):
-                    row.append(Decimal(les_text[22][les_text[22].index("UEA")+2]))
+                row = ["UEA Initial", Decimal(les_text[22][les_text[22].index("UEA")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
             if "ADVANCE" in les_text[22]:
-                row = ["Advance Debt"]
-                for i in range(session['months_num']):
-                    row.append(Decimal(les_text[22][les_text[22].index("ADVANCE")+2]))
+                row = ["Advance Debt", Decimal(les_text[22][les_text[22].index("ADVANCE")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
             if "PCS" in les_text[22]:
-                row = ["PCS Member"]
-                for i in range(session['months_num']):
-                    row.append(Decimal(les_text[22][les_text[22].index("PCS")+2]))
+                row = ["PCS Member", Decimal(les_text[22][les_text[22].index("PCS")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
 
@@ -338,21 +337,21 @@ def read_les(les_file):
                 session['paydf'].loc[len(session['paydf'])] = row
 
             if "PARTIAL" in les_text[23]:
-                row = ["Partial Pay"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[23][les_text[23].index("PARTIAL")+2]))
+                row = ["Partial Pay", -Decimal(les_text[23][les_text[23].index("PARTIAL")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
             if "PCS" in les_text[23]:
-                row = ["PCS Members"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[23][les_text[23].index("PCS")+2]))
+                row = ["PCS Members", -Decimal(les_text[23][les_text[23].index("PCS")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
             if "DEBT" in les_text[23]:
-                row = ["Debt"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[23][les_text[23].index("DEBT")+1]))
+                row = ["Debt", -Decimal(les_text[23][les_text[23].index("DEBT")+1])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
 
 

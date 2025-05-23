@@ -305,7 +305,7 @@
                                     <td class="core">
                                         <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
                                     </td>
-                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")|replace("H","HoH")}}</td>
                                     <td class="core">
                                         <select class="core" id="federal_filing_status_future" name="federal_filing_status_future">
                                             {% for x in config['TAX_FILING_TYPES'][0:] %}<option value="{{x}}" {% if x==session.federal_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
@@ -322,7 +322,7 @@
                                     <td class="core">
                                         <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
                                     </td>
-                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]}}</td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")}}</td>
                                     <td class="core">
                                         <select class="core" id="state_filing_status_future" name="state_filing_status_future">
                                             {% for x in config['TAX_FILING_TYPES'][0:2] %}<option value="{{x}}" {% if x==session.state_filing_status_future %} selected {% endif %}>{{x}}</option>{% endfor %}
