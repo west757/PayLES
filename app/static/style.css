@@ -166,12 +166,6 @@ input[type=submit]:hover {
     padding: 1rem;
 }
 
-#les-display {
-    background-color: #e6ffd0;
-    text-align: center;
-}
-
-
 
 
 
@@ -585,3 +579,40 @@ details[open] > summary::after {
     transform: rotate(-180deg);
 }
 
+
+
+
+.pdf-container {
+    position: relative;
+    display: inline-block;
+}
+
+.highlight-rect {
+    position: absolute;
+    border: 2px solid rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.highlight-rect:hover {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+.modal-image {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content-image {
+    margin: 15% auto;
+    background: white;
+    padding: 20px;
+    width: 300px;
+    border-radius: 5px;
+}
