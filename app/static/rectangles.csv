@@ -12,10 +12,10 @@ index,x1,y1,x2,y2,title,modal,tooltip
 11,74,228,764,935,entitlements,none,"Entitlements and allowances being paid. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive entitlements/allowances will be added to like entitlements/allowances."
 12,764,228,1334,935,deductions,none,"Deductions being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive deductions will be added to like deductions."
 13,1334,228,1904,935,allotments,none,"Allotments being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. If a member has more than one of the same type of allotment, the only differentiation may be that of the dollar amount."
-14,1904,276,2474,365,amount forward,none,Amount of all unpaid entitlements and allowances due from the priod LES
-15,1904,367,2474,442,total entitlement,none,Total of all entitlements/allowances
-16,1904,443,2474,520,total deduction,none,Total of all deductions
-17,1904,520,2474,596,total allotment,none,Total of all allotments
+14,1904,276,2474,365,amount forward,none,Amount of all unpaid entitlements and allowances due from the prior LES
+15,1904,367,2474,442,total entitlement,none,Total entitlements/allowances
+16,1904,443,2474,520,total deduction,none,Total deductions
+17,1904,520,2474,596,total allotment,none,Total allotments
 18,1904,597,2474,674,net amount,none,"Total of all unpaid entitlements/allowances, plus total entitlements/allowances, minus deductions and allotments due on the current LES"
 19,1904,674,2474,750,carry forward,none,Total of all unpaid entitlements/allowances due to reflect on the next LES as the +AMT FWD
 20,1904,751,2474,830,end of month pay,none,Actual amount paid to the member at the end of the month

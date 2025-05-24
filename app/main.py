@@ -18,8 +18,6 @@ Session(app)
 
 @app.route('/')
 def index():
-    session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
-    session['export_type'] = ""
     return render_template('index.html')
 
 
@@ -52,6 +50,12 @@ def submit_example():
 
 @app.route('/read_les', methods=['POST'])
 def read_les(les_file):
+    session['months_num'] = app.config['DEFAULT_MONTHS_NUM']
+    session['les_image'] = None
+    session['rect_overlay'] = 0
+    session['export_type'] = ""
+    session['showallvariables'] = False
+
     session['rank_future'] = ""
     session['rank_future_month'] = ""
     session['zipcode_future'] = 0
@@ -73,9 +77,6 @@ def read_les(les_file):
     session['state_filing_status_future'] = ""
     session['state_filing_status_future_month'] = ""
 
-    session['les_image'] = None
-    session['rect_overlay'] = 0
-
     with pdfplumber.open(les_file) as les_pdf:
         les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
         les_text = ["text per rectangle"]
@@ -86,7 +87,7 @@ def read_les(les_file):
             print("file submitted is not an LES")
         else:
 
-
+            #create image
             temp_image = les_page.to_image(resolution=300).original
             new_width = int(temp_image.width * app.config['LES_IMAGE_SCALE'])
             new_height = int(temp_image.height * app.config['LES_IMAGE_SCALE'])
@@ -109,18 +110,8 @@ def read_les(les_file):
                     "modal": rect["modal"],
                     "tooltip": rect["tooltip"]
                 })
-
             session['les_image'] = encoded_img
             session['rect_overlay'] = scaled_rects
-
-
-
-
-
-
-
-
-
 
 
             #get text
@@ -472,6 +463,15 @@ def updatemonths():
 
     return render_template('les.html')
 
+
+
+@app.route('/showallvariables', methods=['POST'])
+def showallvariables():
+    if session['showallvariables']:
+        session['showallvariables'] = False
+    else:
+        session['showallvariables'] = bool(request.form['showallvariables'])
+    return render_template('les.html')
 
 
 
