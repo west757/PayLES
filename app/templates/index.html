@@ -33,16 +33,20 @@
 
     <div id="core">
         <div id="core-home">
-            <p>Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
+            <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
 
             <table id="core-submit">
                 <tr>
                     <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
                         <td id="submit-upload" rowspan=2>
-                            <input id="input-submit" type="file" name="file" accept=".pdf" required/>
+                            <label for="submit-input" id="submit-drop">
+                                <span id="drop-title">Drop LES here</span>
+                                or
+                                <input type="file" id="submit-input" name="file" accept=".pdf" required>
+                            </label>
                         </td>
                         <td id="submit-les">
-                            <input type="submit" value="Submit LES"/>
+                            <input type="submit" value="Submit LES" class="submit-submit"/>
                         </td>
                     </form>
                 </tr>
@@ -50,7 +54,7 @@
                 <tr>
                     <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
                         <td id="submit-example">
-                            <input type="submit" value="Submit Example LES"/>
+                            <input type="submit" value="Submit Example LES" class="submit-submit"/>
                         </td>
                     </form>
                 </tr>
@@ -64,6 +68,30 @@
         </div>
     </footer>
 
+
+    <script>
+        var dropContainer = document.getElementById("submit-drop");
+        var fileInput = document.getElementById("submit-input");
+
+        dropContainer.addEventListener("dragover", function(e) {
+          // prevent default to allow drop
+          e.preventDefault();
+        }, false);
+
+        dropContainer.addEventListener("dragenter", function() {
+          dropContainer.classList.add("drag-active");
+        });
+
+        dropContainer.addEventListener("dragleave", function() {
+          dropContainer.classList.remove("drag-active");
+        });
+
+        dropContainer.addEventListener("drop", function(e) {
+          e.preventDefault();
+          dropContainer.classList.remove("drag-active");
+          fileInput.files = e.dataTransfer.files;
+        });
+    </script>
 
 </body>
 </html>

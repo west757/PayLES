@@ -15,7 +15,7 @@
             <div id="paydf">
                 <table class="core" id="paydf-table">
                     <tbody>
-                        <tr class="core-header" style="position: sticky;">
+                        <tr class="core-header">
                             <td class="core-header"></td>
                             {% for x in session.col_headers[1:] %}
                             <td class="core-header">{{x}}</td>
@@ -596,12 +596,12 @@
                             <tr class="core">
                                 <td class="core" colspan=2>
                                     <div class="settings-div">
-                                        <label>Upload New LES</label>
+                                        <label>Upload New LES: </label>
                                     </div>
                                     <div class="settings-div">
                                         <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                                            <input type="file" name="file" accept=".pdf" required />
-                                            <input type="submit" value="Submit New LES" />
+                                            <input type="file" id="settings-input" name="file" accept=".pdf" required />
+                                            <input type="submit" value="Submit" class="settings-submit" />
                                         </form>
                                     </div>
                                 </td>
