@@ -56,6 +56,9 @@ dfas fica: https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/
 military state taxes: https://myairforcebenefits.us.af.mil/Which-states-tax-my-Active-Duty-or-Reserve-military-pay
 tsp types: https://www.tsp.gov/making-contributions/traditional-and-roth-contributions/
 tsp contribution limits: https://www.tsp.gov/making-contributions/contribution-limits/
+cola: https://www.travel.dod.mil/Allowances/Overseas-Cost-of-Living-Allowance/Overseas-COLA-Rate-Lookup/
+opm leave: https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/
+leave explained: https://www.militaryonesource.mil/military-basics/new-to-the-military/military-leave-and-how-it-works/
 dfas pcs pay: https://www.dfas.mil/MilitaryMembers/travelpay/armypcs/PCS-Information/
 gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 -->

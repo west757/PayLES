@@ -599,6 +599,11 @@ details[open] > summary::after {
 
 
 
+
+
+
+
+
 #les-image {
     position: relative;
     display: inline-block;
@@ -613,6 +618,17 @@ details[open] > summary::after {
     background-color: rgba(5, 219, 141, 0.5);
 }
 
+.tooltip {
+    position: absolute;
+    padding: 4px 8px;
+    background: black;
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    display: none;
+    z-index: 1001;
+}
+
 .modal-image {
     display: none;
     position: fixed;
@@ -625,7 +641,7 @@ details[open] > summary::after {
 }
 
 .modal-content-image {
-    margin: 15% auto;
+    margin: 10% auto;
     background: white;
     padding: 20px;
     width: 300px;

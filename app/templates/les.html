@@ -149,10 +149,10 @@
                         {% endif %}
 
                         <!--
-                        <tr class="core">
-                            <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                        </tr>
-                        -->
+                    <tr class="core">
+                        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+                    </tr>
+                    -->
 
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
@@ -404,29 +404,29 @@
                             </tr>
 
                             <!--
-                            <tr class="core">
-                                <td class="core" colspan=2>
-                                    <div class="settings-div">
-                                        <label>Color Table</label>
-                                    </div>
-                                    <div class="settings-div">
-                                        <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
-                                    </div>
-                                </td>
-                            </tr>
-                                -->
-                            <!--
-                            <tr class="core">
+                        <tr class="core">
+                            <td class="core" colspan=2>
                                 <div class="settings-div">
-                                    <td class="core" colspan=2>
-                                        <label>Add row</label>
-                                    </td>
+                                    <label>Color Table</label>
                                 </div>
-                            </tr>
-                                -->
-                            <!--
-                                add row for show difference of previous month
+                                <div class="settings-div">
+                                    <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
+                                </div>
+                            </td>
+                        </tr>
                             -->
+                            <!--
+                        <tr class="core">
+                            <div class="settings-div">
+                                <td class="core" colspan=2>
+                                    <label>Add row</label>
+                                </td>
+                            </div>
+                        </tr>
+                            -->
+                            <!--
+                            add row for show difference of previous month
+                        -->
 
 
                             <tr class="core">
@@ -475,460 +475,511 @@
             <img src="data:image/png;base64,{{session['les_image']}}" />
 
             {% for rect in session['rect_overlay'] %}
-            <div class="rect-highlight"
-                    style="
-                        left:{{rect.x1}}px;
-                        top:{{rect.y1}}px;
-                        width:{{rect.x2 - rect.x1}}px;
-                        height:{{rect.y2 - rect.y1}}px;"
-                    title="Rect{{rect.index}}"
-                    onclick="showModal('Details for rect {{ rect.index }}')">
-            </div>
+            <label {% if rect.modal !="none" %}
+                   for="modal-{{rect.modal}}"
+                   {% endif %}
+                   class="rect-highlight {% if rect.modal != 'none' %}clickable{% endif %}"
+                   style="
+                            left: {{rect.x1}}px;
+                            top: {{rect.y1}}px;
+                            width: {{rect.x2 - rect.x1}}px;
+                            height: {{rect.y2 - rect.y1}}px;"
+                   onmousemove="showTooltip(event, '{{rect.tooltip}}')"
+                   onmouseleave="hideTooltip()"></label>
             {% endfor %}
         </div>
         {% endif %}
 
-        <div class="modal-image" id="infoModal">
-            <div class="modal-content-image">
-                <span id="modalText"></span>
-                <br><br>
-                <button onclick="closeModal()">Close</button>
+        <div class="tooltip" id="tooltip"></div>
+
+
+
+
+        <input class="modal-state" id="modal-basepay" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-basepay"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-basepay"></label>
+                <p class="modal-text-big">Base Pay</p>
+                <p>
+                    Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay.
+                    A member's grade (usually the same as rank) and years of service determines the amount of basic pay received.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://militarypay.defense.gov/Pay/Basic-Pay/" target="_blank">DoD Base Pay Rates</a></li>
+                </ul>
             </div>
         </div>
-    </div>
 
-
-
-    <input class="modal-state" id="modal-basepay" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-basepay"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-basepay"></label>
-            <p class="modal-text-big">Base Pay</p>
-            <p>
-                Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay.
-                A member's grade (usually the same as rank) and years of service determines the amount of basic pay received.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://militarypay.defense.gov/Pay/Basic-Pay/" target="_blank">DoD Base Pay Rates</a></li>
-            </ul>
+        <input class="modal-state" id="modal-bas" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-bas"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-bas"></label>
+                <p class="modal-text-big">Basic Allowance for Subsistence</p>
+                <p>
+                    BAS is meant to offset the cost of food for service members. This allowance is based on the historic origins of the military in which the
+                    military provided room and board (or rations) as part of a member's pay. This allowance is not intended to offset the costs of meals for family members.
+                    Beginning on January 1, 2002, all enlisted members get full BAS, but pay for their meals (including those provided by the government).
+                    This is the culmination of the BAS Reform transition period. Since BAS is intended to defray a portion of the cost of food for the service member,
+                    its level is linked to the USDA’s food cost index. Therefore, each year the BAS rate is adjusted based upon the percentage increase of the price of
+                    food as identified by the USDA. This is why the increase to BAS will not necessarily be the same percentage as that applied to the increase in the pay
+                    table, as annual pay raises are linked to the increase of private sector wages.
+                </p>
+                <table class="modal-table">
+                    <tr class="modal-table">
+                        <td class="modal-table">Officers</td>
+                        <td class="modal-table">Enlisted</td>
+                        <td class="modal-table">Enlisted II*</td>
+                    </tr>
+                    <tr class="modal-table">
+                        <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][0]).replace('$-','$')}}</td>
+                        <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][1]).replace('$-','$')}}</td>
+                        <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][2]).replace('$-','$')}}</td>
+                    </tr>
+                </table>
+                <p class="modal-text-small">
+                    *BAS II is the monthly rate that may be payable to enlisted members on duty at a permanent station and assigned to single (unaccompanied) Government
+                    quarters, which do not have adequate food storage or preparation facilities, and where a Government mess is not available, and the Government  cannot
+                    otherwise make meals available.  The BAS II rate is twice the rate of standard enlisted BAS.
+                <p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://militarypay.defense.gov/pay/allowances/bas.aspx" target="_blank">DoD BAS Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-bas" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-bas"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-bas"></label>
-            <p class="modal-text-big">Basic Allowance for Subsistence</p>
-            <p>
-                BAS is meant to offset the cost of food for service members. This allowance is based on the historic origins of the military in which the
-                military provided room and board (or rations) as part of a member's pay. This allowance is not intended to offset the costs of meals for family members.
-                Beginning on January 1, 2002, all enlisted members get full BAS, but pay for their meals (including those provided by the government).
-                This is the culmination of the BAS Reform transition period. Since BAS is intended to defray a portion of the cost of food for the service member,
-                its level is linked to the USDA’s food cost index. Therefore, each year the BAS rate is adjusted based upon the percentage increase of the price of
-                food as identified by the USDA. This is why the increase to BAS will not necessarily be the same percentage as that applied to the increase in the pay
-                table, as annual pay raises are linked to the increase of private sector wages.
-            </p>
-            <table class="modal-table">
-                <tr class="modal-table">
-                    <td class="modal-table">Officers</td>
-                    <td class="modal-table">Enlisted</td>
-                    <td class="modal-table">Enlisted II*</td>
-                </tr>
-                <tr class="modal-table">
-                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][0]).replace('$-','$')}}</td>
-                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][1]).replace('$-','$')}}</td>
-                    <td class="modal-table">{{'${:,.2f}'.format(config['BAS_AMOUNT'][2]).replace('$-','$')}}</td>
-                </tr>
-            </table>
-            <p class="modal-text-small">
-                *BAS II is the monthly rate that may be payable to enlisted members on duty at a permanent station and assigned to single (unaccompanied) Government
-                quarters, which do not have adequate food storage or preparation facilities, and where a Government mess is not available, and the Government  cannot
-                otherwise make meals available.  The BAS II rate is twice the rate of standard enlisted BAS.
-            <p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://militarypay.defense.gov/pay/allowances/bas.aspx" target="_blank">DoD BAS Rates</a></li>
-            </ul>
+        <input class="modal-state" id="modal-bah" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-bah"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-bah"></label>
+                <p class="modal-text-big">Basic Allowance for Housing</p>
+                <p>
+                    BAH provides uniformed service members equitable housing compensation based on housing costs in local
+                    civilian housing markets within the 50 U.S. states when government quarters are not provided. BAH is not intended to cover all of a service member’s
+                    housing costs. The opportunity for Service members to choose their off-base housing is important to DoD. Each member has the freedom to decide how to
+                    allocate their income (including the housing allowance) without a penalty for deciding to conserve some dollars on rent to pay other expenses. Therefore,
+                    actual out-of-pocket expense for an individual may be higher or lower than the prescribed rate based on choice of housing. Allowances reflect the costs
+                    associated with household rental. Generally, rental prices change between 2%-5% from year to year. Housing allowances typically change accordingly.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://militarypay.defense.gov/PAY/ALLOWANCES/bah.aspx" target="_blank">DoD Base Pay Rates</a></li>
+                    <li><a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate/" target="_blank">DTMO BAH Rates</a></li>
+                </ul>
+                <p>Current: {{session.mha_current}} - {{session.mha_current_name}}</p>
+                <p>Future: {{session.mha_future}} - {{session.mha_future_name}}</p>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-bah" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-bah"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-bah"></label>
-            <p class="modal-text-big">Basic Allowance for Housing</p>
-            <p>
-                BAH provides uniformed service members equitable housing compensation based on housing costs in local
-                civilian housing markets within the 50 U.S. states when government quarters are not provided. BAH is not intended to cover all of a service member’s
-                housing costs. The opportunity for Service members to choose their off-base housing is important to DoD. Each member has the freedom to decide how to
-                allocate their income (including the housing allowance) without a penalty for deciding to conserve some dollars on rent to pay other expenses. Therefore,
-                actual out-of-pocket expense for an individual may be higher or lower than the prescribed rate based on choice of housing. Allowances reflect the costs
-                associated with household rental. Generally, rental prices change between 2%-5% from year to year. Housing allowances typically change accordingly.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://militarypay.defense.gov/PAY/ALLOWANCES/bah.aspx" target="_blank">DoD Base Pay Rates</a></li>
-                <li><a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate/" target="_blank">DTMO BAH Rates</a></li>
-            </ul>
-            <p>Current: {{session.mha_current}} - {{session.mha_current_name}}</p>
-            <p>Future: {{session.mha_future}} - {{session.mha_future_name}}</p>
+        <input class="modal-state" id="modal-ueainitial" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-ueainitial"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-ueainitial"></label>
+                <p class="modal-text-big">Clothing Allowance</p>
+                <p>
+                    Clothing allowances may be issued to help members pay for their uniforms. There are four main types of clothing allowance: Initial, Replacement, Maintenance, and Extra.
+                </p>
+                <p>
+                    Both officers and enlisted members of the U.S. Armed Forces are entitled to an initial clothing allowance. This allowance is provided to
+                    enlisted members upon initial enlistment or upon special qualification. Office , however, are only entitled to the allowance once except in the situation noted below:
+                </p>
+                <ul>
+                    <li>Upon first reporting for active duty (other than for training) for a period of more than 90 days.</li>
+                    <li>Upon completing at least 14 days of active duty or active duty for training as a member of a Reserve Component</li>
+                    <li>Upon completing 14 periods of inactive-duty training as a member of the Ready Reserve (Each period must be of at least 2 hours duration)</li>
+                    <li>Upon reporting for the first period of active duty required of a member of the Armed Forces Health Professions Scholarship Program.</li>
+                </ul>
+                <p>
+                    Cash Clothing Replacement Allowance is payable only to enlisted members annually following initial clothing allowance on the anniversary month. This is
+                    for the replacement of uniforms based on normal wear and tear.
+                </p>
+                <p>
+                    Extra Clothing Allowance are additional to the other two and do not affect them. These allowances are for situations in which a member may need additional
+                    uniforms or is required to have civilian clothing to perform their duties.
+                </p>
+                <p>
+                    Military Clothing Maintenance Allowance is for replacement and maintenance of military items during and after three years of active duty.
+                    If a member has a break in military service, he/she will start over with the initial clothing allowance upon returning to the service. They will then
+                    receive Cash Clothing Replacement Allowance and Military Clothing Maintenance Allowance as applicable.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://militarypay.defense.gov/PAY/Allowances/clothing.aspx" target="_blank">DoD Clothing Allowance Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-ueainitial" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-ueainitial"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-ueainitial"></label>
-            <p class="modal-text-big">Clothing Allowance</p>
-            <p>
-                Clothing allowances may be issued to help members pay for their uniforms. There are four main types of clothing allowance: Initial, Replacement, Maintenance, and Extra.
-            </p>
-            <p>
-                Both officers and enlisted members of the U.S. Armed Forces are entitled to an initial clothing allowance. This allowance is provided to
-                enlisted members upon initial enlistment or upon special qualification. Office , however, are only entitled to the allowance once except in the situation noted below:
-            </p>
-            <ul>
-                <li>Upon first reporting for active duty (other than for training) for a period of more than 90 days.</li>
-                <li>Upon completing at least 14 days of active duty or active duty for training as a member of a Reserve Component</li>
-                <li>Upon completing 14 periods of inactive-duty training as a member of the Ready Reserve (Each period must be of at least 2 hours duration)</li>
-                <li>Upon reporting for the first period of active duty required of a member of the Armed Forces Health Professions Scholarship Program.</li>
-            </ul>
-            <p>
-                Cash Clothing Replacement Allowance is payable only to enlisted members annually following initial clothing allowance on the anniversary month. This is
-                for the replacement of uniforms based on normal wear and tear.
-            </p>
-            <p>
-                Extra Clothing Allowance are additional to the other two and do not affect them. These allowances are for situations in which a member may need additional
-                uniforms or is required to have civilian clothing to perform their duties.
-            </p>
-            <p>
-                Military Clothing Maintenance Allowance is for replacement and maintenance of military items during and after three years of active duty.
-                If a member has a break in military service, he/she will start over with the initial clothing allowance upon returning to the service. They will then
-                receive Cash Clothing Replacement Allowance and Military Clothing Maintenance Allowance as applicable.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://militarypay.defense.gov/PAY/Allowances/clothing.aspx" target="_blank">DoD Clothing Allowance Rates</a></li>
-            </ul>
+        <input class="modal-state" id="modal-federaltaxes" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-federaltaxes"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-federaltaxes"></label>
+                <p class="modal-text-big">Federal Taxes</p>
+                <p>
+                    All U.S. citizens pay a federal income tax. Citizens pay tax as a percentage of your income in layers called tax brackets. As income goes up,
+                    the tax rate on the next layer of income is higher. When income jumps to a higher tax bracket, citizens don't pay the higher rate on their entire income.
+                    Citizens pay the higher rate only on the part that's in the new tax bracket. Members of the U.S. Armed Forces have special tax situations and benefits.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.irs.gov/individuals/military" target="_blank">IRS Federal Tax Information for Military</a></li>
+                    <li><a href="https://www.irs.gov/individuals/military/eligibility-for-military-tax-benefits" target="_blank">IRS Eligibility for Military Tax Benefits</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-federaltaxes" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-federaltaxes"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-federaltaxes"></label>
-            <p class="modal-text-big">Federal Taxes</p>
-            <p>
-                All U.S. citizens pay a federal income tax. Citizens pay tax as a percentage of your income in layers called tax brackets. As income goes up,
-                the tax rate on the next layer of income is higher. When income jumps to a higher tax bracket, citizens don't pay the higher rate on their entire income.
-                Citizens pay the higher rate only on the part that's in the new tax bracket. Members of the U.S. Armed Forces have special tax situations and benefits.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.irs.gov/individuals/military" target="_blank">IRS Federal Tax Information for Military</a></li>
-                <li><a href="https://www.irs.gov/individuals/military/eligibility-for-military-tax-benefits" target="_blank">IRS Eligibility for Military Tax Benefits</a></li>
-            </ul>
+        <input class="modal-state" id="modal-fica" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-fica"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-fica"></label>
+                <p class="modal-text-big">Federal Insurance Contributions Act</p>
+                <p>
+                    FICA is a U.S. federal payroll tax that is automatically deducted from an employee’s paycheck. Taxes under FICA are composed of the old-age, survivors, and
+                    disability insurance taxes, also known as Social Security taxes, and the hospital insurance taxes, also known as Medicare taxes. FICA generates money for Social
+                    Security and Medicare programs through taxes imposed on nearly every employee and employer in the United States.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.irs.gov/taxtopics/tc751" target="_blank">IRS FICA Rates</a></li>
+                    <li><a href="https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/" target="_blank">DFAS FICA Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-fica" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-fica"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-fica"></label>
-            <p class="modal-text-big">Federal Insurance Contributions Act</p>
-            <p>
-                FICA is a U.S. federal payroll tax that is automatically deducted from an employee’s paycheck. Taxes under FICA are composed of the old-age, survivors, and
-                disability insurance taxes, also known as Social Security taxes, and the hospital insurance taxes, also known as Medicare taxes. FICA generates money for Social
-                Security and Medicare programs through taxes imposed on nearly every employee and employer in the United States.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.irs.gov/taxtopics/tc751" target="_blank">IRS FICA Rates</a></li>
-                <li><a href="https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/" target="_blank">DFAS FICA Rates</a></li>
-            </ul>
+
+        <input class="modal-state" id="modal-sgli" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-sgli"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-sgli"></label>
+                <p class="modal-text-big">Servicemembers' Group Life Insurance</p>
+                <p>
+                    SGLI provides low-cost term life insurance coverage to eligible service members such as active duty Service members, Ready Reserve, or National Guard members.
+                    If members qualify for SGLI they are automatically enrolled and issued the maximum SGLI coverage.
+                </p>
+                <table class="modal-table">
+                    <tr class="modal-table">
+                        <td class="modal-table">Coverage Amount</td>
+                        <td class="modal-table">Monthly Premium Rate</td>
+                        <td class="modal-table">TSGLI Premium Rate</td>
+                        <td class="modal-table">Total Monthly Premium Deduction</td>
+                    </tr>
+
+                    {% for i in range(1, config['SGLI_PREMIUMS']|length) %}
+                    <tr class="modal-table">
+                        <td class="modal-table">{{"${:,.2f}".format(config['SGLI_COVERAGES'][i])}}</td>
+                        <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i])}}</td>
+                        <td class="modal-table">$1.00</td>
+                        <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i] + 1)}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.va.gov/life-insurance/options-eligibility/sgli/" target="_blank">VA SGLI Information</a></li>
+                    <li><a href="https://milconnect.dmdc.osd.mil/milconnect/public/faq/Life_Insurance-SGLI" target="_blank">Access SGLI</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-
-    <input class="modal-state" id="modal-sgli" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-sgli"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-sgli"></label>
-            <p class="modal-text-big">Servicemembers' Group Life Insurance</p>
-            <p>
-                SGLI provides low-cost term life insurance coverage to eligible service members such as active duty Service members, Ready Reserve, or National Guard members.
-                If members qualify for SGLI they are automatically enrolled and issued the maximum SGLI coverage.
-            </p>
-            <table class="modal-table">
-                <tr class="modal-table">
-                    <td class="modal-table">Coverage Amount</td>
-                    <td class="modal-table">Monthly Premium Rate</td>
-                    <td class="modal-table">TSGLI Premium Rate</td>
-                    <td class="modal-table">Total Monthly Premium Deduction</td>
-                </tr>
-
-                {% for i in range(1, config['SGLI_PREMIUMS']|length) %}
-                <tr class="modal-table">
-                    <td class="modal-table">{{"${:,.2f}".format(config['SGLI_COVERAGES'][i])}}</td>
-                    <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i])}}</td>
-                    <td class="modal-table">$1.00</td>
-                    <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i] + 1)}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.va.gov/life-insurance/options-eligibility/sgli/" target="_blank">VA SGLI Information</a></li>
-                <li><a href="https://milconnect.dmdc.osd.mil/milconnect/public/faq/Life_Insurance-SGLI" target="_blank">Access SGLI</a></li>
-            </ul>
+        <input class="modal-state" id="modal-statetaxes" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-statetaxes"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-statetaxes"></label>
+                <p class="modal-text-big">State Taxes and Tax Residency State</p>
+                <p>
+                    The distinction between a service member’s home of record and tax residency can be confusing. The home of record is the state recorded when an
+                    individual enlists or is commissioned in the military. It generally remains unchanged unless there is a break in service and is used for administrative
+                    purposes, such as determining travel entitlements upon separation. However, it does not automatically dictate where state taxes must be filed.
+                    Tax residency, on the other hand, is determined by where an individual has established a permanent home and intends to return when absent. Factors
+                    like physical presence, voter registration, and property ownership play a role. The Servicemembers Civil Relief Act (SCRA) allows military personnel to
+                    maintain their tax residency in their home state even when stationed elsewhere, which can be advantageous if the home state has no income tax, such as
+                    Texas or Florida. For example, a service member stationed in California but with a home of record in Nevada may avoid California state income taxes if
+                    they do not establish residency there. Similarly, military spouses may benefit from the Military Spouses Residency Relief Act, which lets them retain their
+                    original state of residency for tax purposes, even after relocating due to military orders.
+                </p>
+                <p>
+                    Receiving Permanent Change of Station (PCS) orders provides an opportunity to reassess tax residency. This can have significant financial implications,
+                    especially when moving from a high-tax state to one with lower or no income tax. To change tax residency, you must meet criteria such as physical presence,
+                    intent to remain indefinitely, and actions like obtaining a driver’s license or registering to vote in the new state. Evaluating the tax benefits of the new
+                    state compared to the current one is essential. States like Washington and Nevada, which have no state income tax, can offer considerable savings. Some states
+                    also provide specific tax incentives for military personnel. Researching state tax codes and regulations thoroughly is critical to making an informed decision.
+                </p>
+                <p>
+                    Once tax residency is established, understanding your chosen state’s tax laws and filing requirements is essential. Familiarize yourself with the state’s tax
+                    deadlines, forms, and electronic filing options. States have varying income tax rates, deductions, and credits, which can significantly impact your tax liability.
+                    For example, some states offer unique tax credits, such as Oregon’s credit for retirement income. Being aware of state-specific penalties for late filing or
+                    underpayment can help avoid unnecessary costs. Proper preparation ensures compliance and maximizes potential tax benefits.
+                </p>
+                <p>
+                    Military personnel and their spouses often need to file nonresident state tax returns when earning income in states where they are not tax residents.
+                    This includes wages from off-duty jobs, rental income, or business income. Understanding how to allocate taxable income to the appropriate state is essential
+                    to avoid double taxation. Nonresident returns generally require reporting income earned within the state’s borders. For example, if you work part-time in
+                    Virginia while maintaining residency in Florida, Virginia may require a nonresident return for the wages earned there. Many states offer worksheets to help
+                    calculate taxable income. Additionally, your resident state may provide credits for taxes paid to nonresident states, which can reduce your overall tax burden.
+                    State tax rates and thresholds vary widely. For instance, rental income from a property in California could be subject to one of the highest state tax rates in
+                    the country. Keeping detailed records of income and tax withholdings is critical for accuracy. Consulting a tax professional familiar with multi-state filings
+                    can simplify the process.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://myairforcebenefits.us.af.mil/Which-states-tax-my-Active-Duty-or-Reserve-military-pay" target="_blank">State Tax Rates for Military</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-statetaxes" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-statetaxes"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-statetaxes"></label>
-            <p class="modal-text-big">State Taxes and Tax Residency State</p>
-            <p>
-                The distinction between a service member’s home of record and tax residency can be confusing. The home of record is the state recorded when an
-                individual enlists or is commissioned in the military. It generally remains unchanged unless there is a break in service and is used for administrative
-                purposes, such as determining travel entitlements upon separation. However, it does not automatically dictate where state taxes must be filed.
-                Tax residency, on the other hand, is determined by where an individual has established a permanent home and intends to return when absent. Factors
-                like physical presence, voter registration, and property ownership play a role. The Servicemembers Civil Relief Act (SCRA) allows military personnel to
-                maintain their tax residency in their home state even when stationed elsewhere, which can be advantageous if the home state has no income tax, such as
-                Texas or Florida. For example, a service member stationed in California but with a home of record in Nevada may avoid California state income taxes if
-                they do not establish residency there. Similarly, military spouses may benefit from the Military Spouses Residency Relief Act, which lets them retain their
-                original state of residency for tax purposes, even after relocating due to military orders.
-            </p>
-            <p>
-                Receiving Permanent Change of Station (PCS) orders provides an opportunity to reassess tax residency. This can have significant financial implications,
-                especially when moving from a high-tax state to one with lower or no income tax. To change tax residency, you must meet criteria such as physical presence,
-                intent to remain indefinitely, and actions like obtaining a driver’s license or registering to vote in the new state. Evaluating the tax benefits of the new
-                state compared to the current one is essential. States like Washington and Nevada, which have no state income tax, can offer considerable savings. Some states
-                also provide specific tax incentives for military personnel. Researching state tax codes and regulations thoroughly is critical to making an informed decision.
-            </p>
-            <p>
-                Once tax residency is established, understanding your chosen state’s tax laws and filing requirements is essential. Familiarize yourself with the state’s tax
-                deadlines, forms, and electronic filing options. States have varying income tax rates, deductions, and credits, which can significantly impact your tax liability.
-                For example, some states offer unique tax credits, such as Oregon’s credit for retirement income. Being aware of state-specific penalties for late filing or
-                underpayment can help avoid unnecessary costs. Proper preparation ensures compliance and maximizes potential tax benefits.
-            </p>
-            <p>
-                Military personnel and their spouses often need to file nonresident state tax returns when earning income in states where they are not tax residents.
-                This includes wages from off-duty jobs, rental income, or business income. Understanding how to allocate taxable income to the appropriate state is essential
-                to avoid double taxation. Nonresident returns generally require reporting income earned within the state’s borders. For example, if you work part-time in
-                Virginia while maintaining residency in Florida, Virginia may require a nonresident return for the wages earned there. Many states offer worksheets to help
-                calculate taxable income. Additionally, your resident state may provide credits for taxes paid to nonresident states, which can reduce your overall tax burden.
-                State tax rates and thresholds vary widely. For instance, rental income from a property in California could be subject to one of the highest state tax rates in
-                the country. Keeping detailed records of income and tax withholdings is critical for accuracy. Consulting a tax professional familiar with multi-state filings
-                can simplify the process.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://myairforcebenefits.us.af.mil/Which-states-tax-my-Active-Duty-or-Reserve-military-pay" target="_blank">State Tax Rates for Military</a></li>
-            </ul>
+        <input class="modal-state" id="modal-tsp" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-tsp"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-tsp"></label>
+                <p class="modal-text-big">Thrift Savings Plan</p>
+                <p>
+                    Your decision about Roth and traditional TSP is a choice of when you pay income tax on your TSP contributions and earnings. You can pay taxes either when
+                    you earn and contribute the money or when you take it out. There isn’t a set formula to determine which choice is best for everyone, and your decision may
+                    change as your income and needs change over time. Here are a few questions you’ll want to ask yourself to get started:
+                </p>
+                <ul>
+                    <li>Do I expect a higher or lower income tax rate in retirement?</li>
+                    <li>How much money do I need in my paycheck right now?</li>
+                    <li>Will my choice of tax treatment affect how much income tax I need to pay?</li>
+                </ul>
+                </p>
+                <p>
+                    With Roth TSP, your contributions go into the TSP after tax withholding. That means you pay taxes on your contributions at your current income tax rate.
+                    The advantage of the Roth TSP is that you won’t pay taxes later when you take out your contributions and any qualified earnings. Earnings are considered
+                    qualified after both of these Internal Revenue Code (IRC) requirements are met: 5 years have passed since January 1 of the calendar year when you made your
+                    first Roth TSP contribution and you are at least age 59½, permanently disabled, or deceased. Also, your Roth balance isn’t subject to IRS required minimum
+                    distributions (RMDs), which means you can keep your Roth contributions and earnings in your TSP account as long as you want.
+                </p>
+                <p>
+                    With traditional TSP, your contributions go into the TSP before tax withholding, which can potentially lower your current income tax rate. But when you take
+                    money from your traditional TSP, you’ll pay taxes on both your contributions and earnings at the income tax rate of the year you make the withdrawal.
+                </p>
+                <p>
+                    You may consider splitting your contributions between Roth and traditional. You can change your contribution type through your agency or service payroll
+                    system. Note that if you receive automatic or matching contributions from your agency or service, those contributions will always go into your traditional
+                    TSP balance and cannot be converted to Roth within your TSP account.
+                </p>
+                <p>
+                    The TSP elective deferral limit is $23,500. This limit applies to the combined total of traditional and Roth contributions. For uniformed services members,
+                    this does not apply to traditional contributions from combat-zone pay. The annual additions limit is $70,000. The annual additions limit is the total amount
+                    of all the contributions you make in a calendar year. This limit is per employer and includes money from all sources: employee contributions (tax-deferred,
+                    after-tax, and tax-exempt), Agency/Service Automatic (1%) Contributions, and Agency/Service Matching Contributions. It does not include catch-up contributions.
+                    The annual additions limit affects mostly members of the uniformed services who can exceed the annual elective deferral limit. The excess contributions go
+                    into the traditional portion of your account from tax-exempt pay earned in a combat zone.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.tsp.gov/making-contributions/traditional-and-roth-contributions/" target="_blank">Traditional and Roth TSP Contributions</a></li>
+                    <li><a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-tsp" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-tsp"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-tsp"></label>
-            <p class="modal-text-big">Thrift Savings Plan</p>
-            <p>
-                Your decision about Roth and traditional TSP is a choice of when you pay income tax on your TSP contributions and earnings. You can pay taxes either when
-                you earn and contribute the money or when you take it out. There isn’t a set formula to determine which choice is best for everyone, and your decision may
-                change as your income and needs change over time. Here are a few questions you’ll want to ask yourself to get started:
-            </p>
-            <ul>
-                <li>Do I expect a higher or lower income tax rate in retirement?</li>
-                <li>How much money do I need in my paycheck right now?</li>
-                <li>Will my choice of tax treatment affect how much income tax I need to pay?</li>
-            </ul>
-            </p>
-            <p>
-                With Roth TSP, your contributions go into the TSP after tax withholding. That means you pay taxes on your contributions at your current income tax rate.
-                The advantage of the Roth TSP is that you won’t pay taxes later when you take out your contributions and any qualified earnings. Earnings are considered
-                qualified after both of these Internal Revenue Code (IRC) requirements are met: 5 years have passed since January 1 of the calendar year when you made your
-                first Roth TSP contribution and you are at least age 59½, permanently disabled, or deceased. Also, your Roth balance isn’t subject to IRS required minimum
-                distributions (RMDs), which means you can keep your Roth contributions and earnings in your TSP account as long as you want.
-            </p>
-            <p>
-                With traditional TSP, your contributions go into the TSP before tax withholding, which can potentially lower your current income tax rate. But when you take
-                money from your traditional TSP, you’ll pay taxes on both your contributions and earnings at the income tax rate of the year you make the withdrawal.
-            </p>
-            <p>
-                You may consider splitting your contributions between Roth and traditional. You can change your contribution type through your agency or service payroll
-                system. Note that if you receive automatic or matching contributions from your agency or service, those contributions will always go into your traditional
-                TSP balance and cannot be converted to Roth within your TSP account.
-            </p>
-            <p>
-                The TSP elective deferral limit is $23,500. This limit applies to the combined total of traditional and Roth contributions. For uniformed services members,
-                this does not apply to traditional contributions from combat-zone pay. The annual additions limit is $70,000. The annual additions limit is the total amount
-                of all the contributions you make in a calendar year. This limit is per employer and includes money from all sources: employee contributions (tax-deferred,
-                after-tax, and tax-exempt), Agency/Service Automatic (1%) Contributions, and Agency/Service Matching Contributions. It does not include catch-up contributions.
-                The annual additions limit affects mostly members of the uniformed services who can exceed the annual elective deferral limit. The excess contributions go
-                into the traditional portion of your account from tax-exempt pay earned in a combat zone.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.tsp.gov/making-contributions/traditional-and-roth-contributions/" target="_blank">Traditional and Roth TSP Contributions</a></li>
-                <li><a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a></li>
-            </ul>
+        <input class="modal-state" id="modal-partialpay" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-partialpay"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-partialpay"></label>
+                <p class="modal-text-big">Partial Pay</p>
+                <p>
+                    Partial pay is entitled to a member to account for late or missed payments.
+                </p>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-partialpay" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-partialpay"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-partialpay"></label>
-            <p class="modal-text-big">Partial Pay</p>
-            <p>
-                Partial pay is entitled to a member to account for late or missed payments.
-            </p>
+        <input class="modal-state" id="modal-pcspay" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-pcspay"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-pcspay"></label>
+                <p class="modal-text-big">Permanent Change of Station</p>
+                <p>
+                    Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not
+                    specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used
+                    for all other PCS travel expenses. For additional information, please see this memo.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.dfas.mil/militarymembers/travelpay/information/" target="_blank">DoD PCS Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-pcspay" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-pcspay"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-pcspay"></label>
-            <p class="modal-text-big">Permanent Change of Station</p>
-            <p>
-                Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not
-                specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used
-                for all other PCS travel expenses. For additional information, please see this memo.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.dfas.mil/militarymembers/travelpay/information/" target="_blank">DoD PCS Rates</a></li>
-            </ul>
+        <input class="modal-state" id="modal-debts" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-debts"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-debts"></label>
+                <p class="modal-text-big"> Debt and Advance Debt</p>
+                <p>
+                    Typically, a debt is caused by an exchange in entitlements; for example the difference in BAH rates from the old PDS and new PDS, and also members receiving
+                    table rate BAH when they’ve been assigned a dorm. The size of the debt is determined by the arrival date on station and the in-processing date with Finance.
+                    The wider the gap between those dates, the more time the debt has to accrue.
+                </p>
+                <p>
+                    Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed
+                    package must be turned in within 30 days from notification in order to suspend the debt from collection.
+                </p>
+                <p>
+                    Advance debt notifies the member that they’ve been overpaid. This usually occurs during a PCS or a deployment, and the overpayment occurred in a previous months pay cycle.
+                    Members have 30 days to contact your finance office to inquire about possible repayment options. If no action is taken the debt will be recouped in full
+                    the following pay period*.
+                </p>
+                <p class="modal-text-small">
+                    *Debt has not been satisfied until it shows up in the deductions column of your LES if paid by payroll deduction.
+                </p>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-debts" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-debts"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-debts"></label>
-            <p class="modal-text-big"> Debt and Advance Debt</p>
-            <p>
-                Typically, a debt is caused by an exchange in entitlements; for example the difference in BAH rates from the old PDS and new PDS, and also members receiving
-                table rate BAH when they’ve been assigned a dorm. The size of the debt is determined by the arrival date on station and the in-processing date with Finance.
-                The wider the gap between those dates, the more time the debt has to accrue.
-            </p>
-            <p>
-                Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed
-                package must be turned in within 30 days from notification in order to suspend the debt from collection.
-            </p>
-            <p>
-                Advance debt notifies the member that they’ve been overpaid. This usually occurs during a PCS or a deployment, and the overpayment occurred in a previous months pay cycle.
-                Members have 30 days to contact your finance office to inquire about possible repayment options. If no action is taken the debt will be recouped in full
-                the following pay period*.
-            </p>
-            <p class="modal-text-small">
-                *Debt has not been satisfied until it shows up in the deductions column of your LES if paid by payroll deduction.
-            </p>
+
+        <input class="modal-state" id="modal-cola" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-cola"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-cola"></label>
+                <p class="modal-text-big">Cost of Living Allowance (COLA)</p>
+                <p>
+                    Service members serving outside of the continental United States (OCONUS) where the cost of living is higher than CONUS receive an Overseas Cost-of-Living 
+                    Allowance (COLA). Overseas COLA is a non-taxable allowance designed to offset higher prices of non-housing goods and services OCONUS and equalize 
+                    purchasing power with members stationed in CONUS. It does not reimburse expenses, compensate for remoteness, hardship, loss of spousal income, or non-availability 
+                    of goods and services.
+
+                    OCONUS COLA is not a fixed amount and should not be considered in household budgeting. Fixed expenses, such as car payments, should be based on what a 
+                    Service member can afford without the allowance. Overseas COLA can fluctuate based on the exchange rate, as COLA is paid in U.S dollars, but some expenses 
+                    are typically paid in foreign currency.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.travel.dod.mil/Allowances/Overseas-Cost-of-Living-Allowance/Overseas-COLA-Rate-Lookup/" target="_blank">DoD COLA Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-taxpay" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-taxpay"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-taxpay"></label>
-            <p class="modal-text-big">Taxable and Non-Taxable Pay</p>
-            <p>
+        <input class="modal-state" id="modal-leave" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-leave"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-leave"></label>
+                <p class="modal-text-big">Leave</p>
+                <p>
+                    As part of the military pay and benefits package, military service members earn 30 days of paid leave per year. Service members start at zero and for every month of 
+                    military service, 2.5 days of leave get added to your leave account. It doesn’t stop, but the most members can carry over from one fiscal year to the next 
+                    fiscal year is 60 days, except in certain, very limited situations where you can carry over more.
 
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://militarypay.defense.gov/Pay/Basic-Pay/" target="_blank">DoD Base Pay Rates</a></li>
-            </ul>
+                    Reserve component members, including National Guard, also accrue leave at the rate of 2.5 days for each month that they are on active-duty orders. 
+                    Reserve components have some special rules for how and when they can use their leave.
+
+                    Service members are expected to use leave for any workday that they will not be available for work, as required by their command. They are also expected to 
+                    use leave for any day that they leave the vicinity of their duty station, as defined by their command.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/" target="_blank">OPM Leave Information</a></li>
+                    <li><a href="https://www.militaryonesource.mil/military-basics/new-to-the-military/military-leave-and-how-it-works/" target="_blank">Military OneSource Leave Explained</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <input class="modal-state" id="modal-grossnetpay" type="checkbox" />
-    <div class="modal">
-        <label class="modal-bg" for="modal-grossnetpay"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="modal-grossnetpay"></label>
-            <p class="modal-text-big">Gross and Net Pay</p>
-            <p>
-                Gross pay is the amount an employee earns before all deductions, including taxes, benefits, wage attachments and any other payroll deductions.
-            </p>
-            <p>
-                Net pay, or take-home pay, is the amount of an employee’s paycheck after deductions are taken out of their gross pay. Deductions include things,
-                such as payroll taxes, income tax, health insurance premiums, retirement account contributions, wage attachments (garnishments) and other voluntary
-                or obligatory deductions.
-            </p>
-            <p>More Resources:</p>
-            <ul>
-                <li><a href="https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/" target="_blank">Gross Pay and Net Pay</a></li>
-            </ul>
+
+        <input class="modal-state" id="modal-taxpay" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-taxpay"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-taxpay"></label>
+                <p class="modal-text-big">Taxable and Non-Taxable Pay</p>
+                <p>
+
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://militarypay.defense.gov/Pay/Basic-Pay/" target="_blank">DoD Base Pay Rates</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+
+        <input class="modal-state" id="modal-grossnetpay" type="checkbox" />
+        <div class="modal">
+            <label class="modal-bg" for="modal-grossnetpay"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="modal-grossnetpay"></label>
+                <p class="modal-text-big">Gross and Net Pay</p>
+                <p>
+                    Gross pay is the amount an employee earns before all deductions, including taxes, benefits, wage attachments and any other payroll deductions.
+                </p>
+                <p>
+                    Net pay, or take-home pay, is the amount of an employee’s paycheck after deductions are taken out of their gross pay. Deductions include things,
+                    such as payroll taxes, income tax, health insurance premiums, retirement account contributions, wage attachments (garnishments) and other voluntary
+                    or obligatory deductions.
+                </p>
+                <p>More Resources:</p>
+                <ul>
+                    <li><a href="https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/" target="_blank">Gross Pay and Net Pay</a></li>
+                </ul>
+            </div>
+        </div>
 
 
 
 
-    <script>
-        async function downloadFile() {
-            try {
-                const filetype = document.getElementById('filetype').value;
+        <script>
+            async function downloadFile() {
+                try {
+                    const filetype = document.getElementById('filetype').value;
 
-                const formData = new FormData();
-                formData.append('filetype', filetype);
+                    const formData = new FormData();
+                    formData.append('filetype', filetype);
 
-                const response = await fetch('/export', {
-                    method: 'POST',
-                    body: formData
-                });
+                    const response = await fetch('/export', {
+                        method: 'POST',
+                        body: formData
+                    });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+
+                    a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
+
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error('Error during file download:', error);
                 }
-
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-
-                a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
-
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            } catch (error) {
-                console.error('Error during file download:', error);
             }
-        }
-    </script>
 
 
 
-    <script>
-        function showModal(text) {
-            document.getElementById('modalText').innerText = text;
-            document.getElementById('infoModal').style.display = 'block';
-        }
-        function closeModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-    </script>
+
+            function showTooltip(evt, text) {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.innerText = text;
+                tooltip.style.left = (evt.pageX + 10) + 'px';
+                tooltip.style.top = (evt.pageY + 10) + 'px';
+                tooltip.style.display = 'block';
+            }
+
+            function hideTooltip() {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.style.display = 'none';
+            }
+        </script>
+
 
 </body>
 </html>
