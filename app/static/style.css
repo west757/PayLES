@@ -127,6 +127,7 @@ footer {
 
 
 
+/* file input */
 input[type=file] {
     padding: 10px;
     font-size: 14px;
@@ -144,17 +145,150 @@ input[type=file]::file-selector-button {
 }
 
 
+/* file submit */
 input[type=submit] {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid var(--darkgray);
+    background-color: var(--lightgreen);
+    border: 2px solid var(--lightgreen);
+    border-radius: 15px;
+    color: var(--white);
     cursor: pointer;
+    display: inline-block;
+    outline: none;
+    padding: 10px 50px;
+    text-align: center;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    touch-action: manipulation;
+    will-change: transform;
+    font-size: 16px;
+    margin: 8px;
+}
+
+input[type=submit]:disabled {
+    pointer-events: none;
 }
 
 input[type=submit]:hover {
-    background-color: var(--lightgreen);
-    transition: background .2s ease-in-out;
+    color: var(--white);
+    background-color: var(--darkgreen);
+    border: 2px solid var(--darkgreen);
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
 }
+
+input[type=submit]:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+/* table dropdown */
+select.core {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    height: 30px;
+    margin: -10px;
+}
+
+/* table number input */
+input.core {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    margin: -10px;
+}
+
+
+/* table update button*/
+.updatebutton {
+    background-color: var(--lightgreen);
+    border: 2px solid var(--lightgreen);
+    border-radius: 15px;
+    color: var(--white);
+    cursor: pointer;
+    display: inline-block;
+    outline: none;
+    padding: 10px 50px;
+    text-align: center;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    touch-action: manipulation;
+    will-change: transform;
+    font-size: 16px;
+    margin: 8px;
+}
+
+.updatebutton:disabled {
+    pointer-events: none;
+}
+
+.updatebutton:hover {
+    color: var(--white);
+    background-color: var(--darkgreen);
+    border: 2px solid var(--darkgreen);
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.updatebutton:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+
+
+
+
+
+select.settings {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    height: 30px;
+    margin: -10px;
+}
+
+input.settings {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 70px;
+    text-align: center;
+    height: 18px;
+    margin: -10px;
+}
+
+input.settingcheckbox {
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    height: 20px;
+    width: 20px;
+    accent-color: #04AA6D;
+}
+
+
+
+
+
 
 
 
@@ -236,22 +370,10 @@ td.core-header:last-child {
 }
 
 /*
-td.hover01:hover {
-    background-color: #dde6ee;
+tr.core:hover {
+    font-weight: bold;
 }
-
-td.hover02:hover {
-    background-color: #dde6ee;
-}
-
-td.hover02:first-child {
-    border-radius: 0 0 0 6px;
-}
-
-td.hover02:last-child {
-    border-radius: 0 0 6px 0;
-}
-*/
+    */
 
 
 #options-table {
@@ -262,121 +384,15 @@ td.hover02:last-child {
     width: 490px;
 }
 
-
-
-select.core {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    height: 30px;
-    margin: -10px;
-}
-
-input.core {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    margin: -10px;
-}
-
-
-
-.updatebutton {
-    background-color: var(--lightgreen);
-    border: 2px solid var(--lightgreen);
-    border-radius: 15px;
-    color: var(--white);
-    cursor: pointer;
-    display: inline-block;
-    outline: none;
-    padding: 10px 50px;
-    text-align: center;
-    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-    touch-action: manipulation;
-    will-change: transform;
-    font-size: 16px;
-    margin: 8px;
-}
-
-.updatebutton:disabled {
-    pointer-events: none;
-}
-
-.updatebutton:hover {
-    color: var(--white);
-    background-color: var(--darkgreen);
-    border: 2px solid var(--darkgreen);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-    transform: translateY(-2px);
-}
-
-.updatebutton:active {
-    box-shadow: none;
-    transform: translateY(0);
-}
-
-
-
-
 .settings-div {
     display: inline-block;
     margin: 0px;
 }
 
-select.settings {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    height: 30px;
-    margin: -10px;
-}
-
-input.settings {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 70px;
-    text-align: center;
-    height: 18px;
-    margin: -10px;
-}
-
-input.settingcheckbox {
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    height: 20px;
-    width: 20px;
-    accent-color: #04AA6D;
-}
 
 
 
-
-
-
-/* Modal */
-
+/* modal */
 .modal {
     opacity: 0;
     visibility: hidden;
@@ -442,7 +458,7 @@ input.settingcheckbox {
     position: absolute;
     width: 2px;
     height: 1.5em;
-    background: #ccc;
+    background: var(--darkgray);
     display: block;
     transform: rotate(45deg);
     left: 50%;
@@ -451,7 +467,7 @@ input.settingcheckbox {
 }
 
 .modal-close:hover:after, .modal-close:hover:before {
-    background: #aaa;
+    
 }
 
 .modal-close:before {
