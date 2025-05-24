@@ -62,4 +62,11 @@ opm leave: https://www.opm.gov/policy-data-oversight/pay-leave/pay-administratio
 leave explained: https://www.militaryonesource.mil/military-basics/new-to-the-military/military-leave-and-how-it-works/
 dfas pcs pay: https://www.dfas.mil/MilitaryMembers/travelpay/armypcs/PCS-Information/
 gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
+
+
+in work:
+css styling
+file drag and drop
+difference calculation
+
 -->
