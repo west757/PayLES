@@ -465,39 +465,35 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
-
         </div>
 
 
 
-        <div id="les-display">
-            {% if session['les_image'] %}
-            <div class="pdf-container" id="pdfContainer">
-                <img id="pdfImage" src="data:image/png;base64,{{session['les_image']}}" />
+        {% if session['les_image'] %}
+        <!--<div class="pdf-container" id="pdfContainer">-->
+        <div id="les-image">
+            <img src="data:image/png;base64,{{session['les_image']}}" />
 
-                {% for rect in session['rect_overlay'] %}
-                <div class="highlight-rect"
-                     style="
-                    left: {{ rect.x1 }}px;
-                    top: {{ rect.y1 }}px;
-                    width: {{ rect.x2 - rect.x1 }}px;
-                    height: {{ rect.y2 - rect.y1 }}px;
-                 "
-                     title="Rect {{ rect.index }}"
-                     onclick="showModal('Details for rect {{ rect.index }}')">
-                </div>
-                {% endfor %}
+            {% for rect in session['rect_overlay'] %}
+            <div class="rect-highlight"
+                    style="
+                        left:{{rect.x1}}px;
+                        top:{{rect.y1}}px;
+                        width:{{rect.x2 - rect.x1}}px;
+                        height:{{rect.y2 - rect.y1}}px;"
+                    title="Rect{{rect.index}}"
+                    onclick="showModal('Details for rect {{ rect.index }}')">
             </div>
-            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
 
-            <div class="modal-image" id="infoModal">
-                <div class="modal-content-image">
-                    <span id="modalText"></span>
-                    <br><br>
-                    <button onclick="closeModal()">Close</button>
-                </div>
+        <div class="modal-image" id="infoModal">
+            <div class="modal-content-image">
+                <span id="modalText"></span>
+                <br><br>
+                <button onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>

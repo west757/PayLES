@@ -599,17 +599,17 @@ details[open] > summary::after {
 
 
 
-.pdf-container {
+#les-image {
     position: relative;
     display: inline-block;
 }
 
-.highlight-rect {
+.rect-highlight {
     position: absolute;
     cursor: pointer;
 }
 
-.highlight-rect:hover {
+.rect-highlight:hover {
     background-color: rgba(5, 219, 141, 0.5);
 }
 
