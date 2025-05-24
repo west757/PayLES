@@ -572,7 +572,6 @@ def updatepaydf():
         #update federal taxes
         session['paydf'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i])), 2)
 
-
         #update fica - social security
         session['paydf'].at[session['row_headers'].index("FICA - Social Security"), session['col_headers'][i]] = round(-Decimal(session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] * app.config['FICA_SOCIALSECURITY_TAX_RATE']), 2)
 
@@ -585,6 +584,21 @@ def updatepaydf():
         else:
             session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
 
+
+        #update tax residency state
+        if i >= session['col_headers'].index(session['state_future_month']):
+            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['state_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]
+
+        #update state filing status
+        if i >= session['col_headers'].index(session['state_filing_status_future_month']):
+            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['state_filing_status_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]
+
+        #update state taxes
+        session['paydf'].at[session['row_headers'].index("State Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_statetaxes(session['col_headers'][i])), 2)
 
         #update total taxes, net pay
         session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
@@ -629,6 +643,7 @@ def page404():
 def calculate_federaltaxes(column):
     taxable_income = session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Taxable Pay"), column] * 12
     taxable_income = round(taxable_income, 2)
+    tax = Decimal(0)
 
     if session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Federal Filing Status"), column] == "Single":
         taxable_income -= app.config['STANDARD_DEDUCTIONS'][0]
@@ -642,8 +657,6 @@ def calculate_federaltaxes(column):
     brackets = app.config['FEDERAL_TAX_RATE'][app.config['FEDERAL_TAX_RATE']['Status'].str.lower() == session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Federal Filing Status"), column].lower()]
     brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
 
-    tax = Decimal(0)
-
     for i in range(len(brackets)):
         lower = brackets.at[i, 'Bracket']
         rate = brackets.at[i, 'Rate']
@@ -653,14 +666,52 @@ def calculate_federaltaxes(column):
         else:
             upper = float('inf')
 
-        if taxable_income <= Decimal(float(lower)):
-            break
-
-        taxable_amount = min(taxable_income, upper) - lower
-        tax += taxable_amount * Decimal(rate)
+        if taxable_income > Decimal(float(lower)):
+            taxable_amount = min(taxable_income, upper) - lower
+            tax += taxable_amount * Decimal(rate)
 
     tax = tax / 12
     return round(tax, 2)
+
+
+
+
+def calculate_statetaxes(column):
+    taxable_income = session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Taxable Pay"), column] * 12
+    taxable_income = round(taxable_income, 2)
+    tax = Decimal(0)
+
+    state_brackets = app.config['STATE_TAX_RATE'][app.config['STATE_TAX_RATE']['State'] == session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Tax Residency State"), column]]
+        
+    if session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("State Filing Status"), column] == "Single":
+        brackets = state_brackets[['SingleBracket', 'SingleRate']].rename(columns={'SingleBracket': 'Bracket', 'SingleRate': 'Rate'})
+    elif session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("State Filing Status"), column] == "Married":
+        brackets = state_brackets[['MarriedBracket', 'MarriedRate']].rename(columns={'MarriedBracket': 'Bracket', 'MarriedRate': 'Rate'})
+    else:
+        print("no state filing status found")
+        
+    brackets = brackets.sort_values(by='Bracket')
+    brackets = brackets.reset_index(drop=True)
+
+    for i in range(len(brackets)):
+        lower = brackets.loc[i, 'Bracket']
+        rate = brackets.loc[i, 'Rate']
+
+        if i + 1 < len(brackets):
+            upper = brackets.loc[i + 1, 'Bracket']
+        else:
+            upper = float('inf')
+
+        if taxable_income > Decimal(float(lower)):
+            taxable_at_this_rate = min(taxable_income, upper) - lower
+            tax += taxable_at_this_rate * Decimal(rate)
+
+    tax = tax / 12
+    return round(tax, 2)
+
+
+
+
 
 
 
