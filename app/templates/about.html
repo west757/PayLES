@@ -9,23 +9,25 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="header-item" id="header-logo">
-            <a href="{{ url_for('index') }}"><img src="/static/logo.png"></a>
+    <header>
+        <div class="header">
+            <div class="header-item" id="header-logo">
+                <a href="{{ url_for('index') }}"><img src="/static/logo.png"></a>
+            </div>
+            <div class="header-item" id="header-text">
+                <p>program analyzing your LES</p>
+            </div>
+            <div class="header-item" id="header-nav">
+                <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
+                <a href="{{ url_for('leave') }}">Leave Calculator</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('resources') }}">Resources</a>
+                <a href="{{ url_for('faq') }}">FAQ</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('index') }}">Home</a>
+            </div>
         </div>
-        <div class="header-item" id="header-text">
-            <p>program analyzing your LES</p>
-        </div>
-        <div class="header-item" id="header-nav">
-            <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
-            <a href="{{ url_for('leave') }}">Leave Calculator</a>
-            <a href="{{ url_for('contact') }}">Contact</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('faq') }}">FAQ</a>
-            <a href="{{ url_for('about') }}">About</a>
-            <a href="{{ url_for('index') }}">Home</a>
-        </div>
-    </div>
+    </header>
 
     <main>
         <h2>About PayLES</h2>
@@ -70,31 +72,37 @@
 
         <h2>Background</h2>
         <p>
-            According to Brendan Duebner in his paper "A Military Solution to a Military Problem - Personal Finance Issues in the United States Armed Forces", he conducted 
-            an analysis of personal finances for military service members and found many members are not financially secure and struggle with basic finances. This is especially 
+            According to Brendan Duebner in his paper "A Military Solution to a Military Problem - Personal Finance Issues in the United States Armed Forces", he conducted
+            an analysis of personal finances for military service members and found many members are not financially secure and struggle with basic finances. This is especially
             true for junior service members, who are typically young, inexperienced, right out of high school, and particularly exposed to financial struggles.
         </p>
         <p>
-            He found that approximately 60 percent of families in the military could not meet three months’ worth of living expenses with their savings. This was also 
-            corroborated by another study by Blue Star Family, which found that 62 percent of military families are stressed about their financial situation. If a major 
-            life event or stressor occurs in those families’ lives, then they could be susceptible to various problems. This includes mental health issues, going without 
+            He found that approximately 60 percent of families in the military could not meet three months’ worth of living expenses with their savings. This was also
+            corroborated by another study by Blue Star Family, which found that 62 percent of military families are stressed about their financial situation. If a major
+            life event or stressor occurs in those families’ lives, then they could be susceptible to various problems. This includes mental health issues, going without
             basic necessities, and even could lead to coercion or financial blackmail.
         </p>
         <p>
-            By providing service members with an application which can accurately budget out future months of finances, it will provide direct benefits as well as second 
-            and third-order effects. This includes reducing stress, anxiety, and vulnerability. It also allows service members to work on building savings, which are 
-            necessary to reduce living paycheck to paycheck. Second and third-order effects are an increase in military readiness having service members who are financially, 
+            By providing service members with an application which can accurately budget out future months of finances, it will provide direct benefits as well as second
+            and third-order effects. This includes reducing stress, anxiety, and vulnerability. It also allows service members to work on building savings, which are
+            necessary to reduce living paycheck to paycheck. Second and third-order effects are an increase in military readiness having service members who are financially,
             mentally, and morally healthy.
         </p>
 
         <h2>Acknowledgements</h2>
         <p>
-            I would first like to thank Professor Adil Ahmad for his support during this project as my advisor. His understanding, grace, and guidance were instrumental in 
-            helping me successfully complete this project. Additionally, I would like to thank Dr. Yinong Chen for helping run this course and providing higher-level support. 
-            I also have major kudos to all the individuals who helped in the testing of the program and for providing valuable feedback. Without all the time and effort spent 
-            on making sure the program met all its objectives, PayLES would not be achieving its full potential. And finally, all the countless developers of the various 
+            I would first like to thank Professor Adil Ahmad for his support during this project as my advisor. His understanding, grace, and guidance were instrumental in
+            helping me successfully complete this project. Additionally, I would like to thank Dr. Yinong Chen for helping run this course and providing higher-level support.
+            I also have major kudos to all the individuals who helped in the testing of the program and for providing valuable feedback. Without all the time and effort spent
+            on making sure the program met all its objectives, PayLES would not be achieving its full potential. And finally, all the countless developers of the various
             libraries and datasets that were made freely available for use in this project.
         </p>
     </main>
+
+    <footer>
+        <div class="footer">
+            <p>All Rights Reserved &#xA9; 2025 PayLES</p>
+        </div>
+    </footer>
 </body>
 </html>

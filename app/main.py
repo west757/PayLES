@@ -78,7 +78,6 @@ def read_les(les_file):
 
     with pdfplumber.open(les_file) as les_pdf:
         les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
-        #page = pdf.pages[0].crop(bbox=crop_coords)
         les_text = ["text per rectangle"]
 
         title_crop = les_page.crop((18, 18, 593, 29))
@@ -86,13 +85,9 @@ def read_les(les_file):
         if title_text != "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
             print("file submitted is not an LES")
         else:
-            
-            
 
-
-
+            #create image
             temp_image = les_page.to_image(resolution=300).original
-
             new_width = int(temp_image.width * app.config['LES_IMAGE_SCALE'])
             new_height = int(temp_image.height * app.config['LES_IMAGE_SCALE'])
             resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
@@ -114,10 +109,7 @@ def read_les(les_file):
             session['les_image'] = encoded_img
             session['rect_overlay'] = scaled_rects
 
-
-
-            
-            
+            #get text
             for i, row in app.config['RECTANGLES'].iterrows():
                 x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
                 x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
