@@ -68,5 +68,7 @@ in work:
 css styling
 file drag and drop
 difference calculation
+change px to rem in css
+update year over time
 
 -->
