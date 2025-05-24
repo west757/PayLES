@@ -15,7 +15,7 @@
             <div id="paydf">
                 <table class="core" id="paydf-table">
                     <tbody>
-                        <tr class="core-header">
+                        <tr class="core-header" style="position: sticky;">
                             <td class="core-header"></td>
                             {% for x in session.col_headers[1:] %}
                             <td class="core-header">{{x}}</td>
@@ -48,7 +48,7 @@
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][x]]|replace("S","Single")|replace("M","Married")|replace("H","HoH")}}</td>
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][x]]}}</td>
                             {% endfor %}
                         </tr>
 
@@ -62,7 +62,7 @@
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-statetaxes">State Filing Status</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][x]]|replace("S","Single")|replace("M","Married")}}</td>
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][x]]}}</td>
                             {% endfor %}
                         </tr>
 
@@ -468,7 +468,7 @@
                                     <td class="core">
                                         <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
                                     </td>
-                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")|replace("H","HoH")}}</td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
                                     <td class="core">
                                         <select class="core" id="federal_filing_status_future" name="federal_filing_status_future">
                                             {% for x in config['TAX_FILING_TYPES'][0:] %}
@@ -489,7 +489,7 @@
                                     <td class="core">
                                         <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
                                     </td>
-                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]|replace("S","Single")|replace("M","Married")}}</td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]}}</td>
                                     <td class="core">
                                         <select class="core" id="state_filing_status_future" name="state_filing_status_future">
                                             {% for x in config['TAX_FILING_TYPES'][0:2] %}
