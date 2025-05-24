@@ -9,23 +9,25 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="header-item" id="header-logo">
-            <a href="{{ url_for('index') }}"><img src="/static/logo.png"></a>
+    <header>
+        <div class="header">
+            <div class="header-item" id="header-logo">
+                <a href="{{ url_for('index') }}"><img src="/static/logo.png"></a>
+            </div>
+            <div class="header-item" id="header-text">
+                <p>program analyzing your LES</p>
+            </div>
+            <div class="header-item" id="header-nav">
+                <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
+                <a href="{{ url_for('leave') }}">Leave Calculator</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('resources') }}">Resources</a>
+                <a href="{{ url_for('faq') }}">FAQ</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('index') }}">Home</a>
+            </div>
         </div>
-        <div class="header-item" id="header-text">
-            <p>program analyzing your LES</p>
-        </div>
-        <div class="header-item" id="header-nav">
-            <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
-            <a href="{{ url_for('leave') }}">Leave Calculator</a>
-            <a href="{{ url_for('contact') }}">Contact</a>
-            <a href="{{ url_for('resources') }}">Resources</a>
-            <a href="{{ url_for('faq') }}">FAQ</a>
-            <a href="{{ url_for('about') }}">About</a>
-            <a href="{{ url_for('index') }}">Home</a>
-        </div>
-    </div>
+    </header>
 
     <main>
         <h2>Frequently Asked Questions</h2>
@@ -52,6 +54,12 @@
         </details>
 
     </main>
+
+    <footer>
+        <div class="footer">
+            <p>All Rights Reserved &#xA9; 2025 PayLES</p>
+        </div>
+    </footer>
 
 </body>
 </html>

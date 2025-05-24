@@ -11,6 +11,7 @@
 
 html {
     box-sizing: border-box;
+    min-height: 100%;
 }
 
 *, *:before, *:after {
@@ -24,6 +25,9 @@ body {
     overflow-y: scroll;
     margin: 0;
     padding: 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 main {
@@ -40,7 +44,7 @@ main {
 }
 
 .header-item {
-    color: #f5e7de;
+    color: var(--pale);
     flex: 1;
     align-self: flex-end;
 }
@@ -73,6 +77,19 @@ main {
 
 #header-nav a:hover {
     background-color: var(--darkgreen);
+}
+
+
+footer {
+    background-color: var(--darkgray);
+    text-align: left;
+    padding: 0px 0px 0px 12px;
+    bottom: 0;
+    width: 100%;
+    color: var(--white);
+    font-size: 12px;
+    line-height: 1px;
+    margin-top: auto;
 }
 
 
@@ -589,13 +606,11 @@ details[open] > summary::after {
 
 .highlight-rect {
     position: absolute;
-    border: 2px solid rgba(255, 0, 0, 0.5);
-    background-color: rgba(255, 0, 0, 0.2);
     cursor: pointer;
 }
 
 .highlight-rect:hover {
-    background-color: rgba(0, 255, 0, 0.3);
+    background-color: rgba(5, 219, 141, 0.5);
 }
 
 .modal-image {
