@@ -86,7 +86,7 @@ def read_les(les_file):
             print("file submitted is not an LES")
         else:
 
-            #create image
+
             temp_image = les_page.to_image(resolution=300).original
             new_width = int(temp_image.width * app.config['LES_IMAGE_SCALE'])
             new_height = int(temp_image.height * app.config['LES_IMAGE_SCALE'])
@@ -98,16 +98,30 @@ def read_les(les_file):
             encoded_img = base64.b64encode(img_io.read()).decode("utf-8")
 
             scaled_rects = []
-            for box in app.config['RECTANGLES'].to_dict(orient="records"):
+            for rect in app.config['RECTANGLES'].to_dict(orient="records"):
                 scaled_rects.append({
-                    "index": box["index"],
-                    "x1": box["x1"] * app.config['LES_IMAGE_SCALE'],
-                    "y1": box["y1"] * app.config['LES_IMAGE_SCALE'],
-                    "x2": box["x2"] * app.config['LES_IMAGE_SCALE'],
-                    "y2": box["y2"] * app.config['LES_IMAGE_SCALE'],
+                    "index": rect["index"],
+                    "x1": rect["x1"] * app.config['LES_IMAGE_SCALE'],
+                    "y1": rect["y1"] * app.config['LES_IMAGE_SCALE'],
+                    "x2": rect["x2"] * app.config['LES_IMAGE_SCALE'],
+                    "y2": rect["y2"] * app.config['LES_IMAGE_SCALE'],
+                    "title": rect["title"],
+                    "modal": rect["modal"],
+                    "tooltip": rect["tooltip"]
                 })
+
             session['les_image'] = encoded_img
             session['rect_overlay'] = scaled_rects
+
+
+
+
+
+
+
+
+
+
 
             #get text
             for i, row in app.config['RECTANGLES'].iterrows():
