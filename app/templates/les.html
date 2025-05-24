@@ -255,14 +255,12 @@
                             {% endfor %}
                         </tr>
 
-                        {% if "Roth TSP" in session['row_headers'] %}
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
                             <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                             {% endfor %}
                         </tr>
-                        {% endif %}
 
                         {% if "Partial Pay" in session['row_headers'] %}
                         <tr class="core">
@@ -331,6 +329,19 @@
                             <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][x]])}}</td>
                             {% endfor %}
                         </tr>
+
+                        {% if session['showdifference'] %}
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-grossnetpay">Difference</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Difference"), session['col_headers'][x]])}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
+                        <!--
+                            add row
+                        -->
                     </tbody>
                 </table>
             </div>
@@ -424,7 +435,6 @@
                                     </td>
                                 </tr>
 
-                                {% if "Roth TSP" in session['row_headers'] %}
                                 <tr class="core">
                                     <td class="core">
                                         <label class="modalbutton" for="modal-tsp">Roth TSP</label>
@@ -441,7 +451,6 @@
                                         </select>
                                     </td>
                                 </tr>
-                                {% endif %}
 
                                 <tr class="core">
                                     <td class="core">
@@ -551,30 +560,17 @@
                                 </td>
                             </tr>
 
-                            <!--
-                        <tr class="core">
-                            <td class="core" colspan=2>
-                                <div class="settings-div">
-                                    <label>Color Table</label>
-                                </div>
-                                <div class="settings-div">
-                                    <input type="checkbox" class="settingcheckbox" id="colortable" name="colortable" value="False">
-                                </div>
-                            </td>
-                        </tr>
-                            -->
-                            <!--
-                        <tr class="core">
-                            <div class="settings-div">
+                            <tr class="core">
                                 <td class="core" colspan=2>
-                                    <label>Add row</label>
+                                    <div class="settings-div">
+                                        <label>Show Difference From Previous Month:</label>
+                                    </div>
+                                    <div class="settings-div">
+                                        <input type="checkbox" class="settingcheckbox" id="showdifference" name="showdifference" {% if showdifference %} checked {% endif %} hx-post="/showdifference" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                                    </div>
                                 </td>
-                            </div>
-                        </tr>
-                            -->
-                            <!--
-                            add row for show difference of previous month
-                        -->
+                            </tr>
+
 
 
                             <tr class="core">
