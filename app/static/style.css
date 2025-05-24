@@ -16,10 +16,10 @@ html {
 
 *, *:before, *:after {
     box-sizing: inherit;
+    font-family: Arial, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
     background-color: var(--pale);
     color: var(--black);
     overflow-y: scroll;
@@ -108,9 +108,6 @@ footer {
 
 #core-submit {
     margin: auto;
-}
-
-#submit-upload {
 }
 
 #submit-les {
@@ -267,63 +264,7 @@ td.hover02:last-child {
 
 
 
-/* inputs */
-
-table.inputs-table {
-    border-collapse: separate;
-    border-spacing: 0px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background: #f9f9f9;
-    width: 560px;
-}
-
-tr.inputs-header {
-    text-align: center;
-    font-weight: bold;
-    border-left: 1px solid #ddd;
-}
-
-td.inputs-header {
-    background: #333;
-    color: #f2f2f2;
-    text-align: center;
-    font-weight: bold;
-    border-left: 1px solid #ddd;
-    border-radius: 0px;
-    padding: 20px;
-}
-
-tr.inputs, td.inputs {
-    text-align: center;
-    border-left: 1px solid #ddd;
-    border-top: 1px solid #ddd;
-}
-
-/*
-tr.inputs:nth-child(even) td.inputs {
-    background-color: #f1f1f1;
-}
-*/
-
-tr.inputs:not(:first-child), td.inputs:not(:first-child) {
-    padding: 20px;
-}
-
-td.inputs:first-child, td.inputs-header:first-child {
-    border-left: none;
-}
-
-td.inputs-header:first-child {
-    border-radius: 20px 0 0 0;
-}
-
-td.inputs-header:last-child {
-    border-radius: 0 20px 0 0;
-}
-
 select.core {
-    font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
     border: 1px solid #999;
@@ -337,7 +278,6 @@ select.core {
 }
 
 input.core {
-    font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
     border: 1px solid #999;
@@ -349,38 +289,41 @@ input.core {
     margin: -10px;
 }
 
-/*
-tr.matrix:hover {
-    background-color: #ddd;
-    transform: scale(1.02);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-*/
 
-
-
-.updatebuttondiv {
-    margin: auto;
-    width: 300px;
-    padding: 10px;
-}
 
 .updatebutton {
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
+    background-color: var(--lightgreen);
+    border: 2px solid var(--lightgreen);
+    border-radius: 15px;
+    color: var(--white);
+    cursor: pointer;
     display: inline-block;
+    outline: none;
+    padding: 10px 50px;
+    text-align: center;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    touch-action: manipulation;
+    will-change: transform;
     font-size: 16px;
+    margin: 8px;
+}
+
+.updatebutton:disabled {
+    pointer-events: none;
 }
 
 .updatebutton:hover {
-    background-color: #0c9a65;
+    color: var(--white);
+    background-color: var(--darkgreen);
+    border: 2px solid var(--darkgreen);
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
 }
 
-
+.updatebutton:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
 
 
 
@@ -391,7 +334,6 @@ tr.matrix:hover {
 }
 
 select.settings {
-    font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
     border: 1px solid #999;
@@ -405,7 +347,6 @@ select.settings {
 }
 
 input.settings {
-    font-family: Arial, sans-serif;
     font-size: 15px;
     padding: 5px;
     border: 1px solid #999;
@@ -598,12 +539,6 @@ details[open] > summary::after {
 
 
 
-
-
-
-
-
-
 #les-image {
     position: relative;
     display: inline-block;
@@ -621,29 +556,12 @@ details[open] > summary::after {
 .tooltip {
     position: absolute;
     padding: 4px 8px;
-    background: black;
-    color: white;
-    font-size: 12px;
-    border-radius: 4px;
+    background: var(--darkgray);
+    color: var(--white);
+    border-radius: 8px;
     display: none;
     z-index: 1001;
+    max-width: 400px;
+    font-size: 14px;
 }
 
-.modal-image {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-}
-
-.modal-content-image {
-    margin: 10% auto;
-    background: white;
-    padding: 20px;
-    width: 300px;
-    border-radius: 5px;
-}

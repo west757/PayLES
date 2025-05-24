@@ -22,6 +22,149 @@
                             {% endfor %}
                         </tr>
 
+
+                        {% if session['showallvariables'] %}
+                        <tr class="core">
+                            <td class="core">Year</td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Year"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-basepay">Rank</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-basepay">Months of Service</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Months of Service"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][x]]|replace("S","Single")|replace("M","Married")|replace("H","HoH")}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-statetaxes">Tax Residency State</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-statetaxes">State Filing Status</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][x]]|replace("S","Single")|replace("M","Married")}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-basepay">BAQ Type</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("BAQ Type"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-bah">Zip Code</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-cola">JFTR</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("JFTR"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-bah">Dependents</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-cola">JFTR 2</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("JFTR 2"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-bas">BAS Type</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("BAS Type"), session['col_headers'][x]]}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Traditional TSP Base Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Traditional TSP Base Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Traditional TSP Specialty Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Traditional TSP Specialty Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Traditional TSP Incentive Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Traditional TSP Incentive Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Traditional TSP Bonus Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Traditional TSP Bonus Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP Base Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Roth TSP Base Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP Specialty Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Roth TSP Specialty Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP Incentive Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Roth TSP Incentive Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core"><label class="modalbutton" for="modal-tsp">Roth TSP Bonus Pay Rate</label></td>
+                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Roth TSP Bonus Pay Rate"), session['col_headers'][x]]}}%</td>
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+
                         <!-- entitlements -->
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-basepay">Base Pay</label></td>
@@ -149,10 +292,10 @@
                         {% endif %}
 
                         <!--
-                    <tr class="core">
-                        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-                    </tr>
-                    -->
+    <tr class="core">
+        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
+    </tr>
+    -->
 
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
@@ -192,6 +335,8 @@
                 </table>
             </div>
 
+
+            <!-- options -->
             <div id="options-settings">
                 <div id="options">
                     <form hx-post="/updatepaydf" hx-target="#core" hx-swap="innerHTML">
@@ -373,6 +518,8 @@
                     </form>
                 </div>
 
+
+                <!-- settings -->
                 <div id="settings">
                     <table class="core" id="settings-table">
                         <tbody>
@@ -393,12 +540,13 @@
                                         </select>
                                     </div>
                                 </td>
+
                                 <td class="core" style="width: 50%;">
                                     <div class="settings-div">
-                                        <label>Years Displayed:</label>
+                                        <label>Show All Variables:</label>
                                     </div>
                                     <div class="settings-div">
-                                        <input type="checkbox" class="settingcheckbox" id="displayyears" name="displayyears" value="False">
+                                        <input type="checkbox" class="settingcheckbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
                                     </div>
                                 </td>
                             </tr>
@@ -469,7 +617,7 @@
         </div>
 
 
-
+        <!-- display les image -->
         {% if session['les_image'] %}
         <div id="les-image">
             <img src="data:image/png;base64,{{session['les_image']}}" />
@@ -494,7 +642,7 @@
 
 
 
-
+        <!-- modals -->
         <input class="modal-state" id="modal-basepay" type="checkbox" />
         <div class="modal">
             <label class="modal-bg" for="modal-basepay"></label>
