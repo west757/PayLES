@@ -115,7 +115,7 @@ def read_les(les_file):
             session['rect_overlay'] = scaled_rects
 
 
-            #get text
+            #parse text
             for i, row in app.config['RECTANGLES'].iterrows():
                 x0 = float(row['x1']) * app.config['LES_COORD_SCALE']
                 x1 = float(row['x2']) * app.config['LES_COORD_SCALE']
