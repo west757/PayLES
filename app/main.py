@@ -309,14 +309,13 @@ def read_les(les_file):
             #entitlements
             row = ["Base Pay"]
             if "BASE" in les_text[11]:
-                for column in session['paydf'].columns[1:]:
+                row.append(Decimal(les_text[11][les_text[11].index("BASE")+2]))
+                for column in session['paydf'].columns[2:]:
                     row.append(calculate_basepay(column))
             else:
                 for i in range(session['months_num']):
                     row.append(Decimal(0))
             session['paydf'].loc[len(session['paydf'])] = row
-
-
 
             row = ["BAS"]
             if "BAS" in les_text[11]:
@@ -353,73 +352,7 @@ def read_les(les_file):
                 for i in range(session['months_num']-1):
                     row.append(0)
                 session['paydf'].loc[len(session['paydf'])] = row
-
-
-            #deductions
-            if "FEDERAL" in les_text[12]:
-                row = ["Federal Taxes"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("FEDERAL")+2]))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-            if "FICA-SOC" in les_text[12]:
-                row = ["FICA - Social Security"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("FICA-SOC")+2]))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-            if "FICA-MEDICARE" in les_text[12]:
-                row = ["FICA - Medicare"]
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("FICA-MEDICARE")+1]))
-                session['paydf'].loc[len(session['paydf'])] = row
-
-            row = ["SGLI"]
-            if "SGLI" in les_text[12]:
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("SGLI")+1]))
-            else:
-                for i in range(session['months_num']):
-                    row.append(Decimal(0))
-            session['paydf'].loc[len(session['paydf'])] = row
-            session['sgli_future'] = Decimal(les_text[12][les_text[12].index("SGLI")+1])
-
-            row = ["State Taxes"]
-            if "STATE" in les_text[12]:
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("STATE")+2]))
-            else:
-                for i in range(session['months_num']):
-                    row.append(Decimal(0))
-            session['paydf'].loc[len(session['paydf'])] = row
-
-            row = ["Roth TSP"]
-            if "ROTH" in les_text[12]:
-                for i in range(session['months_num']):
-                    row.append(-Decimal(les_text[12][les_text[12].index("ROTH")+2]))
-            else:
-                for i in range(session['months_num']):
-                    row.append(Decimal(0))
-            session['paydf'].loc[len(session['paydf'])] = row
-
-            if "PARTIAL" in les_text[12]:
-                row = ["Partial Pay", -Decimal(les_text[12][les_text[12].index("PARTIAL")+2])]
-                for i in range(session['months_num']-1):
-                    row.append(0)
-                session['paydf'].loc[len(session['paydf'])] = row
-
-            if "PCS" in les_text[12]:
-                row = ["PCS Members", -Decimal(les_text[12][les_text[12].index("PCS")+2])]
-                for i in range(session['months_num']-1):
-                    row.append(0)
-                session['paydf'].loc[len(session['paydf'])] = row
-
-            if "DEBT" in les_text[12]:
-                row = ["Debt", -Decimal(les_text[12][les_text[12].index("DEBT")+1])]
-                for i in range(session['months_num']-1):
-                    row.append(0)
-                session['paydf'].loc[len(session['paydf'])] = row
-
+            
 
             #calculations
             row = ["Taxable Pay"]
@@ -432,15 +365,95 @@ def read_les(les_file):
                 row.append(calculate_nontaxablepay(column))
             session['paydf'].loc[len(session['paydf'])] = row
 
-            row = ["Total Taxes"]
-            for column in session['paydf'].columns[1:]:
-                row.append(-calculate_totaltaxes(column))
-            session['paydf'].loc[len(session['paydf'])] = row
-
             row = ["Gross Pay"]
             for column in session['paydf'].columns[1:]:
-                row.append(Decimal(session['paydf'][column][20:-3][session['paydf'][column][20:-3] > 0].sum()))
+                row.append(Decimal(session['paydf'][column][20:-2][session['paydf'][column][20:-2] > 0].sum()))
             session['paydf'].loc[len(session['paydf'])] = row
+
+
+            #deductions
+            row = ["Federal Taxes"]
+            if "FEDERAL" in les_text[12]:
+                row.append(-Decimal(les_text[12][les_text[12].index("FEDERAL")+2]))
+                for column in session['paydf'].columns[2:]:
+                    row.append(round(-Decimal(calculate_federaltaxes(column)), 2))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+
+            if "FICA-SOC" in les_text[12]:
+                row = ["FICA - Social Security"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[12][les_text[12].index("FICA-SOC")+2]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            if "FICA-MEDICARE" in les_text[12]:
+                row = ["FICA - Medicare"]
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[12][les_text[12].index("FICA-MEDICARE")+1]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            row = ["SGLI"]
+            if "SGLI" in les_text[12]:
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[12][les_text[12].index("SGLI")+1]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+            session['sgli_future'] = Decimal(les_text[12][les_text[12].index("SGLI")+1])
+
+            row = ["State Taxes"]
+            if "STATE" in les_text[12]:
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[12][les_text[12].index("STATE")+2]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            row = ["Roth TSP"]
+            if "ROTH" in les_text[12]:
+                for i in range(session['months_num']):
+                    row.append(-Decimal(les_text[12][les_text[12].index("ROTH")+2]))
+            else:
+                for i in range(session['months_num']):
+                    row.append(Decimal(0))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            if "PARTIAL" in les_text[12]:
+                row = ["Partial Pay", -Decimal(les_text[12][les_text[12].index("PARTIAL")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
+                session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            if "PCS" in les_text[12]:
+                row = ["PCS Members", -Decimal(les_text[12][les_text[12].index("PCS")+2])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
+                session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+            if "DEBT" in les_text[12]:
+                row = ["Debt", -Decimal(les_text[12][les_text[12].index("DEBT")+1])]
+                for i in range(session['months_num']-1):
+                    row.append(0)
+                session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 3)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 3):]], ignore_index=True)
+
+
+            #calculations
+            row = ["Total Taxes"]
+            for column in session['paydf'].columns[1:]:
+                row.append(calculate_totaltaxes(column))
+            session['paydf'] = pd.concat([session['paydf'].iloc[:(len(session['paydf']) - 1)], pd.DataFrame([row], columns=session['paydf'].columns), session['paydf'].iloc[(len(session['paydf']) - 1):]], ignore_index=True)
 
             row = ["Net Pay"]
             for column in session['paydf'].columns[1:]:
@@ -584,24 +597,8 @@ def updatepaydf():
             session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]
 
 
-
-
         #update base pay
         session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = calculate_basepay(session['col_headers'][i])
-        #if i >= session['col_headers'].index(session['rank_future_month']):
-        #    basepay_col = 0
-        #    for j in range(len(session['col_headers'])):
-        #        if app.config['PAY_ACTIVE_HEADERS'][j] <= session['paydf'].at[session['row_headers'].index("Months of Service"), session['col_headers'][i]] < app.config['PAY_ACTIVE_HEADERS'][j+1]:
-        #            basepay_col = app.config['PAY_ACTIVE_HEADERS'][j]
-        #
-        #    basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
-        #    session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(Decimal(basepay_value.iloc[0]), 2)
-        #else:
-        #    session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
-
-
-
-
 
         #update bas
         if i >= session['col_headers'].index(session['rank_future_month']):
@@ -613,7 +610,6 @@ def updatepaydf():
             session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(bas_value, 2)
         else:
             session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][1]], 2)
-
 
         #update BAH
         if session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] != "Not Found" and session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] != "00000":
