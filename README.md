@@ -68,6 +68,6 @@ in work:
 css styling
 change px to rem in css
 file verification
-dependents broken
+change logo size
 
 -->
