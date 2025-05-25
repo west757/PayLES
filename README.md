@@ -65,9 +65,6 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 
 in work:
-css styling
-change px to rem in css
 file verification
-change logo size
 
 -->
