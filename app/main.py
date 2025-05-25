@@ -42,13 +42,10 @@ def submit_les():
             return render_template("submit.html", error="File is not a valid LES")
 
 
-
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
     read_les(app.config['EXAMPLE_LES'])
     return render_template('les.html')
-
-
 
 
 @app.route('/read_les', methods=['POST'])
