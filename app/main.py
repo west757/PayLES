@@ -84,7 +84,8 @@ def read_les(les_file):
         title_crop = les_page.crop((18, 18, 593, 29))
         title_text = title_crop.extract_text_simple()
         if title_text != "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
-            print("file submitted is not an LES")
+            return 'File is not an LES', 400
+
         else:
 
             #create image
@@ -208,8 +209,12 @@ def read_les(les_file):
             session['paydf'].loc[len(session['paydf'])] = row
 
             row = ["Zip Code"]
-            for i in range(session['months_num']):
-                row.append(les_text[50][2])
+            if les_text[50][2] != "00000":
+                for i in range(session['months_num']):
+                    row.append(les_text[50][2])
+            else:
+                for i in range(session['months_num']):
+                    row.append("Not Found")
             session['paydf'].loc[len(session['paydf'])] = row
             session['zipcode_future'] = les_text[50][2]
 
@@ -603,7 +608,7 @@ def updatepaydf():
 
 
         #update BAH
-        if session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] != "Not Found":
+        if session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] != "Not Found" and session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] != "00000":
             mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(session['zipcode_future'])])].stack()
             mha_search_row = mha_search.index[0][0]
             session['mha_future'] = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]

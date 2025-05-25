@@ -16,49 +16,50 @@ html {
 
 *, *:before, *:after {
     box-sizing: inherit;
-    font-family: Arial, sans-serif;
 }
 
 body {
+    min-height: 100vh;
     background-color: var(--pale);
     color: var(--black);
     overflow-y: scroll;
-    margin: 0;
-    padding: 0px;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 main {
-    margin: auto;
+    margin: 0 auto;
     width: 60%;
 }
 
 
-.header {
-    display: flex;
-    background-color: var(--darkgray);
-    height: 90px;
+/* header */
+header {
+    height: 6rem;
     width: 100%;
+    background-color: var(--darkgray);
+    color: var(--pale);
+}
+
+.header-container {
+    display: flex;
 }
 
 .header-item {
-    color: var(--pale);
     flex: 1;
     align-self: flex-end;
 }
 
-#header-logo {
+#logo {
     float: left;
-    transform: scale(0.5);
-    margin: -30px -50px -30px 0px;
 }
 
 #header-text {
     text-align: left;
-    font-size: 26px;
-    line-height: 4px;
+    font-size: 24px;
 }
 
 #header-nav {
@@ -69,10 +70,10 @@ main {
     float: right;
     color: var(--white);
     text-align: center;
-    padding: 60px 12px 15px 12px;
     text-decoration: none;
-    font-size: 17px;
-    vertical-align: bottom;
+    margin: 0;
+    height: 6rem;
+    padding: 4rem 1rem 0rem 1rem;
 }
 
 #header-nav a:hover {
@@ -124,30 +125,6 @@ footer {
     width: 400px;
     border-radius: 20px;
 }
-
-
-
-/* file input */
-/*
-input[type=file] {
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-}
-
-input[type=file]:hover {
-    background-color: var(--lightgreen);
-    transition: background .2s ease-in-out;
-}
-
-input[type=file]::file-selector-button {
-    display: none;
-}
-*/
-
-
-
 
 
 #submit-drop {
