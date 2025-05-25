@@ -136,9 +136,20 @@ def read_les(les_file):
             for i in range(session['months_num']):
                 paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[10][3])+i) % 12])
 
+
             paydf_year = ["Year"]
-            for i in range(session['months_num']):
-                paydf_year.append("20" + les_text[10][4])
+            current_year = int(les_text[10][4])
+            prev_month_index = app.config['MONTHS_SHORT'].index(paydf_month[1])
+            for month in paydf_month[1:]:
+                month_index = app.config['MONTHS_SHORT'].index(month)
+                if month_index < prev_month_index:
+                    current_year += 1
+        
+                paydf_year.append("20" + str(current_year))
+                prev_month_index = month_index
+
+
+                
 
             session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
 
@@ -484,6 +495,18 @@ def updatemonths():
     session['paydf'] = df2
     session['col_headers'] = list(session['paydf'].columns)
     session['row_headers'] = list(session['paydf'][session['paydf'].columns[0]])
+
+
+    current_year = int(session['paydf'].at[session['row_headers'].index("Year"), session['col_headers'][1]])
+    prev_month_index = app.config['MONTHS_SHORT'].index(session['col_headers'][1])
+    for month in session['col_headers'][1:]:
+        month_index = app.config['MONTHS_SHORT'].index(month)
+        if month_index < prev_month_index:
+            current_year += 1
+
+        session['paydf'].at[session['row_headers'].index("Year"), session['col_headers'][session['col_headers'].index(month)]] = current_year
+        prev_month_index = month_index
+
 
     return render_template('les.html')
 

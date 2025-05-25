@@ -209,6 +209,10 @@ input[type=file]::file-selector-button:hover {
     width: 14rem;
 }
 
+#settings-input:hover {
+    background: var(--lightgray);
+}
+
 #settings-input::file-selector-button {
     display: none;
 }
@@ -289,6 +293,7 @@ input.core {
 }
 
 
+
 /* table update button*/
 .updatebutton {
     background-color: var(--lightgreen);
@@ -298,7 +303,6 @@ input.core {
     cursor: pointer;
     display: inline-block;
     outline: none;
-    padding: 10px 50px;
     text-align: center;
     transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
     touch-action: manipulation;
@@ -325,8 +329,13 @@ input.core {
 }
 
 
+#update-button {
+    padding: 10px 50px;
+}
 
-
+#export-button {
+    padding: 10px 10px;
+}
 
 
 select.settings {
@@ -414,8 +423,10 @@ tr.core-header {
     /*position: sticky;*/
 }
 
+
+
 td.core-header {
-    background: #333;
+    background: var(--darkgray);
     color: var(--white);
     text-align: center;
     font-weight: bold;
@@ -450,11 +461,12 @@ td.core-header:last-child {
     border-radius: 0 20px 0 0;
 }
 
-/*
-tr.core:hover {
-    font-weight: bold;
+
+.core-spacer {
+    background-color: #CFD8DC;
+    border-top: 1px solid #CFD8DC;
+    height: 3px;
 }
-    */
 
 
 #options-table {
@@ -571,7 +583,7 @@ tr.core:hover {
 }
 
 .modalbutton:hover, .modalbutton:focus {
-    background: #2ecc71;
+    background: var(--lightgreen);
 }
 
 .modalbutton:active {
