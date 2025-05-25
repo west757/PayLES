@@ -3,7 +3,7 @@
     --pale: #f5e7de;
     --black: #000000;
     --darkgray: #393939;
-    --gray: #5F6368;
+    --gray: #CFD8DC;
     --lightgray: #f1f1f1;
     --lightgreen: #04a96d;
     --darkgreen: #0c9a65;
@@ -19,14 +19,14 @@ html {
 }
 
 body {
-    min-height: 100vh;
     background-color: var(--pale);
     color: var(--black);
-    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     font-family: Arial, sans-serif;
     margin: 0;
+    min-height: 100vh;
+    overflow-y: scroll;
     padding: 0;
 }
 
@@ -39,17 +39,17 @@ main {
 
 /* header */
 header {
-    height: 6rem;
-    width: 100%;
     background-color: var(--darkgray);
     color: var(--pale);
+    height: 6rem;
+    width: 100%;
 }
 
 .header-container {
-    height: inherit;
-    width: inherit;
     display: flex;
+    height: inherit;
     justify-content: flex-end;
+    width: inherit;
 }
 
 .header-item {
@@ -70,11 +70,11 @@ header {
 }
 
 #header-nav a {
+    align-self: flex-end;
     color: var(--white);
+    padding: 100% 1rem 1rem 1rem;
     text-align: center;
     text-decoration: none;
-    align-self: flex-end;
-    padding: 100% 1rem 1rem 1rem;
 }
 
 #header-nav a:hover {
@@ -85,32 +85,33 @@ header {
 
 /* footer */
 footer {
-    width: 100%;
     background-color: var(--darkgray);
     color: var(--white);
-    text-align: left;
-    padding: 0 0 0 1.5rem;
     font-size: 0.8rem;
-    margin-top: auto;
     line-height: 0.35rem;
+    margin-top: auto;
+    padding: 0 0 0 1.5rem;
+    text-align: left;
+    width: 100%;
 }
+
 
 
 /* drag and drop */
 #submit-drop {
-    position: relative;
+    align-items: center;
+    border: 2px dashed var(--darkgray);
+    border-radius: 1rem;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 14rem;
-    width: 30rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    border: 2px dashed var(--darkgray);
-    cursor: pointer;
-    transition: background .2s ease-in-out;
     gap: 0.75rem;
+    height: 14rem;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    transition: background .2s ease-in-out;
+    width: 30rem;
 }
 
 #submit-drop:hover, #submit-drop.drag-active {
@@ -118,43 +119,35 @@ footer {
 }
 
 #drop-title {
-    text-align: center;
     font-size: 1.25rem;
-}
-
-#input-submit {
-    border: 3px dashed var(--darkgray);
-    height: 140px;
-    width: 400px;
-    border-radius: 20px;
+    text-align: center;
 }
 
 
 
 /* file input */
 input[type=file] {
+    border: 1px solid var(--darkgray);
+    border-radius: 0.5rem;
     max-width: 100%;
     padding: 0.5rem;
-    border-radius: 10px;
-    border: 1px solid var(--darkgray);
-    font-size: 14px;
 }
 
 input[type=file]::file-selector-button {
-    margin-right: 20px;
-    border: none;
     background: var(--lightgreen);
-    padding: 10px 20px;
-    border-radius: 10px;
+    border: none;
+    border-radius: 0.5rem;
     color: var(--white);
     cursor: pointer;
+    font-size: 1rem;
+    margin-right: 1rem;
+    padding: 0.75rem 1.25rem;
     transition: background .2s ease-in-out;
-    font-size: 16px;
 }
 
 input[type=file]::file-selector-button:hover {
     background: var(--darkgreen);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
 }
 
 #submit-input {
@@ -166,7 +159,8 @@ input[type=file]::file-selector-button:hover {
 }
 
 #settings-input:hover {
-    background: var(--lightgray);
+    background: var(--gray);
+    transition: background .2s ease-in-out;
 }
 
 #settings-input::file-selector-button {
@@ -177,89 +171,47 @@ input[type=file]::file-selector-button:hover {
 
 
 /* buttons */
-input[type=submit] {
+button {
     background-color: var(--lightgreen);
     border: 2px solid var(--lightgreen);
-    border-radius: 10px;
+    border-radius: 0.5rem;
     color: var(--white);
     cursor: pointer;
     display: inline-block;
-    outline: none;
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
     text-align: center;
     transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
     touch-action: manipulation;
     will-change: transform;
-    font-size: 16px;
-    margin: 8px;
 }
 
-input[type=submit]:disabled {
-    pointer-events: none;
-}
-
-input[type=submit]:hover {
-    color: var(--white);
+button:hover {
     background-color: var(--darkgreen);
     border: 2px solid var(--darkgreen);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    color: var(--white);
     transform: translateY(-2px);
 }
 
-input[type=submit]:active {
-    box-shadow: none;
-    transform: translateY(0);
+#submit-les-button {
+
 }
 
+#submit-les-example-button {
 
-
-
-.updatebutton {
-    background-color: var(--lightgreen);
-    border: 2px solid var(--lightgreen);
-    border-radius: 10px;
-    color: var(--white);
-    cursor: pointer;
-    display: inline-block;
-    outline: none;
-    text-align: center;
-    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-    touch-action: manipulation;
-    will-change: transform;
-    font-size: 16px;
-    margin: 8px;
 }
 
-.updatebutton:disabled {
-    pointer-events: none;
-}
+#update-les-button {
 
-.updatebutton:hover {
-    color: var(--white);
-    background-color: var(--darkgreen);
-    border: 2px solid var(--darkgreen);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-    transform: translateY(-2px);
-}
-
-.updatebutton:active {
-    box-shadow: none;
-    transform: translateY(0);
-}
-
-#update-button {
-    padding: 10px 50px;
 }
 
 #export-button {
-    padding: 10px 10px;
+
 }
 
-.submit-submit {
-    padding: 10px 50px;
-}
+#submit-new-les-button {
 
-.settings-submit {
-    padding: 10px 10px;
 }
 
 
@@ -267,17 +219,18 @@ input[type=submit]:active {
 
 /* dropdowns */
 select.core {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
     background-color: #eee;
+    border: 1px solid #999;
     border-radius: 5px;
     box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
+    font-size: 15px;
     height: 30px;
     margin: -10px;
+    padding: 5px;
+    text-align: center;
+    width: 80px;
 }
+
 
 select.settings {
     font-size: 15px;
@@ -452,8 +405,8 @@ td.core-header:last-child {
 
 
 .core-spacer {
-    background-color: #CFD8DC;
-    border-top: 1px solid #CFD8DC;
+    background-color: var(--gray);
+    border-top: 1px solid var(--gray);
     height: 3px;
 }
 
