@@ -45,35 +45,36 @@ header {
 }
 
 .header-container {
+    height: inherit;
+    width: inherit;
     display: flex;
+    justify-content: flex-end;
 }
 
 .header-item {
-    flex: 1;
-    align-self: flex-end;
+    height: inherit;
 }
 
 #logo {
-    float: left;
+    margin: 0.5rem;
 }
 
 #header-text {
-    text-align: left;
     font-size: 24px;
+    margin: 3.5rem 32rem 0 2rem;
 }
 
 #header-nav {
-    flex-grow: 3;
+    display: flex;
+    
 }
 
 #header-nav a {
-    float: right;
     color: var(--white);
     text-align: center;
     text-decoration: none;
-    margin: 0;
-    height: 6rem;
-    padding: 4rem 1rem 0rem 1rem;
+    align-self: flex-end;
+    padding: 100% 1rem 1rem 1rem;
 }
 
 #header-nav a:hover {
