@@ -552,7 +552,7 @@
                                     <label>Months Displayed: &nbsp;</label>
                                 </div>
                                 <div class="settings-div">
-                                    <select class="core" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                                    <select class="core" id="months-dropdown" name="months_num" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
                                         {% for x in range(2, 13) %}
                                         <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
                                         {% endfor %}
@@ -576,15 +576,13 @@
                                     <label>Export as:</label>
                                 </div>
                                 <div class="settings-div">
-                                    <select id="filetype" class="core">
+                                    <select id="export-dropdown" class="core">
                                         <option value="xlsx" selected>Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
                                 </div>
                                 <div class="settings-div">
-                                    <div class="updatebuttondiv">
-                                        <button class="updatebutton" id="export-button" onclick="downloadFile()">Export</button>
-                                    </div>
+                                    <button id="export-button" onclick="downloadFile()">Export</button>
                                 </div>
                             </td>
                         </tr>
@@ -1074,7 +1072,7 @@
     <script>
         async function downloadFile() {
             try {
-                const filetype = document.getElementById('filetype').value;
+                const filetype = document.getElementById('export-dropdown').value;
 
                 const formData = new FormData();
                 formData.append('filetype', filetype);
@@ -1103,9 +1101,6 @@
                 console.error('Error during file download:', error);
             }
         }
-
-
-
 
         function showTooltip(evt, text) {
             const tooltip = document.getElementById('tooltip');

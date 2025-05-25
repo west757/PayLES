@@ -65,9 +65,9 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 
 in work:
-file verification
 get links from remarks and put below
-add disclaimer for accuracy
+add disclaimer for accuracy and faq
+add resources
 add row
 cola
 tsp update
