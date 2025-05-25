@@ -53,16 +53,16 @@
                         </tr>
 
                         <tr class="core">
-                            <td class="core"><label class="modalbutton" for="modal-statetaxes">Tax Residency State</label></td>
+                            <td class="core"><label class="modalbutton" for="modal-statetaxes">State Filing Status</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][x]]}}</td>
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][x]]}}</td>
                             {% endfor %}
                         </tr>
 
                         <tr class="core">
-                            <td class="core"><label class="modalbutton" for="modal-statetaxes">State Filing Status</label></td>
+                            <td class="core"><label class="modalbutton" for="modal-statetaxes">Tax Residency State</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][x]]}}</td>
+                            <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][x]]}}</td>
                             {% endfor %}
                         </tr>
 
@@ -106,6 +106,13 @@
                             {% for x in range(1, session['paydf'].shape[1]) %}
                             <td class="core">{{session['paydf'].at[session['row_headers'].index("BAS Type"), session['col_headers'][x]]}}</td>
                             {% endfor %}
+                        </tr>
+
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
+                        </tr>
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
                         </tr>
 
                         <tr class="core">
@@ -320,7 +327,7 @@
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-taxpay">Total Taxes</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][x]])}}</td>
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                             {% endfor %}
                         </tr>
 
@@ -338,14 +345,12 @@
                             {% endfor %}
                         </tr>
 
-                        {% if session['showdifference'] %}
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-grossnetpay">Difference</label></td>
                             {% for x in range(1, session['paydf'].shape[1]) %}
-                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Difference"), session['col_headers'][x]])}}</td>
+                            <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Difference"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                             {% endfor %}
                         </tr>
-                        {% endif %}
 
                         <!--
         add row
@@ -462,27 +467,6 @@
 
                                 <tr class="core">
                                     <td class="core">
-                                        <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
-                                    </td>
-                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
-                                    <td class="core">
-                                        <select class="core" id="state_future" name="state_future">
-                                            {% for x in config['STATES_SHORT'][0:] %}
-                                            <option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                    <td class="core">
-                                        <select class="core" id="state_future_month" name="state_future_month">
-                                            {% for x in session.col_headers[2:] %}
-                                            <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                </tr>
-
-                                <tr class="core">
-                                    <td class="core">
                                         <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
                                     </td>
                                     <td class="core">{{session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]}}</td>
@@ -518,6 +502,27 @@
                                         <select class="core" id="state_filing_status_future_month" name="state_filing_status_future_month">
                                             {% for x in session.col_headers[2:] %}
                                             <option value="{{x}}" {% if x==session.state_filing_status_future_month %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr class="core">
+                                    <td class="core">
+                                        <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
+                                    </td>
+                                    <td class="core">{{session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]}}</td>
+                                    <td class="core">
+                                        <select class="core" id="state_future" name="state_future">
+                                            {% for x in config['STATES_SHORT'][0:] %}
+                                            <option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td class="core">
+                                        <select class="core" id="state_future_month" name="state_future_month">
+                                            {% for x in session.col_headers[2:] %}
+                                            <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
                                             {% endfor %}
                                         </select>
                                     </td>
@@ -574,19 +579,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            <tr class="core">
-                                <td class="core" colspan=2>
-                                    <div class="settings-div">
-                                        <label>Show Difference From Previous Month:</label>
-                                    </div>
-                                    <div class="settings-div">
-                                        <input type="checkbox" class="settingcheckbox" id="showdifference" name="showdifference" {% if showdifference %} checked {% endif %} hx-post="/showdifference" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
-                                    </div>
-                                </td>
-                            </tr>
-
-
 
                             <tr class="core">
                                 <td class="core" colspan=2>

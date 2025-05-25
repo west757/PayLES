@@ -136,7 +136,6 @@ def read_les(les_file):
             for i in range(session['months_num']):
                 paydf_month.append(app.config['MONTHS_SHORT'][(app.config['MONTHS_SHORT'].index(les_text[10][3])+i) % 12])
 
-
             paydf_year = ["Year"]
             current_year = int(les_text[10][4])
             prev_month_index = app.config['MONTHS_SHORT'].index(paydf_month[1])
@@ -147,9 +146,6 @@ def read_les(les_file):
         
                 paydf_year.append("20" + str(current_year))
                 prev_month_index = month_index
-
-
-                
 
             session['paydf'] = pd.DataFrame([paydf_year], columns=paydf_month)
 
@@ -181,16 +177,6 @@ def read_les(les_file):
             session['paydf'].loc[len(session['paydf'])] = row
             session['federal_filing_status_future'] = row[1]
 
-            row = ["Tax Residency State"]
-            if les_text[41][1] != "98":
-                for i in range(session['months_num']):
-                    row.append(les_text[41][1])
-            else:
-                for i in range(session['months_num']):
-                    row.append("Not Found")
-            session['paydf'].loc[len(session['paydf'])] = row
-            session['state_future'] = les_text[41][1]
-
             row = ["State Filing Status"]
             for i in range(session['months_num']):
                 if les_text[44][1] == "S":
@@ -201,6 +187,16 @@ def read_les(les_file):
                     row.append("no state filing status found")
             session['paydf'].loc[len(session['paydf'])] = row
             session['state_filing_status_future'] = row[1]
+
+            row = ["Tax Residency State"]
+            if les_text[41][1] != "98":
+                for i in range(session['months_num']):
+                    row.append(les_text[41][1])
+            else:
+                for i in range(session['months_num']):
+                    row.append("Not Found")
+            session['paydf'].loc[len(session['paydf'])] = row
+            session['state_future'] = les_text[41][1]
 
             row = ["BAQ Type"]
             if len(les_text[48]) == 3:
@@ -444,11 +440,12 @@ def read_les(les_file):
                 row.append(Decimal(session['paydf'][column][20:-4].sum()))
             session['paydf'].loc[len(session['paydf'])] = row
             
-            #row = ["Difference", 0]
-            #for column1 in session['paydf'].columns[2:]:
-            #    column2 = session['paydf'].columns[1:]
-            #    row.append(calculate_difference(column1, column2))
-            #session['paydf'].loc[len(session['paydf'])] = row
+            row = ["Difference", 0]
+            columns = session['paydf'].columns.tolist()
+            for i in range(2, len(columns)):
+                row.append(calculate_difference(columns, i))
+            session['paydf'].loc[len(session['paydf'])] = row
+
 
             session['col_headers'] = list(session['paydf'].columns)
             session['row_headers'] = list(session['paydf'][session['paydf'].columns[0]])
@@ -511,7 +508,6 @@ def updatemonths():
     return render_template('les.html')
 
 
-
 @app.route('/showallvariables', methods=['POST'])
 def showallvariables():
     if session['showallvariables']:
@@ -521,38 +517,66 @@ def showallvariables():
     return render_template('les.html')
 
 
-@app.route('/showdifference', methods=['POST'])
-def showdifference():
-    if session['showdifference']:
-        session['showdifference'] = False
-    else:
-        session['showdifference'] = bool(request.form['showdifference'])
-    return render_template('les.html')
-
-
-
 @app.route('/updatepaydf', methods=['POST'])
 def updatepaydf():
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
+    session['federal_filing_status_future'] = request.form['federal_filing_status_future']
+    session['federal_filing_status_future_month'] = request.form['federal_filing_status_future_month']
+    session['state_filing_status_future'] = request.form['state_filing_status_future']
+    session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
+    session['state_future'] = request.form['state_future']
+    session['state_future_month'] = request.form['state_future_month']
     session['zipcode_future'] = Decimal(request.form['zipcode_future'])
     session['zipcode_future_month'] = request.form['zipcode_future_month']
     session['dependents_future'] = Decimal(request.form['dependents_future'])
     session['dependents_future_month'] = request.form['dependents_future_month']
     session['sgli_future'] = Decimal(request.form['sgli_future'])
     session['sgli_future_month'] = request.form['sgli_future_month']
-    session['state_future'] = request.form['state_future']
-    session['state_future_month'] = request.form['state_future_month']
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
-    session['federal_filing_status_future'] = request.form['federal_filing_status_future']
-    session['federal_filing_status_future_month'] = request.form['federal_filing_status_future_month']
-    session['state_filing_status_future'] = request.form['state_filing_status_future']
-    session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
 
     basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))
+    columns = session['paydf'].columns.tolist()
 
     for i in range(2, len(session['col_headers'])):
+
+        #update rank
+        if i >= session['col_headers'].index(session['rank_future_month']):
+            session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][i]] = session['rank_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Rank"), session['col_headers'][1]]
+
+        #update federal filing status
+        if i >= session['col_headers'].index(session['federal_filing_status_future_month']):
+            session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][i]] = session['federal_filing_status_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]
+
+        #update state filing status
+        if i >= session['col_headers'].index(session['state_filing_status_future_month']):
+            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['state_filing_status_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]
+
+        #update tax residency state
+        if i >= session['col_headers'].index(session['state_future_month']):
+            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['state_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]
+
+        #update zip code
+        if i >= session['col_headers'].index(session['zipcode_future_month']):
+            session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] = f'{session['zipcode_future']:05}'
+        else:
+            session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Zip Code"), session['col_headers'][1]]
+
+        #update dependents
+        if i >= session['col_headers'].index(session['dependents_future_month']):
+            session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][i]] = session['dependents_future']
+        else:
+            session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]
+
 
         #update base pay
         if i >= session['col_headers'].index(session['rank_future_month']):
@@ -577,6 +601,7 @@ def updatepaydf():
         else:
             session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("BAS"), session['col_headers'][1]], 2)
 
+
         #update BAH
         if session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] != "Not Found":
             mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(session['zipcode_future'])])].stack()
@@ -594,21 +619,14 @@ def updatepaydf():
 
             session['paydf'].at[session['row_headers'].index("BAH"), session['col_headers'][i]] = round(bah_value, 2)
 
-
         #update gross pay
-        session['paydf'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-5][session['paydf'][session['col_headers'][i]][20:-5] > 0].sum()), 2)
+        session['paydf'].at[session['row_headers'].index("Gross Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-6][session['paydf'][session['col_headers'][i]][20:-5] > 0].sum()), 2)
 
         #update taxable pay
         session['paydf'].at[session['row_headers'].index("Taxable Pay"), session['col_headers'][i]] = calculate_taxablepay(session['col_headers'][i])
 
         #update non-taxable pay
         session['paydf'].at[session['row_headers'].index("Non-Taxable Pay"), session['col_headers'][i]] = calculate_nontaxablepay(session['col_headers'][i])
-
-        #update federal filing status
-        if i >= session['col_headers'].index(session['federal_filing_status_future_month']):
-            session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][i]] = session['federal_filing_status_future']
-        else:
-            session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Federal Filing Status"), session['col_headers'][1]]
 
         #update federal taxes
         session['paydf'].at[session['row_headers'].index("Federal Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_federaltaxes(session['col_headers'][i])), 2)
@@ -625,24 +643,15 @@ def updatepaydf():
         else:
             session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]
 
-        #update tax residency state
-        if i >= session['col_headers'].index(session['state_future_month']):
-            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['state_future']
-        else:
-            session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Tax Residency State"), session['col_headers'][1]]
-
-        #update state filing status
-        if i >= session['col_headers'].index(session['state_filing_status_future_month']):
-            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['state_filing_status_future']
-        else:
-            session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("State Filing Status"), session['col_headers'][1]]
-
         #update state taxes
         session['paydf'].at[session['row_headers'].index("State Taxes"), session['col_headers'][i]] = round(-Decimal(calculate_statetaxes(session['col_headers'][i])), 2)
 
         #update total taxes, net pay
         session['paydf'].at[session['row_headers'].index("Total Taxes"), session['col_headers'][i]] = calculate_totaltaxes(session['col_headers'][i])
-        session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-5].sum()), 2)
+        session['paydf'].at[session['row_headers'].index("Net Pay"), session['col_headers'][i]] = round(Decimal(session['paydf'][session['col_headers'][i]][20:-6].sum()), 2)
+
+        #update difference
+        session['paydf'].at[session['row_headers'].index("Difference"), session['col_headers'][i]] = calculate_difference(columns, i)
 
     session['zipcode_future'] = f'{session['zipcode_future']:05}'
 
@@ -759,8 +768,10 @@ def calculate_nontaxablepay(column):
 def calculate_totaltaxes(column):
     return Decimal((session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Federal Taxes"), column]) + (session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("State Taxes"), column]))
 
-def calculate_difference(column1, column2):
-    return round(session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), column2] - session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), column1], 2)
+def calculate_difference(columns, i):
+    current_col = columns[i]
+    prev_col = columns[i - 1]
+    return session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), current_col] - session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), prev_col]
 
 def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
