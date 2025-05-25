@@ -13,7 +13,7 @@
     <div id="core">
         <div id="paydf-options-settings">
             <div id="paydf">
-                <table class="core" id="paydf-table">
+                <table class="core">
                     <tbody>
                         <tr class="core-header">
                             <td class="core-header"></td>
@@ -163,6 +163,13 @@
                             <td class="core">{{session['paydf'].at[session['row_headers'].index("Roth TSP Bonus Pay Rate"), session['col_headers'][x]]}}%</td>
                             {% endfor %}
                         </tr>
+
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
+                        </tr>
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
+                        </tr>
                         {% endif %}
 
                         <!-- entitlements -->
@@ -289,11 +296,12 @@
                         </tr>
                         {% endif %}
 
-                        <!--
-    <tr class="core">
-        <td class="core" colspan="100%" style="background-color: #CFD8DC; height: 8px; padding: 0px;"></td>
-    </tr>
-    -->
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
+                        </tr>
+                        <tr class="core">
+                            <td class="core-spacer" colspan=100%></td>
+                        </tr>
 
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
@@ -340,8 +348,8 @@
                         {% endif %}
 
                         <!--
-                            add row
-                        -->
+        add row
+    -->
                     </tbody>
                 </table>
             </div>
@@ -516,9 +524,16 @@
                                 </tr>
 
                                 <tr class="core">
+                                    <td class="core-spacer" colspan=100%></td>
+                                </tr>
+                                <tr class="core">
+                                    <td class="core-spacer" colspan=100%></td>
+                                </tr>
+
+                                <tr class="core">
                                     <td class="core" colspan="4">
                                         <div class="updatebuttondiv">
-                                            <button class="updatebutton" type="submit">Update LES</button>
+                                            <button class="updatebutton" id="update-button" type="submit">Update LES</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -586,7 +601,7 @@
                                     </div>
                                     <div class="settings-div">
                                         <div class="updatebuttondiv">
-                                            <button class="updatebutton" onclick="downloadFile()">Export</button>
+                                            <button class="updatebutton" id="export-button" onclick="downloadFile()">Export</button>
                                         </div>
                                     </div>
                                 </td>
