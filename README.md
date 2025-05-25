@@ -66,9 +66,8 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 in work:
 css styling
-difference calculation
 change px to rem in css
-update year over time
 file verification
+dependents broken
 
 -->
