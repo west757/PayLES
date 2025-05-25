@@ -37,14 +37,14 @@
             <table id="core-submit">
                 <tr>
                     <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                        <td id="submit-upload" rowspan=2>
+                        <td rowspan=2>
                             <label for="submit-input" id="submit-drop">
                                 <span id="drop-title">Drop LES here</span>
                                 or
                                 <input type="file" id="submit-input" name="file" accept=".pdf" required>
                             </label>
                         </td>
-                        <td id="submit-les">
+                        <td>
                             <button id="submit-les-button">Submit LES</button>
                         </td>
                     </form>
@@ -52,7 +52,7 @@
 
                 <tr>
                     <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                        <td id="submit-example">
+                        <td>
                             <button id="submit-example-les-button">Submit Example LES</button>
                         </td>
                     </form>

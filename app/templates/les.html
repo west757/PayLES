@@ -562,7 +562,7 @@
                                         <label>Months Displayed: &nbsp;</label>
                                     </div>
                                     <div class="settings-div">
-                                        <select class="settings" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                                        <select class="core" id="months_num" name="months_num" style="width: 40px;" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
                                             {% for x in range(2, 13) %}
                                             <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
                                             {% endfor %}
@@ -575,7 +575,7 @@
                                         <label>Show All Variables:</label>
                                     </div>
                                     <div class="settings-div">
-                                        <input type="checkbox" class="settingcheckbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                                        <input type="checkbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
                                     </div>
                                 </td>
                             </tr>

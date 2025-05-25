@@ -7,6 +7,9 @@
     --lightgray: #f1f1f1;
     --lightgreen: #04a96d;
     --darkgreen: #0c9a65;
+    --input_background: #eee;
+    --input_shadow: #999;
+    --table_border: #ddd;
 }
 
 html {
@@ -195,11 +198,11 @@ button:hover {
 }
 
 #submit-les-button {
-
+    width: 12rem;
 }
 
 #submit-les-example-button {
-
+    width: 12rem;
 }
 
 #update-les-button {
@@ -216,93 +219,61 @@ button:hover {
 
 
 
-
 /* dropdowns */
 select.core {
-    background-color: #eee;
-    border: 1px solid #999;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    font-size: 15px;
-    height: 30px;
-    margin: -10px;
-    padding: 5px;
+    background-color: var(--input_background);
+    border: 1px solid var(--input_shadow);
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 2px var(--input_shadow);
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    height: 1.85rem;
+    margin: -0.5rem;
+    padding: 0.25rem;
     text-align: center;
-    width: 80px;
+    width: 4.6rem;
 }
 
 
-select.settings {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    height: 30px;
-    margin: -10px;
-}
-
-input.settings {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 70px;
-    text-align: center;
-    height: 18px;
-    margin: -10px;
-}
-
-
-
-
-
-/* text inputs */
+/* dropdowns */
 input.core {
-    font-size: 15px;
-    padding: 5px;
+    background-color: var(--input_background);
     border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
+    border-radius: 0.25rem;
     box-shadow: 1px 1px 2px #999;
-    width: 80px;
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    height: 1.85rem;
+    margin: -0.5rem;
+    padding: 0.25rem;
     text-align: center;
-    margin: -10px;
+    width: 4.6rem;
 }
 
 
 
 /* checkboxes */
-input.settingcheckbox {
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    height: 20px;
-    width: 20px;
-    accent-color: #04AA6D;
+input[type=checkbox] {
+    accent-color: var(--lightgreen);
+    background-color: var(--input_background);
+    border: 1px solid var(--input_shadow);
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 2px var(--input_shadow);
+    height: 1.25rem;
+    padding: 0.25rem;
+    width: 1.25rem;
 }
 
 
 
-
-
-
-
-
+/* core */
 #core {
-    margin: 0;
-    padding: 1rem;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    margin: 0;
     max-width: 100%;
+    padding: 1rem;
 }
 
 #core-home {
@@ -313,74 +284,61 @@ input.settingcheckbox {
     margin: auto;
 }
 
-#submit-les {
-    width: 100px;
-}
-
-#submit-example {
-    width: 200px;
-}
-
-
-
-
 #paydf-options-settings {
-    display: flex;
     align-items: flex-start;
-    max-width: 100%;
+    display: flex;
     gap: 1rem;
+    max-width: 100%;
 }
 
 #paydf {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 1rem;
     flex-shrink: 1;
+    overflow-x: auto;
+    padding: 1rem;
+    white-space: nowrap;
 }
 
 #options-settings {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     flex-shrink: 0;
+    gap: 1rem;
     padding: 1rem;
 }
 
 
 
-
+/* core tables */
 table.core {
-    border-collapse: separate;
-    border-spacing: 0px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
     background: var(--white);
+    border: 1px solid var(--table_border);
+    border-collapse: separate;
+    border-radius: 1.5rem;
+    border-spacing: 0px;
 }
 
 tr.core-header {
-    text-align: center;
+    border-left: 1px solid var(--table_border);
     font-weight: bold;
-    border-left: 1px solid #ddd;
+    text-align: center;
     top: 0;
     /*position: sticky;*/
 }
 
-
-
 td.core-header {
     background: var(--darkgray);
-    color: var(--white);
-    text-align: center;
-    font-weight: bold;
-    border-left: 1px solid #ddd;
+    border-left: 1px solid var(--table_border);
     border-radius: 0px;
-    padding: 20px;
+    color: var(--white);
+    font-weight: bold;
+    text-align: center;
+    padding: 1.25rem;
 }
 
 tr.core, td.core {
+    border-left: 1px solid var(--table_border);
+    border-top: 1px solid var(--table_border);
     text-align: center;
-    border-left: 1px solid #ddd;
-    border-top: 1px solid #ddd;
 }
 
 tr.core:nth-child(even) td.core {
@@ -388,7 +346,7 @@ tr.core:nth-child(even) td.core {
 }
 
 tr.core:not(:first-child), td.core:not(:first-child) {
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 td.core:first-child, td.core-header:first-child {
@@ -396,13 +354,12 @@ td.core:first-child, td.core-header:first-child {
 }
 
 td.core-header:first-child {
-    border-radius: 20px 0 0 0;
+    border-radius: 1.5rem 0 0 0;
 }
 
 td.core-header:last-child {
-    border-radius: 0 20px 0 0;
+    border-radius: 0 1.5rem 0 0;
 }
-
 
 .core-spacer {
     background-color: var(--gray);
@@ -410,18 +367,16 @@ td.core-header:last-child {
     height: 3px;
 }
 
-
 #options-table {
-    width: 490px;
+    width: 31rem;
 }
 
 #settings-table {
-    width: 490px;
+    width: 31rem;
 }
 
 .settings-div {
     display: inline-block;
-    margin: 0px;
 }
 
 
@@ -588,13 +543,13 @@ details[open] > summary::after {
 
 /* les image display */
 #les-image {
-    position: relative;
     display: inline-block;
+    position: relative;
 }
 
 .rect-highlight {
-    position: absolute;
     cursor: pointer;
+    position: absolute;
 }
 
 .rect-highlight:hover {
@@ -602,13 +557,13 @@ details[open] > summary::after {
 }
 
 .tooltip {
-    position: absolute;
-    padding: 4px 8px;
     background: var(--darkgray);
+    border-radius: 0.5rem;
     color: var(--white);
-    border-radius: 8px;
     display: none;
+    font-size: 0.85rem;
+    max-width: 28rem;
+    position: absolute;
+    padding: 0.25rem 0.5rem;
     z-index: 1001;
-    max-width: 400px;
-    font-size: 14px;
 }
