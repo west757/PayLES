@@ -36,6 +36,7 @@ main {
 }
 
 
+
 /* header */
 header {
     height: 6rem;
@@ -66,7 +67,6 @@ header {
 
 #header-nav {
     display: flex;
-    
 }
 
 #header-nav a {
@@ -82,42 +82,44 @@ header {
 }
 
 
+
+/* footer */
 footer {
-    background-color: var(--darkgray);
-    text-align: left;
-    padding: 0px 0px 0px 12px;
-    bottom: 0;
     width: 100%;
+    background-color: var(--darkgray);
     color: var(--white);
-    font-size: 12px;
-    line-height: 1px;
+    text-align: left;
+    padding: 0 0 0 1.5rem;
+    font-size: 0.8rem;
     margin-top: auto;
+    line-height: 0.35rem;
 }
 
 
-#core {
-    margin: 0;
-    padding: 1rem;
+/* drag and drop */
+#submit-drop {
+    position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    max-width: 100%;
+    height: 14rem;
+    width: 30rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 2px dashed var(--darkgray);
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+    gap: 0.75rem;
 }
 
-#core-home {
+#submit-drop:hover, #submit-drop.drag-active {
+    background: var(--lightgray);
+}
+
+#drop-title {
     text-align: center;
-}
-
-#core-submit {
-    margin: auto;
-}
-
-#submit-les {
-    width: 100px;
-}
-
-#submit-example {
-    width: 200px;
+    font-size: 1.25rem;
 }
 
 #input-submit {
@@ -128,31 +130,8 @@ footer {
 }
 
 
-#submit-drop {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 14rem;
-    width: 30rem;
-    padding: 1rem;
-    border-radius: 20px;
-    border: 2px dashed var(--darkgray);
-    cursor: pointer;
-    transition: background .2s ease-in-out, border .2s ease-in-out;
-    gap: 0.75rem;
-}
 
-#submit-drop:hover, #submit-drop.drag-active {
-    background: var(--lightgray);
-}
-
-#drop-title {
-    text-align: center;
-    font-size: 20px;
-}
-
+/* file input */
 input[type=file] {
     max-width: 100%;
     padding: 0.5rem;
@@ -178,7 +157,6 @@ input[type=file]::file-selector-button:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
 }
 
-
 #submit-input {
     width: 24rem;
 }
@@ -198,9 +176,7 @@ input[type=file]::file-selector-button:hover {
 
 
 
-
-
-/* file submit */
+/* buttons */
 input[type=submit] {
     background-color: var(--lightgreen);
     border: 2px solid var(--lightgreen);
@@ -234,45 +210,9 @@ input[type=submit]:active {
     transform: translateY(0);
 }
 
-.submit-submit {
-    padding: 10px 50px;
-}
-
-.settings-submit {
-    padding: 10px 10px;
-}
-
-
-/* table dropdown */
-select.core {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    height: 30px;
-    margin: -10px;
-}
-
-/* table number input */
-input.core {
-    font-size: 15px;
-    padding: 5px;
-    border: 1px solid #999;
-    background-color: #eee;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #999;
-    width: 80px;
-    text-align: center;
-    margin: -10px;
-}
 
 
 
-/* table update button*/
 .updatebutton {
     background-color: var(--lightgreen);
     border: 2px solid var(--lightgreen);
@@ -306,7 +246,6 @@ input.core {
     transform: translateY(0);
 }
 
-
 #update-button {
     padding: 10px 50px;
 }
@@ -315,6 +254,30 @@ input.core {
     padding: 10px 10px;
 }
 
+.submit-submit {
+    padding: 10px 50px;
+}
+
+.settings-submit {
+    padding: 10px 10px;
+}
+
+
+
+
+/* dropdowns */
+select.core {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    height: 30px;
+    margin: -10px;
+}
 
 select.settings {
     font-size: 15px;
@@ -342,6 +305,26 @@ input.settings {
     margin: -10px;
 }
 
+
+
+
+
+/* text inputs */
+input.core {
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #999;
+    width: 80px;
+    text-align: center;
+    margin: -10px;
+}
+
+
+
+/* checkboxes */
 input.settingcheckbox {
     padding: 5px;
     border: 1px solid #999;
@@ -356,6 +339,34 @@ input.settingcheckbox {
 
 
 
+
+
+
+
+#core {
+    margin: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+}
+
+#core-home {
+    text-align: center;
+}
+
+#core-submit {
+    margin: auto;
+}
+
+#submit-les {
+    width: 100px;
+}
+
+#submit-example {
+    width: 200px;
+}
 
 
 
@@ -537,10 +548,6 @@ td.core-header:last-child {
     top: 0;
 }
 
-.modal-close:hover:after, .modal-close:hover:before {
-    
-}
-
 .modal-close:before {
     transform: rotate(-45deg);
 }
@@ -569,7 +576,6 @@ td.core-header:last-child {
     box-shadow: 0 1px 2px rgba(0,0,0, .2) inset;
 }
 
-
 .modal-text-big {
     font-size: 24px;
     font-weight: bold;
@@ -590,6 +596,7 @@ td.core-header:last-child {
 
 
 
+/* faq dropdown */
 details {
     transition: 0.2s background linear;
     border-bottom: 1px solid #393939;
@@ -626,6 +633,7 @@ details[open] > summary::after {
 
 
 
+/* les image display */
 #les-image {
     position: relative;
     display: inline-block;
@@ -651,4 +659,3 @@ details[open] > summary::after {
     max-width: 400px;
     font-size: 14px;
 }
-
