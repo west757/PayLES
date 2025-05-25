@@ -309,12 +309,14 @@ def read_les(les_file):
             #entitlements
             row = ["Base Pay"]
             if "BASE" in les_text[11]:
-                for i in range(session['months_num']):
-                    row.append(Decimal(les_text[11][les_text[11].index("BASE")+2]))
+                for column in session['paydf'].columns[1:]:
+                    row.append(calculate_basepay(column))
             else:
                 for i in range(session['months_num']):
                     row.append(Decimal(0))
             session['paydf'].loc[len(session['paydf'])] = row
+
+
 
             row = ["BAS"]
             if "BAS" in les_text[11]:
@@ -541,7 +543,6 @@ def updatepaydf():
     session['rothtsp_future'] = request.form['rothtsp_future']
     session['rothtsp_future_month'] = request.form['rothtsp_future_month']
 
-    basepay_headers = list(map(int, app.config['PAY_ACTIVE'].columns[1:]))
     columns = session['paydf'].columns.tolist()
 
     for i in range(2, len(session['col_headers'])):
@@ -583,17 +584,24 @@ def updatepaydf():
             session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][i]] = session['paydf'].at[session['row_headers'].index("Dependents"), session['col_headers'][1]]
 
 
-        #update base pay
-        if i >= session['col_headers'].index(session['rank_future_month']):
-            basepay_col = 0
-            for j in range(len(session['col_headers'])):
-                if basepay_headers[j] <= session['paydf'].at[session['row_headers'].index("Months of Service"), session['col_headers'][i]] < basepay_headers[j+1]:
-                    basepay_col = basepay_headers[j]
 
-            basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
-            session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(Decimal(basepay_value.iloc[0]), 2)
-        else:
-            session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
+
+        #update base pay
+        session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = calculate_basepay(session['col_headers'][i])
+        #if i >= session['col_headers'].index(session['rank_future_month']):
+        #    basepay_col = 0
+        #    for j in range(len(session['col_headers'])):
+        #        if app.config['PAY_ACTIVE_HEADERS'][j] <= session['paydf'].at[session['row_headers'].index("Months of Service"), session['col_headers'][i]] < app.config['PAY_ACTIVE_HEADERS'][j+1]:
+        #            basepay_col = app.config['PAY_ACTIVE_HEADERS'][j]
+        #
+        #    basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
+        #    session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(Decimal(basepay_value.iloc[0]), 2)
+        #else:
+        #    session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][i]] = round(session['paydf'].at[session['row_headers'].index("Base Pay"), session['col_headers'][1]], 2)
+
+
+
+
 
         #update bas
         if i >= session['col_headers'].index(session['rank_future_month']):
@@ -691,6 +699,24 @@ def page404():
 
 
 
+
+def months_in_service(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+
+
+def calculate_basepay(column):
+    basepay_col = 0
+    for i in range(len(app.config['PAY_ACTIVE_HEADERS'])):
+        if app.config['PAY_ACTIVE_HEADERS'][i] <= session['paydf'].at[session['row_headers'].index("Months of Service"), column] < app.config['PAY_ACTIVE_HEADERS'][i+1]:
+            basepay_col = app.config['PAY_ACTIVE_HEADERS'][i]
+
+    basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
+    return round(Decimal(basepay_value.iloc[0]), 2)
+
+
+
+
 def calculate_federaltaxes(column):
     taxable_income = session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Taxable Pay"), column] * 12
     taxable_income = round(taxable_income, 2)
@@ -777,9 +803,6 @@ def calculate_difference(columns, i):
     current_col = columns[i]
     prev_col = columns[i - 1]
     return session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), current_col] - session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Net Pay"), prev_col]
-
-def months_in_service(d1, d2):
-    return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
 @app.route('/export', methods=['POST'])
