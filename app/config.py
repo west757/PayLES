@@ -12,7 +12,7 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
     STATIC_FOLDER = Path.cwd() / "static"
 
-    LOGO_FILE = "logo_2.png"
+    LOGO_FILE = "logo.png"
     EXAMPLE_LES_FILE = "les_example.pdf"
     RECTANGLES_FILE = "rectangles.csv"
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
@@ -46,7 +46,7 @@ class Config:
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
-    LOGO = os.path.join(STATIC_FOLDER, LOGO_FILE)
+    LOGO = os.path.join('static', LOGO_FILE)
     EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
     RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, RECTANGLES_FILE))
     MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
