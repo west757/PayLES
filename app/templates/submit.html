@@ -1,20 +1,16 @@
-{% if error %}
-<div class="toast">{{ error }}</div>
-{% endif %}
-
 <div id="core-home">
     <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
 
     <table id="core-submit">
         <tr>
             <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-            <td rowspan=2>
-                <label for="submit-input" id="submit-drop">
-                    <span id="drop-title">Drop LES here</span>
-                    or
-                    <input type="file" id="submit-input" name="file" accept=".pdf" required>
-                </label>
-            </td>
+                <td rowspan=2>
+                    <label for="submit-input" id="submit-drop">
+                        <span id="drop-title">Drop LES here</span>
+                        or
+                        <input type="file" id="submit-input" name="submit-input" accept=".pdf">
+                    </label>
+                </td>
             <td>
                 <button id="submit-les-button">Submit LES</button>
             </td>
@@ -23,13 +19,17 @@
 
         <tr>
             <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-            <td>
-                <button id="submit-example-les-button">Submit Example LES</button>
-            </td>
+                <td>
+                    <button id="submit-example-les-button">Submit Example LES</button>
+                </td>
             </form>
         </tr>
     </table>
 </div>
+
+{% if error %}
+<div class="tooltip-toast">{{ error }}</div>
+{% endif %}
 
 <script>
     var dropContainer = document.getElementById("submit-drop");

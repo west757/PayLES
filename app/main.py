@@ -23,7 +23,7 @@ def index():
 
 @app.route('/submit_les', methods=['POST'])
 def submit_les():
-    les_file = request.files['file']
+    les_file = request.files.get('submit-input')
     if not les_file:
         return render_template("submit.html", error="No file part in form")
 
@@ -47,15 +47,6 @@ def submit_les():
 def submit_example():
     read_les(app.config['EXAMPLE_LES'])
     return render_template('les.html')
-
-
-
-def validate_file(file):
-    if file.filename == '':
-        return False, "No file selected"
-    if not allowed_file(file.filename):
-        return False, "Invalid file type, only PDF is accepted"
-    return True, ""
 
 
 
@@ -673,7 +664,6 @@ def updatepaydf():
 
 
 
-
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -700,10 +690,8 @@ def page404():
 
 
 
-
 def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
-
 
 
 def calculate_basepay(column):
@@ -714,8 +702,6 @@ def calculate_basepay(column):
 
     basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
     return round(Decimal(basepay_value.iloc[0]), 2)
-
-
 
 
 def calculate_federaltaxes(column):
@@ -841,6 +827,14 @@ def export_dataframe():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def validate_file(file):
+    if file.filename == '':
+        return False, "No file selected"
+    if not allowed_file(file.filename):
+        return False, "Invalid file type, only PDF is accepted"
+    return True, ""
+
 
 @app.errorhandler(413)
 def too_large(e):
