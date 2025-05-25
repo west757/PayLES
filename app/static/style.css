@@ -99,6 +99,15 @@ footer {
 }
 
 
+/* toasts */
+.toast {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
 
 /* drag and drop */
 #submit-drop {

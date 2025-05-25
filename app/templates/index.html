@@ -13,7 +13,7 @@
     <header>
         <div class="header-container">
             <div class="header-item" id="logo">
-                 <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
+                <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
             </div>
             <div class="header-item">
                 <p id="header-text">program analyzing your LES</p>
@@ -31,34 +31,7 @@
     </header>
 
     <div id="core">
-        <div id="core-home">
-            <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
-
-            <table id="core-submit">
-                <tr>
-                    <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                        <td rowspan=2>
-                            <label for="submit-input" id="submit-drop">
-                                <span id="drop-title">Drop LES here</span>
-                                or
-                                <input type="file" id="submit-input" name="file" accept=".pdf" required>
-                            </label>
-                        </td>
-                        <td>
-                            <button id="submit-les-button">Submit LES</button>
-                        </td>
-                    </form>
-                </tr>
-
-                <tr>
-                    <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                        <td>
-                            <button id="submit-example-les-button">Submit Example LES</button>
-                        </td>
-                    </form>
-                </tr>
-            </table>
-        </div>
+        {% include 'submit.html' %}
     </div>
 
     <footer>
@@ -66,31 +39,6 @@
             <p>All Rights Reserved &#xA9; 2025 PayLES</p>
         </div>
     </footer>
-
-
-    <script>
-        var dropContainer = document.getElementById("submit-drop");
-        var fileInput = document.getElementById("submit-input");
-
-        dropContainer.addEventListener("dragover", function(e) {
-          // prevent default to allow drop
-          e.preventDefault();
-        }, false);
-
-        dropContainer.addEventListener("dragenter", function() {
-          dropContainer.classList.add("drag-active");
-        });
-
-        dropContainer.addEventListener("dragleave", function() {
-          dropContainer.classList.remove("drag-active");
-        });
-
-        dropContainer.addEventListener("drop", function(e) {
-          e.preventDefault();
-          dropContainer.classList.remove("drag-active");
-          fileInput.files = e.dataTransfer.files;
-        });
-    </script>
 
 </body>
 </html>

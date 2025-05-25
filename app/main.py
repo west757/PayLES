@@ -1,5 +1,5 @@
 ﻿from flask import Flask
-from flask import request, render_template, make_response, jsonify, session, send_file
+from flask import request, render_template, make_response, jsonify, session, send_file, flash
 from flask_session import Session
 from config import Config
 from werkzeug.exceptions import RequestEntityTooLarge
@@ -23,37 +23,40 @@ def index():
 
 @app.route('/submit_les', methods=['POST'])
 def submit_les():
-    if 'file' not in request.files:
-        return 'No file part in the request', 400
+    les_file = request.files['file']
+    if not les_file:
+        return render_template("submit.html", error="No file part in form")
 
-    if 'file' in request.files:
-        les_file = request.files['file']
-        if les_file.filename == '':
-            return 'No selected file', 400
+    valid, message = validate_file(les_file)
+    if not valid:
+        return render_template("submit.html", error=message)
 
-        if les_file and not allowed_file(les_file.filename):
-            return 'File type not allowed', 400
+    with pdfplumber.open(les_file) as les_pdf:
+        title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
+        title_text = title_crop.extract_text_simple()
+        les_pdf.close()
+        if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
+            read_les(les_file)
+            return render_template('les.html')
+        else:
+            return render_template("submit.html", error="File is not a valid LES")
 
-        if les_file and allowed_file(les_file.filename):
-
-            with pdfplumber.open(les_file) as les_pdf:
-                title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
-                title_text = title_crop.extract_text_simple()
-                les_pdf.close()
-                if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
-                    read_les(les_file)
-                    return render_template('les.html')
-                else:
-                    return 'File is not an LES', 400
-                
-
-    return 'LES submission failed'
 
 
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
     read_les(app.config['EXAMPLE_LES'])
     return render_template('les.html')
+
+
+
+def validate_file(file):
+    if file.filename == '':
+        return False, "No file selected"
+    if not allowed_file(file.filename):
+        return False, "Invalid file type, only PDF is accepted"
+    return True, ""
+
 
 
 
