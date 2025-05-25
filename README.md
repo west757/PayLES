@@ -67,7 +67,6 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 in work:
 file verification
 get links from remarks and put below
-add change for basic pay over months of service
 add disclaimer for accuracy
 add row
 cola

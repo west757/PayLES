@@ -347,7 +347,8 @@
 
                         <tr class="core">
                             <td class="core"><label class="modalbutton" for="modal-grossnetpay">Difference</label></td>
-                            {% for x in range(1, session['paydf'].shape[1]) %}
+                            <td class="core">&mdash;</td>
+                            {% for x in range(2, session['paydf'].shape[1]) %}
                             <td class="core">{{'${:,.2f}'.format(session['paydf'].at[session['row_headers'].index("Difference"), session['col_headers'][x]]).replace('$-','-$')}}</td>
                             {% endfor %}
                         </tr>
