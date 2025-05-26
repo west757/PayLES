@@ -22,7 +22,7 @@ flask config file: https://flask.palletsprojects.com/en/stable/config/
 flask sessions: https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
 searching through dataframes: https://rowannicholls.github.io/python/advanced/data_frames_searching.html
 python dataframe add column: https://www.geeksforgeeks.org/dealing-with-rows-and-columns-in-pandas-dataframe/
-css details: https://codepen.io/SitePoint/embed/poGzWrb?default-tab=result&height=600&slug-hash=poGzWrb&user=SitePoint&name=cp_embed_13#result-box
+css accordion: https://codepen.io/alvarotrigo/pen/dyJbqpd
 buttons: https://getcssscan.com/css-buttons-examples
 
 
@@ -66,11 +66,10 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 in work:
 get links from remarks and put below
-add disclaimer for accuracy and faq
 add resources
 add row
 cola
 tsp update
-rank and month verification
+contact form
 
 -->

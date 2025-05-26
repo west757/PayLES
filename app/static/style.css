@@ -6,6 +6,7 @@
     --gray: #CFD8DC;
     --lightgray: #f1f1f1;
     --lightgreen: #04a96d;
+    --palegreen: #4fd1a2;
     --darkgreen: #0c9a65;
     --input_background: #eee;
     --input_shadow: #999;
@@ -159,6 +160,7 @@ footer {
 input[type=file] {
     border: 1px solid var(--darkgray);
     border-radius: 0.5rem;
+    cursor: pointer;
     max-width: 100%;
     padding: 0.5rem;
 }
@@ -168,7 +170,6 @@ input[type=file]::file-selector-button {
     border: none;
     border-radius: 0.5rem;
     color: var(--white);
-    cursor: pointer;
     font-size: 1rem;
     margin-right: 1rem;
     padding: 0.75rem 1.25rem;
@@ -334,7 +335,6 @@ input[type=checkbox] {
 #paydf {
     flex-shrink: 1;
     overflow-x: auto;
-    padding: 1rem;
     white-space: nowrap;
 }
 
@@ -343,7 +343,6 @@ input[type=checkbox] {
     flex-direction: column;
     flex-shrink: 0;
     gap: 1rem;
-    padding: 1rem;
 }
 
 
@@ -516,7 +515,7 @@ td.core-header:last-child {
 }
 
 .modalbutton:hover, .modalbutton:focus {
-    background: var(--lightgreen);
+    background: var(--palegreen);
 }
 
 .modalbutton:active {
@@ -541,44 +540,6 @@ td.core-header:last-child {
     border-collapse: collapse;
     margin: auto;
 }
-
-
-
-/* faq dropdown */
-details {
-    transition: 0.2s background linear;
-    border-bottom: 1px solid #393939;
-    margin: 20px;
-}
-
-summary {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding: 8px;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-summary:hover {
-    color: #393939;
-    transition: 0.5s ease;
-}
-
-summary::after {
-    content: '';
-    border-top: 12px solid #393939;
-    border-inline: 9px solid transparent;
-    transition: 0.5s;
-    margin: 0px;
-}
-
-details[open] > summary::after {
-    transform: rotate(-180deg);
-}
-
 
 
 /* les image display */
@@ -606,4 +567,67 @@ details[open] > summary::after {
     position: absolute;
     padding: 0.25rem 0.5rem;
     z-index: 1001;
+}
+
+
+
+
+
+.tabs {
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    overflow: hidden;
+    flex: 1;
+}
+
+.tab {
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--table_border);
+}
+
+.tab-label {
+    background: var(--lightgray);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.25rem;
+}
+
+.tab-label:hover {
+    background: var(--palegreen);
+}
+
+.tab-label::after {
+    content: "\276F";
+    height: 1rem;
+    text-align: center;
+    transition: all 0.35s;
+    width: 1rem;
+}
+
+.tab-content {
+    background: var(--white);
+    padding: 0 1rem;
+    transition: all 0.35s;
+    max-height: 0;
+}
+
+.faq-checkbox {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.faq-checkbox:checked + .tab-label {
+   background: var(--palegreen);
+}
+
+.faq-checkbox:checked + .tab-label::after {
+    transform: rotate(90deg);
+}
+
+.faq-checkbox:checked ~ .tab-content {
+    max-height: 100vh;
+    padding: 1rem;
 }
