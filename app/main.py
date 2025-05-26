@@ -694,7 +694,7 @@ def months_in_service(d1, d2):
 def calculate_basepay(column):
     basepay_col = 0
     for i in range(len(app.config['PAY_ACTIVE_HEADERS'])):
-        if app.config['PAY_ACTIVE_HEADERS'][i] <= session['paydf'].at[session['row_headers'].index("Months of Service"), column] < app.config['PAY_ACTIVE_HEADERS'][i+1]:
+        if app.config['PAY_ACTIVE_HEADERS'][i] <= session['paydf'].at[list(session['paydf'][session['paydf'].columns[0]]).index("Months of Service"), column] < app.config['PAY_ACTIVE_HEADERS'][i+1]:
             basepay_col = app.config['PAY_ACTIVE_HEADERS'][i]
 
     basepay_value = app.config['PAY_ACTIVE'].loc[app.config['PAY_ACTIVE']["Rank"] == session['rank_future'], str(basepay_col)]
