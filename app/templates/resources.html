@@ -9,36 +9,38 @@
 </head>
 
 <body>
-    <header>
-        <div class="header-container">
-            <div class="header-item" id="logo">
+    <div id="top-container">
+        <header>
+            <div id="logo">
                 <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
             </div>
-            <div class="header-item">
+            <div id="title">
                 <p id="header-text">program analyzing your LES</p>
             </div>
-            <div class="header-item" id="header-nav">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('about') }}">About</a>
-                <a href="{{ url_for('faq') }}">FAQ</a>
-                <a href="{{ url_for('resources') }}">Resources</a>
-                <a href="{{ url_for('contact') }}">Contact</a>
-                <a href="{{ url_for('leave') }}">Leave Calculator</a>
-                <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
-            </div>
-        </div>
-    </header>
+        </header>
+
+        <nav>
+            <ul>
+                <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
+                <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
+                <li class="nav-top">
+                    <a href="{{ url_for('resources') }}">Resources</a>
+                    <ul>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='general') }}">General Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial') }}">Financial Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='educational') }}">Educational Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mentalhealth') }}">Mental Health Resources</a></li>
+                    </ul>
+                </li>
+                <li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </div>
 
     <main>
-        <h2>General Resources</h2>
-
-        <h2>Financial Resources</h2>
-
-        <h2>Educational Resources</h2>
-
-        <h2>Mental Health Resources</h2>
-
-
+        <h2 id="general">General Resources</h2>
         <div class="tabs">
             <div class="tab">
                 <input class="faq-checkbox" id="faq1" type="checkbox">
@@ -90,6 +92,172 @@
                 </div>
             </div>
         </div>
+
+
+        <h2 id="financial">Financial Resources</h2>
+        <div class="tabs">
+            <div class="tab">
+                <input class="faq-checkbox" id="faq1" type="checkbox">
+                <label class="tab-label" for="faq1">What is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq2" type="checkbox">
+                <label class="tab-label" for="faq2">How do I use PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq3" type="checkbox">
+                <label class="tab-label" for="faq3">How do I get an LES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq4" type="checkbox">
+                <label class="tab-label" for="faq4">Is PayLES secure?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq5" type="checkbox">
+                <label class="tab-label" for="faq5">How accurate is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq6" type="checkbox">
+                <label class="tab-label" for="faq6">How can I contact the developer of PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq7" type="checkbox">
+                <label class="tab-label" for="faq7">How can I contribute to this project?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+        </div>
+
+
+
+        <h2 id="educational">Educational Resources</h2>
+        <div class="tabs">
+            <div class="tab">
+                <input class="faq-checkbox" id="faq1" type="checkbox">
+                <label class="tab-label" for="faq1">What is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq2" type="checkbox">
+                <label class="tab-label" for="faq2">How do I use PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq3" type="checkbox">
+                <label class="tab-label" for="faq3">How do I get an LES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq4" type="checkbox">
+                <label class="tab-label" for="faq4">Is PayLES secure?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq5" type="checkbox">
+                <label class="tab-label" for="faq5">How accurate is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq6" type="checkbox">
+                <label class="tab-label" for="faq6">How can I contact the developer of PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq7" type="checkbox">
+                <label class="tab-label" for="faq7">How can I contribute to this project?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+        </div>
+
+
+
+        <h2 id="mentalhealth">Mental Health Resources</h2>
+        <div class="tabs">
+            <div class="tab">
+                <input class="faq-checkbox" id="faq1" type="checkbox">
+                <label class="tab-label" for="faq1">What is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq2" type="checkbox">
+                <label class="tab-label" for="faq2">How do I use PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq3" type="checkbox">
+                <label class="tab-label" for="faq3">How do I get an LES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq4" type="checkbox">
+                <label class="tab-label" for="faq4">Is PayLES secure?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq5" type="checkbox">
+                <label class="tab-label" for="faq5">How accurate is PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq6" type="checkbox">
+                <label class="tab-label" for="faq6">How can I contact the developer of PayLES?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+            <div class="tab">
+                <input class="faq-checkbox" id="faq7" type="checkbox">
+                <label class="tab-label" for="faq7">How can I contribute to this project?</label>
+                <div class="tab-content">
+                    temp
+                </div>
+            </div>
+        </div>
+
+
     </main>
 
     <footer>
