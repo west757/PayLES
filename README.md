@@ -66,12 +66,29 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 
 in work:
-put in common tsp remarks
 add row
 cola
 tsp update
 dynamic column creation
 delete sessions after time
 export formatting
+dynamic variable get from entitlement/deduction/allotment boxes
+dynamic variable display
+show TSP variables
+Update options for TSP rate change
+highlight changes
+sticky row/column of paydf
+military money manual
+last updated/version number
+add deployment
+site visitor count
+background gradient
+on-base/off-base BAH
+one open les call
+year display
+download csv supporting files
+download for self-host
+use video
+license update
 
 -->

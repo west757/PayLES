@@ -24,7 +24,7 @@ class Config:
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
 
     LES_COORD_SCALE = 0.24
-    LES_IMAGE_SCALE = 0.4
+    LES_IMAGE_SCALE = 0.42
     DEFAULT_MONTHS_NUM = 6
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
