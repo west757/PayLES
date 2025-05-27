@@ -9,25 +9,35 @@
 </head>
 
 <body>
-    <header>
-        <div class="header-container">
-            <div class="header-item" id="logo">
+    <div id="top-container">
+        <header>
+            <div id="logo">
                 <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
             </div>
-            <div class="header-item">
+            <div id="title">
                 <p id="header-text">program analyzing your LES</p>
             </div>
-            <div class="header-item" id="header-nav">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('about') }}">About</a>
-                <a href="{{ url_for('faq') }}">FAQ</a>
-                <a href="{{ url_for('resources') }}">Resources</a>
-                <a href="{{ url_for('contact') }}">Contact</a>
-                <a href="{{ url_for('leave') }}">Leave Calculator</a>
-                <a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a>
-            </div>
-        </div>
-    </header>
+        </header>
+
+        <nav>
+            <ul>
+                <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
+                <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
+                <li class="nav-top">
+                    <a href="{{ url_for('resources') }}">Resources</a>
+                    <ul>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='general') }}">General Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial') }}">Financial Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='educational') }}">Educational Resources</a></li>
+                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mentalhealth') }}">Mental Health Resources</a></li>
+                    </ul>
+                </li>
+                <li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </div>
 
     <main>
         <h1>404</h1>
