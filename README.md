@@ -66,13 +66,12 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 
 in work:
-get links from remarks and put below
-add resources
+put in common tsp remarks
 add row
 cola
 tsp update
-months is buggy
-update with no changes has stuff change
+dynamic column creation
 delete sessions after time
+export formatting
 
 -->
