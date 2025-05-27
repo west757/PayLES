@@ -36,7 +36,7 @@ body {
 
 main {
     margin: 0 auto;
-    width: 60%;
+    width: 63.5%;
 }
 
 
@@ -227,11 +227,19 @@ button:hover {
 }
 
 #submit-les-button {
-    width: 12rem;
+    height: 5rem;
+    margin: 0 0 0 2rem;
+    width: 14rem;
 }
 
-#submit-les-example-button {
-    width: 12rem;
+#submit-example-les-button {
+    margin: 0 0 0 2rem;
+    width: 14rem;
+}
+
+#mypay-button {
+    margin: 0 0 0 2rem;
+    width: 14rem;
 }
 
 #update-les-button {
@@ -309,12 +317,13 @@ input[type=checkbox] {
 
 /* core */
 #core {
+    max-width: 100%;
+}
+
+#core-les {
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin: 0;
-    max-width: 100%;
-    padding: 1rem;
 }
 
 #core-home {
@@ -329,11 +338,13 @@ input[type=checkbox] {
     align-items: flex-start;
     display: flex;
     gap: 1rem;
+    margin: 1rem 0 0 0;
     max-width: 100%;
 }
 
 #paydf {
     flex-shrink: 1;
+    margin: 1rem;
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -343,6 +354,14 @@ input[type=checkbox] {
     flex-direction: column;
     flex-shrink: 0;
     gap: 1rem;
+}
+
+#options {
+    margin: 1rem;
+}
+
+#settings {
+    margin: 1rem;
 }
 
 
@@ -542,9 +561,10 @@ td.core-header:last-child {
 }
 
 
-/* les image display */
+/* les image */
 #les-image {
     display: inline-block;
+    margin: 1rem;
     position: relative;
 }
 
@@ -571,8 +591,7 @@ td.core-header:last-child {
 
 
 
-
-
+/* tab accordion */
 .tabs {
     border-radius: 0.5rem;
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;

@@ -1,4 +1,4 @@
-<div id="core">
+<div id="core-les">
     <div id="paydf-options-settings">
         <div id="paydf">
             <table class="core">
@@ -608,7 +608,7 @@
     <!-- display les image -->
     {% if session['les_image'] %}
     <div id="les-image">
-        <img src="data:image/png;base64,{{session['les_image']}}" />
+        <img src="data:image/png;base64,{{session['les_image']}}" alt="LES image unable to be generated"/>
 
         {% for rect in session['rect_overlay'] %}
         <label {% if rect.modal !="none" %}

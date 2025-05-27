@@ -74,8 +74,7 @@
               "RelativeToolTip": "app\\config.py",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAADQAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-04-01T02:20:36.918Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-01T02:20:36.918Z"
             },
             {
               "$type": "Document",
@@ -87,8 +86,7 @@
               "RelativeToolTip": "app\\main.py",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAADEAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-01-15T03:49:52.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T03:49:52.475Z"
             },
             {
               "$type": "Document",
@@ -100,8 +98,7 @@
               "RelativeToolTip": "app\\templates\\les.html",
               "ViewState": "AgIAADkBAAAAAAAAAADwv10BAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-03-12T22:42:43.647Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-12T22:42:43.647Z"
             },
             {
               "$type": "Document",
@@ -113,8 +110,7 @@
               "RelativeToolTip": "app\\static\\style.css",
               "ViewState": "AgIAAFYAAAAAAAAAAAAAAHYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-02-27T01:33:48.884Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T01:33:48.884Z"
             },
             {
               "$type": "Document",
@@ -124,7 +120,7 @@
               "RelativeDocumentMoniker": "app\\templates\\index.html",
               "ToolTip": "C:\\Users\\blue\\Documents\\GitHub\\PayLES\\app\\templates\\index.html",
               "RelativeToolTip": "app\\templates\\index.html",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAAwGAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAAwF4AAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2025-01-16T00:25:58.502Z",
               "EditorCaption": ""
@@ -211,8 +207,7 @@
               "RelativeToolTip": "README.md",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAAEMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-15T23:31:37.711Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T23:31:37.711Z"
             }
           ]
         }

@@ -4,16 +4,16 @@
     <table id="core-submit">
         <tr>
             <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                <td rowspan=2>
+                <td rowspan=3>
                     <label for="submit-input" id="submit-drop">
                         <span id="drop-title">Drop LES here</span>
                         or
                         <input type="file" id="submit-input" name="submit-input" accept=".pdf">
                     </label>
                 </td>
-            <td>
-                <button id="submit-les-button">Submit LES</button>
-            </td>
+                <td>
+                    <button id="submit-les-button">Submit LES</button>
+                </td>
             </form>
         </tr>
 
@@ -21,6 +21,14 @@
             <form hx-post="/submit_example" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
                 <td>
                     <button id="submit-example-les-button">Submit Example LES</button>
+                </td>
+            </form>
+        </tr>
+
+        <tr>
+            <form action="https://mypay.dfas.mil/#/" target="_blank">
+                <td>
+                    <button id="mypay-button">MyPay</button>
                 </td>
             </form>
         </tr>

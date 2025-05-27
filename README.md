@@ -45,6 +45,7 @@ les deductions: https://www.military.com/paycheck-chronicles/2015/04/28/deductio
 pcs fact sheet: https://home.army.mil/wood/6815/9862/5687/PCS_Fact_Sheet_August_2020.pdf
 
 
+mypay: https://mypay.dfas.mil/#/
 base pay: https://militarypay.defense.gov/Pay/Basic-Pay/
 bas: https://militarypay.defense.gov/pay/allowances/bas.aspx
 bah: https://militarypay.defense.gov/PAY/ALLOWANCES/bah.aspx
@@ -70,6 +71,9 @@ add resources
 add row
 cola
 tsp update
-contact form
+months is buggy
+update with no changes has stuff change
+delete sessions after time
+page scaling
 
 -->
