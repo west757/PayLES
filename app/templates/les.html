@@ -342,8 +342,8 @@
                     </tr>
 
                     <!--
-    add row
--->
+                        add row
+                    -->
                 </tbody>
             </table>
         </div>
@@ -592,7 +592,7 @@
                                 </div>
                                 <div class="settings-div">
                                     <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
-                                        <input type="file" id="settings-input" name="submit-input" accept=".pdf"/>
+                                        <input type="file" id="settings-input" name="submit-input" accept=".pdf" />
                                         <button id="submit-new-les-button">Submit</button>
                                     </form>
                                 </div>
@@ -608,25 +608,77 @@
     <!-- display les image -->
     {% if session['les_image'] %}
     <div id="les-image">
-        <img src="data:image/png;base64,{{session['les_image']}}" alt="LES image unable to be generated"/>
+        <img src="data:image/png;base64,{{session['les_image']}}" alt="LES image unable to be generated" />
 
         {% for rect in session['rect_overlay'] %}
         <label {% if rect.modal !="none" %}
-                for="modal-{{rect.modal}}"
-                {% endif %}
-                class="rect-highlight {% if rect.modal != 'none' %}clickable{% endif %}"
-                style="
+               for="modal-{{rect.modal}}"
+               {% endif %}
+               class="rect-highlight {% if rect.modal != 'none' %}clickable{% endif %}"
+               style="
                         left: {{rect.x1}}px;
                         top: {{rect.y1}}px;
                         width: {{rect.x2 - rect.x1}}px;
                         height: {{rect.y2 - rect.y1}}px;"
-                onmousemove="showTooltip(event, '{{rect.tooltip}}')"
-                onmouseleave="hideTooltip()"></label>
+               onmousemove="showTooltip(event, '{{rect.tooltip}}')"
+               onmouseleave="hideTooltip()"></label>
         {% endfor %}
     </div>
     {% endif %}
 
     <div class="tooltip" id="tooltip"></div>
+
+
+
+    <!-- les remarks -->
+    <h2>Common LES Remarks</h2>
+
+    <div class="remark-container">
+        <div class="remark">
+            If TSP election amount exceeds net amount due, TSP will not be deducted.
+            <br> &emsp; - The contribution limit for the TSP is $23,500 per year. Once the limit is reached, no additional TSP deductions will occur.
+        </div>
+        <div class="remark">
+            You are the best manager of your pay. Preclude overpayment or underpayment of your pay by reviewing your LES every month. Visit your local finance office for any updates required.
+            <br> &emsp; - Army: S1 Shop
+            <br> &emsp; - Air Force: Customer Support Section (CSS)
+            <br> &emsp; - Navy: Personnel Support Detachment (PSD)
+            <br> &emsp; - Marines: S8 Shop
+            <br> &emsp; - Space Force: Customer Support Section (CSS)
+        </div>
+        <div class="remark">
+            Make sure to use your benefit: you can save an average of 25% on your grocery bill by shopping at the Commisary, in-store and online at Commissary Click2Go! Visit
+            <a href="https://www.corp.commissaries.com" target="_blank">corp.commissaries.com</a>.
+        </div>
+        <div class="remark">
+            If eligible, you may have been automatically enrolled in the airborne hazards and open burn pit registry. Visit 
+            <a href="https://www.health.mil/ahburnpitregistry" target="_blank">health.mil/ahburnpitregistry</a> to learn more.
+        </div>
+        <div class="remark">
+            Active Duty families: explore your FEDVIP vision benefits at the virtual benefits fair. Visit <a href="https://www.benefeds.com/military" target="_blank">benefeds.com/military</a>.
+        </div>
+        <div class="remark">
+            Health care flexible spending accounts allow eligible service members to set aside up to $3,300 in pre-tax earnings for health care costs. Enroll at
+            <a href="https://www.fsafeds.gov/enroll" target="_blank">fsafeds.gov/enroll</a>. Learn more at <a href="https://www.finred.usalearning.gov/hcfsa" target="_blank">finred.usalearning.gov/hcfsa</a>.
+        </div>
+        <div class="remark">
+            The Servicemembers Civil Relief Act (SCRA) protects service members. These protections include reducing interest rates and permitting termination of a lease upon
+            PCS/Deployment. Visit <a href="https://www.aflegalassistance.law.af.mil" target="_blank">aflegalassistance.law.af.mil</a>.
+        </div>
+        <div class="remark">
+            Receive your 1095 and W2 statements faster and more secure by logging onto MyPay at <a href="https://mypay.dfas.mil" target="_blank">mypay.dfas.mil</a> and selecting the
+            turn on/off hardcopy 1095 and W2 option to elect electronic only.
+        </div>
+        <div class="remark">
+            Start/change agency contribution.
+            <br> &emsp; - Provides the date that the member's TSP contributing agency either started their automatic matching (typically 1%) or regular matching.
+        </div>
+        <div class="remark">
+            Start accession.
+            <br> &emsp; - Provides the date in which the member was fully provisioned into the service.
+        </div>
+    </div>
+
 
 
 
@@ -984,13 +1036,13 @@
             <label class="modal-close" for="modal-cola"></label>
             <h2>Cost of Living Allowance (COLA)</h2>
             <p>
-                Service members serving outside of the continental United States (OCONUS) where the cost of living is higher than CONUS receive an Overseas Cost-of-Living 
-                Allowance (COLA). Overseas COLA is a non-taxable allowance designed to offset higher prices of non-housing goods and services OCONUS and equalize 
-                purchasing power with members stationed in CONUS. It does not reimburse expenses, compensate for remoteness, hardship, loss of spousal income, or non-availability 
+                Service members serving outside of the continental United States (OCONUS) where the cost of living is higher than CONUS receive an Overseas Cost-of-Living
+                Allowance (COLA). Overseas COLA is a non-taxable allowance designed to offset higher prices of non-housing goods and services OCONUS and equalize
+                purchasing power with members stationed in CONUS. It does not reimburse expenses, compensate for remoteness, hardship, loss of spousal income, or non-availability
                 of goods and services.
 
-                OCONUS COLA is not a fixed amount and should not be considered in household budgeting. Fixed expenses, such as car payments, should be based on what a 
-                Service member can afford without the allowance. Overseas COLA can fluctuate based on the exchange rate, as COLA is paid in U.S dollars, but some expenses 
+                OCONUS COLA is not a fixed amount and should not be considered in household budgeting. Fixed expenses, such as car payments, should be based on what a
+                Service member can afford without the allowance. Overseas COLA can fluctuate based on the exchange rate, as COLA is paid in U.S dollars, but some expenses
                 are typically paid in foreign currency.
             </p>
             <p>More Resources:</p>
@@ -1007,14 +1059,14 @@
             <label class="modal-close" for="modal-leave"></label>
             <h2>Leave</h2>
             <p>
-                As part of the military pay and benefits package, military service members earn 30 days of paid leave per year. Service members start at zero and for every month of 
-                military service, 2.5 days of leave get added to your leave account. It doesn’t stop, but the most members can carry over from one fiscal year to the next 
+                As part of the military pay and benefits package, military service members earn 30 days of paid leave per year. Service members start at zero and for every month of
+                military service, 2.5 days of leave get added to your leave account. It doesn’t stop, but the most members can carry over from one fiscal year to the next
                 fiscal year is 60 days, except in certain, very limited situations where you can carry over more.
 
-                Reserve component members, including National Guard, also accrue leave at the rate of 2.5 days for each month that they are on active-duty orders. 
+                Reserve component members, including National Guard, also accrue leave at the rate of 2.5 days for each month that they are on active-duty orders.
                 Reserve components have some special rules for how and when they can use their leave.
 
-                Service members are expected to use leave for any workday that they will not be available for work, as required by their command. They are also expected to 
+                Service members are expected to use leave for any workday that they will not be available for work, as required by their command. They are also expected to
                 use leave for any day that they leave the vicinity of their duty station, as defined by their command.
             </p>
             <p>More Resources:</p>

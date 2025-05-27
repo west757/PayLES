@@ -695,3 +695,22 @@ td.core-header:last-child {
 .resource:hover {
     background-color: var(--palegreen);
 }
+
+
+/* remarks */
+.remark-container {
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    overflow: hidden;
+    flex: 1;
+    margin: 0 0 2rem 0;
+    width: 60%;
+}
+
+.remark {
+    background-color: var(--lightgray);
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--table_border);
+    padding: 1rem;
+}
