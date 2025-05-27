@@ -74,6 +74,5 @@ tsp update
 months is buggy
 update with no changes has stuff change
 delete sessions after time
-page scaling
 
 -->

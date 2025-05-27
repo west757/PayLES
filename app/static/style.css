@@ -35,8 +35,8 @@ body {
 }
 
 main {
-    margin: 0 auto;
-    width: 63.5%;
+    margin: 0 auto 1rem auto;
+    width: 60%;
 }
 
 
@@ -62,7 +62,7 @@ header {
     align-self: flex-end;
     color: var(--pale);
     font-size: 24px;
-    line-height: 0;
+    line-height: 0.2rem;
 }
 
 nav {
@@ -189,7 +189,7 @@ footer {
 }
 
 #submit-drop:hover, #submit-drop.drag-active {
-    background: var(--lightgray);
+    background-color: var(--lightgray);
 }
 
 #drop-title {
@@ -209,7 +209,7 @@ input[type=file] {
 }
 
 input[type=file]::file-selector-button {
-    background: var(--lightgreen);
+    background-color: var(--lightgreen);
     border: none;
     border-radius: 0.5rem;
     color: var(--white);
@@ -220,7 +220,7 @@ input[type=file]::file-selector-button {
 }
 
 input[type=file]::file-selector-button:hover {
-    background: var(--darkgreen);
+    background-color: var(--darkgreen);
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
 }
 
@@ -234,7 +234,7 @@ input[type=file]::file-selector-button:hover {
 }
 
 #settings-input:hover {
-    background: var(--gray);
+    background-color: var(--gray);
     transition: background .2s ease-in-out;
 }
 
@@ -411,7 +411,7 @@ input[type=checkbox] {
 
 /* core tables */
 table.core {
-    background: var(--white);
+    background-color: var(--white);
     border: 1px solid var(--table_border);
     border-collapse: separate;
     border-radius: 1.5rem;
@@ -427,7 +427,7 @@ tr.core-header {
 }
 
 td.core-header {
-    background: var(--darkgray);
+    background-color: var(--darkgray);
     border-left: 1px solid var(--table_border);
     border-radius: 0px;
     color: var(--white);
@@ -529,7 +529,7 @@ td.core-header:last-child {
     width: 50%;
     margin: auto;
     overflow: auto;
-    background: var(--white);
+    background-color: var(--white);
     border-radius: 20px;
     padding: 1em 2em;
     height: fit-content;
@@ -549,7 +549,7 @@ td.core-header:last-child {
     position: absolute;
     width: 2px;
     height: 1.5em;
-    background: var(--darkgray);
+    background-color: var(--darkgray);
     display: block;
     transform: rotate(45deg);
     left: 50%;
@@ -577,11 +577,11 @@ td.core-header:last-child {
 }
 
 .modalbutton:hover, .modalbutton:focus {
-    background: var(--palegreen);
+    background-color: var(--palegreen);
 }
 
 .modalbutton:active {
-    background: #27ae60;
+    background-color: #27ae60;
     box-shadow: 0 1px 2px rgba(0,0,0, .2) inset;
 }
 
@@ -621,7 +621,7 @@ td.core-header:last-child {
 }
 
 .tooltip {
-    background: var(--darkgray);
+    background-color: var(--darkgray);
     border-radius: 0.5rem;
     color: var(--white);
     display: none;
@@ -649,7 +649,7 @@ td.core-header:last-child {
 }
 
 .tab-label {
-    background: var(--lightgray);
+    background-color: var(--lightgray);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -657,7 +657,7 @@ td.core-header:last-child {
 }
 
 .tab-label:hover {
-    background: var(--palegreen);
+    background-color: var(--palegreen);
 }
 
 .tab-label::after {
@@ -669,7 +669,7 @@ td.core-header:last-child {
 }
 
 .tab-content {
-    background: var(--white);
+    background-color: var(--white);
     padding: 0 1rem;
     transition: all 0.35s;
     max-height: 0;
@@ -682,7 +682,7 @@ td.core-header:last-child {
 }
 
 .faq-checkbox:checked + .tab-label {
-   background: var(--palegreen);
+   background-color: var(--palegreen);
 }
 
 .faq-checkbox:checked + .tab-label::after {
@@ -692,4 +692,31 @@ td.core-header:last-child {
 .faq-checkbox:checked ~ .tab-content {
     max-height: 100vh;
     padding: 1rem;
+}
+
+
+
+/* resources */
+.resource-container {
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    overflow: hidden;
+    flex: 1;
+}
+
+.resource-container a {
+    color: var(--black);
+    text-decoration: none;
+}
+
+.resource {
+    background-color: var(--lightgray);
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--table_border);
+    padding: 1rem;
+}
+
+.resource:hover {
+    background-color: var(--palegreen);
 }
