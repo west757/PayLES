@@ -5,6 +5,7 @@ import secrets
 import pandas as pd
 
 class Config:
+    #flask configuration settings
     SECRET_KEY = secrets.token_hex(16)
     SESSION_PERMANENT = False
     SESSION_TYPE = "filesystem"
@@ -12,9 +13,10 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
     STATIC_FOLDER = Path.cwd() / "static"
 
+    #static files
     LOGO_FILE = "logo.png"
     EXAMPLE_LES_FILE = "les_example.pdf"
-    RECTANGLES_FILE = "rectangles.csv"
+    LES_RECTANGLES_FILE = "les_rectangles.csv"
     MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
     PAY_DRILL_FILE = "pay_drill_2025.csv"
@@ -22,8 +24,24 @@ class Config:
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
     FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
-    PAYDF_FILE = "paydf.csv"
+    SGLI_RATE_FILE = "sgli_rates.csv"
+    PAYDF_TEMPLATE_FILE = "paydf_template.csv"
 
+    #load static files
+    LOGO = os.path.join('static', LOGO_FILE)
+    EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
+    LES_RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, LES_RECTANGLES_FILE))
+    MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
+    PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
+    PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
+    BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
+    BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
+    FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
+    STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
+    SGLI_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, SGLI_RATE_FILE))
+    PAYDF_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_TEMPLATE_FILE))
+
+    #constants
     LES_COORD_SCALE = 0.24
     LES_IMAGE_SCALE = 0.42
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -38,28 +56,13 @@ class Config:
     RANKS_SHORT = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
                    'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
                    'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-    SGLI_COVERAGES = list(map(Decimal, [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000]))
-    SGLI_PREMIUMS = list(map(Decimal, [0, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31]))
     BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))   #officers, enlisted, enlisted BAS 2
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
 
-    LOGO = os.path.join('static', LOGO_FILE)
-    EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
-    RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, RECTANGLES_FILE))
-    MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
-    PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
-    PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
-    BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
-    BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
-    FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
-    STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
-    PAYDF = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_FILE))
-
-    PAY_ACTIVE_HEADERS = list(map(int, PAY_ACTIVE.columns[1:]))
-
+    #default session values
     SESSION_DEFAULTS = {
         'months_num': 4,
         'les_image': None,
