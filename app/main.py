@@ -289,12 +289,12 @@ def add_entitlements(les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     entitlements = []
     section = les_text[11]
+
     for i, row in paydf_template.iterrows():
         if row['type'] == 'E':
             short = str(row['shortname'])
             matches = find_multiword_matches(section, short)
             for idx in matches:
-                # Look for the first numeric value after the match
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         entitlements.append((row['header'], round(Decimal(section[j]), 2)))
@@ -307,6 +307,7 @@ def add_deductions(les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     deductions = []
     section = les_text[12]
+
     for i, row in paydf_template.iterrows():
         if row['type'] == 'D':
             short = str(row['shortname'])
@@ -324,6 +325,7 @@ def add_allotments(les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     allotments = []
     section = les_text[13]
+
     for i, row in paydf_template.iterrows():
         if row['type'] == 'A':
             short = str(row['shortname'])
@@ -354,44 +356,53 @@ def add_calculations(paydf):
 
 def expand_paydf(paydf):
     months_short = app.config['MONTHS_SHORT']
+    months_num = int(session.get('months_num', 6))
+
     col_headers = paydf.columns.tolist()
     initial_month = col_headers[2]
     month_idx = months_short.index(initial_month)
-    for i in range(1, session['months_num']):
+
+    for i in range(1, months_num):
         month_idx = (month_idx + 1) % 12
         new_month = months_short[month_idx]
         paydf[new_month] = None
-        columns = paydf.columns.tolist()
-        # 1. Update all variables
+
+        #update variables
         for row_idx, row in paydf.iterrows():
             if row['Type'] == 'V':
                 value = update_variables(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
-        # 2. Update all entitlements
+
+        #update entitlements
         for row_idx, row in paydf.iterrows():
             if row['Type'] == 'E':
                 value = update_entitlements(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
-        # 3. Update taxable pay and non-taxable pay
+
+        #update taxable and non-taxable pay
         for row_idx, row in paydf.iterrows():
             if row['Header'] == 'Taxable Pay' or row['Header'] == 'Non-Taxable Pay':
                 value = update_calculations(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
-        # 4. Update all deductions
+
+        #update deductions
         for row_idx, row in paydf.iterrows():
             if row['Type'] == 'D':
                 value = update_deductions(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
-        # 5. Update all allotments
+
+        #update allotments
         for row_idx, row in paydf.iterrows():
             if row['Type'] == 'A':
                 value = update_allotments(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
-        # 6. Update all remaining calculations
+
+        #update remaining calculations
         for row_idx, row in paydf.iterrows():
             if row['Type'] == 'C' and row['Header'] not in ['Taxable Pay', 'Non-Taxable Pay']:
                 value = update_calculations(paydf, row_idx, new_month)
                 paydf.at[row_idx, new_month] = value
+
     return paydf
 
 
@@ -435,7 +446,6 @@ def update_variables(paydf, row_idx, month):
         return prev_value + 1
     
 
-
     if header == 'Zip Code' or header == 'MHA Code' or header == 'MHA Name':
         future_value = session.get('zipcode_future', '')
         future_month = session.get('zipcode_future_month', '')
@@ -457,7 +467,6 @@ def update_variables(paydf, row_idx, month):
         return prev_value
 
         
-
     if header == 'Tax Residency State':
         future_value = session.get('state_future', '')
         future_month = session.get('state_future_month', '')
@@ -492,7 +501,6 @@ def update_variables(paydf, row_idx, month):
         return prev_value
 
 
-
     if header == 'State Filing Status':
         future_value = session.get('state_filing_status_future', '')
         future_month = session.get('state_filing_status_future_month', '')
@@ -511,7 +519,7 @@ def update_variables(paydf, row_idx, month):
     
 
     if header == 'Dependents':
-        future_value = session.get('dependents_future', '')
+        future_value = session.get('dependents_future', 0)
         future_month = session.get('dependents_future_month', '')
 
         #if no future value or month is set, return previous value
@@ -561,7 +569,7 @@ def update_variables(paydf, row_idx, month):
 
 
     if header == 'Traditional TSP Rate':
-        future_value = session.get('traditional_tsp_rate_future', '')
+        future_value = session.get('traditional_tsp_rate_future', 0)
         future_month = session.get('traditional_tsp_rate_future_month', '')
 
         #if no future value or month is set, return previous value
@@ -578,7 +586,7 @@ def update_variables(paydf, row_idx, month):
 
 
     if header == 'Roth TSP Rate':
-        future_value = session.get('roth_tsp_rate_future', '')
+        future_value = session.get('roth_tsp_rate_future', 0)
         future_month = session.get('roth_tsp_rate_future_month', '')
 
         #if no future value or month is set, return previous value
@@ -836,9 +844,7 @@ def calculate_federaltaxes(paydf, row_idx, month):
     standard_deductions = app.config['STANDARD_DEDUCTIONS']
     federal_tax_rate = app.config['FEDERAL_TAX_RATE']
 
-    columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
-    col_idx = columns.index(month)
     # Get taxable pay and federal filing status for this month
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     filing_status_row_idx = row_headers.index("Federal Filing Status")
@@ -880,7 +886,6 @@ def calculate_federaltaxes(paydf, row_idx, month):
 
 
 def calculate_ficasocialsecurity(paydf, row_idx, month):
-    columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     taxable_pay = paydf.at[taxable_pay_row_idx, month]
@@ -890,7 +895,6 @@ def calculate_ficasocialsecurity(paydf, row_idx, month):
 
 
 def calculate_ficamedicare(paydf, row_idx, month):
-    columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     taxable_pay = paydf.at[taxable_pay_row_idx, month]
@@ -905,7 +909,7 @@ def calculate_sgli(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     prev_value = paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    # Use user-submitted value if month is at or after sgli_future_month
+
     sgli_future = session.get('sgli_future', None)
     sgli_future_month = session.get('sgli_future_month', None)
     if sgli_future is not None and sgli_future_month and month >= sgli_future_month:
@@ -917,9 +921,7 @@ def calculate_sgli(paydf, row_idx, month):
 def calculate_statetaxes(paydf, row_idx, month):
     state_tax_rate = app.config['STATE_TAX_RATE']
 
-    columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
-    col_idx = columns.index(month)
     # Get taxable pay, state, and filing status for this month
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     state_row_idx = row_headers.index("Tax Residency State")
