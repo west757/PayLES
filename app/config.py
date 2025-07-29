@@ -24,7 +24,7 @@ class Config:
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
     FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
-    SGLI_RATE_FILE = "sgli_rates.csv"
+    SGLI_RATE_FILE = "sgli_rate.csv"
     PAYDF_TEMPLATE_FILE = "paydf_template.csv"
 
     #load static files
