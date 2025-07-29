@@ -128,19 +128,20 @@ def read_les(les_file):
 
     #build dataframe
     paydf = build_paydf(les_text)
-    row_headers = paydf['Header'].tolist()
-
 
     #expand dataframe
-    user_inputs = {}
-    paydf = expand_paydf(paydf, col_headers, row_headers, user_inputs)
+    paydf = expand_paydf(paydf)
+    print(paydf)
 
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
 
     session['paydf'] = paydf
     session['col_headers'] = col_headers
     session['row_headers'] = row_headers
 
     les_pdf.close()
+
     return render_template('les.html')
 
 
@@ -148,13 +149,11 @@ def read_les(les_file):
 
 def build_paydf(les_text):
     initial_month = les_text[10][3]
-    initial_year = int(les_text[10][4])
-    df = pd.DataFrame([
-        ["Header", "Type", initial_month],
-        ["Year", "V", initial_year]
-    ], columns=[0, 1, 2])
+    df = pd.DataFrame(columns=["Header", "Type", initial_month])
+    row_idx = 0
 
     row_idx = len(df)
+
     for header, value in add_variables(les_text):
         df.loc[row_idx] = [header, "V", value]
         row_idx += 1
@@ -178,8 +177,6 @@ def build_paydf(les_text):
     return df
 
 
-
-
 def add_variables(les_text):
     paydate = datetime.strptime(les_text[5][2], '%y%m%d')
     lesdate = pd.to_datetime(datetime.strptime((les_text[10][4] + les_text[10][3] + "1"), '%y%b%d'))
@@ -190,14 +187,7 @@ def add_variables(les_text):
     else:
         zc = "Not Found"
 
-    if les_text[50][2] != "00000":
-        mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(les_text[50][2])])].stack()
-        mha_search_row = mha_search.index[0][0]
-        mha = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
-        mhan = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
-    else:
-        mha = "no mha found"
-        mhan = "no mha name found"
+    mhac, mhan = calculate_mha(les_text[50][2])
 
     if les_text[41][1] != "98":
         trs = les_text[41][1]
@@ -230,6 +220,8 @@ def add_variables(les_text):
     else:
         jftr2 = "None"
 
+    cz = "No"
+
     if len(les_text[48]) == 3:
         baqt = (les_text[48][2])[0] + (les_text[48][2])[1:].lower()
     else:
@@ -257,10 +249,11 @@ def add_variables(les_text):
             rtsp = 0
 
     variables = [
+        ("Year", int(les_text[10][4])),
         ("Rank", les_text[4][1]),
         ("Months in Service", mis),
         ("Zip Code", zc),
-        ("MHA", mha),
+        ("MHA Code", mhac),
         ("MHA Name", mhan),
         ("Tax Residency State", trs),
         ("Federal Filing Status", ffs),
@@ -268,6 +261,7 @@ def add_variables(les_text):
         ("Dependents", int(les_text[55][1])),
         ("JFTR", jftr),
         ("JFTR 2", jftr2),
+        ("Combat Zone", cz),
         ("BAQ Type", baqt),
         ("BAS Type", bast),
         ("Traditional TSP Rate", ttsp),
@@ -277,16 +271,17 @@ def add_variables(les_text):
 
 
 
+
+
 def add_entitlements(les_text):
     entitlements = []
     section = les_text[11]
     for i, row in app.config['PAYDF'].iterrows():
         if row['type'] == 'E':
             short = str(row['shortname'])
-
-            if short in section:
-                idx = section.index(short)
-                
+            matches = find_multiword_matches(section, short)
+            for idx in matches:
+                # Look for the first numeric value after the match
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         value = Decimal(section[j])
@@ -294,17 +289,14 @@ def add_entitlements(les_text):
                         break
     return entitlements
 
-
 def add_deductions(les_text):
     deductions = []
     section = les_text[12]
     for i, row in app.config['PAYDF'].iterrows():
         if row['type'] == 'D':
             short = str(row['shortname'])
-
-            if short in section:
-                idx = section.index(short)
-
+            matches = find_multiword_matches(section, short)
+            for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         value = Decimal(section[j])
@@ -312,17 +304,14 @@ def add_deductions(les_text):
                         break
     return deductions
 
-
 def add_allotments(les_text):
     allotments = []
     section = les_text[13]
     for i, row in app.config['PAYDF'].iterrows():
         if row['type'] == 'A':
             short = str(row['shortname'])
-
-            if short in section:
-                idx = section.index(short)
-
+            matches = find_multiword_matches(section, short)
+            for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         value = Decimal(section[j])
@@ -347,39 +336,286 @@ def add_calculations(paydf):
 
 
 
-def expand_paydf(df, col_headers, row_headers, user_inputs):
-    """
-    Fill in the DataFrame for columns beyond the first month column.
-    Each cell value is recalculated using a function based on user input and row type.
-    """
-    for col_idx in range(3, len(col_headers)):
-        month = col_headers[col_idx]
-        for row_idx, row_name in enumerate(row_headers):
-            row_type = df.at[row_idx, 'Type']
-            if row_type == 'V':
-                value = get_variable_value(row_name, month, user_inputs, df, col_headers)
-            elif row_type == 'E':
-                value = get_entitlement_value(row_name, month, user_inputs, df, col_headers)
-            elif row_type == 'D':
-                value = get_deduction_value(row_name, month, user_inputs, df, col_headers)
-            elif row_type == 'A':
-                value = get_allotment_value(row_name, month, user_inputs, df, col_headers)
-            elif row_type == 'C':
-                value = get_calculation_value(row_name, month, user_inputs, df, col_headers)
+def expand_paydf(paydf):
+    col_headers = paydf.columns.tolist()
+    initial_month = col_headers[2]
+    month_idx = app.config['MONTHS_SHORT'].index(initial_month)
+    #expand out months_num-1 new columns (since first month is already present)
+    for i in range(1, session['months_num']):
+        #determine new month and add as column header with blank values for each row
+        month_idx = (month_idx + 1) % 12
+        new_month = app.config['MONTHS_SHORT'][month_idx]
+        paydf[new_month] = None
+
+        col_values = []
+        calc_row_indices = []
+        for row_idx, row in paydf.iterrows():
+            if row['Type'] == 'C':
+                col_values.append(None)
+                calc_row_indices.append(row_idx)
+            elif row['Type'] == 'V':
+                value = update_variables(paydf, row_idx, new_month)
+                col_values.append(value)
+            elif row['Type'] == 'E':
+                value = update_entitlements(paydf, row_idx, new_month)
+                col_values.append(value)
+            elif row['Type'] == 'D':
+                value = update_deductions(paydf, row_idx, new_month)
+                col_values.append(value)
+            elif row['Type'] == 'A':
+                value = update_allotments(paydf, row_idx, new_month)
+                col_values.append(value)
             else:
-                value = df.at[row_idx, col_headers[2]]  # Default: copy first month value
-            df.at[row_idx, month] = value
-    return df
+                value = paydf.iloc[row_idx, 2 + i - 1]
+                col_values.append(value)
+        paydf[new_month] = col_values
+        for row_idx in calc_row_indices:
+            value = update_calculations(paydf, row_idx, new_month)
+            paydf.at[row_idx, new_month] = value
+
+    return paydf
+
+
+def update_variables(paydf, row_idx, month):
+    header = paydf.at[row_idx, 'Header']
+    columns = paydf.columns.tolist()
+    prev_month = paydf.columns[-2]
+    prev_value = paydf.at[row_idx, prev_month]
+    
+    if header == 'Year':
+        #if current month is JAN and previous month is DEC, increment year
+        if app.config['MONTHS_SHORT'].index(month) == 0 and app.config['MONTHS_SHORT'].index(prev_month) == 11:
+            return prev_value + 1
+        else:
+            return prev_value
+
+
+    if header == 'Rank':
+        future_value = session.get('rank_future', '')
+        future_month = session.get('rank_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+    
+
+    if header == 'Months in Service':
+        return prev_value + 1
+    
+
+
+    if header == 'Zip Code' or header == 'MHA Code' or header == 'MHA Name':
+        future_value = session.get('zipcode_future', '')
+        future_month = session.get('zipcode_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if header == 'Zip Code':
+            if future_col_idx is not None and current_col_idx >= future_col_idx:
+                return future_value
+        else:
+            mhac, mhan = calculate_mha(future_value)
+            return mhac if header == 'MHA Code' else mhan
+        return prev_value
+
+        
+
+    if header == 'Tax Residency State':
+        future_value = session.get('state_future', '')
+        future_month = session.get('state_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+
+
+    if header == 'Federal Filing Status':
+        future_value = session.get('federal_filing_status_future', '')
+        future_month = session.get('federal_filing_status_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
 
 
 
+    if header == 'State Filing Status':
+        future_value = session.get('state_filing_status_future', '')
+        future_month = session.get('state_filing_status_future_month', '')
 
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+    
+
+    if header == 'Dependents':
+        future_value = session.get('dependents_future', '')
+        future_month = session.get('dependents_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+
+
+    if header == 'JFTR':
+        return prev_value
+    
+
+    if header == 'JFTR 2':
+        return prev_value
+
+
+    if header == 'Combat Zone':
+        future_value = session.get('combat_zone_future', '')
+        future_month = session.get('combat_zone_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+
+
+    if header == 'BAQ Type':
+        return prev_value
+    
+
+    if header == 'BAS Type':
+        return prev_value
+
+
+    if header == 'Traditional TSP Rate':
+        future_value = session.get('traditional_tsp_rate_future', '')
+        future_month = session.get('traditional_tsp_rate_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+
+
+    if header == 'Roth TSP Rate':
+        future_value = session.get('roth_tsp_rate_future', '')
+        future_month = session.get('roth_tsp_rate_future_month', '')
+
+        #if no future value or month is set, return previous value
+        if not future_value or not future_month:
+            return prev_value
+
+        #gets the future month index from the columns, if not created yet then is none
+        future_col_idx = columns.index(future_month) if future_month in columns else None
+        current_col_idx = columns.index(month)
+
+        if future_col_idx is not None and current_col_idx >= future_col_idx:
+            return future_value
+        return prev_value
+
+    #default to return previous value
+    return prev_value
+
+
+
+def update_entitlements(paydf, row_idx, month):
+    # TODO: Implement entitlement update logic
+    return paydf.at[row_idx, paydf.columns[-2]]
+
+
+def update_deductions(paydf, row_idx, month):
+    # TODO: Implement deduction update logic
+    return paydf.at[row_idx, paydf.columns[-2]]
+
+
+def update_allotments(paydf, row_idx, month):
+    # TODO: Implement allotment update logic
+    return paydf.at[row_idx, paydf.columns[-2]]
+
+
+
+def update_calculations(paydf, row_idx, month):
+    header = paydf.at[row_idx, 'Header']
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+
+    if header == "Taxable Pay":
+        return calculate_taxablepay(paydf, col_idx)
+    elif header == "Non-Taxable Pay":
+        return calculate_nontaxablepay(paydf, col_idx)
+    elif header == "Total Taxes":
+        return calculate_totaltaxes(paydf, col_idx)
+    elif header == "Gross Pay":
+        return calculate_grosspay(paydf, col_idx)
+    elif header == "Net Pay":
+        return calculate_netpay(paydf, col_idx)
+    elif header == "Difference":
+        return calculate_difference(paydf, col_idx)
+    else:
+        #default to return previous value
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
 
 
 
 @app.route('/updatepaydf', methods=['POST'])
-def updatepaydf():
+def update_paydf():
     session['months_num'] = request.form['months_num']
     session['rank_future'] = request.form['rank_future']
     session['rank_future_month'] = request.form['rank_future_month']
@@ -395,16 +631,17 @@ def updatepaydf():
     session['federal_filing_status_future_month'] = request.form['federal_filing_status_future_month']
     session['state_filing_status_future'] = request.form['state_filing_status_future']
     session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
+    session['combat_zone_future'] = request.form['combat_zone_future']
+    session['combat_zone_future_month'] = request.form['combat_zone_future_month']
     session['traditional_tsp_rate_future'] = int(request.form['traditional_tsp_rate_future'])
     session['traditional_tsp_rate_future_month'] = request.form['traditional_tsp_rate_future_month']    
     session['roth_tsp_rate_future'] = int(request.form['roth_tsp_rate_future'])
     session['roth_tsp_rate_future_month'] = request.form['roth_tsp_rate_future_month']
 
 
-
     columns = session['paydf'].columns.tolist()
 
-    session['paydf'] = expand_paydf(session['paydf'], session['initial_month'], session['months_num'], entitlements_text, deductions_text, allotments_text)
+    #session['paydf'] = expand_paydf(session['paydf'], session['initial_month'], session['months_num'], entitlements_text, deductions_text, allotments_text)
 
     session['zipcode_future'] = f'{session['zipcode_future']:05}'
     return render_template('les.html')
@@ -415,26 +652,33 @@ def updatepaydf():
 
 def calculate_taxablepay(paydf, col_idx):
     total = Decimal(0)
+    # Find if combat zone is 'Yes' for this column
+    combat_zone_row = paydf[paydf['Header'] == 'Combat Zone']
+    combat_zone = None
+    if not combat_zone_row.empty:
+        combat_zone = combat_zone_row.iloc[0, col_idx]
     for i, row in paydf.iterrows():
-        header = row[0]
-        type = row[1]
-
+        header = row.iloc[0]
+        type = row.iloc[1]
         if type == 'E':
-            #get the row in the template paydf file that matches the current row header
             match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
-
-            #if the matching row has a Y for tax
-            if match.iloc[0]['tax'] == 'Y':
-                total += Decimal(row.iloc[col_idx])
-
+            if not match.empty:
+                # If combat zone is Yes, skip BASE PAY for taxable pay
+                if combat_zone == 'Yes' and header == 'Base Pay':
+                    continue
+                if match.iloc[0]['tax'] == 'Y':
+                    value = row.iloc[col_idx]
+                    if value is None or value == '':
+                        value = 0
+                    total += Decimal(value)
     return round(total, 2)
 
 
 def calculate_nontaxablepay(paydf, col_idx):
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        header = row[0]
-        type = row[1]
+        header = row.iloc[0]
+        type = row.iloc[1]
 
         if type == 'E':
             #get the row in the template paydf file that matches the current row header
@@ -442,7 +686,10 @@ def calculate_nontaxablepay(paydf, col_idx):
 
             #if the matching row has a N for tax
             if match.iloc[0]['tax'] == 'N':
-                total += Decimal(row.iloc[col_idx])
+                value = row.iloc[col_idx]
+                if value is None or value == '':
+                    value = 0
+                total += Decimal(value)
 
     return round(total, 2)
 
@@ -450,15 +697,18 @@ def calculate_nontaxablepay(paydf, col_idx):
 def calculate_totaltaxes(paydf, col_idx):
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        header = row[0]
-        type = row[1]
+        header = row.iloc[0]
+        type = row.iloc[1]
 
         if type == 'D':
             match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
 
             #if the matching row has a Y for tax
             if match.iloc[0]['tax'] == 'Y':
-                total += Decimal(row.iloc[col_idx])
+                value = row.iloc[col_idx]
+                if value is None or value == '':
+                    value = 0
+                total += Decimal(value)
 
     return round(total, 2)
 
@@ -466,10 +716,13 @@ def calculate_totaltaxes(paydf, col_idx):
 def calculate_grosspay(paydf, col_idx):
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        type = row[1]
+        type = row.iloc[1]
 
         if type == 'E':
-            total += Decimal(row.iloc[col_idx])
+            value = row.iloc[col_idx]
+            if value is None or value == '':
+                value = 0
+            total += Decimal(value)
 
     return round(total, 2)
 
@@ -478,10 +731,13 @@ def calculate_netpay(paydf, col_idx):
     gross = calculate_grosspay(paydf, col_idx)
     loss = Decimal(0)
     for i, row in paydf.iterrows():
-        type = row[1]
+        type = row.iloc[1]
 
         if type in ['D', 'A']:
-            loss += Decimal(row.iloc[col_idx])
+            value = row.iloc[col_idx]
+            if value is None or value == '':
+                value = 0
+            loss += Decimal(value)
 
     return round(gross - loss, 2)
 
@@ -498,9 +754,34 @@ def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
+def calculate_mha(zipcode):
+    if zipcode != "00000" or zipcode != "" or zipcode is not None:
+        mha_search = app.config['MHA_ZIPCODES'][app.config['MHA_ZIPCODES'].isin([int(zipcode)])].stack()
+        mha_search_row = mha_search.index[0][0]
+        mhac = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA"]
+        mhan = app.config['MHA_ZIPCODES'].loc[mha_search_row, "MHA_NAME"]
+    else:
+        mhac = "no mha code found"
+        mhan = "no mha name found"
+    return mhac, mhan
+
+
+def find_multiword_matches(section, shortname):
+    short_words = shortname.split()
+    n = len(short_words)
+    matches = []
+    for i in range(len(section) - n + 1):
+        candidate = ' '.join(section[i:i+n])
+        if candidate == shortname:
+            matches.append(i + n - 1)  # index of last word in match
+    return matches
+
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
 def validate_file(file):
     if file.filename == '':

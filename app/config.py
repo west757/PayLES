@@ -61,7 +61,7 @@ class Config:
     PAY_ACTIVE_HEADERS = list(map(int, PAY_ACTIVE.columns[1:]))
 
     SESSION_DEFAULTS = {
-        'months_num': 6,
+        'months_num': 4,
         'les_image': None,
         'rect_overlay': 0,
         'rank_future': "",
@@ -78,6 +78,8 @@ class Config:
         'federal_filing_status_future_month': "",
         'state_filing_status_future': "",
         'state_filing_status_future_month': "",
+        'combat_zone_future': "",
+        'combat_zone_future_month': "",
         'traditional_tsp_rate_future': 0,
         'traditional_tsp_rate_future_month': "",
         'roth_tsp_rate_future': 0,
