@@ -3,213 +3,111 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayLES</title>
-    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+    <title>PayLES Inputs</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
 </head>
-
 <body>
-    <form hx-post="/updatematrix" hx-target="#matrix-id" hx-swap="outerHTML">
-        <div class="table-div" id="inputs-id">
-            <table class="inputs-table">
-                <tbody>
-                    <tr class="inputs-header">
-                        <td class="inputs-header"></td>
-                        <td class="inputs-header">Current</td>
-                        <td class="inputs-header">Future</td>
-                        <td class="inputs-header">Changing Month</td>
-                    </tr>
+<form id="update-form" hx-post="/updatepaydf" hx-target="#paydf-container" hx-swap="outerHTML">
+    <div class="table-div" id="update-table-div">
+        <table class="inputs-table">
+            <tbody>
+                <tr class="inputs-header">
+                    <td></td>
+                    <td>Current</td>
+                    <td>Future</td>
+                    <td>Changing Month</td>
+                </tr>
+                {% for var in update_vars %}
+                <tr class="inputs">
+                    <td><label class="modalbutton" for="modal-{{ var.modal }}">{{ var.label }}</label></td>
+                    <td>{{ var.current }}</td>
+                    <td>
+                        {% if var.type == 'select' %}
+                        <select name="{{ var.name }}_future">
+                            {% for opt in var.options %}
+                            <option value="{{ opt }}" {% if opt == var.future %}selected{% endif %}>{{ opt }}</option>
+                            {% endfor %}
+                        </select>
+                        {% elif var.type == 'input' %}
+                        <input type="text" name="{{ var.name }}_future" value="{{ var.future }}" />
+                        {% elif var.type == 'checkbox' %}
+                        <input type="checkbox" name="{{ var.name }}_future" {% if var.future %}checked{% endif %} />
+                        {% endif %}
+                    </td>
+                    <td>
+                        <select name="{{ var.name }}_future_month">
+                            {% for month in col_headers[2:] %}
+                            <option value="{{ month }}" {% if month == var.future_month %}selected{% endif %}>{{ month }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr><td colspan="4"><input type="checkbox" id="show_all_changeable" name="show_all_changeable" {% if show_all_changeable %}checked{% endif %} onchange="this.form.submit()"> Show all changeable rows</td></tr>
+                {% if show_all_changeable %}
+                    {% for row in standard_rows %}
                     <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-basepay">Rank</label>
-                        </td>
-                        <td class="inputs">{{session.rank_current}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="rank_future" name="rank_future">
-                                {% for x in config['RANKS_SHORT'][0:] %}
-                                <option value="{{x}}" {% if x==session.rank_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="rank_future_month" name="rank_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.rank_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-bah">Zipcode</label>
-                        </td>
-                        <td class="inputs">{{session.zipcode_current}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="{{session.zipcode_future}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="zipcode_future_month" name="zipcode_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==zipcode_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-bah">Dependents</label>
-                        </td>
-                        <td class="inputs">{{session.dependents_current}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_future" name="dependents_future" value="{{session.dependents_future}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="dependents_future_month" name="dependents_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.dependents_future_month %} selected {% endif %}>{{x}}</option>
+                        <td><label class="modalbutton" for="modal-{{ row.modal }}">{{ row.header }}</label></td>
+                        <td>{{ row.current }}</td>
+                        <td><input type="checkbox" name="{{ row.name }}_continue" {% if row.continue %}checked{% endif %}></td>
+                        <td>
+                            <select name="{{ row.name }}_future_month">
+                                {% for month in col_headers[2:] %}
+                                <option value="{{ month }}" {% if month == row.future_month %}selected{% endif %}>{{ month }}</option>
                                 {% endfor %}
                             </select>
                         </td>
                     </tr>
+                    {% endfor %}
+                {% endif %}
+                <tr><td colspan="4"><button type="submit" id="update-les-button">Update LES</button></td></tr>
+            </tbody>
+        </table>
+    </div>
 
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-sgli">SGLI</label>
-                        </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("SGLI"), session['col_headers'][1]]).replace('$-','$')}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="sgli_future" name="sgli_future">
-                                {% for x in config['SGLI_PREMIUMS'][0:] %}
-                                <option value="{{x}}" {% if x==session.sgli_future %} selected {% endif %}>{{"${:,.2f}".format(x)}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="sgli_future_month" name="sgli_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.sgli_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-statetaxes">Home of Record</label>
-                        </td>
-                        <td class="inputs">{{session.state_current}}</td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_future" name="state_future">
-                                {% for x in config['STATES_SHORT'][0:] %}
-                                <option value="{{x}}" {% if x==session.state_future %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="state_future_month" name="state_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.state_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <label class="modalbutton" for="modal-rothtsp">Roth TSP</label>
-                        </td>
-                        <td class="inputs">{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}</td>
-                        <td class="inputs">
-                            <input class="inputs" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{{'${:,.2f}'.format(session['matrix'].at[session['row_headers'].index("Roth TSP"), session['col_headers'][1]]).replace('$-','$')}}" />
-                        </td>
-                        <td class="inputs">
-                            <select class="inputs" id="rothtsp_future_month" name="rothtsp_future_month">
-                                {% for x in session.col_headers[2:] %}
-                                <option value="{{x}}" {% if x==session.rothtsp_future_month %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan="4">
-                            <div class="updatebuttondiv">
-                                <button class="updatebutton" type="submit">Update LES</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-
-        <div class="table-div" id="settings-id">
-            <table class="inputs-table">
-                <tbody>
-                    <tr class="inputs-header">
-                        <td class="inputs-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs">
-                            <p>Months Displayed:</p>
-                            <select class="inputs" id="months_display" name="months_display" style="width: 40px;" onchange="this.form.submit()">
-                                {% for x in range(1, 13) %}
-                                <option value="{{x}}" {% if x==session.months_display %} selected {% endif %}>{{x}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td class="inputs">
-                            <p>Years Displayed: </p>
-                            <input type="checkbox" class="inputcheckbox" id="displayyears" name="displayyears" value="False">
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan=2>
-                            <p>Color Table</p>
-                            <input type="checkbox" class="inputcheckbox" id="colortable" name="colortable" value="False">
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan=2>Add row</td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan=2>
-                            <label for="export">Export as:</label>
-                            <select name="export" id="export" class="inputs">
-                                <option value="excel">Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                            <div class="updatebuttondiv">
-                                <button class="updatebutton" type="submit">Export to Excel</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="inputs">
-                        <td class="inputs" colspan=3>Upload New LES:</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
-
-
-
-    <script>
-        function change_monthsdisplay() {
-            var md = document.getElementById("months-display").value;
-
-        }
-    </script>
-
-
-
+    <div class="table-div" id="settings-table-div">
+        <table class="inputs-table">
+            <tbody>
+                <tr class="inputs-header">
+                    <td colspan="2">Settings</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="show_variables" name="show_variables" {% if show_variables %}checked{% endif %} onchange="this.form.submit()"> Show all variables
+                    </td>
+                    <td>
+                        <label for="months_display">Months Displayed:</label>
+                        <select id="months_display" name="months_display" onchange="this.form.submit()">
+                            {% for i in range(2,13) %}
+                            <option value="{{ i }}" {% if i == months_display %}selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="export">Export as:</label>
+                        <select name="export" id="export">
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                        <button type="submit" id="export-button">Export</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="upload-les">Upload New LES:</label>
+                        <input type="file" id="upload-les" name="upload-les" accept=".pdf">
+                        <button type="submit" id="submit-new-les-button">Upload</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+<script>
+// Optionally add JS for dynamic UI if needed
+</script>
 </body>
 </html>

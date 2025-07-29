@@ -1,105 +1,60 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayLES</title>
-    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% extends "base.html" %}
+{% block content %}
 
-<body>
-    <div id="top-container">
-        <header>
-            <div id="logo">
-                <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
-            </div>
-            <div id="title">
-                <p id="header-text">program analyzing your LES</p>
-            </div>
-        </header>
+<div class="faq">
+    <h2>Frequently Asked Questions</h2>
 
-        <nav>
-            <ul>
-                <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
-                <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
-                <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
-                <li class="nav-top">
-                    <a href="{{ url_for('resources') }}">Resources</a>
-                    <ul>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='general') }}">General Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial') }}">Financial Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='educational') }}">Educational Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mentalhealth') }}">Mental Health Resources</a></li>
-                    </ul>
-                </li>
-                <li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>
-                <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
+    <div class="tabs">
+        <div class="tab">
+            <input class="faq-checkbox" id="faq1" type="checkbox">
+            <label class="tab-label" for="faq1">What is PayLES?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq2" type="checkbox">
+            <label class="tab-label" for="faq2">How do I use PayLES?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq3" type="checkbox">
+            <label class="tab-label" for="faq3">How do I get an LES?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq4" type="checkbox">
+            <label class="tab-label" for="faq4">Is PayLES secure?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq5" type="checkbox">
+            <label class="tab-label" for="faq5">How accurate is PayLES?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq6" type="checkbox">
+            <label class="tab-label" for="faq6">How can I contact the developer of PayLES?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
+        <div class="tab">
+            <input class="faq-checkbox" id="faq7" type="checkbox">
+            <label class="tab-label" for="faq7">How can I contribute to this project?</label>
+            <div class="tab-content">
+                temp
+            </div>
+        </div>
     </div>
+</div>
 
-    <main>
-        <h2>Frequently Asked Questions</h2>
-
-        <div class="tabs">
-            <div class="tab">
-                <input class="faq-checkbox" id="faq1" type="checkbox">
-                <label class="tab-label" for="faq1">What is PayLES?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq2" type="checkbox">
-                <label class="tab-label" for="faq2">How do I use PayLES?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq3" type="checkbox">
-                <label class="tab-label" for="faq3">How do I get an LES?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq4" type="checkbox">
-                <label class="tab-label" for="faq4">Is PayLES secure?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq5" type="checkbox">
-                <label class="tab-label" for="faq5">How accurate is PayLES?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq6" type="checkbox">
-                <label class="tab-label" for="faq6">How can I contact the developer of PayLES?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-            <div class="tab">
-                <input class="faq-checkbox" id="faq7" type="checkbox">
-                <label class="tab-label" for="faq7">How can I contribute to this project?</label>
-                <div class="tab-content">
-                    temp
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="footer">
-            <p>All Rights Reserved &#xA9; 2025 PayLES</p>
-        </div>
-    </footer>
-
-</body>
-</html>
+{% endblock %}

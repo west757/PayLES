@@ -18,7 +18,7 @@ Session(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('submit.html')
 
 @app.route('/about')
 def about():
@@ -35,14 +35,6 @@ def resources():
 @app.route('/leave')
 def leave():
     return render_template('leave.html')
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-@app.route('/404')
-def page404():
-    return render_template('404.html')
 
 
 
@@ -64,7 +56,7 @@ def submit_les():
         les_pdf.close()
         if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
             read_les(les_file)
-            return render_template('les.html')
+            return render_template('paydf_group.html')
         else:
             return render_template("submit.html", error="File is not a valid LES")
 
@@ -74,7 +66,7 @@ def submit_les():
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
     read_les(app.config['EXAMPLE_LES'])
-    return render_template('les.html')
+    return render_template('paydf_group.html')
 
 
 
@@ -142,7 +134,8 @@ def read_les(les_file):
     session['row_headers'] = row_headers
 
     les_pdf.close()
-    return render_template('les.html')
+    # No need to render a template here, just process the LES
+    return None
 
 
 
