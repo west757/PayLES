@@ -22,10 +22,10 @@ class Config:
     BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
     FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
+    PAYDF_FILE = "paydf.csv"
 
     LES_COORD_SCALE = 0.24
     LES_IMAGE_SCALE = 0.42
-    DEFAULT_MONTHS_NUM = 6
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
@@ -56,5 +56,30 @@ class Config:
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
     FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
     STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
+    PAYDF = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_FILE))
 
     PAY_ACTIVE_HEADERS = list(map(int, PAY_ACTIVE.columns[1:]))
+
+    SESSION_DEFAULTS = {
+        'months_num': 6,
+        'les_image': None,
+        'rect_overlay': 0,
+        'rank_future': "",
+        'rank_future_month': "",
+        'zipcode_future': "",
+        'zipcode_future_month': "",
+        'state_future': "",
+        'state_future_month': "",
+        'sgli_future': 0,
+        'sgli_future_month': "",
+        'dependents_future': 0,
+        'dependents_future_month': "",
+        'federal_filing_status_future': "",
+        'federal_filing_status_future_month': "",
+        'state_filing_status_future': "",
+        'state_filing_status_future_month': "",
+        'traditional_tsp_rate_future': 0,
+        'traditional_tsp_rate_future_month': "",
+        'roth_tsp_rate_future': 0,
+        'roth_tsp_rate_future_month': "",
+    }
