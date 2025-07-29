@@ -64,7 +64,7 @@ class Config:
 
     #default session values
     SESSION_DEFAULTS = {
-        'months_num': 4,
+        'months_num': 6,
         'les_image': None,
         'rect_overlay': 0,
         'rank_future': "",
