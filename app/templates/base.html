@@ -12,7 +12,7 @@
     <div id="top-container">
         <header>
             <div id="logo">
-                <a href="{{ url_for('index') }}"><img src="{{config['LOGO']}}" alt="PayLES Logo"></a>
+                <a href="{{ url_for('index') }}"><img src="{{ config['LOGO']}}" alt="PayLES Logo"></a>
             </div>
             <div id="title">
                 <p id="header-text">program analyzing your LES</p>
@@ -39,10 +39,9 @@
         </nav>
     </div>
 
-    <main>
-        <h1>Contact:</h1>
-        <p>Please contact PayLES through GitHub. Thank you.</p>
-    </main>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
 
     <footer>
         <div class="footer">

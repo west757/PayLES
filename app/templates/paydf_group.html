@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="paydf-group-main">
+    <div class="paydf-group-flex">
+        <div class="paydf-table-outer">
+            <div class="paydf-table-scroll">
+                {% include "paydf_table.html" %}
+            </div>
+        </div>
+        <div class="paydf-side-col">
+            <div class="inputs-table-wrap">
+                {% include "inputs_table.html" %}
+            </div>
+            <div class="settings-table-wrap">
+                {% include "settings_table.html" %}
+            </div>
+        </div>
+    </div>
+    <div class="les-image-wrap">
+        {% include "les_image.html" %}
+    </div>
+</div>
+{% endblock %}
