@@ -249,24 +249,25 @@ def add_variables(les_text):
             rtsp = 0
 
     variables = [
-        ("Year", int(les_text[10][4])),
+        ("Year", int('20' + les_text[10][4])),
         ("Rank", les_text[4][1]),
-        ("Months in Service", mis),
-        ("Zip Code", zc),
-        ("MHA Code", mhac),
-        ("MHA Name", mhan),
-        ("Tax Residency State", trs),
-        ("Federal Filing Status", ffs),
-        ("State Filing Status", sfs),
+        ("Months in Service", int(mis)),
+        ("Zip Code", str(zc)),
+        ("MHA Code", str(mhac)),
+        ("MHA Name", str(mhan)),
+        ("Tax Residency State", str(trs)),
+        ("Federal Filing Status", str(ffs)),
+        ("State Filing Status", str(sfs)),
         ("Dependents", int(les_text[55][1])),
-        ("JFTR", jftr),
-        ("JFTR 2", jftr2),
-        ("Combat Zone", cz),
-        ("BAQ Type", baqt),
-        ("BAS Type", bast),
-        ("Traditional TSP Rate", ttsp),
-        ("Roth TSP Rate", rtsp),
+        ("JFTR", str(jftr)),
+        ("JFTR 2", str(jftr2)),
+        ("Combat Zone", str(cz)),
+        ("BAQ Type", str(baqt)),
+        ("BAS Type", str(bast)),
+        ("Traditional TSP Rate", int(ttsp)),
+        ("Roth TSP Rate", int(rtsp)),
     ]
+
     return variables
 
 
@@ -284,10 +285,11 @@ def add_entitlements(les_text):
                 # Look for the first numeric value after the match
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
-                        value = Decimal(section[j])
-                        entitlements.append((row['header'], value))
+                        entitlements.append((row['header'], round(Decimal(section[j]), 2)))
                         break
     return entitlements
+
+
 
 def add_deductions(les_text):
     deductions = []
@@ -299,10 +301,11 @@ def add_deductions(les_text):
             for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
-                        value = Decimal(section[j])
-                        deductions.append((row['header'], value))
+                        deductions.append((row['header'], -round(Decimal(section[j]), 2)))
                         break
     return deductions
+
+
 
 def add_allotments(les_text):
     allotments = []
@@ -314,8 +317,7 @@ def add_allotments(les_text):
             for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
-                        value = Decimal(section[j])
-                        allotments.append((row['header'], value))
+                        allotments.append((row['header'], -round(Decimal(section[j]), 2)))
                         break
     return allotments
 
@@ -340,40 +342,44 @@ def expand_paydf(paydf):
     col_headers = paydf.columns.tolist()
     initial_month = col_headers[2]
     month_idx = app.config['MONTHS_SHORT'].index(initial_month)
-    #expand out months_num-1 new columns (since first month is already present)
     for i in range(1, session['months_num']):
-        #determine new month and add as column header with blank values for each row
         month_idx = (month_idx + 1) % 12
         new_month = app.config['MONTHS_SHORT'][month_idx]
         paydf[new_month] = None
-
-        col_values = []
-        calc_row_indices = []
+        columns = paydf.columns.tolist()
+        # 1. Update all variables
         for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'C':
-                col_values.append(None)
-                calc_row_indices.append(row_idx)
-            elif row['Type'] == 'V':
+            if row['Type'] == 'V':
                 value = update_variables(paydf, row_idx, new_month)
-                col_values.append(value)
-            elif row['Type'] == 'E':
+                paydf.at[row_idx, new_month] = value
+        # 2. Update all entitlements
+        for row_idx, row in paydf.iterrows():
+            if row['Type'] == 'E':
                 value = update_entitlements(paydf, row_idx, new_month)
-                col_values.append(value)
-            elif row['Type'] == 'D':
+                paydf.at[row_idx, new_month] = value
+        # 3. Update taxable pay and non-taxable pay
+        for row_idx, row in paydf.iterrows():
+            if row['Header'] == 'Taxable Pay' or row['Header'] == 'Non-Taxable Pay':
+                value = update_calculations(paydf, row_idx, new_month)
+                paydf.at[row_idx, new_month] = value
+        # 4. Update all deductions
+        for row_idx, row in paydf.iterrows():
+            if row['Type'] == 'D':
                 value = update_deductions(paydf, row_idx, new_month)
-                col_values.append(value)
-            elif row['Type'] == 'A':
+                paydf.at[row_idx, new_month] = value
+        # 5. Update all allotments
+        for row_idx, row in paydf.iterrows():
+            if row['Type'] == 'A':
                 value = update_allotments(paydf, row_idx, new_month)
-                col_values.append(value)
-            else:
-                value = paydf.iloc[row_idx, 2 + i - 1]
-                col_values.append(value)
-        paydf[new_month] = col_values
-        for row_idx in calc_row_indices:
-            value = update_calculations(paydf, row_idx, new_month)
-            paydf.at[row_idx, new_month] = value
-
+                paydf.at[row_idx, new_month] = value
+        # 6. Update all remaining calculations
+        for row_idx, row in paydf.iterrows():
+            if row['Type'] == 'C' and row['Header'] not in ['Taxable Pay', 'Non-Taxable Pay']:
+                value = update_calculations(paydf, row_idx, new_month)
+                paydf.at[row_idx, new_month] = value
     return paydf
+
+
 
 
 def update_variables(paydf, row_idx, month):
@@ -575,18 +581,117 @@ def update_variables(paydf, row_idx, month):
 
 
 def update_entitlements(paydf, row_idx, month):
-    # TODO: Implement entitlement update logic
-    return paydf.at[row_idx, paydf.columns[-2]]
+    header = paydf.at[row_idx, 'Header']
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
+    
+    onetime = match.iloc[0]['onetime']
+    standard = match.iloc[0]['standard']
+
+    #if onetime payment, return 0
+    if onetime == 'Y':
+        return 0
+    
+    # Standard recurring payment
+    if standard == 'Y':
+        session_key_active = f"{header.lower().replace(' ', '_')}_active"
+        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
+        is_active = session.get(session_key_active, True)
+        stop_month = session.get(session_key_stop_month, '')
+        if not is_active:
+            return 0
+        if stop_month and month >= stop_month:
+            return 0
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    else:
+        if header == 'Base Pay':
+            return calculate_basepay(paydf, row_idx, month)
+        elif header == 'BAS':
+            return calculate_bas(paydf, row_idx, month)
+        elif header == 'BAH':
+            return calculate_bah(paydf, row_idx, month)
+    #default, return previous value
+    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+
 
 
 def update_deductions(paydf, row_idx, month):
-    # TODO: Implement deduction update logic
-    return paydf.at[row_idx, paydf.columns[-2]]
+    header = paydf.at[row_idx, 'Header']
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
+    
+    onetime = match.iloc[0]['onetime']
+    standard = match.iloc[0]['standard']
+
+    #if onetime payment, return 0
+    if onetime == 'Y':
+        return 0
+    
+    # Standard recurring payment
+    if standard == 'Y':
+        session_key_active = f"{header.lower().replace(' ', '_')}_active"
+        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
+        is_active = session.get(session_key_active, True)
+        stop_month = session.get(session_key_stop_month, '')
+        if not is_active:
+            return 0
+        if stop_month and month >= stop_month:
+            return 0
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    else:
+        if header == 'Federal Taxes':
+            return calculate_federaltaxes(paydf, row_idx, month)
+        elif header == 'FICA - Social Security':
+            return calculate_ficasocialsecurity(paydf, row_idx, month)
+        elif header == 'FICA - Medicare':
+            return calculate_ficamedicare(paydf, row_idx, month)
+        elif header == 'SGLI':
+            return calculate_sgli(paydf, row_idx, month)
+        elif header == 'State Taxes':
+            return calculate_statetaxes(paydf, row_idx, month)
+        elif header == 'Roth TSP':
+            return calculate_rothtsp(paydf, row_idx, month)
+    #default, return previous value
+    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
 
 
 def update_allotments(paydf, row_idx, month):
-    # TODO: Implement allotment update logic
-    return paydf.at[row_idx, paydf.columns[-2]]
+    header = paydf.at[row_idx, 'Header']
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
+    
+    onetime = match.iloc[0]['onetime']
+    standard = match.iloc[0]['standard']
+
+    #if onetime payment, return 0
+    if onetime == 'Y':
+        return 0
+    
+    # Standard recurring payment
+    if standard == 'Y':
+        session_key_active = f"{header.lower().replace(' ', '_')}_active"
+        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
+        is_active = session.get(session_key_active, True)
+        stop_month = session.get(session_key_stop_month, '')
+        if not is_active:
+            return 0
+        if stop_month and month >= stop_month:
+            return 0
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    else:
+        if header == 'Base Pay':
+            return calculate_basepay(paydf, row_idx, month)
+        elif header == 'BAS':
+            return calculate_bas(paydf, row_idx, month)
+        elif header == 'BAH':
+            return calculate_bah(paydf, row_idx, month)
+    #default, return previous value
+    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
 
 
@@ -610,6 +715,229 @@ def update_calculations(paydf, row_idx, month):
     else:
         #default to return previous value
         return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+
+
+
+
+def calculate_basepay(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    row_headers = paydf['Header'].tolist()
+
+    rank_row_idx = row_headers.index("Rank")
+    mis_row_idx = row_headers.index("Months in Service")
+
+    rank = paydf.at[rank_row_idx, month]
+
+    months_in_service_val = paydf.at[mis_row_idx, month]
+    if months_in_service_val is None or months_in_service_val == '':
+        months_in_service = 0
+    else:
+        months_in_service = int(months_in_service_val)
+
+    # Find the correct row in PAY_ACTIVE for the rank
+    pay_active = app.config['PAY_ACTIVE']
+    pay_active_headers = app.config['PAY_ACTIVE_HEADERS']
+    pay_active_row = pay_active[pay_active["rank"] == rank]
+    if pay_active_row.empty:
+        return Decimal(0)
+
+    # Find the correct column for months in service
+    col_idx = 0
+    for i, mis in enumerate(pay_active_headers):
+        if months_in_service < mis:
+            break
+        col_idx = i
+    # The column headers in PAY_ACTIVE are strings, so convert to str
+    col_name = str(pay_active_headers[col_idx])
+    value = pay_active_row[col_name].values[0]
+    return round(Decimal(value), 2)
+
+
+
+
+def calculate_bas(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    rank_row_idx = row_headers.index("Rank")
+    rank = paydf.at[rank_row_idx, month]
+
+    if str(rank).startswith("E"):
+        bas_value = app.config['BAS_AMOUNT'][1]
+    else:
+        bas_value = app.config['BAS_AMOUNT'][0]
+    return round(Decimal(bas_value), 2)
+
+
+
+def calculate_bah(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    # Get MHA code, dependents, and rank for this column
+    mha_row_idx = row_headers.index("MHA Code")
+    dependents_row_idx = row_headers.index("Dependents")
+    rank_row_idx = row_headers.index("Rank")
+    mha_code = paydf.at[mha_row_idx, month]
+    dependents = paydf.at[dependents_row_idx, month]
+    rank = paydf.at[rank_row_idx, month]
+
+    # If MHA code is missing or invalid, return previous value
+    if not mha_code or mha_code == "no mha code found":
+        col_idx = columns.index(month)
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+    # Choose correct BAH table based on dependents
+    if int(dependents) > 0:
+        bah_df = app.config['BAH_WITH_DEPENDENTS']
+    else:
+        bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
+
+    # Find the row for the MHA code
+    bah_row = bah_df[bah_df["MHA"] == mha_code]
+    if bah_row.empty or rank not in bah_df.columns:
+        col_idx = columns.index(month)
+        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+    value = bah_row[rank].values[0]
+    return round(Decimal(str(value)), 2)
+
+
+
+
+
+
+
+def calculate_federaltaxes(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    col_idx = columns.index(month)
+    # Get taxable pay and federal filing status for this month
+    taxable_pay_row_idx = row_headers.index("Taxable Pay")
+    filing_status_row_idx = row_headers.index("Federal Filing Status")
+    taxable_pay = paydf.at[taxable_pay_row_idx, month]
+    filing_status = paydf.at[filing_status_row_idx, month]
+    if taxable_pay is None or taxable_pay == '':
+        taxable_pay = 0
+    if not filing_status:
+        return Decimal(0)
+    # Annualize taxable pay
+    taxable_income = Decimal(taxable_pay) * 12
+    # Apply standard deduction
+    if filing_status == "Single":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][0]
+    elif filing_status == "Married":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][1]
+    elif filing_status == "Head of Household":
+        taxable_income -= app.config['STANDARD_DEDUCTIONS'][2]
+    else:
+        return Decimal(0)
+    taxable_income = max(taxable_income, 0)
+    # Get brackets for this status
+    brackets = app.config['FEDERAL_TAX_RATE'][app.config['FEDERAL_TAX_RATE']['Status'].str.lower() == filing_status.lower()]
+    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
+    tax = Decimal(0)
+    for i in range(len(brackets)):
+        lower = Decimal(str(brackets.at[i, 'Bracket']))
+        rate = Decimal(str(brackets.at[i, 'Rate']))
+        if i + 1 < len(brackets):
+            upper = Decimal(str(brackets.at[i + 1, 'Bracket']))
+        else:
+            upper = Decimal('1e12')
+        if taxable_income > lower:
+            taxable_at_this_rate = min(taxable_income, upper) - lower
+            tax += taxable_at_this_rate * rate
+    # Convert annual tax to monthly
+    tax = tax / 12
+    return round(tax, 2)
+
+
+
+def calculate_ficasocialsecurity(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    taxable_pay_row_idx = row_headers.index("Taxable Pay")
+    taxable_pay = paydf.at[taxable_pay_row_idx, month]
+    if taxable_pay is None or taxable_pay == '':
+        taxable_pay = 0
+    return round(-Decimal(taxable_pay) * app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
+
+
+def calculate_ficamedicare(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    taxable_pay_row_idx = row_headers.index("Taxable Pay")
+    taxable_pay = paydf.at[taxable_pay_row_idx, month]
+    if taxable_pay is None or taxable_pay == '':
+        taxable_pay = 0
+    return round(-Decimal(taxable_pay) * app.config['FICA_MEDICARE_TAX_RATE'], 2)
+
+
+
+
+def calculate_sgli(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    prev_value = paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    # Use user-submitted value if month is at or after sgli_future_month
+    sgli_future = session.get('sgli_future', None)
+    sgli_future_month = session.get('sgli_future_month', None)
+    if sgli_future is not None and sgli_future_month and month >= sgli_future_month:
+        return -Decimal(sgli_future)
+    return prev_value
+
+
+
+def calculate_statetaxes(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    col_idx = columns.index(month)
+    # Get taxable pay, state, and filing status for this month
+    taxable_pay_row_idx = row_headers.index("Taxable Pay")
+    state_row_idx = row_headers.index("Tax Residency State")
+    filing_status_row_idx = row_headers.index("State Filing Status")
+    taxable_pay = paydf.at[taxable_pay_row_idx, month]
+    state = paydf.at[state_row_idx, month]
+    filing_status = paydf.at[filing_status_row_idx, month]
+    if taxable_pay is None or taxable_pay == '':
+        taxable_pay = 0
+    if not state or not filing_status:
+        return Decimal(0)
+    # Annualize taxable pay
+    taxable_income = Decimal(taxable_pay) * 12
+    # Get state brackets
+    state_brackets = app.config['STATE_TAX_RATE'][app.config['STATE_TAX_RATE']['State'] == state]
+    if state_brackets.empty:
+        return Decimal(0)
+    # Select correct columns for filing status
+    if filing_status == "Single":
+        brackets = state_brackets[['SingleBracket', 'SingleRate']].rename(columns={'SingleBracket': 'Bracket', 'SingleRate': 'Rate'})
+    elif filing_status == "Married":
+        brackets = state_brackets[['MarriedBracket', 'MarriedRate']].rename(columns={'MarriedBracket': 'Bracket', 'MarriedRate': 'Rate'})
+    else:
+        return Decimal(0)
+    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
+    tax = Decimal(0)
+    for i in range(len(brackets)):
+        lower = Decimal(brackets.at[i, 'Bracket'])
+        rate = Decimal(brackets.at[i, 'Rate'])
+        if i + 1 < len(brackets):
+            upper = Decimal(brackets.at[i + 1, 'Bracket'])
+        else:
+            upper = Decimal('1e12')
+        if taxable_income > lower:
+            taxable_at_this_rate = min(taxable_income, upper) - lower
+            tax += taxable_at_this_rate * rate
+    # Convert annual tax to monthly
+    tax = tax / 12
+    return round(tax, 2)
+
+
+
+def calculate_rothtsp(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
 
 
@@ -661,16 +989,16 @@ def calculate_taxablepay(paydf, col_idx):
         header = row.iloc[0]
         type = row.iloc[1]
         if type == 'E':
+            #get the row in the template paydf file that matches the current row header
             match = app.config['PAYDF'][app.config['PAYDF']['header'] == header]
-            if not match.empty:
-                # If combat zone is Yes, skip BASE PAY for taxable pay
-                if combat_zone == 'Yes' and header == 'Base Pay':
-                    continue
-                if match.iloc[0]['tax'] == 'Y':
-                    value = row.iloc[col_idx]
-                    if value is None or value == '':
-                        value = 0
-                    total += Decimal(value)
+            # If combat zone is Yes, skip BASE PAY for taxable pay
+            if combat_zone == 'Yes' and header == 'Base Pay':
+                continue
+            if match.iloc[0]['tax'] == 'Y':
+                value = row.iloc[col_idx]
+                if value is None or value == '':
+                    value = 0
+                total += Decimal(value)
     return round(total, 2)
 
 
