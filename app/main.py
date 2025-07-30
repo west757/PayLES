@@ -290,11 +290,18 @@ def add_entitlements(les_text):
         if row['type'] == 'E':
             short = str(row['shortname'])
             matches = find_multiword_matches(section, short)
+            found = False
             for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         entitlements.append((row['header'], round(Decimal(section[j]), 2)))
+                        found = True
                         break
+                if found:
+                    break
+            # If required and not found, add with value 0
+            if row.get('required', 'N') == 'Y' and not found:
+                entitlements.append((row['header'], Decimal(0)))
     return entitlements
 
 
@@ -308,11 +315,18 @@ def add_deductions(les_text):
         if row['type'] == 'D':
             short = str(row['shortname'])
             matches = find_multiword_matches(section, short)
+            found = False
             for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         deductions.append((row['header'], -round(Decimal(section[j]), 2)))
+                        found = True
                         break
+                if found:
+                    break
+            # If required and not found, add with value 0
+            if row.get('required', 'N') == 'Y' and not found:
+                deductions.append((row['header'], Decimal(0)))
     return deductions
 
 
@@ -326,11 +340,18 @@ def add_allotments(les_text):
         if row['type'] == 'A':
             short = str(row['shortname'])
             matches = find_multiword_matches(section, short)
+            found = False
             for idx in matches:
                 for j in range(idx + 1, len(section)):
                     if section[j].replace('.', '', 1).isdigit():
                         allotments.append((row['header'], -round(Decimal(section[j]), 2)))
+                        found = True
                         break
+                if found:
+                    break
+            # If required and not found, add with value 0
+            if row.get('required', 'N') == 'Y' and not found:
+                allotments.append((row['header'], Decimal(0)))
     return allotments
 
 
@@ -342,7 +363,7 @@ def add_calculations(paydf):
         ("Total Taxes", calculate_totaltaxes(paydf, 2)),
         ("Gross Pay", calculate_grosspay(paydf, 2)),
         ("Net Pay", calculate_netpay(paydf, 2)),
-        ("Difference", "-")
+        ("Difference", 0)
     ]
     return calculations
 

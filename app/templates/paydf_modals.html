@@ -199,13 +199,12 @@
                 <td class="modal-table">TSGLI Premium Rate</td>
                 <td class="modal-table">Total Monthly Premium Deduction</td>
             </tr>
-
-            {% for i in range(1, config['SGLI_PREMIUMS']|length) %}
+            {% for row in config['SGLI_RATE'].itertuples() %}
             <tr class="modal-table">
-                <td class="modal-table">{{"${:,.2f}".format(config['SGLI_COVERAGES'][i])}}</td>
-                <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i])}}</td>
-                <td class="modal-table">$1.00</td>
-                <td class="modal-table">{{"${:,.2f}".format(config['SGLI_PREMIUMS'][i] + 1)}}</td>
+                <td class="modal-table">{{ '${:,.2f}'.format(row.coverage) }}</td>
+                <td class="modal-table">{{ '${:,.2f}'.format(row.premium) }}</td>
+                <td class="modal-table">{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
+                <td class="modal-table">{{ '${:,.2f}'.format(row.total) }}</td>
             </tr>
             {% endfor %}
         </table>
