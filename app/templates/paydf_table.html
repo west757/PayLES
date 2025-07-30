@@ -18,7 +18,7 @@
             </tr>
 
             <!-- variables -->
-            {% if session['showallvariables'] %}
+            {% if session['show_all_variables'] %}
                 {% for header, dtype, modal in PAYDF_VARIABLES %}
                 <tr class="pos-table">
                     <td class="pos-table">
@@ -26,8 +26,10 @@
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="pos-table">
-                            {% set value = paydf.at[row_headers.index(header), col_headers[x]] %}
+                        {% set value = paydf.at[row_headers.index(header), col_headers[x]] %}
+                        {% set prev_value = paydf.at[row_headers.index(header), col_headers[x-1]] if x > 2 else None %}
+                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                             {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] and value is number %}
                                 {{ '{:.1f}%'.format(value) }}
                             {% else %}
@@ -52,8 +54,10 @@
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="pos-table">
-                            {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
+                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                             {% else %}
@@ -76,8 +80,10 @@
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="pos-table">
-                            {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
+                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                             {% else %}
@@ -100,8 +106,10 @@
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="pos-table">
-                            {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
+                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
+                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                             {% else %}
@@ -123,7 +131,9 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Taxable Pay"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Taxable Pay"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -139,7 +149,9 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Non-Taxable Pay"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Non-Taxable Pay"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -155,7 +167,9 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Total Taxes"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Total Taxes"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -171,7 +185,9 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Gross Pay"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Gross Pay"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -187,7 +203,9 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Net Pay"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Net Pay"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -203,7 +221,9 @@
                 {% for x in range(2, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Difference"), col_headers[x]] %}
-                    <td class="pos-table">
+                    {% set prev_value = paydf.at[row_headers.index("Difference"), col_headers[x-1]] if x > 2 else None %}
+                    {% set highlight = session['highlight_changes'] and x > 2 and value != 0 %}
+                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
