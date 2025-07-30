@@ -5,7 +5,7 @@
       hx-target="#paydf-group"
       hx-swap="outerHTML"
       hx-include="#settings-form">
-        <table class="core" id="options-table">
+        <table class="pos-table" id="options-table">
             {% set RANKS_SHORT = config['RANKS_SHORT'] %}
             {% set STATES_SHORT = config['STATES_SHORT'] %}
             {% set TAX_FILING_TYPES = config['TAX_FILING_TYPES'] %}
@@ -16,31 +16,31 @@
             {% set month_options = col_headers[3:] %}
 
             <tbody>
-                <tr class="core-header">
-                    <td class="core-header"></td>
-                    <td class="core-header">Current</td>
-                    <td class="core-header">Future</td>
-                    <td class="core-header">Month</td>
+                <tr class="pos-table-header">
+                    <td class="pos-table-header"></td>
+                    <td class="pos-table-header">Current</td>
+                    <td class="pos-table-header">Future</td>
+                    <td class="pos-table-header">Month</td>
                 </tr>
                 
                 <!-- rank -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set rank_current = paydf.at[row_headers.index("Rank"), col_headers[2]] %}
                     {% set rank_future = session['rank_future'] if 'rank_future' in session else current_rank %}
                     {% set rank_future_month = session['rank_future_month'] if 'rank_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-basepay">Rank</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-basepay">Rank</label>
                     </td>
-                    <td class="core">{{ rank_current }}</td>
-                    <td class="core">
-                        <select class="core" id="rank_future" name="rank_future">
+                    <td class="pos-table">{{ rank_current }}</td>
+                    <td class="pos-table">
+                        <select class="pos-table" name="rank_future">
                             {% for x in RANKS_SHORT %}
                             <option value="{{x}}" {% if x == rank_future %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="core">
-                        <select class="core" id="rank_future_month" name="rank_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="rank_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == rank_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -49,19 +49,19 @@
                 </tr>
 
                 <!-- zip code -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set zipcode_current = paydf.at[row_headers.index("Zip Code"), col_headers[2]] %}
                     {% set zipcode_future = session['zipcode_future'] if 'zipcode_future' in session else zipcode_current %}
                     {% set zipcode_future_month = session['zipcode_future_month'] if 'zipcode_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-bah">Zip Code</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-bah">Zip Code</label>
                     </td>
-                    <td class="core">{{ zipcode_current }}</td>
-                    <td class="core">
-                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" id="zipcode_future" name="zipcode_future" value="" />
+                    <td class="pos-table">{{ zipcode_current }}</td>
+                    <td class="pos-table">
+                        <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="zipcode_future" value="" />
                     </td>
-                    <td class="core">
-                        <select class="core" id="zipcode_future_month" name="zipcode_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="zipcode_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == zipcode_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -70,23 +70,23 @@
                 </tr>
 
                 <!-- tax residency state -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set state_current = paydf.at[row_headers.index("Tax Residency State"), col_headers[2]] %}
                     {% set state_future = session['state_future'] if 'state_future' in session else state_current %}
                     {% set state_future_month = session['state_future_month'] if 'state_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-statetaxes">Tax Residency State</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-statetaxes">Tax Residency State</label>
                     </td>
-                    <td class="core">{{ state_current }}</td>
-                    <td class="core">
-                        <select class="core" id="state_future" name="state_future">
+                    <td class="pos-table">{{ state_current }}</td>
+                    <td class="pos-table">
+                        <select class="pos-table" name="state_future">
                             {% for x in STATES_SHORT %}
                             <option value="{{x}}" {% if x == state_future %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="core">
-                        <select class="core" id="state_future_month" name="state_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="state_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == state_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -95,29 +95,29 @@
                 </tr>
 
                 <!-- SGLI -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set sgli_current = paydf.at[row_headers.index("SGLI"), col_headers[2]] %}
                     {% set sgli_future = session['sgli_future'] if 'sgli_future' in session else sgli_current %}
                     {% set sgli_future_month = session['sgli_future_month'] if 'sgli_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-sgli">SGLI</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-sgli">SGLI</label>
                     </td>
-                    <td class="core">
+                    <td class="pos-table">
                         {% if sgli_current is number %}
                             {{ '${:,.2f}'.format(sgli_current|abs).replace('$-','-$') }}
                         {% else %}
                             {{ sgli_current }}
                         {% endif %}
                     </td>
-                    <td class="core">
-                        <select class="core" id="sgli_future" name="sgli_future">
+                    <td class="pos-table">
+                        <select class="pos-table" name="sgli_future">
                             {% for row in SGLI_RATE.itertuples() %}
                             <option value="{{row.premium}}" {% if row.premium == sgli_future|abs %} selected {% endif %}>{{"${:,.2f}".format(row.premium)}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="core">
-                        <select class="core" id="sgli_future_month" name="sgli_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="sgli_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == sgli_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -126,19 +126,19 @@
                 </tr>
 
                 <!-- dependents -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set dependents_current = paydf.at[row_headers.index("Dependents"), col_headers[2]] %}
                     {% set dependents_future = session['dependents_future'] if 'dependents_future' in session else dependents_current %}
                     {% set dependents_future_month = session['dependents_future_month'] if 'dependents_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-bah">Dependents</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-bah">Dependents</label>
                     </td>
-                    <td class="core">{{ dependents_current }}</td>
-                    <td class="core">
-                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" id="dependents_future" name="dependents_future" value="{{ dependents_future }}" />
+                    <td class="pos-table">{{ dependents_current }}</td>
+                    <td class="pos-table">
+                        <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_future" value="{{ dependents_future }}" />
                     </td>
-                    <td class="core">
-                        <select class="core" id="dependents_future_month" name="dependents_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="dependents_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == dependents_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -147,23 +147,23 @@
                 </tr>
 
                 <!-- federal filing status -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set federal_filing_status_current = paydf.at[row_headers.index("Federal Filing Status"), col_headers[2]] %}
                     {% set federal_filing_status_future = session['federal_filing_status_future'] if 'federal_filing_status_future' in session else federal_filing_status_current %}
                     {% set federal_filing_status_future_month = session['federal_filing_status_future_month'] if 'federal_filing_status_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-federaltaxes">Federal Filing Status</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-federaltaxes">Federal Filing Status</label>
                     </td>
-                    <td class="core">{{ federal_filing_status_current }}</td>
-                    <td class="core">
-                        <select class="core" id="federal_filing_status_future" name="federal_filing_status_future">
+                    <td class="pos-table">{{ federal_filing_status_current }}</td>
+                    <td class="pos-table">
+                        <select class="pos-table" name="federal_filing_status_future">
                             {% for x in TAX_FILING_TYPES %}
                             <option value="{{x}}" {% if x == federal_filing_status_future %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="core">
-                        <select class="core" id="federal_filing_status_future_month" name="federal_filing_status_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="federal_filing_status_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == federal_filing_status_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -172,23 +172,23 @@
                 </tr>
 
                 <!-- state filing status -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set state_filing_status_current = paydf.at[row_headers.index("State Filing Status"), col_headers[2]] %}
                     {% set state_filing_status_future = session['state_filing_status_future'] if 'state_filing_status_future' in session else state_filing_status_current %}
                     {% set state_filing_status_future_month = session['state_filing_status_future_month'] if 'state_filing_status_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-statetaxes">State Filing Status</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-statetaxes">State Filing Status</label>
                     </td>
-                    <td class="core">{{ state_filing_status_current }}</td>
-                    <td class="core">
-                        <select class="core" id="state_filing_status_future" name="state_filing_status_future">
+                    <td class="pos-table">{{ state_filing_status_current }}</td>
+                    <td class="pos-table">
+                        <select class="pos-table" name="state_filing_status_future">
                             {% for x in TAX_FILING_TYPES[0:2] %}
                             <option value="{{x}}" {% if x == state_filing_status_future %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="core">
-                        <select class="core" id="state_filing_status_future_month" name="state_filing_status_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="state_filing_status_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == state_filing_status_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -197,19 +197,19 @@
                 </tr>
 
                 <!-- combat zone -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set combat_zone_current = paydf.at[row_headers.index("Combat Zone"), col_headers[2]] %}
                     {% set combat_zone_future = session['combat_zone_future'] if 'combat_zone_future' in session else combat_zone_current %}
                     {% set combat_zone_future_month = session['combat_zone_future_month'] if 'combat_zone_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-combat">In Combat Zone</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-combat">In Combat Zone</label>
                     </td>
-                    <td class="core">{{ combat_zone_current }}</td>
-                    <td class="core">
-                        <input type="checkbox" id="combat_zone_future" name="combat_zone_future" {% if combat_zone_future == "Y" %} checked {% endif %}>
+                    <td class="pos-table">{{ combat_zone_current }}</td>
+                    <td class="pos-table">
+                        <input type="checkbox" id="combat-zone-checkbox" name="combat_zone_future" {% if combat_zone_future == "Y" %} checked {% endif %}>
                     </td>
-                    <td class="core">
-                        <select class="core" id="combat_zone_future_month" name="combat_zone_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="combat_zone_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == combat_zone_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -220,25 +220,25 @@
                 <!-- add in traditional tsp -->
 
                 <!-- roth tsp -->
-                <tr class="core">
+                <tr class="pos-table">
                     {% set roth_tsp_current = paydf.at[row_headers.index("Roth TSP"), col_headers[2]] %}
                     {% set roth_tsp_future = session['roth_tsp_future'] if 'roth_tsp_future' in session else roth_tsp_current %}
                     {% set roth_tsp_future_month = session['roth_tsp_future_month'] if 'roth_tsp_future_month' in session else month_options[0] %}
-                    <td class="core">
-                        <label class="modalbutton" for="modal-tsp">Roth TSP</label>
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-tsp">Roth TSP</label>
                     </td>
-                    <td class="core">
+                    <td class="pos-table">
                         {% if roth_tsp_current is number %}
                             {{ '${:,.2f}'.format(roth_tsp_current|abs).replace('$-','-$') }}
                         {% else %}
                             {{ roth_tsp_current }}
                         {% endif %}
                     </td>
-                    <td class="core">
-                        <input class="core" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 id="rothtsp_future" name="rothtsp_future" placeholder="{% if roth_tsp_future is number %}${:,.2f}{% else %}{{ roth_tsp_future }}{% endif %}" value="" />
+                    <td class="pos-table">
+                        <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength=2 name="rothtsp_future" placeholder="{% if roth_tsp_future is number %}${:,.2f}{% else %}{{ roth_tsp_future }}{% endif %}" value="" />
                     </td>
-                    <td class="core">
-                        <select class="core" id="rothtsp_future_month" name="rothtsp_future_month">
+                    <td class="pos-table">
+                        <select class="pos-table" name="rothtsp_future_month">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == roth_tsp_future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -246,15 +246,13 @@
                     </td>
                 </tr>
 
-                <tr class="core"><td class="core-spacer" colspan=100%></td></tr>
-                <tr class="core"><td class="core-spacer" colspan=100%></td></tr>
+                <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
+                <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
 
                 <!-- update LES button -->
-                <tr class="core">
-                    <td class="core" colspan="4">
-                        <div class="updatebuttondiv">
-                            <button class="updatebutton" id="update-les-button">Update LES</button>
-                        </div>
+                <tr class="pos-table">
+                    <td class="pos-table" colspan="4">
+                        <button id="update-les-button">Update LES</button>
                     </td>
                 </tr>
             </tbody>

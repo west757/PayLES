@@ -1,5 +1,5 @@
 <div id="paydf">
-    <table id="paydf-table" class="core">
+    <table id="paydf-table" class="pos-table">
         {% set PAYDF_VARIABLES = config.PAYDF_VARIABLES %}
         {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
         {% set paydf = session['paydf'] %}
@@ -7,12 +7,12 @@
         {% set col_headers = session['col_headers'] %}
 
         <tbody>
-            <tr class="core-header">
-                <td class="core-header"></td>
+            <tr class="pos-table-header">
+                <td class="pos-table-header"></td>
                 {# Only display value columns, skip type column if present #}
                 {% for x in col_headers[1:] %}
                     {% if x|lower != 'type' %}
-                        <td class="core-header">{{x}}</td>
+                        <td class="pos-table-header">{{x}}</td>
                     {% endif %}
                 {% endfor %}
             </tr>
@@ -20,13 +20,13 @@
             <!-- variables -->
             {% if session['showallvariables'] %}
                 {% for header, dtype, modal in PAYDF_VARIABLES %}
-                <tr class="core">
-                    <td class="core">
-                        <label class="modalbutton" for="modal-{{ modal }}">{{ header }}</label>
+                <tr class="pos-table">
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-{{ modal }}">{{ header }}</label>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="core">
+                        <td class="pos-table">
                             {% set value = paydf.at[row_headers.index(header), col_headers[x]] %}
                             {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] and value is number %}
                                 {{ '{:.1f}%'.format(value) }}
@@ -38,21 +38,21 @@
                     {% endfor %}
                 </tr>
                 {% endfor %}
-            <tr class="core-spacer"><td class="core-spacer" colspan=100%></td></tr>
-            <tr class="core-spacer"><td class="core-spacer" colspan=100%></td></tr>
+            <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
+            <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
             {% endif %}
 
             <!-- entitlements -->
             {% for row in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
                 {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'E' %}
-                <tr class="core">
-                    <td class="core">
-                        <label class="modalbutton" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
+                <tr class="pos-table">
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="core">
+                        <td class="pos-table">
                             {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
@@ -70,13 +70,13 @@
             {% for row in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
                 {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'D' %}
-                <tr class="core">
-                    <td class="core">
-                        <label class="modalbutton" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
+                <tr class="pos-table">
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="core">
+                        <td class="pos-table">
                             {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
@@ -94,13 +94,13 @@
             {% for row in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
                 {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'A' %}
-                <tr class="core">
-                    <td class="core">
-                        <label class="modalbutton" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
+                <tr class="pos-table">
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% if col_headers[x]|lower != 'type' %}
-                        <td class="core">
+                        <td class="pos-table">
                             {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
                             {% if value is number %}
                                 {{ '${:,.2f}'.format(value).replace('$-','-$') }}
@@ -114,16 +114,16 @@
                 {% endif %}
             {% endfor %}
 
-            <tr class="core"><td class="core-spacer" colspan=100%></td></tr>
-            <tr class="core"><td class="core-spacer" colspan=100%></td></tr>
+            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
+            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
 
             <!-- calculations -->
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-taxpay">Taxable Pay</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Taxable Pay</label></td>
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Taxable Pay"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -134,12 +134,12 @@
                 {% endfor %}
             </tr>
 
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-taxpay">Non-Taxable Pay</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Non-Taxable Pay</label></td>
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Non-Taxable Pay"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -150,12 +150,12 @@
                 {% endfor %}
             </tr>
 
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-taxpay">Total Taxes</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Total Taxes</label></td>
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Total Taxes"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -166,12 +166,12 @@
                 {% endfor %}
             </tr>
 
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-grossnetpay">Gross Pay</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Gross Pay</label></td>
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Gross Pay"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -182,12 +182,12 @@
                 {% endfor %}
             </tr>
 
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-grossnetpay">Net Pay</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Net Pay</label></td>
                 {% for x in range(1, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Net Pay"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}
@@ -198,12 +198,12 @@
                 {% endfor %}
             </tr>
 
-            <tr class="core">
-                <td class="core"><label class="modalbutton" for="modal-grossnetpay">Difference</label></td>
+            <tr class="pos-table">
+                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Difference</label></td>
                 {% for x in range(2, paydf.shape[1]) %}
                     {% if col_headers[x]|lower != 'type' %}
                     {% set value = paydf.at[row_headers.index("Difference"), col_headers[x]] %}
-                    <td class="core">
+                    <td class="pos-table">
                         {% if value is number %}
                             {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         {% else %}

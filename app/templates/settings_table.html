@@ -1,23 +1,23 @@
 <div id="settings">
-    <table class="core" id="settings-table">
+    <table class="pos-table" id="settings-table">
         <tbody>
-            <tr class="core-header">
-                <td class="core-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
+            <tr class="pos-table-header">
+                <td class="pos-table-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
             </tr>
 
-            <tr class="core">
-                <td class="core" style="width: 50%;">
-                    <div class="settings-div">
+            <tr class="pos-table">
+                <td class="pos-table" style="width: 50%;">
+                    <div class="settings-row">
                         <label>Months Displayed: &nbsp;</label>
                     </div>
-                    <div class="settings-div">
+                    <div class="settings-row">
                         <form id="settings-form"
                             hx-post="/update_paydf"
                             hx-target="#paydf-group"
                             hx-swap="outerHTML"
                             hx-trigger="change"
                             hx-include="#options-form">
-                            <select class="core" id="months-dropdown" name="months_num"
+                            <select class="pos-table" id="months-dropdown" name="months_num"
                                     onchange="this.form.dispatchEvent(new Event('change', {bubbles:true}))">
                                 {% for x in range(2, 13) %}
                                     <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
@@ -27,39 +27,39 @@
                     </div>
                 </td>
 
-                <td class="core" style="width: 50%;">
-                    <div class="settings-div">
+                <td class="pos-table" style="width: 50%;">
+                    <div class="settings-row">
                         <label>Show All Variables:</label>
                     </div>
-                    <div class="settings-div">
-                        <input type="checkbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
+                    <div class="settings-row">
+                        <input type="checkbox" id="settings-checkbox" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
                     </div>
                 </td>
             </tr>
 
-            <tr class="core">
-                <td class="core" colspan=2>
-                    <div class="settings-div">
+            <tr class="pos-table">
+                <td class="pos-table" colspan=2>
+                    <div class="settings-row">
                         <label>Export as:</label>
                     </div>
-                    <div class="settings-div">
-                        <select id="export-dropdown" class="core">
+                    <div class="settings-row">
+                        <select id="export-dropdown" class="pos-table">
                             <option value="xlsx" selected>Excel</option>
                             <option value="csv">CSV</option>
                         </select>
                     </div>
-                    <div class="settings-div">
+                    <div class="settings-row">
                         <button id="export-button" onclick="downloadFile()">Export</button>
                     </div>
                 </td>
             </tr>
 
-            <tr class="core">
-                <td class="core" colspan=2>
-                    <div class="settings-div">
+            <tr class="pos-table">
+                <td class="pos-table" colspan=2>
+                    <div class="settings-row">
                         <label>Upload New LES: </label>
                     </div>
-                    <div class="settings-div">
+                    <div class="settings-row">
                          <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
                             <input type="file" id="settings-input" name="submit-input" accept=".pdf" />
                             <button id="submit-new-les-button">Submit</button>
