@@ -80,8 +80,6 @@ add deployment
 site visitor count
 background gradient
 on-base/off-base BAH
-one open les call
-year display
 download csv supporting files
 download for self-host
 use video
