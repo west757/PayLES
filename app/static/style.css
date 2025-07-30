@@ -321,7 +321,7 @@ select.core {
 }
 
 
-/* dropdowns */
+/* input boxes */
 input.core {
     background-color: var(--input_background);
     border: 1px solid #999;
@@ -358,6 +358,18 @@ input[type=checkbox] {
     max-width: 100%;
 }
 
+
+/* submit */
+#submit {
+    text-align: center;
+}
+
+#submit-table {
+    margin: auto;
+}
+
+
+/* paydf group */
 #paydf-group {
     align-items: center;
     display: flex;
@@ -365,12 +377,7 @@ input[type=checkbox] {
 }
 
 
-
-.core-submit {
-    margin: auto;
-}
-
-.paydf-options-settings {
+#paydf-options-settings {
     align-items: flex-start;
     display: flex;
     gap: 1rem;
@@ -378,26 +385,32 @@ input[type=checkbox] {
     max-width: 100%;
 }
 
-.paydf {
+#paydf {
     flex-shrink: 1;
     margin: 1rem;
     overflow-x: auto;
     white-space: nowrap;
 }
 
-.options-settings {
+#options-settings {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     gap: 1rem;
 }
 
-.options {
+#options {
     margin: 1rem;
 }
 
-.settings {
+#settings {
     margin: 1rem;
+}
+
+#les-image {
+    display: inline-block;
+    margin: 1rem;
+    position: relative;
 }
 
 
@@ -578,12 +591,6 @@ td.core-header:last-child {
 
 
 /* les image */
-#les-image {
-    display: inline-block;
-    margin: 1rem;
-    position: relative;
-}
-
 .rect-highlight {
     cursor: pointer;
     position: absolute;

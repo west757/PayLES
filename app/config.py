@@ -89,7 +89,7 @@ class Config:
         'roth_tsp_rate_future_month': "",
     }
 
-    #variable definitions (header, dtype, modal)
+    #paydf variable definitions (header, dtype, modal)
     PAYDF_VARIABLES = [
         ("Year", int, "basepay"),
         ("Rank", str, "basepay"),

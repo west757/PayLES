@@ -254,7 +254,7 @@ def add_variables(les_text):
 
     extracted = [
         int('20' + les_text[10][4]),         # Year
-        les_text[4][1],                      # Rank
+        str(les_text[4][1]),                 # Rank
         int(mis),                            # Months in Service
         str(zc),                             # Zip Code
         str(mhac),                           # MHA Code
@@ -275,6 +275,18 @@ def add_variables(les_text):
     variables = []
     for (header, dtype, modal), value in zip(app.config['PAYDF_VARIABLES'], extracted):
         variables.append((header, value, modal))
+
+    session['rank_future'] = les_text[4][1]
+    session['zipcode_future'] = zc
+    session['state_future'] = trs
+    session['sgli_future'] = int(les_text[55][1])  # Store SGLI for future use
+    session['dependents_future'] = les_text[55][1]
+    session['federal_filing_status_future'] = ffs
+    session['state_filing_status_future'] = sfs
+    session['combat_zone_future'] = cz
+    session['traditional_tsp_rate_future'] = ttsp
+    session['roth_tsp_rate_future'] = rtsp
+
     return variables
 
 
@@ -1122,53 +1134,11 @@ def calculate_difference(paydf, col_idx):
 
 
 
-
-def months_in_service(d1, d2):
-    return (d1.year - d2.year) * 12 + d1.month - d2.month
-
-
-def calculate_mha(zipcode):
-    mha_zipcodes = app.config['MHA_ZIPCODES']
-    if zipcode != "00000" or zipcode != "" or zipcode is not None:
-        mha_search = mha_zipcodes[mha_zipcodes.isin([int(zipcode)])].stack()
-        mha_search_row = mha_search.index[0][0]
-        mhac = mha_zipcodes.loc[mha_search_row, "MHA"]
-        mhan = mha_zipcodes.loc[mha_search_row, "MHA_NAME"]
-    else:
-        mhac = "no mha code found"
-        mhan = "no mha name found"
-    return mhac, mhan
-
-
-def find_multiword_matches(section, shortname):
-    short_words = shortname.split()
-    n = len(short_words)
-    matches = []
-    for i in range(len(section) - n + 1):
-        candidate = ' '.join(section[i:i+n])
-        if candidate == shortname:
-            matches.append(i + n - 1)  # index of last word in match
-    return matches
-
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-
-def validate_file(file):
-    if file.filename == '':
-        return False, "No file selected"
-    if not allowed_file(file.filename):
-        return False, "Invalid file type, only PDF is accepted"
-    return True, ""
-
-
-def reset_session_defaults():
-    session.clear()
-    for key, value in app.config['SESSION_DEFAULTS'].items():
-        session[key] = value
+@app.route('/showallvariables', methods=['POST'])
+def showallvariables():
+    checked = request.form.get('showallvariables')
+    session['showallvariables'] = bool(checked)
+    return render_template('paydf_group.html')
 
 
 @app.route('/export', methods=['POST'])
@@ -1201,6 +1171,54 @@ def export_dataframe():
         )
     
 
+
+def months_in_service(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+
+def calculate_mha(zipcode):
+    mha_zipcodes = app.config['MHA_ZIPCODES']
+    if zipcode != "00000" or zipcode != "" or zipcode is not None:
+        mha_search = mha_zipcodes[mha_zipcodes.isin([int(zipcode)])].stack()
+        mha_search_row = mha_search.index[0][0]
+        mhac = mha_zipcodes.loc[mha_search_row, "MHA"]
+        mhan = mha_zipcodes.loc[mha_search_row, "MHA_NAME"]
+    else:
+        mhac = "no mha code found"
+        mhan = "no mha name found"
+    return mhac, mhan
+
+
+def find_multiword_matches(section, shortname):
+    short_words = shortname.split()
+    n = len(short_words)
+    matches = []
+    for i in range(len(section) - n + 1):
+        candidate = ' '.join(section[i:i+n])
+        if candidate == shortname:
+            matches.append(i + n - 1)  # index of last word in match
+    return matches
+
+
+
+def reset_session_defaults():
+    session.clear()
+    for key, value in app.config['SESSION_DEFAULTS'].items():
+        session[key] = value
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+
+def validate_file(file):
+    if file.filename == '':
+        return False, "No file selected"
+    if not allowed_file(file.filename):
+        return False, "Invalid file type, only PDF is accepted"
+    return True, ""
+
+
 @app.errorhandler(413)
 def too_large(e):
     return make_response(jsonify(message="File is too large"), 413)
@@ -1214,6 +1232,9 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+
 
 
 if __name__ == "__main__":

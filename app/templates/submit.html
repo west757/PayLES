@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="core-home">
+<div id="submit">
     <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
 
-    <table id="core-submit">
+    <table id="submit-table">
         <tr>
             <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
                 <td rowspan=3>
