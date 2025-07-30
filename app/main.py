@@ -766,8 +766,6 @@ def update_calculations(paydf, row_idx, month):
 
 
 
-
-
 def calculate_basepay(paydf, row_idx, month):
     pay_active = app.config['PAY_ACTIVE']
 
@@ -989,39 +987,39 @@ def calculate_rothtsp(paydf, row_idx, month):
 
 
 
-@app.route('/updatepaydf', methods=['POST'])
+@app.route('/update_paydf', methods=['POST'])
 def update_paydf():
-    session['months_num'] = request.form['months_num']
-    session['rank_future'] = request.form['rank_future']
-    session['rank_future_month'] = request.form['rank_future_month']
-    session['zipcode_future'] = request.form['zipcode_future']
-    session['zipcode_future_month'] = request.form['zipcode_future_month']
-    session['state_future'] = request.form['state_future']
-    session['state_future_month'] = request.form['state_future_month']
-    session['sgli_future'] = int(request.form['sgli_future'])
-    session['sgli_future_month'] = request.form['sgli_future_month']
-    session['dependents_future'] = int(request.form['dependents_future'])
-    session['dependents_future_month'] = request.form['dependents_future_month']
-    session['federal_filing_status_future'] = request.form['federal_filing_status_future']
-    session['federal_filing_status_future_month'] = request.form['federal_filing_status_future_month']
-    session['state_filing_status_future'] = request.form['state_filing_status_future']
-    session['state_filing_status_future_month'] = request.form['state_filing_status_future_month']
-    session['combat_zone_future'] = request.form['combat_zone_future']
-    session['combat_zone_future_month'] = request.form['combat_zone_future_month']
-    session['traditional_tsp_rate_future'] = int(request.form['traditional_tsp_rate_future'])
-    session['traditional_tsp_rate_future_month'] = request.form['traditional_tsp_rate_future_month']    
-    session['roth_tsp_rate_future'] = int(request.form['roth_tsp_rate_future'])
-    session['roth_tsp_rate_future_month'] = request.form['roth_tsp_rate_future_month']
+    session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
+    session['rank_future'] = request.form.get('rank_future', session.get('rank_future', ''))
+    session['rank_future_month'] = request.form.get('rank_future_month', session.get('rank_future_month', ''))
+    session['zipcode_future'] = request.form.get('zipcode_future', session.get('zipcode_future', ''))
+    session['zipcode_future_month'] = request.form.get('zipcode_future_month', session.get('zipcode_future_month', ''))
+    session['state_future'] = request.form.get('state_future', session.get('state_future', ''))
+    session['state_future_month'] = request.form.get('state_future_month', session.get('state_future_month', ''))
+    session['sgli_future'] = Decimal(str(float(request.form.get('sgli_future', session.get('sgli_future', 0)))))
+    session['sgli_future_month'] = request.form.get('sgli_future_month', session.get('sgli_future_month', ''))
+    session['dependents_future'] = int(request.form.get('dependents_future', session.get('dependents_future', 0)))
+    session['dependents_future_month'] = request.form.get('dependents_future_month', session.get('dependents_future_month', ''))
+    session['federal_filing_status_future'] = request.form.get('federal_filing_status_future', session.get('federal_filing_status_future', ''))
+    session['federal_filing_status_future_month'] = request.form.get('federal_filing_status_future_month', session.get('federal_filing_status_future_month', ''))
+    session['state_filing_status_future'] = request.form.get('state_filing_status_future', session.get('state_filing_status_future', ''))
+    session['state_filing_status_future_month'] = request.form.get('state_filing_status_future_month', session.get('state_filing_status_future_month', ''))
+    session['combat_zone_future'] = request.form.get('combat_zone_future', session.get('combat_zone_future', ''))
+    session['combat_zone_future_month'] = request.form.get('combat_zone_future_month', session.get('combat_zone_future_month', ''))
+    session['traditional_tsp_rate_future'] = int(request.form.get('traditional_tsp_rate_future', session.get('traditional_tsp_rate_future', 0)))
+    session['traditional_tsp_rate_future_month'] = request.form.get('traditional_tsp_rate_future_month', session.get('traditional_tsp_rate_future_month', ''))
+    session['roth_tsp_rate_future'] = int(request.form.get('roth_tsp_rate_future', session.get('roth_tsp_rate_future', 0)))
+    session['roth_tsp_rate_future_month'] = request.form.get('roth_tsp_rate_future_month', session.get('roth_tsp_rate_future_month', ''))
 
+    paydf = session.get('paydf')
+    if paydf is not None:
+        paydf_subset = paydf.iloc[:, :3]
+        paydf = expand_paydf(paydf_subset)
+        session['paydf'] = paydf
+        session['col_headers'] = paydf.columns.tolist()
+        session['row_headers'] = paydf['Header'].tolist()
 
-    columns = session['paydf'].columns.tolist()
-
-    #session['paydf'] = expand_paydf(session['paydf'], session['initial_month'], session['months_num'], entitlements_text, deductions_text, allotments_text)
-
-    session['zipcode_future'] = f'{session['zipcode_future']:05}'
-    return render_template('les.html')
-
-
+    return render_template('paydf_group.html')
 
 
 

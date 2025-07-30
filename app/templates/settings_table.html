@@ -11,11 +11,19 @@
                         <label>Months Displayed: &nbsp;</label>
                     </div>
                     <div class="settings-div">
-                        <select class="core" id="months-dropdown" name="months_num" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
-                            {% for x in range(2, 13) %}
-                            <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
-                            {% endfor %}
-                        </select>
+                        <form id="settings-form"
+                            hx-post="/update_paydf"
+                            hx-target="#paydf-group"
+                            hx-swap="outerHTML"
+                            hx-trigger="change"
+                            hx-include="#options-form">
+                            <select class="core" id="months-dropdown" name="months_num"
+                                    onchange="this.form.dispatchEvent(new Event('change', {bubbles:true}))">
+                                {% for x in range(2, 13) %}
+                                    <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
                     </div>
                 </td>
 
