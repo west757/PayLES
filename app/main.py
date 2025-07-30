@@ -145,7 +145,7 @@ def build_paydf(les_text):
     df = pd.DataFrame(columns=["Header", "Type", initial_month])
     row_idx = len(df)
 
-    for header, value in add_variables(les_text):
+    for header, value, modal in add_variables(les_text):
         df.loc[row_idx] = [header, "V", value]
         row_idx += 1
 
@@ -252,26 +252,29 @@ def add_variables(les_text):
         else:
             rtsp = 0
 
-    variables = [
-        ("Year", int('20' + les_text[10][4])),
-        ("Rank", les_text[4][1]),
-        ("Months in Service", int(mis)),
-        ("Zip Code", str(zc)),
-        ("MHA Code", str(mhac)),
-        ("MHA Name", str(mhan)),
-        ("Tax Residency State", str(trs)),
-        ("Federal Filing Status", str(ffs)),
-        ("State Filing Status", str(sfs)),
-        ("Dependents", int(les_text[55][1])),
-        ("JFTR", str(jftr)),
-        ("JFTR 2", str(jftr2)),
-        ("Combat Zone", str(cz)),
-        ("BAQ Type", str(baqt)),
-        ("BAS Type", str(bast)),
-        ("Traditional TSP Rate", int(ttsp)),
-        ("Roth TSP Rate", int(rtsp)),
+    extracted = [
+        int('20' + les_text[10][4]),         # Year
+        les_text[4][1],                      # Rank
+        int(mis),                            # Months in Service
+        str(zc),                             # Zip Code
+        str(mhac),                           # MHA Code
+        str(mhan),                           # MHA Name
+        str(trs),                            # Tax Residency State
+        str(ffs),                            # Federal Filing Status
+        str(sfs),                            # State Filing Status
+        int(les_text[55][1]),                # Dependents
+        str(jftr),                           # JFTR
+        str(jftr2),                          # JFTR 2
+        str(cz),                             # Combat Zone
+        str(baqt),                           # BAQ Type
+        str(bast),                           # BAS Type
+        int(ttsp),                           # Traditional TSP Rate
+        int(rtsp),                           # Roth TSP Rate
     ]
 
+    variables = []
+    for (header, dtype, modal), value in zip(app.config['PAYDF_VARIABLES'], extracted):
+        variables.append((header, value, modal))
     return variables
 
 
@@ -949,8 +952,8 @@ def calculate_statetaxes(paydf, row_idx, month):
         else:
             upper = Decimal('1e12')
         if taxable_income > lower:
-            taxable_at_this_rate = min(taxable_income, upper) - lower
-            tax += taxable_at_this_rate * rate
+            taxable_rate = min(taxable_income, upper) - lower
+            tax += taxable_rate * rate
     # Convert annual tax to monthly and return as negative
     tax = tax / 12
     return -round(tax, 2)
