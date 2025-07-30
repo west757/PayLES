@@ -353,20 +353,18 @@ input[type=checkbox] {
 
 
 
-/* core */
-.core {
+/* content */
+#content {
     max-width: 100%;
 }
 
-.core-les {
+#paydf-group {
     align-items: center;
     display: flex;
     flex-direction: column;
 }
 
-.core-home {
-    text-align: center;
-}
+
 
 .core-submit {
     margin: auto;
