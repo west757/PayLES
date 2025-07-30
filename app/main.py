@@ -313,7 +313,7 @@ def add_entitlements(les_text):
             found = False
             for idx in matches:
                 for j in range(idx + 1, len(section)):
-                    if section[j].replace('.', '', 1).isdigit():
+                    if section[j].replace('.', '', 1).replace('-', '', 1).isdigit() or (section[j].startswith('-') and section[j][1:].replace('.', '', 1).isdigit()):
                         entitlements.append((row['header'], round(Decimal(section[j]), 2)))
                         found = True
                         break
@@ -1142,11 +1142,27 @@ def calculate_difference(paydf, col_idx):
 
 
 
-@app.route('/showallvariables', methods=['POST'])
-def showallvariables():
-    checked = request.form.get('showallvariables')
-    session['showallvariables'] = bool(checked)
+@app.route('/show_all_variables', methods=['POST'])
+def show_all_variables():
+    checked = request.form.get('show_all_variables')
+    session['show_all_variables'] = bool(checked)
     return render_template('paydf_group.html')
+
+
+@app.route('/highlight_changes', methods=['POST'])
+def highlight_changes():
+    checked = request.form.get('highlight_changes')
+    session['highlight_changes'] = bool(checked)
+    return render_template('paydf_group.html')
+
+
+@app.route('/show_all_options', methods=['POST'])
+def show_all_options():
+    checked = request.form.get('show_all_options')
+    session['show_all_options'] = bool(checked)
+    return render_template('paydf_group.html')
+
+
 
 
 @app.route('/export', methods=['POST'])
