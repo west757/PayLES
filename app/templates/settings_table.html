@@ -1,0 +1,99 @@
+<div id="settings">
+    <table class="core" id="settings-table">
+        <tbody>
+            <tr class="core-header">
+                <td class="core-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
+            </tr>
+
+            <tr class="core">
+                <td class="core" style="width: 50%;">
+                    <div class="settings-div">
+                        <label>Months Displayed: &nbsp;</label>
+                    </div>
+                    <div class="settings-div">
+                        <select class="core" id="months-dropdown" name="months_num" hx-post="/updatemonths" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                            {% for x in range(2, 13) %}
+                            <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+
+                <td class="core" style="width: 50%;">
+                    <div class="settings-div">
+                        <label>Show All Variables:</label>
+                    </div>
+                    <div class="settings-div">
+                        <input type="checkbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="core">
+                <td class="core" colspan=2>
+                    <div class="settings-div">
+                        <label>Export as:</label>
+                    </div>
+                    <div class="settings-div">
+                        <select id="export-dropdown" class="core">
+                            <option value="xlsx" selected>Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                    <div class="settings-div">
+                        <button id="export-button" onclick="downloadFile()">Export</button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="core">
+                <td class="core" colspan=2>
+                    <div class="settings-div">
+                        <label>Upload New LES: </label>
+                    </div>
+                    <div class="settings-div">
+                        <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                            <input type="file" id="settings-input" name="submit-input" accept=".pdf" />
+                            <button id="submit-new-les-button">Submit</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    async function downloadFile() {
+        try {
+            const filetype = document.getElementById('export-dropdown').value;
+
+            const formData = new FormData();
+            formData.append('filetype', filetype);
+
+            const response = await fetch('/export', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+
+            a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
+
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error during file download:', error);
+        }
+    }
+</script>

@@ -1,47 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div id="core-home">
-    <p class="welcome-text">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
-    <div class="submit-flex-row">
-        <!-- File upload area -->
-        <form id="les-upload-form" hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data" class="submit-form-flex">
-            <label for="submit-input" id="submit-drop">
-                <span id="drop-title">Drop LES here</span>
-                <br>or<br>
-                <input type="file" id="submit-input" name="submit-input" accept=".pdf">
-            </label>
-            <div class="submit-buttons-col">
-                <button id="submit-les-button" type="submit">Submit LES</button>
-                <button id="submit-example-les-button" type="button" onclick="htmx.ajax('POST', '/submit_example', {target: '#core', swap: 'innerHTML'})">Submit Example LES</button>
-                <a href="https://mypay.dfas.mil/#/" target="_blank" class="mypay-link">
-                    <button id="mypay-button" type="button">MyPay</button>
-                </a>
-            </div>
-        </form>
-    </div>
-    {% if error %}
-    <div class="tooltip-toast submit-error-toast">{{ error }}</div>
-    {% endif %}
+    <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
+
+    <table id="core-submit">
+        <tr>
+            <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
+                <td rowspan=3>
+                    <label for="submit-input" id="submit-drop">
+                        <span id="drop-title">Drop LES here</span>
+                        or
+                        <input type="file" id="submit-input" name="submit-input" accept=".pdf">
+                    </label>
+                </td>
+                <td>
+                    <button id="submit-les-button">Submit LES</button>
+                </td>
+            </form>
+        </tr>
+
+        <tr>
+            <form hx-post="/submit_example" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
+                <td>
+                    <button id="submit-example-les-button">Submit Example LES</button>
+                </td>
+            </form>
+        </tr>
+
+        <tr>
+            <form action="https://mypay.dfas.mil/#/" target="_blank">
+                <td>
+                    <button id="mypay-button">MyPay</button>
+                </td>
+            </form>
+        </tr>
+    </table>
 </div>
+
+{% if error %}
+<div class="tooltip-toast">{{ error }}</div>
+{% endif %}
 
 <script>
     var dropContainer = document.getElementById("submit-drop");
     var fileInput = document.getElementById("submit-input");
-    if (dropContainer && fileInput) {
-        dropContainer.addEventListener("dragover", function (e) {
-            e.preventDefault();
-        }, false);
-        dropContainer.addEventListener("dragenter", function () {
-            dropContainer.classList.add("drag-active");
-        });
-        dropContainer.addEventListener("dragleave", function () {
-            dropContainer.classList.remove("drag-active");
-        });
-        dropContainer.addEventListener("drop", function (e) {
-            e.preventDefault();
-            dropContainer.classList.remove("drag-active");
-            fileInput.files = e.dataTransfer.files;
-        });
-    }
+
+    dropContainer.addEventListener("dragover", function (e) {
+        e.preventDefault();
+    }, false);
+
+    dropContainer.addEventListener("dragenter", function () {
+        dropContainer.classList.add("drag-active");
+    });
+
+    dropContainer.addEventListener("dragleave", function () {
+        dropContainer.classList.remove("drag-active");
+    });
+
+    dropContainer.addEventListener("drop", function (e) {
+        e.preventDefault();
+        dropContainer.classList.remove("drag-active");
+        fileInput.files = e.dataTransfer.files;
+    });
 </script>
 {% endblock %}
