@@ -69,13 +69,9 @@ in work:
 add row
 cola
 tsp update
-dynamic column creation
 delete sessions after time
 export formatting
 dynamic variable get from entitlement/deduction/allotment boxes
-dynamic variable display
-show TSP variables
-Update options for TSP rate change
 highlight changes
 sticky row/column of paydf
 military money manual

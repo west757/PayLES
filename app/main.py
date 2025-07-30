@@ -18,7 +18,7 @@ Session(app)
 
 @app.route('/')
 def index():
-    return render_template('submit.html')
+    return render_template('home_group.html')
 
 @app.route('/about')
 def about():
@@ -42,88 +42,101 @@ def leave():
 
 @app.route('/submit_les', methods=['POST'])
 def submit_les():
-    les_file = request.files.get('submit-input')
+    les_file = request.files.get('home-input')
     if not les_file:
-        return render_template("submit.html", error="No file part in form")
+        return render_template("home_form.html", message="No file submitted")
 
     valid, message = validate_file(les_file)
     if not valid:
-        return render_template("submit.html", error=message)
+        return render_template("home_form.html", message=message)
 
-    with pdfplumber.open(les_file) as les_pdf:
-        title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
-        title_text = title_crop.extract_text_simple()
-        les_pdf.close()
-        if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
-            read_les(les_file)
-            return render_template('paydf_group.html')
-        else:
-            return render_template("submit.html", error="File is not a valid LES")
-
+    valid, message = validate_les(les_file)
+    if valid:
+        return render_template('paydf_group.html')
+    else:
+        return render_template("home_form.html", message=message)
 
 
 
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
-    read_les(app.config['EXAMPLE_LES'])
-    return render_template('paydf_group.html')
+    example_les = app.config['EXAMPLE_LES']
+    valid, message = validate_les(example_les)
+    if valid:
+        return render_template('paydf_group.html')
+    else:
+        return render_template("home_form.html", message=message)
+
+
+
+@app.route('/process_les_file', methods=['POST'])
+def validate_les(les_file):
+    reset_session_defaults()
+
+    with pdfplumber.open(les_file) as les_pdf:
+        title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
+        title_text = title_crop.extract_text_simple()
+        if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
+            read_les(les_pdf)
+            return True, None
+        else:
+            return False, "File is not a valid LES"
 
 
 
 @app.route('/read_les', methods=['POST'])
-def read_les(les_file):
-    reset_session_defaults()
+def read_les(les_pdf):
+    les_rectangles = app.config['LES_RECTANGLES']
+    les_image_scale = app.config['LES_IMAGE_SCALE']
+    les_coord_scale = app.config['LES_COORD_SCALE']
 
-    with pdfplumber.open(les_file) as les_pdf:
-        les_rectangles = app.config['LES_RECTANGLES']
-        les_image_scale = app.config['LES_IMAGE_SCALE']
-        les_coord_scale = app.config['LES_COORD_SCALE']
+    les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
+    les_text = ["text per rectangle"]
 
-        les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
-        les_text = ["text per rectangle"]
+    #create image
+    temp_image = les_page.to_image(resolution=300).original
+    new_width = int(temp_image.width * les_image_scale)
+    new_height = int(temp_image.height * les_image_scale)
+    resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
 
-        #create image
-        temp_image = les_page.to_image(resolution=300).original
-        new_width = int(temp_image.width * les_image_scale)
-        new_height = int(temp_image.height * les_image_scale)
-        resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
+    img_io = io.BytesIO()
+    resized_image.save(img_io, format='PNG')
+    img_io.seek(0)
+    encoded_img = base64.b64encode(img_io.read()).decode("utf-8")
 
-        img_io = io.BytesIO()
-        resized_image.save(img_io, format='PNG')
-        img_io.seek(0)
-        encoded_img = base64.b64encode(img_io.read()).decode("utf-8")
+    scaled_rects = []
+    for rect in les_rectangles.to_dict(orient="records"):
+        scaled_rects.append({
+            "index": rect["index"],
+            "x1": rect["x1"] * les_image_scale,
+            "y1": rect["y1"] * les_image_scale,
+            "x2": rect["x2"] * les_image_scale,
+            "y2": rect["y2"] * les_image_scale,
+            "title": rect["title"],
+            "modal": rect["modal"],
+            "tooltip": rect["tooltip"]
+        })
+    session['les_image'] = encoded_img
+    session['rect_overlay'] = scaled_rects
 
-        scaled_rects = []
-        for rect in les_rectangles.to_dict(orient="records"):
-            scaled_rects.append({
-                "index": rect["index"],
-                "x1": rect["x1"] * les_image_scale,
-                "y1": rect["y1"] * les_image_scale,
-                "x2": rect["x2"] * les_image_scale,
-                "y2": rect["y2"] * les_image_scale,
-                "title": rect["title"],
-                "modal": rect["modal"],
-                "tooltip": rect["tooltip"]
-            })
-        session['les_image'] = encoded_img
-        session['rect_overlay'] = scaled_rects
+    #parse text
+    for i, row in les_rectangles.iterrows():
+        x0 = float(row['x1']) * les_coord_scale
+        x1 = float(row['x2']) * les_coord_scale
+        y0 = float(row['y1']) * les_coord_scale
+        y1 = float(row['y2']) * les_coord_scale
+        top = min(y0, y1)
+        bottom = max(y0, y1)
 
+        les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
+        les_text.append(les_rect_text.replace("\n", " ").split())
 
-        #parse text
-        for i, row in les_rectangles.iterrows():
-            x0 = float(row['x1']) * les_coord_scale
-            x1 = float(row['x2']) * les_coord_scale
-            y0 = float(row['y1']) * les_coord_scale
-            y1 = float(row['y2']) * les_coord_scale
-            top = min(y0, y1)
-            bottom = max(y0, y1)
-
-            les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
-            les_text.append(les_rect_text.replace("\n", " ").split())
-
+    build_paydf(les_text)
+    return None
 
 
-    paydf = build_paydf(les_text)
+def build_paydf(les_text):
+    paydf = initialize_paydf(les_text)
     paydf = expand_paydf(paydf)
 
     col_headers = paydf.columns.tolist()
@@ -132,15 +145,10 @@ def read_les(les_file):
     session['paydf'] = paydf
     session['col_headers'] = col_headers
     session['row_headers'] = row_headers
-
-    les_pdf.close()
-    # No need to render a template here, just process the LES
     return None
 
 
-
-
-def build_paydf(les_text):
+def initialize_paydf(les_text):
     initial_month = les_text[10][3]
     df = pd.DataFrame(columns=["Header", "Type", initial_month])
     row_idx = len(df)
@@ -1213,9 +1221,9 @@ def allowed_file(filename):
 
 def validate_file(file):
     if file.filename == '':
-        return False, "No file selected"
+        return False, "No file submitted"
     if not allowed_file(file.filename):
-        return False, "Invalid file type, only PDF is accepted"
+        return False, "Invalid file type, only PDFs are accepted"
     return True, ""
 
 

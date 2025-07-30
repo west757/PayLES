@@ -142,13 +142,15 @@ footer {
 .tooltip-toast {
     animation: fadeout 4s forwards;
     background-color: var(--darkgray);
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     color: var(--white);
-    display: inline-block;
+    display: block;
     font-size: 1rem;
+    margin: 1rem auto;
     max-width: 16rem;
     padding: 0.5rem 1rem;
     position: relative;
+    text-align: center;
 }
 
 @keyframes fadeout {
@@ -167,7 +169,7 @@ footer {
 
 
 /* drag and drop */
-#submit-drop {
+#home-drop {
     align-items: center;
     border: 2px dashed var(--darkgray);
     border-radius: 1rem;
@@ -183,7 +185,7 @@ footer {
     width: 30rem;
 }
 
-#submit-drop:hover, #submit-drop.drag-active {
+#home-drop:hover, #home-drop.drag-active {
     background-color: var(--lightgray);
 }
 
@@ -219,7 +221,7 @@ input[type=file]::file-selector-button:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
 }
 
-#submit-input {
+#home-input {
     width: 24rem;
 }
 
@@ -298,7 +300,7 @@ button:hover {
 
 
 /* dropdowns */
-select.core {
+select.pos-table {
     background-color: var(--input_background);
     border: 1px solid var(--input_shadow);
     border-radius: 0.25rem;
@@ -322,7 +324,7 @@ select.core {
 
 
 /* input boxes */
-input.core {
+input.pos-table {
     background-color: var(--input_background);
     border: 1px solid #999;
     border-radius: 0.25rem;
@@ -337,7 +339,6 @@ input.core {
 }
 
 
-
 /* checkboxes */
 input[type=checkbox] {
     accent-color: var(--darkgreen);
@@ -346,11 +347,16 @@ input[type=checkbox] {
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--input_shadow);
     height: 1.25rem;
-    margin: 0 0 0 -0.1rem;
-    padding: 0.25rem;
     width: 1.25rem;
 }
 
+#combat-zone-checkbox {
+    margin: -0.5rem;
+}
+
+#settings-checkbox {
+    
+}
 
 
 /* content */
@@ -359,12 +365,12 @@ input[type=checkbox] {
 }
 
 
-/* submit */
-#submit {
+/* home */
+#home-form {
     text-align: center;
 }
 
-#submit-table {
+#home-table {
     margin: auto;
 }
 
@@ -375,7 +381,6 @@ input[type=checkbox] {
     display: flex;
     flex-direction: column;
 }
-
 
 #paydf-options-settings {
     align-items: flex-start;
@@ -415,8 +420,8 @@ input[type=checkbox] {
 
 
 
-/* core tables */
-table.core {
+/* paydf-options-settings tables */
+table.pos-table {
     background-color: var(--white);
     border: 1px solid var(--table_border);
     border-collapse: separate;
@@ -424,15 +429,14 @@ table.core {
     border-spacing: 0px;
 }
 
-tr.core-header {
+tr.pos-table-header {
     border-left: 1px solid var(--table_border);
     font-weight: bold;
     text-align: center;
     top: 0;
-    /*position: sticky;*/
 }
 
-td.core-header {
+td.pos-table-header {
     background-color: var(--darkgray);
     border-left: 1px solid var(--table_border);
     border-radius: 0px;
@@ -442,47 +446,43 @@ td.core-header {
     padding: 1.25rem;
 }
 
-tr.core, td.core {
+tr.pos-table, td.pos-table {
     border-left: 1px solid var(--table_border);
     border-top: 1px solid var(--table_border);
     text-align: center;
 }
 
-tr.core:nth-child(even) td.core {
+tr.pos-table:nth-child(even) td.pos-table {
     background-color: var(--lightgray);
 }
 
-tr.core:not(:first-child), td.core:not(:first-child) {
+tr.pos-table:not(:first-child), td.pos-table:not(:first-child) {
     padding: 1.25rem;
 }
 
-td.core:first-child, td.core-header:first-child {
+td.pos-table:first-child, td.pos-table-header:first-child {
     border-left: none;
 }
 
-td.core-header:first-child {
+td.pos-table-header:first-child {
     border-radius: 1.5rem 0 0 0;
 }
 
-td.core-header:last-child {
+td.pos-table-header:last-child {
     border-radius: 0 1.5rem 0 0;
 }
 
-.core-spacer {
+.pos-table-spacer {
     background-color: var(--gray);
     border-top: 1px solid var(--gray);
     height: 3px;
 }
 
-#options-table {
+#options-table, #settings-table {
     width: 31rem;
 }
 
-#settings-table {
-    width: 31rem;
-}
-
-.settings-div {
+.settings-row {
     display: inline-block;
 }
 
@@ -566,14 +566,14 @@ td.core-header:last-child {
     transform: rotate(-45deg);
 }
 
-.modalbutton {
+.modal-button {
     cursor: pointer;
     display: block;
     margin: -1px;
     padding: 1.25rem 1rem 1.25rem 1rem;
 }
 
-.modalbutton:hover, .modalbutton:focus {
+.modal-button:hover, .modal-button:focus {
     background-color: var(--palegreen);
 }
 
@@ -584,7 +584,7 @@ td.core-header:last-child {
 .modal-table {
     border: 1px solid black;
     border-collapse: collapse;
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 1rem;
     margin: auto;
     text-align: center;
 }

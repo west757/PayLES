@@ -1,17 +1,14 @@
-{% extends "base.html" %}
-{% block content %}
-
-<div id="submit">
+<div id="home-form">
     <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
 
-    <table id="submit-table">
+    <table id="home-table">
         <tr>
             <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
                 <td rowspan=3>
-                    <label for="submit-input" id="submit-drop">
+                    <label for="home-input" id="home-drop">
                         <span id="drop-title">Drop LES here</span>
                         or
-                        <input type="file" id="submit-input" name="submit-input" accept=".pdf">
+                        <input type="file" id="home-input" name="home-input" accept=".pdf">
                     </label>
                 </td>
                 <td>
@@ -38,13 +35,13 @@
     </table>
 </div>
 
-{% if error %}
-<div class="tooltip-toast">{{ error }}</div>
+{% if message %}
+<div class="tooltip-toast">{{ message }}</div>
 {% endif %}
 
 <script>
-    var dropContainer = document.getElementById("submit-drop");
-    var fileInput = document.getElementById("submit-input");
+    var dropContainer = document.getElementById("home-drop");
+    var fileInput = document.getElementById("home-input");
 
     dropContainer.addEventListener("dragover", function (e) {
         e.preventDefault();
@@ -64,4 +61,3 @@
         fileInput.files = e.dataTransfer.files;
     });
 </script>
-{% endblock %}
