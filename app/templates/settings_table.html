@@ -32,7 +32,7 @@
                         <label>Show All Variables:</label>
                     </div>
                     <div class="settings-div">
-                        <input type="checkbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#core" hx-swap="innerHTML" hx-trigger="change">
+                        <input type="checkbox" id="showallvariables" name="showallvariables" {% if session['showallvariables'] %} checked {% endif %} hx-post="/showallvariables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
                     </div>
                 </td>
             </tr>
@@ -60,7 +60,7 @@
                         <label>Upload New LES: </label>
                     </div>
                     <div class="settings-div">
-                        <form hx-post="/submit_les" hx-target="#core" hx-swap="innerHTML" enctype="multipart/form-data">
+                         <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
                             <input type="file" id="settings-input" name="submit-input" accept=".pdf" />
                             <button id="submit-new-les-button">Submit</button>
                         </form>
