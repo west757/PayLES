@@ -1,23 +1,20 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="paydf-group-main">
-    <div class="paydf-group-flex">
-        <div class="paydf-table-outer">
-            <div class="paydf-table-scroll">
-                {% include "paydf_table.html" %}
-            </div>
+
+<div class="core-les">
+    <div class="paydf-options-settings">
+        <div class="paydf">
+            {% include "paydf_table.html" %}
         </div>
-        <div class="paydf-side-col">
-            <div class="inputs-table-wrap">
-                {% include "inputs_table.html" %}
+        <div class="options-settings">
+            <div class="options">
+                {% include "options_table.html" %}
             </div>
-            <div class="settings-table-wrap">
+            <div class="settings">
                 {% include "settings_table.html" %}
             </div>
         </div>
     </div>
-    <div class="les-image-wrap">
+    <div class="les-image">
         {% include "les_image.html" %}
     </div>
 </div>
-{% endblock %}
+{% include "paydf_modals.html" %}

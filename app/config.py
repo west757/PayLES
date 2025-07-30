@@ -88,3 +88,24 @@ class Config:
         'roth_tsp_rate_future': 0,
         'roth_tsp_rate_future_month': "",
     }
+
+    #variable definitions (header, dtype, modal)
+    PAYDF_VARIABLES = [
+        ("Year", int, "basepay"),
+        ("Rank", str, "basepay"),
+        ("Months in Service", int, "basepay"),
+        ("Zip Code", str, "bah"),
+        ("MHA Code", str, "bah"),
+        ("MHA Name", str, "bah"),
+        ("Tax Residency State", str, "statetaxes"),
+        ("Federal Filing Status", str, "federaltaxes"),
+        ("State Filing Status", str, "statetaxes"),
+        ("Dependents", int, "bah"),
+        ("JFTR", str, "cola"),
+        ("JFTR 2", str, "cola"),
+        ("Combat Zone", str, "basepay"),
+        ("BAQ Type", str, "basepay"),
+        ("BAS Type", str, "bas"),
+        ("Traditional TSP Rate", int, "tsp"),
+        ("Roth TSP Rate", int, "tsp"),
+    ]
