@@ -1,239 +1,72 @@
 <div id="paydf">
     <table id="paydf-table" class="pos-table">
-        {% set PAYDF_VARIABLES = config.PAYDF_VARIABLES %}
-        {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
-        {% set paydf = session['paydf'] %}
-        {% set row_headers = session['row_headers'] %}
-        {% set col_headers = session['col_headers'] %}
-
         <tbody>
             <tr class="pos-table-header">
                 <td class="pos-table-header"></td>
-                {# Only display value columns, skip type column if present #}
-                {% for x in col_headers[1:] %}
-                    {% if x|lower != 'type' %}
-                        <td class="pos-table-header">{{x}}</td>
-                    {% endif %}
+                {% for col in col_headers[1:] %}
+                    <td class="pos-table-header">{{ col }}</td>
                 {% endfor %}
             </tr>
 
-            <!-- variables -->
             {% if session['show_all_variables'] %}
-                {% for header, dtype, modal in PAYDF_VARIABLES %}
-                <tr class="pos-table">
-                    <td class="pos-table">
-                        <label class="modal-button" for="modal-{{ modal }}">{{ header }}</label>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% if col_headers[x]|lower != 'type' %}
-                        {% set value = paydf.at[row_headers.index(header), col_headers[x]] %}
-                        {% set prev_value = paydf.at[row_headers.index(header), col_headers[x-1]] if x > 2 else None %}
-                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                            {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] and value is number %}
-                                {{ '{:.1f}%'.format(value) }}
-                            {% else %}
-                                {{ value }}
-                            {% endif %}
+                {% for i, header in enumerate(row_headers) %}
+                    {% set row_info = config.PAYDF_TEMPLATE[config.PAYDF_TEMPLATE['header'] == header] %}
+                    {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'V' %}
+                    <tr class="pos-table">
+                        <td class="pos-table">
+                            <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                         </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
+                        {% for x in range(1, paydf.shape[1]) %}
+                            {% set value = paydf.at[i, col_headers[x]] %}
+                            {% set prev_value = paydf.at[i, col_headers[x-1]] if x > 1 else None %}
+                            {% set highlight = session['highlight_changes'] and x > 1 and value != prev_value %}
+                            <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
+                                {% set dtype = row_info.iloc[0]['dtype'] %}
+                                {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] and value is number %}
+                                    {{ '{:.1f}%'.format(value) }}
+                                {% elif dtype == 'Decimal' and value is number %}
+                                    {{ '{:,.2f}'.format(value) }}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
                 {% endfor %}
-            <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
-            <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
+                <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
+                <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
             {% endif %}
 
-            <!-- entitlements -->
-            {% for row in row_headers %}
-                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
-                {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'E' %}
-                <tr class="pos-table">
-                    <td class="pos-table">
-                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% if col_headers[x]|lower != 'type' %}
-                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
-                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
-                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                            {% if value is number %}
-                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                            {% else %}
-                                {{ value }}
-                            {% endif %}
+
+            {% for i, header in enumerate(row_headers) %}
+                {% set row_info = config.PAYDF_TEMPLATE[config.PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] != 'V' %}
+                    {% set dtype = row_info.iloc[0]['dtype'] %}
+                    <tr class="pos-table">
+                        <td class="pos-table">
+                            <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                         </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
+                        {% for x in range(1, paydf.shape[1]) %}
+                            {% set value = paydf.at[i, col_headers[x]] %}
+                            {% set prev_value = paydf.at[i, col_headers[x-1]] if x > 1 else None %}
+                            {% set highlight = session['highlight_changes'] and x > 1 and value != prev_value %}
+                            <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
+                                {% if dtype == 'Decimal' and value is number %}
+                                    {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    
+                    {% if row_info.iloc[0]['type'] == 'C' and not loop.last %}
+                        <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
+                        <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
-
-            <!-- deductions -->
-            {% for row in row_headers %}
-                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
-                {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'D' %}
-                <tr class="pos-table">
-                    <td class="pos-table">
-                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% if col_headers[x]|lower != 'type' %}
-                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
-                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
-                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                            {% if value is number %}
-                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                            {% else %}
-                                {{ value }}
-                            {% endif %}
-                        </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endif %}
-            {% endfor %}
-
-            <!-- allotments -->
-            {% for row in row_headers %}
-                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == row] %}
-                {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'A' %}
-                <tr class="pos-table">
-                    <td class="pos-table">
-                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ row }}</label>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% if col_headers[x]|lower != 'type' %}
-                        {% set value = paydf.at[row_headers.index(row), col_headers[x]] %}
-                        {% set prev_value = paydf.at[row_headers.index(row), col_headers[x-1]] if x > 2 else None %}
-                        {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                        <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                            {% if value is number %}
-                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                            {% else %}
-                                {{ value }}
-                            {% endif %}
-                        </td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-
-            <!-- calculations -->
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Taxable Pay</label></td>
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Taxable Pay"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Taxable Pay"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Non-Taxable Pay</label></td>
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Non-Taxable Pay"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Non-Taxable Pay"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-taxpay">Total Taxes</label></td>
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Total Taxes"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Total Taxes"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Gross Pay</label></td>
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Gross Pay"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Gross Pay"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Net Pay</label></td>
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Net Pay"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Net Pay"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != prev_value %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            <tr class="pos-table">
-                <td class="pos-table"><label class="modal-button" for="modal-grossnetpay">Difference</label></td>
-                {% for x in range(2, paydf.shape[1]) %}
-                    {% if col_headers[x]|lower != 'type' %}
-                    {% set value = paydf.at[row_headers.index("Difference"), col_headers[x]] %}
-                    {% set prev_value = paydf.at[row_headers.index("Difference"), col_headers[x-1]] if x > 2 else None %}
-                    {% set highlight = session['highlight_changes'] and x > 2 and value != 0 %}
-                    <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
-                        {% if value is number %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
         </tbody>
     </table>
 </div>
