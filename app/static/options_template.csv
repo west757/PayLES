@@ -1,78 +1,78 @@
-﻿header,optname,default,dtype,opt_f,opt_m,required,modal
-Grade,grade,None,str,grade_f,grade_m,TRUE,basepay
-Zip Code,zip_code,None,str,zip_code_f,zip code_m,TRUE,bah
-Tax Residency State,tax_residency_state,None,str,tax_residency_state_f,tax residency state_m,TRUE,statetaxes
-SGLI,sgli,0,Decimal,sgli_f,sgli_m,TRUE,sgli
-Dependents,dependents,0,int,dependents_f,dependents_m,TRUE,bah
-Federal Filing Status,federal_filing_status,Single,str,federal_filing_status_f,federal filing status_m,TRUE,federaltaxes
-State Filing Status,state_filing_status,Single,str,state_filing_status_f,state filing status_m,TRUE,statetaxes
-In Combat Zone,combat_zone,No,bool,combat_zone_f,combat zone_m,TRUE,combat
-Traditional TSP Rate,traditional_tsp,0,Decimal,traditional_tsp_f,traditional tsp_m,FALSE,tsp
-Roth TSP Rate,roth_tsp,0,Decimal,roth_tsp_f,roth tsp_m,TRUE,tsp
-Meal Discount,meal_discount,0,Decimal,meal_discount_f,meal_discount_m,FALSE,bas
-SEA,sea,0,Decimal,sea_f,sea_m,FALSE,bas
-Separation Rations,separation_rations,0,Decimal,separation_rations_f,separation_rations_m,FALSE,bas
-FLPB,flpb,0,Decimal,flpb_f,flpb_m,FALSE,flpb
-Foreign Duty Pay,foreign_duty_pay,0,Decimal,foreign_duty_pay_f,foreign_duty_pay_m,FALSE,fdp
-ASP,asp,0,Decimal,asp_f,asp_m,FALSE,specialty
-Dive Pay,dive_pay,0,Decimal,dive_pay_f,dive_pay_m,FALSE,specialty
-Jump Pay,jump_pay,0,Decimal,jump_pay_f,jump_pay_m,FALSE,specialty
-HALO,halo,0,Decimal,halo_f,halo_m,FALSE,specialty
-MSP,msp,0,Decimal,msp_f,msp_m,FALSE,specialty
-SDAP,sdap,0,Decimal,sdap_f,sdap_m,FALSE,specialty
-Special Duty Pay,special_duty_pay,0,Decimal,special_duty_pay_f,special_duty_pay_m,FALSE,specialty
-Specialty Pay,specialty_pay,0,Decimal,specialty_pay_f,specialty_pay_m,FALSE,specialty
-Variable Special Pay,variable_special_pay,0,Decimal,variable_special_pay_f,variable_special_pay_m,FALSE,specialty
-BCP,bcp,0,Decimal,bcp_f,bcp_m,FALSE,specialty
-Combat Duty,combat_duty,0,Decimal,combat_duty_f,combat_duty_m,FALSE,combat
-Combat Zone Pay,combat_zone_pay,0,Decimal,combat_zone_pay_f,combat_zone_pay_m,FALSE,combat
-HFP/IDP,hfpidp,0,Decimal,hfpidp_f,hfpidp_m,FALSE,combat
-HFP-L,hfpl,0,Decimal,hfpl_f,hfpl_m,FALSE,combat
-Hazardous Duty Pay,hazardous_duty_pay,0,Decimal,hazardous_duty_pay_f,hazardous_duty_pay_m,FALSE,combat
-Imminent Danger Pay,imminent_danger_pay,0,Decimal,imminent_danger_pay_f,imminent_danger_pay_m,FALSE,combat
-AIP,aip,0,Decimal,aip_f,aip_m,FALSE,incentive
-ACIP,acip,0,Decimal,acip_f,acip_m,FALSE,incentive
-CEFIP,cefip,0,Decimal,cefip_f,cefip_m,FALSE,incentive
-Flight Pay,flight_pay,0,Decimal,flight_pay_f,flight_pay_m,FALSE,incentive
-HDIP,hdip,0,Decimal,hdip_f,hdip_m,FALSE,incentive
-Incentive Special Pay,incentive_special_pay,0,Decimal,incentive_special_pay_f,incentive_special_pay_m,FALSE,incentive
-HDP-IE,hdpie,0,Decimal,hdpie_f,hdpie_m,FALSE,hardship
-HDP-L,hdpl,0,Decimal,hdpl_f,hdpl_m,FALSE,hardship
-HDP-M,hdpm,0,Decimal,hdpm_f,hdpm_m,FALSE,hardship
-ACP,acp,0,Decimal,acp_f,acp_m,FALSE,continuation
-CONT PAY,cont_pay,0,Decimal,cont_pay_f,cont_pay_m,FALSE,continuation
-NUCLEAR,nuclear,0,Decimal,nuclear_f,nuclear_m,FALSE,continuation
-Dislocation Allowance,dislocation_allowance,0,Decimal,dislocation_allowance_f,dislocation_allowance_m,FALSE,pcs
-MIHA-M,miham,0,Decimal,miham_f,miham_m,FALSE,pcs
-MIHA-R,mihar,0,Decimal,mihar_f,mihar_m,FALSE,pcs
-MIHA-SM,mihasm,0,Decimal,mihasm_f,mihasm_m,FALSE,pcs
-TLE CONUS,tle_conus,0,Decimal,tle_conus_f,tle_conus_m,FALSE,pcs
-TLA,tla,0,Decimal,tla_f,tla_m,FALSE,pcs
-TLA OCONUS,tla_oconus,0,Decimal,tla_oconus_f,tla_oconus_m,FALSE,pcs
-TQSA,tqsa,0,Decimal,tqsa_f,tqsa_m,FALSE,pcs
-SBP,sbp,0,Decimal,sbp_f,sbp_m,FALSE,sbp
-CIP,cip,0,Decimal,cip_f,cip_m,FALSE,cip
-BRA,bra,0,Decimal,bra_f,bra_m,FALSE,none
-CVI,cvi,0,Decimal,cvi_f,cvi_m,FALSE,none
-FSA,fsa,0,Decimal,fsa_f,fsa_m,FALSE,none
-FSH,fsh,0,Decimal,fsh_f,fsh_m,FALSE,none
-FSSA,fssa,0,Decimal,fssa_f,fssa_m,FALSE,none
-OEP,oep,0,Decimal,oep_f,oep_m,FALSE,none
-VI,vi,0,Decimal,vi_f,vi_m,FALSE,none
-Career Sea Pay,career_sea_pay,0,Decimal,career_sea_pay_f,career_sea_pay_m,FALSE,none
-CSP-P,cspp,0,Decimal,cspp_f,cspp_m,FALSE,none
-SDIP,sdip,0,Decimal,sdip_f,sdip_m,FALSE,none
-Sea Pay,sea_pay,0,Decimal,sea_pay_f,sea_pay_m,FALSE,none
-Split Payment Option,split_payment_option,0,Decimal,split_payment_option_f,split_payment_option_m,FALSE,none
-VBSS,vbss,0,Decimal,vbss_f,vbss_m,FALSE,none
-Family SGLI,family_sgli,0,Decimal,family_sgli_f,family_sgli_m,FALSE,sgli
-TSGLI,tsgli,0,Decimal,tsgli_f,tsgli_m,FALSE,sgli
-MGIB,mgib,0,Decimal,mgib_f,mgib_m,FALSE,mgib
-Meal Deduction,meal_deduction,0,Decimal,meal_deduction_f,meal_deduction_m,FALSE,bas
-SUPP/COM,suppcom,0,Decimal,suppcom_f,suppcom_m,FALSE,suppcom
-Prior SUPP/COM,prior_suppcom,0,Decimal,prior_suppcom_f,prior_suppcom_m,FALSE,suppcom
-Split Pay,split_pay,0,Decimal,split_pay_f,split_pay_m,FALSE,navy
-Split Pay Option,split_pay_option,0,Decimal,split_pay_option_f,split_pay_option_m,FALSE,navy
-AFRH,afrh,0,Decimal,afrh_f,afrh_m,FALSE,afrh
-USN/MC AFRH,usnmc_afrh,0,Decimal,usnmc_afrh_f,usnmc_afrh_m,FALSE,afrh
-USSH AFRH,ussh_afrh,0,Decimal,ussh_afrh_f,ussh_afrh_m,FALSE,afrh
+﻿header,optname,opt_f,opt_m,dtype,default,required,modal
+Grade,grade,grade_f,grade_m,str,None,TRUE,basepay
+Zip Code,zip_code,zip_code_f,zip code_m,str,None,TRUE,bah
+Tax Residency State,tax_residency_state,tax_residency_state_f,tax residency state_m,str,None,TRUE,statetaxes
+SGLI,sgli,sgli_f,sgli_m,Decimal,0,TRUE,sgli
+Dependents,dependents,dependents_f,dependents_m,int,0,TRUE,bah
+Federal Filing Status,federal_filing_status,federal_filing_status_f,federal filing status_m,str,Single,TRUE,federaltaxes
+State Filing Status,state_filing_status,state_filing_status_f,state filing status_m,str,Single,TRUE,statetaxes
+In Combat Zone,combat_zone,combat_zone_f,combat zone_m,bool,No,TRUE,combat
+Traditional TSP Rate,traditional_tsp,traditional_tsp_f,traditional tsp_m,Decimal,0,FALSE,tsp
+Roth TSP Rate,roth_tsp,roth_tsp_f,roth tsp_m,Decimal,0,TRUE,tsp
+Meal Discount,meal_discount,meal_discount_f,meal_discount_m,Decimal,0,FALSE,bas
+SEA,sea,sea_f,sea_m,Decimal,0,FALSE,bas
+Separation Rations,separation_rations,separation_rations_f,separation_rations_m,Decimal,0,FALSE,bas
+FLPB,flpb,flpb_f,flpb_m,Decimal,0,FALSE,flpb
+Foreign Duty Pay,foreign_duty_pay,foreign_duty_pay_f,foreign_duty_pay_m,Decimal,0,FALSE,fdp
+ASP,asp,asp_f,asp_m,Decimal,0,FALSE,specialty
+Dive Pay,dive_pay,dive_pay_f,dive_pay_m,Decimal,0,FALSE,specialty
+Jump Pay,jump_pay,jump_pay_f,jump_pay_m,Decimal,0,FALSE,specialty
+HALO,halo,halo_f,halo_m,Decimal,0,FALSE,specialty
+MSP,msp,msp_f,msp_m,Decimal,0,FALSE,specialty
+SDAP,sdap,sdap_f,sdap_m,Decimal,0,FALSE,specialty
+Special Duty Pay,special_duty_pay,special_duty_pay_f,special_duty_pay_m,Decimal,0,FALSE,specialty
+Specialty Pay,specialty_pay,specialty_pay_f,specialty_pay_m,Decimal,0,FALSE,specialty
+Variable Special Pay,variable_special_pay,variable_special_pay_f,variable_special_pay_m,Decimal,0,FALSE,specialty
+BCP,bcp,bcp_f,bcp_m,Decimal,0,FALSE,specialty
+Combat Duty,combat_duty,combat_duty_f,combat_duty_m,Decimal,0,FALSE,combat
+Combat Zone Pay,combat_zone_pay,combat_zone_pay_f,combat_zone_pay_m,Decimal,0,FALSE,combat
+HFP/IDP,hfpidp,hfpidp_f,hfpidp_m,Decimal,0,FALSE,combat
+HFP-L,hfpl,hfpl_f,hfpl_m,Decimal,0,FALSE,combat
+Hazardous Duty Pay,hazardous_duty_pay,hazardous_duty_pay_f,hazardous_duty_pay_m,Decimal,0,FALSE,combat
+Imminent Danger Pay,imminent_danger_pay,imminent_danger_pay_f,imminent_danger_pay_m,Decimal,0,FALSE,combat
+AIP,aip,aip_f,aip_m,Decimal,0,FALSE,incentive
+ACIP,acip,acip_f,acip_m,Decimal,0,FALSE,incentive
+CEFIP,cefip,cefip_f,cefip_m,Decimal,0,FALSE,incentive
+Flight Pay,flight_pay,flight_pay_f,flight_pay_m,Decimal,0,FALSE,incentive
+HDIP,hdip,hdip_f,hdip_m,Decimal,0,FALSE,incentive
+Incentive Special Pay,incentive_special_pay,incentive_special_pay_f,incentive_special_pay_m,Decimal,0,FALSE,incentive
+HDP-IE,hdpie,hdpie_f,hdpie_m,Decimal,0,FALSE,hardship
+HDP-L,hdpl,hdpl_f,hdpl_m,Decimal,0,FALSE,hardship
+HDP-M,hdpm,hdpm_f,hdpm_m,Decimal,0,FALSE,hardship
+ACP,acp,acp_f,acp_m,Decimal,0,FALSE,continuation
+CONT PAY,cont_pay,cont_pay_f,cont_pay_m,Decimal,0,FALSE,continuation
+NUCLEAR,nuclear,nuclear_f,nuclear_m,Decimal,0,FALSE,continuation
+Dislocation Allowance,dislocation_allowance,dislocation_allowance_f,dislocation_allowance_m,Decimal,0,FALSE,pcs
+MIHA-M,miham,miham_f,miham_m,Decimal,0,FALSE,pcs
+MIHA-R,mihar,mihar_f,mihar_m,Decimal,0,FALSE,pcs
+MIHA-SM,mihasm,mihasm_f,mihasm_m,Decimal,0,FALSE,pcs
+TLE CONUS,tle_conus,tle_conus_f,tle_conus_m,Decimal,0,FALSE,pcs
+TLA,tla,tla_f,tla_m,Decimal,0,FALSE,pcs
+TLA OCONUS,tla_oconus,tla_oconus_f,tla_oconus_m,Decimal,0,FALSE,pcs
+TQSA,tqsa,tqsa_f,tqsa_m,Decimal,0,FALSE,pcs
+SBP,sbp,sbp_f,sbp_m,Decimal,0,FALSE,sbp
+CIP,cip,cip_f,cip_m,Decimal,0,FALSE,cip
+BRA,bra,bra_f,bra_m,Decimal,0,FALSE,none
+CVI,cvi,cvi_f,cvi_m,Decimal,0,FALSE,none
+FSA,fsa,fsa_f,fsa_m,Decimal,0,FALSE,none
+FSH,fsh,fsh_f,fsh_m,Decimal,0,FALSE,none
+FSSA,fssa,fssa_f,fssa_m,Decimal,0,FALSE,none
+OEP,oep,oep_f,oep_m,Decimal,0,FALSE,none
+VI,vi,vi_f,vi_m,Decimal,0,FALSE,none
+Career Sea Pay,career_sea_pay,career_sea_pay_f,career_sea_pay_m,Decimal,0,FALSE,none
+CSP-P,cspp,cspp_f,cspp_m,Decimal,0,FALSE,none
+SDIP,sdip,sdip_f,sdip_m,Decimal,0,FALSE,none
+Sea Pay,sea_pay,sea_pay_f,sea_pay_m,Decimal,0,FALSE,none
+Split Payment Option,split_payment_option,split_payment_option_f,split_payment_option_m,Decimal,0,FALSE,none
+VBSS,vbss,vbss_f,vbss_m,Decimal,0,FALSE,none
+Family SGLI,family_sgli,family_sgli_f,family_sgli_m,Decimal,0,FALSE,sgli
+TSGLI,tsgli,tsgli_f,tsgli_m,Decimal,0,FALSE,sgli
+MGIB,mgib,mgib_f,mgib_m,Decimal,0,FALSE,mgib
+Meal Deduction,meal_deduction,meal_deduction_f,meal_deduction_m,Decimal,0,FALSE,bas
+SUPP/COM,suppcom,suppcom_f,suppcom_m,Decimal,0,FALSE,suppcom
+Prior SUPP/COM,prior_suppcom,prior_suppcom_f,prior_suppcom_m,Decimal,0,FALSE,suppcom
+Split Pay,split_pay,split_pay_f,split_pay_m,Decimal,0,FALSE,navy
+Split Pay Option,split_pay_option,split_pay_option_f,split_pay_option_m,Decimal,0,FALSE,navy
+AFRH,afrh,afrh_f,afrh_m,Decimal,0,FALSE,afrh
+USN/MC AFRH,usnmc_afrh,usnmc_afrh_f,usnmc_afrh_m,Decimal,0,FALSE,afrh
+USSH AFRH,ussh_afrh,ussh_afrh_f,ussh_afrh_m,Decimal,0,FALSE,afrh
