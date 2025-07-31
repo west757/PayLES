@@ -143,6 +143,7 @@ def read_les(les_rectangles, les_page):
 
 def build_paydf(les_text):
     paydf = initialize_paydf(les_text)
+    session['paydf_json'] = paydf.iloc[:, :3].to_json()
     paydf = expand_paydf(paydf)
 
     col_headers = paydf.columns.tolist()
@@ -362,11 +363,7 @@ def update_variables(paydf, month, options):
     initial_month = col_headers[1]
     month_idx = months_short.index(initial_month)
 
-    get_option_headers = {
-        'Rank', 'Zip Code', 'MHA Code', 'MHA Name', 'Tax Residency State',
-        'Federal Filing Status', 'State Filing Status', 'Dependents',
-        'Combat Zone', 'Traditional TSP Rate', 'Roth TSP Rate'
-    }
+    option_headers = set(opt[0] for opt in options)
 
     for i in range(1, len(col_headers)):
         month_idx = (month_idx + 1) % 12
@@ -377,27 +374,14 @@ def update_variables(paydf, month, options):
             prev_month = paydf.columns[col_idx - 1]
             prev_value = paydf.at[row_idx, prev_month]
 
-            if header == 'Year':
-                if months_short.index(month) == 0 and months_short.index(prev_month) == 11:
-                    paydf.at[row_idx, month] = prev_value + 1
-                else:
-                    paydf.at[row_idx, month] = prev_value
-                continue
-
-            if header == 'Months in Service':
-                paydf.at[row_idx, month] = prev_value + 1
-                continue
-
-            if header in get_option_headers:
-                # For MHA Code and MHA Name, get option for Zip Code
-                opt_header = 'Zip Code' if header in {'MHA Code', 'MHA Name'} else header
-                future_value, future_month = get_option(opt_header, options)
+            if header in option_headers:
+                future_value, future_month = get_option(header, options)
                 future_col_idx = columns.index(future_month) if future_month in columns else None
                 current_col_idx = columns.index(month)
                 if not future_value or not future_month:
                     paydf.at[row_idx, month] = prev_value
                 else:
-                    if header == 'MHA Code' or header == 'MHA Name':
+                    if header in {'MHA Code', 'MHA Name'}:
                         if future_col_idx is not None and current_col_idx >= future_col_idx:
                             mhac, mhan = calculate_mha(future_value)
                             paydf.at[row_idx, month] = mhac if header == 'MHA Code' else mhan
@@ -410,7 +394,27 @@ def update_variables(paydf, month, options):
                             paydf.at[row_idx, month] = prev_value
                 continue
 
-            # All other variables just carry forward previous value
+            if header == 'Year':
+                if months_short.index(month) == 0 and months_short.index(prev_month) == 11:
+                    paydf.at[row_idx, month] = prev_value + 1
+                else:
+                    paydf.at[row_idx, month] = prev_value
+                continue
+            if header == 'Months in Service':
+                paydf.at[row_idx, month] = prev_value + 1
+                continue
+            if header == 'JFTR':
+                paydf.at[row_idx, month] = prev_value
+                continue
+            if header == 'JFTR 2':
+                paydf.at[row_idx, month] = prev_value
+                continue
+            if header == 'BAQ Type':
+                paydf.at[row_idx, month] = prev_value
+                continue
+            if header == 'BAS Type':
+                paydf.at[row_idx, month] = prev_value
+                continue
             paydf.at[row_idx, month] = prev_value
     return paydf
 
@@ -662,10 +666,10 @@ def calculate_sgli(paydf, row_idx, month):
     col_idx = columns.index(month)
     prev_value = paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
-    sgli_future = session.get('sgli_future', None)
-    sgli_future_month = session.get('sgli_future_month', None)
-    if sgli_future is not None and sgli_future_month and month >= sgli_future_month:
-        return -Decimal(sgli_future)
+    options = session.get('options', [])
+    sgli_value, sgli_month = get_option('SGLI', options)
+    if sgli_value is not None and sgli_month and month >= sgli_month:
+        return -Decimal(sgli_value)
     return prev_value
 
 
@@ -864,9 +868,8 @@ def update_paydf():
             opt[1] = value
             opt[2] = month
 
-    paydf = session.get('paydf')
-    paydf_subset = paydf.iloc[:, :3]
-    paydf = expand_paydf(paydf_subset, options)
+    paydf = pd.read_json(session['paydf_json'])
+    paydf = expand_paydf(paydf, options)
 
     session['options'] = options
 
