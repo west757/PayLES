@@ -1,139 +1,139 @@
-﻿header,varname,shortname,longname,type,dtype,required,code,tax,modal
-Year,year,YEAR,Year,V,int,TRUE,X,FALSE,basepay
-Grade,grade,GRADE,Grade,V,str,TRUE,X,FALSE,basepay
-Months in Service,months_in_service,MIS,Months in Service,V,int,TRUE,X,FALSE,basepay
-Zip Code,zip_code,ZC,Zip Code,V,str,TRUE,X,FALSE,bah
-MHA Code,mha_code,MHAC,Military Housing Area Code,V,str,TRUE,X,FALSE,bah
-MHA Name,mha_name,MHAN,Military Housing Area Name,V,str,TRUE,X,FALSE,bah
-Tax Residency State,tax_residency_state,TRS,Tax Residency State,V,str,TRUE,X,FALSE,bah
-Federal Filing Status,federal_filing_status,FFS,Federal Filing Status,V,str,TRUE,X,FALSE,federaltaxes
-State Filing Status,state_filing_status,SFS,State Filing Status,V,str,TRUE,X,FALSE,statetaxes
-Dependents,dependents,DEPS,Dependents,V,int,TRUE,X,FALSE,bah
-JFTR,jftr,JFTR,Joint Federal Travel Regulation Code,V,str,TRUE,X,FALSE,cola
-JFTR 2,jftr2,JFTR2,Joint Federal Travel Regulation Code 2,V,str,TRUE,X,FALSE,cola
-Combat Zone,combat_zone,CZ,Combat Zone,V,bool,TRUE,X,FALSE,combat
-BAQ Type,baq_type,BAQT,Basic Allowance for Quarters Type,V,str,TRUE,X,FALSE,basepay
-BAS Type,bas_type,BAST,Basic Allowance for Subsistence Type,V,str,TRUE,X,FALSE,basepay
-Traditional TSP Rate,traditional_tsp_rate,TTSP,Traditional TSP Rate,V,Decimal,TRUE,X,FALSE,tsp
-Roth TSP Rate,roth_tsp_rate,RTSP,Roth TSP Rate,V,Decimal,TRUE,X,FALSE,tsp
-Base Pay,base_pay,BASE PAY,Base Pay,E,Decimal,TRUE,X,TRUE,basepay
-BAS,bas,BAS,Basic Allowance for Subsistence,E,Decimal,TRUE,X,FALSE,bas
-Meal Discount,meal_discount,DSCT,Meal Discount,E,Decimal,FALSE,Y,FALSE,bas
-SEA,sea,SEA,Subsistence Expense Allowance,E,Decimal,FALSE,Y,FALSE,bas
-Separation Rations,separation_rations,SR,Separation Rations,E,Decimal,FALSE,Y,FALSE,bas
-BAH,bah,BAH,Basic Allowance for Housing,E,Decimal,TRUE,X,FALSE,bah
-BAQ,baq,BAQ,Basic Allowance for Quarters,E,Decimal,FALSE,Y,FALSE,bah
-LQA,lqa,LQA,Living Quarters Allowance,E,Decimal,FALSE,Y,FALSE,bah
-CONUS COLA,conus_cola,CONUS COLA,Continental U.S. Cost of Living Allowance,E,Decimal,FALSE,Y,FALSE,cola
-OCONUS COLA,oconus_cola,OCONUS COLA,Outside Continental U.S. Cost of Living Allowance,E,Decimal,FALSE,Y,FALSE,cola
-OHA,oha,OHA,Overseas Housing Allowance,E,Decimal,FALSE,Y,FALSE,bah
-FLPB,flpb,FLPB,Foreign Language Profiency Bonus,E,Decimal,FALSE,Y,FALSE,flpb
-Foreign Duty Pay,foreign_duty_pay,FDP,Foreign Duty Pay,E,Decimal,FALSE,Y,FALSE,fdp
-ASP,asp,ASP,Additional Special Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Dive Pay,dive_pay,DP,Dive Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Jump Pay,jump_pay,JP,Jump Pay,E,Decimal,FALSE,Y,FALSE,specialty
-HALO,halo,HALO,High Altitude/Low Altitude Pay,E,Decimal,FALSE,Y,FALSE,specialty
-MSP,msp,MSP,Multiyear Special Pay,E,Decimal,FALSE,Y,FALSE,specialty
-SDAP,sdap,SDAP,Special Duty Assignment Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Special Duty Pay,special_duty_pay,SDP,Special Duty Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Specialty Pay,specialty_pay,SP,Specialty Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Variable Special Pay,variable_special_pay,VSP,Variable Special Pay,E,Decimal,FALSE,Y,FALSE,specialty
-BCP,bcp,BCP,Board Certified Pay,E,Decimal,FALSE,Y,FALSE,specialty
-Combat Duty,combat_duty,CD,Combat Duty,E,Decimal,FALSE,Y,FALSE,combat
-Combat Zone Pay,combat_zone_pay,CZP,Combat Zone Pay,E,Decimal,FALSE,Y,FALSE,combat
-HFP/IDP,,HFP/IDP,Hostile Fire/Imminent Danger Pay,E,Decimal,FALSE,Y,FALSE,combat
-HFP-L,hfpl,HFP-L,Hostile Fire Pay - Location,E,Decimal,FALSE,Y,FALSE,combat
-Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,E,Decimal,FALSE,Y,FALSE,combat
-Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,E,Decimal,FALSE,Y,FALSE,combat
-AIP,aip,AIP,Assignment Incentive Pay,E,Decimal,FALSE,Y,FALSE,incentive
-ACIP,acip,ACIP,Aviation Career Incentive Pay,E,Decimal,FALSE,Y,FALSE,incentive
-CEFIP,cefip,CEFIP,Career Enlisted Flyer Incentive Pay,E,Decimal,FALSE,Y,FALSE,incentive
-Flight Pay,flight_pay,FP,Flight Pay,E,Decimal,FALSE,Y,FALSE,incentive
-HDIP,hdip,HDIP,Hazardous Duty Incentive Pay,E,Decimal,FALSE,Y,FALSE,incentive
-Incentive Special Pay,incentive_special_pay,ISP,Incentive Special Pay,E,Decimal,FALSE,Y,FALSE,incentive
-HDP-IE,hdpie,HDP-IE,Hardship Duty Pay - Involuntary Extension,E,Decimal,FALSE,Y,FALSE,hardship
-HDP-L,hdpl,HDP-L,Hardship Duty Pay - Location,E,Decimal,FALSE,Y,FALSE,hardship
-HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,E,Decimal,FALSE,Y,FALSE,hardship
-ACP,acp,ACP,Aviation Continuation Pay,E,Decimal,FALSE,Y,FALSE,continuation
-CONT PAY,cont_pay,CONT PAY,Continuation Pay,E,Decimal,FALSE,Y,FALSE,continuation
-NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,E,Decimal,FALSE,Y,FALSE,continuation
-Accession Bonus,accession_bonus,AB,Accession Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-CSRB,csrb,CSRB,Critical Skills Retention Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-MRB,mrb,MRB,Multiyear Retention Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-NPAB,npab,NPAB,Nuclear Power Accession Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-SEB,seb,SEB,Selective Enlistment Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-SRB,srb,SRB,Selective Reenlistment Bonus,E,Decimal,FALSE,Z,FALSE,bonus
-PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,E,Decimal,FALSE,Z,FALSE,pcs
-Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,E,Decimal,FALSE,Y,FALSE,pcs
-MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,E,Decimal,FALSE,Y,FALSE,pcs
-MIHA-R,mihar,MIHA-R,Moving Housing Allowance - Rent,E,Decimal,FALSE,Y,FALSE,pcs
-MIHA-SM,mihasm,MIHA-SM,Housing Allowance - Security,E,Decimal,FALSE,Y,FALSE,pcs
-TLE CONUS,tle_pcs,TLE CONUS,Temporary Lodging Expense in Continental U.S.,E,Decimal,FALSE,Y,FALSE,pcs
-TLA,tla,TLA,Temporary Living Allowance,E,Decimal,FALSE,Y,FALSE,pcs
-TLA OCONUS,tla_pcs,TLA OCONUS,Temporary Lodging Allowance Outside Continental U.S.,E,Decimal,FALSE,Y,FALSE,pcs
-TQSA,tqsa,TQSA,Temporary Quarters Subsistence Allowance,E,Decimal,FALSE,Y,FALSE,pcs
-CCA,cca,CCA,Civilian Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-CCCA,ccca,CCCA,Continuing Civilian Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-CCRA,ccra,CCRA,Cash Clothing Replacement Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-CMA,cma,CMA,Clothing Maintenance Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-CRA,cra,CRA,Clothing Replacement Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-ICCA,icca,ICCA,Initial Civilian Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-MCA,mca,MCA,Maternity Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-PCCA,pcca,PCCA,Partial Civilian Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-RBMA,rbma,RBMA,Reserve Basic Maintenance Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-SMA,sma,SMA,Standard Maintenance Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-SRA,sra,SRA,Standard Replacement Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-SICA,sica,SICA,Standard Initial Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-SUPP CMA,supp_cma,SUPP CMA,Enlisted Supplemental Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-TDY CCA,tdy_cca,TDY CCA,Temporary Duty Civilian Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-UEA Initial,uea_initial,UEA INITIAL,Initial Clothing Allowance,E,Decimal,FALSE,Z,FALSE,clothingallowance
-SBP,sbp,SBP,Military Survivor Benefits Plan,E,Decimal,FALSE,Y,FALSE,sbp
-CIP,cip,CIP,Combat-Related Injury and Rehabilitation,E,Decimal,FALSE,Y,FALSE,cip
-Advance Debt,advance_debt,ADVANCE DEBT,Advance Debt Payment,E,Decimal,FALSE,Z,FALSE,debt
-BRA,bra,BRA,Basic Replacement Allowance,E,Decimal,FALSE,Y,FALSE,none
-CVI,cvi,CVI,Conditional Voluntary Indefinite Status,E,Decimal,FALSE,Y,FALSE,none
-FSA,fsa,FSA,Family Separation Allowance,E,Decimal,FALSE,Y,FALSE,none
-FSH,fsh,FSH,Family Separation Housing,E,Decimal,FALSE,Y,FALSE,none
-FSSA,fssa,FSSA,Family Subsistence Supplemental Allowance,E,Decimal,FALSE,Y,FALSE,none
-OEP,oep,OEP,Overseas Extension Pay,E,Decimal,FALSE,Y,FALSE,none
-Ref Social Security,ref_social_security,REF SOC SECURITY,Refund Social Security,E,Decimal,FALSE,Z,FALSE,none
-VI,vi,VI,Voluntary Indefinite Status,E,Decimal,FALSE,Y,FALSE,none
-Career Sea Pay,career_sea_pay,CSP,Career Sea Pay,E,Decimal,FALSE,Y,FALSE,navy
-CSP-P,cspp,CSP-P,Career Sea Pay - Premium,E,Decimal,FALSE,Y,FALSE,navy
-SDIP,sdip,SDIP,Submarine Duty Incentive Pay,E,Decimal,FALSE,Y,FALSE,navy
-Sea Pay,sea_pay,SP,Sea Pay,E,Decimal,FALSE,Y,FALSE,navy
-Split Payment Option,split_payment_option,SPO,Split Payment Option,E,Decimal,FALSE,Y,FALSE,navy
-VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",E,Decimal,FALSE,Y,FALSE,navy
-Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,D,Decimal,TRUE,X,TRUE,federaltaxes
-FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,D,Decimal,TRUE,X,TRUE,fica
-FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,D,Decimal,TRUE,X,TRUE,fica
-SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,D,Decimal,TRUE,X,FALSE,sgli
-Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,D,Decimal,FALSE,Y,FALSE,sgli
-TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,D,Decimal,FALSE,Y,FALSE,sgli
-State Taxes,state_taxes,STATE TAXES,State Taxes,D,Decimal,TRUE,X,TRUE,statetaxes
-Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,D,Decimal,FALSE,X,FALSE,tsp
-Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,D,Decimal,TRUE,X,FALSE,tsp
-MGIB,mgib,MGIB,Montgomery G.I. Bill Program,D,Decimal,FALSE,Y,FALSE,mgib
-Debt,debt_debt,DEBT,Government Debt,D,Decimal,FALSE,Z,FALSE,debt
-Fine,fine_fine,FINE,Military Fines,D,Decimal,FALSE,Z,FALSE,debt
-Garnishment,garnishment_garnishment,GARNISHMENT,Garnished Income,D,Decimal,FALSE,Z,FALSE,debt
-AAFES Debt,aafes_debt,AAFES,AAFES Debt,D,Decimal,FALSE,Z,FALSE,debt
-GPLD,gpld,GPLD,Government Property Lost or Damaged,D,Decimal,FALSE,Z,FALSE,debt
-Meal Deduction,meal_deduction,MEAL DEDUCT,Meal Deduction,D,Decimal,FALSE,Y,FALSE,bas
-Partial Pay,partial_pay,PARTIAL PAY,Partial Pay,D,Decimal,FALSE,Z,FALSE,none
-Pay Released,pay_released,PAY RELEASED,Pay Released,D,Decimal,FALSE,Z,FALSE,none
-SUPP/COM,suppcom,SUPP/COM DEBT,Spousal Support/Court-Ordered Child Support,D,Decimal,FALSE,Y,FALSE,suppcom
-Prior SUPP/COM,prior_suppcom,PRIOR SUPP/COM,Prior Spousal Support/Court-Ordered Child Support,D,Decimal,FALSE,Y,FALSE,suppcom
-Repay Advance,repay_advance,REPAY ADVANCE,Repayment of Advance Pay,D,Decimal,FALSE,Z,FALSE,none
-Split Pay,split_pay,SPLIT PAY,Split Pay Option,D,Decimal,FALSE,Y,FALSE,navy
-Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accounting,D,Decimal,FALSE,Y,FALSE,navy
-AFRH,afrh,AFRH,Armed Forces Retirement Home,D,Decimal,FALSE,Y,FALSE,afrh
-USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,D,Decimal,FALSE,Y,FALSE,afrh
-USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,D,Decimal,FALSE,Y,FALSE,afrh
-Taxable Pay,taxable_pay,TAXABLE PAY,Taxable Pay,C,Decimal,TRUE,X,FALSE,taxpay
-Non-Taxable Pay,nontaxable_pay,NON-TAXABLE PAY,Non-Taxable Pay,C,Decimal,TRUE,X,FALSE,taxpay
-Total Taxes,total_taxes,TOTAL TAXES,Total Taxes,C,Decimal,TRUE,X,FALSE,taxpay
-Gross Pay,gross_pay,GROSS PAY,Gross Pay,C,Decimal,TRUE,X,FALSE,grossnetpay
-Net Pay,net_pay,NET PAY,Net Pay,C,Decimal,TRUE,X,FALSE,grossnetpay
-Difference,difference,DIFFERENCE,Difference,C,Decimal,TRUE,X,FALSE,grossnetpay
+﻿header,varname,shortname,longname,type,dtype,default,required,code,tax,modal
+Year,year,YEAR,Year,V,int,0,TRUE,X,FALSE,basepay
+Grade,grade,GRADE,Grade,V,str,Not Found,TRUE,X,FALSE,basepay
+Months in Service,months_in_service,MIS,Months in Service,V,int,0,TRUE,X,FALSE,basepay
+Zip Code,zip_code,ZC,Zip Code,V,str,Not Found,TRUE,X,FALSE,bah
+MHA Code,mha_code,MHAC,Military Housing Area Code,V,str,Not Found,TRUE,X,FALSE,bah
+MHA Name,mha_name,MHAN,Military Housing Area Name,V,str,Not Found,TRUE,X,FALSE,bah
+Tax Residency State,tax_residency_state,TRS,Tax Residency State,V,str,Not Found,TRUE,X,FALSE,bah
+Federal Filing Status,federal_filing_status,FFS,Federal Filing Status,V,str,Not Found,TRUE,X,FALSE,federaltaxes
+State Filing Status,state_filing_status,SFS,State Filing Status,V,str,Not Found,TRUE,X,FALSE,statetaxes
+Dependents,dependents,DEPS,Dependents,V,int,0,TRUE,X,FALSE,bah
+JFTR,jftr,JFTR,Joint Federal Travel Regulation Code,V,str,Not Found,TRUE,X,FALSE,cola
+JFTR 2,jftr2,JFTR2,Joint Federal Travel Regulation Code 2,V,str,Not Found,TRUE,X,FALSE,cola
+Combat Zone,combat_zone,CZ,Combat Zone,V,bool,FALSE,TRUE,X,FALSE,combat
+BAQ Type,baq_type,BAQT,Basic Allowance for Quarters Type,V,str,Not Found,TRUE,X,FALSE,basepay
+BAS Type,bas_type,BAST,Basic Allowance for Subsistence Type,V,str,Not Found,TRUE,X,FALSE,basepay
+Traditional TSP Rate,traditional_tsp_rate,TTSP,Traditional TSP Rate,V,Decimal,0,TRUE,X,FALSE,tsp
+Roth TSP Rate,roth_tsp_rate,RTSP,Roth TSP Rate,V,Decimal,0,TRUE,X,FALSE,tsp
+Base Pay,base_pay,BASE PAY,Base Pay,E,Decimal,0,TRUE,X,TRUE,basepay
+BAS,bas,BAS,Basic Allowance for Subsistence,E,Decimal,0,TRUE,X,FALSE,bas
+Meal Discount,meal_discount,DSCT,Meal Discount,E,Decimal,0,FALSE,Y,FALSE,bas
+SEA,sea,SEA,Subsistence Expense Allowance,E,Decimal,0,FALSE,Y,FALSE,bas
+Separation Rations,separation_rations,SR,Separation Rations,E,Decimal,0,FALSE,Y,FALSE,bas
+BAH,bah,BAH,Basic Allowance for Housing,E,Decimal,0,TRUE,X,FALSE,bah
+BAQ,baq,BAQ,Basic Allowance for Quarters,E,Decimal,0,FALSE,Y,FALSE,bah
+LQA,lqa,LQA,Living Quarters Allowance,E,Decimal,0,FALSE,Y,FALSE,bah
+CONUS COLA,conus_cola,CONUS COLA,Continental U.S. Cost of Living Allowance,E,Decimal,0,FALSE,Y,FALSE,cola
+OCONUS COLA,oconus_cola,OCONUS COLA,Outside Continental U.S. Cost of Living Allowance,E,Decimal,0,FALSE,Y,FALSE,cola
+OHA,oha,OHA,Overseas Housing Allowance,E,Decimal,0,FALSE,Y,FALSE,bah
+FLPB,flpb,FLPB,Foreign Language Profiency Bonus,E,Decimal,0,FALSE,Y,FALSE,flpb
+Foreign Duty Pay,foreign_duty_pay,FDP,Foreign Duty Pay,E,Decimal,0,FALSE,Y,FALSE,fdp
+ASP,asp,ASP,Additional Special Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Dive Pay,dive_pay,DP,Dive Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Jump Pay,jump_pay,JP,Jump Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+HALO,halo,HALO,High Altitude/Low Altitude Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+MSP,msp,MSP,Multiyear Special Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+SDAP,sdap,SDAP,Special Duty Assignment Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Special Duty Pay,special_duty_pay,SDP,Special Duty Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Specialty Pay,specialty_pay,SP,Specialty Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Variable Special Pay,variable_special_pay,VSP,Variable Special Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+BCP,bcp,BCP,Board Certified Pay,E,Decimal,0,FALSE,Y,FALSE,specialty
+Combat Duty,combat_duty,CD,Combat Duty,E,Decimal,0,FALSE,Y,FALSE,combat
+Combat Zone Pay,combat_zone_pay,CZP,Combat Zone Pay,E,Decimal,0,FALSE,Y,FALSE,combat
+HFP/IDP,,HFP/IDP,Hostile Fire/Imminent Danger Pay,E,Decimal,0,FALSE,Y,FALSE,combat
+HFP-L,hfpl,HFP-L,Hostile Fire Pay - Location,E,Decimal,0,FALSE,Y,FALSE,combat
+Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,E,Decimal,0,FALSE,Y,FALSE,combat
+Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,E,Decimal,0,FALSE,Y,FALSE,combat
+AIP,aip,AIP,Assignment Incentive Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+ACIP,acip,ACIP,Aviation Career Incentive Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+CEFIP,cefip,CEFIP,Career Enlisted Flyer Incentive Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+Flight Pay,flight_pay,FP,Flight Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+HDIP,hdip,HDIP,Hazardous Duty Incentive Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+Incentive Special Pay,incentive_special_pay,ISP,Incentive Special Pay,E,Decimal,0,FALSE,Y,FALSE,incentive
+HDP-IE,hdpie,HDP-IE,Hardship Duty Pay - Involuntary Extension,E,Decimal,0,FALSE,Y,FALSE,hardship
+HDP-L,hdpl,HDP-L,Hardship Duty Pay - Location,E,Decimal,0,FALSE,Y,FALSE,hardship
+HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,E,Decimal,0,FALSE,Y,FALSE,hardship
+ACP,acp,ACP,Aviation Continuation Pay,E,Decimal,0,FALSE,Y,FALSE,continuation
+CONT PAY,cont_pay,CONT PAY,Continuation Pay,E,Decimal,0,FALSE,Y,FALSE,continuation
+NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,E,Decimal,0,FALSE,Y,FALSE,continuation
+Accession Bonus,accession_bonus,AB,Accession Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+CSRB,csrb,CSRB,Critical Skills Retention Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+MRB,mrb,MRB,Multiyear Retention Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+NPAB,npab,NPAB,Nuclear Power Accession Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+SEB,seb,SEB,Selective Enlistment Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+SRB,srb,SRB,Selective Reenlistment Bonus,E,Decimal,0,FALSE,Z,FALSE,bonus
+PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,E,Decimal,0,FALSE,Z,FALSE,pcs
+Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,E,Decimal,0,FALSE,Y,FALSE,pcs
+MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,E,Decimal,0,FALSE,Y,FALSE,pcs
+MIHA-R,mihar,MIHA-R,Moving Housing Allowance - Rent,E,Decimal,0,FALSE,Y,FALSE,pcs
+MIHA-SM,mihasm,MIHA-SM,Housing Allowance - Security,E,Decimal,0,FALSE,Y,FALSE,pcs
+TLE CONUS,tle_pcs,TLE CONUS,Temporary Lodging Expense in Continental U.S.,E,Decimal,0,FALSE,Y,FALSE,pcs
+TLA,tla,TLA,Temporary Living Allowance,E,Decimal,0,FALSE,Y,FALSE,pcs
+TLA OCONUS,tla_pcs,TLA OCONUS,Temporary Lodging Allowance Outside Continental U.S.,E,Decimal,0,FALSE,Y,FALSE,pcs
+TQSA,tqsa,TQSA,Temporary Quarters Subsistence Allowance,E,Decimal,0,FALSE,Y,FALSE,pcs
+CCA,cca,CCA,Civilian Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+CCCA,ccca,CCCA,Continuing Civilian Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+CCRA,ccra,CCRA,Cash Clothing Replacement Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+CMA,cma,CMA,Clothing Maintenance Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+CRA,cra,CRA,Clothing Replacement Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+ICCA,icca,ICCA,Initial Civilian Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+MCA,mca,MCA,Maternity Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+PCCA,pcca,PCCA,Partial Civilian Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+RBMA,rbma,RBMA,Reserve Basic Maintenance Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+SMA,sma,SMA,Standard Maintenance Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+SRA,sra,SRA,Standard Replacement Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+SICA,sica,SICA,Standard Initial Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+SUPP CMA,supp_cma,SUPP CMA,Enlisted Supplemental Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+TDY CCA,tdy_cca,TDY CCA,Temporary Duty Civilian Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+UEA Initial,uea_initial,UEA INITIAL,Initial Clothing Allowance,E,Decimal,0,FALSE,Z,FALSE,clothingallowance
+SBP,sbp,SBP,Military Survivor Benefits Plan,E,Decimal,0,FALSE,Y,FALSE,sbp
+CIP,cip,CIP,Combat-Related Injury and Rehabilitation,E,Decimal,0,FALSE,Y,FALSE,cip
+Advance Debt,advance_debt,ADVANCE DEBT,Advance Debt Payment,E,Decimal,0,FALSE,Z,FALSE,debt
+BRA,bra,BRA,Basic Replacement Allowance,E,Decimal,0,FALSE,Y,FALSE,none
+CVI,cvi,CVI,Conditional Voluntary Indefinite Status,E,Decimal,0,FALSE,Y,FALSE,none
+FSA,fsa,FSA,Family Separation Allowance,E,Decimal,0,FALSE,Y,FALSE,none
+FSH,fsh,FSH,Family Separation Housing,E,Decimal,0,FALSE,Y,FALSE,none
+FSSA,fssa,FSSA,Family Subsistence Supplemental Allowance,E,Decimal,0,FALSE,Y,FALSE,none
+OEP,oep,OEP,Overseas Extension Pay,E,Decimal,0,FALSE,Y,FALSE,none
+Ref Social Security,ref_social_security,REF SOC SECURITY,Refund Social Security,E,Decimal,0,FALSE,Z,FALSE,none
+VI,vi,VI,Voluntary Indefinite Status,E,Decimal,0,FALSE,Y,FALSE,none
+Career Sea Pay,career_sea_pay,CSP,Career Sea Pay,E,Decimal,0,FALSE,Y,FALSE,navy
+CSP-P,cspp,CSP-P,Career Sea Pay - Premium,E,Decimal,0,FALSE,Y,FALSE,navy
+SDIP,sdip,SDIP,Submarine Duty Incentive Pay,E,Decimal,0,FALSE,Y,FALSE,navy
+Sea Pay,sea_pay,SP,Sea Pay,E,Decimal,0,FALSE,Y,FALSE,navy
+Split Payment Option,split_payment_option,SPO,Split Payment Option,E,Decimal,0,FALSE,Y,FALSE,navy
+VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",E,Decimal,0,FALSE,Y,FALSE,navy
+Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,D,Decimal,0,TRUE,X,TRUE,federaltaxes
+FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,D,Decimal,0,TRUE,X,TRUE,fica
+FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,D,Decimal,0,TRUE,X,TRUE,fica
+SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,D,Decimal,0,TRUE,X,FALSE,sgli
+Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,D,Decimal,0,FALSE,Y,FALSE,sgli
+TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,D,Decimal,0,FALSE,Y,FALSE,sgli
+State Taxes,state_taxes,STATE TAXES,State Taxes,D,Decimal,0,TRUE,X,TRUE,statetaxes
+Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,D,Decimal,0,FALSE,X,FALSE,tsp
+Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,D,Decimal,0,TRUE,X,FALSE,tsp
+MGIB,mgib,MGIB,Montgomery G.I. Bill Program,D,Decimal,0,FALSE,Y,FALSE,mgib
+Debt,debt_debt,DEBT,Government Debt,D,Decimal,0,FALSE,Z,FALSE,debt
+Fine,fine_fine,FINE,Military Fines,D,Decimal,0,FALSE,Z,FALSE,debt
+Garnishment,garnishment_garnishment,GARNISHMENT,Garnished Income,D,Decimal,0,FALSE,Z,FALSE,debt
+AAFES Debt,aafes_debt,AAFES,AAFES Debt,D,Decimal,0,FALSE,Z,FALSE,debt
+GPLD,gpld,GPLD,Government Property Lost or Damaged,D,Decimal,0,FALSE,Z,FALSE,debt
+Meal Deduction,meal_deduction,MEAL DEDUCT,Meal Deduction,D,Decimal,0,FALSE,Y,FALSE,bas
+Partial Pay,partial_pay,PARTIAL PAY,Partial Pay,D,Decimal,0,FALSE,Z,FALSE,none
+Pay Released,pay_released,PAY RELEASED,Pay Released,D,Decimal,0,FALSE,Z,FALSE,none
+SUPP/COM,suppcom,SUPP/COM DEBT,Spousal Support/Court-Ordered Child Support,D,Decimal,0,FALSE,Y,FALSE,suppcom
+Prior SUPP/COM,prior_suppcom,PRIOR SUPP/COM,Prior Spousal Support/Court-Ordered Child Support,D,Decimal,0,FALSE,Y,FALSE,suppcom
+Repay Advance,repay_advance,REPAY ADVANCE,Repayment of Advance Pay,D,Decimal,0,FALSE,Z,FALSE,none
+Split Pay,split_pay,SPLIT PAY,Split Pay Option,D,Decimal,0,FALSE,Y,FALSE,navy
+Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accounting,D,Decimal,0,FALSE,Y,FALSE,navy
+AFRH,afrh,AFRH,Armed Forces Retirement Home,D,Decimal,0,FALSE,Y,FALSE,afrh
+USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,D,Decimal,0,FALSE,Y,FALSE,afrh
+USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,D,Decimal,0,FALSE,Y,FALSE,afrh
+Taxable Pay,taxable_pay,TAXABLE PAY,Taxable Pay,C,Decimal,0,TRUE,X,FALSE,taxpay
+Non-Taxable Pay,nontaxable_pay,NON-TAXABLE PAY,Non-Taxable Pay,C,Decimal,0,TRUE,X,FALSE,taxpay
+Total Taxes,total_taxes,TOTAL TAXES,Total Taxes,C,Decimal,0,TRUE,X,FALSE,taxpay
+Gross Pay,gross_pay,GROSS PAY,Gross Pay,C,Decimal,0,TRUE,X,FALSE,grossnetpay
+Net Pay,net_pay,NET PAY,Net Pay,C,Decimal,0,TRUE,X,FALSE,grossnetpay
+Difference,difference,DIFFERENCE,Difference,C,Decimal,0,TRUE,X,FALSE,grossnetpay
