@@ -155,19 +155,17 @@ def build_paydf(les_text):
 def initialize_paydf(les_text):
     initial_month = les_text[10][3]
     paydf = pd.DataFrame(columns=["Header", initial_month])
-
-    paydf = add_variables(paydf, les_text)
-    paydf = add_entitlements(paydf, les_text)
-    paydf = add_deductions(paydf, les_text)
+    options = []
+    paydf, options = add_variables(paydf, les_text, options)
+    paydf, options = add_entitlements_deductions(paydf, les_text, options)
     paydf = add_allotments(paydf, les_text)
     paydf = add_calculations(paydf, les_text)
-    
-    options = add_options(paydf)
     session['options'] = options
     return paydf
 
 
-def add_variables(paydf, les_text):
+
+def add_variables(paydf, les_text, options):
     paydf_template = app.config['PAYDF_TEMPLATE']
     var_rows = paydf_template[paydf_template['type'] == 'V']
 
@@ -233,64 +231,50 @@ def add_variables(paydf, les_text):
         value = cast_dtype(value, dtype)
         paydf.loc[len(paydf)] = [header, value]
 
-    return paydf
+        if bool(row.get('option', True)):
+            options = add_options(options, row)
+
+    return paydf, options
 
 
-
-def add_entitlements(paydf, les_text):
+def add_entitlements_deductions(paydf, les_text, options):
     paydf_template = app.config['PAYDF_TEMPLATE']
-    section = les_text[11]
 
-    for _, row in paydf_template.iterrows():
-        if row['type'] == 'E':
-            value = None
-            found = False
-            short = str(row['shortname'])
-            matches = find_multiword_matches(section, short)
-            for idx in matches:
-                for j in range(idx + 1, len(section)):
-                    if section[j].replace('.', '', 1).replace('-', '', 1).isdigit() or (section[j].startswith('-') and section[j][1:].replace('.', '', 1).isdigit()):
-                        value = round(Decimal(section[j]), 2)
-                        found = True
+    # Map type to section index and value sign
+    type_section = [('E', les_text[11], 1), ('D', les_text[12], -1)]
+
+    for row_type, section, sign in type_section:
+        for _, row in paydf_template.iterrows():
+            if row['type'] == row_type:
+                value = None
+                found = False
+                short = str(row['shortname'])
+                matches = find_multiword_matches(section, short)
+
+                for idx in matches:
+                    for j in range(idx + 1, len(section)):
+                        s = section[j]
+                        is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                        if is_num:
+                            v = Decimal(section[j])
+                            value = sign * round(abs(v), 2)
+                            found = True
+                            break
+                    if found:
                         break
-                if found:
-                    break
-            if not found:
-                if bool(row['required']):
-                    value = row['default']
-                else:
-                    continue
-            value = cast_dtype(value, row['dtype'])
-            paydf.loc[len(paydf)] = [row['header'], value]
-    return paydf
+                if not found:
+                    if bool(row['required']):
+                        value = row['default']
+                    else:
+                        continue
 
+                value = cast_dtype(value, row['dtype'])
+                paydf.loc[len(paydf)] = [row['header'], value]
 
-def add_deductions(paydf, les_text):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    section = les_text[12]
+                if bool(row.get('option', True)):
+                    options = add_options(options, row)
 
-    for _, row in paydf_template.iterrows():
-        if row['type'] == 'D':
-            value = None
-            found = False
-            short = str(row['shortname'])
-            matches = find_multiword_matches(section, short)
-            for idx in matches:
-                for j in range(idx + 1, len(section)):
-                    if section[j].replace('.', '', 1).isdigit():
-                        value = -round(Decimal(section[j]), 2)
-                        found = True
-                        break
-                if found:
-                    break
-            if not found:
-                if bool(row['required']):
-                    value = row['default']
-                else:
-                    continue
-            value = cast_dtype(value, row['dtype'])
-            paydf.loc[len(paydf)] = [row['header'], value]
-    return paydf
+    return paydf, options
 
 
 def add_allotments(paydf, les_text):
@@ -317,33 +301,20 @@ def add_calculations(paydf, les_text):
                 value = calculate_netpay(paydf, 1)
             elif header == "Difference":
                 value = calculate_difference(paydf, 1)
+
             value = cast_dtype(value, row['dtype'])
             paydf.loc[len(paydf)] = [header, value]
     return paydf
 
 
-def add_options(paydf):
-    options_template = app.config['OPTIONS_TEMPLATE']
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    options = []
+def add_options(options, row):
+    header = row['header']
+    dtype = row['dtype']
+    default = row['default']
 
-    paydf_varnames = set(paydf_template['varname'].dropna().astype(str))
-    paydf_headers = set(paydf['Header'].astype(str))
-
-    for _, row in options_template.iterrows():
-        required = str(row['required']).strip().upper() == 'TRUE'
-        optname = str(row['optname'])
-        header = row['header']
-        dtype = row['dtype']
-        default = row['default']
-        if required:
-            value = cast_dtype(default, dtype)
-            options.append([header, value, ""])
-        else:
-            # Only add if optname matches a varname in paydf_template and that varname is present in paydf headers
-            if optname in paydf_varnames and any(paydf_template[paydf_template['varname'] == optname]['header'].iloc[0] in paydf_headers for _ in [0]):
-                value = cast_dtype(default, dtype)
-                options.append([header, value, ""])
+    if not any(opt[0] == header for opt in options):
+        value = cast_dtype(default, dtype)
+        options.append([header, value, ""])
     return options
 
 
@@ -373,11 +344,10 @@ def expand_paydf(paydf, options):
         paydf[new_month] = defaults
 
         paydf = update_variables(paydf, new_month, options)
-        paydf = update_entitlements(paydf, new_month, options)
-        paydf = update_calculations(paydf, new_month, only_taxable=True, options=options)
-        paydf = update_deductions(paydf, new_month, options)
+        paydf = update_entitlements_deductions(paydf, new_month, options)
+        paydf = update_calculations(paydf, new_month, only_taxable=True)
         paydf = update_allotments(paydf, new_month, options)
-        paydf = update_calculations(paydf, new_month, only_taxable=False, options=options)
+        paydf = update_calculations(paydf, new_month, only_taxable=False)
 
     return paydf
 
@@ -539,47 +509,51 @@ def update_variables(paydf, month, options):
 
 
 
-def update_entitlements(paydf, month, options):
+def update_entitlements_deductions(paydf, month, options):
     paydf_template = app.config['PAYDF_TEMPLATE']
+    row_headers = paydf['Header'].tolist()
+    columns = paydf.columns.tolist()
+
+    def get_option(header):
+        for opt in options:
+            if opt[0] == header:
+                return opt[1], opt[2]
+        return None, None
 
     for row_idx, row in paydf.iterrows():
         header = row['Header']
         match = paydf_template[paydf_template['header'] == header]
-        code = match.iloc[0]['code']
-
-        if code == 'Z':
+        if match.empty:
+            continue
+        onetime = bool(match.iloc[0].get('onetime', False))
+        standard = bool(match.iloc[0].get('standard', False))
+        if onetime:
             paydf.at[row_idx, month] = 0
             continue
-
-        if code == 'Y':
-            paydf.at[row_idx, month] = update_standard_rows(paydf, row_idx, month, options)
+        if standard:
+            # Standard row, update from options if present
+            future_value, future_month = get_option(header)
+            col_idx = columns.index(month)
+            prev_month = columns[col_idx - 1]
+            prev_value = paydf.at[row_idx, prev_month]
+            if not future_value or not future_month:
+                paydf.at[row_idx, month] = prev_value
+            else:
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
             continue
-
+        # Special cases for non-standard rows
         if header == 'Base Pay':
             paydf.at[row_idx, month] = calculate_basepay(paydf, row_idx, month)
         elif header == 'BAS':
             paydf.at[row_idx, month] = calculate_bas(paydf, row_idx, month)
         elif header == 'BAH':
             paydf.at[row_idx, month] = calculate_bah(paydf, row_idx, month)
-    return paydf
-
-def update_deductions(paydf, month, options):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-
-    for row_idx, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
-        code = match.iloc[0]['code']
-
-        if code == 'Z':
-            paydf.at[row_idx, month] = 0
-            continue
-
-        if code == 'Y':
-            paydf.at[row_idx, month] = update_standard_rows(paydf, row_idx, month, options)
-            continue
-
-        if header == 'Federal Taxes':
+        elif header == 'Federal Taxes':
             paydf.at[row_idx, month] = calculate_federaltaxes(paydf, row_idx, month)
         elif header == 'FICA - Social Security':
             paydf.at[row_idx, month] = calculate_ficasocialsecurity(paydf, row_idx, month)
@@ -591,6 +565,7 @@ def update_deductions(paydf, month, options):
             paydf.at[row_idx, month] = calculate_statetaxes(paydf, row_idx, month)
         elif header == 'Roth TSP':
             paydf.at[row_idx, month] = calculate_rothtsp(paydf, row_idx, month)
+        # else: leave as is
     return paydf
 
 
@@ -599,16 +574,13 @@ def update_allotments(paydf, month, options):
     return paydf
 
 
-def update_standard_rows(paydf, row_idx, month, options):
-    return
 
-
-def update_calculations(paydf, month, only_taxable, options):
+def update_calculations(paydf, month, only_taxable):
     for row_idx, row in paydf.iterrows():
         header = row['Header']
         columns = paydf.columns.tolist()
         col_idx = columns.index(month)
-
+        
         if only_taxable:
             if header == "Taxable Pay":
                 paydf.at[row_idx, month] = calculate_taxablepay(paydf, col_idx)
@@ -957,39 +929,44 @@ def calculate_difference(paydf, col_idx):
 
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
-    options_template = app.config['OPTIONS_TEMPLATE']
+    paydf_template = app.config['PAYDF_TEMPLATE']
     options = session.get('options', [])
-
+    
     session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
 
-    # Build a mapping from header to (opt_f, opt_m, dtype) for lookup
-    optname_map = {}
-    for _, row in options_template.iterrows():
-        header = row['header']
-        opt_f = row['opt_f']
-        opt_m = row['opt_m']
-        dtype = row['dtype']
-        optname_map[header] = (opt_f, opt_m, dtype)
+    # Build a mapping from header to (varname, dtype)
+    header_to_var_dtype = {}
+    for _, row in paydf_template.iterrows():
+        if bool(row.get('option', False)):
+            header = row['header']
+            varname = row['varname']
+            dtype = row['dtype']
+            header_to_var_dtype[header] = (varname, dtype)
 
     # Update each option's value and month from the form
     for opt in options:
         header = opt[0]
-        opt_f, opt_m, dtype = optname_map.get(header, (None, None, None))
-        if opt_f:
-            value = request.form.get(opt_f, opt[1])
-            value = cast_dtype(value, dtype)
+        varname, dtype = header_to_var_dtype.get(header, (None, None))
+        if varname:
+            value_key = f"{varname}_f"
+            month_key = f"{varname}_m"
+            if dtype == 'bool':
+                value = request.form.get(value_key)
+                if value is None or value is False:
+                    value = Decimal(0)
+                else:
+                    value = opt[1]
+            else:
+                value = request.form.get(value_key, opt[1])
+                value = cast_dtype(value, dtype)
+            month = request.form.get(month_key, opt[2])
             opt[1] = value
-        if opt_m:
-            month = request.form.get(opt_m, opt[2])
             opt[2] = month
 
     paydf = session.get('paydf')
     paydf_subset = paydf.iloc[:, :3]
     paydf = expand_paydf(paydf_subset, options)
-    
-    session['paydf'] = paydf
-    session['col_headers'] = paydf.columns.tolist()
-    session['row_headers'] = paydf['Header'].tolist()
+
     session['options'] = options
 
     return render_template('paydf_group.html')
