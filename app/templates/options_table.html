@@ -222,8 +222,8 @@
                 <!-- roth tsp -->
                 <tr class="pos-table">
                     {% set roth_tsp_current = paydf.at[row_headers.index("Roth TSP"), col_headers[2]] %}
-                    {% set roth_tsp_future = session['roth_tsp_future'] if 'roth_tsp_future' in session else roth_tsp_current %}
-                    {% set roth_tsp_future_month = session['roth_tsp_future_month'] if 'roth_tsp_future_month' in session else month_options[0] %}
+                    {% set roth_tsp_future = session['roth_tsp_rate_future'] if 'roth_tsp_rate_future' in session else roth_tsp_current %}
+                    {% set roth_tsp_future_month = session['roth_tsp_rate_future_month'] if 'roth_tsp_rate_future_month' in session else month_options[0] %}
                     <td class="pos-table">
                         <label class="modal-button" for="modal-tsp">Roth TSP</label>
                     </td>
@@ -245,6 +245,53 @@
                         </select>
                     </td>
                 </tr>
+
+
+                <!-- standard option rows -->
+                {% if session['show_all_options'] %}
+                    <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
+                    <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
+
+                    {% for std_row in session['standard_rows'] %}
+                        {% set base_var = std_row[0] %}
+                        {% set header = (base_var.replace('_', ' ')).title() %}
+                        {% set row_idx = None %}
+                        {% for rh in row_headers %}
+                            {% if rh|lower == header|lower %}
+                                {% set row_idx = loop.index0 %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if row_idx is not none %}
+                            {% set current_value = paydf.at[row_idx, col_headers[2]] %}
+                            {% set is_active = std_row[1] %}
+                            {% set stop_month = std_row[2] %}
+                            <tr class="pos-table">
+                                <td class="pos-table">
+                                    <label>{{ header }}</label>
+                                </td>
+                                <td class="pos-table">
+                                    {% if current_value is number %}
+                                        {{ '${:,.2f}'.format(current_value|abs).replace('$-','-$') }}
+                                    {% else %}
+                                        {{ current_value }}
+                                    {% endif %}
+                                </td>
+                                <td class="pos-table">
+                                    <input class="pos-table" type="checkbox" name="{{ base_var }}_future" value="on" {% if is_active %}checked{% endif %} />
+                                </td>
+                                <td class="pos-table">
+                                    <select class="pos-table" name="{{ base_var }}_future_month">
+                                        {% for m in month_options %}
+                                            {% if m != col_headers[2] %}
+                                                <option value="{{ m }}" {% if stop_month == m %}selected{% endif %}>{{ m }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>

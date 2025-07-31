@@ -28,22 +28,6 @@
                         </form>
                     </div>
                 </td>
-
-                
-                <!-- show all variables -->
-                <td class="pos-table" style="width: 50%;">
-                    {% set show_all_variables = session.get('show_all_variables', False) %}
-                    <div class="settings-row">
-                        <label>Show All Variables:</label>
-                    </div>
-                    <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="show_all_variables" {% if show_all_variables %} checked {% endif %} hx-post="/show_all_variables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
-                    </div>
-                </td>
-            </tr>
-
-
-            <tr class="pos-table">
                 <!-- highlight changes -->
                 <td class="pos-table" style="width: 50%;">
                     {% set highlight_changes = session.get('highlight_changes', False) %}
@@ -54,8 +38,22 @@
                         <input type="checkbox" id="settings-checkbox" name="highlight_changes" {% if highlight_changes %} checked {% endif %} hx-post="/highlight_changes" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
                     </div>
                 </td>
+            </tr>
 
 
+            <tr class="pos-table">
+                <!-- show all variables -->
+                <td class="pos-table" style="width: 50%;">
+                    {% set show_all_variables = session.get('show_all_variables', False) %}
+                    <div class="settings-row">
+                        <label>Show All Variables:</label>
+                    </div>
+                    <div class="settings-row">
+                        <input type="checkbox" id="settings-checkbox" name="show_all_variables" {% if show_all_variables %} checked {% endif %} hx-post="/show_all_variables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
+                    </div>
+                </td>
+
+                
                 <!-- show all options -->
                 <td class="pos-table" style="width: 50%;">
                     {% set show_all_options = session.get('show_all_options', False) %}

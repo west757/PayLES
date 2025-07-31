@@ -70,6 +70,7 @@ class Config:
         'show_all_variables': False,
         'highlight_changes': False,
         'show_all_options': False,
+        'standard_rows': [],
         'rank_future': "",
         'rank_future_month': "",
         'zipcode_future': "",
@@ -112,3 +113,8 @@ class Config:
         ("Traditional TSP Rate", int, "tsp"),
         ("Roth TSP Rate", int, "tsp"),
     ]
+
+#codes:
+#X - special
+#Y - standard
+#Z - onetime
