@@ -43,6 +43,7 @@ def leave():
 @app.route('/submit_les', methods=['POST'])
 def submit_les():
     les_file = request.files.get('home-input')
+
     if not les_file:
         return render_template("home_form.html", message="No file submitted")
 
@@ -50,9 +51,10 @@ def submit_les():
     if not valid:
         return render_template("home_form.html", message=message)
 
-    valid, message = validate_les(les_file)
+    valid, message, les_pdf = validate_les(les_file)
     if valid:
-        return render_template('paydf_group.html')
+        context = process_les(les_pdf)
+        return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
 
@@ -61,15 +63,16 @@ def submit_les():
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
     example_les = app.config['EXAMPLE_LES']
-    valid, message = validate_les(example_les)
+
+    valid, message, les_pdf = validate_les(example_les)
     if valid:
-        return render_template('paydf_group.html')
+        context = process_les(les_pdf)
+        return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
 
 
 
-@app.route('/process_les_file', methods=['POST'])
 def validate_les(les_file):
     reset_session_defaults()
 
@@ -77,23 +80,25 @@ def validate_les(les_file):
         title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
         title_text = title_crop.extract_text_simple()
         if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
-            read_les(les_pdf)
-            return True, None
+            return True, None, les_pdf
         else:
-            return False, "File is not a valid LES"
+            return False, "File is not a valid LES", les_pdf
 
 
-
-@app.route('/read_les', methods=['POST'])
-def read_les(les_pdf):
+def process_les(les_pdf):
     les_rectangles = app.config['LES_RECTANGLES']
-    les_image_scale = app.config['LES_IMAGE_SCALE']
-    les_coord_scale = app.config['LES_COORD_SCALE']
-
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
-    les_text = ["text per rectangle"]
 
-    #create image
+    context = {}
+    context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
+    context['les_text'] = read_les(les_rectangles, les_page)
+    context['paydf'], context['col_headers'], context['row_headers'] = build_paydf(context['les_text'])
+    return context
+
+
+def create_les_image(les_rectangles, les_page):
+    les_image_scale = app.config['LES_IMAGE_SCALE']
+
     temp_image = les_page.to_image(resolution=300).original
     new_width = int(temp_image.width * les_image_scale)
     new_height = int(temp_image.height * les_image_scale)
@@ -102,11 +107,11 @@ def read_les(les_pdf):
     img_io = io.BytesIO()
     resized_image.save(img_io, format='PNG')
     img_io.seek(0)
-    encoded_img = base64.b64encode(img_io.read()).decode("utf-8")
+    les_image = base64.b64encode(img_io.read()).decode("utf-8")
 
-    scaled_rects = []
+    rect_overlay = []
     for rect in les_rectangles.to_dict(orient="records"):
-        scaled_rects.append({
+        rect_overlay.append({
             "index": rect["index"],
             "x1": rect["x1"] * les_image_scale,
             "y1": rect["y1"] * les_image_scale,
@@ -116,10 +121,13 @@ def read_les(les_pdf):
             "modal": rect["modal"],
             "tooltip": rect["tooltip"]
         })
-    session['les_image'] = encoded_img
-    session['rect_overlay'] = scaled_rects
+    return les_image, rect_overlay
 
-    #parse text
+
+def read_les(les_rectangles, les_page):
+    les_coord_scale = app.config['LES_COORD_SCALE']
+    les_text = ["text per rectangle"]
+
     for i, row in les_rectangles.iterrows():
         x0 = float(row['x1']) * les_coord_scale
         x1 = float(row['x2']) * les_coord_scale
@@ -131,8 +139,7 @@ def read_les(les_pdf):
         les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
         les_text.append(les_rect_text.replace("\n", " ").split())
 
-    build_paydf(les_text)
-    return None
+    return les_text
 
 
 def build_paydf(les_text):
@@ -142,10 +149,7 @@ def build_paydf(les_text):
     col_headers = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
 
-    session['paydf'] = paydf
-    session['col_headers'] = col_headers
-    session['row_headers'] = row_headers
-    return None
+    return paydf, col_headers, row_headers
 
 
 
@@ -567,10 +571,6 @@ def update_variables(paydf, month):
     return paydf
 
 
-def standard_rows(paydf, row_idx, month):
-    return None
-
-
 def update_entitlements(paydf, month):
     paydf_template = app.config['PAYDF_TEMPLATE']
     for row_idx, row in paydf.iterrows():
@@ -634,6 +634,10 @@ def update_allotments(paydf, month):
 
 
 
+def standard_rows(paydf, row_idx, month):
+    return None
+
+
 def update_calculations(paydf, month, only_taxable):
     for row_idx, row in paydf.iterrows():
         header = row['Header']
@@ -655,6 +659,8 @@ def update_calculations(paydf, month, only_taxable):
             elif header == "Difference":
                 paydf.at[row_idx, month] = calculate_difference(paydf, col_idx)
     return paydf
+
+
 
 
 
@@ -697,7 +703,6 @@ def calculate_basepay(paydf, row_idx, month):
 
 def calculate_bas(paydf, row_idx, month):
     bas_amount = app.config['BAS_AMOUNT']
-    columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
     rank_row_idx = row_headers.index("Rank")
     rank = paydf.at[rank_row_idx, month]
@@ -880,47 +885,6 @@ def calculate_rothtsp(paydf, row_idx, month):
 
 
 
-
-
-
-
-
-@app.route('/update_paydf', methods=['POST'])
-def update_paydf():
-    session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
-    session['rank_future'] = request.form.get('rank_future', session.get('rank_future', ''))
-    session['rank_future_month'] = request.form.get('rank_future_month', session.get('rank_future_month', ''))
-    session['zipcode_future'] = request.form.get('zipcode_future', session.get('zipcode_future', ''))
-    session['zipcode_future_month'] = request.form.get('zipcode_future_month', session.get('zipcode_future_month', ''))
-    session['state_future'] = request.form.get('state_future', session.get('state_future', ''))
-    session['state_future_month'] = request.form.get('state_future_month', session.get('state_future_month', ''))
-    session['sgli_future'] = Decimal(str(float(request.form.get('sgli_future', session.get('sgli_future', 0)))))
-    session['sgli_future_month'] = request.form.get('sgli_future_month', session.get('sgli_future_month', ''))
-    session['dependents_future'] = int(request.form.get('dependents_future', session.get('dependents_future', 0)))
-    session['dependents_future_month'] = request.form.get('dependents_future_month', session.get('dependents_future_month', ''))
-    session['federal_filing_status_future'] = request.form.get('federal_filing_status_future', session.get('federal_filing_status_future', ''))
-    session['federal_filing_status_future_month'] = request.form.get('federal_filing_status_future_month', session.get('federal_filing_status_future_month', ''))
-    session['state_filing_status_future'] = request.form.get('state_filing_status_future', session.get('state_filing_status_future', ''))
-    session['state_filing_status_future_month'] = request.form.get('state_filing_status_future_month', session.get('state_filing_status_future_month', ''))
-    session['combat_zone_future'] = request.form.get('combat_zone_future', session.get('combat_zone_future', ''))
-    session['combat_zone_future_month'] = request.form.get('combat_zone_future_month', session.get('combat_zone_future_month', ''))
-    session['traditional_tsp_rate_future'] = int(request.form.get('traditional_tsp_rate_future', session.get('traditional_tsp_rate_future', 0)))
-    session['traditional_tsp_rate_future_month'] = request.form.get('traditional_tsp_rate_future_month', session.get('traditional_tsp_rate_future_month', ''))
-    session['roth_tsp_rate_future'] = int(request.form.get('roth_tsp_rate_future', session.get('roth_tsp_rate_future', 0)))
-    session['roth_tsp_rate_future_month'] = request.form.get('roth_tsp_rate_future_month', session.get('roth_tsp_rate_future_month', ''))
-
-    paydf = session.get('paydf')
-    if paydf is not None:
-        paydf_subset = paydf.iloc[:, :3]
-        paydf = expand_paydf(paydf_subset)
-        session['paydf'] = paydf
-        session['col_headers'] = paydf.columns.tolist()
-        session['row_headers'] = paydf['Header'].tolist()
-
-    return render_template('paydf_group.html')
-
-
-
 def calculate_taxablepay(paydf, col_idx):
     paydf_template = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
@@ -1022,10 +986,40 @@ def calculate_difference(paydf, col_idx):
 
 
 
-@app.route('/show_all_variables', methods=['POST'])
-def show_all_variables():
-    checked = request.form.get('show_all_variables')
-    session['show_all_variables'] = bool(checked)
+
+
+@app.route('/update_paydf', methods=['POST'])
+def update_paydf():
+    session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
+    session['rank_future'] = request.form.get('rank_future', session.get('rank_future', ''))
+    session['rank_future_month'] = request.form.get('rank_future_month', session.get('rank_future_month', ''))
+    session['zipcode_future'] = request.form.get('zipcode_future', session.get('zipcode_future', ''))
+    session['zipcode_future_month'] = request.form.get('zipcode_future_month', session.get('zipcode_future_month', ''))
+    session['state_future'] = request.form.get('state_future', session.get('state_future', ''))
+    session['state_future_month'] = request.form.get('state_future_month', session.get('state_future_month', ''))
+    session['sgli_future'] = Decimal(str(float(request.form.get('sgli_future', session.get('sgli_future', 0)))))
+    session['sgli_future_month'] = request.form.get('sgli_future_month', session.get('sgli_future_month', ''))
+    session['dependents_future'] = int(request.form.get('dependents_future', session.get('dependents_future', 0)))
+    session['dependents_future_month'] = request.form.get('dependents_future_month', session.get('dependents_future_month', ''))
+    session['federal_filing_status_future'] = request.form.get('federal_filing_status_future', session.get('federal_filing_status_future', ''))
+    session['federal_filing_status_future_month'] = request.form.get('federal_filing_status_future_month', session.get('federal_filing_status_future_month', ''))
+    session['state_filing_status_future'] = request.form.get('state_filing_status_future', session.get('state_filing_status_future', ''))
+    session['state_filing_status_future_month'] = request.form.get('state_filing_status_future_month', session.get('state_filing_status_future_month', ''))
+    session['combat_zone_future'] = request.form.get('combat_zone_future', session.get('combat_zone_future', ''))
+    session['combat_zone_future_month'] = request.form.get('combat_zone_future_month', session.get('combat_zone_future_month', ''))
+    session['traditional_tsp_rate_future'] = int(request.form.get('traditional_tsp_rate_future', session.get('traditional_tsp_rate_future', 0)))
+    session['traditional_tsp_rate_future_month'] = request.form.get('traditional_tsp_rate_future_month', session.get('traditional_tsp_rate_future_month', ''))
+    session['roth_tsp_rate_future'] = int(request.form.get('roth_tsp_rate_future', session.get('roth_tsp_rate_future', 0)))
+    session['roth_tsp_rate_future_month'] = request.form.get('roth_tsp_rate_future_month', session.get('roth_tsp_rate_future_month', ''))
+
+    paydf = session.get('paydf')
+    if paydf is not None:
+        paydf_subset = paydf.iloc[:, :3]
+        paydf = expand_paydf(paydf_subset)
+        session['paydf'] = paydf
+        session['col_headers'] = paydf.columns.tolist()
+        session['row_headers'] = paydf['Header'].tolist()
+
     return render_template('paydf_group.html')
 
 
@@ -1036,12 +1030,20 @@ def highlight_changes():
     return render_template('paydf_group.html')
 
 
+
+@app.route('/show_all_variables', methods=['POST'])
+def show_all_variables():
+    checked = request.form.get('show_all_variables')
+    session['show_all_variables'] = bool(checked)
+    return render_template('paydf_group.html')
+
+
+
 @app.route('/show_all_options', methods=['POST'])
 def show_all_options():
     checked = request.form.get('show_all_options')
     session['show_all_options'] = bool(checked)
     return render_template('paydf_group.html')
-
 
 
 
@@ -1075,6 +1077,28 @@ def export_dataframe():
         )
     
 
+    
+
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+
+def validate_file(file):
+    if file.filename == '':
+        return False, "No file submitted"
+    if not allowed_file(file.filename):
+        return False, "Invalid file type, only PDFs are accepted"
+    return True, ""
+
+
+def reset_session_defaults():
+    session.clear()
+    for key, value in app.config['SESSION_DEFAULTS'].items():
+        session[key] = value
+
 
 def cast_dtype(value, dtype):
     if dtype == 'int':
@@ -1086,6 +1110,18 @@ def cast_dtype(value, dtype):
     elif dtype == 'bool':
         return bool(value)
     return value
+
+
+def find_multiword_matches(section, shortname):
+    short_words = shortname.split()
+    n = len(short_words)
+    matches = []
+    for i in range(len(section) - n + 1):
+        candidate = ' '.join(section[i:i+n])
+        if candidate == shortname:
+            matches.append(i + n - 1)  # index of last word in match
+    return matches
+
 
 def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
@@ -1104,34 +1140,6 @@ def calculate_mha(zipcode):
     return mhac, mhan
 
 
-def find_multiword_matches(section, shortname):
-    short_words = shortname.split()
-    n = len(short_words)
-    matches = []
-    for i in range(len(section) - n + 1):
-        candidate = ' '.join(section[i:i+n])
-        if candidate == shortname:
-            matches.append(i + n - 1)  # index of last word in match
-    return matches
-
-
-
-def reset_session_defaults():
-    session.clear()
-    for key, value in app.config['SESSION_DEFAULTS'].items():
-        session[key] = value
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-
-def validate_file(file):
-    if file.filename == '':
-        return False, "No file submitted"
-    if not allowed_file(file.filename):
-        return False, "Invalid file type, only PDFs are accepted"
-    return True, ""
 
 
 @app.errorhandler(413)
@@ -1147,9 +1155,6 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-
-
 
 
 if __name__ == "__main__":
