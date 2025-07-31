@@ -148,6 +148,7 @@ def build_paydf(les_text):
     return None
 
 
+
 def initialize_paydf(les_text):
     initial_month = les_text[10][3]
     df = pd.DataFrame(columns=["Header", "Type", initial_month])
@@ -305,6 +306,7 @@ def add_entitlements(les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     entitlements = []
     section = les_text[11]
+    standard_rows = session.get('standard_rows', [])
 
     for i, row in paydf_template.iterrows():
         if row['type'] == 'E':
@@ -322,6 +324,13 @@ def add_entitlements(les_text):
             # If required and not found, add with value 0
             if row.get('required', 'N') == 'Y' and not found:
                 entitlements.append((row['header'], Decimal(0)))
+            # If standard row, add to standard_rows array as [header, True, ""]
+            if row.get('standard', 'N') == 'Y':
+                base_var = row['header'].lower().replace(' ', '_')
+                already_in = any(x[0] == base_var for x in standard_rows)
+                if not already_in:
+                    standard_rows.append([base_var, True, ""])
+    session['standard_rows'] = standard_rows
     return entitlements
 
 
@@ -330,6 +339,7 @@ def add_deductions(les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     deductions = []
     section = les_text[12]
+    standard_rows = session.get('standard_rows', [])
 
     for i, row in paydf_template.iterrows():
         if row['type'] == 'D':
@@ -347,6 +357,13 @@ def add_deductions(les_text):
             # If required and not found, add with value 0
             if row.get('required', 'N') == 'Y' and not found:
                 deductions.append((row['header'], Decimal(0)))
+            # If standard row, add to standard_rows array as [header, True, ""]
+            if row.get('standard', 'N') == 'Y':
+                base_var = row['header'].lower().replace(' ', '_')
+                already_in = any(x[0] == base_var for x in standard_rows)
+                if not already_in:
+                    standard_rows.append([base_var, True, ""])
+    session['standard_rows'] = standard_rows
     return deductions
 
 
@@ -441,7 +458,6 @@ def expand_paydf(paydf):
                 paydf.at[row_idx, new_month] = value
 
     return paydf
-
 
 
 
@@ -645,85 +661,56 @@ def update_variables(paydf, row_idx, month):
 
 def update_entitlements(paydf, row_idx, month):
     paydf_template = app.config['PAYDF_TEMPLATE']
-
     header = paydf.at[row_idx, 'Header']
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     match = paydf_template[paydf_template['header'] == header]
-    
     onetime = match.iloc[0]['onetime']
     standard = match.iloc[0]['standard']
 
-    #if onetime payment, return 0
     if onetime == 'Y':
         return 0
     
-    # Standard recurring payment
     if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
-        if header == 'Base Pay':
-            return calculate_basepay(paydf, row_idx, month)
-        elif header == 'BAS':
-            return calculate_bas(paydf, row_idx, month)
-        elif header == 'BAH':
-            return calculate_bah(paydf, row_idx, month)
-    #default, return previous value
+        return update_standard_rows(header, columns, row_idx, month, paydf)
+    
+    if header == 'Base Pay':
+        return calculate_basepay(paydf, row_idx, month)
+    elif header == 'BAS':
+        return calculate_bas(paydf, row_idx, month)
+    elif header == 'BAH':
+        return calculate_bah(paydf, row_idx, month)
     return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-
-
 
 
 def update_deductions(paydf, row_idx, month):
     paydf_template = app.config['PAYDF_TEMPLATE']
-
     header = paydf.at[row_idx, 'Header']
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     match = paydf_template[paydf_template['header'] == header]
-
     onetime = match.iloc[0]['onetime']
     standard = match.iloc[0]['standard']
 
-    #if onetime payment, return 0
     if onetime == 'Y':
         return 0
     
-    # Standard recurring payment
     if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
-        if header == 'Federal Taxes':
-            return calculate_federaltaxes(paydf, row_idx, month)
-        elif header == 'FICA - Social Security':
-            return calculate_ficasocialsecurity(paydf, row_idx, month)
-        elif header == 'FICA - Medicare':
-            return calculate_ficamedicare(paydf, row_idx, month)
-        elif header == 'SGLI':
-            return calculate_sgli(paydf, row_idx, month)
-        elif header == 'State Taxes':
-            return calculate_statetaxes(paydf, row_idx, month)
-        elif header == 'Roth TSP':
-            return calculate_rothtsp(paydf, row_idx, month)
-    #default, return previous value
+        return update_standard_rows(header, columns, row_idx, month, paydf)
+    
+    if header == 'Federal Taxes':
+        return calculate_federaltaxes(paydf, row_idx, month)
+    elif header == 'FICA - Social Security':
+        return calculate_ficasocialsecurity(paydf, row_idx, month)
+    elif header == 'FICA - Medicare':
+        return calculate_ficamedicare(paydf, row_idx, month)
+    elif header == 'SGLI':
+        return calculate_sgli(paydf, row_idx, month)
+    elif header == 'State Taxes':
+        return calculate_statetaxes(paydf, row_idx, month)
+    elif header == 'Roth TSP':
+        return calculate_rothtsp(paydf, row_idx, month)
     return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-
 
 
 def update_allotments(paydf, row_idx, month):
@@ -732,34 +719,37 @@ def update_allotments(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     match = paydf_template[paydf_template['header'] == header]
-
     onetime = match.iloc[0]['onetime']
-    standard = match.iloc[0]['standard']
 
-    #if onetime payment, return 0
     if onetime == 'Y':
         return 0
-    
-    # Standard recurring payment
-    if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
-        if header == 'Base Pay':
-            return calculate_basepay(paydf, row_idx, month)
-        elif header == 'BAS':
-            return calculate_bas(paydf, row_idx, month)
-        elif header == 'BAH':
-            return calculate_bah(paydf, row_idx, month)
-    #default, return previous value
+
     return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+
+
+def update_standard_rows(header, columns, row_idx, month, paydf):
+    standard_rows = session.get('standard_rows', [])
+    base_var = header.lower().replace(' ', '_')
+    
+    std_row = next((x for x in standard_rows if x[0] == base_var), None)
+    original_value = paydf.at[row_idx, columns[2]]
+    if std_row is None:
+        return original_value
+    is_active = std_row[1]
+    stop_month = std_row[2]
+    
+    if is_active:
+        return original_value
+    else:
+        if stop_month == '':
+            return 0
+        month_idx = columns.index(month)
+        stop_idx = columns.index(stop_month) if stop_month in columns else None
+        if stop_idx is not None and month_idx >= stop_idx:
+            return 0
+        else:
+            return original_value
 
 
 
@@ -783,6 +773,8 @@ def update_calculations(paydf, row_idx, month):
     else:
         #default to return previous value
         return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+
+
 
 
 
@@ -837,7 +829,6 @@ def calculate_bas(paydf, row_idx, month):
     return round(Decimal(bas_value), 2)
 
 
-
 def calculate_bah(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
@@ -868,8 +859,6 @@ def calculate_bah(paydf, row_idx, month):
 
     value = bah_row[rank].values[0]
     return round(Decimal(str(value)), 2)
-
-
 
 
 
@@ -1030,6 +1019,16 @@ def update_paydf():
     session['traditional_tsp_rate_future_month'] = request.form.get('traditional_tsp_rate_future_month', session.get('traditional_tsp_rate_future_month', ''))
     session['roth_tsp_rate_future'] = int(request.form.get('roth_tsp_rate_future', session.get('roth_tsp_rate_future', 0)))
     session['roth_tsp_rate_future_month'] = request.form.get('roth_tsp_rate_future_month', session.get('roth_tsp_rate_future_month', ''))
+
+    # Update standard_rows from form
+    standard_rows = session.get('standard_rows', [])
+    for i, row in enumerate(standard_rows):
+        header, _, _ = row
+        checkbox_val = request.form.get(f"{header}_future")
+        month_val = request.form.get(f"{header}_future_month", '')
+        standard_rows[i][1] = True if checkbox_val == 'on' else False
+        standard_rows[i][2] = month_val
+    session['standard_rows'] = standard_rows
 
     paydf = session.get('paydf')
     if paydf is not None:
