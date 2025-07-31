@@ -55,20 +55,20 @@ class Config:
                    'Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming', 'District of Columbia']
     STATES_SHORT = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO',
                     'MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY', 'DC']
-    RANKS_SHORT = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9',
-                   'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
-                   'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
+    GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
+              'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
+              'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
     BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))   #officers, enlisted, enlisted BAS 2
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
+    TRADITIONAL_TSP_RATE_MAX = Decimal(0.84)
+    ROTH_TSP_RATE_MAX = Decimal(0.60)
 
     #default session values
     SESSION_DEFAULTS = {
         'months_num': 6,
-        'les_image': None,
-        'rect_overlay': 0,
         'show_all_variables': False,
         'highlight_changes': False,
         'show_all_options': False,
