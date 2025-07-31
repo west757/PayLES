@@ -290,30 +290,6 @@ def add_deductions(paydf, les_text):
 
 
 def add_allotments(paydf, les_text):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    section = les_text[13]
-    month = paydf.columns[1]
-    for _, row in paydf_template.iterrows():
-        if row['type'] == 'A':
-            value = None
-            found = False
-            short = str(row['shortname'])
-            matches = find_multiword_matches(section, short)
-            for idx in matches:
-                for j in range(idx + 1, len(section)):
-                    if section[j].replace('.', '', 1).isdigit():
-                        value = -round(Decimal(section[j]), 2)
-                        found = True
-                        break
-                if found:
-                    break
-            if not found:
-                if bool(row['required']):
-                    value = row['default']
-                else:
-                    continue
-            value = cast_dtype(value, row['dtype'])
-            paydf.loc[len(paydf)] = [row['header'], value]
     return paydf
 
 
@@ -347,397 +323,338 @@ def add_calculations(paydf, les_text):
 
 
 def expand_paydf(paydf):
+    paydf_template = app.config['PAYDF_TEMPLATE']
     months_short = app.config['MONTHS_SHORT']
     months_num = int(session.get('months_num', 6))
 
     col_headers = paydf.columns.tolist()
-    initial_month = col_headers[2]
+    initial_month = col_headers[1]
     month_idx = months_short.index(initial_month)
 
     for i in range(1, months_num):
         month_idx = (month_idx + 1) % 12
         new_month = months_short[month_idx]
-        paydf[new_month] = None
 
-        #update variables
+        defaults = []
         for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'V':
-                value = update_variables(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
+            header = row['Header']
+            match = paydf_template[paydf_template['header'] == header]
+            if not match.empty:
+                defaults.append(cast_dtype(match.iloc[0]['default'], match.iloc[0]['dtype']))
+            else:
+                defaults.append(None)
+        paydf[new_month] = defaults
 
-        #update entitlements
-        for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'E':
-                value = update_entitlements(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
-
-        #update taxable and non-taxable pay
-        for row_idx, row in paydf.iterrows():
-            if row['Header'] == 'Taxable Pay' or row['Header'] == 'Non-Taxable Pay':
-                value = update_calculations(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
-
-        #update deductions
-        for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'D':
-                value = update_deductions(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
-
-        #update allotments
-        for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'A':
-                value = update_allotments(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
-
-        #update remaining calculations
-        for row_idx, row in paydf.iterrows():
-            if row['Type'] == 'C' and row['Header'] not in ['Taxable Pay', 'Non-Taxable Pay']:
-                value = update_calculations(paydf, row_idx, new_month)
-                paydf.at[row_idx, new_month] = value
+        paydf = update_variables(paydf, new_month)
+        paydf = update_entitlements(paydf, new_month)
+        paydf = update_calculations(paydf, new_month, only_taxable=True)
+        paydf = update_deductions(paydf, new_month)
+        paydf = update_allotments(paydf, new_month)
+        paydf = update_calculations(paydf, new_month, only_taxable=False)
 
     return paydf
 
 
 
 
-def update_variables(paydf, row_idx, month):
+def update_variables(paydf, month):
     months_short = app.config['MONTHS_SHORT']
     
-    header = paydf.at[row_idx, 'Header']
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
-    prev_month = paydf.columns[col_idx - 1]
-    prev_value = paydf.at[row_idx, prev_month]
-    
-    if header == 'Year':
-        #if current month is JAN and previous month is DEC, increment year
-        if months_short.index(month) == 0 and months_short.index(prev_month) == 11:
-            return prev_value + 1
-        else:
-            return prev_value
+    col_headers = paydf.columns.tolist()
+    initial_month = col_headers[1]
+    month_idx = months_short.index(initial_month)
+
+    for i in range(1, len(col_headers)):
+        month_idx = (month_idx + 1) % 12
+
+        for row_idx, row in paydf.iterrows():
+            header = row['Header']
+            columns = paydf.columns.tolist()
+            col_idx = columns.index(month)
+            prev_month = paydf.columns[col_idx - 1]
+            prev_value = paydf.at[row_idx, prev_month]
+            
+            if header == 'Year':
+                if months_short.index(month) == 0 and months_short.index(prev_month) == 11:
+                    paydf.at[row_idx, month] = prev_value + 1
+                else:
+                    paydf.at[row_idx, month] = prev_value
 
 
-    if header == 'Rank':
-        future_value = session.get('rank_future', '')
-        future_month = session.get('rank_future_month', '')
+            if header == 'Rank':
+                future_value = session.get('rank_future', '')
+                future_month = session.get('rank_future_month', '')
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
-    
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
+            
 
-    if header == 'Months in Service':
-        return prev_value + 1
-    
+            if header == 'Months in Service':
+                paydf.at[row_idx, month] = prev_value + 1
+            
 
-    if header == 'Zip Code' or header == 'MHA Code' or header == 'MHA Name':
-        future_value = session.get('zipcode_future', '')
-        future_month = session.get('zipcode_future_month', '')
+            if header == 'Zip Code' or header == 'MHA Code' or header == 'MHA Name':
+                future_value = session.get('zipcode_future', '')
+                future_month = session.get('zipcode_future_month', '')
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-        if header == 'Zip Code':
-            if future_col_idx is not None and current_col_idx >= future_col_idx:
-                return future_value
-        else:
-            mhac, mhan = calculate_mha(future_value)
-            return mhac if header == 'MHA Code' else mhan
-        return prev_value
+                if header == 'Zip Code':
+                    if future_col_idx is not None and current_col_idx >= future_col_idx:
+                        paydf.at[row_idx, month] = future_value
+                else:
+                    mhac, mhan = calculate_mha(future_value)
+                    paydf.at[row_idx, month] = mhac if header == 'MHA Code' else mhan
+               
 
-        
-    if header == 'Tax Residency State':
-        future_value = session.get('state_future', '')
-        future_month = session.get('state_future_month', '')
+            if header == 'Tax Residency State':
+                future_value = session.get('state_future', '')
+                future_month = session.get('state_future_month', '')
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
-
-
-    if header == 'Federal Filing Status':
-        future_value = session.get('federal_filing_status_future', '')
-        future_month = session.get('federal_filing_status_future_month', '')
-
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
-
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
-
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
 
 
-    if header == 'State Filing Status':
-        future_value = session.get('state_filing_status_future', '')
-        future_month = session.get('state_filing_status_future_month', '')
+            if header == 'Federal Filing Status':
+                future_value = session.get('federal_filing_status_future', '')
+                future_month = session.get('federal_filing_status_future_month', '')
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
-    
-
-    if header == 'Dependents':
-        future_value = session.get('dependents_future', 0)
-        future_month = session.get('dependents_future_month', '')
-
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
-
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
-
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
 
 
-    if header == 'JFTR':
-        return prev_value
-    
+            if header == 'State Filing Status':
+                future_value = session.get('state_filing_status_future', '')
+                future_month = session.get('state_filing_status_future_month', '')
 
-    if header == 'JFTR 2':
-        return prev_value
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-    if header == 'Combat Zone':
-        future_value = session.get('combat_zone_future', '')
-        future_month = session.get('combat_zone_future_month', '')
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
+            
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
+            if header == 'Dependents':
+                future_value = session.get('dependents_future', 0)
+                future_month = session.get('dependents_future_month', '')
 
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
 
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
 
-
-    if header == 'BAQ Type':
-        return prev_value
-    
-
-    if header == 'BAS Type':
-        return prev_value
-
-
-    if header == 'Traditional TSP Rate':
-        future_value = session.get('traditional_tsp_rate_future', 0)
-        future_month = session.get('traditional_tsp_rate_future_month', '')
-
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
-
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
-
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
 
 
-    if header == 'Roth TSP Rate':
-        future_value = session.get('roth_tsp_rate_future', 0)
-        future_month = session.get('roth_tsp_rate_future_month', '')
+            if header == 'JFTR':
+                paydf.at[row_idx, month] = prev_value
+            
 
-        #if no future value or month is set, return previous value
-        if not future_value or not future_month:
-            return prev_value
-
-        #gets the future month index from the columns, if not created yet then is none
-        future_col_idx = columns.index(future_month) if future_month in columns else None
-        current_col_idx = columns.index(month)
-
-        if future_col_idx is not None and current_col_idx >= future_col_idx:
-            return future_value
-        return prev_value
-
-    #default to return previous value
-    return prev_value
+            if header == 'JFTR 2':
+                paydf.at[row_idx, month] = prev_value
 
 
+            if header == 'Combat Zone':
+                future_value = session.get('combat_zone_future', '')
+                future_month = session.get('combat_zone_future_month', '')
 
-def update_entitlements(paydf, row_idx, month):
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
+
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
+
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
+
+
+            if header == 'BAQ Type':
+                paydf.at[row_idx, month] = prev_value
+            
+
+            if header == 'BAS Type':
+                paydf.at[row_idx, month] = prev_value
+
+
+            if header == 'Traditional TSP Rate':
+                future_value = session.get('traditional_tsp_rate_future', 0)
+                future_month = session.get('traditional_tsp_rate_future_month', '')
+
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
+
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
+
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
+
+
+            if header == 'Roth TSP Rate':
+                future_value = session.get('roth_tsp_rate_future', 0)
+                future_month = session.get('roth_tsp_rate_future_month', '')
+
+                #if no future value or month is set, return previous value
+                if not future_value or not future_month:
+                    paydf.at[row_idx, month] = prev_value
+
+                #gets the future month index from the columns, if not created yet then is none
+                future_col_idx = columns.index(future_month) if future_month in columns else None
+                current_col_idx = columns.index(month)
+
+                if future_col_idx is not None and current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
+
+    return paydf
+
+
+def standard_rows(paydf, row_idx, month):
+    return None
+
+
+def update_entitlements(paydf, month):
     paydf_template = app.config['PAYDF_TEMPLATE']
+    for row_idx, row in paydf.iterrows():
+        header = row['Header']
+        match = paydf_template[paydf_template['header'] == header]
+        code = match.iloc[0]['code']
 
-    header = paydf.at[row_idx, 'Header']
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
-    match = paydf_template[paydf_template['header'] == header]
-    
-    onetime = match.iloc[0]['onetime']
-    standard = match.iloc[0]['standard']
+        if code == 'Z':
+            paydf.at[row_idx, month] = 0
+            continue
 
-    #if onetime payment, return 0
-    if onetime == 'Y':
-        return 0
-    
-    # Standard recurring payment
-    if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
+        if code == 'Y':
+            paydf.at[row_idx, month] = standard_rows(paydf, row_idx, month)
+            continue
+
         if header == 'Base Pay':
-            return calculate_basepay(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_basepay(paydf, row_idx, month)
         elif header == 'BAS':
-            return calculate_bas(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_bas(paydf, row_idx, month)
         elif header == 'BAH':
-            return calculate_bah(paydf, row_idx, month)
-    #default, return previous value
-    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+            paydf.at[row_idx, month] = calculate_bah(paydf, row_idx, month)
+    return paydf
 
 
 
 
-def update_deductions(paydf, row_idx, month):
+def update_deductions(paydf, month):
     paydf_template = app.config['PAYDF_TEMPLATE']
 
-    header = paydf.at[row_idx, 'Header']
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
-    match = paydf_template[paydf_template['header'] == header]
+    for row_idx, row in paydf.iterrows():
+        header = row['Header']
+        match = paydf_template[paydf_template['header'] == header]
+        code = match.iloc[0]['code']
 
-    onetime = match.iloc[0]['onetime']
-    standard = match.iloc[0]['standard']
+        if code == 'Z':
+            paydf.at[row_idx, month] = 0
+            continue
 
-    #if onetime payment, return 0
-    if onetime == 'Y':
-        return 0
-    
-    # Standard recurring payment
-    if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
+        if code == 'Y':
+            paydf.at[row_idx, month] = standard_rows(paydf, row_idx, month)
+            continue
+
         if header == 'Federal Taxes':
-            return calculate_federaltaxes(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_federaltaxes(paydf, row_idx, month)
         elif header == 'FICA - Social Security':
-            return calculate_ficasocialsecurity(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_ficasocialsecurity(paydf, row_idx, month)
         elif header == 'FICA - Medicare':
-            return calculate_ficamedicare(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_ficamedicare(paydf, row_idx, month)
         elif header == 'SGLI':
-            return calculate_sgli(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_sgli(paydf, row_idx, month)
         elif header == 'State Taxes':
-            return calculate_statetaxes(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_statetaxes(paydf, row_idx, month)
         elif header == 'Roth TSP':
-            return calculate_rothtsp(paydf, row_idx, month)
-    #default, return previous value
-    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+            paydf.at[row_idx, month] = calculate_rothtsp(paydf, row_idx, month)
+    return paydf
 
 
 
-def update_allotments(paydf, row_idx, month):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    header = paydf.at[row_idx, 'Header']
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
-    match = paydf_template[paydf_template['header'] == header]
-
-    onetime = match.iloc[0]['onetime']
-    standard = match.iloc[0]['standard']
-
-    #if onetime payment, return 0
-    if onetime == 'Y':
-        return 0
-    
-    # Standard recurring payment
-    if standard == 'Y':
-        session_key_active = f"{header.lower().replace(' ', '_')}_active"
-        session_key_stop_month = f"{header.lower().replace(' ', '_')}_stop_month"
-        is_active = session.get(session_key_active, True)
-        stop_month = session.get(session_key_stop_month, '')
-        if not is_active:
-            return 0
-        if stop_month and month >= stop_month:
-            return 0
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
-    else:
-        if header == 'Base Pay':
-            return calculate_basepay(paydf, row_idx, month)
-        elif header == 'BAS':
-            return calculate_bas(paydf, row_idx, month)
-        elif header == 'BAH':
-            return calculate_bah(paydf, row_idx, month)
-    #default, return previous value
-    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+def update_allotments(paydf, month):
+    return paydf
 
 
 
-def update_calculations(paydf, row_idx, month):
-    header = paydf.at[row_idx, 'Header']
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
+def update_calculations(paydf, month, only_taxable):
+    for row_idx, row in paydf.iterrows():
+        header = row['Header']
+        columns = paydf.columns.tolist()
+        col_idx = columns.index(month)
 
-    if header == "Taxable Pay":
-        return calculate_taxablepay(paydf, col_idx)
-    elif header == "Non-Taxable Pay":
-        return calculate_nontaxablepay(paydf, col_idx)
-    elif header == "Total Taxes":
-        return calculate_totaltaxes(paydf, col_idx)
-    elif header == "Gross Pay":
-        return calculate_grosspay(paydf, col_idx)
-    elif header == "Net Pay":
-        return calculate_netpay(paydf, col_idx)
-    elif header == "Difference":
-        return calculate_difference(paydf, col_idx)
-    else:
-        #default to return previous value
-        return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+        if only_taxable:
+            if header == "Taxable Pay":
+                paydf.at[row_idx, month] = calculate_taxablepay(paydf, col_idx)
+            elif header == "Non-Taxable Pay":
+                paydf.at[row_idx, month] = calculate_nontaxablepay(paydf, col_idx)
+        else:
+            if header == "Total Taxes":
+                paydf.at[row_idx, month] = calculate_totaltaxes(paydf, col_idx)
+            elif header == "Gross Pay":
+                paydf.at[row_idx, month] = calculate_grosspay(paydf, col_idx)
+            elif header == "Net Pay":
+                paydf.at[row_idx, month] = calculate_netpay(paydf, col_idx)
+            elif header == "Difference":
+                paydf.at[row_idx, month] = calculate_difference(paydf, col_idx)
+    return paydf
 
 
 
@@ -991,16 +908,6 @@ def update_paydf():
     session['traditional_tsp_rate_future_month'] = request.form.get('traditional_tsp_rate_future_month', session.get('traditional_tsp_rate_future_month', ''))
     session['roth_tsp_rate_future'] = int(request.form.get('roth_tsp_rate_future', session.get('roth_tsp_rate_future', 0)))
     session['roth_tsp_rate_future_month'] = request.form.get('roth_tsp_rate_future_month', session.get('roth_tsp_rate_future_month', ''))
-
-    # Update standard_rows from form
-    standard_rows = session.get('standard_rows', [])
-    for i, row in enumerate(standard_rows):
-        header, _, _ = row
-        checkbox_val = request.form.get(f"{header}_future")
-        month_val = request.form.get(f"{header}_future_month", '')
-        standard_rows[i][1] = True if checkbox_val == 'on' else False
-        standard_rows[i][2] = month_val
-    session['standard_rows'] = standard_rows
 
     paydf = session.get('paydf')
     if paydf is not None:
