@@ -26,6 +26,7 @@ class Config:
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
     SGLI_RATE_FILE = "sgli_rate.csv"
     PAYDF_TEMPLATE_FILE = "paydf_template.csv"
+    OPTIONS_TEMPLATE_FILE = "options_template.csv"
 
     #load static files
     LOGO = os.path.join('static', LOGO_FILE)
@@ -40,6 +41,7 @@ class Config:
     STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
     SGLI_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, SGLI_RATE_FILE))
     PAYDF_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_TEMPLATE_FILE))
+    OPTIONS_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, OPTIONS_TEMPLATE_FILE))
 
     #constants
     LES_COORD_SCALE = 0.24
@@ -93,26 +95,6 @@ class Config:
         'roth_tsp_rate_future_month': "",
     }
 
-    #paydf variable definitions (header, dtype, modal)
-    PAYDF_VARIABLES = [
-        ("Year", int, "basepay"),
-        ("Rank", str, "basepay"),
-        ("Months in Service", int, "basepay"),
-        ("Zip Code", str, "bah"),
-        ("MHA Code", str, "bah"),
-        ("MHA Name", str, "bah"),
-        ("Tax Residency State", str, "statetaxes"),
-        ("Federal Filing Status", str, "federaltaxes"),
-        ("State Filing Status", str, "statetaxes"),
-        ("Dependents", int, "bah"),
-        ("JFTR", str, "cola"),
-        ("JFTR 2", str, "cola"),
-        ("Combat Zone", str, "basepay"),
-        ("BAQ Type", str, "basepay"),
-        ("BAS Type", str, "bas"),
-        ("Traditional TSP Rate", int, "tsp"),
-        ("Roth TSP Rate", int, "tsp"),
-    ]
 
 #codes:
 #X - special
