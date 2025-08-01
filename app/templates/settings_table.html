@@ -11,7 +11,7 @@
 
             <tr class="pos-table">
 
-                <!-- months displayed-->
+                <!-- months display-->
                 <td class="pos-table" style="width: 50%;">
                     <div class="settings-row">
                         <label>Months Displayed: &nbsp;</label>
@@ -36,15 +36,8 @@
                 <!-- highlight changes -->
                 <td class="pos-table" style="width: 50%;">
                     <div class="settings-row">
-                        <label>Highlight Changes:</label>
-                    </div>
-                    <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="highlight_changes" {% if highlight_changes %} checked {% endif %} 
-                            hx-post="/highlight_changes" 
-                            hx-target="#paydf-table" 
-                            hx-swap="outerHTML" 
-                            hx-trigger="change" 
-                            hx-include="#options-form">
+                        <label for="highlight-changes-checkbox">Highlight Changes:</label>
+                        <input type="checkbox" id="highlight-changes-checkbox">
                     </div>
                 </td>
             </tr>
@@ -54,15 +47,8 @@
                 <!-- show all variables -->
                 <td class="pos-table" style="width: 50%;">
                     <div class="settings-row">
-                        <label>Show All Variables:</label>
-                    </div>
-                    <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="show_all_variables" {% if show_all_variables %} checked {% endif %} 
-                            hx-post="/show_all_variables" 
-                            hx-target="#paydf-table" 
-                            hx-swap="outerHTML" 
-                            hx-trigger="change" 
-                            hx-include="#options-form">
+                        <label for="show-all-variables-checkbox">Show All Variables:</label>
+                        <input type="checkbox" id="show-all-variables-checkbox" onclick="show_all_variables()">
                     </div>
                 </td>
 
@@ -70,15 +56,8 @@
                 <!-- show all options -->
                 <td class="pos-table" style="width: 50%;">
                     <div class="settings-row">
-                        <label>Show All Options:</label>
-                    </div>
-                    <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="show_all_options" {% if show_all_options %} checked {% endif %} 
-                            hx-post="/show_all_options" 
-                            hx-target="#options-table" 
-                            hx-swap="outerHTML" 
-                            hx-trigger="change" 
-                            hx-include="#options-form">
+                        <label for="show-all-options-checkbox">Show All Options:</label>
+                        <input type="checkbox" id="show-all-options-checkbox">
                     </div>
                 </td>
             </tr>
@@ -121,37 +100,4 @@
     </table>
 </div>
 
-
-<script>
-    async function downloadFile() {
-        try {
-            const filetype = document.getElementById('export-dropdown').value;
-
-            const formData = new FormData();
-            formData.append('filetype', filetype);
-
-            const response = await fetch('/export', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-
-            a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
-
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error during file download:', error);
-        }
-    }
-</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>

@@ -39,25 +39,4 @@
 <div class="tooltip-toast">{{ message }}</div>
 {% endif %}
 
-<script>
-    var dropContainer = document.getElementById("home-drop");
-    var fileInput = document.getElementById("home-input");
-
-    dropContainer.addEventListener("dragover", function (e) {
-        e.preventDefault();
-    }, false);
-
-    dropContainer.addEventListener("dragenter", function () {
-        dropContainer.classList.add("drag-active");
-    });
-
-    dropContainer.addEventListener("dragleave", function () {
-        dropContainer.classList.remove("drag-active");
-    });
-
-    dropContainer.addEventListener("drop", function (e) {
-        e.preventDefault();
-        dropContainer.classList.remove("drag-active");
-        fileInput.files = e.dataTransfer.files;
-    });
-</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>

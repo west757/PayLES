@@ -1,11 +1,13 @@
 <div id="paydf-group">
     <div id="paydf-options-settings">
-        {% include "paydf_table.html" %}
+        {% include 'paydf_table.html' %}
         <div id="options-settings">
-            {% include "options_table.html" %}
+            {% include 'options_table.html' %}
             {% include "settings_table.html" %}
         </div>
     </div>
     {% include "les_image.html" %}
 </div>
 {% include "paydf_modals.html" %}
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
