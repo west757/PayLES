@@ -11,8 +11,7 @@
                     top: {{rect.y1}}px;
                     width: {{rect.x2 - rect.x1}}px;
                     height: {{rect.y2 - rect.y1}}px;"
-            onmousemove="showTooltip(event, '{{rect.tooltip}}')"
-            onmouseleave="hideTooltip()"></label>
+            data-tooltip="{{rect.tooltip}}"></label>
     {% endfor %}
 </div>
 
