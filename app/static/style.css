@@ -336,7 +336,15 @@ input.pos-table {
     margin: -0.5rem;
     padding: 0.25rem;
     text-align: center;
+    
+}
+
+.num-input-long {
     width: 4.6rem;
+}
+
+.num-input-short {
+    width: 3.5rem;
 }
 
 
