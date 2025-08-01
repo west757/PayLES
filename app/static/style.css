@@ -722,6 +722,16 @@ td.pos-table-header:last-child {
 }
 
 
-.paydf-highlight {
+
+
+#paydf-table.highlight-mode .paydf-highlight {
     background-color: var(--highlight) !important;
+}
+
+.paydf-variable-row {
+    display: none;
+}
+
+.options-standard-row {
+    display: none;
 }

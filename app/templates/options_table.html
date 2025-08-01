@@ -11,8 +11,7 @@
             {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
             {% set SGLI_RATE = config.SGLI_RATE %}
             {% set month_options = col_headers[3:] %}
-            {% set show_all_options = session.get('show_all_options', False) %}
-            
+
             <tbody>
                 <tr class="pos-table-header">
                     <td class="pos-table-header"></td>
@@ -100,39 +99,37 @@
                 {% endfor %}
 
                 <!-- standard row options-->
-                {% if show_all_options %}
-                    {% for opt in options %}
-                        {% set header = opt[0] %}
-                        {% set future_value = opt[1] %}
-                        {% set future_month = opt[2] %}
-                        {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-                        {% if row_info.shape[0] > 0 %}
-                            {% set varname = row_info.iloc[0]['varname'] %}
-                            {% set dtype = row_info.iloc[0]['dtype'] %}
-                            {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
-                            {% if not required %}
-                                {% set current_idx = row_headers.index(header) if header in row_headers else None %}
-                                {% set current_value = paydf.at[current_idx, col_headers[2]] if current_idx is not none else '' %}
-                                <tr class="pos-table">
-                                    <td class="pos-table">
-                                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
-                                    </td>
-                                    <td class="pos-table">{{ current_value }}</td>
-                                    <td class="pos-table">
-                                        <input type="checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
-                                    </td>
-                                    <td class="pos-table">
-                                        <select class="pos-table" name="{{ varname }}_m">
-                                            {% for x in month_options %}
-                                            <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </td>
-                                </tr>
-                            {% endif %}
+                {% for opt in options %}
+                    {% set header = opt[0] %}
+                    {% set future_value = opt[1] %}
+                    {% set future_month = opt[2] %}
+                    {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                    {% if row_info.shape[0] > 0 %}
+                        {% set varname = row_info.iloc[0]['varname'] %}
+                        {% set dtype = row_info.iloc[0]['dtype'] %}
+                        {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
+                        {% if not required %}
+                            {% set current_idx = row_headers.index(header) if header in row_headers else None %}
+                            {% set current_value = paydf.at[current_idx, col_headers[2]] if current_idx is not none else '' %}
+                            <tr class="pos-table options-standard-row">
+                                <td class="pos-table">
+                                    <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                                </td>
+                                <td class="pos-table">{{ current_value }}</td>
+                                <td class="pos-table">
+                                    <input type="checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
+                                </td>
+                                <td class="pos-table">
+                                    <select class="pos-table" name="{{ varname }}_m">
+                                        {% for x in month_options %}
+                                        <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% endif %}
+                {% endfor %}
 
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
@@ -146,3 +143,5 @@
         </table>
     </form>
 </div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
