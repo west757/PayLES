@@ -14,8 +14,8 @@ JFTR 2,jftr2,JFTR2,Joint Federal Travel Regulation Code 2,V,str,Not Found,TRUE,F
 Combat Zone,combat_zone,CZ,Combat Zone,V,str,No,TRUE,FALSE,FALSE,FALSE,TRUE,combat
 BAQ Type,baq_type,BAQT,Basic Allowance for Quarters Type,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
 BAS Type,bas_type,BAST,Basic Allowance for Subsistence Type,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
-Traditional TSP Rate,traditional_tsp_rate,TTSP,Traditional TSP Rate,V,Decimal,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
-Roth TSP Rate,roth_tsp_rate,RTSP,Roth TSP Rate,V,Decimal,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
+Traditional TSP Rate,traditional_tsp_rate,TTSP,Traditional TSP Rate,V,int,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
+Roth TSP Rate,roth_tsp_rate,RTSP,Roth TSP Rate,V,int,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
 Base Pay,base_pay,BASE PAY,Base Pay,E,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,basepay
 BAS,bas,BAS,Basic Allowance for Subsistence,E,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,bas
 Meal Discount,meal_discount,DSCT,Meal Discount,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,bas
