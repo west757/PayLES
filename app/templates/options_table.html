@@ -98,7 +98,7 @@
                 {% endfor %}
 
 
-                {% if session['show_all_options'] %}
+                {% if show_all_options %}
                     {% for opt in options %}
                         {% set header = opt[0] %}
                         {% set future_value = opt[1] %}
@@ -134,7 +134,7 @@
 
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-                
+
                 <tr class="pos-table">
                     <td class="pos-table" colspan="4">
                         <button id="update-les-button">Update LES</button>

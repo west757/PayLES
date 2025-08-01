@@ -78,7 +78,6 @@ def validate_les(les_file):
         title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
         title_text = title_crop.extract_text_simple()
         if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
-            reset_session_defaults()
             return True, None, les_pdf
         else:
             return False, "File is not a valid LES", les_pdf
@@ -88,7 +87,7 @@ def process_les(les_pdf):
     les_rectangles = app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
-    context = {}
+    context = dict(app.config['CONTEXT_DEFAULTS'])
     context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
     les_text = read_les(les_rectangles, les_page)
     context['paydf'], context['col_headers'], context['row_headers'], context['options'] = build_paydf(les_text)
@@ -142,10 +141,12 @@ def read_les(les_rectangles, les_page):
 
 
 def build_paydf(les_text):
+    months_display = app.config['CONTEXT_DEFAULTS']['months_display']
+
     paydf = initialize_paydf(les_text)
     options = build_options(les_text=les_text)
     session['paydf_json'] = paydf.iloc[:, :3].to_json()
-    paydf = expand_paydf(paydf)
+    paydf = expand_paydf(paydf, options, months_display)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
@@ -340,16 +341,15 @@ def build_options(les_text=None, form=None):
 
 
 
-def expand_paydf(paydf, options):
+def expand_paydf(paydf, options, months_display):
     paydf_template = app.config['PAYDF_TEMPLATE']
     months_short = app.config['MONTHS_SHORT']
-    months_num = int(session.get('months_num', 6))
 
     col_headers = paydf.columns.tolist()
     initial_month = col_headers[1]
     month_idx = months_short.index(initial_month)
 
-    for i in range(1, months_num):
+    for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         new_month = months_short[month_idx]
 
@@ -850,13 +850,11 @@ def calculate_difference(paydf, col_idx):
 
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    
-    session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
+    months_display = int(request.form.get('months_display', 6))
 
     paydf = pd.read_json(session['paydf_json'])
     options = build_options(form=request.form)
-    paydf = expand_paydf(paydf, options)
+    paydf = expand_paydf(paydf, options, months_display)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
@@ -880,24 +878,22 @@ def update_paydf():
 @app.route('/highlight_changes', methods=['POST'])
 def highlight_changes():
     checked = request.form.get('highlight_changes')
-    session['highlight_changes'] = bool(checked)
-    return render_template('paydf_group.html')
+    return render_template('paydf_table.html', highlight_changes = bool(checked))
 
 
 
 @app.route('/show_all_variables', methods=['POST'])
 def show_all_variables():
     checked = request.form.get('show_all_variables')
-    session['show_all_variables'] = bool(checked)
-    return render_template('paydf_group.html')
+    return render_template('paydf_table.html', show_all_variables = bool(checked))
 
 
 
 @app.route('/show_all_options', methods=['POST'])
 def show_all_options():
     checked = request.form.get('show_all_options')
-    session['show_all_options'] = bool(checked)
-    return render_template('paydf_group.html')
+    return render_template('options_table.html', show_all_options = bool(checked))
+
 
 
 
@@ -946,12 +942,6 @@ def validate_file(file):
     if not allowed_file(file.filename):
         return False, "Invalid file type, only PDFs are accepted"
     return True, ""
-
-
-def reset_session_defaults():
-    session.clear()
-    for key, value in app.config['SESSION_DEFAULTS'].items():
-        session[key] = value
 
 
 def cast_dtype(value, dtype):
@@ -1015,6 +1005,19 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.before_request
+def clear_session_on_navigation():
+    if request.endpoint not in [
+        'submit_les',
+        'submit_example',
+        'update_paydf',
+        'highlight_changes',
+        'show_all_variables',
+        'show_all_options'
+    ]:
+        session.clear()
 
 
 if __name__ == "__main__":

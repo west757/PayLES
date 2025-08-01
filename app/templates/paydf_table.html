@@ -8,7 +8,7 @@
                 {% endfor %}
             </tr>
 
-            {% if session['show_all_variables'] %}
+            {% if show_all_variables %}
                 {% for i, header in enumerate(row_headers) %}
                     {% set row_info = config.PAYDF_TEMPLATE[config.PAYDF_TEMPLATE['header'] == header] %}
                     {% if row_info.shape[0] > 0 and row_info.iloc[0]['type'] == 'V' %}
@@ -19,7 +19,7 @@
                         {% for x in range(1, paydf.shape[1]) %}
                             {% set value = paydf.at[i, col_headers[x]] %}
                             {% set prev_value = paydf.at[i, col_headers[x-1]] if x > 1 else None %}
-                            {% set highlight = session['highlight_changes'] and x > 1 and value != prev_value %}
+                            {% set highlight = highlight_changes and x > 1 and value != prev_value %}
                             <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                                 {% set dtype = row_info.iloc[0]['dtype'] %}
                                 {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] and value is number %}
@@ -50,7 +50,7 @@
                         {% for x in range(1, paydf.shape[1]) %}
                             {% set value = paydf.at[i, col_headers[x]] %}
                             {% set prev_value = paydf.at[i, col_headers[x-1]] if x > 1 else None %}
-                            {% set highlight = session['highlight_changes'] and x > 1 and value != prev_value %}
+                            {% set highlight = highlight_changes and x > 1 and value != prev_value %}
                             <td class="pos-table{% if highlight %} paydf-highlight{% endif %}">
                                 {% if dtype == 'Decimal' and value is number %}
                                     {{ '${:,.2f}'.format(value).replace('$-','-$') }}
