@@ -4,6 +4,9 @@ import os
 import secrets
 import pandas as pd
 
+def str_to_bool(val):
+    return str(val).strip().upper() == "TRUE"
+
 class Config:
     #flask configuration settings
     SECRET_KEY = secrets.token_hex(16)
@@ -39,7 +42,9 @@ class Config:
     FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
     STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
     SGLI_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, SGLI_RATE_FILE))
-    PAYDF_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_TEMPLATE_FILE))
+
+    bool_columns = ['required', 'onetime', 'standard', 'tax', 'option']
+    PAYDF_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_TEMPLATE_FILE), converters={col: str_to_bool for col in bool_columns})
 
     #constants
     LES_COORD_SCALE = 0.24
