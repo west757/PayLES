@@ -90,8 +90,8 @@ def process_les(les_pdf):
 
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
-    context['les_text'] = read_les(les_rectangles, les_page)
-    context['paydf'], context['col_headers'], context['row_headers'] = build_paydf(context['les_text'])
+    les_text = read_les(les_rectangles, les_page)
+    context['paydf'], context['col_headers'], context['row_headers'], context['options'] = build_paydf(les_text)
     return context
 
 
@@ -143,25 +143,26 @@ def read_les(les_rectangles, les_page):
 
 def build_paydf(les_text):
     paydf = initialize_paydf(les_text)
+    options = build_options(les_text=les_text)
     session['paydf_json'] = paydf.iloc[:, :3].to_json()
     paydf = expand_paydf(paydf)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
 
-    return paydf, col_headers, row_headers
+    return paydf, col_headers, row_headers, options
 
 
 
 def initialize_paydf(les_text):
     initial_month = les_text[10][3]
     paydf = pd.DataFrame(columns=["Header", initial_month])
-    options = []
-    paydf, options = add_variables(paydf, les_text, options)
-    paydf, options = add_entitlements_deductions(paydf, les_text, options)
+
+    paydf = add_variables(paydf, les_text)
+    paydf = add_entitlements_deductions(paydf, les_text)
     paydf = add_allotments(paydf, les_text)
-    paydf = add_calculations(paydf, les_text)
-    session['options'] = options
+    paydf = add_calculations(paydf)
+
     return paydf
 
 
@@ -234,9 +235,6 @@ def add_variables(paydf, les_text, options):
         value = cast_dtype(value, dtype)
         paydf.loc[len(paydf)] = [header, value]
 
-        if bool(row.get('option', True)):
-            options = add_options(options, row)
-
     return paydf, options
 
 
@@ -274,9 +272,6 @@ def add_entitlements_deductions(paydf, les_text, options):
                 value = cast_dtype(value, row['dtype'])
                 paydf.loc[len(paydf)] = [row['header'], value]
 
-                if bool(row.get('option', True)):
-                    options = add_options(options, row)
-
     return paydf, options
 
 
@@ -284,7 +279,7 @@ def add_allotments(paydf, les_text):
     return paydf
 
 
-def add_calculations(paydf, les_text):
+def add_calculations(paydf):
     paydf_template = app.config['PAYDF_TEMPLATE']
 
     for _, row in paydf_template.iterrows():
@@ -310,15 +305,37 @@ def add_calculations(paydf, les_text):
     return paydf
 
 
-def add_options(options, row):
-    header = row['header']
-    dtype = row['dtype']
-    default = row['default']
 
-    if not any(opt[0] == header for opt in options):
-        value = cast_dtype(default, dtype)
-        options.append([header, value, ""])
+def build_options(les_text=None, form=None):
+    paydf_template = app.config['PAYDF_TEMPLATE']
+    options = []
+
+    for _, row in paydf_template.iterrows():
+        if not bool(row.get('option', False)):
+            continue
+
+        header = row['header']
+        dtype = row['dtype']
+        varname = row['varname']
+        default = row['default']
+
+        if les_text is not None:
+            value = default
+            month = ""
+        elif form is not None:
+            value_key = f"{varname}_f"
+            month_key = f"{varname}_m"
+            value = form.get(value_key, default)
+            month = form.get(month_key, "")
+            value = cast_dtype(value, dtype)
+        else:
+            value = default
+            month = ""
+
+        options.append([header, value, month])
     return options
+
+
 
 
 
@@ -465,7 +482,7 @@ def update_entitlements_deductions(paydf, month, options):
         elif header == 'FICA - Medicare':
             paydf.at[row_idx, month] = calculate_ficamedicare(paydf, row_idx, month)
         elif header == 'SGLI':
-            paydf.at[row_idx, month] = calculate_sgli(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_sgli(paydf, row_idx, month, options)
         elif header == 'State Taxes':
             paydf.at[row_idx, month] = calculate_statetaxes(paydf, row_idx, month)
         elif header == 'Roth TSP':
@@ -661,12 +678,11 @@ def calculate_ficamedicare(paydf, row_idx, month):
 
 
 
-def calculate_sgli(paydf, row_idx, month):
+def calculate_sgli(paydf, row_idx, month, options):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     prev_value = paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
-    options = session.get('options', [])
     sgli_value, sgli_month = get_option('SGLI', options)
     if sgli_value is not None and sgli_month and month >= sgli_month:
         return -Decimal(sgli_value)
@@ -835,45 +851,30 @@ def calculate_difference(paydf, col_idx):
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     paydf_template = app.config['PAYDF_TEMPLATE']
-    options = session.get('options', [])
     
     session['months_num'] = int(request.form.get('months_num', session.get('months_num', 6)))
 
-    # Build a mapping from header to (varname, dtype)
-    header_to_var_dtype = {}
-    for _, row in paydf_template.iterrows():
-        if bool(row.get('option', False)):
-            header = row['header']
-            varname = row['varname']
-            dtype = row['dtype']
-            header_to_var_dtype[header] = (varname, dtype)
-
-    # Update each option's value and month from the form
-    for opt in options:
-        header = opt[0]
-        varname, dtype = header_to_var_dtype.get(header, (None, None))
-        if varname:
-            value_key = f"{varname}_f"
-            month_key = f"{varname}_m"
-            if dtype == 'bool':
-                value = request.form.get(value_key)
-                if value is None or value is False:
-                    value = Decimal(0)
-                else:
-                    value = opt[1]
-            else:
-                value = request.form.get(value_key, opt[1])
-                value = cast_dtype(value, dtype)
-            month = request.form.get(month_key, opt[2])
-            opt[1] = value
-            opt[2] = month
-
     paydf = pd.read_json(session['paydf_json'])
+    options = build_options(form=request.form)
     paydf = expand_paydf(paydf, options)
 
-    session['options'] = options
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
 
-    return render_template('paydf_group.html')
+    context = {
+        'paydf': paydf,
+        'col_headers': col_headers,
+        'row_headers': row_headers,
+        'options': options
+    }
+
+    return jsonify({
+        'paydf_table': render_template('paydf_table.html', **context),
+        'options_table': render_template('options_table.html', **context),
+        'settings_table': render_template('settings_table.html', **context),
+    })
+
+
 
 
 @app.route('/highlight_changes', methods=['POST'])

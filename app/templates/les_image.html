@@ -1,8 +1,7 @@
-{% if session['les_image'] %}
 <div id="les-image">
-    <img src="data:image/png;base64,{{session['les_image']}}" alt="LES image unable to be generated" />
+    <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
 
-    {% for rect in session['rect_overlay'] %}
+    {% for rect in rect_overlay %}
     <label {% if rect.modal !="none" %}
             for="modal-{{rect.modal}}"
             {% endif %}
@@ -16,11 +15,8 @@
             onmouseleave="hideTooltip()"></label>
     {% endfor %}
 </div>
-{% endif %}
 
 <div class="tooltip" id="tooltip"></div>
-
-
 
 <!-- les remarks -->
 <h2>Common LES Remarks</h2>
