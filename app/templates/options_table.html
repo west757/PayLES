@@ -8,6 +8,8 @@
         {% set STATES_SHORT = config.STATES_SHORT %}
         {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
         {% set SGLI_RATE = config.SGLI_RATE %}
+        {% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
+        {% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
         {% set month_options = col_headers[2:] %}
 
         <tbody>
@@ -35,7 +37,16 @@
                         <td class="pos-table">
                             <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                         </td>
-                        <td class="pos-table">{{ current_value }}</td>
+                        <td class="pos-table">
+                            {% set dtype = row_info.iloc[0]['dtype'] %}
+                            {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
+                                {{ '{}%'.format(current_value) }}
+                            {% elif dtype == 'Decimal' %}
+                                {{ '${:,.2f}'.format(current_value) }}
+                            {% else %}
+                                {{ current_value }}
+                            {% endif %}
+                        </td>
                         <td class="pos-table">
 
                             {% if header == 'Grade' %}
@@ -46,7 +57,7 @@
                                 </select>
 
                             {% elif header == 'Zip Code' %}
-                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="{{ future_value }}" />
+                                <input class="pos-table num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="{{ future_value }}" />
                             
                             {% elif header == 'Tax Residency State' %}
                                 <select class="pos-table" name="{{ varname }}_f">
@@ -77,7 +88,7 @@
                                 </select>
 
                             {% elif header == 'Dependents' %}
-                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                                <input class="pos-table num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
                             
                             {% elif header == 'Combat Zone' %}
                                 <select class="pos-table" name="{{ varname }}_f">
@@ -85,9 +96,10 @@
                                     <option value="Yes" {% if future_value == 'Yes' %} selected {% endif %}>Yes</option>
                                 </select>
                             
-                            {% elif header == 'Roth TSP Rate' %}
-                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
-                            
+                            {% elif header == 'Traditional TSP Rate' or header == 'Roth TSP Rate' %}
+                                <input class="pos-table num-input-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                                <span>&nbsp;&nbsp;%</span>
+
                             {% else %}
                                 <input class="pos-table" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
                             {% endif %}
