@@ -1,5 +1,5 @@
 ﻿from flask import Flask
-from flask import request, render_template, make_response, jsonify, session, send_file, flash
+from flask import request, render_template, make_response, jsonify, session
 from flask_session import Session
 from config import Config
 from werkzeug.exceptions import RequestEntityTooLarge
@@ -87,7 +87,9 @@ def process_les(les_pdf):
     les_rectangles = app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
-    context = dict(app.config['CONTEXT_DEFAULTS'])
+    reset_session_defaults()
+
+    context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
     les_text = read_les(les_rectangles, les_page)
     context['paydf'], context['col_headers'], context['row_headers'], context['options'] = build_paydf(les_text)
@@ -141,10 +143,10 @@ def read_les(les_rectangles, les_page):
 
 
 def build_paydf(les_text):
-    months_display = app.config['CONTEXT_DEFAULTS']['months_display']
+    months_display = app.config['MONTHS_DISPLAY']
 
     paydf = initialize_paydf(les_text)
-    options = build_options(les_text=les_text)
+    options = build_options(paydf=paydf)
     session['paydf_json'] = paydf.iloc[:, :3].to_json()
     paydf = expand_paydf(paydf, options, months_display)
 
@@ -168,7 +170,7 @@ def initialize_paydf(les_text):
 
 
 
-def add_variables(paydf, les_text, options):
+def add_variables(paydf, les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
     var_rows = paydf_template[paydf_template['type'] == 'V']
 
@@ -180,7 +182,7 @@ def add_variables(paydf, les_text, options):
 
         if header == 'Year':
             value = int('20' + les_text[10][4])
-        elif header == 'Rank':
+        elif header == 'Grade':
             value = str(les_text[4][1])
         elif header == 'Months in Service':
             paydate = datetime.strptime(les_text[5][2], '%y%m%d')
@@ -201,9 +203,9 @@ def add_variables(paydf, les_text, options):
         elif header == 'Federal Filing Status':
             if les_text[26][1] == "S":
                 value = "Single"
-            elif les_text[26][1] == "M":
+            elif header == 'M':
                 value = "Married"
-            elif les_text[26][1] == "H":
+            elif header == 'H':
                 value = "Head of Household"
         elif header == 'State Filing Status':
             if les_text[44][1] == "S":
@@ -236,10 +238,10 @@ def add_variables(paydf, les_text, options):
         value = cast_dtype(value, dtype)
         paydf.loc[len(paydf)] = [header, value]
 
-    return paydf, options
+    return paydf
 
 
-def add_entitlements_deductions(paydf, les_text, options):
+def add_entitlements_deductions(paydf, les_text):
     paydf_template = app.config['PAYDF_TEMPLATE']
 
     # Map type to section index and value sign
@@ -273,7 +275,7 @@ def add_entitlements_deductions(paydf, les_text, options):
                 value = cast_dtype(value, row['dtype'])
                 paydf.loc[len(paydf)] = [row['header'], value]
 
-    return paydf, options
+    return paydf
 
 
 def add_allotments(paydf, les_text):
@@ -307,7 +309,7 @@ def add_calculations(paydf):
 
 
 
-def build_options(les_text=None, form=None):
+def build_options(paydf=None, form=None):
     paydf_template = app.config['PAYDF_TEMPLATE']
     options = []
 
@@ -318,12 +320,15 @@ def build_options(les_text=None, form=None):
         header = row['header']
         dtype = row['dtype']
         varname = row['varname']
-        default = row['default']
 
-        if les_text is not None:
-            value = default
-            month = ""
-        elif form is not None:
+        if paydf is not None and header in paydf['Header'].values:
+            row_idx = paydf[paydf['Header'] == header].index[0]
+            first_month_col = paydf.columns[1]
+            default = paydf.at[row_idx, first_month_col]
+        else:
+            default = row['default']
+
+        if form is not None:
             value_key = f"{varname}_f"
             month_key = f"{varname}_m"
             value = form.get(value_key, default)
@@ -532,10 +537,10 @@ def calculate_basepay(paydf, row_idx, month):
     col_idx = columns.index(month)
     row_headers = paydf['Header'].tolist()
 
-    rank_row_idx = row_headers.index("Rank")
+    grade_row_idx = row_headers.index("Grade")
     mis_row_idx = row_headers.index("Months in Service")
 
-    rank = paydf.at[rank_row_idx, month]
+    grade = paydf.at[grade_row_idx, month]
 
     months_in_service_val = paydf.at[mis_row_idx, month]
     if months_in_service_val is None or months_in_service_val == '':
@@ -544,7 +549,7 @@ def calculate_basepay(paydf, row_idx, month):
         months_in_service = int(months_in_service_val)
 
     pay_active_headers = [int(col) for col in pay_active.columns[1:]]
-    pay_active_row = pay_active[pay_active["rank"] == rank]
+    pay_active_row = pay_active[pay_active["grade"] == grade]
     if pay_active_row.empty:
         return Decimal(0)
 
@@ -565,10 +570,10 @@ def calculate_basepay(paydf, row_idx, month):
 def calculate_bas(paydf, row_idx, month):
     bas_amount = app.config['BAS_AMOUNT']
     row_headers = paydf['Header'].tolist()
-    rank_row_idx = row_headers.index("Rank")
-    rank = paydf.at[rank_row_idx, month]
+    grade_row_idx = row_headers.index("Grade")
+    grade = paydf.at[grade_row_idx, month]
 
-    if str(rank).startswith("E"):
+    if str(grade).startswith("E"):
         bas_value = bas_amount[1]
     else:
         bas_value = bas_amount[0]
@@ -579,13 +584,13 @@ def calculate_bas(paydf, row_idx, month):
 def calculate_bah(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
-    # Get MHA code, dependents, and rank for this column
+    # Get MHA code, dependents, and grade for this column
     mha_row_idx = row_headers.index("MHA Code")
     dependents_row_idx = row_headers.index("Dependents")
-    rank_row_idx = row_headers.index("Rank")
+    grade_row_idx = row_headers.index("Grade")
     mha_code = paydf.at[mha_row_idx, month]
     dependents = paydf.at[dependents_row_idx, month]
-    rank = paydf.at[rank_row_idx, month]
+    grade = paydf.at[grade_row_idx, month]
 
     # If MHA code is missing or invalid, return previous value
     if not mha_code or mha_code == "no mha code found":
@@ -600,11 +605,11 @@ def calculate_bah(paydf, row_idx, month):
 
     # Find the row for the MHA code
     bah_row = bah_df[bah_df["MHA"] == mha_code]
-    if bah_row.empty or rank not in bah_df.columns:
+    if bah_row.empty or grade not in bah_df.columns:
         col_idx = columns.index(month)
         return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
-    value = bah_row[rank].values[0]
+    value = bah_row[grade].values[0]
     return round(Decimal(str(value)), 2)
 
 
@@ -818,7 +823,10 @@ def calculate_grosspay(paydf, col_idx):
             value = row.iloc[col_idx]
             if value is None or value == '':
                 value = 0
-            total += Decimal(value)
+            try:
+                total += Decimal(value)
+            except Exception:
+                total += Decimal(0)
     return round(total, 2)
 
 
@@ -835,14 +843,23 @@ def calculate_netpay(paydf, col_idx):
             value = row.iloc[col_idx]
             if value is None or value == '':
                 value = 0
-            total += Decimal(value)
+            try:
+                total += Decimal(value)
+            except Exception:
+                total += Decimal(0)
     return round(total, 2)
 
 
 def calculate_difference(paydf, col_idx):
     netpay_current = calculate_netpay(paydf, col_idx)
     netpay_prev = calculate_netpay(paydf, col_idx - 1)
-    return round(netpay_current - netpay_prev, 2)
+    try:
+        diff = Decimal(netpay_current) - Decimal(netpay_prev)
+    except Exception:
+        diff = Decimal(0)
+    return round(diff, 2)
+
+
 
 
 
@@ -863,7 +880,7 @@ def update_paydf():
         'paydf': paydf,
         'col_headers': col_headers,
         'row_headers': row_headers,
-        'options': options
+        'options': options,
     }
 
     return jsonify({
@@ -874,61 +891,74 @@ def update_paydf():
 
 
 
-
 @app.route('/highlight_changes', methods=['POST'])
 def highlight_changes():
-    checked = request.form.get('highlight_changes')
-    return render_template('paydf_table.html', highlight_changes = bool(checked))
+    checked = bool(request.form.get('highlight_changes'))
+    session['highlight_changes'] = checked
+
+    paydf = pd.read_json(session['paydf_json'])
+    options = build_options(form=request.form)
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    context = {
+        'paydf': paydf,
+        'col_headers': col_headers,
+        'row_headers': row_headers,
+        'options': options,
+    }
+    return render_template('paydf_table.html', **context)
 
 
 
 @app.route('/show_all_variables', methods=['POST'])
 def show_all_variables():
-    checked = request.form.get('show_all_variables')
-    return render_template('paydf_table.html', show_all_variables = bool(checked))
+    checked = bool(request.form.get('show_all_variables'))
+    session['show_all_variables'] = checked
+
+    paydf = pd.read_json(session['paydf_json'])
+    options = build_options(form=request.form)
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    context = {
+        'paydf': paydf,
+        'col_headers': col_headers,
+        'row_headers': row_headers,
+        'options': options,
+    }
+    return render_template('paydf_table.html', **context)
 
 
 
 @app.route('/show_all_options', methods=['POST'])
 def show_all_options():
-    checked = request.form.get('show_all_options')
-    return render_template('options_table.html', show_all_options = bool(checked))
+    checked = bool(request.form.get('show_all_options'))
+    session['show_all_options'] = checked
+
+    paydf = pd.read_json(session['paydf_json'])
+    options = build_options(form=request.form)
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['Header'].tolist()
+    context = {
+        'paydf': paydf,
+        'col_headers': col_headers,
+        'row_headers': row_headers,
+        'options': options,
+    }
+    return render_template('options_table.html', **context)
 
 
 
 
 @app.route('/export', methods=['POST'])
 def export_dataframe():
-    filetype = request.form.get('filetype')
-
-    if filetype not in ['csv', 'xlsx']:
-        return "Invalid file type requested", 400
-
-    buffer = io.BytesIO()
-
-    if filetype == 'csv':
-        session['paydf'].to_csv(buffer, index=False)
-        buffer.seek(0)
-        return send_file(
-            buffer,
-            as_attachment=True,
-            download_name='payles.csv',
-            mimetype='text/csv'
-        )
-    else:
-        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-            session['paydf'].to_excel(writer, index=False, sheet_name='Sheet1')
-        buffer.seek(0)
-        return send_file(
-            buffer,
-            as_attachment=True,
-            download_name='payles.xlsx',
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
+    return None
     
 
     
 
+def reset_session_defaults():
+    for key, value in app.config['SESSION_DEFAULTS'].items():
+        session[key] = value
 
 
 def allowed_file(filename):
