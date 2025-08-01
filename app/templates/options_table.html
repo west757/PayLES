@@ -1,4 +1,3 @@
-<!-- options -->
 <div id="options">
     <form id="options-form"
       hx-post="/update_paydf"
@@ -12,6 +11,7 @@
             {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
             {% set SGLI_RATE = config.SGLI_RATE %}
             {% set month_options = col_headers[3:] %}
+            {% set show_all_options = session.get('show_all_options', False) %}
             
             <tbody>
                 <tr class="pos-table-header">
@@ -20,6 +20,8 @@
                     <td class="pos-table-header">Future</td>
                     <td class="pos-table-header">Month</td>
                 </tr>
+
+                <!-- required options -->
                 {% for opt in options %}
                     {% set header = opt[0] %}
                     {% set future_value = opt[1] %}
@@ -97,7 +99,7 @@
 
                 {% endfor %}
 
-
+                <!-- standard row options-->
                 {% if show_all_options %}
                     {% for opt in options %}
                         {% set header = opt[0] %}

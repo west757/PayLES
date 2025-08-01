@@ -63,10 +63,10 @@ class Config:
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
     TRADITIONAL_TSP_RATE_MAX = Decimal(0.84)
     ROTH_TSP_RATE_MAX = Decimal(0.60)
+    MONTHS_DISPLAY = 6
 
-    #default context values
-    CONTEXT_DEFAULTS = {
-        'months_display': 6,
+    #default session values
+    SESSION_DEFAULTS = {
         'highlight_changes': False,
         'show_all_variables': False,
         'show_all_options': False

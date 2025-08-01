@@ -1,5 +1,9 @@
 <div id="settings">
     <table class="pos-table" id="settings-table">
+        {% set show_all_variables = session.get('show_all_variables', False) %}
+        {% set highlight_changes = session.get('highlight_changes', False) %}
+        {% set show_all_options = session.get('show_all_options', False) %}
+
         <tbody>
             <tr class="pos-table-header">
                 <td class="pos-table-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
@@ -35,7 +39,12 @@
                         <label>Highlight Changes:</label>
                     </div>
                     <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="highlight_changes" {% if highlight_changes %} checked {% endif %} hx-post="/highlight_changes" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
+                        <input type="checkbox" id="settings-checkbox" name="highlight_changes" {% if highlight_changes %} checked {% endif %} 
+                            hx-post="/highlight_changes" 
+                            hx-target="#paydf-table" 
+                            hx-swap="outerHTML" 
+                            hx-trigger="change" 
+                            hx-include="#options-form">
                     </div>
                 </td>
             </tr>
@@ -48,7 +57,12 @@
                         <label>Show All Variables:</label>
                     </div>
                     <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="show_all_variables" {% if show_all_variables %} checked {% endif %} hx-post="/show_all_variables" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
+                        <input type="checkbox" id="settings-checkbox" name="show_all_variables" {% if show_all_variables %} checked {% endif %} 
+                            hx-post="/show_all_variables" 
+                            hx-target="#paydf-table" 
+                            hx-swap="outerHTML" 
+                            hx-trigger="change" 
+                            hx-include="#options-form">
                     </div>
                 </td>
 
@@ -59,7 +73,12 @@
                         <label>Show All Options:</label>
                     </div>
                     <div class="settings-row">
-                        <input type="checkbox" id="settings-checkbox" name="show_all_options" {% if show_all_options %} checked {% endif %} hx-post="/show_all_options" hx-target="#paydf-group" hx-swap="outerHTML" hx-trigger="change">
+                        <input type="checkbox" id="settings-checkbox" name="show_all_options" {% if show_all_options %} checked {% endif %} 
+                            hx-post="/show_all_options" 
+                            hx-target="#options-table" 
+                            hx-swap="outerHTML" 
+                            hx-trigger="change" 
+                            hx-include="#options-form">
                     </div>
                 </td>
             </tr>
