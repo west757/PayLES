@@ -1,9 +1,15 @@
 <div id="paydf-group">
     <div id="paydf-options-settings">
-        {% include 'paydf_table.html' %}
+        <div id="paydf">
+            {% include 'paydf_table.html' %}
+        </div>
         <div id="options-settings">
-            {% include 'options_table.html' %}
-            {% include "settings_table.html" %}
+            <div id="options">
+                {% include 'options_table.html' %}
+            </div>
+            <div id="settings">
+                {% include 'settings_table.html' %}
+            </div>
         </div>
     </div>
     {% include "les_image.html" %}

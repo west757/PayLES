@@ -144,8 +144,9 @@ def build_paydf(les_text):
     months_display = app.config['MONTHS_DISPLAY']
 
     paydf = initialize_paydf(les_text)
+    session['paydf_json'] = paydf.to_json()
+
     options = build_options(paydf=paydf)
-    session['paydf_json'] = paydf.iloc[:, :3].to_json()
     paydf = expand_paydf(paydf, options, months_display)
 
     col_headers = paydf.columns.tolist()
@@ -299,7 +300,7 @@ def add_calculations(paydf):
             elif header == "Net Pay":
                 value = calculate_netpay(paydf, 1)
             elif header == "Difference":
-                value = calculate_difference(paydf, 1)
+                value = 0
 
             value = cast_dtype(value, row['dtype'])
             paydf.loc[len(paydf)] = [header, value]
@@ -874,7 +875,7 @@ def calculate_difference(paydf, col_idx):
 def update_paydf():
     months_display = int(request.form.get('months_display', 6))
 
-    paydf = pd.read_json(session['paydf_json'])
+    paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(form=request.form)
     paydf = expand_paydf(paydf, options, months_display)
 
@@ -889,11 +890,13 @@ def update_paydf():
         'months_display': months_display,
     }
 
-    return jsonify({
-        'paydf_table': render_template('paydf_table.html', **context),
-        'options_table': render_template('options_table.html', **context),
-        'settings_table': render_template('settings_table.html', **context),
-    })
+    return render_template('paydf_table.html', **context)
+
+    #return jsonify({
+    #    'paydf_table': render_template('paydf_table.html', **context),
+    #    'options_table': render_template('options_table.html', **context),
+    #    'settings_table': render_template('settings_table.html', **context),
+    #})
 
 
 
@@ -979,16 +982,6 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-
-@app.before_request
-def clear_session_on_navigation():
-    if request.endpoint not in [
-        'submit_les',
-        'submit_example',
-        'update_paydf',
-    ]:
-        session.clear()
 
 
 if __name__ == "__main__":
