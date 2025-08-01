@@ -66,6 +66,6 @@ class Config:
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
-    TRADITIONAL_TSP_RATE_MAX = Decimal(0.84)
-    ROTH_TSP_RATE_MAX = Decimal(0.60)
+    TRADITIONAL_TSP_RATE_MAX = 84
+    ROTH_TSP_RATE_MAX = 60
     DEFAULT_MONTHS_DISPLAY = 4
