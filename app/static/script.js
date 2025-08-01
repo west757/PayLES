@@ -60,19 +60,29 @@ async function downloadFile() {
 
 
 function show_all_variables() {
-    // Get the checkbox element
     var checkbox = document.getElementById('show-all-variables-checkbox');
-    // Determine if the checkbox is checked
-    var isChecked = checkbox.checked;
-    // Get all rows with the class 'paydf-variable-row'
-    var variableRows = document.getElementsByClassName('paydf-variable-row');
-    // Loop through each variable row
-    for (var row of variableRows) {
-        if (isChecked) {
-            // If checked, show the row as a table row
+    var checked = checkbox.checked;
+    var rows = document.getElementsByClassName('paydf-variable-row');
+
+    for (var row of rows) {
+        if (checked) {
             row.style.display = 'table-row';
         } else {
-            // If not checked, hide the row
+            row.style.display = 'none';
+        }
+    }
+}
+
+
+function show_all_options() {
+    var checkbox = document.getElementById('show-all-options-checkbox');
+    var checked = checkbox.checked;
+    var rows = document.getElementsByClassName('paydf-option-row');
+
+    for (var row of rows) {
+        if (checked) {
+            row.style.display = 'table-row';
+        } else {
             row.style.display = 'none';
         }
     }

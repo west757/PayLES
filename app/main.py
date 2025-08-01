@@ -311,32 +311,39 @@ def build_options(paydf=None, form=None):
     paydf_template = app.config['PAYDF_TEMPLATE']
     options = []
 
-    for _, row in paydf_template.iterrows():
-        if not bool(row.get('option', False)):
-            continue
+    if paydf is not None:
+        for _, row in paydf_template.iterrows():
 
-        header = row['header']
-        dtype = row['dtype']
-        varname = row['varname']
+            if not row.get('option', False):
+                continue
 
-        if paydf is not None and header in paydf['Header'].values:
-            row_idx = paydf[paydf['Header'] == header].index[0]
-            first_month_col = paydf.columns[1]
-            default = paydf.at[row_idx, first_month_col]
-        else:
-            default = row['default']
+            header = row['header']
+            varname = row['varname']
+            required = row.get('required', False)
 
-        if form is not None:
+            if required:
+                row_idx = paydf[paydf['Header'] == header].index[0]
+                first_month_col = paydf.columns[1]
+                value = paydf.at[row_idx, first_month_col]
+                options.append([header, value, ""])
+            else:
+                if header in paydf['Header'].values:
+                    row_idx = paydf[paydf['Header'] == header].index[0]
+                    first_month_col = paydf.columns[1]
+                    value = paydf.at[row_idx, first_month_col]
+                    options.append([header, value, ""])
+
+
+    elif form is not None:
+        for _, row in paydf_template.iterrows():
+            header = row['header']
+            varname = row['varname']
             value_key = f"{varname}_f"
             month_key = f"{varname}_m"
-            value = form.get(value_key, default)
+            value = form.get(value_key, "")
             month = form.get(month_key, "")
-            value = cast_dtype(value, dtype)
-        else:
-            value = default
-            month = ""
+            options.append([header, value, month])
 
-        options.append([header, value, month])
     return options
 
 
