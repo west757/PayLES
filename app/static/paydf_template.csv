@@ -3,17 +3,12 @@ Year,year,YEAR,Year,V,int,0,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
 Grade,grade,GRADE,Grade,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,TRUE,basepay
 Months in Service,months_in_service,MIS,Months in Service,V,int,0,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
 Zip Code,zip_code,ZC,Zip Code,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,TRUE,bah
-MHA Code,mha_code,MHAC,Military Housing Area Code,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,bah
-MHA Name,mha_name,MHAN,Military Housing Area Name,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,bah
+Military Housing Area,military_housing_area,MHA,Military Housing Area Code,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,bah
 Tax Residency State,tax_residency_state,TRS,Tax Residency State,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,TRUE,bah
 Federal Filing Status,federal_filing_status,FFS,Federal Filing Status,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,TRUE,federaltaxes
 State Filing Status,state_filing_status,SFS,State Filing Status,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,TRUE,statetaxes
 Dependents,dependents,DEPS,Dependents,V,int,0,TRUE,FALSE,FALSE,FALSE,TRUE,bah
-JFTR,jftr,JFTR,Joint Federal Travel Regulation Code,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,cola
-JFTR 2,jftr2,JFTR2,Joint Federal Travel Regulation Code 2,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,cola
 Combat Zone,combat_zone,CZ,Combat Zone,V,str,No,TRUE,FALSE,FALSE,FALSE,TRUE,combat
-BAQ Type,baq_type,BAQT,Basic Allowance for Quarters Type,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
-BAS Type,bas_type,BAST,Basic Allowance for Subsistence Type,V,str,Not Found,TRUE,FALSE,FALSE,FALSE,FALSE,basepay
 Traditional TSP Rate,traditional_tsp_rate,TTSP,Traditional TSP Rate,V,int,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
 Roth TSP Rate,roth_tsp_rate,RTSP,Roth TSP Rate,V,int,0,TRUE,FALSE,FALSE,FALSE,TRUE,tsp
 Base Pay,base_pay,BASE PAY,Base Pay,E,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,basepay
@@ -108,7 +103,7 @@ VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",E,Decimal,0,F
 Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,D,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,federaltaxes
 FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,D,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,fica
 FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,D,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,fica
-SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,sgli
+SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,TRUE,sgli
 Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,sgli
 TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,sgli
 State Taxes,state_taxes,STATE TAXES,State Taxes,D,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,statetaxes

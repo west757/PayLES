@@ -293,9 +293,9 @@ button:hover {
     width: 6rem;
 }
 
-#submit-new-les-button {
+#return-home-button {
     margin: 0.35rem 0 0.35rem 0.5rem;
-    width: 6rem;
+    width: 12rem;
 }
 
 
@@ -344,7 +344,7 @@ input.pos-table {
 }
 
 .num-input-short {
-    width: 3.5rem;
+    width: 2.5rem;
 }
 
 
