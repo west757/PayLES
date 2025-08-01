@@ -22,6 +22,22 @@ dropContainer.addEventListener("drop", function (e) {
 
 
 
+//les image tooltip
+function showTooltip(evt, text) {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.innerText = text;
+    tooltip.style.left = (evt.pageX + 10) + 'px';
+    tooltip.style.top = (evt.pageY + 10) + 'px';
+    tooltip.style.display = 'block';
+}
+
+function hideTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.style.display = 'none';
+}
+
+
+
 
 
 // export paydf
@@ -56,6 +72,62 @@ async function downloadFile() {
         console.error('Error during file download:', error);
     }
 }
+
+
+// Delegated event listeners for dynamic paydf controls
+
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'update-les-button') {
+        e.preventDefault();
+        console.log('Delegated: Update LES button clicked');
+        updatePaydf();
+    }
+});
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'months-dropdown') {
+        e.preventDefault();
+        console.log('Delegated: Months dropdown changed');
+        updatePaydf();
+    }
+});
+
+
+
+function updatePaydf() {
+    console.log('updatePaydf called');
+    const optionsForm = document.getElementById('options-form');
+    const settingsForm = document.getElementById('settings-form');
+    if (!optionsForm) {
+        console.log('No #options-form found');
+        return;
+    }
+    if (!settingsForm) {
+        console.log('No #settings-form found');
+        return;
+    }
+    const formData = new FormData(optionsForm);
+    const monthsDropdown = settingsForm.querySelector('[name="months_display"]');
+    if (!monthsDropdown) {
+        console.log('No months_display dropdown found in #settings-form');
+        return;
+    }
+    formData.append('months_display', monthsDropdown.value);
+
+    fetch('/update_paydf', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+        console.log('Received response from /update_paydf');
+        document.getElementById('paydf').innerHTML = html;
+        attachPaydfEventListeners();
+    });
+}
+
+
+
 
 
 
@@ -122,15 +194,3 @@ function show_all_options() {
         }
     }
 }
-
-
-
-
-fetch('/update_paydf', {
-    method: 'POST',
-    body: formData
-})
-.then(response => response.text())
-.then(html => {
-    document.getElementById('paydf-table').innerHTML = html;
-});
