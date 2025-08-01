@@ -725,7 +725,7 @@ td.pos-table-header:last-child {
 
 
 #paydf-table.highlight-mode .paydf-highlight {
-    background-color: var(--highlight) !important;
+    background-color: var(--highlight);
 }
 
 .paydf-variable-row {

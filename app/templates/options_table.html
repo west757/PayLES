@@ -1,85 +1,135 @@
-<div id="options">
-    <form id="options-form"
-      hx-post="/update_paydf"
-      hx-target="#paydf-group"
-      hx-swap="outerHTML"
-      hx-include="#settings-form">
-        <table class="pos-table" id="options-table">
-            {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
-            {% set GRADES = config.GRADES %}
-            {% set STATES_SHORT = config.STATES_SHORT %}
-            {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
-            {% set SGLI_RATE = config.SGLI_RATE %}
-            {% set month_options = col_headers[3:] %}
+<form id="options-form"
+    hx-post="/update_paydf"
+    hx-target="#paydf-group"
+    hx-swap="outerHTML"
+    hx-include="#settings-form">
+    <table class="pos-table" id="options-table">
+        {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+        {% set GRADES = config.GRADES %}
+        {% set STATES_SHORT = config.STATES_SHORT %}
+        {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
+        {% set SGLI_RATE = config.SGLI_RATE %}
+        {% set month_options = col_headers[2:] %}
 
-            <tbody>
-                <tr class="pos-table-header">
-                    <td class="pos-table-header"></td>
-                    <td class="pos-table-header">Current</td>
-                    <td class="pos-table-header">Future</td>
-                    <td class="pos-table-header">Month</td>
-                </tr>
+        <tbody>
+            <tr class="pos-table-header">
+                <td class="pos-table-header"></td>
+                <td class="pos-table-header">Current</td>
+                <td class="pos-table-header">Future</td>
+                <td class="pos-table-header">Month</td>
+            </tr>
 
-                <!-- required options -->
-                {% for opt in options %}
-                    {% set header = opt[0] %}
-                    {% set future_value = opt[1] %}
-                    {% set future_month = opt[2] %}
-                    {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-                    {% if row_info.shape[0] > 0 %}
-                        {% set varname = row_info.iloc[0]['varname'] %}
-                        {% set dtype = row_info.iloc[0]['dtype'] %}
-                        {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
+            <!-- required options -->
+            {% for opt in options %}
+                {% set header = opt[0] %}
+                {% set future_value = opt[1] %}
+                {% set future_month = opt[2] %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.shape[0] > 0 %}
+                    {% set varname = row_info.iloc[0]['varname'] %}
+                    {% set dtype = row_info.iloc[0]['dtype'] %}
+                    {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
+                    {% set current_idx = row_headers.index(header) if header in row_headers else None %}
+                    {% set current_value = paydf.at[current_idx, col_headers[2]] if current_idx is not none else '' %}
+                    {% if required %}
+                    <tr class="pos-table">
+                        <td class="pos-table">
+                            <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                        </td>
+                        <td class="pos-table">{{ current_value }}</td>
+                        <td class="pos-table">
+
+                            {% if header == 'Grade' %}
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    {% for x in GRADES %}
+                                    <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% elif header == 'Zip Code' %}
+                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="{{ future_value }}" />
+                            
+                            {% elif header == 'Tax Residency State' %}
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    {% for x in STATES_SHORT %}
+                                    <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% elif header == 'Federal Filing Status' %}
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    {% for x in TAX_FILING_TYPES %}
+                                    <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% elif header == 'State Filing Status' %}
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    {% for x in TAX_FILING_TYPES[0:2] %}
+                                    <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% elif header == 'SGLI' %}
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    {% for row in SGLI_RATE.itertuples() %}
+                                    <option value="{{row.premium}}" {% if row.premium == future_value %} selected {% endif %}>{{"${:,.2f}".format(row.premium)}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            {% elif header == 'Dependents' %}
+                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                            
+                            {% elif header == 'Combat Zone' %}
+                                <input type="checkbox" id="combat-zone-checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
+                            
+                            {% elif header == 'Roth TSP Rate' %}
+                                <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                            
+                            {% else %}
+                                <input class="pos-table" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
+                            {% endif %}
+                        </td>
+
+                        <td class="pos-table">
+                            <select class="pos-table" name="{{ varname }}_m">
+                                {% for x in month_options %}
+                                <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
+
+                {% if required and header == 'Roth TSP Rate' %}
+                    {% set last_required_idx = loop.index0 %}
+                {% endif %}
+
+            {% endfor %}
+
+            <!-- standard row options-->
+            <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
+            <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
+            {% for opt in options %}
+                {% set header = opt[0] %}
+                {% set future_value = opt[1] %}
+                {% set future_month = opt[2] %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.shape[0] > 0 %}
+                    {% set varname = row_info.iloc[0]['varname'] %}
+                    {% set dtype = row_info.iloc[0]['dtype'] %}
+                    {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
+                    {% if not required %}
                         {% set current_idx = row_headers.index(header) if header in row_headers else None %}
                         {% set current_value = paydf.at[current_idx, col_headers[2]] if current_idx is not none else '' %}
-                        {% if required %}
-                        <tr class="pos-table">
+                        <tr class="pos-table options-standard-row">
                             <td class="pos-table">
                                 <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                             </td>
                             <td class="pos-table">{{ current_value }}</td>
                             <td class="pos-table">
-                                {% if header == 'Grade' %}
-                                    <select class="pos-table" name="{{ varname }}_f">
-                                        {% for x in GRADES %}
-                                        <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif header == 'Zip Code' %}
-                                    <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="{{ future_value }}" />
-                                {% elif header == 'Tax Residency State' %}
-                                    <select class="pos-table" name="{{ varname }}_f">
-                                        {% for x in STATES_SHORT %}
-                                        <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif header == 'Federal Filing Status' %}
-                                    <select class="pos-table" name="{{ varname }}_f">
-                                        {% for x in TAX_FILING_TYPES %}
-                                        <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif header == 'State Filing Status' %}
-                                    <select class="pos-table" name="{{ varname }}_f">
-                                        {% for x in TAX_FILING_TYPES[0:2] %}
-                                        <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif header == 'SGLI' %}
-                                    <select class="pos-table" name="{{ varname }}_f">
-                                        {% for row in SGLI_RATE.itertuples() %}
-                                        <option value="{{row.premium}}" {% if row.premium == future_value %} selected {% endif %}>{{"${:,.2f}".format(row.premium)}}</option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif header == 'Dependents' %}
-                                    <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
-                                {% elif header == 'Combat Zone' %}
-                                    <input type="checkbox" id="combat-zone-checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
-                                {% elif header == 'Roth TSP Rate' %}
-                                    <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
-                                {% else %}
-                                    <input class="pos-table" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
-                                {% endif %}
+                                <input type="checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
                             </td>
                             <td class="pos-table">
                                 <select class="pos-table" name="{{ varname }}_m">
@@ -89,61 +139,21 @@
                                 </select>
                             </td>
                         </tr>
-                        {% endif %}
                     {% endif %}
+                {% endif %}
+            {% endfor %}
 
-                    {% if required and header == 'Roth TSP Rate' %}
-                        {% set last_required_idx = loop.index0 %}
-                    {% endif %}
+            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
+            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
 
-                {% endfor %}
+            <tr class="pos-table">
+                <td class="pos-table" colspan="4">
+                    <button id="update-les-button">Update LES</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
 
-                <!-- standard row options-->
-                <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
-                <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
-                {% for opt in options %}
-                    {% set header = opt[0] %}
-                    {% set future_value = opt[1] %}
-                    {% set future_month = opt[2] %}
-                    {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-                    {% if row_info.shape[0] > 0 %}
-                        {% set varname = row_info.iloc[0]['varname'] %}
-                        {% set dtype = row_info.iloc[0]['dtype'] %}
-                        {% set required = row_info.iloc[0]['required'] in [True, 'TRUE', 'True', 'true'] %}
-                        {% if not required %}
-                            {% set current_idx = row_headers.index(header) if header in row_headers else None %}
-                            {% set current_value = paydf.at[current_idx, col_headers[2]] if current_idx is not none else '' %}
-                            <tr class="pos-table options-standard-row">
-                                <td class="pos-table">
-                                    <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
-                                </td>
-                                <td class="pos-table">{{ current_value }}</td>
-                                <td class="pos-table">
-                                    <input type="checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
-                                </td>
-                                <td class="pos-table">
-                                    <select class="pos-table" name="{{ varname }}_m">
-                                        {% for x in month_options %}
-                                        <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-
-                <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-                <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-
-                <tr class="pos-table">
-                    <td class="pos-table" colspan="4">
-                        <button id="update-les-button">Update LES</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
