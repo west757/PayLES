@@ -77,7 +77,10 @@
                                 <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
                             
                             {% elif header == 'Combat Zone' %}
-                                <input type="checkbox" id="combat-zone-checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
+                                <select class="pos-table" name="{{ varname }}_f">
+                                    <option value="No" {% if future_value == 'No' %} selected {% endif %}>No</option>
+                                    <option value="Yes" {% if future_value == 'Yes' %} selected {% endif %}>Yes</option>
+                                </select>
                             
                             {% elif header == 'Roth TSP Rate' %}
                                 <input class="pos-table" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
@@ -125,7 +128,7 @@
                             </td>
                             <td class="pos-table">{{ current_value }}</td>
                             <td class="pos-table">
-                                <input type="checkbox" name="{{ varname }}_f" {% if future_value in ['Y', 'Yes', True, 'True'] %} checked {% endif %}>
+                                <input type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>
                             <td class="pos-table">
                                 <select class="pos-table" name="{{ varname }}_m">
