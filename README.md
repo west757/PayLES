@@ -69,11 +69,8 @@ in work:
 add row
 cola
 tsp update
-delete sessions after time
 export formatting
-dynamic variable get from entitlement/deduction/allotment boxes
-highlight changes
-sticky row/column of paydf
+dynamic variable get from allotment boxes
 military money manual
 last updated/version number
 add deployment
