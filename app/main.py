@@ -892,12 +892,6 @@ def update_paydf():
 
     return render_template('paydf_table.html', **context)
 
-    #return jsonify({
-    #    'paydf_table': render_template('paydf_table.html', **context),
-    #    'options_table': render_template('options_table.html', **context),
-    #    'settings_table': render_template('settings_table.html', **context),
-    #})
-
 
 
 

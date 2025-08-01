@@ -1,8 +1,4 @@
-<form id="options-form"
-    hx-post="/update_paydf"
-    hx-target="#paydf-group"
-    hx-swap="outerHTML"
-    hx-include="#settings-form">
+<form id="options-form">
     <table class="pos-table" id="options-table">
         {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
         {% set GRADES = config.GRADES %}
@@ -148,12 +144,9 @@
 
             <tr class="pos-table">
                 <td class="pos-table" colspan="4">
-                    <button id="update-les-button">Update LES</button>
+                    <button id="update-les-button" type="button">Update LES</button>
                 </td>
             </tr>
         </tbody>
     </table>
 </form>
-
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>

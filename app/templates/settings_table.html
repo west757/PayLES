@@ -16,14 +16,8 @@
                     <label>Months Displayed: &nbsp;</label>
                 </div>
                 <div class="settings-row">
-                    <form id="settings-form"
-                        hx-post="/update_paydf"
-                        hx-target="#paydf-group"
-                        hx-swap="outerHTML"
-                        hx-trigger="change"
-                        hx-include="#options-form">
-                        <select class="pos-table" id="months-dropdown" name="months_display"
-                                onchange="this.form.dispatchEvent(new Event('change', {bubbles:true}))">
+                    <form id="settings-form">
+                        <select class="pos-table" id="months-dropdown" name="months_display">
                             {% for x in range(2, 13) %}
                                 <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -97,6 +91,3 @@
         </tr>
     </tbody>
 </table>
-
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
