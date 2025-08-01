@@ -141,7 +141,7 @@ def read_les(les_rectangles, les_page):
 
 
 def build_paydf(les_text):
-    months_display = app.config['MONTHS_DISPLAY']
+    months_display = app.config['DEFAULT_MONTHS_DISPLAY']
 
     paydf = initialize_paydf(les_text)
     session['paydf_json'] = paydf.to_json()
