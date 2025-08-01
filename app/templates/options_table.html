@@ -1,4 +1,7 @@
 <form id="options-form">
+    <!-- variable passed to javascript to seed the initial month for the month dropdowns -->
+    <input type="hidden" id="initial-month" value="{{ col_headers[1] }}">
+
     <table class="pos-table" id="options-table">
         {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
         {% set GRADES = config.GRADES %}
@@ -91,7 +94,7 @@
                         </td>
 
                         <td class="pos-table">
-                            <select class="pos-table" name="{{ varname }}_m">
+                            <select class="pos-table month-dropdown" name="{{ varname }}_m">
                                 {% for x in month_options %}
                                 <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
@@ -131,7 +134,7 @@
                                 <input type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>
                             <td class="pos-table">
-                                <select class="pos-table" name="{{ varname }}_m">
+                                <select class="pos-table month-dropdown" name="{{ varname }}_m">
                                     {% for x in month_options %}
                                     <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
