@@ -87,12 +87,10 @@ def process_les(les_pdf):
     les_rectangles = app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
-    reset_session_defaults()
-
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
     les_text = read_les(les_rectangles, les_page)
-    context['paydf'], context['col_headers'], context['row_headers'], context['options'] = build_paydf(les_text)
+    context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
     return context
 
 
@@ -153,7 +151,7 @@ def build_paydf(les_text):
     col_headers = paydf.columns.tolist()
     row_headers = paydf['Header'].tolist()
 
-    return paydf, col_headers, row_headers, options
+    return paydf, col_headers, row_headers, options, months_display
 
 
 
@@ -881,6 +879,7 @@ def update_paydf():
         'col_headers': col_headers,
         'row_headers': row_headers,
         'options': options,
+        'months_display': months_display,
     }
 
     return jsonify({
@@ -891,74 +890,12 @@ def update_paydf():
 
 
 
-@app.route('/highlight_changes', methods=['POST'])
-def highlight_changes():
-    checked = bool(request.form.get('highlight_changes'))
-    session['highlight_changes'] = checked
-
-    paydf = pd.read_json(session['paydf_json'])
-    options = build_options(form=request.form)
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
-    context = {
-        'paydf': paydf,
-        'col_headers': col_headers,
-        'row_headers': row_headers,
-        'options': options,
-    }
-    return render_template('paydf_table.html', **context)
-
-
-
-@app.route('/show_all_variables', methods=['POST'])
-def show_all_variables():
-    checked = bool(request.form.get('show_all_variables'))
-    session['show_all_variables'] = checked
-
-    paydf = pd.read_json(session['paydf_json'])
-    options = build_options(form=request.form)
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
-    context = {
-        'paydf': paydf,
-        'col_headers': col_headers,
-        'row_headers': row_headers,
-        'options': options,
-    }
-    return render_template('paydf_table.html', **context)
-
-
-
-@app.route('/show_all_options', methods=['POST'])
-def show_all_options():
-    checked = bool(request.form.get('show_all_options'))
-    session['show_all_options'] = checked
-
-    paydf = pd.read_json(session['paydf_json'])
-    options = build_options(form=request.form)
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
-    context = {
-        'paydf': paydf,
-        'col_headers': col_headers,
-        'row_headers': row_headers,
-        'options': options,
-    }
-    return render_template('options_table.html', **context)
-
-
-
 
 @app.route('/export', methods=['POST'])
 def export_dataframe():
     return None
     
 
-    
-
-def reset_session_defaults():
-    for key, value in app.config['SESSION_DEFAULTS'].items():
-        session[key] = value
 
 
 def allowed_file(filename):
@@ -1043,9 +980,6 @@ def clear_session_on_navigation():
         'submit_les',
         'submit_example',
         'update_paydf',
-        'highlight_changes',
-        'show_all_variables',
-        'show_all_options'
     ]:
         session.clear()
 
