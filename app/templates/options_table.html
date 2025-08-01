@@ -6,17 +6,13 @@
       hx-swap="outerHTML"
       hx-include="#settings-form">
         <table class="pos-table" id="options-table">
+            {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
             {% set GRADES = config.GRADES %}
             {% set STATES_SHORT = config.STATES_SHORT %}
             {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
             {% set SGLI_RATE = config.SGLI_RATE %}
-            {% set paydf = session['paydf'] %}
-            {% set row_headers = session['row_headers'] %}
-            {% set col_headers = session['col_headers'] %}
             {% set month_options = col_headers[3:] %}
-            {% set options = session['options'] %}
-            {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
-
+            
             <tbody>
                 <tr class="pos-table-header">
                     <td class="pos-table-header"></td>
@@ -24,7 +20,6 @@
                     <td class="pos-table-header">Future</td>
                     <td class="pos-table-header">Month</td>
                 </tr>
-                {# Required options up to and including Roth TSP Rate #}
                 {% for opt in options %}
                     {% set header = opt[0] %}
                     {% set future_value = opt[1] %}
@@ -95,10 +90,13 @@
                         </tr>
                         {% endif %}
                     {% endif %}
+
                     {% if required and header == 'Roth TSP Rate' %}
                         {% set last_required_idx = loop.index0 %}
                     {% endif %}
+
                 {% endfor %}
+
 
                 {% if session['show_all_options'] %}
                     {% for opt in options %}
@@ -136,7 +134,7 @@
 
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
                 <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-
+                
                 <tr class="pos-table">
                     <td class="pos-table" colspan="4">
                         <button id="update-les-button">Update LES</button>

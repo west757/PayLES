@@ -70,7 +70,6 @@ class Config:
         'show_all_variables': False,
         'highlight_changes': False,
         'show_all_options': False,
-        'options': []
     }
 
 
