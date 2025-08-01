@@ -19,18 +19,18 @@
                             hx-swap="outerHTML"
                             hx-trigger="change"
                             hx-include="#options-form">
-                            <select class="pos-table" id="months-dropdown" name="months_num"
+                            <select class="pos-table" id="months-dropdown" name="months_display"
                                     onchange="this.form.dispatchEvent(new Event('change', {bubbles:true}))">
                                 {% for x in range(2, 13) %}
-                                    <option value="{{x}}" {% if x==session.months_num %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
                         </form>
                     </div>
                 </td>
+                
                 <!-- highlight changes -->
                 <td class="pos-table" style="width: 50%;">
-                    {% set highlight_changes = session.get('highlight_changes', False) %}
                     <div class="settings-row">
                         <label>Highlight Changes:</label>
                     </div>
@@ -44,7 +44,6 @@
             <tr class="pos-table">
                 <!-- show all variables -->
                 <td class="pos-table" style="width: 50%;">
-                    {% set show_all_variables = session.get('show_all_variables', False) %}
                     <div class="settings-row">
                         <label>Show All Variables:</label>
                     </div>
@@ -56,7 +55,6 @@
                 
                 <!-- show all options -->
                 <td class="pos-table" style="width: 50%;">
-                    {% set show_all_options = session.get('show_all_options', False) %}
                     <div class="settings-row">
                         <label>Show All Options:</label>
                     </div>
