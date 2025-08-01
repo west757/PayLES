@@ -64,16 +64,10 @@ class Config:
     TRADITIONAL_TSP_RATE_MAX = Decimal(0.84)
     ROTH_TSP_RATE_MAX = Decimal(0.60)
 
-    #default session values
-    SESSION_DEFAULTS = {
-        'months_num': 6,
-        'show_all_variables': False,
+    #default context values
+    CONTEXT_DEFAULTS = {
+        'months_display': 6,
         'highlight_changes': False,
-        'show_all_options': False,
+        'show_all_variables': False,
+        'show_all_options': False
     }
-
-
-#codes:
-#X - special
-#Y - standard
-#Z - onetime
