@@ -79,13 +79,7 @@
         <tr class="pos-table">
             <td class="pos-table" colspan=2>
                 <div class="settings-row">
-                    <label>Upload New LES: </label>
-                </div>
-                <div class="settings-row">
-                        <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
-                        <input type="file" id="settings-input" name="submit-input" accept=".pdf" />
-                        <button id="submit-new-les-button">Submit</button>
-                    </form>
+                    <button id="return-home-button" onclick="window.location.href='/'">Upload New LES</button>
                 </div>
             </td>
         </tr>

@@ -62,9 +62,9 @@ def submit_les():
 
 @app.route('/submit_example', methods=['POST'])
 def submit_example():
-    example_les = app.config['EXAMPLE_LES']
+    EXAMPLE_LES = app.config['EXAMPLE_LES']
 
-    valid, message, les_pdf = validate_les(example_les)
+    valid, message, les_pdf = validate_les(EXAMPLE_LES)
     if valid:
         context = process_les(les_pdf)
         return render_template('paydf_group.html', **context)
@@ -84,22 +84,22 @@ def validate_les(les_file):
 
 
 def process_les(les_pdf):
-    les_rectangles = app.config['LES_RECTANGLES']
+    LES_RECTANGLES = app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
     context = {}
-    context['les_image'], context['rect_overlay'] = create_les_image(les_rectangles, les_page)
-    les_text = read_les(les_rectangles, les_page)
+    context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
+    les_text = read_les(LES_RECTANGLES, les_page)
     context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
     return context
 
 
 def create_les_image(les_rectangles, les_page):
-    les_image_scale = app.config['LES_IMAGE_SCALE']
+    LES_IMAGE_SCALE = app.config['LES_IMAGE_SCALE']
 
     temp_image = les_page.to_image(resolution=300).original
-    new_width = int(temp_image.width * les_image_scale)
-    new_height = int(temp_image.height * les_image_scale)
+    new_width = int(temp_image.width * LES_IMAGE_SCALE)
+    new_height = int(temp_image.height * LES_IMAGE_SCALE)
     resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
 
     img_io = io.BytesIO()
@@ -111,10 +111,10 @@ def create_les_image(les_rectangles, les_page):
     for rect in les_rectangles.to_dict(orient="records"):
         rect_overlay.append({
             "index": rect["index"],
-            "x1": rect["x1"] * les_image_scale,
-            "y1": rect["y1"] * les_image_scale,
-            "x2": rect["x2"] * les_image_scale,
-            "y2": rect["y2"] * les_image_scale,
+            "x1": rect["x1"] * LES_IMAGE_SCALE,
+            "y1": rect["y1"] * LES_IMAGE_SCALE,
+            "x2": rect["x2"] * LES_IMAGE_SCALE,
+            "y2": rect["y2"] * LES_IMAGE_SCALE,
             "title": rect["title"],
             "modal": rect["modal"],
             "tooltip": rect["tooltip"]
@@ -123,14 +123,14 @@ def create_les_image(les_rectangles, les_page):
 
 
 def read_les(les_rectangles, les_page):
-    les_coord_scale = app.config['LES_COORD_SCALE']
+    LES_COORD_SCALE = app.config['LES_COORD_SCALE']
     les_text = ["text per rectangle"]
 
     for i, row in les_rectangles.iterrows():
-        x0 = float(row['x1']) * les_coord_scale
-        x1 = float(row['x2']) * les_coord_scale
-        y0 = float(row['y1']) * les_coord_scale
-        y1 = float(row['y2']) * les_coord_scale
+        x0 = float(row['x1']) * LES_COORD_SCALE
+        x1 = float(row['x2']) * LES_COORD_SCALE
+        y0 = float(row['y1']) * LES_COORD_SCALE
+        y1 = float(row['y2']) * LES_COORD_SCALE
         top = min(y0, y1)
         bottom = max(y0, y1)
 
@@ -141,24 +141,29 @@ def read_les(les_rectangles, les_page):
 
 
 def build_paydf(les_text):
-    months_display = app.config['DEFAULT_MONTHS_DISPLAY']
+    DEFAULT_MONTHS_DISPLAY = app.config['DEFAULT_MONTHS_DISPLAY']
 
     paydf = initialize_paydf(les_text)
     session['paydf_json'] = paydf.to_json()
 
     options = build_options(paydf=paydf)
-    paydf = expand_paydf(paydf, options, months_display)
+
+    paydf = expand_paydf(paydf, options, DEFAULT_MONTHS_DISPLAY)
+    print("")
+    print("paydf after expand")
+    print(paydf)
+    print("")
 
     col_headers = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
 
-    return paydf, col_headers, row_headers, options, months_display
+    return paydf, col_headers, row_headers, options, DEFAULT_MONTHS_DISPLAY
 
 
 
 def initialize_paydf(les_text):
     initial_month = les_text[10][3]
-    paydf = pd.DataFrame(columns=["Header", initial_month])
+    paydf = pd.DataFrame(columns=["header", initial_month])
 
     paydf = add_variables(paydf, les_text)
     paydf = add_entitlements_deductions(paydf, les_text)
@@ -170,8 +175,8 @@ def initialize_paydf(les_text):
 
 
 def add_variables(paydf, les_text):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    var_rows = paydf_template[paydf_template['type'] == 'V']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']
 
     for _, row in var_rows.iterrows():
         header = row['header']
@@ -191,11 +196,8 @@ def add_variables(paydf, les_text):
         elif header == 'Zip Code':
             if les_text[50][2] != "00000":
                 value = les_text[50][2]
-        elif header == 'MHA Code':
-            mhac, mhan = calculate_mha(les_text[50][2])
-            value = str(mhac)
-        elif header == 'MHA Name':
-            value = str(mhan)
+        elif header == 'Military Housing Area':
+            value = calculate_mha(les_text[50][2])
         elif header == 'Tax Residency State':
             if les_text[41][1] != "98":
                 value = les_text[41][1]
@@ -213,20 +215,8 @@ def add_variables(paydf, les_text):
                 value = "Married"
         elif header == 'Dependents':
             value = int(les_text[55][1])
-        elif header == 'JFTR':
-            if len(les_text[54]) == 2:
-                value = les_text[54][1]
-        elif header == 'JFTR 2':
-            if len(les_text[56]) == 3:
-                value = les_text[56][2]
         elif header == 'Combat Zone':
             value = "No"
-        elif header == 'BAQ Type':
-            if len(les_text[48]) == 3:
-                value = (les_text[48][2])[0] + (les_text[48][2])[1:].lower()
-        elif header == 'BAS Type':
-            if len(les_text[57]) == 3:
-                value = (les_text[57][2])[0] + (les_text[57][2])[1:].lower()
         elif header == 'Traditional TSP Rate':
             ttsp_fields = [int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3]), int(les_text[68][3])]
             value = next((val for val in ttsp_fields if val > 0), 0)
@@ -241,13 +231,14 @@ def add_variables(paydf, les_text):
 
 
 def add_entitlements_deductions(paydf, les_text):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'].isin(['E', 'D'])]
 
     # Map type to section index and value sign
     type_section = [('E', les_text[11], 1), ('D', les_text[12], -1)]
 
     for row_type, section, sign in type_section:
-        for _, row in paydf_template.iterrows():
+        for _, row in var_rows.iterrows():
             if row['type'] == row_type:
                 value = None
                 found = False
@@ -282,39 +273,41 @@ def add_allotments(paydf, les_text):
 
 
 def add_calculations(paydf):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    # Only add calculation rows for the initial month
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'C']
+
     taxable, nontaxable = calculate_tax_pay(paydf, 1)
-    for _, row in paydf_template.iterrows():
-        if row['type'] == 'C':
-            header = row['header']
+
+    for _, row in var_rows.iterrows():
+        header = row['header']
+        value = 0
+
+        if header == "Taxable Pay":
+            value = taxable
+        elif header == "Non-Taxable Pay":
+            value = nontaxable
+        elif header == "Total Taxes":
+            value = calculate_totaltaxes(paydf, 1)
+        elif header == "Gross Pay":
+            value = calculate_grosspay(paydf, 1)
+        elif header == "Net Pay":
+            value = calculate_netpay(paydf, 1)
+        elif header == "Difference":
             value = 0
 
-            if header == "Taxable Pay":
-                value = taxable
-            elif header == "Non-Taxable Pay":
-                value = nontaxable
-            elif header == "Total Taxes":
-                value = calculate_totaltaxes(paydf, 1)
-            elif header == "Gross Pay":
-                value = calculate_grosspay(paydf, 1)
-            elif header == "Net Pay":
-                value = calculate_netpay(paydf, 1)
-            elif header == "Difference":
-                value = 0
-
-            value = cast_dtype(value, row['dtype'])
-            paydf.loc[len(paydf)] = [header, value]
+        value = cast_dtype(value, row['dtype'])
+        paydf.loc[len(paydf)] = [header, value]
     return paydf
 
 
 
 def build_options(paydf=None, form=None):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    MONTHS_SHORT = app.config['MONTHS_SHORT']
     options = []
 
     if paydf is not None:
-        for _, row in paydf_template.iterrows():
+        for _, row in PAYDF_TEMPLATE.iterrows():
 
             if not row.get('option', False):
                 continue
@@ -322,22 +315,24 @@ def build_options(paydf=None, form=None):
             header = row['header']
             varname = row['varname']
             required = row.get('required', False)
+            initial_month = paydf.columns[1]
+            month = MONTHS_SHORT[(MONTHS_SHORT.index(initial_month) + 1) % 12]
 
             if required:
-                row_idx = paydf[paydf['Header'] == header].index[0]
+                row_idx = paydf[paydf['header'] == header].index[0]
                 first_month_col = paydf.columns[1]
                 value = paydf.at[row_idx, first_month_col]
-                options.append([header, value, ""])
+                options.append([header, value, month])
             else:
-                if header in paydf['Header'].values:
-                    row_idx = paydf[paydf['Header'] == header].index[0]
+                if header in paydf['header'].values:
+                    row_idx = paydf[paydf['header'] == header].index[0]
                     first_month_col = paydf.columns[1]
                     value = paydf.at[row_idx, first_month_col]
-                    options.append([header, value, ""])
+                    options.append([header, value, month])
 
 
     elif form is not None:
-        for _, row in paydf_template.iterrows():
+        for _, row in PAYDF_TEMPLATE.iterrows():
             header = row['header']
             varname = row['varname']
             value_key = f"{varname}_f"
@@ -354,25 +349,22 @@ def build_options(paydf=None, form=None):
 
 
 def expand_paydf(paydf, options, months_display):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    months_short = app.config['MONTHS_SHORT']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    MONTHS_SHORT = app.config['MONTHS_SHORT']
 
-    col_headers = paydf.columns.tolist()
-    initial_month = col_headers[1]
-    month_idx = months_short.index(initial_month)
+    initial_month = paydf.columns[1]
+    month_idx = MONTHS_SHORT.index(initial_month)
 
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
-        new_month = months_short[month_idx]
+        new_month = MONTHS_SHORT[month_idx]
 
         defaults = []
-        for row_idx, row in paydf.iterrows():
-            header = row['Header']
-            match = paydf_template[paydf_template['header'] == header]
+        for _, row in paydf.iterrows():
+            header = row['header']
+            match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
             if not match.empty:
                 defaults.append(cast_dtype(match.iloc[0]['default'], match.iloc[0]['dtype']))
-            else:
-                defaults.append(None)
         paydf[new_month] = defaults
 
         paydf = update_variables(paydf, new_month, options)
@@ -387,75 +379,56 @@ def expand_paydf(paydf, options, months_display):
 
 
 def update_variables(paydf, month, options):
-    months_short = app.config['MONTHS_SHORT']
-    col_headers = paydf.columns.tolist()
-    initial_month = col_headers[1]
-    month_idx = months_short.index(initial_month)
-
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    MONTHS_SHORT = app.config['MONTHS_SHORT']
     option_headers = set(opt[0] for opt in options)
+    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']
 
-    for i in range(1, len(col_headers)):
-        month_idx = (month_idx + 1) % 12
-        for row_idx, row in paydf.iterrows():
-            header = row['Header']
-            columns = paydf.columns.tolist()
-            col_idx = columns.index(month)
-            prev_month = paydf.columns[col_idx - 1]
-            prev_value = paydf.at[row_idx, prev_month]
+    for row_idx, row in var_rows.iterrows():
+        header = row['header']
+        columns = paydf.columns.tolist()
+        col_idx = columns.index(month)
+        prev_month = paydf.columns[col_idx - 1]
+        prev_value = paydf.at[row_idx, prev_month]
 
-            if header in option_headers:
-                future_value, future_month = get_option(header, options)
-                future_col_idx = columns.index(future_month) if future_month in columns else None
-                current_col_idx = columns.index(month)
-                if not future_value or not future_month:
-                    paydf.at[row_idx, month] = prev_value
-                else:
-                    if header in {'MHA Code', 'MHA Name'}:
-                        if future_col_idx is not None and current_col_idx >= future_col_idx:
-                            mhac, mhan = calculate_mha(future_value)
-                            paydf.at[row_idx, month] = mhac if header == 'MHA Code' else mhan
-                        else:
-                            paydf.at[row_idx, month] = prev_value
-                    else:
-                        if future_col_idx is not None and current_col_idx >= future_col_idx:
-                            paydf.at[row_idx, month] = future_value
-                        else:
-                            paydf.at[row_idx, month] = prev_value
-                continue
+        if header in option_headers:
+            future_value, future_month = get_option(header, options)
+            future_col_idx = columns.index(future_month)
+            current_col_idx = columns.index(month)
 
-            if header == 'Year':
-                if months_short.index(month) == 0 and months_short.index(prev_month) == 11:
-                    paydf.at[row_idx, month] = prev_value + 1
-                else:
-                    paydf.at[row_idx, month] = prev_value
-                continue
-            if header == 'Months in Service':
+            if current_col_idx >= future_col_idx:
+                paydf.at[row_idx, month] = future_value
+            else:
+                paydf.at[row_idx, month] = prev_value
+            continue
+
+        elif header == 'Year':
+            if MONTHS_SHORT.index(month) == 0 and MONTHS_SHORT.index(prev_month) == 11:
                 paydf.at[row_idx, month] = prev_value + 1
-                continue
-            if header == 'JFTR':
+            else:
                 paydf.at[row_idx, month] = prev_value
-                continue
-            if header == 'JFTR 2':
-                paydf.at[row_idx, month] = prev_value
-                continue
-            if header == 'BAQ Type':
-                paydf.at[row_idx, month] = prev_value
-                continue
-            if header == 'BAS Type':
-                paydf.at[row_idx, month] = prev_value
-                continue
-            paydf.at[row_idx, month] = prev_value
+            continue
+
+        elif header == 'Months in Service':
+            paydf.at[row_idx, month] = prev_value + 1
+            continue
+
+        elif header == 'Military Housing Area':
+            zip_code = paydf.at[row_idx - 1, month]
+            paydf.at[row_idx, month] = calculate_mha(zip_code)
+            continue
+
     return paydf
 
 
 
 def update_entitlements_deductions(paydf, month, options):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     columns = paydf.columns.tolist()
 
     for row_idx, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
+        header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if match.empty:
             continue
         onetime = bool(match.iloc[0].get('onetime', False))
@@ -516,14 +489,14 @@ def update_calculations(paydf, month, only_taxable):
     if only_taxable:
         taxable, nontaxable = calculate_tax_pay(paydf, col_idx)
         for row_idx, row in paydf.iterrows():
-            header = row['Header']
+            header = row['header']
             if header == "Taxable Pay":
                 paydf.at[row_idx, month] = taxable
             elif header == "Non-Taxable Pay":
                 paydf.at[row_idx, month] = nontaxable
     else:
         for row_idx, row in paydf.iterrows():
-            header = row['Header']
+            header = row['header']
             if header == "Total Taxes":
                 paydf.at[row_idx, month] = calculate_totaltaxes(paydf, col_idx)
             elif header == "Gross Pay":
@@ -541,11 +514,11 @@ def update_calculations(paydf, month, only_taxable):
 
 
 def calculate_basepay(paydf, row_idx, month):
-    pay_active = app.config['PAY_ACTIVE']
+    PAY_ACTIVE = app.config['PAY_ACTIVE']
 
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
 
     grade_row_idx = row_headers.index("Grade")
     mis_row_idx = row_headers.index("Months in Service")
@@ -558,8 +531,8 @@ def calculate_basepay(paydf, row_idx, month):
     else:
         months_in_service = int(months_in_service_val)
 
-    pay_active_headers = [int(col) for col in pay_active.columns[1:]]
-    pay_active_row = pay_active[pay_active["grade"] == grade]
+    pay_active_headers = [int(col) for col in PAY_ACTIVE.columns[1:]]
+    pay_active_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
     if pay_active_row.empty:
         return Decimal(0)
 
@@ -578,24 +551,24 @@ def calculate_basepay(paydf, row_idx, month):
 
 
 def calculate_bas(paydf, row_idx, month):
-    bas_amount = app.config['BAS_AMOUNT']
-    row_headers = paydf['Header'].tolist()
+    BAS_AMOUNT = app.config['BAS_AMOUNT']
+    row_headers = paydf['header'].tolist()
     grade_row_idx = row_headers.index("Grade")
     grade = paydf.at[grade_row_idx, month]
 
     if str(grade).startswith("E"):
-        bas_value = bas_amount[1]
+        bas_value = BAS_AMOUNT[1]
     else:
-        bas_value = bas_amount[0]
+        bas_value = BAS_AMOUNT[0]
     return round(Decimal(bas_value), 2)
 
 
 
 def calculate_bah(paydf, row_idx, month):
     columns = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
     # Get MHA code, dependents, and grade for this column
-    mha_row_idx = row_headers.index("MHA Code")
+    mha_row_idx = row_headers.index("Military Housing Area")
     dependents_row_idx = row_headers.index("Dependents")
     grade_row_idx = row_headers.index("Grade")
     mha_code = paydf.at[mha_row_idx, month]
@@ -609,13 +582,13 @@ def calculate_bah(paydf, row_idx, month):
 
     # Choose correct BAH table based on dependents
     if int(dependents) > 0:
-        bah_df = app.config['BAH_WITH_DEPENDENTS']
+        BAH_DF = app.config['BAH_WITH_DEPENDENTS']
     else:
-        bah_df = app.config['BAH_WITHOUT_DEPENDENTS']
+        BAH_DF = app.config['BAH_WITHOUT_DEPENDENTS']
 
     # Find the row for the MHA code
-    bah_row = bah_df[bah_df["MHA"] == mha_code]
-    if bah_row.empty or grade not in bah_df.columns:
+    bah_row = BAH_DF[BAH_DF["MHA"] == mha_code]
+    if bah_row.empty or grade not in BAH_DF.columns:
         col_idx = columns.index(month)
         return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
@@ -629,10 +602,10 @@ def calculate_bah(paydf, row_idx, month):
 
 
 def calculate_federaltaxes(paydf, row_idx, month):
-    standard_deductions = app.config['STANDARD_DEDUCTIONS']
-    federal_tax_rate = app.config['FEDERAL_TAX_RATE']
+    STANDARD_DEDUCTIONS = app.config['STANDARD_DEDUCTIONS']
+    FEDERAL_TAX_RATE = app.config['FEDERAL_TAX_RATE']
 
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
     # Get taxable pay and federal filing status for this month
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     filing_status_row_idx = row_headers.index("Federal Filing Status")
@@ -646,16 +619,16 @@ def calculate_federaltaxes(paydf, row_idx, month):
     taxable_income = Decimal(taxable_pay) * 12
     # Apply standard deduction
     if filing_status == "Single":
-        taxable_income -= standard_deductions[0]
+        taxable_income -= STANDARD_DEDUCTIONS[0]
     elif filing_status == "Married":
-        taxable_income -= standard_deductions[1]
+        taxable_income -= STANDARD_DEDUCTIONS[1]
     elif filing_status == "Head of Household":
-        taxable_income -= standard_deductions[2]
+        taxable_income -= STANDARD_DEDUCTIONS[2]
     else:
         return Decimal(0)
     taxable_income = max(taxable_income, 0)
     # Get brackets for this status
-    brackets = federal_tax_rate[federal_tax_rate['Status'].str.lower() == filing_status.lower()]
+    brackets = FEDERAL_TAX_RATE[FEDERAL_TAX_RATE['Status'].str.lower() == filing_status.lower()]
     brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
     tax = Decimal(0)
     for i in range(len(brackets)):
@@ -674,21 +647,23 @@ def calculate_federaltaxes(paydf, row_idx, month):
 
 
 def calculate_ficasocialsecurity(paydf, row_idx, month):
-    row_headers = paydf['Header'].tolist()
+    FICA_SOCIALSECURITY_TAX_RATE = app.config['FICA_SOCIALSECURITY_TAX_RATE']
+    row_headers = paydf['header'].tolist()
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     taxable_pay = paydf.at[taxable_pay_row_idx, month]
     if taxable_pay is None or taxable_pay == '':
         taxable_pay = 0
-    return round(-Decimal(taxable_pay) * app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
+    return round(-Decimal(taxable_pay) * FICA_SOCIALSECURITY_TAX_RATE, 2)
 
 
 def calculate_ficamedicare(paydf, row_idx, month):
-    row_headers = paydf['Header'].tolist()
+    FICA_MEDICARE_TAX_RATE = app.config['FICA_MEDICARE_TAX_RATE']
+    row_headers = paydf['header'].tolist()
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     taxable_pay = paydf.at[taxable_pay_row_idx, month]
     if taxable_pay is None or taxable_pay == '':
         taxable_pay = 0
-    return round(-Decimal(taxable_pay) * app.config['FICA_MEDICARE_TAX_RATE'], 2)
+    return round(-Decimal(taxable_pay) * FICA_MEDICARE_TAX_RATE, 2)
 
 
 
@@ -706,9 +681,9 @@ def calculate_sgli(paydf, row_idx, month, options):
 
 
 def calculate_statetaxes(paydf, row_idx, month):
-    state_tax_rate = app.config['STATE_TAX_RATE']
+    STATE_TAX_RATE = app.config['STATE_TAX_RATE']
 
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
     # Get taxable pay, state, and filing status for this month
     taxable_pay_row_idx = row_headers.index("Taxable Pay")
     state_row_idx = row_headers.index("Tax Residency State")
@@ -723,7 +698,7 @@ def calculate_statetaxes(paydf, row_idx, month):
     # Annualize taxable pay
     taxable_income = Decimal(taxable_pay) * 12
     # Get state brackets
-    state_brackets = state_tax_rate[state_tax_rate['State'] == state]
+    state_brackets = STATE_TAX_RATE[STATE_TAX_RATE['State'] == state]
     if state_brackets.empty:
         return Decimal(0)
     # Select correct columns for filing status
@@ -760,8 +735,8 @@ def calculate_rothtsp(paydf, row_idx, month):
 
 
 def calculate_tax_pay(paydf, col_idx):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    combat_zone_row = paydf[paydf['Header'] == 'Combat Zone']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    combat_zone_row = paydf[paydf['header'] == 'Combat Zone']
     combat_zone = combat_zone_row.iloc[0, col_idx] if not combat_zone_row.empty else "No"
     # Check combat_zone as a string (case-insensitive 'YES')
     is_combat_zone = str(combat_zone).strip().upper() == 'YES'
@@ -769,8 +744,8 @@ def calculate_tax_pay(paydf, col_idx):
     nontaxable = Decimal(0)
 
     for i, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
+        header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if match.empty:
             continue
         row_type = match.iloc[0]['type']
@@ -798,11 +773,11 @@ def calculate_tax_pay(paydf, col_idx):
 
 
 def calculate_totaltaxes(paydf, col_idx):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
+        header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if match.empty:
             continue
         row_type = match.iloc[0]['type']
@@ -823,11 +798,11 @@ def calculate_totaltaxes(paydf, col_idx):
 
 
 def calculate_grosspay(paydf, col_idx):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
+        header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if match.empty:
             continue
         row_type = match.iloc[0]['type']
@@ -843,11 +818,11 @@ def calculate_grosspay(paydf, col_idx):
 
 
 def calculate_netpay(paydf, col_idx):
-    paydf_template = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
     for i, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
+        header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if match.empty:
             continue
         row_type = match.iloc[0]['type']
@@ -886,7 +861,7 @@ def update_paydf():
     paydf = expand_paydf(paydf, options, months_display)
 
     col_headers = paydf.columns.tolist()
-    row_headers = paydf['Header'].tolist()
+    row_headers = paydf['header'].tolist()
 
     context = {
         'paydf': paydf,
@@ -949,16 +924,14 @@ def months_in_service(d1, d2):
 
 
 def calculate_mha(zipcode):
-    mha_zipcodes = app.config['MHA_ZIPCODES']
+    MHA_ZIPCODES = app.config['MHA_ZIPCODES']
     if zipcode != "00000" or zipcode != "" or zipcode is not None:
-        mha_search = mha_zipcodes[mha_zipcodes.isin([int(zipcode)])].stack()
+        mha_search = MHA_ZIPCODES[MHA_ZIPCODES.isin([int(zipcode)])].stack()
         mha_search_row = mha_search.index[0][0]
-        mhac = mha_zipcodes.loc[mha_search_row, "MHA"]
-        mhan = mha_zipcodes.loc[mha_search_row, "MHA_NAME"]
+        mha = MHA_ZIPCODES.loc[mha_search_row, "MHA"]
     else:
-        mhac = "no mha code found"
-        mhan = "no mha name found"
-    return mhac, mhan
+        mha = "No Military Housing Area"
+    return mha
 
 
 def get_option(header, options):
