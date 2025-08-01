@@ -27,7 +27,7 @@ LQA,lqa,LQA,Living Quarters Allowance,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,ba
 CONUS COLA,conus_cola,CONUS COLA,Continental U.S. Cost of Living Allowance,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,cola
 OCONUS COLA,oconus_cola,OCONUS COLA,Outside Continental U.S. Cost of Living Allowance,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,cola
 OHA,oha,OHA,Overseas Housing Allowance,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,bah
-FLPB,flpb,FLPB,Foreign Language Profiency Bonus,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,flpb
+FLPB,flpb,FLPB,Foreign Language Profiency Bonus,E,Decimal,0,FALSE,FALSE,TRUE,TRUE,TRUE,flpb
 Foreign Duty Pay,foreign_duty_pay,FDP,Foreign Duty Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,fdp
 ASP,asp,ASP,Additional Special Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,specialty
 Dive Pay,dive_pay,DP,Dive Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,specialty
@@ -43,8 +43,8 @@ Combat Duty,combat_duty,CD,Combat Duty,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,c
 Combat Zone Pay,combat_zone_pay,CZP,Combat Zone Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,combat
 HFP/IDP,hfpidp,HFP/IDP,Hostile Fire/Imminent Danger Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,combat
 HFP-L,hfpl,HFP-L,Hostile Fire Pay - Location,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,combat
-Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,combat
-Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,combat
+Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,E,Decimal,0,FALSE,FALSE,TRUE,TRUE,TRUE,combat
+Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,E,Decimal,0,FALSE,FALSE,TRUE,TRUE,TRUE,combat
 AIP,aip,AIP,Assignment Incentive Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,incentive
 ACIP,acip,ACIP,Aviation Career Incentive Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,incentive
 CEFIP,cefip,CEFIP,Career Enlisted Flyer Incentive Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,incentive
@@ -57,14 +57,14 @@ HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,
 ACP,acp,ACP,Aviation Continuation Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,continuation
 CONT PAY,cont_pay,CONT PAY,Continuation Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,continuation
 NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,continuation
-Accession Bonus,accession_bonus,AB,Accession Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-CSRB,csrb,CSRB,Critical Skills Retention Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-MRB,mrb,MRB,Multiyear Retention Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-NPAB,npab,NPAB,Nuclear Power Accession Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-SEB,seb,SEB,Selective Enlistment Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-SRB,srb,SRB,Selective Reenlistment Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,bonus
-PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,pcs
+Accession Bonus,accession_bonus,AB,Accession Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+CSRB,csrb,CSRB,Critical Skills Retention Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+MRB,mrb,MRB,Multiyear Retention Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+NPAB,npab,NPAB,Nuclear Power Accession Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+SEB,seb,SEB,Selective Enlistment Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+SRB,srb,SRB,Selective Reenlistment Bonus,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,bonus
+PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,E,Decimal,0,FALSE,TRUE,FALSE,FALSE,TRUE,pcs
 Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,pcs
 MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,pcs
 MIHA-R,mihar,MIHA-R,Moving Housing Allowance - Rent,E,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,pcs

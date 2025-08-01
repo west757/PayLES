@@ -220,7 +220,7 @@ def add_variables(paydf, les_text):
             if len(les_text[56]) == 3:
                 value = les_text[56][2]
         elif header == 'Combat Zone':
-            value = False
+            value = "No"
         elif header == 'BAQ Type':
             if len(les_text[48]) == 3:
                 value = (les_text[48][2])[0] + (les_text[48][2])[1:].lower()
@@ -283,16 +283,17 @@ def add_allotments(paydf, les_text):
 
 def add_calculations(paydf):
     paydf_template = app.config['PAYDF_TEMPLATE']
-
+    # Only add calculation rows for the initial month
+    taxable, nontaxable = calculate_tax_pay(paydf, 1)
     for _, row in paydf_template.iterrows():
         if row['type'] == 'C':
             header = row['header']
             value = 0
 
             if header == "Taxable Pay":
-                value = calculate_taxablepay(paydf, 1)
+                value = taxable
             elif header == "Non-Taxable Pay":
-                value = calculate_nontaxablepay(paydf, 1)
+                value = nontaxable
             elif header == "Total Taxes":
                 value = calculate_totaltaxes(paydf, 1)
             elif header == "Gross Pay":
@@ -509,17 +510,20 @@ def update_allotments(paydf, month, options):
 
 
 def update_calculations(paydf, month, only_taxable):
-    for row_idx, row in paydf.iterrows():
-        header = row['Header']
-        columns = paydf.columns.tolist()
-        col_idx = columns.index(month)
-        
-        if only_taxable:
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    # Only update the current column, never touch previous columns
+    if only_taxable:
+        taxable, nontaxable = calculate_tax_pay(paydf, col_idx)
+        for row_idx, row in paydf.iterrows():
+            header = row['Header']
             if header == "Taxable Pay":
-                paydf.at[row_idx, month] = calculate_taxablepay(paydf, col_idx)
+                paydf.at[row_idx, month] = taxable
             elif header == "Non-Taxable Pay":
-                paydf.at[row_idx, month] = calculate_nontaxablepay(paydf, col_idx)
-        else:
+                paydf.at[row_idx, month] = nontaxable
+    else:
+        for row_idx, row in paydf.iterrows():
+            header = row['Header']
             if header == "Total Taxes":
                 paydf.at[row_idx, month] = calculate_totaltaxes(paydf, col_idx)
             elif header == "Gross Pay":
@@ -755,14 +759,15 @@ def calculate_rothtsp(paydf, row_idx, month):
 
 
 
-
-def calculate_taxablepay(paydf, col_idx):
+def calculate_tax_pay(paydf, col_idx):
     paydf_template = app.config['PAYDF_TEMPLATE']
-    total = Decimal(0)
     combat_zone_row = paydf[paydf['Header'] == 'Combat Zone']
-    combat_zone = None
-    if not combat_zone_row.empty:
-        combat_zone = combat_zone_row.iloc[0, col_idx]
+    combat_zone = combat_zone_row.iloc[0, col_idx] if not combat_zone_row.empty else "No"
+    # Check combat_zone as a string (case-insensitive 'YES')
+    is_combat_zone = str(combat_zone).strip().upper() == 'YES'
+    taxable = Decimal(0)
+    nontaxable = Decimal(0)
+
     for i, row in paydf.iterrows():
         header = row['Header']
         match = paydf_template[paydf_template['header'] == header]
@@ -770,32 +775,26 @@ def calculate_taxablepay(paydf, col_idx):
             continue
         row_type = match.iloc[0]['type']
         if row_type == 'E':
-            if combat_zone == 'Yes' and header == 'Base Pay':
-                continue
-            if match.iloc[0]['tax'] == 'Y':
-                value = row.iloc[col_idx]
-                if value is None or value == '':
-                    value = 0
-                total += Decimal(value)
-    return round(total, 2)
-
-
-def calculate_nontaxablepay(paydf, col_idx):
-    paydf_template = app.config['PAYDF_TEMPLATE']
-    total = Decimal(0)
-    for i, row in paydf.iterrows():
-        header = row['Header']
-        match = paydf_template[paydf_template['header'] == header]
-        if match.empty:
-            continue
-        row_type = match.iloc[0]['type']
-        if row_type == 'E':
-            if match.iloc[0]['tax'] == 'N':
-                value = row.iloc[col_idx]
-                if value is None or value == '':
-                    value = 0
-                total += Decimal(value)
-    return round(total, 2)
+            value = row.iloc[col_idx]
+            # Robust value casting
+            if value is None or value == '':
+                value = Decimal(0)
+            else:
+                try:
+                    value = Decimal(str(value))
+                except Exception:
+                    value = Decimal(0)
+            tax_flag = match.iloc[0]['tax']
+            if is_combat_zone:
+                nontaxable += value
+            else:
+                if tax_flag:
+                    taxable += value
+                else:
+                    nontaxable += value
+    if is_combat_zone:
+        taxable = Decimal(0)
+    return round(taxable, 2), round(nontaxable, 2)
 
 
 def calculate_totaltaxes(paydf, col_idx):
@@ -808,11 +807,18 @@ def calculate_totaltaxes(paydf, col_idx):
             continue
         row_type = match.iloc[0]['type']
         if row_type == 'D':
-            if match.iloc[0]['tax'] == 'Y':
+            tax_flag = match.iloc[0]['tax']
+            if tax_flag:
                 value = row.iloc[col_idx]
+                # Robust value casting
                 if value is None or value == '':
-                    value = 0
-                total += Decimal(value)
+                    value = Decimal(0)
+                else:
+                    try:
+                        value = Decimal(str(value))
+                    except Exception:
+                        value = Decimal(0)
+                total += value
     return round(total, 2)
 
 
