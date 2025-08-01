@@ -36,6 +36,21 @@ function hideTooltip() {
     tooltip.style.display = 'none';
 }
 
+document.addEventListener('mousemove', function(e) {
+    if (e.target && e.target.classList.contains('rect-highlight')) {
+        // Get tooltip text from data-tooltip attribute
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+});
+
+document.addEventListener('mouseleave', function(e) {
+    if (e.target && e.target.classList.contains('rect-highlight')) {
+        hideTooltip();
+    }
+}, true);
 
 
 
@@ -74,8 +89,7 @@ async function downloadFile() {
 }
 
 
-// Delegated event listeners for dynamic paydf controls
-
+//delegated event listeners for dynamic paydf controls
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
@@ -89,6 +103,18 @@ document.addEventListener('change', function(e) {
         e.preventDefault();
         console.log('Delegated: Months dropdown changed');
         updatePaydf();
+    }
+    if (e.target && e.target.id === 'highlight-changes-checkbox') {
+        console.log('Delegated: Highlight changes toggled');
+        highlight_changes();
+    }
+    if (e.target && e.target.id === 'show-all-variables-checkbox') {
+        console.log('Delegated: Show all variables toggled');
+        show_all_variables();
+    }
+    if (e.target && e.target.id === 'show-all-options-checkbox') {
+        console.log('Delegated: Show all options toggled');
+        show_all_options();
     }
 });
 
