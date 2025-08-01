@@ -42,7 +42,7 @@
                             {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
                                 {{ '{}%'.format(current_value) }}
                             {% elif dtype == 'Decimal' %}
-                                {{ '${:,.2f}'.format(current_value) }}
+                                {{ '${:,.2f}'.format(current_value|float|abs) }}
                             {% else %}
                                 {{ current_value }}
                             {% endif %}
@@ -141,7 +141,7 @@
                             <td class="pos-table">
                                 <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                             </td>
-                            <td class="pos-table">{{ current_value }}</td>
+                            <td class="pos-table">{{ '${:,.2f}'.format(current_value|float|abs) }}</td>
                             <td class="pos-table">
                                 <input type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>

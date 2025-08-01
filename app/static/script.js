@@ -1,27 +1,44 @@
 const DEFAULT_MONTHS_DISPLAY = 4;
 const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
-// drag and drop functionality for file input
-var dropContainer = document.getElementById("home-drop");
-var fileInput = document.getElementById("home-input");
+// Drag and drop functionality for file input
+(function() {
+    var dropContainer = document.getElementById("home-drop");
+    var fileInput = document.getElementById("home-input");
+    var form = dropContainer.closest("form");
 
-dropContainer.addEventListener("dragover", function (e) {
-    e.preventDefault();
-}, false);
+    if (!dropContainer || !fileInput || !form) return;
 
-dropContainer.addEventListener("dragenter", function () {
-    dropContainer.classList.add("drag-active");
-});
+    // Prevent default drag behaviors
+    ["dragenter", "dragover", "dragleave", "drop"].forEach(function(eventName) {
+        dropContainer.addEventListener(eventName, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    });
 
-dropContainer.addEventListener("dragleave", function () {
-    dropContainer.classList.remove("drag-active");
-});
+    dropContainer.addEventListener("dragenter", function() {
+        dropContainer.classList.add("drag-active");
+    });
 
-dropContainer.addEventListener("drop", function (e) {
-    e.preventDefault();
-    dropContainer.classList.remove("drag-active");
-    fileInput.files = e.dataTransfer.files;
-});
+    dropContainer.addEventListener("dragleave", function(e) {
+        // Only remove if leaving the drop area
+        if (e.target === dropContainer) {
+            dropContainer.classList.remove("drag-active");
+        }
+    });
+
+    dropContainer.addEventListener("drop", function(e) {
+        dropContainer.classList.remove("drag-active");
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            // Optionally auto-submit the form after drop
+            if (form) {
+                form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
+            }
+        }
+    });
+})();
 
 
 
@@ -29,7 +46,6 @@ function getInitialMonth() {
     const el = document.getElementById('initial-month');
     return el ? el.value : MONTHS_SHORT[0];
 }
-
 
 function getMonthOptions(initialMonth, monthsDisplay) {
     let idx = MONTHS_SHORT.indexOf(initialMonth);
@@ -40,7 +56,6 @@ function getMonthOptions(initialMonth, monthsDisplay) {
     }
     return options;
 }
-
 
 function updateMonthDropdowns(monthsDisplayOverride) {
     let displayCount = monthsDisplayOverride || DEFAULT_MONTHS_DISPLAY;
@@ -58,8 +73,6 @@ function updateMonthDropdowns(monthsDisplayOverride) {
         });
     });
 }
-
-
 
 
 
@@ -190,8 +203,6 @@ function hideTooltip() {
     const tooltip = document.getElementById('tooltip');
     tooltip.style.display = 'none';
 }
-
-
 
 
 
