@@ -719,27 +719,27 @@ def calculate_sgli(paydf, row_idx, month, options):
 
 def calculate_state_taxes(paydf, month):
     STATE_TAX_RATE = app.config['STATE_TAX_RATE']
-    state_brackets = STATE_TAX_RATE[STATE_TAX_RATE['State'] == state]
     row_headers = paydf['header'].tolist()
     state = paydf.at[row_headers.index("Tax Residency State"), month]
+    state_brackets = STATE_TAX_RATE[STATE_TAX_RATE['state'] == state]
     filing_status = paydf.at[row_headers.index("State Filing Status"), month]
     taxable_income = paydf.at[row_headers.index("Taxable Income"), month]
     taxable_income = Decimal(taxable_income) * 12
     tax = Decimal(0)
 
     if filing_status == "Single":
-        brackets = state_brackets[['SingleBracket', 'SingleRate']].rename(columns={'SingleBracket': 'Bracket', 'SingleRate': 'Rate'})
+        brackets = state_brackets[['single_bracket', 'single_rate']].rename(columns={'single_bracket': 'bracket', 'single_rate': 'rate'})
     elif filing_status == "Married":
-        brackets = state_brackets[['MarriedBracket', 'MarriedRate']].rename(columns={'MarriedBracket': 'Bracket', 'MarriedRate': 'Rate'})
-    
-    brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
+        brackets = state_brackets[['married_bracket', 'married_rate']].rename(columns={'married_bracket': 'bracket', 'married_rate': 'rate'})
+
+    brackets = brackets.sort_values(by='bracket').reset_index(drop=True)
     
     for i in range(len(brackets)):
-        lower_bracket = Decimal(str(brackets.at[i, 'Bracket']))
-        rate = Decimal(str(brackets.at[i, 'Rate']))
+        lower_bracket = Decimal(str(brackets.at[i, 'bracket']))
+        rate = Decimal(str(brackets.at[i, 'rate']))
 
         if i + 1 < len(brackets):
-            upper_bracket = Decimal(str(brackets.at[i + 1, 'Bracket']))
+            upper_bracket = Decimal(str(brackets.at[i + 1, 'bracket']))
         else:
             upper_bracket = Decimal('1e12')
 

@@ -1,7 +1,7 @@
-<table id="paydf-table" class="pos-table">
-    {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+{% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
 
-    <tbody>
+<table id="paydf-table" class="pos-table">
+    <tbody class="pos-table-section">
         <tr class="pos-table-header">
             <td class="pos-table-header"></td>
             {% for col in col_headers[1:] %}
@@ -9,7 +9,6 @@
             {% endfor %}
         </tr>
 
-        <!-- variables -->
         {% for header in row_headers %}
             {% set i = loop.index0 %}
             {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
@@ -34,11 +33,9 @@
             </tr>
             {% endif %}
         {% endfor %}
+    </tbody>
 
-        <tr class="pos-table-spacer paydf-variable-row"><td class="pos-table-spacer" colspan=100%></td></tr>
-        <tr class="pos-table-spacer paydf-variable-row"><td class="pos-table-spacer" colspan=100%></td></tr>
-
-        <!-- entitlements, deductions, allotments -->
+    <tbody class="pos-table-section">
         {% for header in row_headers %}
             {% set i = loop.index0 %}
             {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
@@ -56,11 +53,9 @@
             </tr>
             {% endif %}
         {% endfor %}
+    </tbody>
 
-        <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
-        <tr class="pos-table-spacer"><td class="pos-table-spacer" colspan=100%></td></tr>
-
-        <!-- calculations -->
+    <tbody>
         {% for header in row_headers %}
             {% set i = loop.index0 %}
             {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
