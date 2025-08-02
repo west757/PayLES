@@ -162,33 +162,17 @@ function show_all_options() {
 
 
 
-// export paydf
-async function downloadFile() {
-    const filetype = document.getElementById('export-dropdown').value;
+function exportPaydfClient() {
+    var table = document.getElementById('paydf-table');
+    var filetype = document.getElementById('export-dropdown').value;
+    var filename = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
 
-    const formData = new FormData();
-    formData.append('filetype', filetype);
-
-    const response = await fetch('/export', {
-        method: 'POST',
-        body: formData
-    });
-
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
+    var workbook = XLSX.utils.table_to_book(table, {sheet: "PayDF", raw: true});
+    if (filetype === 'csv') {
+        XLSX.writeFile(workbook, filename, {bookType: 'csv'});
+    } else {
+        XLSX.writeFile(workbook, filename);
     }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-
-    a.download = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
-
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
 }
 
 
@@ -210,31 +194,45 @@ function hideTooltip() {
 
 //delegated event listeners for dynamic paydf controls
 document.addEventListener('click', function(e) {
+    //update les button
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
         updatePaydf();
     }
+
+    //export button
+    if (e.target && e.target.id === 'export-button') {
+        e.preventDefault();
+        exportPaydfClient();
+    }
 });
 
 document.addEventListener('change', function(e) {
+    //months dropdown
     if (e.target && e.target.id === 'months-dropdown') {
         e.preventDefault();
         updatePaydf();
         updateMonthDropdowns(parseInt(e.target.value));
     }
+
+    //highlight changes checkbox
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
         highlight_changes();
     }
+
+    //show all variables checkbox
     if (e.target && e.target.id === 'show-all-variables-checkbox') {
         show_all_variables();
     }
+
+    //show all options checkbox
     if (e.target && e.target.id === 'show-all-options-checkbox') {
         show_all_options();
     }
 });
 
 document.addEventListener('mousemove', function(e) {
-    if (e.target && e.target.classList.contains('rect-highlight')) {
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
@@ -243,7 +241,7 @@ document.addEventListener('mousemove', function(e) {
 });
 
 document.addEventListener('mouseleave', function(e) {
-    if (e.target && e.target.classList.contains('rect-highlight')) {
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         hideTooltip();
     }
 }, true);
