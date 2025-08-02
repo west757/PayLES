@@ -1,18 +1,18 @@
+{% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+{% set GRADES = config.GRADES %}
+{% set STATES_SHORT = config.STATES_SHORT %}
+{% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
+{% set SGLI_RATE = config.SGLI_RATE %}
+{% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
+{% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
+{% set month_options = col_headers[2:] %}
+
 <form id="options-form">
     <!-- variable passed to javascript to seed the initial month for the month dropdowns -->
     <input type="hidden" id="initial-month" value="{{ col_headers[1] }}">
 
     <table class="pos-table" id="options-table">
-        {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
-        {% set GRADES = config.GRADES %}
-        {% set STATES_SHORT = config.STATES_SHORT %}
-        {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
-        {% set SGLI_RATE = config.SGLI_RATE %}
-        {% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
-        {% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
-        {% set month_options = col_headers[2:] %}
-
-        <tbody>
+        <tbody class="pos-table-section">
             <tr class="pos-table-header">
                 <td class="pos-table-header"></td>
                 <td class="pos-table-header">Current</td>
@@ -121,10 +121,10 @@
                 {% endif %}
 
             {% endfor %}
+        </tbody>
 
+        <tbody class="pos-table-section">
             <!-- standard row options-->
-            <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
-            <tr class="pos-table options-standard-row"><td class="pos-table-spacer" colspan=100%></td></tr>
             {% for opt in options %}
                 {% set header = opt[0] %}
                 {% set future_value = opt[1] %}
@@ -156,10 +156,9 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
+        </tbody>
 
-            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-            <tr class="pos-table"><td class="pos-table-spacer" colspan=100%></td></tr>
-
+        <tbody>
             <tr class="pos-table">
                 <td class="pos-table" colspan="4">
                     <button id="update-les-button" type="button">Update LES</button>
