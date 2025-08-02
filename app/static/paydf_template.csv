@@ -126,9 +126,9 @@ Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accou
 AFRH,afrh,AFRH,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
 USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
 USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
-Taxable Pay,taxable_pay,TAXABLE PAY,Taxable Pay,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxpay
-Non-Taxable Pay,nontaxable_pay,NON-TAXABLE PAY,Non-Taxable Pay,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxpay
-Total Taxes,total_taxes,TOTAL TAXES,Total Taxes,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxpay
+Taxable Income,taxable_income,TAXABLE INCOME,Taxable Income,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
+Non-Taxable Income,nontaxable_income,NON-TAXABLE INCOME,Non-Taxable Income,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
+Total Taxes,total_taxes,TOTAL TAXES,Total Taxes,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
 Gross Pay,gross_pay,GROSS PAY,Gross Pay,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,grossnetpay
 Net Pay,net_pay,NET PAY,Net Pay,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,grossnetpay
 Difference,difference,DIFFERENCE,Difference,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,grossnetpay
