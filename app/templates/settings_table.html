@@ -1,8 +1,8 @@
-<table class="pos-table" id="settings-table">
-    {% set show_all_variables = session.get('show_all_variables', False) %}
-    {% set highlight_changes = session.get('highlight_changes', False) %}
-    {% set show_all_options = session.get('show_all_options', False) %}
+{% set show_all_variables = session.get('show_all_variables', False) %}
+{% set highlight_changes = session.get('highlight_changes', False) %}
+{% set show_all_options = session.get('show_all_options', False) %}
 
+<table class="pos-table" id="settings-table">
     <tbody>
         <tr class="pos-table-header">
             <td class="pos-table-header" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
