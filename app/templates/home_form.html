@@ -1,39 +1,35 @@
-<div id="home-form">
-    <p style="font-size: 20px;">Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)</p>
+<table id="home-table">
+    <tr>
+        <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
+            <td rowspan=3>
+                <label for="home-input" id="home-drop">
+                    <span id="drop-title">Drop LES here</span>
+                    or
+                    <input type="file" id="home-input" name="home-input" accept=".pdf">
+                </label>
+            </td>
+            <td>
+                <button id="submit-les-button">Submit LES</button>
+            </td>
+        </form>
+    </tr>
 
-    <table id="home-table">
-        <tr>
-            <form hx-post="/submit_les" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
-                <td rowspan=3>
-                    <label for="home-input" id="home-drop">
-                        <span id="drop-title">Drop LES here</span>
-                        or
-                        <input type="file" id="home-input" name="home-input" accept=".pdf">
-                    </label>
-                </td>
-                <td>
-                    <button id="submit-les-button">Submit LES</button>
-                </td>
-            </form>
-        </tr>
+    <tr>
+        <form hx-post="/submit_example" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
+            <td>
+                <button id="submit-example-les-button">Submit Example LES</button>
+            </td>
+        </form>
+    </tr>
 
-        <tr>
-            <form hx-post="/submit_example" hx-target="#content" hx-swap="innerHTML" enctype="multipart/form-data">
-                <td>
-                    <button id="submit-example-les-button">Submit Example LES</button>
-                </td>
-            </form>
-        </tr>
-
-        <tr>
-            <form action="https://mypay.dfas.mil/#/" target="_blank">
-                <td>
-                    <button id="mypay-button">MyPay</button>
-                </td>
-            </form>
-        </tr>
-    </table>
-</div>
+    <tr>
+        <form action="https://mypay.dfas.mil/#/" target="_blank">
+            <td>
+                <button id="mypay-button">MyPay</button>
+            </td>
+        </form>
+    </tr>
+</table>
 
 {% if message %}
 <div class="tooltip-toast">{{ message }}</div>
