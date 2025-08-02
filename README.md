@@ -68,21 +68,15 @@ gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 in work:
 add row
 cola
-tsp update
-export formatting
 dynamic variable get from allotment boxes
 military money manual
-last updated/version number
-add deployment
 site visitor count
 background gradient
-on-base/off-base BAH
 download csv supporting files
 download for self-host
 use video
 license update
-create levdf (leave)
-more robust checking
-TSP calculator
+create levdf (leave calculator)
+create tspdf (tsp calculator)
 
 -->
