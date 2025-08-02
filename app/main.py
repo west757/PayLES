@@ -712,9 +712,9 @@ def calculate_sgli(paydf, row_idx, month, options):
     sgli_value, sgli_month = get_option('SGLI', options)
 
     if month >= sgli_month:
-        return -Decimal(sgli_value)
+        return -abs(Decimal(sgli_value))
     
-    return prev_value
+    return -abs(Decimal(prev_value))
 
 
 def calculate_state_taxes(paydf, month):
@@ -758,7 +758,7 @@ def calculate_traditional_tsp(paydf, month):
 
     value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
 
-    return round(value, 2)
+    return -round(value, 2)
 
 
 def calculate_roth_tsp(paydf, month):
@@ -768,7 +768,7 @@ def calculate_roth_tsp(paydf, month):
 
     value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
 
-    return round(value, 2)
+    return -round(value, 2)
 
 
 
