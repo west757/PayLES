@@ -816,16 +816,37 @@ def calculate_state_taxes(paydf, row_idx, month):
     return -round(tax, 2)
 
 
+
 def calculate_traditional_tsp(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
-    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    row_headers = paydf['header'].tolist()
+    # Get base pay and traditional tsp rate for this month
+    base_pay_idx = row_headers.index("Base Pay")
+    tsp_rate_idx = row_headers.index("Traditional TSP Rate")
+    base_pay = paydf.at[base_pay_idx, month]
+    tsp_rate = paydf.at[tsp_rate_idx, month]
+    try:
+        value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
+    except Exception:
+        value = Decimal(0)
+    return round(value, 2)
 
 
 def calculate_roth_tsp(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
-    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
+    row_headers = paydf['header'].tolist()
+    # Get base pay and roth tsp rate for this month
+    base_pay_idx = row_headers.index("Base Pay")
+    tsp_rate_idx = row_headers.index("Roth TSP Rate")
+    base_pay = paydf.at[base_pay_idx, month]
+    tsp_rate = paydf.at[tsp_rate_idx, month]
+    try:
+        value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
+    except Exception:
+        value = Decimal(0)
+    return round(value, 2)
 
 
 
@@ -874,87 +895,62 @@ def calculate_taxed_income(paydf, col_idx):
 
 def calculate_total_taxes(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
+    rows = paydf[paydf['header'].isin(row_headers)]
     total = Decimal(0)
 
-    for _, row in paydf.iterrows():
+    for _, row in rows.iterrows():
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+        tax_flag = match.iloc[0]['tax']
 
-        row_type = match.iloc[0]['type']
-
-        if row_type == 'D':
-            tax_flag = match.iloc[0]['tax']
-
-            if tax_flag:
-                value = row.iloc[col_idx]
-
-                if value is None or value == '':
-                    value = Decimal(0)
-                else:
-                    try:
-                        value = Decimal(str(value))
-                    except Exception:
-                        value = Decimal(0)
-                total += value
+        if tax_flag:
+            value = row.iloc[col_idx]
+            value = Decimal(str(value))
+            total += value
 
     return round(total, 2)
 
 
 def calculate_gross_pay(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']['header'].tolist()
+    rows = paydf[paydf['header'].isin(row_headers)]
     total = Decimal(0)
 
-    for i, row in paydf.iterrows():
-        header = row['header']
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-
-        row_type = match.iloc[0]['type']
-        
-        if row_type == 'E':
-            value = row.iloc[col_idx]
-            if value is None or value == '':
-                value = 0
-            try:
-                total += Decimal(value)
-            except Exception:
-                total += Decimal(0)
+    for _, row in rows.iterrows():
+        value = row.iloc[col_idx]
+        total += Decimal(value)
 
     return round(total, 2)
 
 
 def calculate_net_pay(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
+    rows = paydf[paydf['header'].isin(row_headers)]
+    row_headers = paydf['header'].tolist()
+    gross_pay_row_idx = row_headers.index("Gross Pay")
+    gross_pay_current = paydf.iloc[gross_pay_row_idx, col_idx]
     total = Decimal(0)
 
-    for i, row in paydf.iterrows():
-        header = row['header']
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+    for i, row in rows.iterrows():
+        value = row.iloc[col_idx]
+        total += Decimal(value)
 
-        row_type = match.iloc[0]['type']
-
-        if row_type in ['E', 'D', 'A']:
-            value = row.iloc[col_idx]
-
-            if value is None or value == '':
-                value = 0
-            try:
-                total += Decimal(value)
-            except Exception:
-                total += Decimal(0)
+    total = gross_pay_current + total
 
     return round(total, 2)
 
 
 def calculate_difference(paydf, col_idx):
-    netpay_current = calculate_net_pay(paydf, col_idx)
-    netpay_prev = calculate_net_pay(paydf, col_idx - 1)
+    row_headers = paydf['header'].tolist()
+    netpay_row_idx = row_headers.index("Net Pay")
+    netpay_current = paydf.iloc[netpay_row_idx, col_idx]
+    netpay_prev = paydf.iloc[netpay_row_idx, col_idx - 1]
 
-    try:
-        diff = Decimal(netpay_current) - Decimal(netpay_prev)
-    except Exception:
-        diff = Decimal(0)
-
-    return round(diff, 2)
+    difference = Decimal(netpay_current) - Decimal(netpay_prev)
+    return round(difference, 2)
 
 
 
