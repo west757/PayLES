@@ -1,6 +1,6 @@
 :root {
     --white: #F8F9FA;
-    --pale: #f5e7de;
+    --pale: #F2F0EB;
     --black: #000000;
     --darkgray: #393939;
     --gray: #CFD8DC;
@@ -198,7 +198,7 @@ footer {
 }
 
 #home-drop:hover, #home-drop.drag-active {
-    background-color: var(--lightgray);
+    background-color: var(--input_background);
 }
 
 #drop-title {
@@ -438,11 +438,12 @@ input[type=checkbox] {
 }
 
 #les-image {
+    border: 1px solid var(--table_border);
     display: inline-block;
+    line-height: 0;
     margin: 1rem;
     position: relative;
 }
-
 
 
 /* paydf-options-settings tables */
@@ -727,9 +728,8 @@ tbody.pos-table-section tr:last-child td {
 
 
 /* remarks */
-.remark-container {
+.remarks {
     border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
     overflow: hidden;
     flex: 1;
     margin: 0 0 2rem 0;
@@ -745,8 +745,11 @@ tbody.pos-table-section tr:last-child td {
 }
 
 
+.shadow {
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
+}
 
-
+/* default css for settings */
 #paydf-table.highlight-mode .paydf-highlight {
     background-color: var(--highlight);
 }
