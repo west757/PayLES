@@ -427,11 +427,13 @@ def update_variables(paydf, month, options):
 
         if header in option_headers:
             future_value, future_month = get_option(header, options)
-            future_col_idx = columns.index(future_month)
-            current_col_idx = columns.index(month)
-
-            if current_col_idx >= future_col_idx:
-                paydf.at[row_idx, month] = future_value
+            if future_month in columns:
+                future_col_idx = columns.index(future_month)
+                current_col_idx = columns.index(month)
+                if current_col_idx >= future_col_idx:
+                    paydf.at[row_idx, month] = future_value
+                else:
+                    paydf.at[row_idx, month] = prev_value
             else:
                 paydf.at[row_idx, month] = prev_value
             continue
@@ -479,15 +481,16 @@ def update_entitlements(paydf, month, options):
             prev_month = columns[col_idx - 1]
             prev_value = paydf.at[row_idx, prev_month]
 
-            if not future_value or not future_month:
-                paydf.at[row_idx, month] = prev_value
-            else:
-                future_col_idx = columns.index(future_month) if future_month in columns else None
+            if future_month in columns:
+                future_col_idx = columns.index(future_month)
                 current_col_idx = columns.index(month)
+
                 if future_col_idx is not None and current_col_idx >= future_col_idx:
                     paydf.at[row_idx, month] = future_value
                 else:
                     paydf.at[row_idx, month] = prev_value
+            else:
+                paydf.at[row_idx, month] = prev_value
             continue
 
         elif header == 'Base Pay':
@@ -524,15 +527,16 @@ def update_deductions(paydf, month, options):
             prev_month = columns[col_idx - 1]
             prev_value = paydf.at[row_idx, prev_month]
 
-            if not future_value or not future_month:
-                paydf.at[row_idx, month] = prev_value
-            else:
-                future_col_idx = columns.index(future_month) if future_month in columns else None
+            if future_month in columns:
+                future_col_idx = columns.index(future_month)
                 current_col_idx = columns.index(month)
+
                 if future_col_idx is not None and current_col_idx >= future_col_idx:
                     paydf.at[row_idx, month] = future_value
                 else:
                     paydf.at[row_idx, month] = prev_value
+            else:
+                paydf.at[row_idx, month] = prev_value
             continue
 
         elif header == 'Federal Taxes':
@@ -1024,12 +1028,13 @@ def months_in_service(d1, d2):
 
 def calculate_mha(zipcode):
     MHA_ZIPCODES = app.config['MHA_ZIPCODES']
-    if zipcode != "00000" or zipcode != "" or zipcode is not None:
+    if zipcode != "00000" and zipcode != "" and zipcode != "Not Found" and zipcode is not None:
         mha_search = MHA_ZIPCODES[MHA_ZIPCODES.isin([int(zipcode)])].stack()
         mha_search_row = mha_search.index[0][0]
         mha = MHA_ZIPCODES.loc[mha_search_row, "MHA"]
     else:
-        mha = "No Military Housing Area"
+        mha = "Not Found"
+
     return mha
 
 
