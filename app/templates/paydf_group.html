@@ -1,17 +1,19 @@
-<div id="paydf-group">
-    <div id="paydf-options-settings">
-        <div id="paydf">
-            {% include 'paydf_table.html' %}
-        </div>
-        <div id="options-settings">
-            <div id="options">
-                {% include 'options_table.html' %}
+<div id="content" hx-swap-oob="true">
+    <div id="paydf-group">
+        <div id="paydf-options-settings">
+            <div id="paydf">
+                {% include 'paydf_table.html' %}
             </div>
-            <div id="settings">
-                {% include 'settings_table.html' %}
+            <div id="options-settings">
+                <div id="options">
+                    {% include 'options_table.html' %}
+                </div>
+                <div id="settings">
+                    {% include 'settings_table.html' %}
+                </div>
             </div>
         </div>
+        {% include "les_image.html" %}
     </div>
-    {% include "les_image.html" %}
+    {% include "paydf_modals.html" %}
 </div>
-{% include "paydf_modals.html" %}
