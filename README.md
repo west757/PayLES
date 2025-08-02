@@ -65,17 +65,16 @@ dfas pcs pay: https://www.dfas.mil/MilitaryMembers/travelpay/armypcs/PCS-Informa
 gross and net pay: https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/
 
 
-in work:
+todo:
 add row
 cola
 dynamic variable get from allotment boxes
 military money manual
-site visitor count
-background gradient
-download csv supporting files
-download for self-host
-use video
-license update
+site visitor tracking
+background gradient and updated css
+instructions for self-host
+use video/site instructions
+remove social security rectangle?
 create levdf (leave calculator)
 create tspdf (tsp calculator)
 

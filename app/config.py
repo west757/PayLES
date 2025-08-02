@@ -8,7 +8,7 @@ def str_to_bool(val):
     return str(val).strip().upper() == "TRUE"
 
 class Config:
-    #flask configuration settings
+    #configuration settings
     SECRET_KEY = secrets.token_hex(16)
     SESSION_PERMANENT = False
     SESSION_TYPE = "filesystem"
