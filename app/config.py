@@ -15,6 +15,7 @@ class Config:
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
     STATIC_FOLDER = Path.cwd() / "static"
+    VERSION = "Version 1.0.0 - 2025-08-01"
 
     #static files
     LOGO_FILE = "logo.png"

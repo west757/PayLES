@@ -130,12 +130,23 @@ nav ul li:hover > ul {
 footer {
     background-color: var(--darkgray);
     color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 0.8rem;
     line-height: 0.35rem;
     margin-top: auto;
-    padding: 0 0 0 1.5rem;
-    text-align: left;
     width: 100%;
+}
+
+#footer-left {
+    padding-left: 1.5rem;
+    text-align: left;
+}
+
+#footer-right {
+    padding-right: 1.5rem;
+    text-align: right;
 }
 
 
@@ -371,6 +382,11 @@ input[type=checkbox] {
 /* content */
 #content {
     max-width: 100%;
+}
+
+.about, .faq, .resources {
+    margin: 0 auto;
+    max-width: 60%;
 }
 
 

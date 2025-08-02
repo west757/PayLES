@@ -34,7 +34,8 @@
                         <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mentalhealth') }}">Mental Health Resources</a></li>
                     </ul>
                 </li>
-                <li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="{{ url_for('leave_calculator') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="{{ url_for('tsp_calculator') }}">TSP Calculator</a></li>
                 <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
             </ul>
         </nav>
@@ -45,8 +46,11 @@
     </div>
 
     <footer>
-        <div class="footer">
+        <div id="footer-left">
             <p>All Rights Reserved &#xA9; 2025 PayLES</p>
+        </div>
+        <div id="footer-right">
+            <p>{{ config['VERSION'] }}</p>
         </div>
     </footer>
 

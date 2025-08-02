@@ -32,11 +32,13 @@ def faq():
 def resources():
     return render_template('resources.html')
 
-@app.route('/leave')
-def leave():
-    return render_template('leave.html')
+@app.route('/leave_calculator')
+def leave_calculator():
+    return render_template('leave_calculator.html')
 
-
+@app.route('/tsp_calculator')
+def tsp_calculator():
+    return render_template('tsp_calculator.html')
 
 
 
