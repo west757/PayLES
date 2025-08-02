@@ -384,7 +384,7 @@ input[type=checkbox] {
     max-width: 100%;
 }
 
-.about, .faq, .resources {
+#home-group, #about, #faq, #resources {
     margin: 0 auto;
     max-width: 60%;
 }
@@ -642,7 +642,6 @@ tbody.pos-table-section tr:last-child td {
 /* tab accordion */
 .tabs {
     border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
     overflow: hidden;
     flex: 1;
 }
@@ -704,7 +703,6 @@ tbody.pos-table-section tr:last-child td {
 /* resources */
 .resource-container {
     border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
     overflow: hidden;
     flex: 1;
 }
