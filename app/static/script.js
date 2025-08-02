@@ -90,7 +90,9 @@ function updatePaydf() {
     .then(response => response.text())
     .then(html => {
         document.getElementById('paydf').innerHTML = html;
-        attachPaydfEventListeners();
+        highlight_changes();
+        show_all_variables();
+        show_all_options();
     });
 }
 
