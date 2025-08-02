@@ -1,5 +1,6 @@
 from decimal import Decimal
 from pathlib import Path
+from datetime import timedelta
 import os
 import secrets
 import pandas as pd
@@ -11,11 +12,12 @@ class Config:
     #configuration settings
     SECRET_KEY = secrets.token_hex(16)
     SESSION_PERMANENT = False
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     SESSION_TYPE = "filesystem"
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
     STATIC_FOLDER = Path.cwd() / "static"
-    VERSION = "Version 1.0.0 - 2025-08-01"
+    VERSION = "Version 0.1.0 2025-08-01"
 
     #static files
     LOGO_FILE = "logo.png"
