@@ -327,11 +327,11 @@ def add_calculations(paydf):
         elif header == "Non-Taxable Income":
             value = nontaxable
         elif header == "Total Taxes":
-            value = calculate_totaltaxes(paydf, 1)
+            value = calculate_total_taxes(paydf, 1)
         elif header == "Gross Pay":
-            value = calculate_grosspay(paydf, 1)
+            value = calculate_gross_pay(paydf, 1)
         elif header == "Net Pay":
-            value = calculate_netpay(paydf, 1)
+            value = calculate_net_pay(paydf, 1)
         elif header == "Difference":
             value = 0
 
@@ -494,7 +494,7 @@ def update_entitlements(paydf, month, options):
             continue
 
         elif header == 'Base Pay':
-            paydf.at[row_idx, month] = calculate_basepay(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_base_pay(paydf, row_idx, month)
         elif header == 'BAS':
             paydf.at[row_idx, month] = calculate_bas(paydf, row_idx, month)
         elif header == 'BAH':
@@ -540,17 +540,19 @@ def update_deductions(paydf, month, options):
             continue
 
         elif header == 'Federal Taxes':
-            paydf.at[row_idx, month] = calculate_federaltaxes(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_federal_taxes(paydf, row_idx, month)
         elif header == 'FICA - Social Security':
-            paydf.at[row_idx, month] = calculate_ficasocialsecurity(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_fica_social_security(paydf, row_idx, month)
         elif header == 'FICA - Medicare':
-            paydf.at[row_idx, month] = calculate_ficamedicare(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_fica_medicare(paydf, row_idx, month)
         elif header == 'SGLI':
             paydf.at[row_idx, month] = calculate_sgli(paydf, row_idx, month, options)
         elif header == 'State Taxes':
-            paydf.at[row_idx, month] = calculate_statetaxes(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_state_taxes(paydf, row_idx, month)
+        elif header == 'Traditional TSP':
+            paydf.at[row_idx, month] = calculate_traditional_tsp(paydf, row_idx, month)
         elif header == 'Roth TSP':
-            paydf.at[row_idx, month] = calculate_rothtsp(paydf, row_idx, month)
+            paydf.at[row_idx, month] = calculate_roth_tsp(paydf, row_idx, month)
 
     return paydf
 
@@ -584,11 +586,11 @@ def update_calculations(paydf, month, only_taxable):
         for row_idx, row in rows.iterrows():
             header = row['header']
             if header == "Total Taxes":
-                paydf.at[row_idx, month] = calculate_totaltaxes(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_total_taxes(paydf, col_idx)
             elif header == "Gross Pay":
-                paydf.at[row_idx, month] = calculate_grosspay(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_gross_pay(paydf, col_idx)
             elif header == "Net Pay":
-                paydf.at[row_idx, month] = calculate_netpay(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_net_pay(paydf, col_idx)
             elif header == "Difference":
                 paydf.at[row_idx, month] = calculate_difference(paydf, col_idx)
     return paydf
@@ -599,7 +601,7 @@ def update_calculations(paydf, month, only_taxable):
 
 
 
-def calculate_basepay(paydf, row_idx, month):
+def calculate_base_pay(paydf, row_idx, month):
     PAY_ACTIVE = app.config['PAY_ACTIVE']
 
     columns = paydf.columns.tolist()
@@ -687,7 +689,7 @@ def calculate_bah(paydf, row_idx, month):
 
 
 
-def calculate_federaltaxes(paydf, row_idx, month):
+def calculate_federal_taxes(paydf, row_idx, month):
     STANDARD_DEDUCTIONS = app.config['STANDARD_DEDUCTIONS']
     FEDERAL_TAX_RATE = app.config['FEDERAL_TAX_RATE']
 
@@ -734,7 +736,7 @@ def calculate_federaltaxes(paydf, row_idx, month):
     return -round(tax, 2)
 
 
-def calculate_ficasocialsecurity(paydf, row_idx, month):
+def calculate_fica_social_security(paydf, row_idx, month):
     FICA_SOCIALSECURITY_TAX_RATE = app.config['FICA_SOCIALSECURITY_TAX_RATE']
     row_headers = paydf['header'].tolist()
     taxable_income_row_idx = row_headers.index("Taxable Income")
@@ -744,7 +746,7 @@ def calculate_ficasocialsecurity(paydf, row_idx, month):
     return round(-Decimal(taxable_income) * FICA_SOCIALSECURITY_TAX_RATE, 2)
 
 
-def calculate_ficamedicare(paydf, row_idx, month):
+def calculate_fica_medicare(paydf, row_idx, month):
     FICA_MEDICARE_TAX_RATE = app.config['FICA_MEDICARE_TAX_RATE']
     row_headers = paydf['header'].tolist()
     taxable_income_row_idx = row_headers.index("Taxable Income")
@@ -768,7 +770,7 @@ def calculate_sgli(paydf, row_idx, month, options):
 
 
 
-def calculate_statetaxes(paydf, row_idx, month):
+def calculate_state_taxes(paydf, row_idx, month):
     STATE_TAX_RATE = app.config['STATE_TAX_RATE']
 
     row_headers = paydf['header'].tolist()
@@ -814,8 +816,13 @@ def calculate_statetaxes(paydf, row_idx, month):
     return -round(tax, 2)
 
 
+def calculate_traditional_tsp(paydf, row_idx, month):
+    columns = paydf.columns.tolist()
+    col_idx = columns.index(month)
+    return paydf.at[row_idx, paydf.columns[col_idx - 1]]
 
-def calculate_rothtsp(paydf, row_idx, month):
+
+def calculate_roth_tsp(paydf, row_idx, month):
     columns = paydf.columns.tolist()
     col_idx = columns.index(month)
     return paydf.at[row_idx, paydf.columns[col_idx - 1]]
@@ -865,7 +872,7 @@ def calculate_taxed_income(paydf, col_idx):
     return round(taxable, 2), round(nontaxable, 2)
 
 
-def calculate_totaltaxes(paydf, col_idx):
+def calculate_total_taxes(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
 
@@ -893,7 +900,7 @@ def calculate_totaltaxes(paydf, col_idx):
     return round(total, 2)
 
 
-def calculate_grosspay(paydf, col_idx):
+def calculate_gross_pay(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
 
@@ -915,7 +922,7 @@ def calculate_grosspay(paydf, col_idx):
     return round(total, 2)
 
 
-def calculate_netpay(paydf, col_idx):
+def calculate_net_pay(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     total = Decimal(0)
 
@@ -939,8 +946,8 @@ def calculate_netpay(paydf, col_idx):
 
 
 def calculate_difference(paydf, col_idx):
-    netpay_current = calculate_netpay(paydf, col_idx)
-    netpay_prev = calculate_netpay(paydf, col_idx - 1)
+    netpay_current = calculate_net_pay(paydf, col_idx)
+    netpay_prev = calculate_net_pay(paydf, col_idx - 1)
 
     try:
         diff = Decimal(netpay_current) - Decimal(netpay_prev)
