@@ -162,7 +162,7 @@ function show_all_options() {
 
 
 
-function exportPaydfClient() {
+function exportPaydf() {
     var table = document.getElementById('paydf-table');
     var filetype = document.getElementById('export-dropdown').value;
     var filename = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
@@ -203,7 +203,7 @@ document.addEventListener('click', function(e) {
     //export button
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
-        exportPaydfClient();
+        exportPaydf();
     }
 });
 

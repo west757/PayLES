@@ -107,7 +107,7 @@ SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,D,Decimal,0,TRUE,FAL
 Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,sgli
 TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,sgli
 State Taxes,state_taxes,STATE TAXES,State Taxes,D,Decimal,0,TRUE,FALSE,FALSE,TRUE,FALSE,statetaxes
-Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,D,Decimal,0,FALSE,FALSE,FALSE,FALSE,FALSE,tsp
+Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
 Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
 MGIB,mgib,MGIB,Montgomery G.I. Bill Program,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,mgib
 Debt,debt_debt,DEBT,Government Debt,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
