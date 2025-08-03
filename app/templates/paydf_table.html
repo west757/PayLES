@@ -33,17 +33,19 @@
         </tbody>
 
         <tbody id="custom-reference-body">
+            {% set custom_idx = 0 %}
             {% for header in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.iloc[0]['custom'] %}
                     <tr class="custom-row-btn-tr" data-header="{{ header }}">
                         <td class="custom-row-btn-td">
-                            <button class="custom-row-btn edit custom-row-edit">&#9998;</button>
+                            <button class="custom-row-btn edit custom-row-edit" data-index="{{ custom_idx }}">&#9998;</button>
                         </td>
                         <td class="custom-row-btn-td">
-                            <button class="custom-row-btn remove custom-row-remove">&#10005;</button>
+                            <button class="custom-row-btn remove custom-row-remove" data-index="{{ custom_idx }}">&#10005;</button>
                         </td>
                     </tr>
+                    {% set custom_idx = custom_idx + 1 %}
                 {% endif %}
             {% endfor %}
         </tbody>

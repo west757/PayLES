@@ -161,18 +161,28 @@ def read_les(les_rectangles, les_page):
 
 
 # =========================
-# initialize and build paydf
+# build paydf
 # =========================
 
 def build_paydf(les_text):
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
     DEFAULT_MONTHS_DISPLAY = app.config['DEFAULT_MONTHS_DISPLAY']
+    initial_month = les_text[8][3]
 
-    paydf = initialize_paydf(les_text)
+    paydf = pd.DataFrame(columns=["header", initial_month])
+
+    paydf = add_variables(PAYDF_TEMPLATE, paydf, les_text)
+    paydf = add_entitlements(PAYDF_TEMPLATE, paydf, les_text)
+    paydf = add_deductions(PAYDF_TEMPLATE, paydf, les_text)
+    paydf = add_allotments(PAYDF_TEMPLATE, paydf, les_text)
+    paydf = add_calculations(PAYDF_TEMPLATE, paydf)
+
     session['paydf_json'] = paydf.to_json()
 
-    options = build_options(paydf=paydf)
+    options = build_options(PAYDF_TEMPLATE, paydf=paydf)
 
-    paydf = expand_paydf(paydf, options, DEFAULT_MONTHS_DISPLAY)
+    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
@@ -180,21 +190,7 @@ def build_paydf(les_text):
     return paydf, col_headers, row_headers, options, DEFAULT_MONTHS_DISPLAY
 
 
-def initialize_paydf(les_text):
-    initial_month = les_text[8][3]
-    paydf = pd.DataFrame(columns=["header", initial_month])
-
-    paydf = add_variables(paydf, les_text)
-    paydf = add_entitlements(paydf, les_text)
-    paydf = add_deductions(paydf, les_text)
-    paydf = add_allotments(paydf, les_text)
-    paydf = add_calculations(paydf)
-
-    return paydf
-
-
-def add_variables(paydf, les_text):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def add_variables(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']
 
     for _, row in var_rows.iterrows():
@@ -249,8 +245,7 @@ def add_variables(paydf, les_text):
     return paydf
 
 
-def add_entitlements(paydf, les_text):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def add_entitlements(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']
     section = les_text[9]
 
@@ -281,8 +276,7 @@ def add_entitlements(paydf, les_text):
 
     return paydf
 
-def add_deductions(paydf, les_text):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def add_deductions(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']
     section = les_text[10]
 
@@ -315,8 +309,7 @@ def add_deductions(paydf, les_text):
     return paydf
 
 
-def add_allotments(paydf, les_text):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def add_allotments(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']
     section = les_text[11]
 
@@ -349,11 +342,10 @@ def add_allotments(paydf, les_text):
     return paydf
 
 
-def add_calculations(paydf):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def add_calculations(PAYDF_TEMPLATE, paydf):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'C']
 
-    taxable, nontaxable = calculate_taxed_income(paydf, 1)
+    taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, paydf, 1)
 
     for _, row in var_rows.iterrows():
         header = row['header']
@@ -364,11 +356,11 @@ def add_calculations(paydf):
         elif header == "Non-Taxable Income":
             value = nontaxable
         elif header == "Total Taxes":
-            value = calculate_total_taxes(paydf, 1)
+            value = calculate_total_taxes(PAYDF_TEMPLATE, paydf, 1)
         elif header == "Gross Pay":
-            value = calculate_gross_pay(paydf, 1)
+            value = calculate_gross_pay(PAYDF_TEMPLATE, paydf, 1)
         elif header == "Net Pay":
-            value = calculate_net_pay(paydf, 1)
+            value = calculate_net_pay(PAYDF_TEMPLATE, paydf, 1)
         elif header == "Difference":
             value = 0
 
@@ -382,8 +374,7 @@ def add_calculations(paydf):
 # build options
 # =========================
 
-def build_options(paydf, form=None):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def build_options(PAYDF_TEMPLATE, paydf, form=None):
     MONTHS_SHORT = app.config['MONTHS_SHORT']
     options = []
 
@@ -437,8 +428,7 @@ def build_options(paydf, form=None):
 # expand paydf
 # =========================
 
-def expand_paydf(paydf, options, months_display, custom_rows=None):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=None):
     MONTHS_SHORT = app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -458,18 +448,17 @@ def expand_paydf(paydf, options, months_display, custom_rows=None):
 
         paydf[new_month] = defaults
 
-        paydf = update_variables(paydf, new_month, options)
-        paydf = update_entitlements(paydf, new_month, options, custom_rows=custom_rows)
-        paydf = update_calculations(paydf, new_month, only_taxable=True)
-        paydf = update_deductions(paydf, new_month, options, custom_rows=custom_rows)
-        paydf = update_allotments(paydf, new_month, options)
-        paydf = update_calculations(paydf, new_month, only_taxable=False)
+        paydf = update_variables(PAYDF_TEMPLATE, paydf, new_month, options)
+        paydf = update_entitlements(PAYDF_TEMPLATE, paydf, new_month, options, custom_rows=custom_rows)
+        paydf = update_calculations(PAYDF_TEMPLATE, paydf, new_month, only_taxable=True)
+        paydf = update_deductions(PAYDF_TEMPLATE, paydf, new_month, options, custom_rows=custom_rows)
+        paydf = update_allotments(PAYDF_TEMPLATE, paydf, new_month, options)
+        paydf = update_calculations(PAYDF_TEMPLATE, paydf, new_month, only_taxable=False)
 
     return paydf
 
 
-def update_variables(paydf, month, options):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def update_variables(PAYDF_TEMPLATE, paydf, month, options):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     MONTHS_SHORT = app.config['MONTHS_SHORT']
@@ -514,8 +503,7 @@ def update_variables(paydf, month, options):
     return paydf
 
 
-def update_entitlements(paydf, month, options, custom_rows=None):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def update_entitlements(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     columns = paydf.columns.tolist()
@@ -572,8 +560,7 @@ def update_entitlements(paydf, month, options, custom_rows=None):
     return paydf
 
 
-def update_deductions(paydf, month, options, custom_rows=None):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def update_deductions(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     columns = paydf.columns.tolist()
@@ -637,8 +624,7 @@ def update_deductions(paydf, month, options, custom_rows=None):
     return paydf
 
 
-def update_allotments(paydf, month, options):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def update_allotments(PAYDF_TEMPLATE, paydf, month, options):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     columns = paydf.columns.tolist()
@@ -672,8 +658,7 @@ def update_allotments(paydf, month, options):
     return paydf
 
 
-def update_calculations(paydf, month, only_taxable):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def update_calculations(PAYDF_TEMPLATE, paydf, month, only_taxable):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'C']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     columns = paydf.columns.tolist()
@@ -683,18 +668,18 @@ def update_calculations(paydf, month, only_taxable):
         header = row['header']
 
         if only_taxable:
-            taxable, nontaxable = calculate_taxed_income(paydf, col_idx)
+            taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, paydf, col_idx)
             if header == "Taxable Income":
                 paydf.at[row_idx, month] = taxable
             elif header == "Non-Taxable Income":
                 paydf.at[row_idx, month] = nontaxable
         else:
             if header == "Total Taxes":
-                paydf.at[row_idx, month] = calculate_total_taxes(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_total_taxes(PAYDF_TEMPLATE, paydf, col_idx)
             elif header == "Gross Pay":
-                paydf.at[row_idx, month] = calculate_gross_pay(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_gross_pay(PAYDF_TEMPLATE, paydf, col_idx)
             elif header == "Net Pay":
-                paydf.at[row_idx, month] = calculate_net_pay(paydf, col_idx)
+                paydf.at[row_idx, month] = calculate_net_pay(PAYDF_TEMPLATE, paydf, col_idx)
             elif header == "Difference":
                 paydf.at[row_idx, month] = calculate_difference(paydf, col_idx)
     return paydf
@@ -882,8 +867,7 @@ def calculate_roth_tsp(paydf, month):
 # calculation functions
 # =========================
 
-def calculate_taxed_income(paydf, col_idx):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def calculate_taxed_income(PAYDF_TEMPLATE, paydf, col_idx):
     combat_zone_row = paydf[paydf['header'] == 'Combat Zone']
     combat_zone = combat_zone_row.iloc[0, col_idx] if not combat_zone_row.empty else "No"
     is_combat_zone = str(combat_zone).strip().upper() == 'YES'
@@ -923,8 +907,7 @@ def calculate_taxed_income(paydf, col_idx):
     return round(taxable, 2), round(nontaxable, 2)
 
 
-def calculate_total_taxes(paydf, col_idx):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def calculate_total_taxes(PAYDF_TEMPLATE, paydf, col_idx):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     total = Decimal(0)
@@ -942,8 +925,7 @@ def calculate_total_taxes(paydf, col_idx):
     return round(total, 2)
 
 
-def calculate_gross_pay(paydf, col_idx):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def calculate_gross_pay(PAYDF_TEMPLATE, paydf, col_idx):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     total = Decimal(0)
@@ -955,8 +937,7 @@ def calculate_gross_pay(paydf, col_idx):
     return round(total, 2)
 
 
-def calculate_net_pay(paydf, col_idx):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+def calculate_net_pay(PAYDF_TEMPLATE, paydf, col_idx):
     deduction_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
     allotment_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
     row_headers = deduction_headers + allotment_headers
@@ -999,9 +980,10 @@ def calculate_difference(paydf, col_idx):
 
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     months_display = int(request.form.get('months_display', 6))
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
-    options = build_options(paydf, form=request.form)
+    options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = []
@@ -1026,7 +1008,7 @@ def update_paydf():
 
     add_custom_template_row(custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-    paydf = expand_paydf(paydf, options, months_display, custom_rows=custom_rows)
+    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()

@@ -172,13 +172,17 @@ let editingIndex = null; // Index of the row being edited, or null if none
 
 
 function renderCustomRows() {
+    console.log('renderCustomRows called. editingIndex:', editingIndex, 'customRows:', customRows);
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
     customRows.forEach((row, idx) => {
         let tr = document.createElement('tr');
         tr.className = 'pos-table custom-row';
         tr.dataset.index = idx;
+        console.log('Rendering row', idx, 'with data:', row);
+       
         if (editingIndex === idx) {
+            console.log('Rendering editable row for index', idx, row);
             // Editable row: styled inputs, labels, $ and - signs
             let headerTd = document.createElement('td');
             headerTd.innerHTML = `<input type="text" class="text-input" value="${row.header}" />`;
@@ -189,7 +193,7 @@ function renderCustomRows() {
             taxTd.innerHTML = `<label style='margin-right:6px;'>Tax:</label><input type="checkbox" ${row.tax ? 'checked' : ''} />`;
             tr.appendChild(taxTd);
 
-            // Value inputs for each month column (skip first value)
+            // Value inputs for each month column
             for (let i = 0; i < row.values.length; i++) {
                 let valueTd = document.createElement('td');
                 let sign = row.type === 'D' ? '-' : '';
@@ -199,11 +203,12 @@ function renderCustomRows() {
                 tr.appendChild(valueTd);
             }
         } else {
+            console.log('Rendering static row for index', idx, row);
             // Static row: show values only (no buttons)
             tr.innerHTML = `
                 <td>${row.header}</td>
                 <td>${row.tax ? 'Taxable' : 'Non-Taxable'}</td>
-                ${row.values.slice(1).map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
+                ${row.values.map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
             `;
         }
         customSection.appendChild(tr);
@@ -223,27 +228,35 @@ function renderCustomRowButtonTable() {
         let leftTd = document.createElement('td');
         let rightTd = document.createElement('td');
         if (editingIndex === idx) {
-            // Only show confirm/remove for editing row
+            console.log('Rendering confirm/remove buttons for editing row', idx);
+            // Only show confirm/remove for editing row, both enabled
             let confirmBtn = document.createElement('button');
             confirmBtn.className = 'custom-row-btn confirm custom-row-confirm';
             confirmBtn.textContent = '✔';
+            confirmBtn.dataset.index = idx;
+            confirmBtn.disabled = false;
             leftTd.appendChild(confirmBtn);
             let removeBtn = document.createElement('button');
             removeBtn.className = 'custom-row-btn remove custom-row-remove';
             removeBtn.textContent = '✖';
+            removeBtn.dataset.index = idx;
+            removeBtn.disabled = false;
             rightTd.appendChild(removeBtn);
         } else {
-            // Show edit/remove for static rows
+            console.log('Rendering edit/remove buttons for static row', idx);
+            // Show edit/remove for static rows, disabled if editingIndex !== null
             let editBtn = document.createElement('button');
+            editBtn.dataset.index = idx;
             editBtn.className = 'custom-row-btn edit custom-row-edit';
             editBtn.textContent = '✎';
-            if (editingIndex !== null) editBtn.disabled = true;
+            editBtn.disabled = editingIndex !== null;
             editBtn.style.background = editBtn.disabled ? '#ccc' : '';
             leftTd.appendChild(editBtn);
             let removeBtn = document.createElement('button');
             removeBtn.className = 'custom-row-btn remove custom-row-remove';
             removeBtn.textContent = '✖';
-            if (editingIndex !== null) removeBtn.disabled = true;
+            removeBtn.dataset.index = idx;
+            removeBtn.disabled = editingIndex !== null;
             removeBtn.style.background = removeBtn.disabled ? '#ccc' : '';
             rightTd.appendChild(removeBtn);
         }
@@ -253,6 +266,7 @@ function renderCustomRowButtonTable() {
     });
     updateButtonStates();
 }
+
 
 function updateButtonStates() {
     const disable = editingIndex !== null;
@@ -382,16 +396,20 @@ document.addEventListener('click', function(e) {
 
     // Remove Custom Row
     if (e.target.classList.contains('custom-row-remove')) {
-        const idx = editingIndex !== null ? editingIndex : parseInt(e.target.closest('tr').dataset.index);
+        const idx = editingIndex !== null ? editingIndex : parseInt(e.target.dataset.index);
         customRows.splice(idx, 1);
         editingIndex = null;
         updatePaydf();
     }
 
+
     // Edit Custom Row
     if (e.target.classList.contains('custom-row-edit')) {
-        const idx = parseInt(e.target.closest('tr').dataset.index);
-        if (editingIndex !== null) return;
+        const idx = parseInt(e.target.dataset.index);
+        if (isNaN(idx)) {
+            console.error('Edit button index is NaN!', e.target);
+            return;
+        }
         editingIndex = idx;
         renderCustomRows();
         updateButtonStates();
