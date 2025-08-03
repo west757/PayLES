@@ -1,99 +1,97 @@
 index,x1,y1,x2,y2,title,modal,tooltip
 1,74,126,195,228,id,none,This field is unused
-2,196,126,705,228,name,none,Name
-3,706,126,990,228,social,none,Social security number
-4,990,126,1170,228,grade,basepay,Rank
-5,1170,126,1380,228,pay date,none,"Date entered active duty, same as Pay Entry Base Date (PEBD)"
-6,1380,126,1590,228,years service,none,Years of creditable service
-7,1590,126,1740,228,ets,none,"Expiration Term of Service, same as Expiration of Active Obligated Service (EAOS)"
-8,1740,126,1920,228,branch,none,Branch
-9,1920,126,2145,228,adsn,none,"Disbursing Station Symbol Number, identifies each disbursing/finance office"
-10,2146,126,2474,228,period,none,Month covered
-11,74,228,764,935,entitlements,none,"Entitlements and allowances being paid. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive entitlements/allowances will be added to like entitlements/allowances."
-12,764,228,1334,935,deductions,none,"Deductions being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive deductions will be added to like deductions."
-13,1334,228,1904,935,allotments,none,"Allotments being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. If a member has more than one of the same type of allotment, the only differentiation may be that of the dollar amount."
-14,1904,276,2474,365,amount forward,none,Amount of all unpaid entitlements and allowances due from the prior LES
-15,1904,367,2474,442,total entitlement,none,Total entitlements/allowances
-16,1904,443,2474,520,total deduction,none,Total deductions
-17,1904,520,2474,596,total allotment,none,Total allotments
-18,1904,597,2474,674,net amount,none,"Total of all unpaid entitlements/allowances, plus total entitlements/allowances, minus deductions and allotments due on the current LES"
-19,1904,674,2474,750,carry forward,none,Total of all unpaid entitlements/allowances due to reflect on the next LES as the +AMT FWD
-20,1904,751,2474,830,end of month pay,none,Actual amount paid to the member at the end of the month
-21,1904,832,2129,935,diems,none,"Date Initially Entered Military Service, used to calculate which retirement plan a member falls under"
-22,2130,832,2474,935,retirement plan,tsp,Type of retirement plan
-23,74,936,224,1038,federal taxes,federaltaxes,Federal taxes and Federal Income Tax Withholding (FITW)
-24,224,936,449,1038,federal taxes wage period,federaltaxes,Pay earned subject to FITW
-25,450,936,674,1038,federal taxes wage ytd,federaltaxes,Pay earned year-to-date that is subject to FITW
-26,675,936,899,1038,federal taxes filing status,federaltaxes,"Federal taxes filing status (married, single, head of household), used to compute FITW bracket"
-27,900,936,1124,1038,multiple jobs,federaltaxes,Indicator if member has multiple jobs
-28,1125,936,1349,1038,dependents under 17,federaltaxes,Number of dependents member has under 17 years old
-29,1350,936,1574,1038,other dependents,federaltaxes,Number of other dependents member has
-30,1575,936,1799,1038,additional tax,federaltaxes,Member specified dollar amount to be withheld in addition to the amount computed by marital status and exemptions
-31,1800,936,2024,1038,other deductions,federaltaxes,Total of other miscellaneous deductions
-32,2025,936,2249,1038,other income,federaltaxes,Total of other income member recieves if they have multiple jobs
-33,2250,936,2474,1038,federal taxes ytd,federaltaxes,Total of FITW taxes withheld throughout the calendar year
-34,74,1040,224,1138,fica taxes,fica,Federal Insurance Contributions Act taxes
-35,224,1040,434,1138,fica taxes wage period,fica,Pay earned subject to FICA
-36,434,1040,704,1138,social security wage ytd,fica,Pay earned year to date subject to FICA - Social Security
-37,704,1040,929,1138,social security tax ytd,fica,Total of FICA - Social Security taxes withheld throughout the calendar year
-38,930,1040,1199,1138,medicare wage ytd,fica,Pay earned year-to-date subject to FICA - Medicare
-39,1200,1040,1424,1138,medicare tax ytd,fica,Total of FICA - Medicare taxes withheld throughout the calendar year
-40,1425,1040,1559,1138,state taxes,statetaxes,State taxes and State Income Tax Withholding (SITW)
-41,1560,1040,1634,1138,state,statetaxes,State used to compute tax residency
-42,1634,1040,1859,1138,state taxes wage period,statetaxes,Pay earned subject to state taxes
-43,1860,1040,2084,1138,state taxes wage ytd,statetaxes,Total of state taxes withheld throughout the calendar year
-44,2084,1040,2159,1138,state taxes filing status,statetaxes,"State taxes filing status (married, single), used to compute SITW"
-45,2160,1040,2234,1138,state taxes exemptions,statetaxes,Number of exemptions used to compute SITW
-46,2234,1040,2474,1138,state taxes ytd,statetaxes,Total of SITW taxes withheld throughout the calendar year
-47,74,1140,224,1238,pay data,none,Pay data
-48,224,1140,434,1238,baq type,bah,Basic Allowance for Quarters (BAQ) type
-49,434,1140,614,1238,baq dependents,bah,"Code indiciating type of dependent (A - Spouse, C - Child, D - Parent, G - Grandfathered, I - Member married to member/own right, K - Ward of  the court, L - Parents in Law, R - Own right, S - Student (age 21-22), T - Handicapped child over age 21, W - Member married to member, child under 21"
-50,614,1140,764,1238,zip code,bah,"Zip code, used to calculate Variable Housing Allowance (VHA)"
-51,764,1140,944,1238,rent amount,bah,"Amount of rent paid for housing, if applicable"
-52,944,1140,1154,1238,share of rent,bah,"Number of people which member shares housing costs, if applicable"
-53,1155,1140,1364,1238,vha status,bah,VHA status (accompanied or unaccompanied)
-54,1364,1140,1484,1238,jftr,cola,Joint Federal Travel Regulation (JFTR) code based on location of member to calculate Cost of Living Allowance (COLA)
-55,1484,1140,1634,1238,dependents for jftr,cola,Number of dependents member has to calculate VHA
-56,1634,1140,1814,1238,jftr 2,cola,JFTR code based on the location of the members dependents to calculate COLA
-57,1814,1140,1994,1238,bas type,none,"Basic Allowance of Subsistence (BAS) type, if applicable. B - Separate rations, C - TDY/PCS/Proceed time, H - Rations-in-kind not available, K - Rations under emergency conditions. This field is blank for officers"
-58,1994,1140,2189,1238,charity ytd,none,Total amount of charitable contributions throughout the calendar year
-59,2190,1140,2279,1238,tpc,none,This field is unused
-60,2280,1140,2474,1238,pacidn,none,Unit Identification Code (UIC). Army use only
-61,74,1240,374,1338,traditional tsp,tsp,Traditional Thrift Savings Plan (TSP)
-62,376,1240,614,1338,traditional base pay rate,tsp,Percentage of base pay elected for traditional TSP contribution
-63,614,1240,914,1338,traditional base pay current,tsp,This field is unused
-64,914,1240,1169,1338,traditional special pay rate,tsp,Percentage of specialty pay elected for traditional TSP contribution
-65,1170,1240,1454,1338,traditional special pay current,tsp,This field is unused
-66,1454,1240,1664,1338,traditional incentive pay rate,tsp,Percentage of incentive pay elected for traditional TSP contribution
-67,1664,1240,1919,1338,traditional incentive pay current,tsp,This field is unused
-68,1920,1240,2174,1338,traditional bonus pay rate,tsp,Percentage of bonus pay elected for traditional TSP contribution
-69,2174,1240,2474,1338,traditional bonus pay current,tsp,This field is unused
-70,74,1340,374,1438,roth tsp,tsp,Roth Thrift Savings Plan (TSP)
-71,376,1340,614,1438,roth base pay rate,tsp,Percentage of base pay elected for roth TSP contributions
-72,614,1340,914,1438,roth base pay current,tsp,This field is unused
-73,914,1340,1169,1438,roth special pay rate,tsp,Percentage of specialty pay elected for roth TSP contribution
-74,1170,1340,1454,1438,roth special pay current,tsp,This field is unused
-75,1454,1340,1664,1438,roth incentive pay rate,tsp,Percentage of incentive pay elected for roth TSP contribution
-76,1664,1340,1919,1438,roth incentive pay current,tsp,This field is unused
-77,1920,1340,2174,1438,roth bonus pay rate,tsp,Percentage of bonus pay elected for roth TSP contribution
-78,2174,1340,2474,1438,roth bonus pay current,tsp,This field is unused
-79,74,1440,374,1538,contributions total,tsp,Contributions total
-80,376,1440,695,1538,ytd deductions,tsp,Amount of TSP contributions deducted throughout the calendar year
-81,696,1440,1013,1538,ytd tsp deferred,tsp,Amount of TSP contributions deferred for tax purposes
-82,1334,1440,1652,1538,ytd tsp exempt,tsp,Amount of TSP contributions that are reported as tax exempt to the IRS
-83,1652,1440,2042,1538,ytd roth,tsp,Total contributions to roth TSP
-84,2044,1440,2474,1538,ytd tsp agency auto,tsp,Total auto contributions year-to-date made by the member's contributing agency
-85,1014,1440,1332,1538,ytd tsp agency match,tsp,Total matched contributions year-to-date made by the member's contributing agency
-86,74,1540,374,1642,cm agency contribution,tsp,Contributing agency
-87,376,1540,724,1642,cm agency auto,tsp,Auto amount of contributions made by the member's contributing agency
-88,724,1540,1074,1642,cm agency match,tsp,Matched amount of contributions made by the member's contributing agency
-89,1074,1540,1253,1642,leave,leave,Leave
-90,1252,1540,1404,1642,leave initial balance,leave,"Brought forward leave balance. Balance may be at the beginning of the fiscal year, when active duty for the member began, or the day after the member was paid a Lump Sum Leave (LSL)"
-91,1406,1540,1553,1642,leave earned,leave,Cumulative amount of leave earned in the current fiscal year or current term of enlistement if the member reenlisted/extended since the beginning of the fiscal year. Normally increases by 2.5 days each month
-92,1552,1540,1704,1642,leave used,leave,Amount of leave used in the current fiscal year or current term of enlistement if member reenlisted/extended since the beginning of the fiscal year
-93,1706,1540,1824,1642,leave current balance,leave,Current leave balance at the end of the LES period
-94,2306,1540,2474,1642,leave ets balance,leave,Projected leave balance to the member's Expiration Term of Service (ETS)
-95,1826,1540,1974,1642,leave lost,leave,Amount of leave days that have been lost
-96,1976,1540,2154,1642,leave paid,leave,Amount of leave days that have been paid
-97,2156,1540,2304,1642,leave use lose,leave,Projected number of days of leave that will be lost if the member does not take them in the current fiscal year on a monthly basis. The number of days in this block will decrease with any leave usage
-98,74,1715,2474,2530,remarks,none,This area is used to provide general notices
+2,990,126,1170,228,grade,basepay,Grade
+3,1170,126,1380,228,pay date,none,"Date entered active duty, same as Pay Entry Base Date (PEBD)"
+4,1380,126,1590,228,years service,none,Years of creditable service
+5,1590,126,1740,228,ets,none,"Expiration Term of Service, same as Expiration of Active Obligated Service (EAOS)"
+6,1740,126,1920,228,branch,none,Branch
+7,1920,126,2145,228,adsn,none,"Disbursing Station Symbol Number, identifies each disbursing/finance office"
+8,2146,126,2474,228,period,none,Month covered
+9,74,228,764,935,entitlements,none,"Entitlements and allowances being paid. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive entitlements/allowances will be added to like entitlements/allowances."
+10,764,228,1334,935,deductions,none,"Deductions being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive deductions will be added to like deductions."
+11,1334,228,1904,935,allotments,none,"Allotments being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. If a member has more than one of the same type of allotment, the only differentiation may be that of the dollar amount."
+12,1904,276,2474,365,amount forward,none,Amount of all unpaid entitlements and allowances due from the prior LES
+13,1904,367,2474,442,total entitlement,none,Total entitlements/allowances
+14,1904,443,2474,520,total deduction,none,Total deductions
+15,1904,520,2474,596,total allotment,none,Total allotments
+16,1904,597,2474,674,net amount,none,"Total of all unpaid entitlements/allowances, plus total entitlements/allowances, minus deductions and allotments due on the current LES"
+17,1904,674,2474,750,carry forward,none,Total of all unpaid entitlements/allowances due to reflect on the next LES as the +AMT FWD
+18,1904,751,2474,830,end of month pay,none,Actual amount paid to the member at the end of the month
+19,1904,832,2129,935,diems,none,"Date Initially Entered Military Service, used to calculate which retirement plan a member falls under"
+20,2130,832,2474,935,retirement plan,tsp,Type of retirement plan
+21,74,936,224,1038,federal taxes,federaltaxes,Federal taxes and Federal Income Tax Withholding (FITW)
+22,224,936,449,1038,federal taxes wage period,federaltaxes,Pay earned subject to FITW
+23,450,936,674,1038,federal taxes wage ytd,federaltaxes,Pay earned year-to-date that is subject to FITW
+24,675,936,899,1038,federal taxes filing status,federaltaxes,"Federal taxes filing status (married, single, head of household), used to compute FITW bracket"
+25,900,936,1124,1038,multiple jobs,federaltaxes,Indicator if member has multiple jobs
+26,1125,936,1349,1038,dependents under 17,federaltaxes,Number of dependents member has under 17 years old
+27,1350,936,1574,1038,other dependents,federaltaxes,Number of other dependents member has
+28,1575,936,1799,1038,additional tax,federaltaxes,Member specified dollar amount to be withheld in addition to the amount computed by marital status and exemptions
+29,1800,936,2024,1038,other deductions,federaltaxes,Total of other miscellaneous deductions
+30,2025,936,2249,1038,other income,federaltaxes,Total of other income member recieves if they have multiple jobs
+31,2250,936,2474,1038,federal taxes ytd,federaltaxes,Total of FITW taxes withheld throughout the calendar year
+32,74,1040,224,1138,fica taxes,fica,Federal Insurance Contributions Act taxes
+33,224,1040,434,1138,fica taxes wage period,fica,Pay earned subject to FICA
+34,434,1040,704,1138,social security wage ytd,fica,Pay earned year to date subject to FICA - Social Security
+35,704,1040,929,1138,social security tax ytd,fica,Total of FICA - Social Security taxes withheld throughout the calendar year
+36,930,1040,1199,1138,medicare wage ytd,fica,Pay earned year-to-date subject to FICA - Medicare
+37,1200,1040,1424,1138,medicare tax ytd,fica,Total of FICA - Medicare taxes withheld throughout the calendar year
+38,1425,1040,1559,1138,state taxes,statetaxes,State taxes and State Income Tax Withholding (SITW)
+39,1560,1040,1634,1138,state,statetaxes,State used to compute tax residency
+40,1634,1040,1859,1138,state taxes wage period,statetaxes,Pay earned subject to state taxes
+41,1860,1040,2084,1138,state taxes wage ytd,statetaxes,Total of state taxes withheld throughout the calendar year
+42,2084,1040,2159,1138,state taxes filing status,statetaxes,"State taxes filing status (married, single), used to compute SITW"
+43,2160,1040,2234,1138,state taxes exemptions,statetaxes,Number of exemptions used to compute SITW
+44,2234,1040,2474,1138,state taxes ytd,statetaxes,Total of SITW taxes withheld throughout the calendar year
+45,74,1140,224,1238,pay data,none,Pay data
+46,224,1140,434,1238,baq type,bah,Basic Allowance for Quarters (BAQ) type
+47,434,1140,614,1238,baq dependents,bah,"Code indiciating type of dependent (A - Spouse, C - Child, D - Parent, G - Grandfathered, I - Member married to member/own right, K - Ward of  the court, L - Parents in Law, R - Own right, S - Student (age 21-22), T - Handicapped child over age 21, W - Member married to member, child under 21"
+48,614,1140,764,1238,zip code,bah,"Zip code, used to calculate Variable Housing Allowance (VHA)"
+49,764,1140,944,1238,rent amount,bah,"Amount of rent paid for housing, if applicable"
+50,944,1140,1154,1238,share of rent,bah,"Number of people which member shares housing costs, if applicable"
+51,1155,1140,1364,1238,vha status,bah,VHA status (accompanied or unaccompanied)
+52,1364,1140,1484,1238,jftr,cola,Joint Federal Travel Regulation (JFTR) code based on location of member to calculate Cost of Living Allowance (COLA)
+53,1484,1140,1634,1238,dependents for jftr,cola,Number of dependents member has to calculate VHA
+54,1634,1140,1814,1238,jftr 2,cola,JFTR code based on the location of the members dependents to calculate COLA
+55,1814,1140,1994,1238,bas type,none,"Basic Allowance of Subsistence (BAS) type, if applicable. B - Separate rations, C - TDY/PCS/Proceed time, H - Rations-in-kind not available, K - Rations under emergency conditions. This field is blank for officers"
+56,1994,1140,2189,1238,charity ytd,none,Total amount of charitable contributions throughout the calendar year
+57,2190,1140,2279,1238,tpc,none,This field is unused
+58,2280,1140,2474,1238,pacidn,none,Unit Identification Code (UIC). Army use only
+59,74,1240,374,1338,traditional tsp,tsp,Traditional Thrift Savings Plan (TSP)
+60,376,1240,614,1338,traditional base pay rate,tsp,Percentage of base pay elected for traditional TSP contribution
+61,614,1240,914,1338,traditional base pay current,tsp,This field is unused
+62,914,1240,1169,1338,traditional special pay rate,tsp,Percentage of specialty pay elected for traditional TSP contribution
+63,1170,1240,1454,1338,traditional special pay current,tsp,This field is unused
+64,1454,1240,1664,1338,traditional incentive pay rate,tsp,Percentage of incentive pay elected for traditional TSP contribution
+65,1664,1240,1919,1338,traditional incentive pay current,tsp,This field is unused
+66,1920,1240,2174,1338,traditional bonus pay rate,tsp,Percentage of bonus pay elected for traditional TSP contribution
+67,2174,1240,2474,1338,traditional bonus pay current,tsp,This field is unused
+68,74,1340,374,1438,roth tsp,tsp,Roth Thrift Savings Plan (TSP)
+69,376,1340,614,1438,roth base pay rate,tsp,Percentage of base pay elected for roth TSP contributions
+70,614,1340,914,1438,roth base pay current,tsp,This field is unused
+71,914,1340,1169,1438,roth special pay rate,tsp,Percentage of specialty pay elected for roth TSP contribution
+72,1170,1340,1454,1438,roth special pay current,tsp,This field is unused
+73,1454,1340,1664,1438,roth incentive pay rate,tsp,Percentage of incentive pay elected for roth TSP contribution
+74,1664,1340,1919,1438,roth incentive pay current,tsp,This field is unused
+75,1920,1340,2174,1438,roth bonus pay rate,tsp,Percentage of bonus pay elected for roth TSP contribution
+76,2174,1340,2474,1438,roth bonus pay current,tsp,This field is unused
+77,74,1440,374,1538,contributions total,tsp,Contributions total
+78,376,1440,695,1538,ytd deductions,tsp,Amount of TSP contributions deducted throughout the calendar year
+79,696,1440,1013,1538,ytd tsp deferred,tsp,Amount of TSP contributions deferred for tax purposes
+80,1334,1440,1652,1538,ytd tsp exempt,tsp,Amount of TSP contributions that are reported as tax exempt to the IRS
+81,1652,1440,2042,1538,ytd roth,tsp,Total contributions to roth TSP
+82,2044,1440,2474,1538,ytd tsp agency auto,tsp,Total auto contributions year-to-date made by the member's contributing agency
+83,1014,1440,1332,1538,ytd tsp agency match,tsp,Total matched contributions year-to-date made by the member's contributing agency
+84,74,1540,374,1642,cm agency contribution,tsp,Contributing agency
+85,376,1540,724,1642,cm agency auto,tsp,Auto amount of contributions made by the member's contributing agency
+86,724,1540,1074,1642,cm agency match,tsp,Matched amount of contributions made by the member's contributing agency
+87,1074,1540,1253,1642,leave,leave,Leave
+88,1252,1540,1404,1642,leave initial balance,leave,"Brought forward leave balance. Balance may be at the beginning of the fiscal year, when active duty for the member began, or the day after the member was paid a Lump Sum Leave (LSL)"
+89,1406,1540,1553,1642,leave earned,leave,Cumulative amount of leave earned in the current fiscal year or current term of enlistement if the member reenlisted/extended since the beginning of the fiscal year. Normally increases by 2.5 days each month
+90,1552,1540,1704,1642,leave used,leave,Amount of leave used in the current fiscal year or current term of enlistement if member reenlisted/extended since the beginning of the fiscal year
+91,1706,1540,1824,1642,leave current balance,leave,Current leave balance at the end of the LES period
+92,2306,1540,2474,1642,leave ets balance,leave,Projected leave balance to the member's Expiration Term of Service (ETS)
+93,1826,1540,1974,1642,leave lost,leave,Amount of leave days that have been lost
+94,1976,1540,2154,1642,leave paid,leave,Amount of leave days that have been paid
+95,2156,1540,2304,1642,leave use lose,leave,Projected number of days of leave that will be lost if the member does not take them in the current fiscal year on a monthly basis. The number of days in this block will decrease with any leave usage
+96,74,1715,2474,2530,remarks,none,This area is used to provide general notices

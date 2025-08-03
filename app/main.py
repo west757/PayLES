@@ -5,7 +5,7 @@ from config import Config
 from werkzeug.exceptions import RequestEntityTooLarge
 from decimal import Decimal
 from datetime import datetime
-from PIL import Image
+from PIL import Image, ImageDraw
 import pdfplumber
 import io
 import pandas as pd
@@ -111,6 +111,15 @@ def create_les_image(les_rectangles, les_page):
     new_height = int(temp_image.height * LES_IMAGE_SCALE)
     resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
 
+    #create whiteout rectangle over SSN
+    whiteout_coords = (710, 165, 980, 220)
+    draw = ImageDraw.Draw(resized_image)
+    x1 = int(whiteout_coords[0] * LES_IMAGE_SCALE)
+    y1 = int(whiteout_coords[1] * LES_IMAGE_SCALE)
+    x2 = int(whiteout_coords[2] * LES_IMAGE_SCALE)
+    y2 = int(whiteout_coords[3] * LES_IMAGE_SCALE)
+    draw.rectangle([x1, y1, x2, y2], fill="white")
+
     img_io = io.BytesIO()
     resized_image.save(img_io, format='PNG')
     img_io.seek(0)
@@ -171,7 +180,7 @@ def build_paydf(les_text):
 
 
 def initialize_paydf(les_text):
-    initial_month = les_text[10][3]
+    initial_month = les_text[8][3]
     paydf = pd.DataFrame(columns=["header", initial_month])
 
     paydf = add_variables(paydf, les_text)
@@ -194,43 +203,43 @@ def add_variables(paydf, les_text):
         value = default
 
         if header == 'Year':
-            value = int('20' + les_text[10][4])
+            value = int('20' + les_text[8][4])
         elif header == 'Grade':
-            value = str(les_text[4][1])
+            value = str(les_text[2][1])
         elif header == 'Months in Service':
-            paydate = datetime.strptime(les_text[5][2], '%y%m%d')
-            lesdate = pd.to_datetime(datetime.strptime((les_text[10][4] + les_text[10][3] + "1"), '%y%b%d'))
+            paydate = datetime.strptime(les_text[3][2], '%y%m%d')
+            lesdate = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
             mis = months_in_service(lesdate, paydate)
             value = int(mis)
         elif header == 'Zip Code':
-            if les_text[50][2] != "00000":
-                value = les_text[50][2]
+            if les_text[48][2] != "00000":
+                value = les_text[48][2]
         elif header == 'Military Housing Area':
-            value = calculate_mha(les_text[50][2])
+            value = calculate_mha(les_text[48][2])
         elif header == 'Tax Residency State':
-            if les_text[41][1] != "98":
-                value = les_text[41][1]
+            if les_text[39][1] != "98":
+                value = les_text[39][1]
         elif header == 'Federal Filing Status':
-            if les_text[26][1] == "S":
+            if les_text[24][1] == "S":
                 value = "Single"
             elif header == 'M':
                 value = "Married"
             elif header == 'H':
                 value = "Head of Household"
         elif header == 'State Filing Status':
-            if les_text[44][1] == "S":
+            if les_text[42][1] == "S":
                 value = "Single"
-            elif les_text[44][1] == "M":
+            elif les_text[42][1] == "M":
                 value = "Married"
         elif header == 'Dependents':
-            value = int(les_text[55][1])
+            value = int(les_text[53][1])
         elif header == 'Combat Zone':
             value = "No"
         elif header == 'Traditional TSP Rate':
-            ttsp_fields = [int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3]), int(les_text[68][3])]
+            ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
             value = next((val for val in ttsp_fields if val > 0), 0)
         elif header == 'Roth TSP Rate':
-            rtsp_fields = [int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3]), int(les_text[77][3])]
+            rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
             value = next((val for val in rtsp_fields if val > 0), 0)
 
         value = cast_dtype(value, dtype)
@@ -244,7 +253,7 @@ def add_entitlements(paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']
 
     # Map type to section index and value sign
-    type_section = [('E', les_text[11], 1), ('D', les_text[12], -1)]
+    type_section = [('E', les_text[9], 1), ('D', les_text[10], -1)]
 
     for row_type, section, sign in type_section:
         for _, row in var_rows.iterrows():
@@ -282,7 +291,7 @@ def add_deductions(paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']
 
     # Map type to section index and value sign
-    type_section = [('E', les_text[11], 1), ('D', les_text[12], -1)]
+    type_section = [('E', les_text[9], 1), ('D', les_text[10], -1)]
 
     for row_type, section, sign in type_section:
         for _, row in var_rows.iterrows():
@@ -645,6 +654,9 @@ def calculate_bah(paydf, month):
         BAH_DF = app.config['BAH_WITH_DEPENDENTS']
     else:
         BAH_DF = app.config['BAH_WITHOUT_DEPENDENTS']
+
+    if military_housing_area == "Not Found":
+            return Decimal(0)
 
     bah_row = BAH_DF[BAH_DF["mha"] == military_housing_area]
 
