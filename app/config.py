@@ -52,7 +52,7 @@ class Config:
     #constants
     LES_COORD_SCALE = 0.24
     LES_IMAGE_SCALE = 0.42
-    DEFAULT_MONTHS_DISPLAY = 6
+    DEFAULT_MONTHS_DISPLAY = 4
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
