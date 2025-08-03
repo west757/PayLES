@@ -1,4 +1,4 @@
-const DEFAULT_MONTHS_DISPLAY = 4;
+const DEFAULT_MONTHS_DISPLAY = 6;
 const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
 // Drag and drop functionality for file input
