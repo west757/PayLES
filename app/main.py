@@ -10,6 +10,7 @@ import pdfplumber
 import io
 import pandas as pd
 import base64
+import json
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -188,7 +189,7 @@ def initialize_paydf(les_text):
     paydf = add_deductions(paydf, les_text)
     paydf = add_allotments(paydf, les_text)
     paydf = add_calculations(paydf)
-    print(paydf)
+
     return paydf
 
 
@@ -436,7 +437,7 @@ def build_options(paydf, form=None):
 # expand paydf
 # =========================
 
-def expand_paydf(paydf, options, months_display):
+def expand_paydf(paydf, options, months_display, custom_rows=None):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     MONTHS_SHORT = app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
@@ -455,9 +456,9 @@ def expand_paydf(paydf, options, months_display):
         paydf[new_month] = defaults
 
         paydf = update_variables(paydf, new_month, options)
-        paydf = update_entitlements(paydf, new_month, options)
+        paydf = update_entitlements(paydf, new_month, options, custom_rows=custom_rows)
         paydf = update_calculations(paydf, new_month, only_taxable=True)
-        paydf = update_deductions(paydf, new_month, options)
+        paydf = update_deductions(paydf, new_month, options, custom_rows=custom_rows)
         paydf = update_allotments(paydf, new_month, options)
         paydf = update_calculations(paydf, new_month, only_taxable=False)
 
@@ -510,7 +511,7 @@ def update_variables(paydf, month, options):
     return paydf
 
 
-def update_entitlements(paydf, month, options):
+def update_entitlements(paydf, month, options, custom_rows=None):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
@@ -519,7 +520,17 @@ def update_entitlements(paydf, month, options):
     for row_idx, row in rows.iterrows():
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-        
+
+        if match.iloc[0].get('custom', False):
+            # Find custom row by header, set value for this month
+            custom_row = next((r for r in custom_rows if r['header'] == header), None)
+            if custom_row:
+                col_idx = paydf.columns.tolist().index(month) - 1
+                value = custom_row['values'][col_idx] if col_idx < len(custom_row['values']) else Decimal(0)
+                paydf.at[row_idx, month] = value
+            continue
+
+
         onetime = bool(match.iloc[0].get('onetime', False))
         standard = bool(match.iloc[0].get('standard', False))
 
@@ -555,7 +566,7 @@ def update_entitlements(paydf, month, options):
     return paydf
 
 
-def update_deductions(paydf, month, options):
+def update_deductions(paydf, month, options, custom_rows=None):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
@@ -564,6 +575,15 @@ def update_deductions(paydf, month, options):
     for row_idx, row in rows.iterrows():
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+        
+        if match.iloc[0].get('custom', False):
+            # Find custom row by header, set value for this month
+            custom_row = next((r for r in custom_rows if r['header'] == header), None)
+            if custom_row:
+                col_idx = paydf.columns.tolist().index(month) - 1
+                value = custom_row['values'][col_idx] if col_idx < len(custom_row['values']) else Decimal(0)
+                paydf.at[row_idx, month] = value
+            continue
         
         onetime = bool(match.iloc[0].get('onetime', False))
         standard = bool(match.iloc[0].get('standard', False))
@@ -965,7 +985,7 @@ def calculate_difference(paydf, col_idx):
 
 
 # =========================
-# update paydf
+# update paydf and custom rows
 # =========================
 
 @app.route('/update_paydf', methods=['POST'])
@@ -974,7 +994,21 @@ def update_paydf():
 
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(paydf, form=request.form)
-    paydf = expand_paydf(paydf, options, months_display)
+
+    custom_rows_json = request.form.get('custom_row', None)
+    custom_rows = []
+
+    if custom_rows_json:
+        custom_rows = json.loads(custom_rows_json)
+
+        for row in custom_rows:
+            row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
+            row['tax'] = True if str(row.get('tax', '')).lower() in ['true', 'on', '1'] else False
+
+    add_custom_template_row(custom_rows)
+    paydf = add_custom_row(paydf, custom_rows)
+
+    paydf = expand_paydf(paydf, options, months_display, custom_rows=custom_rows)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
@@ -988,6 +1022,46 @@ def update_paydf():
     }
 
     return render_template('paydf_table.html', **context)
+
+
+def add_custom_template_row(custom_rows):
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+
+    for row in custom_rows:
+        header = row['header']
+        orig_header = header
+        suffix = 1
+
+        #ensures headers are unique, if not then appends suffix to the header
+        while header in PAYDF_TEMPLATE['header'].values:
+            header = f"{orig_header} ({suffix})"
+            suffix += 1
+
+        PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
+            'header': header,
+            'varname': '',
+            'shortname': '',
+            'longname': '',
+            'type': row['type'],
+            'dtype': 'Decimal',
+            'default': 0,
+            'required': False,
+            'onetime': False,
+            'standard': False,
+            'tax': row['tax'],
+            'option': False,
+            'custom': True,
+            'modal': ''
+        }
+
+        #resets the header row back to the original header
+        row['header'] = header 
+
+
+def add_custom_row(paydf, custom_rows):
+    for row in custom_rows:
+        paydf.loc[len(paydf)] = [row['header'], Decimal(0)]
+    return paydf
 
 
 
