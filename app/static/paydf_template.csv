@@ -110,9 +110,9 @@ State Taxes,state_taxes,STATE TAXES,State Taxes,D,Decimal,0,TRUE,FALSE,FALSE,TRU
 Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
 Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,D,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
 MGIB,mgib,MGIB,Montgomery G.I. Bill Program,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,mgib
-Debt,debt_debt,DEBT,Government Debt,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
-Fine,fine_fine,FINE,Military Fines,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
-Garnishment,garnishment_garnishment,GARNISHMENT,Garnished Income,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Debt,debt,DEBT,Government Debt,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Fine,fine,FINE,Military Fines,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Garnishment,garnishment,GARNISHMENT,Garnished Income,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
 AAFES Debt,aafes_debt,AAFES,AAFES Debt,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
 GPLD,gpld,GPLD,Government Property Lost or Damaged,D,Decimal,0,FALSE,TRUE,FALSE,FALSE,FALSE,debt
 Meal Deduction,meal_deduction,MEAL DEDUCT,Meal Deduction,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,bas
@@ -126,6 +126,18 @@ Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accou
 AFRH,afrh,AFRH,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
 USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
 USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,D,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,afrh
+Bank Account Allot,bank_account_allot,BANK ACCT ALLOT,Bank Account Allotment,A,Decimal,0,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Discretionary Allot,discretionary_allot,DISCRETIONARY ALT,Discretionary Allotment,A,Decimal,1,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Insurance Allot,insurance_allot,INSURANCE ALLOT,Insurance Allotment,A,Decimal,2,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+CFC Allot,cfc_allot,CFC ALLOT,Combined Federal Campaign Allotment,A,Decimal,3,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+AFAF Allot,afaf_allot,AFAF ALLOT,Air Force Assistance Fund Allotment,A,Decimal,4,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+AER Allot,aer_allot,AER ALLOT,Army Emergency Relief Allotment,A,Decimal,5,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+NMCRS Allot,nmcrs_allot,NMCRS ALLOT,Navy-Marine Corp Relief Society,A,Decimal,6,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Tricare Dental,tricare_dental,TRICARE DENTAL,Tricare Dental,A,Decimal,7,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+U.S. Debt,us_debt,US DEBT,U.S. Debt,A,Decimal,8,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Bond 1,bond_1,BOND #01,Bond 1,A,Decimal,9,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Bond 2,bond_2,BOND #02,Bond 2,A,Decimal,10,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
+Bond 3,bond_3,BOND #03,Bond 3,A,Decimal,11,FALSE,FALSE,TRUE,FALSE,TRUE,allotments
 Taxable Income,taxable_income,TAXABLE INCOME,Taxable Income,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
 Non-Taxable Income,nontaxable_income,NON-TAXABLE INCOME,Non-Taxable Income,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
 Total Taxes,total_taxes,TOTAL TAXES,Total Taxes,C,Decimal,0,TRUE,FALSE,FALSE,FALSE,FALSE,taxedincome
