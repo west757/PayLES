@@ -23,7 +23,7 @@ class Config:
     LOGO_FILE = "logo.png"
     EXAMPLE_LES_FILE = "les_example.pdf"
     LES_RECTANGLES_FILE = "les_rectangles.csv"
-    MHA_ZIPCODE_FILE = "mha_zipcodes.csv"
+    MHA_ZIP_CODE_FILE = "mha_zip_codes.csv"
     PAY_ACTIVE_FILE = "pay_active_2025.csv"
     PAY_DRILL_FILE = "pay_drill_2025.csv"
     BAH_WITH_DEPENDENTS_FILE = "bah_with_dependents_2025.csv"
@@ -37,7 +37,7 @@ class Config:
     LOGO = os.path.join('static', LOGO_FILE)
     EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
     LES_RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, LES_RECTANGLES_FILE))
-    MHA_ZIPCODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIPCODE_FILE))
+    MHA_ZIP_CODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIP_CODE_FILE))
     PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
     PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
     BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))

@@ -370,6 +370,13 @@ def build_options(paydf, form=None):
         if form:
             value = form.get(f"{varname}_f", "")
             month = form.get(f"{varname}_m", "")
+
+            if header == "Zip Code" and value != "":
+                value = validate_zip_code(value)
+            if value == "":
+                row_idx = paydf[paydf['header'] == header].index[0]
+                first_month_col = paydf.columns[1]
+                value = paydf.at[row_idx, first_month_col]
         else:
             row_idx = paydf[paydf['header'] == header].index[0]
             first_month_col = paydf.columns[1]
@@ -960,13 +967,21 @@ def months_in_service(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 
-def calculate_mha(zipcode):
-    MHA_ZIPCODES = app.config['MHA_ZIPCODES']
+def validate_zip_code(zip_code):
+    MHA_ZIP_CODES = app.config['MHA_ZIP_CODES']
 
-    if zipcode != "00000" and zipcode != "" and zipcode != "Not Found":
-        mha_search = MHA_ZIPCODES[MHA_ZIPCODES.isin([int(zipcode)])].stack()
+    if not (MHA_ZIP_CODES.isin([int(zip_code)]).any().any()):
+        return "Not Found"
+    return str(zip_code)
+
+
+def calculate_mha(zip_code):
+    MHA_ZIP_CODES = app.config['MHA_ZIP_CODES']
+
+    if zip_code != "00000" and zip_code != "" and zip_code != "Not Found":
+        mha_search = MHA_ZIP_CODES[MHA_ZIP_CODES.isin([int(zip_code)])].stack()
         mha_search_row = mha_search.index[0][0]
-        mha = MHA_ZIPCODES.loc[mha_search_row, "mha"]
+        mha = MHA_ZIP_CODES.loc[mha_search_row, "mha"]
     else:
         mha = "Not Found"
 
