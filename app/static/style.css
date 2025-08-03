@@ -367,15 +367,8 @@ input[type=checkbox] {
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--input_shadow);
     height: 1.25rem;
+    margin: -0.5rem 0 -0.5rem 0;
     width: 1.25rem;
-}
-
-#combat-zone-checkbox {
-    margin: -0.5rem;
-}
-
-#settings-checkbox {
-    margin: -0.5rem 0rem -0.5rem 0rem;
 }
 
 

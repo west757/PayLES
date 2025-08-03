@@ -188,7 +188,7 @@ def initialize_paydf(les_text):
     paydf = add_deductions(paydf, les_text)
     paydf = add_allotments(paydf, les_text)
     paydf = add_calculations(paydf)
-
+    print(paydf)
     return paydf
 
 
@@ -296,7 +296,7 @@ def add_deductions(paydf, les_text):
                 s = section[j]
                 is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
                 if is_num:
-                    value = Decimal(section[j])
+                    value = -abs(Decimal(section[j]))
                     found = True
                     break
             if found:
@@ -330,7 +330,7 @@ def add_allotments(paydf, les_text):
                 s = section[j]
                 is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
                 if is_num:
-                    value = Decimal(section[j])
+                    value = -abs(Decimal(section[j]))
                     found = True
                     break
             if found:
@@ -625,6 +625,8 @@ def update_allotments(paydf, month, options):
 
         if future_value is None or future_value == '':
             future_value = 0
+
+        future_value = -abs(Decimal(future_value))
 
         if future_month in columns:
             future_col_idx = columns.index(future_month)

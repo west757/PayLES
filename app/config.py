@@ -52,6 +52,7 @@ class Config:
     #constants
     LES_COORD_SCALE = 0.24
     LES_IMAGE_SCALE = 0.42
+    DEFAULT_MONTHS_DISPLAY = 6
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
@@ -71,4 +72,4 @@ class Config:
     STANDARD_DEDUCTIONS = [15000, 30000, 22500]
     TRADITIONAL_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
-    DEFAULT_MONTHS_DISPLAY = 4
+    
