@@ -342,6 +342,22 @@ select.pos-table {
 }
 
 
+/* text input box */
+input.text-input {
+    background-color: var(--input_background);
+    border: 1px solid var(--input_shadow);
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 2px var(--input_shadow);
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    height: 1.85rem;
+    margin: -0.5rem;
+    padding: 0.25rem;
+    text-align: center;
+    width: 10rem;
+}
+
+
 /* input boxes */
 input.pos-table {
     background-color: var(--input_background);

@@ -3,7 +3,7 @@
 <div id="paydf-container">
 
     <table id="custom-row-button-table">
-        <tbody class="pos-table-section">
+        <tbody>
             <tr class="custom-row-btn-tr">
                 <td class="custom-row-btn-td"></td>
                 <td class="custom-row-btn-td"></td>
@@ -20,7 +20,7 @@
             {% endfor %}
         </tbody>
 
-        <tbody class="pos-table-section" id="eda-reference-body">
+        <tbody id="eda-reference-body">
             {% for header in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.iloc[0]['type'] in ['E', 'D', 'A'] and not row_info.iloc[0]['custom'] %}
@@ -32,7 +32,7 @@
             {% endfor %}
         </tbody>
 
-        <tbody class="pos-table-section" id="custom-reference-body">
+        <tbody id="custom-reference-body">
             {% for header in row_headers %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.iloc[0]['custom'] %}
@@ -103,12 +103,6 @@
         </tbody>
 
         <tbody class="pos-table-section">
-            <tr class="pos-table-header">
-                <td class="pos-table-header"></td>
-                {% for col in col_headers[1:] %}
-                    <td class="pos-table-header">{{ col }}</td>
-                {% endfor %}
-            </tr>
             {% for header in row_headers %}
                 {% set i = loop.index0 %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
@@ -139,7 +133,7 @@
                 {% if row_info.iloc[0]['custom'] %}
                     <tr class="pos-table custom-row" data-header="{{ header }}">
                         <td class="pos-table">
-                            <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                            {{ header }}
                         </td>
                         {% for x in range(1, paydf.shape[1]) %}
                             {% set value = paydf.at[i, col_headers[x]] %}
