@@ -528,8 +528,11 @@ def update_entitlements(paydf, month, options, custom_rows=None):
             # Find custom row by header, set value for this month
             custom_row = next((r for r in custom_rows if r['header'] == header), None)
             if custom_row:
-                col_idx = paydf.columns.tolist().index(month) - 1
-                value = custom_row['values'][col_idx] if col_idx < len(custom_row['values']) else Decimal(0)
+                # The first month column is always 0, so values start at columns[2]
+                col_idx = paydf.columns.tolist().index(month)
+                # For columns[2] (second month), use values[0], for columns[3], use values[1], etc.
+                value_idx = col_idx - 2
+                value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
                 paydf.at[row_idx, month] = value
             continue
 
@@ -583,8 +586,11 @@ def update_deductions(paydf, month, options, custom_rows=None):
             # Find custom row by header, set value for this month
             custom_row = next((r for r in custom_rows if r['header'] == header), None)
             if custom_row:
-                col_idx = paydf.columns.tolist().index(month) - 1
-                value = custom_row['values'][col_idx] if col_idx < len(custom_row['values']) else Decimal(0)
+                # The first month column is always 0, so values start at columns[2]
+                col_idx = paydf.columns.tolist().index(month)
+                # For columns[2] (second month), use values[0], for columns[3], use values[1], etc.
+                value_idx = col_idx - 2
+                value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
                 paydf.at[row_idx, month] = value
             continue
         
@@ -997,23 +1003,26 @@ def update_paydf():
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(paydf, form=request.form)
 
-    # Accept custom_rows as JSON
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = []
+
     if custom_rows_json:
         custom_rows = json.loads(custom_rows_json)
+
         if isinstance(custom_rows, dict):
             custom_rows = [custom_rows]
+
         for row in custom_rows:
-            num_months = len(paydf.columns) - 1
-            # Pad values to match number of months
-            if len(row['values']) < num_months + 1:
-                row['values'] = ([Decimal(0)] * (num_months + 1 - len(row['values']))) + [Decimal(v) if v else Decimal(0) for v in row['values']]
-            else:
-                row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
+            # Ensure all values are Decimal
+            row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
+            # Ensure deduction values are negative
+            if row.get('type') == 'D':
+                row['values'] = [-abs(v) for v in row['values']]
             row['tax'] = True if str(row.get('tax', '')).lower() in ['true', 'on', '1'] else False
     else:
         custom_rows = []
+
+    remove_custom_rows_from_template(custom_rows)
 
     add_custom_template_row(custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
@@ -1028,6 +1037,7 @@ def update_paydf():
         'options': options,
         'months_display': months_display,
     }
+    
     return render_template('paydf_table.html', **context)
 
 
@@ -1059,13 +1069,22 @@ def add_custom_template_row(custom_rows):
         row['header'] = header
 
 
-def add_custom_row(paydf, custom_rows):
-    for row in custom_rows:
-        # Add a new row with all columns: header + values
-        new_row = [row['header']] + row['values'][1:]
-        paydf.loc[len(paydf)] = new_row
-    return paydf
+def remove_custom_rows_from_template(custom_rows):
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    custom_headers = [row['header'] for row in custom_rows]
+    # Remove any custom rows not in custom_headers
+    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[(PAYDF_TEMPLATE['custom']) & (~PAYDF_TEMPLATE['header'].isin(custom_headers))].index, inplace=True)
 
+
+def add_custom_row(paydf, custom_rows):
+    # Only add header and default value for the first month column
+    first_month_col = paydf.columns[1] if len(paydf.columns) > 1 else None
+    for row in custom_rows:
+        if first_month_col:
+            paydf.loc[len(paydf)] = [row['header'], 0]
+        else:
+            paydf.loc[len(paydf)] = [row['header']]
+    return paydf
 
 
 # =========================
