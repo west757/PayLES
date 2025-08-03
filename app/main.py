@@ -251,80 +251,100 @@ def add_variables(paydf, les_text):
 def add_entitlements(paydf, les_text):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']
+    section = les_text[9]
 
-    # Map type to section index and value sign
-    type_section = [('E', les_text[9], 1), ('D', les_text[10], -1)]
+    for _, row in var_rows.iterrows():
+        value = None
+        found = False
+        short = str(row['shortname'])
+        matches = find_multiword_matches(section, short)
 
-    for row_type, section, sign in type_section:
-        for _, row in var_rows.iterrows():
-            if row['type'] == row_type:
-                value = None
-                found = False
-                short = str(row['shortname'])
-                matches = find_multiword_matches(section, short)
+        for idx in matches:
+            for j in range(idx + 1, len(section)):
+                s = section[j]
+                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                if is_num:
+                    value = Decimal(section[j])
+                    found = True
+                    break
+            if found:
+                break
+        if not found:
+            if bool(row['required']):
+                value = cast_dtype(row['default'], row['dtype'])
+            else:
+                continue
 
-                for idx in matches:
-                    for j in range(idx + 1, len(section)):
-                        s = section[j]
-                        is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-                        if is_num:
-                            v = Decimal(section[j])
-                            value = sign * round(abs(v), 2)
-                            found = True
-                            break
-                    if found:
-                        break
-                if not found:
-                    if bool(row['required']):
-                        value = row['default']
-                    else:
-                        continue
-
-                value = cast_dtype(value, row['dtype'])
-                paydf.loc[len(paydf)] = [row['header'], value]
+        value = cast_dtype(value, row['dtype'])
+        paydf.loc[len(paydf)] = [row['header'], value]
 
     return paydf
-
 
 def add_deductions(paydf, les_text):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']
+    section = les_text[10]
 
-    # Map type to section index and value sign
-    type_section = [('E', les_text[9], 1), ('D', les_text[10], -1)]
+    for _, row in var_rows.iterrows():
+        value = None
+        found = False
+        short = str(row['shortname'])
+        matches = find_multiword_matches(section, short)
 
-    for row_type, section, sign in type_section:
-        for _, row in var_rows.iterrows():
-            if row['type'] == row_type:
-                value = None
-                found = False
-                short = str(row['shortname'])
-                matches = find_multiword_matches(section, short)
+        for idx in matches:
+            for j in range(idx + 1, len(section)):
+                s = section[j]
+                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                if is_num:
+                    value = Decimal(section[j])
+                    found = True
+                    break
+            if found:
+                break
+        if not found:
+            if bool(row['required']):
+                default_value = cast_dtype(row['default'], row['dtype'])
+                value = -abs(default_value)
+            else:
+                continue
 
-                for idx in matches:
-                    for j in range(idx + 1, len(section)):
-                        s = section[j]
-                        is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-                        if is_num:
-                            v = Decimal(section[j])
-                            value = sign * round(abs(v), 2)
-                            found = True
-                            break
-                    if found:
-                        break
-                if not found:
-                    if bool(row['required']):
-                        value = row['default']
-                    else:
-                        continue
-
-                value = cast_dtype(value, row['dtype'])
-                paydf.loc[len(paydf)] = [row['header'], value]
+        value = cast_dtype(value, row['dtype'])
+        paydf.loc[len(paydf)] = [row['header'], value]
 
     return paydf
 
 
 def add_allotments(paydf, les_text):
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']
+    section = les_text[11]
+
+    for _, row in var_rows.iterrows():
+        value = None
+        found = False
+        short = str(row['shortname'])
+        matches = find_multiword_matches(section, short)
+
+        for idx in matches:
+            for j in range(idx + 1, len(section)):
+                s = section[j]
+                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                if is_num:
+                    value = Decimal(section[j])
+                    found = True
+                    break
+            if found:
+                break
+        if not found:
+            if bool(row['required']):
+                default_value = cast_dtype(row['default'], row['dtype'])
+                value = -abs(default_value)
+            else:
+                continue
+
+        value = cast_dtype(value, row['dtype'])
+        paydf.loc[len(paydf)] = [row['header'], value]
+
     return paydf
 
 
@@ -368,12 +388,19 @@ def build_options(paydf, form=None):
 
     def add_option(header, varname):
         if form:
-            value = form.get(f"{varname}_f", "")
+            value = form.get(f"{varname}_f", None)
             month = form.get(f"{varname}_m", "")
 
-            if header == "Zip Code" and value != "":
+            if header == "Zip Code" and value not in [None, ""]:
                 value = validate_zip_code(value)
-            if value == "":
+
+            if value == "on":
+                row_idx = paydf[paydf['header'] == header].index[0]
+                first_month_col = paydf.columns[1]
+                value = paydf.at[row_idx, first_month_col]
+            elif value is None:
+                value = 0
+            elif value == "":
                 row_idx = paydf[paydf['header'] == header].index[0]
                 first_month_col = paydf.columns[1]
                 value = paydf.at[row_idx, first_month_col]
@@ -582,6 +609,35 @@ def update_deductions(paydf, month, options):
 
 
 def update_allotments(paydf, month, options):
+    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
+    rows = paydf[paydf['header'].isin(row_headers)]
+    columns = paydf.columns.tolist()
+
+    for row_idx, row in rows.iterrows():
+        header = row['header']
+
+        future_value, future_month = get_option(header, options)
+
+        col_idx = columns.index(month)
+        prev_month = columns[col_idx - 1]
+        prev_value = paydf.at[row_idx, prev_month]
+
+        if future_value is None or future_value == '':
+            future_value = 0
+
+        if future_month in columns:
+            future_col_idx = columns.index(future_month)
+            current_col_idx = columns.index(month)
+
+            if future_col_idx is not None and current_col_idx >= future_col_idx:
+                paydf.at[row_idx, month] = future_value
+            else:
+                paydf.at[row_idx, month] = prev_value
+        else:
+            paydf.at[row_idx, month] = prev_value
+        continue
+
     return paydf
 
 
@@ -870,7 +926,10 @@ def calculate_gross_pay(paydf, col_idx):
 
 def calculate_net_pay(paydf, col_idx):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
+    deduction_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
+    allotment_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
+    row_headers = deduction_headers + allotment_headers
+
     rows = paydf[paydf['header'].isin(row_headers)]
     row_headers = paydf['header'].tolist()
     gross_pay_current = paydf.iloc[row_headers.index("Gross Pay"), col_idx]
@@ -878,7 +937,15 @@ def calculate_net_pay(paydf, col_idx):
 
     for i, row in rows.iterrows():
         value = row.iloc[col_idx]
-        total += Decimal(value)
+
+        if value is None or value == '':
+            value = Decimal(0)
+        else:
+            try:
+                value = Decimal(str(value))
+            except Exception:
+                value = Decimal(0)
+        total += value
 
     total = gross_pay_current + total
 
