@@ -12,6 +12,8 @@
     --input_shadow: #999;
     --table_border: #ddd;
     --highlight: #b9f755;
+    --blue: #3c94f1;
+    --red: #f06f65;
 }
 
 html {
@@ -514,7 +516,7 @@ tbody.pos-table-section tr:last-child td {
 
 
 #paydf-table {
-    margin-left: 40px;
+    margin-left: 0px;
     overflow: visible !important; /* let container handle scroll */
     display: table; /* restore table layout for flex */
     max-width: none;
@@ -574,48 +576,45 @@ table tr {
     z-index: 10;
     table-layout: fixed;
 }
+
 .custom-row-btn-tr {
     height: 4rem !important;
 }
+
 .custom-row-btn-td {
-    width: 20px;
-    /* border: none; */
-    border: 1px solid blue;
+    border: none;
     background: none;
     padding: 0;
     text-align: center;
 }
+
 .custom-row-btn {
-    width: 16px;
-    height: 16px;
+    width: 2.5rem;
+    height: 2.5rem;
     border: none;
-    border-radius: 3px;
+    border-radius: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     line-height: 1;
     color: white;
-    background: var(--darkgreen);
     margin: 0;
     padding: 0;
     cursor: pointer;
 }
+
 .custom-row-btn.confirm {
-    background: #4CAF50;
+    background: var(--darkgreen);
 }
+
 .custom-row-btn.edit {
-    background: #4CAF50;
+    background: var(--blue);
 }
+
 .custom-row-btn.remove {
-    background: #f44336;
+    background: var(--red);
 }
-.show-all-variables {
-    display: none;
-}
-
-
-
 
 
 

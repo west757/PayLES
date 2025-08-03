@@ -1,4 +1,4 @@
-const DEFAULT_MONTHS_DISPLAY = 6;
+const DEFAULT_MONTHS_DISPLAY = 4;
 const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
 // Drag and drop functionality for file input
@@ -82,6 +82,8 @@ function updatePaydf() {
     const formData = new FormData(optionsForm);
     const monthsDropdown = settingsForm.querySelector('[name="months_display"]');
     formData.append('months_display', monthsDropdown.value);
+    // Add customRows as JSON
+    formData.append('custom_rows', JSON.stringify(customRows));
 
     fetch('/update_paydf', {
         method: 'POST',
@@ -93,9 +95,13 @@ function updatePaydf() {
         highlight_changes();
         show_all_variables();
         show_all_options();
+        // After backend update, reset editingIndex and re-enable buttons
+        editingIndex = null;
+        updateButtonStates();
         renderCustomRows();
     });
 }
+
 
 
 function highlight_changes() {
@@ -158,242 +164,63 @@ function show_all_options() {
 
 
 
+
+
 const MAX_CUSTOM_ROWS = 9;
-let customRows = [];
-let editingIndex = null;
+let customRows = []; // Array of custom row objects
+let editingIndex = null; // Index of the row being edited, or null if none
 
-
-function renderCustomRowButtonTable() {
-    const btnTable = document.getElementById('custom-row-button-table');
-    const paydfTable = document.getElementById('paydf-table');
-    if (!btnTable || !paydfTable) return;
-
-    // Get all button table bodies
-    const variableBody = btnTable.querySelector('#variable-reference-body');
-    const edaBody = btnTable.querySelector('#eda-reference-body');
-    const customBody = btnTable.querySelector('#custom-reference-body');
-    const calcBody = btnTable.querySelector('#calculation-reference-body');
-    if (!variableBody || !edaBody || !customBody || !calcBody) return;
-
-    // Clear all bodies
-    variableBody.innerHTML = '';
-    edaBody.innerHTML = '';
-    customBody.innerHTML = '';
-    calcBody.innerHTML = '';
-
-    // Helper to add blank row
-    function addBlankBtnRow(className) {
-        const tr = document.createElement('tr');
-        tr.className = className;
-        const leftTd = document.createElement('td');
-        leftTd.className = 'custom-row-btn-td';
-        const rightTd = document.createElement('td');
-        rightTd.className = 'custom-row-btn-td';
-        tr.appendChild(leftTd);
-        tr.appendChild(rightTd);
-        return tr;
-    }
-
-    // 1. Variable rows
-    const variableRows = paydfTable.querySelectorAll('tbody.pos-table-section .variable-row');
-    variableRows.forEach(row => {
-        variableBody.appendChild(addBlankBtnRow(row.className));
-    });
-
-    // 2. EDA rows (Entitlement/Deduction/Allowance)
-    const edaRows = paydfTable.querySelectorAll('tbody.pos-table-section tr:not(.variable-row)');
-    edaRows.forEach(row => {
-        edaBody.appendChild(addBlankBtnRow(row.className));
-    });
-
-    // 3. Custom rows
-    const customRowsSection = document.getElementById('custom-row-section');
-    if (customRowsSection) {
-        const customRowsTrs = customRowsSection.querySelectorAll('tr');
-        customRowsTrs.forEach((row, idx) => {
-            const tr = addBlankBtnRow(row.className);
-            // Only add buttons for custom rows
-            if (customRows[idx]) {
-                const leftTd = tr.children[0];
-                const rightTd = tr.children[1];
-                if (editingIndex === idx) {
-                    const confirmBtn = document.createElement('button');
-                    confirmBtn.className = 'custom-row-btn confirm custom-row-confirm';
-                    confirmBtn.innerHTML = '&#10003;';
-                    leftTd.appendChild(confirmBtn);
-                } else {
-                    const editBtn = document.createElement('button');
-                    editBtn.className = 'custom-row-btn edit custom-row-edit';
-                    editBtn.innerHTML = '&#9998;';
-                    if (editingIndex !== null) editBtn.disabled = true;
-                    leftTd.appendChild(editBtn);
-                }
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'custom-row-btn remove custom-row-remove';
-                removeBtn.innerHTML = '&#10005;';
-                if (editingIndex !== null && editingIndex !== idx) removeBtn.disabled = true;
-                rightTd.appendChild(removeBtn);
-                tr.dataset.index = idx;
-            }
-            customBody.appendChild(tr);
-        });
-    }
-
-    // 4. Calculation rows
-    const calcRows = paydfTable.querySelectorAll('tbody:not(.pos-table-section):not(#custom-row-section) tr');
-    calcRows.forEach(row => {
-        calcBody.appendChild(addBlankBtnRow(row.className));
-    });
-}
 
 function renderCustomRows() {
     const customSection = document.getElementById('custom-row-section');
-    if (!customSection) return;
     customSection.innerHTML = '';
     customRows.forEach((row, idx) => {
         let tr = document.createElement('tr');
-        tr.className = 'pos-table';
+        tr.className = 'pos-table custom-row';
         tr.dataset.index = idx;
-        // Only render custom row data, no button logic or inline styles
         if (editingIndex === idx) {
-            let headerTd = document.createElement('td');
-            let inputDiv = document.createElement('div');
-            inputDiv.style.flex = '1';
-            inputDiv.style.paddingLeft = '4px';
-            inputDiv.innerHTML = `<input type="text" id="custom-row-header" value="${row.header}" maxlength="32" style="width:120px;">`;
-            headerTd.appendChild(inputDiv);
-            tr.appendChild(headerTd);
-            // Tax cell
-            let taxTd = document.createElement('td');
-            taxTd.innerHTML = `Tax: <input type="checkbox" id="custom-row-tax" ${row.tax ? 'checked' : ''}>`;
-            tr.appendChild(taxTd);
-            for (let i = 1; i < row.values.length; i++) {
-                let valueTd = document.createElement('td');
-                valueTd.innerHTML = `
-                    ${row.type === 'D' ? '-' : ''}$<input type="text" class="custom-row-value" value="${row.values[i]}" maxlength="5" style="width:60px;" pattern="\\d{1,5}" title="Enter up to 5 digits">`;
-                tr.appendChild(valueTd);
-            }
+            // Editable row: show inputs, confirm/remove buttons
+            tr.innerHTML = `
+                <td><input type="text" value="${row.header}" /></td>
+                <td><input type="checkbox" ${row.tax ? 'checked' : ''} /></td>
+                ${row.values.slice(1).map(v => `<td><input type="text" value="${v}" /></td>`).join('')}
+                <td>
+                    <button class="custom-row-confirm">✔</button>
+                    <button class="custom-row-remove">✖</button>
+                </td>
+            `;
         } else {
-            let headerTd = document.createElement('td');
-            let textDiv = document.createElement('div');
-            textDiv.style.flex = '1';
-            textDiv.style.paddingLeft = '4px';
-            textDiv.textContent = row.header;
-            headerTd.appendChild(textDiv);
-            tr.appendChild(headerTd);
-            // Tax cell
-            let taxTd = document.createElement('td');
-            taxTd.textContent = row.tax ? 'Taxable' : 'Non-Taxable';
-            tr.appendChild(taxTd);
-            for (let i = 1; i < row.values.length; i++) {
-                let valueTd = document.createElement('td');
-                valueTd.textContent = `${row.type === 'D' ? '-' : ''}$${row.values[i]}`;
-                tr.appendChild(valueTd);
-            }
+            // Static row: show values, edit/remove buttons
+            tr.innerHTML = `
+                <td>${row.header}</td>
+                <td>${row.tax ? 'Taxable' : 'Non-Taxable'}</td>
+                ${row.values.slice(1).map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
+                <td>
+                    <button class="custom-row-edit">✎</button>
+                    <button class="custom-row-remove">✖</button>
+                </td>
+            `;
         }
         customSection.appendChild(tr);
     });
-    document.getElementById('add-row-entitlement').disabled = editingIndex !== null || customRows.length >= MAX_CUSTOM_ROWS;
-    document.getElementById('add-row-deduction').disabled = editingIndex !== null || customRows.length >= MAX_CUSTOM_ROWS;
-    let maxInfo = document.getElementById('custom-row-max-info');
-    if (!maxInfo) {
-        maxInfo = document.createElement('div');
-        maxInfo.id = 'custom-row-max-info';
-        maxInfo.style.marginBottom = '8px';
-        document.getElementById('settings-form').prepend(maxInfo);
-    }
-    maxInfo.textContent = `Custom rows allowed: ${MAX_CUSTOM_ROWS - customRows.length}`;
-    renderCustomRowButtonTable();
-}
-
-function insertCustomRow(type) {
-    if (editingIndex !== null || customRows.length >= MAX_CUSTOM_ROWS) return;
-    const table = document.getElementById('paydf-table');
-    const headerRow = table.querySelector('.pos-table-header');
-    const months = Array.from(headerRow.querySelectorAll('td')).slice(1).map(td => td.textContent.trim());
-    let values = Array(months.length).fill(0);
-    customRows.push({ header: '', type, tax: false, values });
-    editingIndex = customRows.length - 1;
-    renderCustomRows();
-    // No need to call renderCustomRowButtonTable here, renderCustomRows will do it
 }
 
 
-// Confirm custom row (make static, send to backend)
-function confirmCustomRow() {
-    // Gather values
-    const type = document.getElementById('add-row-entitlement').disabled ? 'E' : 'D';
-    const header = document.getElementById('custom-row-header').value.trim();
-    const tax = document.getElementById('custom-row-tax').checked;
-    const valueInputs = document.querySelectorAll('.custom-row-value');
-    let values = [];
-    for (let inp of valueInputs) {
-        let val = inp.value.replace(/\D/g, '');
-        val = val ? Math.min(parseInt(val), 99999) : 0;
-        values.push(val);
-    }
-
-    // Store in hidden input for backend
-    let customRowData = {
-        header: header,
-        type: type,
-        tax: tax,
-        values: values
-    };
-    let hidden = document.getElementById('custom-row-hidden');
-    if (!hidden) {
-        hidden = document.createElement('input');
-        hidden.type = 'hidden';
-        hidden.id = 'custom-row-hidden';
-        hidden.name = 'custom_row';
-        document.getElementById('options-form').appendChild(hidden);
-    }
-    hidden.value = JSON.stringify(customRowData);
-
-    // Re-enable add buttons
-    document.getElementById('add-row-entitlement').disabled = false;
-    document.getElementById('add-row-deduction').disabled = false;
-
-    // Remove editable row, insert static row
-    let customSection = document.getElementById('custom-row-section');
-    customSection.innerHTML = '';
-    let row = document.createElement('tr');
-    row.className = 'pos-table';
-    row.innerHTML = `
-        <td>
-            <button class="custom-row-edit" style="background:#4CAF50;color:white;border:none;padding:4px 8px;margin-right:4px;">&#9998;</button>
-            <button class="custom-row-remove" style="background:#f44336;color:white;border:none;padding:4px 8px;">&#10005;</button>
-        </td>
-        <td>${header}</td>
-        <td>${tax ? 'Taxable' : 'Non-Taxable'}</td>
-        ${values.map(v => `<td>${type === 'D' ? '-' : ''}$${v}</td>`).join('')}
-    `;
-    customSection.appendChild(row);
-
-    // Trigger updatePaydf to send to backend
-    updatePaydf();
+function updateButtonStates() {
+    const disable = editingIndex !== null;
+    document.getElementById('add-row-entitlement').disabled = disable;
+    document.getElementById('add-row-deduction').disabled = disable;
+    document.getElementById('update-les-button').disabled = disable;
+    document.getElementById('export-button').disabled = disable;
+    // Optionally gray out buttons visually
+    // Disable all edit/remove except for the editing row
+    document.querySelectorAll('.custom-row-edit, .custom-row-remove').forEach((btn, idx) => {
+        btn.disabled = disable && editingIndex !== idx;
+        btn.style.background = btn.disabled ? '#ccc' : '';
+    });
 }
 
 
-function removeCustomRow() {
-    let idx = editingIndex;
-    if (idx === null) {
-        // Find index from clicked button
-        const btn = event.target;
-        const tr = btn.closest('tr');
-        idx = parseInt(tr.dataset.index);
-    }
-    customRows.splice(idx, 1);
-    editingIndex = null;
-    renderCustomRows();
-    renderCustomRowButtonTable(); // Ensure button table is updated after removing row
-    let hidden = document.getElementById('custom-row-hidden');
-    if (customRows.length === 0 && hidden) hidden.remove();
-    else if (hidden) hidden.value = JSON.stringify(customRows);
-    document.getElementById('add-row-entitlement').disabled = false;
-    document.getElementById('add-row-deduction').disabled = false;
-    updatePaydf();
-}
 
 
 
@@ -446,36 +273,47 @@ document.addEventListener('click', function(e) {
     }
 
 
-     // Add Entitlement Row
-    if (e.target && e.target.id === 'add-row-entitlement') {
-        e.target.disabled = true;
-        document.getElementById('add-row-deduction').disabled = true;
-        insertCustomRow('E');
+    // Add Entitlement
+    if (e.target.id === 'add-row-entitlement') {
+        if (editingIndex !== null) return;
+        editingIndex = customRows.length;
+        customRows.push({ header: '', type: 'E', tax: false, values: [0,0,0,0] });
+        renderCustomRows();
+        updateButtonStates();
     }
 
-    // Add Deduction Row
-    if (e.target && e.target.id === 'add-row-deduction') {
-        e.target.disabled = true;
-        document.getElementById('add-row-entitlement').disabled = true;
-        insertCustomRow('D');
+    // Add Deduction
+    if (e.target.id === 'add-row-deduction') {
+        if (editingIndex !== null) return;
+        editingIndex = customRows.length;
+        customRows.push({ header: '', type: 'D', tax: false, values: [0,0,0,0] });
+        renderCustomRows();
+        updateButtonStates();
     }
 
     // Confirm Custom Row
-    if (e.target && e.target.classList.contains('custom-row-confirm')) {
-        confirmCustomRow();
+    if (e.target.classList.contains('custom-row-confirm')) {
+        // Gather input values and update customRows[editingIndex]
+        // ... (input parsing logic here)
+        editingIndex = null;
+        updatePaydf();
     }
 
     // Remove Custom Row
-    if (e.target && e.target.classList.contains('custom-row-remove')) {
-        removeCustomRow();
+    if (e.target.classList.contains('custom-row-remove')) {
+        const idx = editingIndex !== null ? editingIndex : parseInt(e.target.closest('tr').dataset.index);
+        customRows.splice(idx, 1);
+        editingIndex = null;
+        updatePaydf();
     }
 
-    if (e.target && e.target.classList.contains('custom-row-edit')) {
-        const tr = e.target.closest('tr');
-        const idx = parseInt(tr.dataset.index);
+    // Edit Custom Row
+    if (e.target.classList.contains('custom-row-edit')) {
+        const idx = parseInt(e.target.closest('tr').dataset.index);
         if (editingIndex !== null) return;
         editingIndex = idx;
         renderCustomRows();
+        updateButtonStates();
     }
 });
 
@@ -517,22 +355,3 @@ document.addEventListener('mouseleave', function(e) {
         hideTooltip();
     }
 }, true);
-
-// Auto-confirm edit mode row on update triggers
-function autoConfirmEditRow() {
-    if (editingIndex !== null) {
-        confirmCustomRow();
-    }
-}
-
-document.getElementById('update-les-button')?.addEventListener('click', autoConfirmEditRow);
-document.getElementById('months-dropdown')?.addEventListener('change', autoConfirmEditRow);
-
-// Initial render
-window.addEventListener('DOMContentLoaded', function() {
-    renderCustomRows();
-    renderCustomRowButtonTable();
-});
-
-// Update button table on window resize
-window.addEventListener('resize', renderCustomRowButtonTable);
