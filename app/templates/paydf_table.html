@@ -1,94 +1,131 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
 
-<table id="paydf-table" class="pos-table">
-    <tbody class="pos-table-section">
-        <tr class="pos-table-header">
-            <td class="pos-table-header"></td>
-            {% for col in col_headers[1:] %}
-                <td class="pos-table-header">{{ col }}</td>
-            {% endfor %}
+<div id="paydf-container">
+
+    <table id="custom-row-table">
+        <tr class="custom-row-btn-tr">
+            <td class="custom-row-btn-td"></td>
+            <td class="custom-row-btn-td"></td>
         </tr>
-
-        {% for header in row_headers %}
+        <tbody class="pos-table-section">
+            {% for header in row_headers %}
+                {% set i = loop.index0 %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.iloc[0]['type'] == 'V' %}
+                    <tr class="custom-row-btn-tr show-all-variables">
+                        <td class="custom-row-btn-td"></td>
+                        <td class="custom-row-btn-td"></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tbody class="pos-table-section">
+            {% for header in row_headers %}
             {% set i = loop.index0 %}
             {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-            {% if row_info.iloc[0]['type'] == 'V' %}
+            {% if row_info.iloc[0]['type'] in ['E', 'D', 'A', 'C'] %}
+                <tr class="custom-row-btn-tr">
+                    <td class="custom-row-btn-td"></td>
+                    <td class="custom-row-btn-td"></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
 
-            <tr class="pos-table paydf-variable-row">
-                <td class="pos-table">
-                    <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
-                </td>
-
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% set value = paydf.at[i, col_headers[x]] %}
-                    <td class="pos-table">
-                        {% set dtype = row_info.iloc[0]['dtype'] %}
-                        {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
-                            {{ '{}%'.format(value) }}
-                        {% elif dtype == 'Decimal' %}
-                            {{ '{:,.2f}'.format(value) }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
+    <table id="paydf-table" class="pos-table">
+        <tbody class="pos-table-section">
+            <tr class="pos-table-header">
+                <td class="pos-table-header"></td>
+                {% for col in col_headers[1:] %}
+                    <td class="pos-table-header">{{ col }}</td>
                 {% endfor %}
-
             </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
 
-    <tbody class="pos-table-section">
-        {% for header in row_headers %}
-            {% set i = loop.index0 %}
-            {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-            {% if row_info.iloc[0]['type'] in ['E', 'D', 'A'] %}
+            {% for header in row_headers %}
+                {% set i = loop.index0 %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.iloc[0]['type'] == 'V' %}
 
-            <tr class="pos-table">
-                <td class="pos-table">
-                    <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
-                </td>
-
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% set value = paydf.at[i, col_headers[x]] %}
+                <tr class="pos-table paydf-variable-row">
                     <td class="pos-table">
-                        {% if value is not none and value != '' %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            $0.00
-                        {% endif %}
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                     </td>
-                {% endfor %}
 
-            </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td class="pos-table">
+                            {% set dtype = row_info.iloc[0]['dtype'] %}
+                            {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
+                                {{ '{}%'.format(value) }}
+                            {% elif dtype == 'Decimal' %}
+                                {{ '{:,.2f}'.format(value) }}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
 
-    <tbody>
-        {% for header in row_headers %}
-            {% set i = loop.index0 %}
-            {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-            {% if row_info.iloc[0]['type'] == 'C' %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
 
-            <tr class="pos-table">
-                <td class="pos-table">
-                    <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
-                </td>
+        <tbody class="pos-table-section">
+            {% for header in row_headers %}
+                {% set i = loop.index0 %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.iloc[0]['type'] in ['E', 'D', 'A'] %}
 
-                {% for x in range(1, paydf.shape[1]) %}
-                    {% set value = paydf.at[i, col_headers[x]] %}
+                <tr class="pos-table">
                     <td class="pos-table">
-                        {% if value is not none and value != '' %}
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                        {% else %}
-                            $0.00
-                        {% endif %}
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                     </td>
-                {% endfor %}
-                
-            </tr>
-            {% endif %}
-        {% endfor %}
-    </tbody>
-</table>
+
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td class="pos-table">
+                            {% if value is not none and value != '' %}
+                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                            {% else %}
+                                $0.00
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+
+        <tbody id="custom-row-section">
+        </tbody>
+
+        <tbody>
+            {% for header in row_headers %}
+                {% set i = loop.index0 %}
+                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+                {% if row_info.iloc[0]['type'] == 'C' %}
+
+                <tr class="pos-table">
+                    <td class="pos-table">
+                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                    </td>
+
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td class="pos-table">
+                            {% if value is not none and value != '' %}
+                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                            {% else %}
+                                $0.00
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                    
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
