@@ -859,7 +859,7 @@ table tr {
     background-color: var(--highlight);
 }
 
-.paydf-variable-row {
+.variable-row {
     display: none;
 }
 

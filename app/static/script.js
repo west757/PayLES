@@ -135,13 +135,10 @@ function highlight_changes() {
 function show_all_variables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('paydf-variable-row');
-    var btnRows = document.querySelectorAll('#custom-row-table .show-all-variables');
+    var rows = document.getElementsByClassName('variable-row');
     for (var i = 0; i < rows.length; i++) {
         rows[i].style.display = checked ? 'table-row' : 'none';
-        btnRows[i].style.display = checked ? 'table-row' : 'none';
     }
-    renderCustomRowButtonTable();
 }
 
 
@@ -167,47 +164,85 @@ let editingIndex = null;
 
 
 function renderCustomRowButtonTable() {
-    const btnTable = document.getElementById('custom-row-table');
+    const btnTable = document.getElementById('custom-row-button-table');
     const paydfTable = document.getElementById('paydf-table');
     if (!btnTable || !paydfTable) return;
-    const paydfRows = paydfTable.querySelectorAll('tbody tr');
-    const btnTbody = btnTable.querySelector('tbody');
-    // Clear all rows
-    btnTbody.innerHTML = '';
-    paydfRows.forEach((row, idx) => {
-        const btnTr = document.createElement('tr');
-        btnTr.className = row.className;
-        // If paydf row is a variable row, also add show-all-variables class
-        if (row.classList.contains('paydf-variable-row')) {
-            btnTr.classList.add('show-all-variables');
-        }
+
+    // Get all button table bodies
+    const variableBody = btnTable.querySelector('#variable-reference-body');
+    const edaBody = btnTable.querySelector('#eda-reference-body');
+    const customBody = btnTable.querySelector('#custom-reference-body');
+    const calcBody = btnTable.querySelector('#calculation-reference-body');
+    if (!variableBody || !edaBody || !customBody || !calcBody) return;
+
+    // Clear all bodies
+    variableBody.innerHTML = '';
+    edaBody.innerHTML = '';
+    customBody.innerHTML = '';
+    calcBody.innerHTML = '';
+
+    // Helper to add blank row
+    function addBlankBtnRow(className) {
+        const tr = document.createElement('tr');
+        tr.className = className;
         const leftTd = document.createElement('td');
         leftTd.className = 'custom-row-btn-td';
         const rightTd = document.createElement('td');
         rightTd.className = 'custom-row-btn-td';
-        // Only add buttons for custom rows
-        if (customRows[idx]) {
-            if (editingIndex === idx) {
-                const confirmBtn = document.createElement('button');
-                confirmBtn.className = 'custom-row-btn confirm';
-                confirmBtn.innerHTML = '&#10003;';
-                leftTd.appendChild(confirmBtn);
-            } else {
-                const editBtn = document.createElement('button');
-                editBtn.className = 'custom-row-btn edit';
-                editBtn.innerHTML = '&#9998;';
-                if (editingIndex !== null) editBtn.disabled = true;
-                leftTd.appendChild(editBtn);
+        tr.appendChild(leftTd);
+        tr.appendChild(rightTd);
+        return tr;
+    }
+
+    // 1. Variable rows
+    const variableRows = paydfTable.querySelectorAll('tbody.pos-table-section .variable-row');
+    variableRows.forEach(row => {
+        variableBody.appendChild(addBlankBtnRow(row.className));
+    });
+
+    // 2. EDA rows (Entitlement/Deduction/Allowance)
+    const edaRows = paydfTable.querySelectorAll('tbody.pos-table-section tr:not(.variable-row)');
+    edaRows.forEach(row => {
+        edaBody.appendChild(addBlankBtnRow(row.className));
+    });
+
+    // 3. Custom rows
+    const customRowsSection = document.getElementById('custom-row-section');
+    if (customRowsSection) {
+        const customRowsTrs = customRowsSection.querySelectorAll('tr');
+        customRowsTrs.forEach((row, idx) => {
+            const tr = addBlankBtnRow(row.className);
+            // Only add buttons for custom rows
+            if (customRows[idx]) {
+                const leftTd = tr.children[0];
+                const rightTd = tr.children[1];
+                if (editingIndex === idx) {
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.className = 'custom-row-btn confirm custom-row-confirm';
+                    confirmBtn.innerHTML = '&#10003;';
+                    leftTd.appendChild(confirmBtn);
+                } else {
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'custom-row-btn edit custom-row-edit';
+                    editBtn.innerHTML = '&#9998;';
+                    if (editingIndex !== null) editBtn.disabled = true;
+                    leftTd.appendChild(editBtn);
+                }
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'custom-row-btn remove custom-row-remove';
+                removeBtn.innerHTML = '&#10005;';
+                if (editingIndex !== null && editingIndex !== idx) removeBtn.disabled = true;
+                rightTd.appendChild(removeBtn);
+                tr.dataset.index = idx;
             }
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'custom-row-btn remove';
-            removeBtn.innerHTML = '&#10005;';
-            if (editingIndex !== null && editingIndex !== idx) removeBtn.disabled = true;
-            rightTd.appendChild(removeBtn);
-        }
-        btnTr.appendChild(leftTd);
-        btnTr.appendChild(rightTd);
-        btnTbody.appendChild(btnTr);
+            customBody.appendChild(tr);
+        });
+    }
+
+    // 4. Calculation rows
+    const calcRows = paydfTable.querySelectorAll('tbody:not(.pos-table-section):not(#custom-row-section) tr');
+    calcRows.forEach(row => {
+        calcBody.appendChild(addBlankBtnRow(row.className));
     });
 }
 
@@ -219,7 +254,6 @@ function renderCustomRows() {
         let tr = document.createElement('tr');
         tr.className = 'pos-table';
         tr.dataset.index = idx;
-
         // Only render custom row data, no button logic or inline styles
         if (editingIndex === idx) {
             let headerTd = document.createElement('td');
@@ -229,18 +263,7 @@ function renderCustomRows() {
             inputDiv.innerHTML = `<input type="text" id="custom-row-header" value="${row.header}" maxlength="32" style="width:120px;">`;
             headerTd.appendChild(inputDiv);
             tr.appendChild(headerTd);
-        } else {
-            let headerTd = document.createElement('td');
-            let textDiv = document.createElement('div');
-            textDiv.style.flex = '1';
-            textDiv.style.paddingLeft = '4px';
-            textDiv.textContent = row.header;
-            headerTd.appendChild(textDiv);
-            tr.appendChild(headerTd);
-        }
-
-        // Tax cell
-        if (editingIndex === idx) {
+            // Tax cell
             let taxTd = document.createElement('td');
             taxTd.innerHTML = `Tax: <input type="checkbox" id="custom-row-tax" ${row.tax ? 'checked' : ''}>`;
             tr.appendChild(taxTd);
@@ -251,6 +274,14 @@ function renderCustomRows() {
                 tr.appendChild(valueTd);
             }
         } else {
+            let headerTd = document.createElement('td');
+            let textDiv = document.createElement('div');
+            textDiv.style.flex = '1';
+            textDiv.style.paddingLeft = '4px';
+            textDiv.textContent = row.header;
+            headerTd.appendChild(textDiv);
+            tr.appendChild(headerTd);
+            // Tax cell
             let taxTd = document.createElement('td');
             taxTd.textContent = row.tax ? 'Taxable' : 'Non-Taxable';
             tr.appendChild(taxTd);
@@ -284,7 +315,7 @@ function insertCustomRow(type) {
     customRows.push({ header: '', type, tax: false, values });
     editingIndex = customRows.length - 1;
     renderCustomRows();
-    renderCustomRowButtonTable(); // Ensure button table is updated after adding row
+    // No need to call renderCustomRowButtonTable here, renderCustomRows will do it
 }
 
 
