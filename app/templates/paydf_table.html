@@ -52,7 +52,11 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% set value = paydf.at[i, col_headers[x]] %}
                     <td class="pos-table">
-                        {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        {% if value is not none and value != '' %}
+                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        {% else %}
+                            $0.00
+                        {% endif %}
                     </td>
                 {% endfor %}
 
@@ -75,7 +79,11 @@
                 {% for x in range(1, paydf.shape[1]) %}
                     {% set value = paydf.at[i, col_headers[x]] %}
                     <td class="pos-table">
-                        {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        {% if value is not none and value != '' %}
+                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        {% else %}
+                            $0.00
+                        {% endif %}
                     </td>
                 {% endfor %}
                 
