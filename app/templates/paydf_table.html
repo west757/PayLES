@@ -2,24 +2,25 @@
 
 <div id="paydf-container">
 
+    <!--
     <table id="custom-row-table">
-        <tr class="custom-row-btn-tr">
-            <td class="custom-row-btn-td"></td>
-            <td class="custom-row-btn-td"></td>
-        </tr>
         <tbody class="pos-table-section">
+            <tr class="custom-row-btn-tr">
+                <td class="custom-row-btn-td"></td>
+                <td class="custom-row-btn-td"></td>
+            </tr>
             {% for header in row_headers %}
                 {% set i = loop.index0 %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.iloc[0]['type'] == 'V' %}
-                    <tr class="custom-row-btn-tr show-all-variables">
+                    <tr class="custom-row-btn-tr variable-row">
                         <td class="custom-row-btn-td"></td>
                         <td class="custom-row-btn-td"></td>
                     </tr>
                 {% endif %}
             {% endfor %}
         </tbody>
-        <tbody class="pos-table-section">
+        <tbody">
             {% for header in row_headers %}
             {% set i = loop.index0 %}
             {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
@@ -32,6 +33,15 @@
             {% endfor %}
         </tbody>
     </table>
+    -->
+
+    <table id="custom-row-button-table">
+        <tbody id="variable-reference-body"></tbody>
+        <tbody id="eda-reference-body"></tbody>
+        <tbody id="custom-reference-body"></tbody>
+        <tbody id="calculation-reference-body"></tbody>
+    </table>
+
 
     <table id="paydf-table" class="pos-table">
         <tbody class="pos-table-section">
@@ -47,7 +57,7 @@
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.iloc[0]['type'] == 'V' %}
 
-                <tr class="pos-table paydf-variable-row">
+                <tr class="pos-table variable-row">
                     <td class="pos-table">
                         <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
                     </td>
