@@ -443,6 +443,9 @@ def expand_paydf(paydf, options, months_display, custom_rows=None):
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
 
+    if custom_rows is None:
+        custom_rows = []
+
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         new_month = MONTHS_SHORT[month_idx]
@@ -991,28 +994,33 @@ def calculate_difference(paydf, col_idx):
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     months_display = int(request.form.get('months_display', 6))
-
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(paydf, form=request.form)
 
-    custom_rows_json = request.form.get('custom_row', None)
+    # Accept custom_rows as JSON
+    custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = []
-
     if custom_rows_json:
         custom_rows = json.loads(custom_rows_json)
-
+        if isinstance(custom_rows, dict):
+            custom_rows = [custom_rows]
         for row in custom_rows:
-            row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
+            num_months = len(paydf.columns) - 1
+            # Pad values to match number of months
+            if len(row['values']) < num_months + 1:
+                row['values'] = ([Decimal(0)] * (num_months + 1 - len(row['values']))) + [Decimal(v) if v else Decimal(0) for v in row['values']]
+            else:
+                row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
             row['tax'] = True if str(row.get('tax', '')).lower() in ['true', 'on', '1'] else False
+    else:
+        custom_rows = []
 
     add_custom_template_row(custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-
     paydf = expand_paydf(paydf, options, months_display, custom_rows=custom_rows)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
-
     context = {
         'paydf': paydf,
         'col_headers': col_headers,
@@ -1020,23 +1028,18 @@ def update_paydf():
         'options': options,
         'months_display': months_display,
     }
-
     return render_template('paydf_table.html', **context)
 
 
 def add_custom_template_row(custom_rows):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-
     for row in custom_rows:
         header = row['header']
         orig_header = header
         suffix = 1
-
-        #ensures headers are unique, if not then appends suffix to the header
         while header in PAYDF_TEMPLATE['header'].values:
             header = f"{orig_header} ({suffix})"
             suffix += 1
-
         PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
             'header': header,
             'varname': '',
@@ -1053,14 +1056,14 @@ def add_custom_template_row(custom_rows):
             'custom': True,
             'modal': ''
         }
-
-        #resets the header row back to the original header
-        row['header'] = header 
+        row['header'] = header
 
 
 def add_custom_row(paydf, custom_rows):
     for row in custom_rows:
-        paydf.loc[len(paydf)] = [row['header'], Decimal(0)]
+        # Add a new row with all columns: header + values
+        new_row = [row['header']] + row['values'][1:]
+        paydf.loc[len(paydf)] = new_row
     return paydf
 
 
