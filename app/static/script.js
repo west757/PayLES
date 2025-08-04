@@ -1,5 +1,7 @@
-const DEFAULT_MONTHS_DISPLAY = 4;
 const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const DEFAULT_MONTHS_DISPLAY = 4;
+const MAX_CUSTOM_ROWS = 9;
+
 
 // Drag and drop functionality for file input
 (function() {
@@ -82,7 +84,6 @@ function updatePaydf() {
     const formData = new FormData(optionsForm);
     const monthsDropdown = settingsForm.querySelector('[name="months_display"]');
     formData.append('months_display', monthsDropdown.value);
-    // Add customRows as JSON
     formData.append('custom_rows', JSON.stringify(customRows));
 
     fetch('/update_paydf', {
@@ -95,7 +96,6 @@ function updatePaydf() {
         highlight_changes();
         show_all_variables();
         show_all_options();
-        // After backend update, reset editingIndex and re-enable buttons
         editingIndex = null;
         updateButtonStates();
         renderCustomRowButtonTable();
@@ -105,6 +105,7 @@ function updatePaydf() {
 
 
 function highlight_changes() {
+    const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     var checkbox = document.getElementById('highlight-changes-checkbox');
     var checked = checkbox.checked;
     var table = document.getElementById('paydf-table');
@@ -129,7 +130,7 @@ function highlight_changes() {
                 cell.textContent.trim() !== prevCell.textContent.trim() &&
                 !(rowHeader === "Difference" && cell.textContent.trim() === "$0.00")
             ) {
-                cell.style.backgroundColor = '#b9f755';
+                cell.style.backgroundColor = highlight_color;
             } else {
                 cell.style.backgroundColor = '';
             }
@@ -166,7 +167,7 @@ function show_all_options() {
 
 
 
-const MAX_CUSTOM_ROWS = 9;
+
 let customRows = []; // Array of custom row objects
 let editingIndex = null; // Index of the row being edited, or null if none
 let customRowButtons = [];
@@ -387,26 +388,19 @@ function hideTooltip() {
 
 
 //delegated event listeners for dynamic paydf controls
-// Only keep delegated listeners for non-custom-row buttons
-// Remove delegated edit/remove/confirm for custom rows
-
 document.addEventListener('click', function(e) {
-    //update les button
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
         updatePaydf();
     }
 
-    //export button
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
         exportPaydf();
     }
 
-    // Add Entitlement
     if (e.target.id === 'add-row-entitlement') {
         if (editingIndex !== null) return;
-        // Get number of future month columns (total columns - 2: header + first month)
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
         numMonths = headerRow.children.length - 2;
@@ -417,7 +411,6 @@ document.addEventListener('click', function(e) {
         updateButtonStates();
     }
 
-    // Add Deduction
     if (e.target.id === 'add-row-deduction') {
         if (editingIndex !== null) return;
         const paydfTable = document.getElementById('paydf-table');
@@ -432,24 +425,20 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('change', function(e) {
-    //months dropdown
     if (e.target && e.target.id === 'months-dropdown') {
         e.preventDefault();
         updatePaydf();
         updateMonthDropdowns(parseInt(e.target.value));
     }
 
-    //highlight changes checkbox
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
         highlight_changes();
     }
 
-    //show all variables checkbox
     if (e.target && e.target.id === 'show-all-variables-checkbox') {
         show_all_variables();
     }
 
-    //show all options checkbox
     if (e.target && e.target.id === 'show-all-options-checkbox') {
         show_all_options();
     }

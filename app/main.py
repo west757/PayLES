@@ -85,8 +85,10 @@ def submit_example():
 
 def validate_les(les_file):
     with pdfplumber.open(les_file) as les_pdf:
+        #gets the bounding box of the LES title to verify the pdf is an LES
         title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
         title_text = title_crop.extract_text_simple()
+
         if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":
             return True, None, les_pdf
         else:
@@ -104,30 +106,32 @@ def process_les(les_pdf):
     return context
 
 
-def create_les_image(les_rectangles, les_page):
+def create_les_image(LES_RECTANGLES, les_page):
     LES_IMAGE_SCALE = app.config['LES_IMAGE_SCALE']
 
-    temp_image = les_page.to_image(resolution=300).original
-    new_width = int(temp_image.width * LES_IMAGE_SCALE)
-    new_height = int(temp_image.height * LES_IMAGE_SCALE)
-    resized_image = temp_image.resize((new_width, new_height), Image.LANCZOS)
+    raw_image = les_page.to_image(resolution=300).original
+    new_width = int(raw_image.width * LES_IMAGE_SCALE)
+    new_height = int(raw_image.height * LES_IMAGE_SCALE)
+    scaled_image = raw_image.resize((new_width, new_height), Image.LANCZOS)
 
-    #create whiteout rectangle over SSN
-    whiteout_coords = (710, 165, 980, 220)
-    draw = ImageDraw.Draw(resized_image)
-    x1 = int(whiteout_coords[0] * LES_IMAGE_SCALE)
-    y1 = int(whiteout_coords[1] * LES_IMAGE_SCALE)
-    x2 = int(whiteout_coords[2] * LES_IMAGE_SCALE)
-    y2 = int(whiteout_coords[3] * LES_IMAGE_SCALE)
+    #overlays whiteout rectangle over SSN
+    whiteout_rect = (710, 165, 980, 220)
+    draw = ImageDraw.Draw(scaled_image)
+    x1 = int(whiteout_rect[0] * LES_IMAGE_SCALE)
+    y1 = int(whiteout_rect[1] * LES_IMAGE_SCALE)
+    x2 = int(whiteout_rect[2] * LES_IMAGE_SCALE)
+    y2 = int(whiteout_rect[3] * LES_IMAGE_SCALE)
     draw.rectangle([x1, y1, x2, y2], fill="white")
 
+    #creates les_image as base64 encoded PNG
     img_io = io.BytesIO()
-    resized_image.save(img_io, format='PNG')
+    scaled_image.save(img_io, format='PNG')
     img_io.seek(0)
     les_image = base64.b64encode(img_io.read()).decode("utf-8")
 
+    #initializes and scales rectangle overlay data from LES_RECTANGLES
     rect_overlay = []
-    for rect in les_rectangles.to_dict(orient="records"):
+    for rect in LES_RECTANGLES.to_dict(orient="records"):
         rect_overlay.append({
             "index": rect["index"],
             "x1": rect["x1"] * LES_IMAGE_SCALE,
@@ -141,19 +145,20 @@ def create_les_image(les_rectangles, les_page):
     return les_image, rect_overlay
 
 
-def read_les(les_rectangles, les_page):
+def read_les(LES_RECTANGLES, les_page):
     LES_COORD_SCALE = app.config['LES_COORD_SCALE']
     les_text = ["text per rectangle"]
 
-    for i, row in les_rectangles.iterrows():
-        x0 = float(row['x1']) * LES_COORD_SCALE
-        x1 = float(row['x2']) * LES_COORD_SCALE
-        y0 = float(row['y1']) * LES_COORD_SCALE
-        y1 = float(row['y2']) * LES_COORD_SCALE
-        top = min(y0, y1)
-        bottom = max(y0, y1)
+    #extracts text from each rectangle defined in LES_RECTANGLES
+    for _, row in LES_RECTANGLES.iterrows():
+        x1 = float(row['x1']) * LES_COORD_SCALE
+        x2 = float(row['x2']) * LES_COORD_SCALE
+        y1 = float(row['y1']) * LES_COORD_SCALE
+        y2 = float(row['y2']) * LES_COORD_SCALE
+        upper = min(y1, y2)
+        lower = max(y1, y2)
 
-        les_rect_text = les_page.within_bbox((x0, top, x1, bottom)).extract_text()
+        les_rect_text = les_page.within_bbox((x1, upper, x2, lower)).extract_text()
         les_text.append(les_rect_text.replace("\n", " ").split())
 
     return les_text
@@ -166,22 +171,22 @@ def read_les(les_rectangles, les_page):
 
 def build_paydf(les_text):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-    remove_custom_rows_from_template(PAYDF_TEMPLATE)
     DEFAULT_MONTHS_DISPLAY = app.config['DEFAULT_MONTHS_DISPLAY']
     initial_month = les_text[8][3]
 
-    paydf = pd.DataFrame(columns=["header", initial_month])
+    remove_custom_template_rows(PAYDF_TEMPLATE)
 
+    paydf = pd.DataFrame(columns=["header", initial_month])
     paydf = add_variables(PAYDF_TEMPLATE, paydf, les_text)
     paydf = add_entitlements(PAYDF_TEMPLATE, paydf, les_text)
     paydf = add_deductions(PAYDF_TEMPLATE, paydf, les_text)
     paydf = add_allotments(PAYDF_TEMPLATE, paydf, les_text)
     paydf = add_calculations(PAYDF_TEMPLATE, paydf)
 
+    #convert paydf to JSON and store in session for use in update_paydf
     session['paydf_json'] = paydf.to_json()
 
     options = build_options(PAYDF_TEMPLATE, paydf=paydf)
-
     paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY)
 
     col_headers = paydf.columns.tolist()
@@ -196,8 +201,7 @@ def add_variables(PAYDF_TEMPLATE, paydf, les_text):
     for _, row in var_rows.iterrows():
         header = row['header']
         dtype = row['dtype']
-        default = row['default']
-        value = default
+        value = row['default']
 
         if header == 'Year':
             value = int('20' + les_text[8][4])
@@ -206,8 +210,7 @@ def add_variables(PAYDF_TEMPLATE, paydf, les_text):
         elif header == 'Months in Service':
             paydate = datetime.strptime(les_text[3][2], '%y%m%d')
             lesdate = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
-            mis = months_in_service(lesdate, paydate)
-            value = int(mis)
+            value = int(months_in_service(lesdate, paydate))
         elif header == 'Zip Code':
             if les_text[48][2] != "00000":
                 value = les_text[48][2]
@@ -217,16 +220,18 @@ def add_variables(PAYDF_TEMPLATE, paydf, les_text):
             if les_text[39][1] != "98":
                 value = les_text[39][1]
         elif header == 'Federal Filing Status':
-            if les_text[24][1] == "S":
+            status = les_text[24][1]
+            if status == "S":
                 value = "Single"
-            elif header == 'M':
+            elif status == "M":
                 value = "Married"
-            elif header == 'H':
+            elif status == "H":
                 value = "Head of Household"
         elif header == 'State Filing Status':
-            if les_text[42][1] == "S":
+            status = les_text[42][1]
+            if status == "S":
                 value = "Single"
-            elif les_text[42][1] == "M":
+            elif status == "M":
                 value = "Married"
         elif header == 'Dependents':
             value = int(les_text[53][1])
@@ -250,95 +255,31 @@ def add_entitlements(PAYDF_TEMPLATE, paydf, les_text):
     section = les_text[9]
 
     for _, row in var_rows.iterrows():
-        value = None
-        found = False
-        short = str(row['shortname'])
-        matches = find_multiword_matches(section, short)
-
-        for idx in matches:
-            for j in range(idx + 1, len(section)):
-                s = section[j]
-                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-                if is_num:
-                    value = Decimal(section[j])
-                    found = True
-                    break
-            if found:
-                break
-        if not found:
-            if bool(row['required']):
-                value = cast_dtype(row['default'], row['dtype'])
-            else:
-                continue
-
-        value = cast_dtype(value, row['dtype'])
-        paydf.loc[len(paydf)] = [row['header'], value]
-
+        value = parse_eda_sections(section, row)
+        if value is not None:
+            paydf.loc[len(paydf)] = [row['header'], value]
     return paydf
+
 
 def add_deductions(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']
     section = les_text[10]
 
     for _, row in var_rows.iterrows():
-        value = None
-        found = False
-        short = str(row['shortname'])
-        matches = find_multiword_matches(section, short)
-
-        for idx in matches:
-            for j in range(idx + 1, len(section)):
-                s = section[j]
-                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-                if is_num:
-                    value = -abs(Decimal(section[j]))
-                    found = True
-                    break
-            if found:
-                break
-        if not found:
-            if bool(row['required']):
-                default_value = cast_dtype(row['default'], row['dtype'])
-                value = -abs(default_value)
-            else:
-                continue
-
-        value = cast_dtype(value, row['dtype'])
-        paydf.loc[len(paydf)] = [row['header'], value]
-
+        value = parse_eda_sections(section, row)
+        if value is not None:
+            paydf.loc[len(paydf)] = [row['header'], -value]
     return paydf
 
 
 def add_allotments(PAYDF_TEMPLATE, paydf, les_text):
     var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']
     section = les_text[11]
-
+    
     for _, row in var_rows.iterrows():
-        value = None
-        found = False
-        short = str(row['shortname'])
-        matches = find_multiword_matches(section, short)
-
-        for idx in matches:
-            for j in range(idx + 1, len(section)):
-                s = section[j]
-                is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-                if is_num:
-                    value = -abs(Decimal(section[j]))
-                    found = True
-                    break
-            if found:
-                break
-        if not found:
-            if bool(row['required']):
-                default_value = cast_dtype(row['default'], row['dtype'])
-                value = -abs(default_value)
-            else:
-                continue
-
-        value = cast_dtype(value, row['dtype'])
-        paydf.loc[len(paydf)] = [row['header'], value]
-
+        value = parse_eda_sections(section, row)
+        if value is not None:
+            paydf.loc[len(paydf)] = [row['header'], -value]
     return paydf
 
 
@@ -379,6 +320,8 @@ def build_options(PAYDF_TEMPLATE, paydf, form=None):
     options = []
 
     def add_option(header, varname):
+        row_idx = paydf[paydf['header'] == header].index[0]
+
         if form:
             value = form.get(f"{varname}_f", None)
             month = form.get(f"{varname}_m", "")
@@ -386,25 +329,23 @@ def build_options(PAYDF_TEMPLATE, paydf, form=None):
             if header == "Zip Code" and value not in [None, ""]:
                 value = validate_zip_code(value)
 
+            #calcualtes checkbox values as "on" or None
             if value == "on":
-                row_idx = paydf[paydf['header'] == header].index[0]
                 first_month_col = paydf.columns[1]
                 value = paydf.at[row_idx, first_month_col]
             elif value is None:
                 value = 0
             elif value == "":
-                row_idx = paydf[paydf['header'] == header].index[0]
                 first_month_col = paydf.columns[1]
                 value = paydf.at[row_idx, first_month_col]
+
         else:
-            row_idx = paydf[paydf['header'] == header].index[0]
             first_month_col = paydf.columns[1]
             value = paydf.at[row_idx, first_month_col]
             first_month_idx = MONTHS_SHORT.index(first_month_col)
             month = MONTHS_SHORT[(first_month_idx + 1) % 12]
 
         options.append([header, value, month])
-
 
     for _, row in PAYDF_TEMPLATE.iterrows():
         if not row.get('option', False):
@@ -433,9 +374,6 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=Non
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
 
-    if custom_rows is None:
-        custom_rows = []
-
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         new_month = MONTHS_SHORT[month_idx]
@@ -447,7 +385,6 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=Non
             defaults.append(cast_dtype(match.iloc[0]['default'], match.iloc[0]['dtype']))
 
         paydf[new_month] = defaults
-
         paydf = update_variables(PAYDF_TEMPLATE, paydf, new_month, options)
         paydf = update_entitlements(PAYDF_TEMPLATE, paydf, new_month, options, custom_rows=custom_rows)
         paydf = update_calculations(PAYDF_TEMPLATE, paydf, new_month, only_taxable=True)
@@ -459,9 +396,9 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=Non
 
 
 def update_variables(PAYDF_TEMPLATE, paydf, month, options):
+    MONTHS_SHORT = app.config['MONTHS_SHORT']
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
-    MONTHS_SHORT = app.config['MONTHS_SHORT']
     option_headers = set(opt[0] for opt in options)
 
     for row_idx, row in rows.iterrows():
@@ -473,9 +410,11 @@ def update_variables(PAYDF_TEMPLATE, paydf, month, options):
 
         if header in option_headers:
             future_value, future_month = get_option(header, options)
+
             if future_month in columns:
                 future_col_idx = columns.index(future_month)
                 current_col_idx = columns.index(month)
+
                 if current_col_idx >= future_col_idx:
                     paydf.at[row_idx, month] = future_value
                 else:
@@ -512,44 +451,8 @@ def update_entitlements(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None)
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if match.iloc[0].get('custom', False):
-            # Find custom row by header, set value for this month
-            custom_row = next((r for r in custom_rows if r['header'] == header), None)
-            if custom_row:
-                # The first month column is always 0, so values start at columns[2]
-                col_idx = paydf.columns.tolist().index(month)
-                # For columns[2] (second month), use values[0], for columns[3], use values[1], etc.
-                value_idx = col_idx - 2
-                value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
-                paydf.at[row_idx, month] = value
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
             continue
-
-
-        onetime = bool(match.iloc[0].get('onetime', False))
-        standard = bool(match.iloc[0].get('standard', False))
-
-        if onetime:
-            paydf.at[row_idx, month] = 0
-            continue
-
-        elif standard:
-            future_value, future_month = get_option(header, options)
-            col_idx = columns.index(month)
-            prev_month = columns[col_idx - 1]
-            prev_value = paydf.at[row_idx, prev_month]
-
-            if future_month in columns:
-                future_col_idx = columns.index(future_month)
-                current_col_idx = columns.index(month)
-
-                if future_col_idx is not None and current_col_idx >= future_col_idx:
-                    paydf.at[row_idx, month] = future_value
-                else:
-                    paydf.at[row_idx, month] = prev_value
-            else:
-                paydf.at[row_idx, month] = prev_value
-            continue
-
         elif header == 'Base Pay':
             paydf.at[row_idx, month] = calculate_base_pay(paydf, month)
         elif header == 'BAS':
@@ -568,44 +471,9 @@ def update_deductions(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
     for row_idx, row in rows.iterrows():
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-        
-        if match.iloc[0].get('custom', False):
-            # Find custom row by header, set value for this month
-            custom_row = next((r for r in custom_rows if r['header'] == header), None)
-            if custom_row:
-                # The first month column is always 0, so values start at columns[2]
-                col_idx = paydf.columns.tolist().index(month)
-                # For columns[2] (second month), use values[0], for columns[3], use values[1], etc.
-                value_idx = col_idx - 2
-                value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
-                paydf.at[row_idx, month] = value
+
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
             continue
-        
-        onetime = bool(match.iloc[0].get('onetime', False))
-        standard = bool(match.iloc[0].get('standard', False))
-
-        if onetime:
-            paydf.at[row_idx, month] = 0
-            continue
-
-        elif standard:
-            future_value, future_month = get_option(header, options)
-            col_idx = columns.index(month)
-            prev_month = columns[col_idx - 1]
-            prev_value = paydf.at[row_idx, prev_month]
-
-            if future_month in columns:
-                future_col_idx = columns.index(future_month)
-                current_col_idx = columns.index(month)
-
-                if future_col_idx is not None and current_col_idx >= future_col_idx:
-                    paydf.at[row_idx, month] = future_value
-                else:
-                    paydf.at[row_idx, month] = prev_value
-            else:
-                paydf.at[row_idx, month] = prev_value
-            continue
-
         elif header == 'Federal Taxes':
             paydf.at[row_idx, month] = calculate_federal_taxes(paydf, month)
         elif header == 'FICA - Social Security':
@@ -624,36 +492,17 @@ def update_deductions(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
     return paydf
 
 
-def update_allotments(PAYDF_TEMPLATE, paydf, month, options):
+def update_allotments(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
     row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
     rows = paydf[paydf['header'].isin(row_headers)]
     columns = paydf.columns.tolist()
 
     for row_idx, row in rows.iterrows():
         header = row['header']
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        future_value, future_month = get_option(header, options)
-
-        col_idx = columns.index(month)
-        prev_month = columns[col_idx - 1]
-        prev_value = paydf.at[row_idx, prev_month]
-
-        if future_value is None or future_value == '':
-            future_value = 0
-
-        future_value = -abs(Decimal(future_value))
-
-        if future_month in columns:
-            future_col_idx = columns.index(future_month)
-            current_col_idx = columns.index(month)
-
-            if future_col_idx is not None and current_col_idx >= future_col_idx:
-                paydf.at[row_idx, month] = future_value
-            else:
-                paydf.at[row_idx, month] = prev_value
-        else:
-            paydf.at[row_idx, month] = prev_value
-        continue
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+            continue
 
     return paydf
 
@@ -752,6 +601,7 @@ def calculate_federal_taxes(paydf, month):
     taxable_income = Decimal(taxable_income) * 12
     tax = Decimal(0)
 
+    #subtract standard deduction from taxable income based on filing status
     if filing_status == "Single":
         taxable_income -= STANDARD_DEDUCTIONS[0]
     elif filing_status == "Married":
@@ -981,7 +831,7 @@ def calculate_difference(paydf, col_idx):
 @app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-    months_display = int(request.form.get('months_display', 6))
+    months_display = int(request.form.get('months_display', app.config['DEFAULT_MONTHS_DISPLAY']))
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
 
@@ -995,23 +845,21 @@ def update_paydf():
             custom_rows = [custom_rows]
 
         for row in custom_rows:
-            # Ensure all values are Decimal
             row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
-            # Ensure deduction values are negative
+
             if row.get('type') == 'D':
                 row['values'] = [-abs(v) for v in row['values']]
-            row['tax'] = True if str(row.get('tax', '')).lower() in ['true', 'on', '1'] else False
-    else:
-        custom_rows = []
 
-    remove_custom_rows_from_template(PAYDF_TEMPLATE)
+            row['tax'] = True if str(row.get('tax', '')) == 'on' else False
 
-    add_custom_template_row(PAYDF_TEMPLATE, custom_rows)
+    remove_custom_template_rows(PAYDF_TEMPLATE)
+    add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
     paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
+
     context = {
         'paydf': paydf,
         'col_headers': col_headers,
@@ -1023,12 +871,7 @@ def update_paydf():
     return render_template('paydf_table.html', **context)
 
 
-
-def remove_custom_rows_from_template(PAYDF_TEMPLATE):
-    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
-
-
-def add_custom_template_row(PAYDF_TEMPLATE, custom_rows):
+def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
     existing_headers = set(PAYDF_TEMPLATE['header'].values)
     
     for row in custom_rows:
@@ -1058,14 +901,15 @@ def add_custom_template_row(PAYDF_TEMPLATE, custom_rows):
 
 
 def add_custom_row(paydf, custom_rows):
-    # Only add header and default value for the first month column
-    first_month_col = paydf.columns[1] if len(paydf.columns) > 1 else None
+    first_month_col = paydf.columns[1]
+
     for row in custom_rows:
         if first_month_col:
             paydf.loc[len(paydf)] = [row['header'], 0]
         else:
             paydf.loc[len(paydf)] = [row['header']]
     return paydf
+
 
 
 # =========================
@@ -1082,6 +926,10 @@ def validate_file(file):
     if not allowed_file(file.filename):
         return False, "Invalid file type, only PDFs are accepted"
     return True, ""
+
+
+def remove_custom_template_rows(PAYDF_TEMPLATE):
+    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
 
 
 def cast_dtype(value, dtype):
@@ -1132,6 +980,72 @@ def calculate_mha(zip_code):
         mha = "Not Found"
 
     return mha
+
+
+def parse_eda_sections(section, row):
+    value = None
+    found = False
+    shortname = str(row['shortname'])
+    matches = find_multiword_matches(section, shortname)
+
+    for idx in matches:
+        for j in range(idx + 1, len(section)):
+            s = section[j]
+            is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+            
+            if is_num:
+                val = Decimal(section[j])
+                value = abs(val)
+                found = True
+                break
+
+        if found:
+            break
+
+    if not found:
+        if bool(row['required']):
+            default_value = cast_dtype(row['default'], row['dtype'])
+            value = abs(default_value)
+        else:
+            return None
+        
+    return cast_dtype(value, row['dtype'])
+
+
+def update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+    if match.iloc[0].get('custom', False):
+        custom_row = next((r for r in custom_rows if r['header'] == header), None)
+
+        if custom_row:
+            col_idx = columns.index(month)
+            value_idx = col_idx - 2
+            value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
+            paydf.at[row_idx, month] = value
+        return True
+
+    if bool(match.iloc[0].get('onetime', False)):
+        paydf.at[row_idx, month] = 0
+        return True
+
+    if bool(match.iloc[0].get('standard', False)):
+        future_value, future_month = get_option(header, options)
+        col_idx = columns.index(month)
+        prev_month = columns[col_idx - 1]
+        prev_value = paydf.at[row_idx, prev_month]
+
+        if future_month in columns:
+            future_col_idx = columns.index(future_month)
+            current_col_idx = columns.index(month)
+
+            if future_col_idx is not None and current_col_idx >= future_col_idx:
+                paydf.at[row_idx, month] = future_value
+            else:
+                paydf.at[row_idx, month] = prev_value
+        else:
+            paydf.at[row_idx, month] = prev_value
+        return True
+
+    return False
 
 
 def get_option(header, options):
