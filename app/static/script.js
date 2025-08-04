@@ -98,7 +98,7 @@ function updatePaydf() {
         // After backend update, reset editingIndex and re-enable buttons
         editingIndex = null;
         updateButtonStates();
-        //renderCustomRows();
+        renderCustomRowButtonTable();
     });
 }
 
@@ -172,14 +172,33 @@ let editingIndex = null; // Index of the row being edited, or null if none
 let customRowButtons = [];
 
 function renderCustomRows() {
-    console.log('renderCustomRows called. editingIndex:', editingIndex, 'customRows:', customRows);
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
+
+    // Get current month display from dropdown or config
+    let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
+    const monthsDropdown = document.getElementById('months-dropdown');
+    if (monthsDropdown) {
+        monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
+    }
+
+    // Only value columns (exclude header column)
+    let valueColumns = monthsDisplay - 1;
+
     customRows.forEach((row, idx) => {
-        console.log('renderCustomRows: row idx', idx, 'row.header', row.header);
+        // Ensure values array matches valueColumns
+        if (row.values.length < valueColumns) {
+            // Add zeros for new months
+            row.values = row.values.concat(Array(valueColumns - row.values.length).fill(0));
+        } else if (row.values.length > valueColumns) {
+            // Truncate values for fewer months
+            row.values = row.values.slice(0, valueColumns);
+        }
+
         let tr = document.createElement('tr');
         tr.className = 'pos-table custom-row';
         tr.dataset.index = idx;
+        
         if (editingIndex === idx) {
             // Editable row: styled inputs, labels, $ and - signs
             let headerTd = document.createElement('td');
@@ -220,7 +239,6 @@ function renderCustomRows() {
         customSection.appendChild(tr);
     });
     renderCustomRowButtonTable();
-    attachCustomRowButtonListeners();
 }
 
 
@@ -232,21 +250,23 @@ function renderCustomRowButtonTable() {
     customRows.forEach((row, idx) => {
         let tr = document.createElement('tr');
         tr.className = 'custom-row-btn-tr';
-        tr.dataset.index = idx;
         let leftTd = document.createElement('td');
         let rightTd = document.createElement('td');
         let editBtn, removeBtn, confirmBtn;
+
         if (editingIndex === idx) {
             confirmBtn = document.createElement('button');
             confirmBtn.className = 'custom-row-btn confirm custom-row-confirm';
             confirmBtn.textContent = '✔';
             confirmBtn.disabled = false;
             leftTd.appendChild(confirmBtn);
+
             removeBtn = document.createElement('button');
             removeBtn.className = 'custom-row-btn remove custom-row-remove';
             removeBtn.textContent = '✖';
             removeBtn.disabled = false;
             rightTd.appendChild(removeBtn);
+
         } else {
             editBtn = document.createElement('button');
             editBtn.className = 'custom-row-btn edit custom-row-edit';
@@ -254,6 +274,7 @@ function renderCustomRowButtonTable() {
             editBtn.disabled = editingIndex !== null;
             editBtn.style.background = editBtn.disabled ? '#ccc' : '';
             leftTd.appendChild(editBtn);
+
             removeBtn = document.createElement('button');
             removeBtn.className = 'custom-row-btn remove custom-row-remove';
             removeBtn.textContent = '✖';
@@ -267,32 +288,15 @@ function renderCustomRowButtonTable() {
         customRowButtons[idx] = { editBtn, removeBtn, confirmBtn };
     });
     updateButtonStates();
+    attachCustomRowButtonListeners();
 }
 
 // Attach event listeners after rendering
 function attachCustomRowButtonListeners() {
     customRowButtons.forEach((btns, idx) => {
-        if (btns.editBtn) {
-            btns.editBtn.onclick = function() {
-                console.log('Edit button clicked for custom row index:', idx);
-                if (editingIndex !== null) return;
-                editingIndex = idx;
-                renderCustomRows();
-                updateButtonStates();
-            };
-        }
-        if (btns.removeBtn) {
-            btns.removeBtn.onclick = function() {
-                console.log('Remove button clicked for custom row index:', idx);
-                customRows.splice(idx, 1);
-                editingIndex = null;
-                updatePaydf();
-            };
-        }
         if (btns.confirmBtn) {
             btns.confirmBtn.onclick = function() {
                 const tr = document.querySelector(`#custom-row-section tr[data-index="${editingIndex}"]`);
-                console.log('Confirm button clicked for custom row index:', idx, 'editingIndex:', editingIndex, 'tr:', tr);
                 // Get header input
                 const headerInput = tr.querySelector('input.text-input');
                 // Get tax checkbox
@@ -308,6 +312,23 @@ function attachCustomRowButtonListeners() {
                     values.push(val);
                 });
                 customRows[editingIndex].values = values;
+                editingIndex = null;
+                updatePaydf();
+            };
+        }
+
+        if (btns.editBtn) {
+            btns.editBtn.onclick = function() {
+                if (editingIndex !== null) return;
+                editingIndex = idx;
+                renderCustomRows();
+                updateButtonStates();
+            };
+        }
+
+        if (btns.removeBtn) {
+            btns.removeBtn.onclick = function() {
+                customRows.splice(idx, 1);
                 editingIndex = null;
                 updatePaydf();
             };
@@ -391,7 +412,6 @@ document.addEventListener('click', function(e) {
         numMonths = headerRow.children.length - 2;
         const values = Array(numMonths).fill(0);
         editingIndex = customRows.length;
-        console.log('Add Entitlement: editingIndex set to', editingIndex);
         customRows.push({ header: '', type: 'E', tax: false, values });
         renderCustomRows();
         updateButtonStates();
@@ -405,7 +425,6 @@ document.addEventListener('click', function(e) {
         numMonths = headerRow.children.length - 2;
         const values = Array(numMonths).fill(0);
         editingIndex = customRows.length;
-        console.log('Add Deduction: editingIndex set to', editingIndex);
         customRows.push({ header: '', type: 'D', tax: false, values });
         renderCustomRows();
         updateButtonStates();
