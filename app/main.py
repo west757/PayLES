@@ -166,7 +166,7 @@ def read_les(les_rectangles, les_page):
 
 def build_paydf(les_text):
     PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
+    remove_custom_rows_from_template(PAYDF_TEMPLATE)
     DEFAULT_MONTHS_DISPLAY = app.config['DEFAULT_MONTHS_DISPLAY']
     initial_month = les_text[8][3]
 
@@ -996,7 +996,7 @@ def update_paydf():
 
         for row in custom_rows:
             # Ensure all values are Decimal
-            row['values'] = [Decimal(v) if v else Decimal(0) for v in row['values']]
+            row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
             # Ensure deduction values are negative
             if row.get('type') == 'D':
                 row['values'] = [-abs(v) for v in row['values']]
@@ -1004,9 +1004,9 @@ def update_paydf():
     else:
         custom_rows = []
 
-    remove_custom_rows_from_template(custom_rows)
+    remove_custom_rows_from_template(PAYDF_TEMPLATE)
 
-    add_custom_template_row(custom_rows)
+    add_custom_template_row(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
     paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows)
 
@@ -1023,15 +1023,20 @@ def update_paydf():
     return render_template('paydf_table.html', **context)
 
 
-def add_custom_template_row(custom_rows):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
+
+def remove_custom_rows_from_template(PAYDF_TEMPLATE):
+    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
+
+
+def add_custom_template_row(PAYDF_TEMPLATE, custom_rows):
+    existing_headers = set(PAYDF_TEMPLATE['header'].values)
+    
     for row in custom_rows:
         header = row['header']
-        orig_header = header
-        suffix = 1
-        while header in PAYDF_TEMPLATE['header'].values:
-            header = f"{orig_header} ({suffix})"
-            suffix += 1
+
+        if header in existing_headers:
+            header = f"{header}_unique"
+
         PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
             'header': header,
             'varname': '',
@@ -1049,13 +1054,7 @@ def add_custom_template_row(custom_rows):
             'modal': ''
         }
         row['header'] = header
-
-
-def remove_custom_rows_from_template(custom_rows):
-    PAYDF_TEMPLATE = app.config['PAYDF_TEMPLATE']
-    custom_headers = [row['header'] for row in custom_rows]
-    # Remove any custom rows not in custom_headers
-    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[(PAYDF_TEMPLATE['custom']) & (~PAYDF_TEMPLATE['header'].isin(custom_headers))].index, inplace=True)
+        existing_headers.add(header)
 
 
 def add_custom_row(paydf, custom_rows):

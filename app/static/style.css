@@ -377,6 +377,10 @@ input.pos-table {
     width: 4.6rem;
 }
 
+.num-input-mid {
+    width: 3.5rem;
+}
+
 .num-input-short {
     width: 2.5rem;
 }
