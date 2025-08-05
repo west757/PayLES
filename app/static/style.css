@@ -41,6 +41,10 @@ body {
     font-size: 1.5rem;
 }
 
+.text-mid {
+    font-size: 1.25rem;
+}
+
 .text-default {
     font-size: 1rem;
 }
@@ -197,44 +201,45 @@ footer {
    buttons
    ========================= */
 
-button {
-    background-color: var(--primary_green_accent_color);
-    border: 2px solid var(--primary_green_accent_color);
+.button {
     border-radius: 0.5rem;
     color: var(--light_text_color);
     cursor: pointer;
     display: inline-block;
     font-size: 1rem;
-    padding: 0.75rem 1.25rem;
     text-align: center;
     transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
     touch-action: manipulation;
     will-change: transform;
 }
 
-button:hover {
+.button:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    transform: translateY(-2px);
+}
+
+.button-standard {
+    background-color: var(--primary_green_accent_color);
+    border: 2px solid var(--primary_green_accent_color);
+    padding: 0.75rem 1.25rem;
+}
+
+.button-standard:hover {
     background-color: var(--secondary_green_accent_color);
     border: 2px solid var(--secondary_green_accent_color);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
-    color: var(--light_text_color);
-    transform: translateY(-2px);
+    
+}
+
+.button-home {
+    margin: 0 0 0 2rem;
+    width: 12rem;
 }
 
 #submit-les-button {
     height: 5rem;
-    margin: 0 0 0 2rem;
-    width: 14rem;
 }
 
-#submit-example-les-button {
-    margin: 0 0 0 2rem;
-    width: 14rem;
-}
 
-#mypay-button {
-    margin: 0 0 0 2rem;
-    width: 14rem;
-}
 
 #update-les-button {
     margin: 0.35rem 0;
@@ -330,7 +335,7 @@ input.pos-table {
 
 
 /* =========================
-   cheeckboxes
+   checkboxes
    ========================= */
 
 input[type=checkbox] {
@@ -363,12 +368,8 @@ input[type=checkbox] {
    home group
    ========================= */
 
-#home-form {
+#home-group {
     text-align: center;
-}
-
-#home-table {
-    margin: auto;
 }
 
 #home-drop {
@@ -376,13 +377,12 @@ input[type=checkbox] {
     border: 2px dashed var(--primary_dark_accent_color);
     border-radius: 1rem;
     cursor: pointer;
-    display: flex;
+    display: inline-block;
     flex-direction: column;
     gap: 0.75rem;
     height: 14rem;
     justify-content: center;
     padding: 1rem;
-    position: relative;
     transition: background .2s ease-in-out;
     width: 30rem;
 }
@@ -419,6 +419,9 @@ input[type=file]::file-selector-button:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
 }
 
+#disclaimer {
+    text-align: left;
+}
 
 /* =========================
    paydf group
