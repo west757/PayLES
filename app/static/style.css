@@ -1,20 +1,19 @@
 :root {
-    --white: #F8F9FA;
     --background_color: #F2F0EB;
     --dark_text_color: #000000;
     --light_text_color: #F8F9FA;
     --primary_dark_accent_color: #393939;
     --secondary_dark_accent_color: #999999;
-    --primary_light_accent_color: #f1f1f1;
-    --lightgray: #f1f1f1;
+    --primary_light_accent_color: #F8F9FA;
+    --secondary_light_accent_color: #f1f1f1;
+    --input_background_color: #eeeeee;
+    --table_border_color: #dddddd;
     --primary_green_accent_color: #0c9a65;
     --secondary_green_accent_color: #04a96d;
-    --input_background: #eee;
-    --table_border: #ddd;
-    --blue: #3c94f1;
-    --red: #f06f65;
     --highlight_green_color: #4fd1a2;
     --highlight_yellow_color: #baf35f;
+    --highlight_blue_color: #3c94f1;
+    --highlight_red_color: #f06f65;
 }
 
 html {
@@ -38,6 +37,17 @@ body {
     padding: 0;
 }
 
+.text-large {
+    font-size: 1.5rem;
+}
+
+.text-default {
+    font-size: 1rem;
+}
+
+.text-small {
+    font-size: 0.75rem;
+}
 
 /* =========================
    header and nav
@@ -62,7 +72,6 @@ header {
 #title {
     align-self: flex-end;
     color: var(--background_color);
-    font-size: 24px;
     line-height: 0.2rem;
 }
 
@@ -91,7 +100,7 @@ nav ul {
 }
 
 nav a {
-    color: var(--background_color);
+    color: var(--light_text_color);
     display: block;
     height: inherit;
     text-decoration: none;
@@ -137,7 +146,6 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.8rem;
     line-height: 0.35rem;
     margin-top: auto;
     width: 100%;
@@ -160,11 +168,10 @@ footer {
 
 .tooltip-toast {
     animation: fadeout 4s forwards;
-    background-color: var(--primary_dark_accent_color);
+    background-color: var(--highlight_red_color);
     border-radius: 0.5rem;
     color: var(--light_text_color);
     display: block;
-    font-size: 1rem;
     margin: 1rem auto;
     max-width: 16rem;
     padding: 0.5rem 1rem;
@@ -184,73 +191,6 @@ footer {
         visibility: hidden;
     }
 }
-
-
-
-/* =========================
-   home form drag and drop
-   ========================= */
-
-#home-drop {
-    align-items: center;
-    border: 2px dashed var(--primary_dark_accent_color);
-    border-radius: 1rem;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    height: 14rem;
-    justify-content: center;
-    padding: 1rem;
-    position: relative;
-    transition: background .2s ease-in-out;
-    width: 30rem;
-}
-
-#home-drop:hover, #home-drop.drag-active {
-    background-color: var(--input_background);
-}
-
-#drop-title {
-    font-size: 1.25rem;
-    text-align: center;
-}
-
-
-
-/* =========================
-   home file input
-   ========================= */
-
-input[type=file] {
-    border: 1px solid var(--primary_dark_accent_color);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    max-width: 100%;
-    padding: 0.5rem;
-}
-
-input[type=file]::file-selector-button {
-    background-color: var(--primary_green_accent_color);
-    border: none;
-    border-radius: 0.5rem;
-    color: var(--light_text_color);
-    font-size: 1rem;
-    margin-right: 1rem;
-    padding: 0.75rem 1.25rem;
-    transition: background .2s ease-in-out;
-}
-
-input[type=file]::file-selector-button:hover {
-    background-color: var(--secondary_green_accent_color);
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
-}
-
-#home-input {
-    width: 24rem;
-}
-
-
 
 
 /* =========================
@@ -303,7 +243,7 @@ button:hover {
 
 #add-row-entitlement, #add-row-deduction {
     margin: 0.35rem 0;
-    width: 8rem;
+    width: 10rem;
 }
 
 #export-button {
@@ -317,13 +257,12 @@ button:hover {
 }
 
 
-
 /* =========================
    dropdowns
    ========================= */
 
 select.pos-table {
-    background-color: var(--input_background);
+    background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
@@ -350,7 +289,7 @@ select.pos-table {
    ========================= */
 
 input.text-input {
-    background-color: var(--input_background);
+    background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
@@ -364,7 +303,7 @@ input.text-input {
 }
 
 input.pos-table {
-    background-color: var(--input_background);
+    background-color: var(--input_background_color);
     border: 1px solid #999;
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px #999;
@@ -396,7 +335,7 @@ input.pos-table {
 
 input[type=checkbox] {
     accent-color: var(--primary_green_accent_color);
-    background-color: var(--input_background);
+    background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
@@ -430,6 +369,54 @@ input[type=checkbox] {
 
 #home-table {
     margin: auto;
+}
+
+#home-drop {
+    align-items: center;
+    border: 2px dashed var(--primary_dark_accent_color);
+    border-radius: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 14rem;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    transition: background .2s ease-in-out;
+    width: 30rem;
+}
+
+#home-drop:hover, #home-drop.drag-active {
+    background-color: var(--input_background_color);
+}
+
+#home-input {
+    width: 24rem;
+}
+
+input[type=file] {
+    border: 1px solid var(--primary_dark_accent_color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    max-width: 100%;
+    padding: 0.5rem;
+}
+
+input[type=file]::file-selector-button {
+    background-color: var(--primary_green_accent_color);
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--light_text_color);
+    font-size: 1rem;
+    margin-right: 1rem;
+    padding: 0.75rem 1.25rem;
+    transition: background .2s ease-in-out;
+}
+
+input[type=file]::file-selector-button:hover {
+    background-color: var(--secondary_green_accent_color);
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
 }
 
 
@@ -472,7 +459,7 @@ input[type=checkbox] {
 }
 
 #les-image {
-    border: 1px solid var(--table_border);
+    border: 1px solid var(--table_border_color);
     display: inline-block;
     line-height: 0;
     margin: 1rem;
@@ -485,15 +472,15 @@ input[type=checkbox] {
    ========================= */
 
 table.pos-table {
-    background-color: var(--white);
-    border: 1px solid var(--table_border);
+    background-color: var(--primary_light_accent_color);
+    border: 1px solid var(--table_border_color);
     border-collapse: separate;
     border-radius: 1.5rem;
     border-spacing: 0px;
 }
 
 tr.pos-table-header {
-    border-left: 1px solid var(--table_border);
+    border-left: 1px solid var(--table_border_color);
     font-weight: bold;
     text-align: center;
     top: 0;
@@ -501,7 +488,7 @@ tr.pos-table-header {
 
 td.pos-table-header {
     background-color: var(--primary_dark_accent_color);
-    border-left: 1px solid var(--table_border);
+    border-left: 1px solid var(--table_border_color);
     border-radius: 0px;
     color: var(--light_text_color);
     font-weight: bold;
@@ -510,13 +497,13 @@ td.pos-table-header {
 }
 
 tr.pos-table, td.pos-table {
-    border-left: 1px solid var(--table_border);
-    border-top: 1px solid var(--table_border);
+    border-left: 1px solid var(--table_border_color);
+    border-top: 1px solid var(--table_border_color);
     text-align: center;
 }
 
 tr.pos-table:nth-child(even) td.pos-table {
-    background-color: var(--lightgray);
+    background-color: var(--secondary_light_accent_color);
 }
 
 tr.pos-table:not(:first-child), td.pos-table:not(:first-child) {
@@ -536,7 +523,7 @@ td.pos-table-header:last-child {
 }
 
 tbody.pos-table-section tr:last-child td {
-    border-bottom: 6px solid var(--table_border);
+    border-bottom: 6px solid var(--table_border_color);
 }
 
 
@@ -661,11 +648,11 @@ table tr {
 }
 
 .custom-row-btn.edit {
-    background: var(--blue);
+    background: var(--highlight_blue_color);
 }
 
 .custom-row-btn.remove {
-    background: var(--red);
+    background: var(--highlight_red_color);
 }
 
 
@@ -711,7 +698,7 @@ table tr {
 }
 
 .modal-inner {
-    background-color: var(--white);
+    background-color: var(--primary_light_accent_color);
     border-radius: 1rem;
     bottom: 0;
     height: fit-content;
@@ -760,10 +747,6 @@ table tr {
 
 .modal-button:hover, .modal-button:focus {
     background-color: var(--highlight_green_color);
-}
-
-.modal-text-small {
-    font-size: 12px;
 }
 
 .modal-table {
@@ -815,11 +798,11 @@ table tr {
 .tab {
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid var(--table_border);
+    border-bottom: 1px solid var(--table_border_color);
 }
 
 .tab-label {
-    background-color: var(--lightgray);
+    background-color: var(--secondary_light_accent_color);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -839,7 +822,7 @@ table tr {
 }
 
 .tab-content {
-    background-color: var(--white);
+    background-color: var(--primary_light_accent_color);
     padding: 0 1rem;
     transition: all 0.35s;
     max-height: 0;
@@ -882,10 +865,10 @@ table tr {
 }
 
 .resource {
-    background-color: var(--lightgray);
+    background-color: var(--secondary_light_accent_color);
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid var(--table_border);
+    border-bottom: 1px solid var(--table_border_color);
     padding: 1rem;
 }
 
@@ -907,10 +890,10 @@ table tr {
 }
 
 .remark {
-    background-color: var(--lightgray);
+    background-color: var(--secondary_light_accent_color);
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid var(--table_border);
+    border-bottom: 1px solid var(--table_border_color);
     padding: 1rem;
 }
 

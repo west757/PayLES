@@ -728,6 +728,9 @@ def calculate_taxed_income(PAYDF_TEMPLATE, paydf, col_idx):
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
+        if match.empty:
+            continue
+
         row_type = match.iloc[0]['type']
 
         if row_type == 'E':
@@ -765,6 +768,10 @@ def calculate_total_taxes(PAYDF_TEMPLATE, paydf, col_idx):
     for _, row in rows.iterrows():
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+
+        if match.empty:
+            continue
+
         tax_flag = match.iloc[0]['tax']
 
         if tax_flag:
@@ -837,7 +844,7 @@ def update_paydf():
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = []
-
+    print(custom_rows_json)
     if custom_rows_json:
         custom_rows = json.loads(custom_rows_json)
 
@@ -850,7 +857,7 @@ def update_paydf():
             if row.get('type') == 'D':
                 row['values'] = [-abs(v) for v in row['values']]
 
-            row['tax'] = True if str(row.get('tax', '')) == 'on' else False
+            row['tax'] = row.get('tax', False)
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
