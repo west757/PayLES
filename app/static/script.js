@@ -1,5 +1,5 @@
 const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-const DEFAULT_MONTHS_DISPLAY = 4;
+const DEFAULT_MONTHS_DISPLAY = 6;
 const MAX_CUSTOM_ROWS = 9;
 
 
@@ -360,12 +360,12 @@ function attachCustomRowButtonListeners() {
 
 function updateButtonStates() {
     const disable = editingIndex !== null;
-    document.getElementById('add-row-entitlement').disabled = disable;
-    document.getElementById('add-row-deduction').disabled = disable;
+    document.getElementById('add-entitlement-button').disabled = disable;
+    document.getElementById('add-deduction-button').disabled = disable;
     document.getElementById('update-les-button').disabled = disable;
     document.getElementById('export-button').disabled = disable;
-    document.getElementById('add-row-entitlement').style.background = disable ? '#ccc' : '';
-    document.getElementById('add-row-deduction').style.background = disable ? '#ccc' : '';
+    document.getElementById('add-entitlement-button').style.background = disable ? '#ccc' : '';
+    document.getElementById('add-deduction-button').style.background = disable ? '#ccc' : '';
     document.getElementById('update-les-button').style.background = disable ? '#ccc' : '';
     document.getElementById('export-button').style.background = disable ? '#ccc' : '';
 }
@@ -420,7 +420,7 @@ document.addEventListener('click', function(e) {
         exportPaydf();
     }
 
-    if (e.target.id === 'add-row-entitlement') {
+    if (e.target.id === 'add-entitlement-button') {
         if (editingIndex !== null) return;
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
@@ -432,7 +432,7 @@ document.addEventListener('click', function(e) {
         updateButtonStates();
     }
 
-    if (e.target.id === 'add-row-deduction') {
+    if (e.target.id === 'add-deduction-button') {
         if (editingIndex !== null) return;
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
