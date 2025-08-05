@@ -1,5 +1,5 @@
 ﻿from flask import Flask
-from flask import request, render_template, make_response, jsonify, session
+from flask import request, render_template, make_response, jsonify, session, url_for
 from flask_session import Session
 from config import Config
 from werkzeug.exceptions import RequestEntityTooLarge
@@ -29,10 +29,6 @@ def index():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-@app.route('/faq')
-def faq():
-    return render_template('faq.html')
 
 @app.route('/resources')
 def resources():
@@ -1074,6 +1070,78 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+
+# =========================
+# faqs
+# =========================
+
+@app.route('/faq')
+def faq():
+    faqs = [
+        {
+            "label": "What is PayLES?",
+            "content": """
+                PayLES is a free and open-source web application designed to help United States military service members 
+                analyze their finances using their Leave and Earnings Statement (LES). Learn more at the 
+                <a href='{}'>about</a> page!
+            """.format(url_for('about'))
+        },
+        {
+            "label": "How do I use PayLES?",
+            "content": """
+                PayLES is designed to be user-friendly. Simply upload your latest LES file, and the application will parse the 
+                data and display your current pay. You can then adjust your future finances based on anticipated changes such 
+                as promotions, moves, or changes in dependents. The application will calculate your future pay for up to 
+                12 months based on the information provided.
+            """
+        },
+        {
+            "label": "How do I get an LES?",
+            "content": """
+                An LES is provided to all military service members at the end of each month. It can be accessed through 
+                the <a href="https://mypay.dfas.mil/" target="_blank">MyPay</a> website or through your unit's finance office. 
+                If you are unsure how to access your LES, please contact your unit's finance office for assistance.
+            """
+        },
+        {
+            "label": "Is PayLES secure?",
+            "content": """
+                PayLES is as secure as any other web application. It does not store any user data, and all data is processed
+                in-memory without saving to disk. The application does not require any user accounts or personal information, 
+                ensuring user privacy and security. Additionally, PayLES uses HTTPS to encrypt data in transit,
+                providing an extra layer of security.
+            """
+        },
+        {
+            "label": "How accurate is PayLES?",
+            "content": """
+                PayLES strives to be as accurate as possible, however is unable to guarantee 100% accuracy 
+                of the calculations. PayLES uses official U.S. government and DoD datasets and calculations to provide estimates 
+                based on the information provided by the user, however each user's situation is unique and all factors cannot be 
+                accounted for. Historical analysis and testing has shown that PayLES is accurate to within 2.2% of the official 
+                military pay for approximately 95% of users. This means that for the vast majority of users, the estimates provided 
+                by PayLES will be very close to their actual future pay. The estimates provided by PayLES are not a substitute for 
+                official military pay statements or financial advice. Users should verify their own financial information and 
+                consult with their finance office for any discrepancies or concerns.
+            """
+        },
+        {
+            "label": "How can I contact the developer of PayLES?",
+            "content": """
+                The developer of PayLES can be contacted through GitHub.
+            """
+        },
+        {
+            "label": "How can I contribute to this project?",
+            "content": """
+                The best way to contribute to PayLES is to get involved on GitHub. You can report issues, suggest 
+                features, or submit pull requests to help improve the project. All contributions are welcome and appreciated!
+            """
+        },
+    ]
+    return render_template('faq.html', faqs=faqs)
 
 
 if __name__ == "__main__":
