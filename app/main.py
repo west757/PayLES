@@ -838,7 +838,7 @@ def update_paydf():
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = []
-    print(custom_rows_json)
+
     if custom_rows_json:
         custom_rows = json.loads(custom_rows_json)
 
