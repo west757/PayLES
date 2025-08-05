@@ -347,7 +347,7 @@ input[type=checkbox] {
 }
 
 #home-group, #about, #faq, #resources {
-    margin: 0 auto;
+    margin: 0 auto 3rem auto;
     max-width: 60%;
 }
 
