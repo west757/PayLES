@@ -208,7 +208,28 @@ function renderCustomRows() {
 
             // Tax cell with label
             let taxTd = document.createElement('td');
-            taxTd.innerHTML = `<label style='margin-right:6px;'>Tax:</label><input type="checkbox" ${row.tax ? 'checked' : ''} />`;
+            taxTd.innerHTML = `
+                <div style="display:inline-block; position:relative;">
+                <label style='margin-left:8px;'>Tax:</label>
+                    <input type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
+                    <span 
+                        class="tax-tooltip-icon" 
+                        style="
+                            font-size:13px; 
+                            cursor:pointer; 
+                            position:absolute; 
+                            top:-8px; 
+                            right:-10px; 
+                            background:white;
+                            border-radius:50%;
+                            padding:0 2px;
+                            line-height:1;
+                        "
+                        onmouseenter="showTooltip(event, 'Used to indicate if the row is used for tax purposes. If the row is an entitlement, it sets whether the row is taxable income or non-taxable income. If the row is a deduction, it sets whether or not the row is a tax to be added to total taxes.')"
+                        onmouseleave="hideTooltip()"
+                    >?</span>
+                </div>
+            `;
             tr.appendChild(taxTd);
 
             // Value inputs for each month column
