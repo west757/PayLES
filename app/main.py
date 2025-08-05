@@ -54,28 +54,22 @@ def tsp_calculator():
 
 @app.route('/submit_les', methods=['POST'])
 def submit_les():
+    EXAMPLE_LES = app.config['EXAMPLE_LES']
+    action = request.form.get('action')
     les_file = request.files.get('home-input')
 
-    if not les_file:
-        return render_template("home_form.html", message="No file submitted")
-
-    valid, message = validate_file(les_file)
-    if not valid:
-        return render_template("home_form.html", message=message)
-
-    valid, message, les_pdf = validate_les(les_file)
-    if valid:
-        context = process_les(les_pdf)
-        return render_template('paydf_group.html', **context)
+    if action == "submit-les":
+        if not les_file:
+            return render_template("home_form.html", message="No file submitted")
+        valid, message = validate_file(les_file)
+        if not valid:
+            return render_template("home_form.html", message=message)
+        valid, message, les_pdf = validate_les(les_file)
+    elif action == "submit-example":
+        valid, message, les_pdf = validate_les(EXAMPLE_LES)
     else:
-        return render_template("home_form.html", message=message)
+        return render_template("home_form.html", message="Unknown action")
 
-
-@app.route('/submit_example', methods=['POST'])
-def submit_example():
-    EXAMPLE_LES = app.config['EXAMPLE_LES']
-
-    valid, message, les_pdf = validate_les(EXAMPLE_LES)
     if valid:
         context = process_les(les_pdf)
         return render_template('paydf_group.html', **context)
