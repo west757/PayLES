@@ -21,47 +21,9 @@
 <h2>Common LES Remarks</h2>
 
 <div class="remarks shadow">
-    <div class="remark">
-        If TSP election amount exceeds net amount due, TSP will not be deducted.
-        <br> &emsp; - The contribution limit for the TSP is $23,500 per year. Once the limit is reached, no additional TSP deductions will occur.
-    </div>
-    <div class="remark">
-        You are the best manager of your pay. Preclude overpayment or underpayment of your pay by reviewing your LES every month. Visit your local finance office for any updates required.
-        <br> &emsp; - Army: S1 Shop
-        <br> &emsp; - Air Force: Customer Support Section (CSS)
-        <br> &emsp; - Navy: Personnel Support Detachment (PSD)
-        <br> &emsp; - Marines: S8 Shop
-        <br> &emsp; - Space Force: Customer Support Section (CSS)
-    </div>
-    <div class="remark">
-        Make sure to use your benefit: you can save an average of 25% on your grocery bill by shopping at the Commisary, in-store and online at Commissary Click2Go! Visit
-        <a href="https://www.corp.commissaries.com" target="_blank">corp.commissaries.com</a>.
-    </div>
-    <div class="remark">
-        If eligible, you may have been automatically enrolled in the airborne hazards and open burn pit registry. Visit 
-        <a href="https://www.health.mil/ahburnpitregistry" target="_blank">health.mil/ahburnpitregistry</a> to learn more.
-    </div>
-    <div class="remark">
-        Active Duty families: explore your FEDVIP vision benefits at the virtual benefits fair. Visit <a href="https://www.benefeds.com/military" target="_blank">benefeds.com/military</a>.
-    </div>
-    <div class="remark">
-        Health care flexible spending accounts allow eligible service members to set aside up to $3,300 in pre-tax earnings for health care costs. Enroll at
-        <a href="https://www.fsafeds.gov/enroll" target="_blank">fsafeds.gov/enroll</a>. Learn more at <a href="https://www.finred.usalearning.gov/hcfsa" target="_blank">finred.usalearning.gov/hcfsa</a>.
-    </div>
-    <div class="remark">
-        The Servicemembers Civil Relief Act (SCRA) protects service members. These protections include reducing interest rates and permitting termination of a lease upon
-        PCS/Deployment. Visit <a href="https://www.aflegalassistance.law.af.mil" target="_blank">aflegalassistance.law.af.mil</a>.
-    </div>
-    <div class="remark">
-        Receive your 1095 and W2 statements faster and more secure by logging onto MyPay at <a href="https://mypay.dfas.mil" target="_blank">mypay.dfas.mil</a> and selecting the
-        turn on/off hardcopy 1095 and W2 option to elect electronic only.
-    </div>
-    <div class="remark">
-        Start/change agency contribution.
-        <br> &emsp; - Provides the date that the member's TSP contributing agency either started their automatic matching (typically 1%) or regular matching.
-    </div>
-    <div class="remark">
-        Start accession.
-        <br> &emsp; - Provides the date in which the member was fully provisioned into the service.
-    </div>
+    {% for remark in remarks %}
+        <div class="remark">
+            {{ remark.text|safe }}
+        </div>
+    {% endfor %}
 </div>

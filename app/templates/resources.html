@@ -2,115 +2,19 @@
 {% block content %}
 
 <div id="resources">
-    <h2 id="general-resources">General Resources</h2>
-    <div class="resource-container shadow">
-        <a href="https://www.militaryonesource.mil/" target="_blank">
-            <div class="resource">
-                <strong>Military OneSource</strong> 
-                - official site for military members and families, providing a wide range of resources and support services
-            </div>
-        </a>
-
-        <a href="https://www.military.com/" target="_blank">
-            <div class="resource">
-                <strong>Military.com</strong> 
-                - provides news, benefits information, and resources for military members and their families
-            </div>
-        </a>
-
-        <a href="https://www.va.gov/life-insurance/options-eligibility/sgli/" target="_blank">
-            <div class="resource">
-                <strong>SGLI</strong> 
-                - official site for Servicemembers' Group Life Insurance, providing information on coverage and benefits
-            </div>
-        </a>
-
-        <a href="https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/" target="_blank">
-            <div class="resource">
-                <strong>OPM - Military Leave</strong> 
-                - official Office of Personnel Management site for military leave policies and information
-            </div>
-        </a>
-    </div>
-
-
-    <h2 id="financial-resources">Financial Resources</h2>
-    <div class="resource-container shadow">
-        <a href="https://militarymoneymanual.com/" target="_blank">
-            <div class="resource">
-                <strong>Military Money Manual</strong> 
-                - provides independent financial education and resources for military members and their families
-            </div>
-        </a>
-
-        <a href="https://themilitarywallet.com/" target="_blank">
-            <div class="resource">
-                <strong>The Military Wallet</strong> 
-                - provides independent financial resources and tools for military members and their families
-            </div>
-        </a>
-
-        <a href="https://mypay.dfas.mil/#/" target="_blank">
-            <div class="resource">
-                <strong>MyPay</strong> 
-                - official online pay management system for military members, retirees, and their families
-            </div>
-        </a>
-
-        <a href="https://www.dfas.mil/" target="_blank">
-            <div class="resource">
-                <strong>Defense Finance Accounting Service</strong> 
-                - official site for military pay information, including pay tables and entitlements
-            </div>
-        </a>
-
-        <a href="https://militarypay.defense.gov/" target="_blank">
-            <div class="resource">
-                <strong>MilitaryPay</strong> 
-                - official site for military pay information, including basic pay, allowances, and benefits
-            </div>
-        </a>
-
-        <a href="https://www.irs.gov/individuals/military" target="_blank">
-            <div class="resource">
-                <strong>IRS Military Site</strong> 
-                - official IRS site for military tax information, including deductions and credits
-            </div>
-        </a>
-
-        <a href="https://www.tsp.gov/" target="_blank">
-            <div class="resource">
-                <strong>Thrift Savings Plan</strong> 
-                - official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services
-            </div>
-        </a>
-
-        <a href="https://www.hrblock.com/tax-center/lifestyle/military/" target="_blank">
-            <div class="resource">
-                <strong>H&R Block Military Tax Services</strong> 
-                - official site for H&R Block's military tax services, providing resources and support for military members
-            </div>
-        </a>
-    </div>
-
-    <h2 id="moving-resources">Moving Resources</h2>
-    <div class="resource-container shadow">
-        <a href="https://www.travel.dod.mil/" target="_blank">
-            <div class="resource">
-                <strong>Defense Travel Management Office</strong> 
-                - official site for military travel information, including travel allowances and benefits
-            </div>
-        </a>
-    </div>
-
-    <h2 id="educational-resources">Educational Resources</h2>
-    <div class="resource-container shadow">
-    </div>
-
-
-    <h2 id="mental-health-resources">Mental Health Resources</h2>
-    <div class="resource-container shadow">
-    </div>
+    {% for category in resources_data %}
+        <h2 id="{{ category.id }}">{{ category.category }}</h2>
+        <div class="resource-container shadow">
+            {% for item in category['items'] %}
+                <a href="{{ item.url }}" target="_blank">
+                    <div class="resource">
+                        <strong>{{ item.name }}</strong>
+                        - {{ item.desc }}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}
