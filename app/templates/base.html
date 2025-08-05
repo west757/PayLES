@@ -15,7 +15,7 @@
             <div id="logo">
                 <a href="{{ url_for('index') }}"><img src="{{ config['LOGO']}}" alt="PayLES Logo"></a>
             </div>
-            <div id="title">
+            <div id="title" class="text-large">
                 <p>program analyzing your LES</p>
             </div>
         </header>
@@ -46,7 +46,7 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer>
+    <footer class="text-small">
         <div id="footer-left">
             <p>All Rights Reserved &#xA9; 2025 PayLES</p>
         </div>
