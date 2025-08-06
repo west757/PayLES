@@ -32,6 +32,10 @@ class Config:
     STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
     SGLI_RATE_FILE = "sgli_rate.csv"
     PAYDF_TEMPLATE_FILE = "paydf_template.csv"
+    MODALS_JSON_FILE = "paydf_modals.json"
+    REMARKS_JSON_FILE = "les_remarks.json"
+    FAQ_JSON_FILE = "faq.json"
+    RESOURCES_JSON_FILE = "resources.json"
 
     #load static files
     LOGO = os.path.join('static', LOGO_FILE)
