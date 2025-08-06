@@ -13,11 +13,11 @@
 
     <table class="pos-table" id="options-table">
         <tbody class="pos-table-section">
-            <tr class="pos-table-header">
-                <td class="pos-table-header"></td>
-                <td class="pos-table-header">Current</td>
-                <td class="pos-table-header">Future</td>
-                <td class="pos-table-header">Month</td>
+            <tr class="pos-table-header-row">
+                <td class="pos-table-header-cell"></td>
+                <td class="pos-table-header-cell">Current</td>
+                <td class="pos-table-header-cell">Future</td>
+                <td class="pos-table-header-cell">Month</td>
             </tr>
 
             <!-- required options -->
@@ -33,12 +33,14 @@
                 {% set current_value = paydf.at[current_idx, col_headers[2]] %}
                 {% if required %}
 
-                <tr class="pos-table">
-                    <td class="pos-table">
-                        <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                <tr>
+                    <td class="row-header-cell">
+                        <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                            {{ header }}
+                        </button>
                     </td>
 
-                    <td class="pos-table">
+                    <td>
                         {% set dtype = row_info.iloc[0]['dtype'] %}
                         {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
                             {{ '{}%'.format(current_value) }}
@@ -49,8 +51,7 @@
                         {% endif %}
                     </td>
 
-                    <td class="pos-table">
-
+                    <td>
                         {% if header == 'Grade' %}
                             <select class="dropdown" name="{{ varname }}_f">
                                 {% for x in GRADES %}
@@ -107,7 +108,7 @@
                         {% endif %}
                     </td>
 
-                    <td class="pos-table">
+                    <td>
                         <select class="dropdown" name="{{ varname }}_m">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
@@ -124,8 +125,9 @@
             {% endfor %}
         </tbody>
 
+
+        <!-- standard row options-->
         <tbody class="pos-table-section">
-            <!-- standard row options-->
             {% for opt in options %}
                 {% set header = opt[0] %}
                 {% set future_value = opt[1] %}
@@ -138,16 +140,18 @@
                     {% if not required %}
                         {% set current_idx = row_headers.index(header) %}
                         {% set current_value = paydf.at[current_idx, col_headers[2]] %}
-                        <tr class="pos-table options-standard-row">
-                            <td class="pos-table">
-                                <label class="modal-button" for="modal-{{ row_info.iloc[0]['modal'] }}">{{ header }}</label>
+                        <tr class="options-standard-row">
+                            <td class="row-header-cell">
+                                <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                                    {{ header }}
+                                </button>
                             </td>
-                            <td class="pos-table">{{ '${:,.2f}'.format(current_value|float|abs) }}</td>
-                            <td class="pos-table">
+                            <td>{{ '${:,.2f}'.format(current_value|float|abs) }}</td>
+                            <td>
                                 <input class="input-checkbox" type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>
-                            <td class="pos-table">
-                                <select class="pos-table month-dropdown" name="{{ varname }}_m">
+                            <td>
+                                <select class="month-dropdown" name="{{ varname }}_m">
                                     {% for x in month_options %}
                                     <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}
@@ -160,8 +164,8 @@
         </tbody>
 
         <tbody>
-            <tr class="pos-table">
-                <td class="pos-table" colspan="4">
+            <tr>
+                <td colspan="4">
                     <button id="update-les-button" class="button button-standard" type="button">Update LES</button>
                 </td>
             </tr>
