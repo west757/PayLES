@@ -35,7 +35,7 @@
 
                 <tr>
                     <td class="row-header-cell">
-                        <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                        <button class="modal-button" type="button" data-modal="{{ row_info.iloc[0]['modal'] }}">
                             {{ header }}
                         </button>
                     </td>
@@ -142,7 +142,7 @@
                         {% set current_value = paydf.at[current_idx, col_headers[2]] %}
                         <tr class="options-standard-row">
                             <td class="row-header-cell">
-                                <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                                <button class="modal-button" type="button" data-modal="{{ row_info.iloc[0]['modal'] }}">
                                     {{ header }}
                                 </button>
                             </td>

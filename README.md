@@ -8,6 +8,7 @@ create levdf (leave calculator)
 create tspdf (tsp calculator)
 
 remove calculation in button table
+resolve javascript console errors
 speed up performance
 refactor and simplify javascript
 finish css refactor
