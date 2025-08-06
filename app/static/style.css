@@ -254,7 +254,7 @@ footer {
    dropdowns
    ========================= */
 
-select.pos-table {
+.dropdown {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -268,7 +268,7 @@ select.pos-table {
     width: 4.6rem;
 }
 
-#months-dropdown {
+#month-display-dropdown {
     width: 2.5rem;
 }
 
@@ -281,7 +281,7 @@ select.pos-table {
    input boxes
    ========================= */
 
-input.text-input {
+.text-input {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -295,7 +295,7 @@ input.text-input {
     width: 10rem;
 }
 
-input.pos-table {
+.num-input {
     background-color: var(--input_background_color);
     border: 1px solid #999;
     border-radius: 0.25rem;
@@ -306,7 +306,6 @@ input.pos-table {
     margin: -0.5rem;
     padding: 0.25rem;
     text-align: center;
-    
 }
 
 .num-input-long {

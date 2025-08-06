@@ -63,7 +63,7 @@ function updateMonthDropdowns(monthsDisplayOverride) {
     let displayCount = monthsDisplayOverride || DEFAULT_MONTHS_DISPLAY;
     const initialMonth = getInitialMonth();
     const monthOptions = getMonthOptions(initialMonth, displayCount);
-    document.querySelectorAll('select.month-dropdown').forEach(function(select) {
+    document.querySelectorAll('select.month-display-dropdown').forEach(function(select) {
         const currentValue = select.value;
         select.innerHTML = '';
         monthOptions.forEach(function(month) {
@@ -178,7 +178,7 @@ function renderCustomRows() {
 
     // Get current month display from dropdown or config
     let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
-    const monthsDropdown = document.getElementById('months-dropdown');
+    const monthsDropdown = document.getElementById('month-display-dropdown');
     if (monthsDropdown) {
         monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
     }
@@ -241,7 +241,7 @@ function renderCustomRows() {
                 let valueTd = document.createElement('td');
                 valueTd.innerHTML = `
                     <span>${sign}$&nbsp;&nbsp;</span>
-                    <input type="text" class="pos-table num-input-mid"
+                    <input type="text" class="num-input num-input-mid"
                         ${valueAttr}
                         ${placeholderAttr}
                         onkeypress="return /[0-9]/.test(event.key)"
@@ -324,7 +324,7 @@ function attachCustomRowButtonListeners() {
                 // Get tax checkbox
                 const taxCheckbox = tr.querySelector('input[type="checkbox"]');
                 // Get value inputs
-                const valueInputs = tr.querySelectorAll('input.pos-table');
+                const valueInputs = tr.querySelectorAll('input.num-input');
                 customRows[editingIndex].header = headerInput ? headerInput.value.trim() : '';
                 customRows[editingIndex].tax = taxCheckbox ? taxCheckbox.checked : false;
                 let values = [];
