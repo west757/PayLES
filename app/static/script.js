@@ -168,45 +168,96 @@ function show_all_options() {
 
 
 
-let customRows = []; // Array of custom row objects
-let editingIndex = null; // Index of the row being edited, or null if none
+
+//index of row being edited, or null if none
+let editingIndex = null;
+let customRows = [];
 let customRowButtons = [];
+
+
+function renderCustomRowButtonTable() {
+    const buttonTable = document.getElementById('button-table');
+    const customBody = buttonTable.querySelector('#custom-button-section');
+    customBody.innerHTML = '';
+    customRowButtons = [];
+
+    customRows.forEach((row, idx) => {
+        let tr = document.createElement('tr');
+        let leftTd = document.createElement('td');
+        let rightTd = document.createElement('td');
+        let editButton, confirmButton;
+
+        let removeButton = document.createElement('button');
+        removeButton.className = 'button button-custom-row button-remove';
+        removeButton.textContent = '✖';
+
+        if (editingIndex === idx) {
+            confirmButton = document.createElement('button');
+            confirmButton.className = 'button button-custom-row button-confirm';
+            confirmButton.textContent = '✔';
+            confirmButton.disabled = false;
+            leftTd.appendChild(confirmButton);
+
+            removeButton.disabled = false;
+            removeButton.style.background = '';
+            rightTd.appendChild(removeButton);
+        } else {
+            editButton = document.createElement('button');
+            editButton.className = 'button button-custom-row button-edit';
+            editButton.textContent = '✎';
+            editButton.disabled = editingIndex !== null;
+            editButton.style.background = editButton.disabled ? '#ccc' : '';
+            leftTd.appendChild(editButton);
+
+            removeButton.disabled = editingIndex !== null;
+            removeButton.style.background = removeButton.disabled ? '#ccc' : '';
+            rightTd.appendChild(removeButton);
+        }
+        tr.appendChild(leftTd);
+        tr.appendChild(rightTd);
+        customBody.appendChild(tr);
+        customRowButtons[idx] = { confirmButton, editButton, removeButton };
+    });
+    updateButtonStates();
+    attachCustomRowButtonListeners();
+}
+
+
+
 
 function renderCustomRows() {
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
 
-    // Get current month display from dropdown or config
+    //get current month display from dropdown or config
     let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
     const monthsDropdown = document.getElementById('month-display-dropdown');
     if (monthsDropdown) {
         monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
     }
 
-    // Only value columns (exclude header column)
+    //set number of value columns (exclude header column)
     let valueColumns = monthsDisplay - 1;
 
     customRows.forEach((row, idx) => {
-        // Ensure values array matches valueColumns
+        //if months display is greater than current months display, add zeros for new months, else trim excess months
         if (row.values.length < valueColumns) {
-            // Add zeros for new months
             row.values = row.values.concat(Array(valueColumns - row.values.length).fill(0));
         } else if (row.values.length > valueColumns) {
-            // Truncate values for fewer months
             row.values = row.values.slice(0, valueColumns);
         }
 
         let tr = document.createElement('tr');
-        tr.className = 'pos-table custom-row';
         tr.dataset.index = idx;
         
+        //if editingIndex matches current index, render as editable row, else render as static row
         if (editingIndex === idx) {
-            // Editable row: styled inputs, labels, $ and - signs
+            //create row header cell with text input
             let headerTd = document.createElement('td');
-            headerTd.innerHTML = `<input type="text" class="input-text" value="${row.header}" />`;
+            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" />`;
             tr.appendChild(headerTd);
 
-            // Tax cell with label
+            //create tax checkbox cell with tooltip
             let taxTd = document.createElement('td');
             taxTd.innerHTML = `
                 <div style="display:inline-block; position:relative;">
@@ -232,13 +283,14 @@ function renderCustomRows() {
             `;
             tr.appendChild(taxTd);
 
-            // Value inputs for each month column
+            //loop through values (created based upon months display) and create num input cells
             for (let i = 0; i < row.values.length; i++) {
                 let value = row.values[i];
                 let sign = row.type === 'D' ? '-' : '';
                 let valueAttr = value !== 0 && value !== "0" ? `value="${value}"` : '';
                 let placeholderAttr = value === 0 || value === "0" ? 'placeholder="0"' : '';
                 let valueTd = document.createElement('td');
+                
                 valueTd.innerHTML = `
                     <span>${sign}$&nbsp;&nbsp;</span>
                     <input type="text" class="input-num input-num-mid"
@@ -250,75 +302,31 @@ function renderCustomRows() {
                 `;
                 tr.appendChild(valueTd);
             }
-        } else {
-            // Static row: show values only (no buttons)
-            tr.innerHTML = `
-                <td>${row.header}</td>
-                <td>${row.tax ? 'Taxable' : 'Non-Taxable'}</td>
-                ${row.values.map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
-            `;
-        }
+        } 
+        //else {
+            //display custom row as static
+        //    tr.innerHTML = `
+        //        <td>${row.header}</td>
+        //        <td>${row.tax ? 'Taxable' : 'Non-Taxable'}</td>
+        //        ${row.values.map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
+        //    `;
+        //}
         customSection.appendChild(tr);
     });
     renderCustomRowButtonTable();
 }
 
 
-function renderCustomRowButtonTable() {
-    const btnTable = document.getElementById('custom-row-button-table');
-    const customBody = btnTable.querySelector('#custom-reference-body');
-    customBody.innerHTML = '';
-    customRowButtons = [];
-    customRows.forEach((row, idx) => {
-        let tr = document.createElement('tr');
-        tr.className = 'custom-row-btn-tr';
-        let leftTd = document.createElement('td');
-        let rightTd = document.createElement('td');
-        let editBtn, removeBtn, confirmBtn;
 
-        if (editingIndex === idx) {
-            confirmBtn = document.createElement('button');
-            confirmBtn.className = 'custom-row-btn confirm custom-row-confirm';
-            confirmBtn.textContent = '✔';
-            confirmBtn.disabled = false;
-            leftTd.appendChild(confirmBtn);
-
-            removeBtn = document.createElement('button');
-            removeBtn.className = 'custom-row-btn remove custom-row-remove';
-            removeBtn.textContent = '✖';
-            removeBtn.disabled = false;
-            rightTd.appendChild(removeBtn);
-
-        } else {
-            editBtn = document.createElement('button');
-            editBtn.className = 'custom-row-btn edit custom-row-edit';
-            editBtn.textContent = '✎';
-            editBtn.disabled = editingIndex !== null;
-            editBtn.style.background = editBtn.disabled ? '#ccc' : '';
-            leftTd.appendChild(editBtn);
-
-            removeBtn = document.createElement('button');
-            removeBtn.className = 'custom-row-btn remove custom-row-remove';
-            removeBtn.textContent = '✖';
-            removeBtn.disabled = editingIndex !== null;
-            removeBtn.style.background = removeBtn.disabled ? '#ccc' : '';
-            rightTd.appendChild(removeBtn);
-        }
-        tr.appendChild(leftTd);
-        tr.appendChild(rightTd);
-        customBody.appendChild(tr);
-        customRowButtons[idx] = { editBtn, removeBtn, confirmBtn };
-    });
-    updateButtonStates();
-    attachCustomRowButtonListeners();
-}
 
 // Attach event listeners after rendering
 function attachCustomRowButtonListeners() {
-    customRowButtons.forEach((btns, idx) => {
-        if (btns.confirmBtn) {
-            btns.confirmBtn.onclick = function() {
-                const tr = document.querySelector(`#custom-row-section tr[data-index="${editingIndex}"]`);
+    customRowButtons.forEach((button, idx) => {
+        if (button.confirmButton) {
+            button.confirmButton.onclick = function() {
+                // Select the correct row by data-index in the custom-row-section
+                const customSection = document.getElementById('custom-row-section');
+                const tr = customSection.querySelector(`tr[data-index="${editingIndex}"]`);
                 // Get header input
                 const headerInput = tr.querySelector('input.input-text');
                 // Get tax checkbox
@@ -339,8 +347,8 @@ function attachCustomRowButtonListeners() {
             };
         }
 
-        if (btns.editBtn) {
-            btns.editBtn.onclick = function() {
+        if (button.editButton) {
+            button.editButton.onclick = function() {
                 if (editingIndex !== null) return;
                 editingIndex = idx;
                 renderCustomRows();
@@ -348,8 +356,8 @@ function attachCustomRowButtonListeners() {
             };
         }
 
-        if (btns.removeBtn) {
-            btns.removeBtn.onclick = function() {
+        if (button.removeButton) {
+            button.removeButton.onclick = function() {
                 customRows.splice(idx, 1);
                 editingIndex = null;
                 updatePaydf();
@@ -392,7 +400,6 @@ function exportPaydf() {
 }
 
 
-//les image tooltip
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');
     tooltip.innerText = text;
@@ -443,7 +450,18 @@ document.addEventListener('click', function(e) {
         renderCustomRows();
         updateButtonStates();
     }
+
+    if (e.target.classList.contains('modal-button')) {
+        const modalId = e.target.getAttribute('data-modal');
+        if (modalId) {
+            const modalCheckbox = document.getElementById(modalId);
+            if (modalCheckbox) {
+                modalCheckbox.checked = true;
+            }
+        }
+    }
 });
+
 
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-dropdown') {

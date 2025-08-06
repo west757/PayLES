@@ -7,6 +7,7 @@ instructions for self-host
 create levdf (leave calculator)
 create tspdf (tsp calculator)
 
+remove calculation in button table
 speed up performance
 refactor and simplify javascript
 finish css refactor

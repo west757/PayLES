@@ -231,6 +231,47 @@ footer {
     
 }
 
+.button-custom-row {
+    align-items: center;
+    border: none;
+    display: flex;
+    height: 2.5rem;
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
+    width: 2.5rem;
+}
+
+.button-confirm {
+    background: var(--primary_green_accent_color);
+}
+
+.button-edit {
+    background: var(--highlight_blue_color);
+}
+
+.button-remove {
+    background: var(--highlight_red_color);
+}
+
+
+.modal-button {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-align: center;
+}
+
+.modal-button:hover, .modal-button:focus {
+    background-color: var(--highlight_green_color);
+}
+
+
 #submit-les-button {
     width: 75%;
     height: 3.5rem;
@@ -254,7 +295,7 @@ footer {
    dropdowns
    ========================= */
 
-.dropdown {
+select.dropdown {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -281,7 +322,7 @@ footer {
    input boxes
    ========================= */
 
-.input-text {
+input.input-text {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -295,7 +336,7 @@ footer {
     width: 10rem;
 }
 
-.input-num {
+input.input-num {
     background-color: var(--input_background_color);
     border: 1px solid #999;
     border-radius: 0.25rem;
@@ -308,15 +349,15 @@ footer {
     text-align: center;
 }
 
-.input-num-long {
+input.input-num-long {
     width: 4.6rem;
 }
 
-.input-num-mid {
+input.input-num-mid {
     width: 3.5rem;
 }
 
-.input-num-short {
+input.input-num-short {
     width: 2.5rem;
 }
 
@@ -325,7 +366,7 @@ footer {
    checkboxes
    ========================= */
 
-.input-checkbox {
+input.input-checkbox {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -449,76 +490,36 @@ input[type=file] {
 
 
 /* =========================
-   pos table
+   button and paydf table
    ========================= */
 
-table.pos-table {
-    background-color: var(--primary_light_accent_color);
-    border: 1px solid var(--table_border_color);
-    border-collapse: separate;
-    border-radius: 1.5rem;
-    border-spacing: 0px;
-}
-
-tr.pos-table-header {
-    border-left: 1px solid var(--table_border_color);
-    font-weight: bold;
-    text-align: center;
-    top: 0;
-}
-
-td.pos-table-header {
-    background-color: var(--primary_dark_accent_color);
-    border-left: 1px solid var(--table_border_color);
-    border-radius: 0px;
-    color: var(--light_text_color);
-    font-weight: bold;
-    text-align: center;
-    padding: 1.25rem;
-}
-
-tr.pos-table, td.pos-table {
-    border-left: 1px solid var(--table_border_color);
-    border-top: 1px solid var(--table_border_color);
-    text-align: center;
-}
-
-tr.pos-table:nth-child(even) td.pos-table {
-    background-color: var(--secondary_light_accent_color);
-}
-
-tr.pos-table:not(:first-child), td.pos-table:not(:first-child) {
-    padding: 1.25rem;
-}
-
-td.pos-table:first-child, td.pos-table-header:first-child {
-    border-left: none;
-}
-
-td.pos-table-header:first-child {
-    border-radius: 1.5rem 0 0 0;
-}
-
-td.pos-table-header:last-child {
-    border-radius: 0 1.5rem 0 0;
-}
-
-tbody.pos-table-section tr:last-child td {
-    border-bottom: 6px solid var(--table_border_color);
-}
-
-
-
-#paydf-container {
+#button-paydf-tables {
     position: relative;
     display: flex;
     flex-direction: row;
-    width: 100%; /* take full width of parent */
-    max-width: 100vw;
+    height: auto !important;
     margin: 0 auto;
-    overflow-x: auto !important; /* horizontal scroll bar appears under container */
-    overflow-y: visible !important; /* never show vertical scroll bar */
-    height: auto !important; /* let it grow naturally */
+    max-width: 100vw;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    width: 100%;
+}
+
+#button-table {
+    width: auto;
+    background: none;
+    border: none;
+}
+
+#button-table tr {
+    height: 4rem !important;
+}
+
+#button-table td {
+    border: none;
+    background: none;
+    padding: 0;
+    text-align: center;
 }
 
 
@@ -530,29 +531,11 @@ tbody.pos-table-section tr:last-child td {
     min-width: 0;
 }
 
-
-#custom-row-btn-table {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 40px;
-    background: none;
-    border: none;
-    z-index: 10;
-    table-layout: fixed;
-    overflow: visible !important;
-}
-
-
 #paydf {
     flex-shrink: 1;
     margin: 1rem;
     max-width: 100%; /* restrict to screen width */
     min-width: 0;
-}
-
-table tr {
-    height: 4rem;
 }
 
 #paydf-table.highlight-mode .paydf-highlight {
@@ -577,60 +560,86 @@ table tr {
 
 
 /* =========================
-   button table styles
+   pos table
    ========================= */
 
-#custom-row-btn-table {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 40px;
-    background: none;
-    border: none;
-    z-index: 10;
-    table-layout: fixed;
+.pos-table {
+    background-color: var(--primary_light_accent_color);
+    border: 1px solid var(--table_border_color);
+    border-collapse: separate;
+    border-radius: 1.5rem;
+    border-spacing: 0px;
 }
 
-.custom-row-btn-tr {
-    height: 4rem !important;
-}
-
-.custom-row-btn-td {
-    border: none;
-    background: none;
-    padding: 0;
+.pos-table tr {
+    border-left: 1px solid var(--table_border_color);
     text-align: center;
+    height: 4rem;
 }
 
-.custom-row-btn {
-    width: 2.5rem;
-    height: 2.5rem;
-    border: none;
-    border-radius: 0.25rem;
+.pos-table tr.pos-table-header-row {
+    font-weight: bold;
+    top: 0;
+}
+
+.pos-table td {
+    border-left: 1px solid var(--table_border_color);
+    border-top: 1px solid var(--table_border_color);
+    text-align: center;
+    padding: 0 1.25rem 0 1.25rem;
+}
+
+.pos-table td.pos-table-header-cell {
+    background-color: var(--primary_dark_accent_color);
+    color: var(--light_text_color);
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+
+
+.pos-table td.row-header-cell {
+    padding: 0;
+    vertical-align: top; /* Ensures cell content is centered vertically */
+    height: 4rem;           /* Explicitly set cell height */
+}
+
+.pos-table td.row-header-cell .modal-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    line-height: 1;
-    color: var(--light_text_color);
+    width: 100%;
+    height: 100%;
+    min-height: 100%;       /* Ensures button is at least as tall as the row */
+    border: none;
     margin: 0;
-    padding: 0;
-    cursor: pointer;
-}
-
-.custom-row-btn.confirm {
-    background: var(--primary_green_accent_color);
-}
-
-.custom-row-btn.edit {
-    background: var(--highlight_blue_color);
-}
-
-.custom-row-btn.remove {
-    background: var(--highlight_red_color);
+    font: inherit;
+    text-align: center;
+    padding: 0 1.25rem;
+    box-sizing: border-box;
 }
 
 
+.pos-table tr:nth-child(even) td {
+    background-color: var(--secondary_light_accent_color);
+}
+
+.pos-table td:first-child,
+.pos-table td.pos-table-header-cell:first-child {
+    border-left: none;
+}
+
+.pos-table td.pos-table-header-cell:first-child {
+    border-radius: 1.5rem 0 0 0;
+}
+
+.pos-table td.pos-table-header-cell:last-child {
+    border-radius: 0 1.5rem 0 0;
+}
+
+.pos-table-section tr:last-child td {
+    border-bottom: 6px solid var(--table_border_color);
+}
 
 
 /* =========================
@@ -711,17 +720,6 @@ table tr {
 
 .modal-close:before {
     transform: rotate(-45deg);
-}
-
-.modal-button {
-    cursor: pointer;
-    display: block;
-    margin: -1px;
-    padding: 1.25rem 1rem 1.25rem 1rem;
-}
-
-.modal-button:hover, .modal-button:focus {
-    background-color: var(--highlight_green_color);
 }
 
 .modal-table {
