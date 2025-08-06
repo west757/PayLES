@@ -59,7 +59,7 @@
                             </select>
 
                         {% elif header == 'Zip Code' %}
-                            <input class="num-input num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
+                            <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
 
                         {% elif header == 'Tax Residency State' %}
                             <select class="dropdown" name="{{ varname }}_f">
@@ -90,7 +90,7 @@
                             </select>
 
                         {% elif header == 'Dependents' %}
-                            <input class="num-input num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
+                            <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
                         
                         {% elif header == 'Combat Zone' %}
                             <select class="dropdown" name="{{ varname }}_f">
@@ -99,11 +99,11 @@
                             </select>
                         
                         {% elif header == 'Traditional TSP Rate' or header == 'Roth TSP Rate' %}
-                            <input class="num-input num-input-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                            <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
                             <span>&nbsp;&nbsp;%</span>
 
                         {% else %}
-                            <input class="num-input" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
+                            <input class="input-num" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
                         {% endif %}
                     </td>
 
@@ -144,7 +144,7 @@
                             </td>
                             <td class="pos-table">{{ '${:,.2f}'.format(current_value|float|abs) }}</td>
                             <td class="pos-table">
-                                <input type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
+                                <input class="input-checkbox" type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>
                             <td class="pos-table">
                                 <select class="pos-table month-dropdown" name="{{ varname }}_m">
