@@ -11,6 +11,7 @@ import io
 import pandas as pd
 import base64
 import json
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -29,6 +30,16 @@ def index():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/faq')
+def faq():
+    faqs = load_json(app.config['FAQ_JSON_FILE'])
+    return render_template('faq.html', faqs=faqs)
+
+@app.route('/resources')
+def resources():
+    resources = load_json(app.config['RESOURCES_JSON_FILE'])
+    return render_template('resources.html', resources=resources)
 
 @app.route('/leave_calculator')
 def leave_calculator():
@@ -86,9 +97,11 @@ def process_les(les_pdf):
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
     context = {}
-    context['les_image'], context['rect_overlay'], context['remarks'] = create_les_image(LES_RECTANGLES, les_page)
+    context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
+    context['remarks'] = load_json(app.config['REMARKS_JSON_FILE'])
     les_text = read_les(LES_RECTANGLES, les_page)
     context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
+    context['modals'] = load_json(app.config['MODALS_JSON_FILE'])
     return context
 
 
@@ -129,8 +142,7 @@ def create_les_image(LES_RECTANGLES, les_page):
             "tooltip": rect["tooltip"]
         })
 
-    remarks = les_remarks()
-    return les_image, rect_overlay, remarks
+    return les_image, rect_overlay
 
 
 def read_les(LES_RECTANGLES, les_page):
@@ -939,6 +951,13 @@ def cast_dtype(value, dtype):
     return value
 
 
+def load_json(filename):
+    static_folder = app.config['STATIC_FOLDER']
+    path = os.path.join(static_folder, filename)
+    with open(path, encoding='utf-8') as f:
+        return json.load(f)
+    
+
 def find_multiword_matches(section, shortname):
     short_words = shortname.split()
     n = len(short_words)
@@ -1068,281 +1087,6 @@ def file_too_large(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-
-
-# =========================
-# les remarks
-# =========================
-
-def les_remarks():
-    remarks = [
-        {
-            "text": """
-            If TSP election amount exceeds net amount due, TSP will not be deducted.
-            <br> &emsp; - The contribution limit for the TSP is $23,500 per year. Once the limit is reached, no additional 
-            TSP deductions will occur.
-            """
-        },
-        {
-            "text": """
-            You are the best manager of your pay. Preclude overpayment or underpayment of your pay by reviewing your LES 
-            every month. Visit your local finance office for any updates required.
-            <br> &emsp; - Army: S1 Shop
-            <br> &emsp; - Air Force: Customer Support Section (CSS)
-            <br> &emsp; - Navy: Personnel Support Detachment (PSD)
-            <br> &emsp; - Marines: S8 Shop
-            <br> &emsp; - Space Force: Customer Support Section (CSS)
-            """
-        },
-        {
-            "text": """
-            Make sure to use your benefit: you can save an average of 25% on your grocery bill by shopping at the Commissary, 
-            in-store and online at Commissary Click2Go! Visit 
-            <a href="https://www.corp.commissaries.com" target="_blank">corp.commissaries.com</a>.
-            """
-        },
-        {
-            "text": """
-            If eligible, you may have been automatically enrolled in the airborne hazards and open burn pit registry. Visit 
-            <a href="https://www.health.mil/ahburnpitregistry" target="_blank">health.mil/ahburnpitregistry</a> 
-            to learn more.
-            """
-        },
-        {
-            "text": """
-            Active Duty families: explore your FEDVIP vision benefits at the virtual benefits fair. Visit 
-            <a href="https://www.benefeds.com/military" target="_blank">benefeds.com/military</a>.
-            """
-        },
-        {
-            "text": """
-             Health care flexible spending accounts allow eligible service members to set aside up to $3,300 in pre-tax 
-             earnings for health care costs. Enroll at 
-             <a href="https://www.fsafeds.gov/enroll" target="_blank">fsafeds.gov/enroll</a>. 
-             Learn more at 
-             <a href="https://www.finred.usalearning.gov/hcfsa" target="_blank">finred.usalearning.gov/hcfsa</a>.
-            """
-        },
-        {
-            "text": """
-            The Servicemembers Civil Relief Act (SCRA) protects service members. These protections include reducing interest 
-            rates and permitting termination of a lease upon PCS/Deployment. Visit 
-            <a href="https://www.aflegalassistance.law.af.mil" target="_blank">aflegalassistance.law.af.mil</a>.
-            """
-        },
-        {
-            "text": """
-             Receive your 1095 and W2 statements faster and more secure by logging onto MyPay at 
-             <a href="https://mypay.dfas.mil" target="_blank">mypay.dfas.mil</a> 
-             and selecting the turn on/off hardcopy 1095 and W2 option to elect electronic only.
-            """
-        },
-        {
-            "text": """
-            Start/change agency contribution. 
-            <br> &emsp; - Provides the date that the member's TSP contributing agency either started their automatic 
-            matching (typically 1%) or regular matching.
-            """
-        },
-        {
-            "text": """
-            Start accession. 
-            <br> &emsp; - Provides the date in which the member was fully provisioned into the service.
-            """
-        },
-    ]
-    return remarks
-
-
-
-# =========================
-# faq
-# =========================
-
-@app.route('/faq')
-def faq():
-    faqs = [
-        {
-            "label": "What is PayLES?",
-            "content": """
-                PayLES is a free and open-source web application designed to help United States military service members 
-                analyze their finances using their Leave and Earnings Statement (LES). Learn more at the 
-                <a href='{}'>about</a> page!
-            """.format(url_for('about'))
-        },
-        {
-            "label": "How do I use PayLES?",
-            "content": """
-                PayLES is designed to be user-friendly. Simply upload your latest LES file, and the application will parse the 
-                data and display your current pay. You can then adjust your future finances based on anticipated changes such 
-                as promotions, moves, or changes in dependents. The application will calculate your future pay for up to 
-                12 months based on the information provided.
-            """
-        },
-        {
-            "label": "How do I get an LES?",
-            "content": """
-                An LES is provided to all military service members at the end of each month. It can be accessed through 
-                the <a href="https://mypay.dfas.mil/" target="_blank">MyPay</a> website or through your unit's finance office. 
-                If you are unsure how to access your LES, please contact your unit's finance office for assistance.
-            """
-        },
-        {
-            "label": "Is PayLES secure?",
-            "content": """
-                PayLES is as secure as any other web application. It does not store any user data, and all data is processed
-                in-memory without saving to disk. The application does not require any user accounts or personal information, 
-                ensuring user privacy and security. Additionally, PayLES uses HTTPS to encrypt data in transit,
-                providing an extra layer of security.
-            """
-        },
-        {
-            "label": "How accurate is PayLES?",
-            "content": """
-                PayLES strives to be as accurate as possible, however is unable to guarantee 100% accuracy 
-                of the calculations. PayLES uses official U.S. government and DoD datasets and calculations to provide estimates 
-                based on the information provided by the user, however each user's situation is unique and all factors cannot be 
-                accounted for. Historical analysis and testing has shown that PayLES is accurate to within 2.2% of the official 
-                military pay for approximately 95% of users. This means that for the vast majority of users, the estimates provided 
-                by PayLES will be very close to their actual future pay. The estimates provided by PayLES are not a substitute for 
-                official military pay statements or financial advice. Users should verify their own financial information and 
-                consult with their finance office for any discrepancies or concerns.
-            """
-        },
-        {
-            "label": "How can I contact the developer of PayLES?",
-            "content": """
-                The developer of PayLES can be contacted through GitHub.
-            """
-        },
-        {
-            "label": "How can I contribute to this project?",
-            "content": """
-                The best way to contribute to PayLES is to get involved on GitHub. You can report issues, suggest 
-                features, or submit pull requests to help improve the project. All contributions are welcome and appreciated!
-            """
-        },
-    ]
-    return render_template('faq.html', faqs=faqs)
-
-
-
-# =========================
-# resources
-# =========================
-
-@app.route('/resources')
-def resources():
-    resources_data = [
-        {
-            "category": "General Resources",
-            "id": "general-resources",
-            "items": [
-                {
-                    "name": "Military OneSource",
-                    "url": "https://www.militaryonesource.mil/",
-                    "desc": "official site for military members and families, providing a wide range of resources and support services"
-                },
-                {
-                    "name": "Military.com",
-                    "url": "https://www.military.com/",
-                    "desc": "provides news, benefits information, and resources for military members and their families"
-                },
-                {
-                    "name": "SGLI",
-                    "url": "https://www.va.gov/life-insurance/options-eligibility/sgli/",
-                    "desc": "official site for Servicemembers' Group Life Insurance, providing information on coverage and benefits"
-                },
-                {
-                    "name": "OPM - Military Leave",
-                    "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/",
-                    "desc": "official Office of Personnel Management site for military leave policies and information"
-                },
-            ]
-        },
-        {
-            "category": "Financial Resources",
-            "id": "financial-resources",
-            "items": [
-                {
-                    "name": "Military Money Manual",
-                    "url": "https://militarymoneymanual.com/",
-                    "desc": "provides independent financial education and resources for military members and their families"
-                },
-                {
-                    "name": "The Military Wallet",
-                    "url": "https://themilitarywallet.com/",
-                    "desc": "provides independent financial resources and tools for military members and their families"
-                },
-                {
-                    "name": "MyPay",
-                    "url": "https://mypay.dfas.mil/#/",
-                    "desc": "official online pay management system for military members, retirees, and their families"
-                },
-                {
-                    "name": "Defense Finance Accounting Service (DFAS)",
-                    "url": "https://www.dfas.mil/",
-                    "desc": "official site for military pay information, including pay tables and entitlements"
-                },
-                {
-                    "name": "MilitaryPay",
-                    "url": "https://militarypay.defense.gov/",
-                    "desc": "official site for military pay information, including basic pay, allowances, and benefits"
-                },
-                {
-                    "name": "IRS Military Site",
-                    "url": "https://www.irs.gov/individuals/military",
-                    "desc": "official IRS site for military tax information, including deductions and credits"
-                },
-                {
-                    "name": "Thrift Savings Plan (TSP)",
-                    "url": "https://www.tsp.gov/",
-                    "desc": "official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services"
-                },
-                {
-                    "name": "H&R Block Military Tax Services",
-                    "url": "https://www.hrblock.com/tax-center/lifestyle/military/",
-                    "desc": "official site for H&R Block's military tax services, providing resources and support for military members"
-                },
-            ]
-        },
-        {
-            "category": "Moving Resources",
-            "id": "moving-resources",
-            "items": [
-                {
-                    "name": "Defense Travel Management Office (DTMO)",
-                    "url": "https://www.defensetravel.dod.mil/",
-                    "desc": "official site for military travel information, including travel allowances and benefits"
-                },
-            ]
-        },
-        {
-            "category": "Education Resources",
-            "id": "education-resources",
-            "items": [
-                {
-                    "name": "VA Education Benefits",
-                    "url": "https://www.va.gov/education/",
-                    "desc": "official site for military education information, including GI Bill benefits and resources"
-                },
-            ]
-        },
-        {
-            "category": "Mental Health Resources",
-            "id": "mental-health-resources",
-            "items": [
-                {
-                    "name": "Health.mil Psychological Health Resource Center",
-                    "url": "https://www.health.mil/Military-Health-Topics/Centers-of-Excellence/Psychological-Health-Center-of-Excellence/Psychological-Health-Resource-Center",
-                    "desc": "official site for military mental health and psychological health information"
-                },
-            ]
-        },
-    ]
-    return render_template('resources.html', resources_data=resources_data)
-
 
 
 if __name__ == "__main__":
