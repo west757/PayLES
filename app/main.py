@@ -98,10 +98,10 @@ def process_les(les_pdf):
 
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
-    context['remarks'] = load_json(app.config['REMARKS_JSON_FILE'])
+    context['remarks'] = load_json(app.config['LES_REMARKS_JSON_FILE'])
     les_text = read_les(LES_RECTANGLES, les_page)
     context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
-    context['modals'] = load_json(app.config['MODALS_JSON_FILE'])
+    context['modals'] = load_json(app.config['PAYDF_MODALS_JSON_FILE'])
     return context
 
 

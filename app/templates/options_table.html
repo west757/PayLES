@@ -9,7 +9,7 @@
 
 <form id="options-form">
     <!-- variable passed to javascript to seed the initial month for the month dropdowns -->
-    <input type="hidden" id="initial-month" value="{{ col_headers[1] }}">
+    <input id="initial-month" value="{{ col_headers[1] }}" type="hidden">
 
     <table class="pos-table" id="options-table">
         <tbody class="pos-table-section">
@@ -52,63 +52,63 @@
                     <td class="pos-table">
 
                         {% if header == 'Grade' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 {% for x in GRADES %}
                                 <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
 
                         {% elif header == 'Zip Code' %}
-                            <input class="pos-table num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
-                        
+                            <input class="num-input num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
+
                         {% elif header == 'Tax Residency State' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 {% for x in STATES_SHORT %}
                                 <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
 
                         {% elif header == 'Federal Filing Status' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 {% for x in TAX_FILING_TYPES %}
                                 <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
 
                         {% elif header == 'State Filing Status' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 {% for x in TAX_FILING_TYPES[0:2] %}
                                 <option value="{{x}}" {% if x == future_value %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
 
                         {% elif header == 'SGLI' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 {% for row in SGLI_RATE.itertuples() %}
                                 <option value="{{row.premium}}" {% if row.premium == future_value %} selected {% endif %}>{{"${:,.2f}".format(row.premium)}}</option>
                                 {% endfor %}
                             </select>
 
                         {% elif header == 'Dependents' %}
-                            <input class="pos-table num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
+                            <input class="num-input num-input-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="" placeholder="{{ future_value }}" />
                         
                         {% elif header == 'Combat Zone' %}
-                            <select class="pos-table" name="{{ varname }}_f">
+                            <select class="dropdown" name="{{ varname }}_f">
                                 <option value="No" {% if future_value == 'No' %} selected {% endif %}>No</option>
                                 <option value="Yes" {% if future_value == 'Yes' %} selected {% endif %}>Yes</option>
                             </select>
                         
                         {% elif header == 'Traditional TSP Rate' or header == 'Roth TSP Rate' %}
-                            <input class="pos-table num-input-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
+                            <input class="num-input num-input-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="{{ future_value }}" />
                             <span>&nbsp;&nbsp;%</span>
 
                         {% else %}
-                            <input class="pos-table" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
+                            <input class="num-input" type="text" name="{{ varname }}_f" value="{{ future_value }}" />
                         {% endif %}
                     </td>
 
                     <td class="pos-table">
-                        <select class="pos-table month-dropdown" name="{{ varname }}_m">
+                        <select class="dropdown" name="{{ varname }}_m">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}

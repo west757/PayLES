@@ -17,7 +17,7 @@
                 </div>
                 <div class="settings-row">
                     <form id="settings-form">
-                        <select class="pos-table" id="months-dropdown" name="months_display">
+                        <select id="month-display-dropdown" class="dropdown" name="months_display">
                             {% for x in range(2, 13) %}
                                 <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -79,7 +79,7 @@
                     <label>Export as:</label>
                 </div>
                 <div class="settings-row">
-                    <select id="export-dropdown" class="pos-table">
+                    <select id="export-dropdown" class="dropdown">
                         <option value="xlsx" selected>Excel</option>
                         <option value="csv">CSV</option>
                     </select>
