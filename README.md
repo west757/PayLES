@@ -7,7 +7,6 @@ instructions for self-host
 create levdf (leave calculator)
 create tspdf (tsp calculator)
 
-loop through making modals
 speed up performance
 refactor and simplify javascript
 finish css refactor
