@@ -281,7 +281,7 @@ footer {
    input boxes
    ========================= */
 
-.text-input {
+.input-text {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -295,7 +295,7 @@ footer {
     width: 10rem;
 }
 
-.num-input {
+.input-num {
     background-color: var(--input_background_color);
     border: 1px solid #999;
     border-radius: 0.25rem;
@@ -308,15 +308,15 @@ footer {
     text-align: center;
 }
 
-.num-input-long {
+.input-num-long {
     width: 4.6rem;
 }
 
-.num-input-mid {
+.input-num-mid {
     width: 3.5rem;
 }
 
-.num-input-short {
+.input-num-short {
     width: 2.5rem;
 }
 
@@ -325,7 +325,7 @@ footer {
    checkboxes
    ========================= */
 
-input[type=checkbox] {
+.input-checkbox {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -425,9 +425,12 @@ input[type=file] {
     max-width: 100%;
 }
 
+#paydf, #options, #settings, #les-image {
+    margin: 1rem;
+}
+
 #paydf {
     flex-shrink: 1;
-    margin: 1rem;
 }
 
 #options-settings {
@@ -437,19 +440,10 @@ input[type=file] {
     gap: 1rem;
 }
 
-#options {
-    margin: 1rem;
-}
-
-#settings {
-    margin: 1rem;
-}
-
 #les-image {
     border: 1px solid var(--table_border_color);
     display: inline-block;
     line-height: 0;
-    margin: 1rem;
     position: relative;
 }
 

@@ -203,7 +203,7 @@ function renderCustomRows() {
         if (editingIndex === idx) {
             // Editable row: styled inputs, labels, $ and - signs
             let headerTd = document.createElement('td');
-            headerTd.innerHTML = `<input type="text" class="text-input" value="${row.header}" />`;
+            headerTd.innerHTML = `<input type="text" class="input-text" value="${row.header}" />`;
             tr.appendChild(headerTd);
 
             // Tax cell with label
@@ -211,7 +211,7 @@ function renderCustomRows() {
             taxTd.innerHTML = `
                 <div style="display:inline-block; position:relative;">
                 <label style='margin-left:8px;'>Tax:</label>
-                    <input type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
+                    <input class="input-checkbox" type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
                     <span 
                         class="tax-tooltip-icon" 
                         style="
@@ -241,7 +241,7 @@ function renderCustomRows() {
                 let valueTd = document.createElement('td');
                 valueTd.innerHTML = `
                     <span>${sign}$&nbsp;&nbsp;</span>
-                    <input type="text" class="num-input num-input-mid"
+                    <input type="text" class="input-num input-num-mid"
                         ${valueAttr}
                         ${placeholderAttr}
                         onkeypress="return /[0-9]/.test(event.key)"
@@ -320,11 +320,11 @@ function attachCustomRowButtonListeners() {
             btns.confirmBtn.onclick = function() {
                 const tr = document.querySelector(`#custom-row-section tr[data-index="${editingIndex}"]`);
                 // Get header input
-                const headerInput = tr.querySelector('input.text-input');
+                const headerInput = tr.querySelector('input.input-text');
                 // Get tax checkbox
                 const taxCheckbox = tr.querySelector('input[type="checkbox"]');
                 // Get value inputs
-                const valueInputs = tr.querySelectorAll('input.num-input');
+                const valueInputs = tr.querySelectorAll('input.input-num');
                 customRows[editingIndex].header = headerInput ? headerInput.value.trim() : '';
                 customRows[editingIndex].tax = taxCheckbox ? taxCheckbox.checked : false;
                 let values = [];
