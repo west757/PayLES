@@ -106,7 +106,7 @@
                     </td>
 
                     <td>
-                        <select class="dropdown" name="{{ varname }}_m">
+                        <select class="dropdown month-dropdown" name="{{ varname }}_m">
                             {% for x in month_options %}
                             <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
@@ -148,7 +148,7 @@
                                 <input class="input-checkbox" type="checkbox" name="{{ varname }}_f" {% if future_value %} checked {% endif %}>
                             </td>
                             <td>
-                                <select class="month-dropdown" name="{{ varname }}_m">
+                                <select class="dropdown month-dropdown" name="{{ varname }}_m">
                                     {% for x in month_options %}
                                     <option value="{{x}}" {% if x == future_month %} selected {% endif %}>{{x}}</option>
                                     {% endfor %}

@@ -45,31 +45,6 @@ let customRowButtons = [];
 
 
 // =========================
-// month dropdown
-// =========================
-
-function updateMonthDropdowns() {
-    // Get colHeaders from the data attribute
-    const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
-
-    // Adjust the slice as needed (e.g., skip first 2 columns if not months)
-    const monthOptions = colHeaders.slice(2);
-
-    document.querySelectorAll('select.month-display-dropdown').forEach(function(select) {
-        const currentValue = select.value;
-        select.innerHTML = '';
-        monthOptions.forEach(function(month) {
-            const option = document.createElement('option');
-            option.value = month;
-            option.textContent = month;
-            if (month === currentValue) option.selected = true;
-            select.appendChild(option);
-        });
-    });
-}
-
-
-// =========================
 // update paydf and GUI
 // =========================
 
@@ -88,12 +63,32 @@ function updatePaydf() {
     .then(response => response.text())
     .then(html => {
         document.getElementById('paydf').innerHTML = html;
+        editingIndex = null;
         highlight_changes();
         show_all_variables();
         show_all_options();
-        editingIndex = null;
         updateButtonStates();
         renderCustomRowButtonTable();
+        updateMonthDropdowns();
+    });
+}
+
+function updateMonthDropdowns() {
+    //get colHeaders from the data attribute
+    const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
+    //remove the first two column headers (row header and first month)
+    const monthOptions = colHeaders.slice(2);
+
+    document.querySelectorAll('select.month-dropdown').forEach(function(select) {
+        const currentValue = select.value;
+        select.innerHTML = '';
+        monthOptions.forEach(function(month) {
+            const option = document.createElement('option');
+            option.value = month;
+            option.textContent = month;
+            if (month === currentValue) option.selected = true;
+            select.appendChild(option);
+        });
     });
 }
 
@@ -153,7 +148,6 @@ function show_all_options() {
         }
     }
 }
-
 
 
 // =========================
@@ -243,7 +237,7 @@ function renderCustomRows() {
             let taxTd = document.createElement('td');
             taxTd.innerHTML = `
                 <div style="display:inline-block; position:relative;">
-                    <label style='margin-left:8px;'>Tax:</label>
+                    <label style='margin-left:0.5rem;'>Tax:</label>
                     <input class="input-checkbox" type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
                     <span 
                         class="tax-tooltip-icon"
@@ -385,18 +379,29 @@ function hideTooltip() {
 // =========================
 
 document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-button')) {
+        const modalId = e.target.getAttribute('data-modal');
+        if (modalId) {
+            const modalCheckbox = document.getElementById(modalId);
+            if (modalCheckbox) {
+                modalCheckbox.checked = true;
+            }
+        }
+    }
+
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
         updatePaydf();
     }
 
-    if (e.target && e.target.id === 'export-button') {
-        e.preventDefault();
-        exportPaydf();
-    }
-
     if (e.target.id === 'add-entitlement-button') {
         if (editingIndex !== null) return;
+
+        if (customRows.length >= MAX_CUSTOM_ROWS) {
+            alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
+            return;
+        }
+
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
         numMonths = headerRow.children.length - 2;
@@ -409,6 +414,12 @@ document.addEventListener('click', function(e) {
 
     if (e.target.id === 'add-deduction-button') {
         if (editingIndex !== null) return;
+
+        if (customRows.length >= MAX_CUSTOM_ROWS) {
+            alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
+            return;
+        }
+
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
         numMonths = headerRow.children.length - 2;
@@ -419,22 +430,16 @@ document.addEventListener('click', function(e) {
         updateButtonStates();
     }
 
-    if (e.target.classList.contains('modal-button')) {
-        const modalId = e.target.getAttribute('data-modal');
-        if (modalId) {
-            const modalCheckbox = document.getElementById(modalId);
-            if (modalCheckbox) {
-                modalCheckbox.checked = true;
-            }
-        }
+    if (e.target && e.target.id === 'export-button') {
+        e.preventDefault();
+        exportPaydf();
     }
 });
 
 document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'months-dropdown') {
+    if (e.target && e.target.id === 'month-display-dropdown') {
         e.preventDefault();
         updatePaydf();
-        updateMonthDropdowns(parseInt(e.target.value));
     }
 
     if (e.target && e.target.id === 'highlight-changes-checkbox') {

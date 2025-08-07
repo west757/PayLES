@@ -3,14 +3,14 @@
 {% set show_all_options = session.get('show_all_options', False) %}
 
 <table class="pos-table" id="settings-table">
-    <tbody>
+    <tbody class="pos-table-section">
         <tr class="pos-table-header-row">
-            <td class="pos-table-header-cell" colspan=2 style="border-radius: 20px 20px 0 0;">Settings</td>
+            <td class="pos-table-header-cell" colspan=2>Settings</td>
         </tr>
 
         <tr>
             <!-- months display-->
-            <td style="width: 50%;">
+            <td>
                 <div class="settings-row">
                     <label>Months Displayed: &nbsp;</label>
                 </div>
@@ -26,7 +26,7 @@
             </td>
             
             <!-- highlight changes -->
-            <td style="width: 50%;">
+            <td>
                 <div class="settings-row">
                     <label for="highlight-changes-checkbox">Highlight Changes:</label>
                     <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
@@ -37,7 +37,7 @@
 
         <tr>
             <!-- show all variables -->
-            <td style="width: 50%;">
+            <td>
                 <div class="settings-row">
                     <label for="show-all-variables-checkbox">Show All Variables:</label>
                     <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
@@ -46,7 +46,7 @@
 
             
             <!-- show all options -->
-            <td style="width: 50%;">
+            <td>
                 <div class="settings-row">
                     <label for="show-all-options-checkbox">Show All Options:</label>
                     <input class="input-checkbox" type="checkbox" id="show-all-options-checkbox">
@@ -88,8 +88,9 @@
                 </div>
             </td>
         </tr>
-
-
+    </tbody>
+    
+    <tbody>
         <!-- submit new les-->
         <tr>
             <td colspan=2>
