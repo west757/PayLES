@@ -601,7 +601,6 @@ input[type=file] {
 
 .pos-table td.pos-table-header-cell {
     background-color: var(--primary_dark_accent_color);
-    border-radius: 0px;
     color: var(--light_text_color);
     font-weight: bold;
 }
@@ -610,6 +609,7 @@ input[type=file] {
     height: 4rem;
     padding: 0;
     vertical-align: top;
+    white-space: nowrap;
 }
 
 .pos-table td.row-header-cell .modal-button {
@@ -643,10 +643,18 @@ input[type=file] {
     border-radius: 0 1.5rem 0 0;
 }
 
+.pos-table td.pos-table-header-cell:only-child {
+    border-radius: 1.5rem 1.5rem 0 0;
+}
+
 .pos-table-section tr:last-child td {
     border-bottom: 6px solid var(--table_border_color);
 }
 
+#settings-table tr > td:first-child,
+#settings-table tr > td:nth-child(2) {
+    width: 50%;
+}
 
 /* =========================
    paydf modals
