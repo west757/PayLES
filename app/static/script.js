@@ -48,6 +48,18 @@ let customRowButtons = [];
 // update paydf and GUI
 // =========================
 
+function stripeTable(tableId) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    let rowIndex = 0;
+    table.querySelectorAll('tbody').forEach(tbody => {
+        tbody.querySelectorAll('tr').forEach(tr => {
+            tr.classList.toggle('even-row', rowIndex % 2 === 1);
+            rowIndex++;
+        });
+    });
+}
+
 function updatePaydf() {
     const optionsForm = document.getElementById('options-form');
     const settingsForm = document.getElementById('settings-form');
@@ -70,6 +82,7 @@ function updatePaydf() {
         updateButtonStates();
         renderCustomRowButtonTable();
         updateMonthDropdowns();
+        stripeTable('paydf-table');
     });
 }
 
@@ -325,15 +338,18 @@ function attachCustomRowButtonListeners() {
 // =========================
 
 function updateButtonStates() {
+    const buttonIds = [
+        'update-les-button',
+        'add-entitlement-button',
+        'add-deduction-button',
+        'export-button'
+    ];
+
     const disable = editingIndex !== null;
-    document.getElementById('add-entitlement-button').disabled = disable;
-    document.getElementById('add-deduction-button').disabled = disable;
-    document.getElementById('update-les-button').disabled = disable;
-    document.getElementById('export-button').disabled = disable;
-    document.getElementById('add-entitlement-button').style.background = disable ? '#ccc' : '';
-    document.getElementById('add-deduction-button').style.background = disable ? '#ccc' : '';
-    document.getElementById('update-les-button').style.background = disable ? '#ccc' : '';
-    document.getElementById('export-button').style.background = disable ? '#ccc' : '';
+    buttonIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.disabled = disable;
+    });
 }
 
 
@@ -381,6 +397,7 @@ function hideTooltip() {
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
+
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
             if (modalCheckbox) {
@@ -469,3 +486,9 @@ document.addEventListener('mouseleave', function(e) {
         hideTooltip();
     }
 }, true);
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    stripeTable('paydf-table');
+    stripeTable('options-table');
+    stripeTable('settings-table');
+});

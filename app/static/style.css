@@ -8,6 +8,7 @@
     --secondary_light_accent_color: #f1f1f1;
     --input_background_color: #eeeeee;
     --table_border_color: #dddddd;
+    --button_disabled_color: #555252;
     --primary_green_accent_color: #0c9a65;
     --secondary_green_accent_color: #04a96d;
     --highlight_green_color: #4fd1a2;
@@ -287,6 +288,28 @@ footer {
 
 #update-les-button {
     height: 3.25rem;
+}
+
+.rect-highlight {
+    cursor: pointer;
+    position: absolute;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.rect-highlight:hover {
+    background-color: rgba(var(--highlight-green-color-rgb), 0.5);
+}
+
+.button:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled {
+    background: var(--button_disabled_color) !important;
+    border: 2px solid var(--button_disabled_color) !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
 }
 
 
@@ -626,9 +649,16 @@ input[type=file] {
     width: 100%;
 }
 
+.even-row td {
+    background-color: var(--secondary_light_accent_color);
+}
+
+/* Remove default nth-child striping to avoid double striping */
+/*
 .pos-table tr:nth-child(even) td {
     background-color: var(--secondary_light_accent_color);
 }
+*/
 
 .pos-table td:first-child,
 .pos-table td.pos-table-header-cell:first-child {
@@ -655,6 +685,44 @@ input[type=file] {
 #settings-table tr > td:nth-child(2) {
     width: 50%;
 }
+
+
+/* =========================
+   les image
+   ========================= */
+
+.tooltip {
+    background-color: var(--primary_dark_accent_color);
+    border-radius: 0.5rem;
+    color: var(--light_text_color);
+    display: none;
+    font-size: 0.85rem;
+    max-width: 28rem;
+    position: absolute;
+    padding: 0.25rem 0.5rem;
+    z-index: 1001;
+}
+
+.remarks {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex: 1;
+    margin: 0 0 2rem 0;
+    width: 60%;
+}
+
+.remark {
+    background-color: var(--secondary_light_accent_color);
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--table_border_color);
+    padding: 1rem;
+}
+
+.shadow {
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
+}
+
 
 /* =========================
    paydf modals
@@ -746,53 +814,6 @@ input[type=file] {
 .modal-table td {
     padding: 0.75rem 1rem;
     border: 1px solid black;
-}
-
-
-/* =========================
-   les image
-   ========================= */
-
-.rect-highlight {
-    cursor: pointer;
-    position: absolute;
-}
-
-.rect-highlight:hover {
-    background-color: rgba(var(--highlight-green-color-rgb), 0.5);
-}
-
-.tooltip {
-    background-color: var(--primary_dark_accent_color);
-    border-radius: 0.5rem;
-    color: var(--light_text_color);
-    display: none;
-    font-size: 0.85rem;
-    max-width: 28rem;
-    position: absolute;
-    padding: 0.25rem 0.5rem;
-    z-index: 1001;
-}
-
-.remarks {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    flex: 1;
-    margin: 0 0 2rem 0;
-    width: 60%;
-}
-
-.remark {
-    background-color: var(--secondary_light_accent_color);
-    width: 100%;
-    overflow: hidden;
-    border-bottom: 1px solid var(--table_border_color);
-    padding: 1rem;
-}
-
-
-.shadow {
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
 }
 
 
