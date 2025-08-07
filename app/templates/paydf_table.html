@@ -1,6 +1,6 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
 
-<div id="button-paydf-tables">
+<div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
         <tbody>
             <tr>
@@ -45,19 +45,6 @@
                         </td>
                     </tr>
                     {% set custom_idx = custom_idx + 1 %}
-                {% endif %}
-            {% endfor %}
-        </tbody>
-
-        <tbody>
-            {% for header in row_headers %}
-            {% set i = loop.index0 %}
-            {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
-            {% if row_info.iloc[0]['type'] == 'C' %}
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
                 {% endif %}
             {% endfor %}
         </tbody>

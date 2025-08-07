@@ -17,28 +17,28 @@
     </div>
 
     {% for modal in modals %}
-    <input class="modal-state" id="{{ modal.id }}" type="checkbox" />
+    <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-bg" for="{{ modal.id }}"></label>
+        <label class="modal-background" for="{{ modal.id }}"></label>
         <div class="modal-inner">
             <label class="modal-close" for="{{ modal.id }}"></label>
             <h2>{{ modal.title }}</h2>
             <p>{{ modal.content|safe }}</p>
 
-            {% if modal.id == "modal-sgli" %}
+            {% if modal.id == "sgli" %}
                 <table class="modal-table">
-                    <tr class="modal-table">
-                        <td class="modal-table">Coverage Amount</td>
-                        <td class="modal-table">Monthly Premium Rate</td>
-                        <td class="modal-table">TSGLI Premium Rate</td>
-                        <td class="modal-table">Total Monthly Premium Deduction</td>
+                    <tr>
+                        <td>Coverage Amount</td>
+                        <td>Monthly Premium Rate</td>
+                        <td>TSGLI Premium Rate</td>
+                        <td>Total Monthly Premium Deduction</td>
                     </tr>
                     {% for row in config['SGLI_RATE'].itertuples() %}
-                    <tr class="modal-table">
-                        <td class="modal-table">{{ '${:,.2f}'.format(row.coverage) }}</td>
-                        <td class="modal-table">{{ '${:,.2f}'.format(row.premium) }}</td>
-                        <td class="modal-table">{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
-                        <td class="modal-table">{{ '${:,.2f}'.format(row.total) }}</td>
+                    <tr>
+                        <td>{{ '${:,.2f}'.format(row.coverage) }}</td>
+                        <td>{{ '${:,.2f}'.format(row.premium) }}</td>
+                        <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
+                        <td>{{ '${:,.2f}'.format(row.total) }}</td>
                     </tr>
                     {% endfor %}
                 </table>

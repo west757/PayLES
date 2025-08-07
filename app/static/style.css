@@ -11,6 +11,7 @@
     --primary_green_accent_color: #0c9a65;
     --secondary_green_accent_color: #04a96d;
     --highlight_green_color: #4fd1a2;
+    --highlight-green-color-rgb: 79, 209, 162;
     --highlight_yellow_color: #baf35f;
     --highlight_blue_color: #3c94f1;
     --highlight_red_color: #f06f65;
@@ -214,7 +215,7 @@ footer {
 }
 
 .button:hover, input[type=file]::file-selector-button:hover {
-    box-shadow: rgba(0, 0, 0, 0.25) 0 0.5rem 1rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 0.25rem 0.5rem;
     transform: translateY(-2px);
 }
 
@@ -252,25 +253,23 @@ footer {
 
 .button-remove {
     background: var(--highlight_red_color);
+    margin: 0 0 0 0.25rem;
 }
 
-
 .modal-button {
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
     background: none;
     border: none;
-    padding: 0;
+    cursor: pointer;
+    height: 100%;
     margin: 0;
-    font: inherit;
+    padding: 0;
     text-align: center;
+    width: 100%;
 }
 
 .modal-button:hover, .modal-button:focus {
     background-color: var(--highlight_green_color);
 }
-
 
 #submit-les-button {
     width: 75%;
@@ -472,6 +471,8 @@ input[type=file] {
 
 #paydf {
     flex-shrink: 1;
+    margin: 1rem;
+    min-width: 0;
 }
 
 #options-settings {
@@ -495,7 +496,6 @@ input[type=file] {
 
 #button-paydf-tables {
     align-items: flex-start;
-    position: relative;
     display: flex;
     flex-direction: row;
     height: auto !important;
@@ -503,37 +503,30 @@ input[type=file] {
     max-width: 100vw;
     overflow-x: auto !important;
     overflow-y: visible !important;
+    position: relative;
     width: 100%;
 }
 
 #button-table {
-    width: auto;
     background: none;
-    border-spacing: 0;
     border-collapse: collapse;
+    border-spacing: 0;
+    width: auto;
 }
 
 #button-table td {
     background: none;
+    margin: 0;
     padding: 0;
     text-align: center;
     vertical-align: middle;
-    margin: 0;
 }
-
 
 #paydf-table {
     margin-left: 0;
-    overflow: visible !important; /* let container handle scroll */
-    display: table; /* restore table layout for flex */
+    overflow: visible !important;
+    display: table;
     max-width: none;
-    min-width: 0;
-}
-
-#paydf {
-    flex-shrink: 1;
-    margin: 1rem;
-    max-width: 100%; /* restrict to screen width */
     min-width: 0;
 }
 
@@ -549,6 +542,18 @@ input[type=file] {
     display: none;
 }
 
+.tax-tooltip-icon {
+    font-size: 13px;
+    cursor: pointer;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: white;
+    border-radius: 50%;
+    padding: 0 2px;
+    line-height: 1;
+}
+
 #options-table, #settings-table {
     width: 31rem;
 }
@@ -556,8 +561,6 @@ input[type=file] {
 .settings-row {
     display: inline-block;
 }
-
-
 
 #button-table tr,
 .pos-table tr {
@@ -598,33 +601,30 @@ input[type=file] {
 
 .pos-table td.pos-table-header-cell {
     background-color: var(--primary_dark_accent_color);
+    border-radius: 0px;
     color: var(--light_text_color);
     font-weight: bold;
-    border-radius: 0px;
 }
 
-
-
 .pos-table td.row-header-cell {
+    height: 4rem;
     padding: 0;
-    vertical-align: top; /* Ensures cell content is centered vertically */
-    height: 4rem;           /* Explicitly set cell height */
+    vertical-align: top;
 }
 
 .pos-table td.row-header-cell .modal-button {
-    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
     border: none;
-    margin: 0;
-    font: inherit;
-    text-align: center;
-    padding: 0 1.25rem;
     box-sizing: border-box;
+    display: flex;
+    font: inherit;
+    height: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1.25rem;
+    text-align: center;
+    width: 100%;
 }
-
 
 .pos-table tr:nth-child(even) td {
     background-color: var(--secondary_light_accent_color);
@@ -665,7 +665,7 @@ input[type=file] {
     visibility: hidden;
 }
 
-.modal-bg {
+.modal-background {
     bottom: 0;
     cursor: pointer;
     left: 0;
@@ -731,9 +731,13 @@ input[type=file] {
 .modal-table {
     border: 1px solid black;
     border-collapse: collapse;
-    padding: 0.75rem 1rem;
     margin: auto;
     text-align: center;
+}
+
+.modal-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid black;
 }
 
 
@@ -747,7 +751,7 @@ input[type=file] {
 }
 
 .rect-highlight:hover {
-    background-color: rgba(5, 219, 141, 0.5);
+    background-color: rgba(var(--highlight-green-color-rgb), 0.5);
 }
 
 .tooltip {
@@ -762,6 +766,26 @@ input[type=file] {
     z-index: 1001;
 }
 
+.remarks {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex: 1;
+    margin: 0 0 2rem 0;
+    width: 60%;
+}
+
+.remark {
+    background-color: var(--secondary_light_accent_color);
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid var(--table_border_color);
+    padding: 1rem;
+}
+
+
+.shadow {
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
+}
 
 
 /* =========================
@@ -770,8 +794,8 @@ input[type=file] {
 
 .tabs {
     border-radius: 0.5rem;
-    overflow: hidden;
     flex: 1;
+    overflow: hidden;
 }
 
 .tab {
@@ -827,7 +851,6 @@ input[type=file] {
 }
 
 
-
 /* =========================
    resources
    ========================= */
@@ -854,35 +877,3 @@ input[type=file] {
 .resource:hover {
     background-color: var(--highlight_green_color);
 }
-
-
-/* =========================
-   remarks
-   ========================= */
-
-.remarks {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    flex: 1;
-    margin: 0 0 2rem 0;
-    width: 60%;
-}
-
-.remark {
-    background-color: var(--secondary_light_accent_color);
-    width: 100%;
-    overflow: hidden;
-    border-bottom: 1px solid var(--table_border_color);
-    padding: 1rem;
-}
-
-
-.shadow {
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
-}
-
-
-
-
-
-
