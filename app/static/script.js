@@ -52,9 +52,13 @@ function stripeTable(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
     let rowIndex = 0;
-    table.querySelectorAll('tbody').forEach(tbody => {
-        tbody.querySelectorAll('tr').forEach(tr => {
-            tr.classList.toggle('even-row', rowIndex % 2 === 1);
+    table.querySelectorAll('tbody').forEach(function(tbody) {
+        tbody.querySelectorAll('tr').forEach(function(tr) {
+            if (rowIndex % 2 === 1) {
+                tr.classList.add('even-row');
+            } else {
+                tr.classList.remove('even-row');
+            }
             rowIndex++;
         });
     });
@@ -96,10 +100,12 @@ function updateMonthDropdowns() {
         const currentValue = select.value;
         select.innerHTML = '';
         monthOptions.forEach(function(month) {
-            const option = document.createElement('option');
+            var option = document.createElement('option');
             option.value = month;
             option.textContent = month;
-            if (month === currentValue) option.selected = true;
+            if (month === currentValue) {
+                option.selected = true;
+            }
             select.appendChild(option);
         });
     });
@@ -120,7 +126,7 @@ function highlight_changes() {
 
         // get row header (first cell)
         var rowHeader = cells[0].textContent.trim();
-
+        
         //start from col 3 (index 2), skip row header and first month
         for (var j = 2; j < cells.length; j++) {
             var cell = cells[j];
@@ -287,24 +293,36 @@ function renderCustomRows() {
 }
 
 function attachCustomRowButtonListeners() {
-    customRowButtons.forEach((button, idx) => {
+    customRowButtons.forEach(function(button, idx) {
         if (button.confirmButton) {
             button.confirmButton.onclick = function() {
                 // Select the correct row by data-index in the custom-row-section
                 const customSection = document.getElementById('custom-row-section');
-                const tr = customSection.querySelector(`tr[data-index="${editingIndex}"]`);
+                const tr = customSection.querySelector('tr[data-index="' + editingIndex + '"]');
                 // Get header input
                 const headerInput = tr.querySelector('input.input-text');
                 // Get tax checkbox
                 const taxCheckbox = tr.querySelector('input[type="checkbox"]');
                 // Get value inputs
                 const valueInputs = tr.querySelectorAll('input.input-num');
-                customRows[editingIndex].header = headerInput ? headerInput.value.trim() : '';
-                customRows[editingIndex].tax = taxCheckbox ? taxCheckbox.checked : false;
+                if (headerInput) {
+                    customRows[editingIndex].header = headerInput.value.trim();
+                } else {
+                    customRows[editingIndex].header = '';
+                }
+                if (taxCheckbox) {
+                    customRows[editingIndex].tax = taxCheckbox.checked;
+                } else {
+                    customRows[editingIndex].tax = false;
+                }
                 let values = [];
-                valueInputs.forEach(inp => {
+                valueInputs.forEach(function(inp) {
                     let val = inp.value.replace(/[^\d.-]/g, '');
-                    val = val ? parseFloat(val) : 0;
+                    if (val) {
+                        val = parseFloat(val);
+                    } else {
+                        val = 0;
+                    }
                     values.push(val);
                 });
                 customRows[editingIndex].values = values;
@@ -346,9 +364,11 @@ function updateButtonStates() {
     ];
 
     const disable = editingIndex !== null;
-    buttonIds.forEach(id => {
+    buttonIds.forEach(function(id) {
         const btn = document.getElementById(id);
-        if (btn) btn.disabled = disable;
+        if (btn) {
+            btn.disabled = disable;
+        }
     });
 }
 
@@ -491,4 +511,13 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     stripeTable('paydf-table');
     stripeTable('options-table');
     stripeTable('settings-table');
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        // Find all checked modal-state checkboxes and uncheck them
+        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
+            input.checked = false;
+        });
+    }
 });

@@ -268,7 +268,7 @@ footer {
     width: 100%;
 }
 
-.modal-button:hover, .modal-button:focus {
+.modal-button:hover {
     background-color: var(--highlight_green_color);
 }
 
