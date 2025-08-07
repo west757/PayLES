@@ -377,12 +377,16 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=Non
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         new_month = MONTHS_SHORT[month_idx]
-
         defaults = []
+
         for _, row in paydf.iterrows():
             header = row['header']
             match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-            defaults.append(cast_dtype(match.iloc[0]['default'], match.iloc[0]['dtype']))
+            
+            if not match.empty:
+                defaults.append(cast_dtype(match.iloc[0]['default'], match.iloc[0]['dtype']))
+            else:
+                defaults.append(0)
 
         paydf[new_month] = defaults
         paydf = update_variables(PAYDF_TEMPLATE, paydf, new_month, options)
