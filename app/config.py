@@ -17,7 +17,7 @@ class Config:
     SESSION_COOKIE_SAMESITE = 'Lax'
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
-    STATIC_FOLDER = Path.cwd() / "static"
+    STATIC_FOLDER = Path(__file__).parent / "static"
     VERSION = "Version 0.1.0 2025-08-01"
 
     #static files
