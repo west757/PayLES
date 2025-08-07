@@ -1,9 +1,15 @@
-const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+//constants and global variables
 const DEFAULT_MONTHS_DISPLAY = 6;
 const MAX_CUSTOM_ROWS = 9;
+let editingIndex = null;
+let customRows = [];
+let customRowButtons = [];
 
 
-// Drag and drop functionality for file input
+// =========================
+// drag and drop file upload
+// =========================
+
 (function() {
     var dropContainer = document.getElementById("home-drop");
     var fileInput = document.getElementById("home-input");
@@ -11,7 +17,7 @@ const MAX_CUSTOM_ROWS = 9;
 
     if (!dropContainer || !fileInput || !form) return;
 
-    // Prevent default drag behaviors
+    //prevent default drag behaviors
     ["dragenter", "dragover", "dragleave", "drop"].forEach(function(eventName) {
         dropContainer.addEventListener(eventName, function(e) {
             e.preventDefault();
@@ -24,7 +30,6 @@ const MAX_CUSTOM_ROWS = 9;
     });
 
     dropContainer.addEventListener("dragleave", function(e) {
-        // Only remove if leaving the drop area
         if (e.target === dropContainer) {
             dropContainer.classList.remove("drag-active");
         }
@@ -34,35 +39,22 @@ const MAX_CUSTOM_ROWS = 9;
         dropContainer.classList.remove("drag-active");
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             fileInput.files = e.dataTransfer.files;
-            // Optionally auto-submit the form after drop
-            if (form) {
-                form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
-            }
         }
     });
 })();
 
 
+// =========================
+// month dropdown
+// =========================
 
-function getInitialMonth() {
-    const el = document.getElementById('initial-month');
-    return el ? el.value : MONTHS_SHORT[0];
-}
+function updateMonthDropdowns() {
+    // Get colHeaders from the data attribute
+    const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
 
-function getMonthOptions(initialMonth, monthsDisplay) {
-    let idx = MONTHS_SHORT.indexOf(initialMonth);
-    let options = [];
-    for (let i = 1; i < monthsDisplay; i++) {
-        idx = (idx + 1) % MONTHS_SHORT.length;
-        options.push(MONTHS_SHORT[idx]);
-    }
-    return options;
-}
+    // Adjust the slice as needed (e.g., skip first 2 columns if not months)
+    const monthOptions = colHeaders.slice(2);
 
-function updateMonthDropdowns(monthsDisplayOverride) {
-    let displayCount = monthsDisplayOverride || DEFAULT_MONTHS_DISPLAY;
-    const initialMonth = getInitialMonth();
-    const monthOptions = getMonthOptions(initialMonth, displayCount);
     document.querySelectorAll('select.month-display-dropdown').forEach(function(select) {
         const currentValue = select.value;
         select.innerHTML = '';
@@ -77,6 +69,9 @@ function updateMonthDropdowns(monthsDisplayOverride) {
 }
 
 
+// =========================
+// update paydf and GUI
+// =========================
 
 function updatePaydf() {
     const optionsForm = document.getElementById('options-form');
@@ -101,8 +96,6 @@ function updatePaydf() {
         renderCustomRowButtonTable();
     });
 }
-
-
 
 function highlight_changes() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
@@ -138,7 +131,6 @@ function highlight_changes() {
     }
 }
 
-
 function show_all_variables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
@@ -147,7 +139,6 @@ function show_all_variables() {
         rows[i].style.display = checked ? 'table-row' : 'none';
     }
 }
-
 
 function show_all_options() {
     var checkbox = document.getElementById('show-all-options-checkbox');
@@ -165,15 +156,9 @@ function show_all_options() {
 
 
 
-
-
-
-
-//index of row being edited, or null if none
-let editingIndex = null;
-let customRows = [];
-let customRowButtons = [];
-
+// =========================
+// custom rows and buttons
+// =========================
 
 function renderCustomRowButtonTable() {
     const buttonTable = document.getElementById('button-table');
@@ -222,9 +207,6 @@ function renderCustomRowButtonTable() {
     attachCustomRowButtonListeners();
 }
 
-
-
-
 function renderCustomRows() {
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
@@ -261,21 +243,10 @@ function renderCustomRows() {
             let taxTd = document.createElement('td');
             taxTd.innerHTML = `
                 <div style="display:inline-block; position:relative;">
-                <label style='margin-left:8px;'>Tax:</label>
+                    <label style='margin-left:8px;'>Tax:</label>
                     <input class="input-checkbox" type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
                     <span 
-                        class="tax-tooltip-icon" 
-                        style="
-                            font-size:13px; 
-                            cursor:pointer; 
-                            position:absolute; 
-                            top:-8px; 
-                            right:-10px; 
-                            background:white;
-                            border-radius:50%;
-                            padding:0 2px;
-                            line-height:1;
-                        "
+                        class="tax-tooltip-icon"
                         onmouseenter="showTooltip(event, 'Used to indicate if the row is used for tax purposes. If the row is an entitlement, it sets whether the row is taxable income or non-taxable income. If the row is a deduction, it sets whether or not the row is a tax to be added to total taxes.')"
                         onmouseleave="hideTooltip()"
                     >?</span>
@@ -303,23 +274,11 @@ function renderCustomRows() {
                 tr.appendChild(valueTd);
             }
         } 
-        //else {
-            //display custom row as static
-        //    tr.innerHTML = `
-        //        <td>${row.header}</td>
-        //        <td>${row.tax ? 'Taxable' : 'Non-Taxable'}</td>
-        //        ${row.values.map(v => `<td>${row.type === 'D' ? '-' : ''}$${v}</td>`).join('')}
-        //    `;
-        //}
         customSection.appendChild(tr);
     });
     renderCustomRowButtonTable();
 }
 
-
-
-
-// Attach event listeners after rendering
 function attachCustomRowButtonListeners() {
     customRowButtons.forEach((button, idx) => {
         if (button.confirmButton) {
@@ -366,6 +325,11 @@ function attachCustomRowButtonListeners() {
     });
 }
 
+
+// =========================
+// update buttons
+// =========================
+
 function updateButtonStates() {
     const disable = editingIndex !== null;
     document.getElementById('add-entitlement-button').disabled = disable;
@@ -379,12 +343,9 @@ function updateButtonStates() {
 }
 
 
-
-
-
-
-
-
+// =========================
+// export paydf
+// =========================
 
 function exportPaydf() {
     var table = document.getElementById('paydf-table');
@@ -399,6 +360,10 @@ function exportPaydf() {
     }
 }
 
+
+// =========================
+// tooltip functionality
+// =========================
 
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');
@@ -415,7 +380,10 @@ function hideTooltip() {
 
 
 
-//delegated event listeners for dynamic paydf controls
+// =========================
+// delegate event listeners
+// =========================
+
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
@@ -461,7 +429,6 @@ document.addEventListener('click', function(e) {
         }
     }
 });
-
 
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-dropdown') {
