@@ -249,7 +249,7 @@ function renderCustomRows() {
         if (editingIndex === idx) {
             //create row header cell with text input
             let headerTd = document.createElement('td');
-            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" />`;
+            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required />`;
             tr.appendChild(headerTd);
 
             //create tax checkbox cell with tooltip
@@ -301,6 +301,14 @@ function attachCustomRowButtonListeners() {
                 const tr = customSection.querySelector('tr[data-index="' + editingIndex + '"]');
                 // Get header input
                 const headerInput = tr.querySelector('input.input-text');
+
+                // Check if header is blank
+                if (!headerInput.value.trim()) {
+                    alert('Header text cannot be blank.');
+                    headerInput.focus();
+                    return;
+                }
+
                 // Get tax checkbox
                 const taxCheckbox = tr.querySelector('input[type="checkbox"]');
                 // Get value inputs
@@ -513,11 +521,22 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     stripeTable('settings-table');
 });
 
+// close modals on Escape key press
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' || e.key === 'Esc') {
-        // Find all checked modal-state checkboxes and uncheck them
         document.querySelectorAll('.modal-state:checked').forEach(function(input) {
             input.checked = false;
         });
     }
+});
+
+//disable buttons on form submission to prevent multiple submissions
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function() {
+            form.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
+                btn.disabled = true;
+            });
+        });
+    });
 });
