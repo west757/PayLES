@@ -15,16 +15,9 @@ add more faq
 add drill pay
 add security, no sql injection, other security attributes
 validation checks
-verify adjusted screen sizes
 check mobile use
 add in error alerts for different things
-add more html5 validation attributes like required, type="email", etc
-autofocus the first input on forms
-highlight the current page in the navigation
-add error handling for all file operations and user inputs
-log errors to a file or monitoring service
 check for edge cases
-ask about type hints
 add unit tests for core logic, or flask's test client for route testing
 update readme
 
@@ -38,7 +31,7 @@ Cache expensive computations if possible (e.g., with Flask-Caching).
 Avoid unnecessary recomputation of dataframes or images.
 
 Sessions:
-Set SESSION_COOKIE_SECURE = True and SESSION_COOKIE_SAMESITE = 'Lax' or 'Strict' in production.
+Set  and SESSION_COOKIE_SAMESITE = 'Lax' or 'Strict' in production.
 Use CSRF protection for all forms (Flask-WTF or similar).
 
 File Uploads:
