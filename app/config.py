@@ -14,6 +14,7 @@ class Config:
     SESSION_PERMANENT = False
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     SESSION_TYPE = "filesystem"
+    SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     ALLOWED_EXTENSIONS = {'pdf'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB

@@ -408,9 +408,10 @@ input.input-checkbox {
     max-width: 100%;
 }
 
-#home-group, #about, #faq, #resources {
+#home-group, #remarks, #about, #faq, #resources {
     margin: 0 auto 3rem auto;
     max-width: 60%;
+    min-width: 67rem;
 }
 
 
@@ -703,12 +704,10 @@ input[type=file] {
     z-index: 1001;
 }
 
-.remarks {
+#remarks {
     border-radius: 0.5rem;
     overflow: hidden;
     flex: 1;
-    margin: 0 0 2rem 0;
-    width: 60%;
 }
 
 .remark {

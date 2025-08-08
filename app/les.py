@@ -4,8 +4,9 @@ import io
 import pdfplumber
 
 from app import flask_app
-from app import utils
-from app.paydf import build_paydf
+from app.utils import (
+    load_json,
+)
 
 
 # =========================
@@ -24,18 +25,15 @@ def validate_les(les_file):
             return False, "File is not a valid LES", les_pdf
 
 
-def process_les(les_pdf):
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
+def process_les(STATIC_FOLDER, les_pdf):
     LES_RECTANGLES = flask_app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
-    context['remarks'] = utils.load_json(STATIC_FOLDER, flask_app.config['LES_REMARKS_JSON_FILE'])
+    context['remarks'] = load_json(STATIC_FOLDER, flask_app.config['LES_REMARKS_JSON_FILE'])
     les_text = read_les(LES_RECTANGLES, les_page)
-    context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
-    context['modals'] = utils.load_json(STATIC_FOLDER, flask_app.config['PAYDF_MODALS_JSON_FILE'])
-    return context
+    return context, les_text
 
 
 def create_les_image(LES_RECTANGLES, les_page):
