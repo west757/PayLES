@@ -44,6 +44,15 @@ def create_les_image(LES_RECTANGLES, les_page):
     new_height = int(raw_image.height * LES_IMAGE_SCALE)
     scaled_image = raw_image.resize((new_width, new_height), Image.LANCZOS)
 
+    #overlays whiteout rectangle over name
+    whiteout_rect = (200, 165, 700, 220)
+    draw = ImageDraw.Draw(scaled_image)
+    x1 = int(whiteout_rect[0] * LES_IMAGE_SCALE)
+    y1 = int(whiteout_rect[1] * LES_IMAGE_SCALE)
+    x2 = int(whiteout_rect[2] * LES_IMAGE_SCALE)
+    y2 = int(whiteout_rect[3] * LES_IMAGE_SCALE)
+    draw.rectangle([x1, y1, x2, y2], fill="white")
+
     #overlays whiteout rectangle over SSN
     whiteout_rect = (710, 165, 980, 220)
     draw = ImageDraw.Draw(scaled_image)
