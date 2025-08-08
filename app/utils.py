@@ -27,10 +27,17 @@ def cast_dtype(value, dtype):
     return value
 
 
-def load_json(filename, static_folder):
-    path = os.path.join(static_folder, filename)
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
+def load_json(STATIC_FOLDER, filename):
+    path = os.path.join(STATIC_FOLDER, filename)
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
+    except Exception as e:
+        return {}
 
 
 def cast_dtype(value, dtype):
@@ -43,12 +50,6 @@ def cast_dtype(value, dtype):
     elif dtype == 'bool':
         return bool(value)
     return value
-
-
-def load_json(STATIC_FOLDER, filename):
-    path = os.path.join(STATIC_FOLDER, filename)
-    with open(path, encoding='utf-8') as f:
-        return json.load(f)
     
 
 def find_multiword_matches(section, shortname):

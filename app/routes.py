@@ -1,22 +1,24 @@
 from flask import request, render_template, session
-from decimal import Decimal
 import io
-import json
 import pandas as pd
 
 from app import flask_app
-from app import utils
+from app.utils import (
+    validate_file,
+    load_json,
+)
 from app.les import (
     validate_les, 
-    process_les
+    process_les,
 )
 from app.paydf import (
+    build_paydf,
     build_options, 
     remove_custom_template_rows, 
     add_custom_template_rows, 
     add_custom_row, 
     expand_paydf,
-    parse_custom_rows
+    parse_custom_rows,
 )
 
 
@@ -25,37 +27,9 @@ def index():
     return render_template('home_group.html')
 
 
-@flask_app.route('/about')
-def about():
-    return render_template('about.html')
-
-
-@flask_app.route('/faq')
-def faq():
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
-    faqs = utils.load_json(STATIC_FOLDER, flask_app.config['FAQ_JSON_FILE'])
-    return render_template('faq.html', faqs=faqs)
-
-
-@flask_app.route('/resources')
-def resources():
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
-    resources = utils.load_json(STATIC_FOLDER, flask_app.config['RESOURCES_JSON_FILE'])
-    return render_template('resources.html', resources=resources)
-
-
-@flask_app.route('/leave_calculator')
-def leave_calculator():
-    return render_template('leave_calculator.html')
-
-
-@flask_app.route('/tsp_calculator')
-def tsp_calculator():
-    return render_template('tsp_calculator.html')
-
-
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
+    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     action = request.form.get('action')
@@ -64,17 +38,22 @@ def submit_les():
     if action == "submit-les":
         if not les_file:
             return render_template("home_form.html", message="No file submitted")
-        valid, message = utils.validate_file(les_file, ALLOWED_EXTENSIONS)
+        
+        valid, message = validate_file(les_file, ALLOWED_EXTENSIONS)
         if not valid:
             return render_template("home_form.html", message=message)
+        
         valid, message, les_pdf = validate_les(les_file)
+
     elif action == "submit-example":
         valid, message, les_pdf = validate_les(EXAMPLE_LES)
     else:
-        return render_template("home_form.html", message="Unknown action")
+        return render_template("home_form.html", message="Unknown action, no LES or example submitted")
 
     if valid:
-        context = process_les(les_pdf)
+        context, les_text = process_les(STATIC_FOLDER, les_pdf)
+        context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
+        context['modals'] = load_json(STATIC_FOLDER, flask_app.config['PAYDF_MODALS_JSON_FILE'])
         return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
@@ -107,3 +86,32 @@ def update_paydf():
     }
     
     return render_template('paydf_table.html', **context)
+
+
+@flask_app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@flask_app.route('/faq')
+def faq():
+    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
+    faqs = load_json(STATIC_FOLDER, flask_app.config['FAQ_JSON_FILE'])
+    return render_template('faq.html', faqs=faqs)
+
+
+@flask_app.route('/resources')
+def resources():
+    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
+    resources = load_json(STATIC_FOLDER, flask_app.config['RESOURCES_JSON_FILE'])
+    return render_template('resources.html', resources=resources)
+
+
+@flask_app.route('/leave_calculator')
+def leave_calculator():
+    return render_template('leave_calculator.html')
+
+
+@flask_app.route('/tsp_calculator')
+def tsp_calculator():
+    return render_template('tsp_calculator.html')
