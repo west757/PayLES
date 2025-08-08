@@ -1,6 +1,6 @@
-import os
-import json
 from decimal import Decimal
+import json
+import os
 
 
 def validate_file(file, allowed_extensions):
@@ -83,72 +83,6 @@ def calculate_mha(MHA_ZIP_CODES, zip_code):
         mha = "Not Found"
 
     return mha
-
-
-def parse_eda_sections(section, row):
-    value = None
-    found = False
-    shortname = str(row['shortname'])
-    matches = find_multiword_matches(section, shortname)
-
-    for idx in matches:
-        for j in range(idx + 1, len(section)):
-            s = section[j]
-            is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-            
-            if is_num:
-                val = Decimal(section[j])
-                value = abs(val)
-                found = True
-                break
-
-        if found:
-            break
-
-    if not found:
-        if bool(row['required']):
-            default_value = cast_dtype(row['default'], row['dtype'])
-            value = abs(default_value)
-        else:
-            return None
-        
-    return cast_dtype(value, row['dtype'])
-
-
-def update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
-    if match.iloc[0].get('custom', False):
-        custom_row = next((r for r in custom_rows if r['header'] == header), None)
-
-        if custom_row:
-            col_idx = columns.index(month)
-            value_idx = col_idx - 2
-            value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
-            paydf.at[row_idx, month] = value
-        return True
-
-    if bool(match.iloc[0].get('onetime', False)):
-        paydf.at[row_idx, month] = 0
-        return True
-
-    if bool(match.iloc[0].get('standard', False)):
-        future_value, future_month = get_option(header, options)
-        col_idx = columns.index(month)
-        prev_month = columns[col_idx - 1]
-        prev_value = paydf.at[row_idx, prev_month]
-
-        if future_month in columns:
-            future_col_idx = columns.index(future_month)
-            current_col_idx = columns.index(month)
-
-            if future_col_idx is not None and current_col_idx >= future_col_idx:
-                paydf.at[row_idx, month] = future_value
-            else:
-                paydf.at[row_idx, month] = prev_value
-        else:
-            paydf.at[row_idx, month] = prev_value
-        return True
-
-    return False
 
 
 def get_option(header, options):

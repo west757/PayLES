@@ -1,13 +1,20 @@
-from flask import session
 from datetime import datetime
+from decimal import Decimal
+from flask import session
+import json
 import pandas as pd
 
 from app import flask_app
 from app import utils
 from app.calculations import (
-    calculate_bah,
+    calculate_taxed_income,
+    calculate_total_taxes,
+    calculate_gross_pay,
+    calculate_net_pay,
+    calculate_difference,
     calculate_base_pay,
     calculate_bas,
+    calculate_bah,
     calculate_federal_taxes,
     calculate_fica_social_security,
     calculate_fica_medicare,
@@ -15,11 +22,6 @@ from app.calculations import (
     calculate_state_taxes,
     calculate_traditional_tsp,
     calculate_roth_tsp,
-    calculate_taxed_income,
-    calculate_total_taxes,
-    calculate_gross_pay,
-    calculate_net_pay,
-    calculate_difference,
 )
 
 
@@ -114,7 +116,7 @@ def add_entitlements(PAYDF_TEMPLATE, paydf, les_text):
     section = les_text[9]
 
     for _, row in var_rows.iterrows():
-        value = utils.parse_eda_sections(section, row)
+        value = parse_eda_sections(section, row)
         if value is not None:
             paydf.loc[len(paydf)] = [row['header'], value]
     return paydf
@@ -125,7 +127,7 @@ def add_deductions(PAYDF_TEMPLATE, paydf, les_text):
     section = les_text[10]
 
     for _, row in var_rows.iterrows():
-        value = utils.parse_eda_sections(section, row)
+        value = parse_eda_sections(section, row)
         if value is not None:
             paydf.loc[len(paydf)] = [row['header'], -value]
     return paydf
@@ -136,10 +138,40 @@ def add_allotments(PAYDF_TEMPLATE, paydf, les_text):
     section = les_text[11]
     
     for _, row in var_rows.iterrows():
-        value = utils.parse_eda_sections(section, row)
+        value = parse_eda_sections(section, row)
         if value is not None:
             paydf.loc[len(paydf)] = [row['header'], -value]
     return paydf
+
+
+def parse_eda_sections(section, row):
+    value = None
+    found = False
+    shortname = str(row['shortname'])
+    matches = utils.find_multiword_matches(section, shortname)
+
+    for idx in matches:
+        for j in range(idx + 1, len(section)):
+            s = section[j]
+            is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+            
+            if is_num:
+                val = Decimal(section[j])
+                value = abs(val)
+                found = True
+                break
+
+        if found:
+            break
+
+    if not found:
+        if bool(row['required']):
+            default_value = utils.cast_dtype(row['default'], row['dtype'])
+            value = abs(default_value)
+        else:
+            return None
+        
+    return utils.cast_dtype(value, row['dtype'])
 
 
 def add_calculations(PAYDF_TEMPLATE, paydf):
@@ -316,7 +348,7 @@ def update_entitlements(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None)
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if utils.update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
             continue
         elif header == 'Base Pay':
             paydf.at[row_idx, month] = calculate_base_pay(paydf, month)
@@ -337,7 +369,7 @@ def update_deductions(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if utils.update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
             continue
         elif header == 'Federal Taxes':
             paydf.at[row_idx, month] = calculate_federal_taxes(paydf, month)
@@ -366,10 +398,46 @@ def update_allotments(PAYDF_TEMPLATE, paydf, month, options, custom_rows=None):
         header = row['header']
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if utils.update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+        if update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
             continue
 
     return paydf
+
+
+def update_eda_rows(paydf, row_idx, header, match, month, columns, options, custom_rows):
+    if match.iloc[0].get('custom', False):
+        custom_row = next((r for r in custom_rows if r['header'] == header), None)
+
+        if custom_row:
+            col_idx = columns.index(month)
+            value_idx = col_idx - 2
+            value = custom_row['values'][value_idx] if 0 <= value_idx < len(custom_row['values']) else Decimal(0)
+            paydf.at[row_idx, month] = value
+        return True
+
+    if bool(match.iloc[0].get('onetime', False)):
+        paydf.at[row_idx, month] = 0
+        return True
+
+    if bool(match.iloc[0].get('standard', False)):
+        future_value, future_month = utils.get_option(header, options)
+        col_idx = columns.index(month)
+        prev_month = columns[col_idx - 1]
+        prev_value = paydf.at[row_idx, prev_month]
+
+        if future_month in columns:
+            future_col_idx = columns.index(future_month)
+            current_col_idx = columns.index(month)
+
+            if future_col_idx is not None and current_col_idx >= future_col_idx:
+                paydf.at[row_idx, month] = future_value
+            else:
+                paydf.at[row_idx, month] = prev_value
+        else:
+            paydf.at[row_idx, month] = prev_value
+        return True
+
+    return False
 
 
 def update_calculations(PAYDF_TEMPLATE, paydf, month, only_taxable):
@@ -406,6 +474,25 @@ def update_calculations(PAYDF_TEMPLATE, paydf, month, only_taxable):
 
 def remove_custom_template_rows(PAYDF_TEMPLATE):
     PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
+
+
+def parse_custom_rows(custom_rows_json):
+    custom_rows = []
+
+    if custom_rows_json:
+        custom_rows = json.loads(custom_rows_json)
+
+        if isinstance(custom_rows, dict):
+            custom_rows = [custom_rows]
+
+        for row in custom_rows:
+            row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
+
+            if row.get('type') == 'D':
+                row['values'] = [-abs(v) for v in row['values']]
+
+            row['tax'] = row.get('tax', False)
+    return custom_rows
 
 
 def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
