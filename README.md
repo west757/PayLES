@@ -14,11 +14,8 @@ add more resources
 add more faq
 add drill pay
 add security, no sql injection, other security attributes
-validation checks
 check mobile use
-add in error alerts for different things
-check for edge cases
-add unit tests for core logic, or flask's test client for route testing
+add unit tests and edge case tests for core logic, or flask's test client for route testing
 update readme
 
 Static Assets:
@@ -31,11 +28,6 @@ Cache expensive computations if possible (e.g., with Flask-Caching).
 Avoid unnecessary recomputation of dataframes or images.
 
 Sessions:
-Set  and SESSION_COOKIE_SAMESITE = 'Lax' or 'Strict' in production.
 Use CSRF protection for all forms (Flask-WTF or similar).
-
-File Uploads:
-Restrict file types and size.
-Store uploaded files outside the web root if saving to disk.
 
 -->
