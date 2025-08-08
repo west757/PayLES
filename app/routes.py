@@ -1,19 +1,22 @@
 from flask import request, render_template, session
 from decimal import Decimal
+import io
+import json
+import pandas as pd
 
 from app import flask_app
-import json
-import io
-import pandas as pd
 from app import utils
-
-from app.les import validate_les, process_les
+from app.les import (
+    validate_les, 
+    process_les
+)
 from app.paydf import (
     build_options, 
     remove_custom_template_rows, 
     add_custom_template_rows, 
     add_custom_row, 
-    expand_paydf
+    expand_paydf,
+    parse_custom_rows
 )
 
 
@@ -85,21 +88,7 @@ def update_paydf():
     options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
 
     custom_rows_json = request.form.get('custom_rows', None)
-    custom_rows = []
-
-    if custom_rows_json:
-        custom_rows = json.loads(custom_rows_json)
-
-        if isinstance(custom_rows, dict):
-            custom_rows = [custom_rows]
-
-        for row in custom_rows:
-            row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
-
-            if row.get('type') == 'D':
-                row['values'] = [-abs(v) for v in row['values']]
-
-            row['tax'] = row.get('tax', False)
+    custom_rows = parse_custom_rows(custom_rows_json)
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)

@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
-import pdfplumber
-import io
 import base64
+import io
+import pdfplumber
 
 from app import flask_app
 from app import utils
