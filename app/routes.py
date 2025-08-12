@@ -29,7 +29,6 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     action = request.form.get('action')
@@ -51,9 +50,9 @@ def submit_les():
         return render_template("home_form.html", message="Unknown action, no LES or example submitted")
 
     if valid:
-        context, les_text = process_les(STATIC_FOLDER, les_pdf)
+        context, les_text = process_les(les_pdf)
         context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
-        context['modals'] = load_json(STATIC_FOLDER, flask_app.config['PAYDF_MODALS_JSON_FILE'])
+        context['modals'] = load_json(flask_app.config['PAYDF_MODALS_JSON'])
         return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
@@ -95,15 +94,13 @@ def about():
 
 @flask_app.route('/faq')
 def faq():
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
-    faqs = load_json(STATIC_FOLDER, flask_app.config['FAQ_JSON_FILE'])
+    faqs = load_json(flask_app.config['FAQ_JSON'])
     return render_template('faq.html', faqs=faqs)
 
 
 @flask_app.route('/resources')
 def resources():
-    STATIC_FOLDER = flask_app.config['STATIC_FOLDER']
-    resources = load_json(STATIC_FOLDER, flask_app.config['RESOURCES_JSON_FILE'])
+    resources = load_json(flask_app.config['RESOURCES_JSON'])
     return render_template('resources.html', resources=resources)
 
 

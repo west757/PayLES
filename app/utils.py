@@ -3,16 +3,16 @@ import json
 import os
 
 
-def validate_file(file, allowed_extensions):
+def validate_file(file, ALLOWED_EXTENSIONS):
     if file.filename == '':
         return False, "No file submitted"
-    if not allowed_file(file.filename, allowed_extensions):
+    if not allowed_file(file.filename, ALLOWED_EXTENSIONS):
         return False, "Invalid file type, only PDFs are accepted"
     return True, ""
 
 
-def allowed_file(filename, allowed_extensions):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+def allowed_file(filename, ALLOWED_EXTENSIONS):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def cast_dtype(value, dtype):
@@ -27,8 +27,7 @@ def cast_dtype(value, dtype):
     return value
 
 
-def load_json(STATIC_FOLDER, filename):
-    path = os.path.join(STATIC_FOLDER, filename)
+def load_json(path):
     try:
         with open(path, encoding='utf-8') as f:
             return json.load(f)

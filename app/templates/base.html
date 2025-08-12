@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayLES</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='graphics/favicon.ico') }}">
     <script src="https://unpkg.com/htmx.org@1.8.0"></script>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
@@ -14,7 +14,7 @@
     <div id="header-nav">
         <header>
             <div id="logo">
-                <a href="{{ url_for('index') }}"><img src="{{ config['LOGO']}}" alt="PayLES Logo"></a>
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='graphics/logo.png') }}" alt="PayLES Logo"></a>
             </div>
             <div id="title" class="text-large">
                 <p>program analyzing your LES</p>
