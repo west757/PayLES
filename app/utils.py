@@ -64,8 +64,8 @@ def find_multiword_matches(section, shortname):
     return matches
 
 
-def months_in_service(d1, d2):
-    return (d1.year - d2.year) * 12 + d1.month - d2.month
+def months_in_service(date1, date2):
+    return (date1.year - date2.year) * 12 + date1.month - date2.month
 
 
 def validate_zip_code(MHA_ZIP_CODES, zip_code):
