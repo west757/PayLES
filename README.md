@@ -17,7 +17,7 @@ check mobile use
 add unit tests and edge case tests for core logic, or flask's test client for route testing
 update readme
 
-implement CSRF using Flask-WTF, maybe restructure forms first
+implement CSRF using Flask-WTF, restructure forms first
 
 minify style.css and script.js when pushed into a production environment
 
