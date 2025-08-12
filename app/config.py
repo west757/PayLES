@@ -63,8 +63,9 @@ class Config:
     GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-    LES_COORD_SCALE = 0.24
+   
     LES_IMAGE_SCALE = 0.42
+    LES_COORD_SCALE = 0.24
     DEFAULT_MONTHS_DISPLAY = 6
     BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
