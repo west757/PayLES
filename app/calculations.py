@@ -8,42 +8,39 @@ from app import utils
 # calculation functions
 # =========================
 
-def calculate_taxed_income(PAYDF_TEMPLATE, paydf, col_idx):
-    combat_zone_row = paydf[paydf['header'] == 'Combat Zone']
-    combat_zone = combat_zone_row.iloc[0, col_idx] if not combat_zone_row.empty else "No"
+def calculate_taxed_income(PAYDF_TEMPLATE, rows):
+    # Convert rows to a dict for fast lookup
+    row_dict = dict(rows)
+
+    # Get combat zone value
+    combat_zone = row_dict.get("Combat Zone", "No")
     is_combat_zone = str(combat_zone).strip().upper() == 'YES'
+
     taxable = Decimal(0)
     nontaxable = Decimal(0)
 
-    for _, row in paydf.iterrows():
-        header = row['header']
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
+        header = tmpl_row['header']
+        sign = int(tmpl_row['sign'])
+        tax_flag = tmpl_row['tax']
 
-        if match.empty:
+        # Only process entitlements (sign == 1)
+        if sign != 1:
             continue
 
-        row_type = match.iloc[0]['type']
+        value = row_dict.get(header, 0)
+        try:
+            value = Decimal(str(value))
+        except Exception:
+            value = Decimal(0)
 
-        if row_type == 'E':
-            value = row.iloc[col_idx]
-
-            if value is None or value == '':
-                value = Decimal(0)
+        if is_combat_zone:
+            nontaxable += value
+        else:
+            if tax_flag:
+                taxable += value
             else:
-                try:
-                    value = Decimal(str(value))
-                except Exception:
-                    value = Decimal(0)
-
-            tax_flag = match.iloc[0]['tax']
-
-            if is_combat_zone:
                 nontaxable += value
-            else:
-                if tax_flag:
-                    taxable += value
-                else:
-                    nontaxable += value
 
     if is_combat_zone:
         taxable = Decimal(0)
@@ -51,72 +48,103 @@ def calculate_taxed_income(PAYDF_TEMPLATE, paydf, col_idx):
     return round(taxable, 2), round(nontaxable, 2)
 
 
-def calculate_total_taxes(PAYDF_TEMPLATE, paydf, col_idx):
-    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
-    rows = paydf[paydf['header'].isin(row_headers)]
+def calculate_total_taxes(PAYDF_TEMPLATE, rows):
+    # Convert rows to a dict for fast lookup
+    row_dict = dict(rows)
+
     total = Decimal(0)
 
-    for _, row in rows.iterrows():
-        header = row['header']
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
+        header = tmpl_row['header']
+        sign = int(tmpl_row['sign'])
+        tax_flag = tmpl_row['tax']
 
-        if match.empty:
+        # Only process deductions/allotments (sign == -1)
+        if sign != -1:
             continue
 
-        tax_flag = match.iloc[0]['tax']
-
         if tax_flag:
-            value = row.iloc[col_idx]
-            value = Decimal(str(value))
+            value = row_dict.get(header, 0)
+            try:
+                value = Decimal(str(value))
+            except Exception:
+                value = Decimal(0)
+            total += value
+
+    return
+
+
+def calculate_gross_pay(PAYDF_TEMPLATE, rows):
+    from decimal import Decimal
+
+    row_dict = dict(rows)
+    total = Decimal(0)
+
+    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
+        header = tmpl_row['header']
+        sign = int(tmpl_row['sign'])
+
+        # Only sum rows with a positive sign (entitlements)
+        if sign == 1:
+            value = row_dict.get(header, 0)
+            try:
+                value = Decimal(str(value))
+            except Exception:
+                value = Decimal(0)
             total += value
 
     return round(total, 2)
 
 
-def calculate_gross_pay(PAYDF_TEMPLATE, paydf, col_idx):
-    row_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']['header'].tolist()
-    rows = paydf[paydf['header'].isin(row_headers)]
+def calculate_net_pay(PAYDF_TEMPLATE, rows):
+    from decimal import Decimal
+
+    row_dict = dict(rows)
     total = Decimal(0)
 
-    for _, row in rows.iterrows():
-        value = row.iloc[col_idx]
-        total += Decimal(value)
+    # Get gross pay
+    gross_pay = row_dict.get("Gross Pay", 0)
+    try:
+        gross_pay = Decimal(str(gross_pay))
+    except Exception:
+        gross_pay = Decimal(0)
 
-    return round(total, 2)
+    total = gross_pay
 
+    # Subtract all rows with sign == -1
+    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
+        header = tmpl_row['header']
+        sign = int(tmpl_row['sign'])
 
-def calculate_net_pay(PAYDF_TEMPLATE, paydf, col_idx):
-    deduction_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']['header'].tolist()
-    allotment_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']['header'].tolist()
-    row_headers = deduction_headers + allotment_headers
-
-    rows = paydf[paydf['header'].isin(row_headers)]
-    row_headers = paydf['header'].tolist()
-    gross_pay_current = paydf.iloc[row_headers.index("Gross Pay"), col_idx]
-    total = Decimal(0)
-
-    for i, row in rows.iterrows():
-        value = row.iloc[col_idx]
-
-        if value is None or value == '':
-            value = Decimal(0)
-        else:
+        if sign == -1:
+            value = row_dict.get(header, 0)
             try:
                 value = Decimal(str(value))
             except Exception:
                 value = Decimal(0)
-        total += value
-
-    total = gross_pay_current + total
+            total += value  # value should already be negative
 
     return round(total, 2)
 
 
-def calculate_difference(paydf, col_idx):
-    row_headers = paydf['header'].tolist()
-    netpay_current = paydf.iloc[row_headers.index("Net Pay"), col_idx]
-    netpay_prev = paydf.iloc[row_headers.index("Net Pay"), col_idx - 1]
+def calculate_difference(paydf, current_col, prev_col):
+    """
+    Calculate the difference in Net Pay between two columns in the paydf DataFrame.
 
+    Args:
+        paydf (pd.DataFrame): The pay DataFrame.
+        current_col (str or int): The current column name or index.
+        prev_col (str or int): The previous column name or index.
+
+    Returns:
+        Decimal: The difference between Net Pay in current_col and prev_col.
+    """
+    row_headers = paydf['header'].tolist()
+    netpay_idx = row_headers.index("Net Pay")
+    netpay_current = paydf.at[netpay_idx, current_col]
+    netpay_prev = paydf.at[netpay_idx, prev_col]
+
+    from decimal import Decimal
     difference = Decimal(netpay_current) - Decimal(netpay_prev)
     return round(difference, 2)
 

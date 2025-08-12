@@ -75,3 +75,24 @@ class Config:
     TRADITIONAL_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
     
+
+    VARIABLE_CALC_MODAL_MAP = {
+        "Year": "basepay",
+        "Grade": "basepay",
+        "Months in Service": "basepay",
+        "Zip Code": "bah",
+        "Military Housing Area": "bah",
+        "Tax Residency State": "bah",
+        "Federal Filing Status": "federaltaxes",
+        "State Filing Status": "statetaxes",
+        "Dependents": "bah",
+        "Combat Zone": "combatzone",
+        "Traditional TSP Rate": "tsp",
+        "Roth TSP Rate": "tsp",
+        "Taxable Income": "taxedincome",
+        "Non-Taxable Income": "taxedincome",
+        "Total Taxes": "taxedincome",
+        "Gross Pay": "grossnetpay",
+        "Net Pay": "grossnetpay",
+        "Difference": "grossnetpay",
+    }

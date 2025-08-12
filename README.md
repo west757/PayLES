@@ -27,6 +27,9 @@ Cache expensive computations if possible (e.g., with Flask-Caching).
 Avoid unnecessary recomputation of dataframes or images.
 
 
+maybe remove default from paydf_template
+maybe change sgli rate to sgli coverage
+
 
 1. Minimize DataFrame Row-wise Operations
 Current Issue: Many functions (e.g., expand_paydf, update_*) iterate row-by-row and column-by-column, which is slow in pandas.
