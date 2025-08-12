@@ -10,7 +10,7 @@ from app.utils import (
 
 
 # =========================
-# validate, and process LES
+# validate and process LES
 # =========================
 
 def validate_les(les_file):
@@ -31,7 +31,7 @@ def process_les(les_pdf):
 
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
-    context['remarks'] = load_json(flask_app.config['LES_REMARKS_JSON'])
+    context['les_remarks'] = load_json(flask_app.config['LES_REMARKS_JSON'])
     les_text = read_les(LES_RECTANGLES, les_page)
     return context, les_text
 
@@ -43,24 +43,19 @@ def create_les_image(LES_RECTANGLES, les_page):
     new_width = int(raw_image.width * LES_IMAGE_SCALE)
     new_height = int(raw_image.height * LES_IMAGE_SCALE)
     scaled_image = raw_image.resize((new_width, new_height), Image.LANCZOS)
+    whiteout_rects = [
+        (200, 165, 700, 220),  # name
+        (710, 165, 980, 220),  # SSN
+    ]
 
-    #overlays whiteout rectangle over name
-    whiteout_rect = (200, 165, 700, 220)
+    #apply whiteout rectangles
     draw = ImageDraw.Draw(scaled_image)
-    x1 = int(whiteout_rect[0] * LES_IMAGE_SCALE)
-    y1 = int(whiteout_rect[1] * LES_IMAGE_SCALE)
-    x2 = int(whiteout_rect[2] * LES_IMAGE_SCALE)
-    y2 = int(whiteout_rect[3] * LES_IMAGE_SCALE)
-    draw.rectangle([x1, y1, x2, y2], fill="white")
-
-    #overlays whiteout rectangle over SSN
-    whiteout_rect = (710, 165, 980, 220)
-    draw = ImageDraw.Draw(scaled_image)
-    x1 = int(whiteout_rect[0] * LES_IMAGE_SCALE)
-    y1 = int(whiteout_rect[1] * LES_IMAGE_SCALE)
-    x2 = int(whiteout_rect[2] * LES_IMAGE_SCALE)
-    y2 = int(whiteout_rect[3] * LES_IMAGE_SCALE)
-    draw.rectangle([x1, y1, x2, y2], fill="white")
+    for rect in whiteout_rects:
+        x1 = int(rect[0] * LES_IMAGE_SCALE)
+        y1 = int(rect[1] * LES_IMAGE_SCALE)
+        x2 = int(rect[2] * LES_IMAGE_SCALE)
+        y2 = int(rect[3] * LES_IMAGE_SCALE)
+        draw.rectangle([x1, y1, x2, y2], fill="white")
 
     #creates les_image as base64 encoded PNG
     img_io = io.BytesIO()
@@ -68,7 +63,7 @@ def create_les_image(LES_RECTANGLES, les_page):
     img_io.seek(0)
     les_image = base64.b64encode(img_io.read()).decode("utf-8")
 
-    #initializes and scales rectangle overlay data from LES_RECTANGLES
+    #initialize and scale rectangle overlay data
     rect_overlay = []
     for rect in LES_RECTANGLES.to_dict(orient="records"):
         rect_overlay.append({
