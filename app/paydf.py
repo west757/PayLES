@@ -36,12 +36,22 @@ def build_paydf(les_text):
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
 
-    paydf = pd.DataFrame(columns=["header", initial_month])
-    paydf = add_variables(PAYDF_TEMPLATE, paydf, les_text)
-    paydf = add_entitlements(PAYDF_TEMPLATE, paydf, les_text)
-    paydf = add_deductions(PAYDF_TEMPLATE, paydf, les_text)
-    paydf = add_allotments(PAYDF_TEMPLATE, paydf, les_text)
-    paydf = add_calculations(PAYDF_TEMPLATE, paydf)
+    rows = []
+    
+    rows = add_variables(rows, les_text)
+    rows = add_eda(PAYDF_TEMPLATE, rows, les_text)
+    
+    taxable, nontaxable = calculate_taxed_income(None, paydf, 1)
+    rows.append(["Taxable Income", taxable])
+    rows.append(["Non-Taxable Income", nontaxable])
+    rows.append(["Total Taxes", calculate_total_taxes(None, paydf, 1)])
+    rows.append(["Gross Pay", calculate_gross_pay(None, paydf, 1)])
+    rows.append(["Net Pay", calculate_net_pay(None, paydf, 1)])
+    rows.append(["Difference", 0])
+
+
+    df = pd.DataFrame(rows, columns=["header", initial_month])
+
 
     #convert paydf to JSON and store in session for use in update_paydf
     session['paydf_json'] = paydf.to_json()
@@ -55,150 +65,138 @@ def build_paydf(les_text):
     return paydf, col_headers, row_headers, options, DEFAULT_MONTHS_DISPLAY
 
 
-def add_variables(PAYDF_TEMPLATE, paydf, les_text):
-    MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
-    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'V']
+def add_variables(rows, les_text):
+    try:
+        year = int('20' + les_text[8][4])
+    except Exception:
+        year = 0
+    rows.append(["Year", year])
 
-    for _, row in var_rows.iterrows():
+    try:
+        grade = str(les_text[2][1])
+    except Exception:
+        grade = "Not Found"
+    rows.append(["Grade", grade])
+
+    try:
+        pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
+        les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
+        months_in_service = int(utils.months_in_service(les_date, pay_date))
+    except Exception:
+        months_in_service = 0
+    rows.append(["Months in Service", months_in_service])
+
+    try:
+        zip_code = les_text[48][2] if les_text[48][2] != "00000" else "Not Found"
+    except Exception:
+        zip_code = "Not Found"
+    rows.append(["Zip Code", zip_code])
+
+    try:
+        military_housing_area = utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], les_text[48][2])
+    except Exception:
+        military_housing_area = "Not Found"
+    rows.append(["Military Housing Area", military_housing_area])
+
+    try:
+        tax_residency_state = les_text[39][1] if les_text[39][1] != "98" else "Not Found"
+    except Exception:
+        tax_residency_state = "Not Found"
+    rows.append(["Tax Residency State", tax_residency_state])
+
+    try:
+        status = les_text[24][1]
+        if status == "S":
+            federal_filing_status = "Single"
+        elif status == "M":
+            federal_filing_status = "Married"
+        elif status == "H":
+            federal_filing_status = "Head of Household"
+        else:
+            federal_filing_status = "Not Found"
+    except Exception:
+        federal_filing_status = "Not Found"
+    rows.append(["Federal Filing Status", federal_filing_status])
+
+    try:
+        status = les_text[42][1]
+        if status == "S":
+            state_filing_status = "Single"
+        elif status == "M":
+            state_filing_status = "Married"
+        else:
+            state_filing_status = "Not Found"
+    except Exception:
+        state_filing_status = "Not Found"
+    rows.append(["State Filing Status", state_filing_status])
+
+    try:
+        dependents = int(les_text[53][1])
+    except Exception:
+        dependents = 0
+    rows.append(["Dependents", dependents])
+
+    combat_zone = "No"
+    rows.append(["Combat Zone", combat_zone])
+
+    try:
+        ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
+        traditional_tsp_rate = next((val for val in ttsp_fields if val > 0), 0)
+    except Exception:
+        traditional_tsp_rate = 0
+    rows.append(["Traditional TSP Rate", traditional_tsp_rate])
+
+    try:
+        rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
+        roth_tsp_rate = next((val for val in rtsp_fields if val > 0), 0)
+    except Exception:
+        roth_tsp_rate = 0
+    rows.append(["Roth TSP Rate", roth_tsp_rate])
+
+    return rows
+
+
+def add_eda(PAYDF_TEMPLATE, rows, les_text):
+    for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
-        dtype = row['dtype']
-        value = row['default']
+        shortname = str(row['shortname'])
+        sign = int(row['sign'])
+        required = bool(row['required'])
+        value = None
+        found = False
 
-        if header == 'Year':
-            value = int('20' + les_text[8][4])
-        elif header == 'Grade':
-            value = str(les_text[2][1])
-        elif header == 'Months in Service':
-            paydate = datetime.strptime(les_text[3][2], '%y%m%d')
-            lesdate = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
-            value = int(utils.months_in_service(lesdate, paydate))
-        elif header == 'Zip Code':
-            if les_text[48][2] != "00000":
-                value = les_text[48][2]
-        elif header == 'Military Housing Area':
-            value = utils.calculate_mha(MHA_ZIP_CODES,les_text[48][2])
-        elif header == 'Tax Residency State':
-            if les_text[39][1] != "98":
-                value = les_text[39][1]
-        elif header == 'Federal Filing Status':
-            status = les_text[24][1]
-            if status == "S":
-                value = "Single"
-            elif status == "M":
-                value = "Married"
-            elif status == "H":
-                value = "Head of Household"
-        elif header == 'State Filing Status':
-            status = les_text[42][1]
-            if status == "S":
-                value = "Single"
-            elif status == "M":
-                value = "Married"
-        elif header == 'Dependents':
-            value = int(les_text[53][1])
-        elif header == 'Combat Zone':
-            value = "No"
-        elif header == 'Traditional TSP Rate':
-            ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
-            value = next((val for val in ttsp_fields if val > 0), 0)
-        elif header == 'Roth TSP Rate':
-            rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
-            value = next((val for val in rtsp_fields if val > 0), 0)
+        #entitlements in les_text[9], deductions/allotments in les_text[10] and les_text[11]
+        if sign == 1:
+            sections = [les_text[9]]
+        else:
+            sections = [les_text[10], les_text[11]]
 
-        value = utils.cast_dtype(value, dtype)
-        paydf.loc[len(paydf)] = [header, value]
+        #search to see if shortname is in the section
+        for section in sections:
+            matches = utils.find_multiword_matches(section, shortname)
 
-    return paydf
-
-
-def add_entitlements(PAYDF_TEMPLATE, paydf, les_text):
-    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'E']
-    section = les_text[9]
-
-    for _, row in var_rows.iterrows():
-        value = parse_eda_sections(section, row)
-        if value is not None:
-            paydf.loc[len(paydf)] = [row['header'], value]
-    return paydf
-
-
-def add_deductions(PAYDF_TEMPLATE, paydf, les_text):
-    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'D']
-    section = les_text[10]
-
-    for _, row in var_rows.iterrows():
-        value = parse_eda_sections(section, row)
-        if value is not None:
-            paydf.loc[len(paydf)] = [row['header'], -value]
-    return paydf
-
-
-def add_allotments(PAYDF_TEMPLATE, paydf, les_text):
-    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'A']
-    section = les_text[11]
-    
-    for _, row in var_rows.iterrows():
-        value = parse_eda_sections(section, row)
-        if value is not None:
-            paydf.loc[len(paydf)] = [row['header'], -value]
-    return paydf
-
-
-def parse_eda_sections(section, row):
-    value = None
-    found = False
-    shortname = str(row['shortname'])
-    matches = utils.find_multiword_matches(section, shortname)
-
-    for idx in matches:
-        for j in range(idx + 1, len(section)):
-            s = section[j]
-            is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
-            
-            if is_num:
-                val = Decimal(section[j])
-                value = abs(val)
-                found = True
+            for idx in matches:
+                for j in range(idx + 1, len(section)):
+                    s = section[j]
+                    is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                    if is_num:
+                        value = sign * abs(Decimal(section[j]))
+                        found = True
+                        break
+                if found:
+                    break
+            if found:
                 break
 
-        if found:
-            break
+        if not found:
+            if required:
+                value = 0
+            else:
+                continue
 
-    if not found:
-        if bool(row['required']):
-            default_value = utils.cast_dtype(row['default'], row['dtype'])
-            value = abs(default_value)
-        else:
-            return None
-        
-    return utils.cast_dtype(value, row['dtype'])
+        rows.append([header, value])
 
-
-def add_calculations(PAYDF_TEMPLATE, paydf):
-    var_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['type'] == 'C']
-
-    taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, paydf, 1)
-
-    for _, row in var_rows.iterrows():
-        header = row['header']
-        value = 0
-
-        if header == "Taxable Income":
-            value = taxable
-        elif header == "Non-Taxable Income":
-            value = nontaxable
-        elif header == "Total Taxes":
-            value = calculate_total_taxes(PAYDF_TEMPLATE, paydf, 1)
-        elif header == "Gross Pay":
-            value = calculate_gross_pay(PAYDF_TEMPLATE, paydf, 1)
-        elif header == "Net Pay":
-            value = calculate_net_pay(PAYDF_TEMPLATE, paydf, 1)
-        elif header == "Difference":
-            value = 0
-
-        value = utils.cast_dtype(value, row['dtype'])
-        paydf.loc[len(paydf)] = [header, value]
-    return paydf
+    return rows
 
 
 
