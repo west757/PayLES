@@ -16,49 +16,41 @@ class Config:
     SESSION_TYPE = "filesystem"
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #16MB
     ALLOWED_EXTENSIONS = {'pdf'}
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #max size of uploaded file 16MB
-    STATIC_FOLDER = Path(__file__).parent / "static"
-    VERSION = "Version 0.1.0 2025-08-01"
+    VERSION = "Version 0.1.0 2025-08-11"
 
-    #static files
-    LOGO_FILE = "logo.png"
-    EXAMPLE_LES_FILE = "les_example.pdf"
-    LES_RECTANGLES_FILE = "les_rectangles.csv"
-    MHA_ZIP_CODE_FILE = "mha_zip_codes.csv"
-    PAY_ACTIVE_FILE = "pay_active_2025.csv"
-    PAY_DRILL_FILE = "pay_drill_2025.csv"
-    BAH_WITH_DEPENDENTS_FILE = "bah_with_dependents_2025.csv"
-    BAH_WITHOUT_DEPENDENTS_FILE = "bah_without_dependents_2025.csv"
-    FEDERAL_TAX_RATE_FILE = "federal_tax_rate_2024.csv"
-    STATE_TAX_RATE_FILE = "state_tax_rate_2025.csv"
-    SGLI_RATE_FILE = "sgli_rate.csv"
-    PAYDF_TEMPLATE_FILE = "paydf_template.csv"
-    PAYDF_MODALS_JSON_FILE = "paydf_modals.json"
-    LES_REMARKS_JSON_FILE = "les_remarks.json"
-    FAQ_JSON_FILE = "faq.json"
-    RESOURCES_JSON_FILE = "resources.json"
+
+    #folders
+    STATIC_FOLDER = Path(__file__).parent / "static"
+    CSV_FOLDER = STATIC_FOLDER / "csv"
+    GRAPHICS_FOLDER = STATIC_FOLDER / "graphics"
+    JSON_FOLDER = STATIC_FOLDER / "json"
+    PDF_FOLDER = STATIC_FOLDER / "pdf"
+    
 
     #load static files
-    LOGO = os.path.join('static', LOGO_FILE)
-    EXAMPLE_LES = os.path.join(STATIC_FOLDER, EXAMPLE_LES_FILE)
-    LES_RECTANGLES = pd.read_csv(os.path.join(STATIC_FOLDER, LES_RECTANGLES_FILE))
-    MHA_ZIP_CODES = pd.read_csv(os.path.join(STATIC_FOLDER, MHA_ZIP_CODE_FILE))
-    PAY_ACTIVE = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_ACTIVE_FILE))
-    PAY_DRILL = pd.read_csv(os.path.join(STATIC_FOLDER, PAY_DRILL_FILE))
-    BAH_WITH_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITH_DEPENDENTS_FILE))
-    BAH_WITHOUT_DEPENDENTS = pd.read_csv(os.path.join(STATIC_FOLDER, BAH_WITHOUT_DEPENDENTS_FILE))
-    FEDERAL_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, FEDERAL_TAX_RATE_FILE))
-    STATE_TAX_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, STATE_TAX_RATE_FILE))
-    SGLI_RATE = pd.read_csv(os.path.join(STATIC_FOLDER, SGLI_RATE_FILE))
+    BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv")
+    BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv")
+    FEDERAL_TAX_RATE = pd.read_csv(CSV_FOLDER / "federal_tax_rate_2024.csv")
+    LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv")
+    MHA_ZIP_CODES = pd.read_csv(CSV_FOLDER / "mha_zip_codes.csv")
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
+    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
+    STATE_TAX_RATE = pd.read_csv(CSV_FOLDER / "state_tax_rate_2025.csv")
+    SGLI_RATE = pd.read_csv(CSV_FOLDER / "sgli_rate.csv")
+    PAYDF_TEMPLATE = pd.read_csv(CSV_FOLDER / "paydf_template.csv", 
+                                 converters={col: str_to_bool for col in ['required', 'onetime', 'standard', 'tax', 'option']})
 
-    bool_columns = ['required', 'onetime', 'standard', 'tax', 'option']
-    PAYDF_TEMPLATE = pd.read_csv(os.path.join(STATIC_FOLDER, PAYDF_TEMPLATE_FILE), converters={col: str_to_bool for col in bool_columns})
+    FAQ_JSON = JSON_FOLDER / "faq.json"
+    LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
+    PAYDF_MODALS_JSON = JSON_FOLDER / "paydf_modals.json"
+    RESOURCES_JSON = JSON_FOLDER / "resources.json"
+
+    EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
+    
 
     #constants
-    LES_COORD_SCALE = 0.24
-    LES_IMAGE_SCALE = 0.42
-    DEFAULT_MONTHS_DISPLAY = 6
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     STATES_LONG = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii',
@@ -71,7 +63,10 @@ class Config:
     GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))   #officers, enlisted, enlisted BAS 2
+    LES_COORD_SCALE = 0.24
+    LES_IMAGE_SCALE = 0.42
+    DEFAULT_MONTHS_DISPLAY = 6
+    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]

@@ -17,7 +17,7 @@
     },
     {
         "label": "LES documents have PII data, how does PayLES handle this?",
-        "content": "PayLES does not read any Personally Identifiable Information (PII) data (name and last four of SSN) from the LES. All data that is read from the LES is captured only from specific bounding boxes on the pdf which are described in the les_rectangles.csv file. Additionally, the pdf is converted into a png image for display on the page with the rectangle overlays. During this conversion, the name and SSN have whiteout applied to ensure that no PII data is displayed."
+        "content": "PayLES does not read any Personally Identifiable Information (PII) data - the name and last four of SSN - from the LES. All data that is read is captured only from specific bounding boxes on the pdf which are described in the les_rectangles.csv file. Additionally, the pdf is converted into a png image for display on the page with the rectangle modal overlays. During this conversion, the name and SSN have whiteout applied to ensure that no PII data is displayed."
     },
     {
         "label": "How accurate is PayLES?",

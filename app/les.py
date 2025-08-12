@@ -25,13 +25,13 @@ def validate_les(les_file):
             return False, "File is not a valid LES", les_pdf
 
 
-def process_les(STATIC_FOLDER, les_pdf):
+def process_les(les_pdf):
     LES_RECTANGLES = flask_app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
     context = {}
     context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
-    context['remarks'] = load_json(STATIC_FOLDER, flask_app.config['LES_REMARKS_JSON_FILE'])
+    context['remarks'] = load_json(flask_app.config['LES_REMARKS_JSON'])
     les_text = read_les(LES_RECTANGLES, les_page)
     return context, les_text
 
