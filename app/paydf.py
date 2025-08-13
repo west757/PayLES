@@ -3,11 +3,17 @@ from decimal import Decimal
 from flask import session
 import json
 import pandas as pd
+import re
 
 from app import flask_app
-from app import utils
+from app.utils import (
+    calculate_months_in_service,
+    find_multiword_matches,
+    validate_calculate_zip_mha,
+    validate_home_of_record,
+)
 from app.calculations import (
-    calculate_taxed_income,
+    calculate_taxable_income,
     calculate_total_taxes,
     calculate_gross_pay,
     calculate_net_pay,
@@ -29,71 +35,59 @@ from app.calculations import (
 # build paydf
 # =========================
 
-
-def build_paydf(les_text):
-    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+def build_paydf(PAYDF_TEMPLATE, les_text):
     initial_month = les_text[8][3]
-    row_dict = {}
+    core_dict = {}
 
-    remove_custom_template_rows(PAYDF_TEMPLATE)
+    core_dict = add_variables(core_dict, les_text)
+    core_dict = add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text)
+    core_dict["Taxable Income"], core_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, core_dict)
+    core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
+    core_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, core_dict)
+    core_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, core_dict)
+    core_dict["Difference"] = Decimal(0.00)
 
-    row_dict = add_variables(row_dict, les_text)
-    row_dict = add_eda(PAYDF_TEMPLATE, row_dict, les_text)
-    taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, row_dict)
-    row_dict["Taxable Income"] = taxable
-    row_dict["Non-Taxable Income"] = nontaxable
-    row_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, row_dict)
-    row_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, row_dict)
-    row_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, row_dict)
-    row_dict["Difference"] = Decimal(0.00)
+    #convert core from dict to ordered list of lists for session variable and dataframe initializing
+    core_list = [[header, core_dict[header]] for header in core_dict]
+    session['paydf_core'] = core_list
+    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
-    # Convert row_dict to rows for DataFrame and options
-    rows = [[header, row_dict[header]] for header in row_dict]
-    session['paydf_rows'] = rows
-    paydf = pd.DataFrame(rows, columns=["header", initial_month])
-
-    return paydf, rows, initial_month
+    return paydf, core_list, initial_month
 
 
-
-def add_variables(row_dict, les_text):
+def add_variables(core_dict, les_text):
     try:
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    row_dict["Year"] = year
+    core_dict["Year"] = year
 
     try:
         grade = str(les_text[2][1])
     except Exception:
         grade = "Not Found"
-    row_dict["Grade"] = grade
+    core_dict["Grade"] = grade
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
         les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
-        months_in_service = int(utils.months_in_service(les_date, pay_date))
+        months_in_service = calculate_months_in_service(les_date, pay_date)
     except Exception:
         months_in_service = 0
-    row_dict["Months in Service"] = months_in_service
+    core_dict["Months in Service"] = months_in_service
 
     try:
-        zip_code = les_text[48][2] if les_text[48][2] != "00000" else "Not Found"
+        zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
     except Exception:
-        zip_code = "Not Found"
-    row_dict["Zip Code"] = zip_code
+        zip_code, military_housing_area = "Not Found", "Not Found"
+    core_dict["Zip Code"] = zip_code
+    core_dict['Military Housing Area'] = military_housing_area
 
     try:
-        military_housing_area = utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], les_text[48][2])
+        home_of_record = validate_home_of_record(les_text[39][1])
     except Exception:
-        military_housing_area = "Not Found"
-    row_dict["Military Housing Area"] = military_housing_area
-
-    try:
-        tax_residency_state = les_text[39][1] if les_text[39][1] != "98" else "Not Found"
-    except Exception:
-        tax_residency_state = "Not Found"
-    row_dict["Tax Residency State"] = tax_residency_state
+        home_of_record = "Not Found"
+    core_dict["Home of Record"] = home_of_record
 
     try:
         status = les_text[24][1]
@@ -107,7 +101,7 @@ def add_variables(row_dict, les_text):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    row_dict["Federal Filing Status"] = federal_filing_status
+    core_dict["Federal Filing Status"] = federal_filing_status
 
     try:
         status = les_text[42][1]
@@ -119,65 +113,54 @@ def add_variables(row_dict, les_text):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    row_dict["State Filing Status"] = state_filing_status
+    core_dict["State Filing Status"] = state_filing_status
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    row_dict["Dependents"] = dependents
+    core_dict["Dependents"] = dependents
 
     combat_zone = "No"
-    row_dict["Combat Zone"] = combat_zone
+    core_dict["Combat Zone"] = combat_zone
 
     try:
-        sgli_total = None
-        deductions = les_text[10]
-        for idx, item in enumerate(deductions):
-            if isinstance(item, str) and "sgli" in item.lower():
-                for j in range(idx + 1, len(deductions)):
-                    val = deductions[j]
-                    try:
-                        sgli_total = float(val)
-                        break
-                    except (ValueError, TypeError):
-                        continue
-                if sgli_total is not None:
-                    break
+        sgli_coverage = ""
+        remarks = les_text[96]
 
-        if sgli_total is not None:
-            SGLI_RATES = flask_app.config['SGLI_RATES']
+        #join all remark strings into one string
+        remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
+        #uses regex to find the SGLI coverage amount
+        match = re.search(r"SGLI COVERAGE AMOUNT IS\s*(\$\d{1,3}(?:,\d{3})*)", remarks_str, re.IGNORECASE)
 
-            match = SGLI_RATES[SGLI_RATES['total'] == sgli_total]
-            if not match.empty:
-                sgli_coverage = int(match.iloc[0]['coverage'])
-            else:
-                sgli_coverage = 0
+        if match:
+            sgli_coverage = match.group(1)
         else:
-            sgli_coverage = 0
+            sgli_coverage = "Not Found"
+            
     except Exception:
-        sgli_coverage = 0
-    row_dict["SGLI Coverage"] = sgli_coverage
+        sgli_coverage = "Not Found"
+    core_dict["SGLI Coverage"] = sgli_coverage
 
     try:
         ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
         traditional_tsp_rate = next((val for val in ttsp_fields if val > 0), 0)
     except Exception:
         traditional_tsp_rate = 0
-    row_dict["Traditional TSP Rate"] = traditional_tsp_rate
+    core_dict["Traditional TSP Rate"] = traditional_tsp_rate
 
     try:
         rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
         roth_tsp_rate = next((val for val in rtsp_fields if val > 0), 0)
     except Exception:
         roth_tsp_rate = 0
-    row_dict["Roth TSP Rate"] = roth_tsp_rate
+    core_dict["Roth TSP Rate"] = roth_tsp_rate
 
-    return row_dict
+    return core_dict
 
 
 
-def add_eda(PAYDF_TEMPLATE, row_dict, les_text):
+def add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text):
     for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
         shortname = str(row['shortname'])
@@ -194,7 +177,7 @@ def add_eda(PAYDF_TEMPLATE, row_dict, les_text):
 
         # search to see if shortname is in the section
         for section in sections:
-            matches = utils.find_multiword_matches(section, shortname)
+            matches = find_multiword_matches(section, shortname)
 
             for idx in matches:
                 for j in range(idx + 1, len(section)):
@@ -215,9 +198,9 @@ def add_eda(PAYDF_TEMPLATE, row_dict, les_text):
             else:
                 continue
 
-        row_dict[header] = value
+        core_dict[header] = value
 
-    return row_dict
+    return core_dict
 
 
 
@@ -225,9 +208,9 @@ def add_eda(PAYDF_TEMPLATE, row_dict, les_text):
 # build options
 # =========================
 
-def build_options(PAYDF_TEMPLATE, rows, initial_month):
+def build_options(PAYDF_TEMPLATE, core_list, initial_month):
     template_options = PAYDF_TEMPLATE[PAYDF_TEMPLATE['option'] == True]
-    row_dict = {header: value for header, value in rows}
+    row_dict = {header: value for header, value in core_list}
     options = []
 
     # Loop through template options and add to options array if header is in rows
@@ -274,7 +257,7 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
         update_variables(paydf, col_dict, new_month, prev_month, form)
         update_entitlements(PAYDF_TEMPLATE, paydf, new_month, form, col_dict, prev_month)
 
-        taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, col_dict)
+        taxable, nontaxable = calculate_taxable_income(PAYDF_TEMPLATE, col_dict)
         col_dict["Taxable Income"] = taxable
         col_dict["Non-Taxable Income"] = nontaxable
 
@@ -308,7 +291,7 @@ def update_variables(paydf, col_dict, month, prev_month, form):
         ("Months in Service", "months_in_service_f", "months_in_service_m", int, "mis"),
         ("Zip Code", "zip_code_f", "zip_code_m", str, None),
         ("Military Housing Area", "military_housing_area_f", "military_housing_area_m", str, "mha"),
-        ("Tax Residency State", "tax_residency_state_f", "tax_residency_state_m", str, None),
+        ("Home of Record", "home_of_record_f", "home_of_record_m", str, None),
         ("Federal Filing Status", "federal_filing_status_f", "federal_filing_status_m", str, None),
         ("State Filing Status", "state_filing_status_f", "state_filing_status_m", str, None),
         ("Dependents", "dependents_f", "dependents_m", int, None),
@@ -352,7 +335,7 @@ def update_variables(paydf, col_dict, month, prev_month, form):
                 col_dict[header] = val
             else:
                 zip_code = col_dict["Zip Code"]
-                col_dict[header] = utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], zip_code)
+                #col_dict[header] = calculate_mha(zip_code)
 
         else:
             if mval == month and val is not None:
