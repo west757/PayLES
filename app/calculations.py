@@ -9,7 +9,6 @@ from app import utils
 # =========================
 
 def calculate_taxed_income(PAYDF_TEMPLATE, rows):
-    # Convert rows to a dict for fast lookup
     row_dict = dict(rows)
 
     # Get combat zone value
@@ -49,7 +48,6 @@ def calculate_taxed_income(PAYDF_TEMPLATE, rows):
 
 
 def calculate_total_taxes(PAYDF_TEMPLATE, rows):
-    # Convert rows to a dict for fast lookup
     row_dict = dict(rows)
 
     total = Decimal(0)
@@ -60,10 +58,7 @@ def calculate_total_taxes(PAYDF_TEMPLATE, rows):
         tax_flag = tmpl_row['tax']
 
         # Only process deductions/allotments (sign == -1)
-        if sign != -1:
-            continue
-
-        if tax_flag:
+        if sign == -1 and tax_flag:
             value = row_dict.get(header, 0)
             try:
                 value = Decimal(str(value))
@@ -71,7 +66,7 @@ def calculate_total_taxes(PAYDF_TEMPLATE, rows):
                 value = Decimal(0)
             total += value
 
-    return
+    return round(total, 2)
 
 
 def calculate_gross_pay(PAYDF_TEMPLATE, rows):
@@ -209,7 +204,7 @@ def calculate_bah(paydf, month):
 
 def calculate_federal_taxes(paydf, month):
     STANDARD_DEDUCTIONS = flask_app.config['STANDARD_DEDUCTIONS']
-    FEDERAL_TAX_RATE = flask_app.config['FEDERAL_TAX_RATE']
+    FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
     row_headers = paydf['header'].tolist()
     filing_status = paydf.at[row_headers.index("Federal Filing Status"), month]
     taxable_income = paydf.at[row_headers.index("Taxable Income"), month]
@@ -225,7 +220,7 @@ def calculate_federal_taxes(paydf, month):
         taxable_income -= STANDARD_DEDUCTIONS[2]
     
     taxable_income = max(taxable_income, 0)
-    brackets = FEDERAL_TAX_RATE[FEDERAL_TAX_RATE['Status'].str.lower() == filing_status.lower()]
+    brackets = FEDERAL_TAX_RATES[FEDERAL_TAX_RATES['Status'].str.lower() == filing_status.lower()]
     brackets = brackets.sort_values(by='Bracket').reset_index(drop=True)
 
     for i in range(len(brackets)):
@@ -274,10 +269,10 @@ def calculate_sgli(paydf, row_idx, month, options):
 
 
 def calculate_state_taxes(paydf, month):
-    STATE_TAX_RATE = flask_app.config['STATE_TAX_RATE']
+    STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
     row_headers = paydf['header'].tolist()
     state = paydf.at[row_headers.index("Tax Residency State"), month]
-    state_brackets = STATE_TAX_RATE[STATE_TAX_RATE['state'] == state]
+    state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == state]
     filing_status = paydf.at[row_headers.index("State Filing Status"), month]
     taxable_income = paydf.at[row_headers.index("Taxable Income"), month]
     taxable_income = Decimal(taxable_income) * 12

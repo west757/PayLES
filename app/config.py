@@ -32,13 +32,13 @@ class Config:
     #load static files
     BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv")
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv")
-    FEDERAL_TAX_RATE = pd.read_csv(CSV_FOLDER / "federal_tax_rate_2024.csv")
+    FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv")
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv")
     MHA_ZIP_CODES = pd.read_csv(CSV_FOLDER / "mha_zip_codes.csv")
     PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
     PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
-    STATE_TAX_RATE = pd.read_csv(CSV_FOLDER / "state_tax_rate_2025.csv")
-    SGLI_RATE = pd.read_csv(CSV_FOLDER / "sgli_rate.csv")
+    STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv")
+    SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv")
     PAYDF_TEMPLATE = pd.read_csv(CSV_FOLDER / "paydf_template.csv", 
                                  converters={col: str_to_bool for col in ['required', 'onetime', 'standard', 'tax', 'option']})
 
@@ -86,6 +86,7 @@ class Config:
         "Federal Filing Status": "federaltaxes",
         "State Filing Status": "statetaxes",
         "Dependents": "bah",
+        "SGLI Coverage": "sgli",
         "Combat Zone": "combatzone",
         "Traditional TSP Rate": "tsp",
         "Roth TSP Rate": "tsp",
