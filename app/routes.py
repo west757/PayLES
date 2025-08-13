@@ -52,6 +52,7 @@ def submit_les():
     if valid:
         context, les_text = process_les(les_pdf)
         context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
+        #run expand_paydf here
         context['modals'] = load_json(flask_app.config['PAYDF_MODALS_JSON'])
         return render_template('paydf_group.html', **context)
     else:
@@ -71,7 +72,7 @@ def update_paydf():
     remove_custom_template_rows(PAYDF_TEMPLATE)
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows)
+    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows, form=request.form)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()

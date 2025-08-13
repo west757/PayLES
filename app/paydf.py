@@ -29,49 +29,55 @@ from app.calculations import (
 # build paydf
 # =========================
 
+
 def build_paydf(les_text):
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     initial_month = les_text[8][3]
-    rows = []
+    row_dict = {}
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
 
-    rows = add_variables(rows, les_text)
-    rows = add_eda(PAYDF_TEMPLATE, rows, les_text)
-    taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, rows)
-    rows.append(["Taxable Income", taxable])
-    rows.append(["Non-Taxable Income", nontaxable])
-    rows.append(["Total Taxes", calculate_total_taxes(PAYDF_TEMPLATE, rows)])
-    rows.append(["Gross Pay", calculate_gross_pay(PAYDF_TEMPLATE, rows)])
-    rows.append(["Net Pay", calculate_net_pay(PAYDF_TEMPLATE, rows)])
-    rows.append(["Difference", 0])
+    row_dict = add_variables(row_dict, les_text)
+    row_dict = add_eda(PAYDF_TEMPLATE, row_dict, les_text)
+    taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, row_dict)
+    row_dict["Taxable Income"] = taxable
+    row_dict["Non-Taxable Income"] = nontaxable
+    row_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, row_dict)
+    row_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, row_dict)
+    row_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, row_dict)
+    row_dict["Difference"] = 0
 
+    # Convert row_dict to rows for DataFrame and options
+    rows = [[header, row_dict[header]] for header in row_dict]
     session['paydf_rows'] = rows
     paydf = pd.DataFrame(rows, columns=["header", initial_month])
-
     options = build_options(PAYDF_TEMPLATE, rows, initial_month)
-
-    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY)
-
+    print("")
+    print(options)
+    print("")
+    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
+    print(paydf)
+    print("")
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
 
     return paydf, col_headers, row_headers, options, DEFAULT_MONTHS_DISPLAY
 
 
-def add_variables(rows, les_text):
+
+def add_variables(row_dict, les_text):
     try:
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    rows.append(["Year", year])
+    row_dict["Year"] = year
 
     try:
         grade = str(les_text[2][1])
     except Exception:
         grade = "Not Found"
-    rows.append(["Grade", grade])
+    row_dict["Grade"] = grade
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
@@ -79,25 +85,25 @@ def add_variables(rows, les_text):
         months_in_service = int(utils.months_in_service(les_date, pay_date))
     except Exception:
         months_in_service = 0
-    rows.append(["Months in Service", months_in_service])
+    row_dict["Months in Service"] = months_in_service
 
     try:
         zip_code = les_text[48][2] if les_text[48][2] != "00000" else "Not Found"
     except Exception:
         zip_code = "Not Found"
-    rows.append(["Zip Code", zip_code])
+    row_dict["Zip Code"] = zip_code
 
     try:
         military_housing_area = utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], les_text[48][2])
     except Exception:
         military_housing_area = "Not Found"
-    rows.append(["Military Housing Area", military_housing_area])
+    row_dict["Military Housing Area"] = military_housing_area
 
     try:
         tax_residency_state = les_text[39][1] if les_text[39][1] != "98" else "Not Found"
     except Exception:
         tax_residency_state = "Not Found"
-    rows.append(["Tax Residency State", tax_residency_state])
+    row_dict["Tax Residency State"] = tax_residency_state
 
     try:
         status = les_text[24][1]
@@ -111,7 +117,7 @@ def add_variables(rows, les_text):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    rows.append(["Federal Filing Status", federal_filing_status])
+    row_dict["Federal Filing Status"] = federal_filing_status
 
     try:
         status = les_text[42][1]
@@ -123,16 +129,16 @@ def add_variables(rows, les_text):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    rows.append(["State Filing Status", state_filing_status])
+    row_dict["State Filing Status"] = state_filing_status
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    rows.append(["Dependents", dependents])
+    row_dict["Dependents"] = dependents
 
     combat_zone = "No"
-    rows.append(["Combat Zone", combat_zone])
+    row_dict["Combat Zone"] = combat_zone
 
     try:
         sgli_total = None
@@ -161,26 +167,27 @@ def add_variables(rows, les_text):
             sgli_coverage = 0
     except Exception:
         sgli_coverage = 0
-    rows.append(["SGLI Coverage", sgli_coverage])
+    row_dict["SGLI Coverage"] = sgli_coverage
 
     try:
         ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
         traditional_tsp_rate = next((val for val in ttsp_fields if val > 0), 0)
     except Exception:
         traditional_tsp_rate = 0
-    rows.append(["Traditional TSP Rate", traditional_tsp_rate])
+    row_dict["Traditional TSP Rate"] = traditional_tsp_rate
 
     try:
         rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
         roth_tsp_rate = next((val for val in rtsp_fields if val > 0), 0)
     except Exception:
         roth_tsp_rate = 0
-    rows.append(["Roth TSP Rate", roth_tsp_rate])
+    row_dict["Roth TSP Rate"] = roth_tsp_rate
 
-    return rows
+    return row_dict
 
 
-def add_eda(PAYDF_TEMPLATE, rows, les_text):
+
+def add_eda(PAYDF_TEMPLATE, row_dict, les_text):
     for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
         shortname = str(row['shortname'])
@@ -189,13 +196,13 @@ def add_eda(PAYDF_TEMPLATE, rows, les_text):
         value = None
         found = False
 
-        #entitlements in les_text[9], deductions/allotments in les_text[10] and les_text[11]
+        # entitlements in les_text[9], deductions/allotments in les_text[10] and les_text[11]
         if sign == 1:
             sections = [les_text[9]]
         else:
             sections = [les_text[10], les_text[11]]
 
-        #search to see if shortname is in the section
+        # search to see if shortname is in the section
         for section in sections:
             matches = utils.find_multiword_matches(section, shortname)
 
@@ -218,9 +225,9 @@ def add_eda(PAYDF_TEMPLATE, rows, les_text):
             else:
                 continue
 
-        rows.append([header, value])
+        row_dict[header] = value
 
-    return rows
+    return row_dict
 
 
 
@@ -257,65 +264,52 @@ def update_options(PAYDF_TEMPLATE, paydf, form, initial_month=None):
 # expand paydf
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=None):
+def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, custom_rows=None):
+    if form is None:
+        form = {}
+
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
-
-    # Get row indices for tax rows
     row_headers = paydf['header'].tolist()
-    idx_taxable = row_headers.index("Taxable Income")
-    idx_nontaxable = row_headers.index("Non-Taxable Income")
-    idx_totaltaxes = row_headers.index("Total Taxes")
+
+    prev_col_dict = {row_headers[i]: paydf.iloc[i, 1] for i in range(len(row_headers))}
 
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         new_month = MONTHS_SHORT[month_idx]
-        col = []
+        prev_month = paydf.columns[-1]
+        col_dict = {}
 
-        # 1. Variables
-        col = update_variables(paydf, col, new_month, options)
-        # 2. Entitlements
-        col = update_entitlements(PAYDF_TEMPLATE, paydf, new_month, options, col)
+        update_variables(paydf, col_dict, new_month, prev_month, form)
+        update_entitlements(PAYDF_TEMPLATE, paydf, new_month, form, col_dict, prev_month)
 
-        # 3. Insert placeholders for tax rows
-        while len(col) < idx_taxable:
-            col.append(None)
-        col.append(None)  # Taxable Income
-        col.append(None)  # Non-Taxable Income
-        col.append(None)  # Total Taxes
+        taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, col_dict)
+        col_dict["Taxable Income"] = taxable
+        col_dict["Non-Taxable Income"] = nontaxable
 
-        # 4. Calculate taxable and nontaxable income using the current col
-        taxable, nontaxable = calculate_taxed_income(PAYDF_TEMPLATE, col)
+        update_da(PAYDF_TEMPLATE, paydf, new_month, form, col_dict, prev_month)
 
-        # 5. Assign taxable and nontaxable to correct positions
-        col[idx_taxable] = taxable
-        col[idx_nontaxable] = nontaxable
+        col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, col_dict)
+        col_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, col_dict)
+        col_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, col_dict)
+        col_dict["Difference"] = calculate_difference(col_dict, prev_col_dict)
 
-        # 6. Deductions/Allotments (may depend on taxable/nontaxable)
-        col = update_da(PAYDF_TEMPLATE, paydf, new_month, options, col)
-
-        # 7. Now calculate total taxes using the updated col
-        totaltaxes = calculate_total_taxes(PAYDF_TEMPLATE, col)
-        col[idx_totaltaxes] = totaltaxes
-
-        # 8. Continue with the rest
-        col.append(calculate_gross_pay(PAYDF_TEMPLATE, col))
-        col.append(calculate_net_pay(PAYDF_TEMPLATE, col))
-        col.append(calculate_difference(col))
-
+        # Assemble col in correct order
+        col = [col_dict.get(header, 0) for header in row_headers]
         paydf[new_month] = col
+
+        # Update prev_col_dict for next iteration
+        prev_col_dict = col_dict.copy()
 
     return paydf
 
 
 
-
-def update_variables(paydf, col, month, form):
+def update_variables(paydf, col_dict, month, prev_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
 
     variable_specs = [
-        # (header, form_field, form_month_field, type_cast, special_case)
         ("Year", "year_f", "year_m", int, "year"),
         ("Grade", "grade_f", "grade_m", str, None),
         ("Months in Service", "months_in_service_f", "months_in_service_m", int, "mis"),
@@ -331,10 +325,6 @@ def update_variables(paydf, col, month, form):
         ("Roth TSP Rate", "roth_tsp_rate_f", "roth_tsp_rate_m", int, None),
     ]
 
-    columns = paydf.columns.tolist()
-    col_idx = columns.index(month)
-    prev_month = columns[col_idx - 1] if col_idx > 0 else columns[1]
-
     def get_prev(header):
         return paydf.at[paydf[paydf['header'] == header].index[0], prev_month]
 
@@ -342,115 +332,119 @@ def update_variables(paydf, col, month, form):
         prev = get_prev(header)
         val = form.get(f_field)
         mval = form.get(m_field)
-
-        # Special handling for certain variables
+        
         if special == "year":
             if mval == month and val is not None:
                 try:
-                    col.append(int(val))
+                    col_dict[header] = int(val)
                 except Exception:
-                    col.append(prev)
+                    col_dict[header] = prev
             else:
                 if MONTHS_SHORT.index(month) == 0 and MONTHS_SHORT.index(prev_month) == 11:
-                    col.append(int(prev) + 1)
+                    col_dict[header] = int(prev) + 1
                 else:
-                    col.append(prev)
+                    col_dict[header] = prev
+
         elif special == "mis":
             if mval == month and val is not None:
                 try:
-                    col.append(int(val))
+                    col_dict[header] = int(val)
                 except Exception:
-                    col.append(prev)
+                    col_dict[header] = prev
             else:
-                col.append(int(prev) + 1)
+                col_dict[header] = int(prev) + 1
+
         elif special == "mha":
             if mval == month and val is not None:
-                col.append(val)
+                col_dict[header] = val
             else:
-                zip_code = col[3]  # Zip Code is always the 4th variable
-                col.append(utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], zip_code))
+                zip_code = col_dict["Zip Code"]
+                col_dict[header] = utils.calculate_mha(flask_app.config['MHA_ZIP_CODES'], zip_code)
+
         else:
             if mval == month and val is not None:
                 try:
-                    col.append(cast(val))
+                    col_dict[header] = cast(val)
                 except Exception:
-                    col.append(prev)
+                    col_dict[header] = prev
             else:
-                col.append(prev)
-    return col
+                col_dict[header] = prev
+
+    return col_dict
 
 
 
-def update_entitlements(PAYDF_TEMPLATE, paydf, month, form, col):
-    columns = paydf.columns.tolist()
-    ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header'].tolist()
-
+def update_entitlements(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
+    paydf_headers = set(paydf['header'].tolist())
+    ent_rows = [h for h in PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header'].tolist() if h in paydf_headers]
     for header in ent_rows:
-        row_idx = paydf[paydf['header'] == header].index[0]
+        row_match = paydf[paydf['header'] == header]
+        if row_match.empty:
+            continue
+
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-
         if header == 'Base Pay':
-            col.append(calculate_base_pay(paydf, month))
+            col_dict[header] = calculate_base_pay(col_dict)
         elif header == 'BAS':
-            col.append(calculate_bas(paydf, month))
+            col_dict[header] = calculate_bas(col_dict)
         elif header == 'BAH':
-            col.append(calculate_bah(paydf, month))
+            col_dict[header] = calculate_bah(col_dict)
         else:
-            col = update_eda_rows(paydf, row_idx, header, match, month, columns, form, col)
+            update_eda_rows(paydf, header, match, month, prev_month, form, col_dict)
 
-    return col
+    return col_dict
 
 
-
-def update_da(PAYDF_TEMPLATE, paydf, month, form, col):
-    columns = paydf.columns.tolist()
+def update_da(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
     da_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header'].tolist()
 
     for header in da_rows:
-        row_idx = paydf[paydf['header'] == header].index[0]
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-
         if header == 'Federal Taxes':
-            col.append(calculate_federal_taxes(paydf, month))
+            col_dict[header] = calculate_federal_taxes(col_dict)
         elif header == 'FICA - Social Security':
-            col.append(calculate_fica_social_security(paydf, month))
+            col_dict[header] = calculate_fica_social_security(col_dict)
         elif header == 'FICA - Medicare':
-            col.append(calculate_fica_medicare(paydf, month))
+            col_dict[header] = calculate_fica_medicare(col_dict)
         elif header == 'SGLI':
-            col.append(calculate_sgli(paydf, row_idx, month, None))
+            col_dict[header] = calculate_sgli(col_dict)
         elif header == 'State Taxes':
-            col.append(calculate_state_taxes(paydf, month))
+            col_dict[header] = calculate_state_taxes(col_dict)
         elif header == 'Traditional TSP':
-            col.append(calculate_traditional_tsp(paydf, month))
+            col_dict[header] = calculate_traditional_tsp(col_dict)
         elif header == 'Roth TSP':
-            col.append(calculate_roth_tsp(paydf, month))
+            col_dict[header] = calculate_roth_tsp(col_dict)
         else:
-            col = update_eda_rows(paydf, row_idx, header, match, month, columns, form, col)
+            update_eda_rows(paydf, header, match, month, prev_month, form, col_dict)
 
-    return col
+    return col_dict
 
 
 
-def update_eda_rows(paydf, row_idx, header, match, month, columns, form, col):
+def update_eda_rows(paydf, header, match, month, prev_month, form, col_dict):
     if bool(match.iloc[0].get('onetime', False)):
-        col.append(0)
-        return col
+        col_dict[header] = 0
+        return col_dict
 
     varname = match.iloc[0]['varname']
     checkbox_field = f"{varname}_f"
     month_field = f"{varname}_m"
     checked = form.get(checkbox_field)
     checked_month = form.get(month_field)
-    prev_month = columns[columns.index(month) - 1] if columns.index(month) > 0 else columns[1]
-    prev_value = paydf.at[row_idx, prev_month]
+
+    # Use previous value from paydf for this header and prev_month
+    prev_row = paydf[paydf['header'] == header]
+    if not prev_row.empty:
+        prev_value = prev_row[prev_month].values[0]
+    else:
+        prev_value = 0
 
     if checked_month == month and checked:
-        col.append(prev_value)
+        col_dict[header] = prev_value
     else:
-        col.append(0)
+        col_dict[header] = 0
 
-    return col
-
+    return col_dict
 
 
 # =========================

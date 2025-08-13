@@ -2,7 +2,7 @@
 {% set GRADES = config.GRADES %}
 {% set STATES_SHORT = config.STATES_SHORT %}
 {% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
-{% set SGLI_RATE = config.SGLI_RATE %}
+{% set SGLI_RATES = config.SGLI_RATES %}
 {% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
 {% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
 {% set month_options = col_headers[2:] %}
@@ -28,14 +28,14 @@
                 <td>
                     <select class="dropdown" name="grade_f">
                         {% for x in GRADES %}
-                            <option value="{{x}}" {% if x == options[1][1] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 1 and options[1]|length > 1 and x == options[1][1] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="grade_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[1][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 1 and options[1]|length > 2 and x == options[1][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -49,12 +49,12 @@
                     {{ paydf.at[row_headers.index('Zip Code'), col_headers[2]] }}
                 </td>
                 <td>
-                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="zip_code_f" value="{{ options[3][1] }}" />
+                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="zip_code_f" value="{% if options|length > 3 and options[3]|length > 1 %}{{ options[3][1] }}{% endif %}" />
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="zip_code_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[3][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 3 and options[3]|length > 2 and x == options[3][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -70,14 +70,14 @@
                 <td>
                     <select class="dropdown" name="tax_residency_state_f">
                         {% for x in STATES_SHORT %}
-                            <option value="{{x}}" {% if x == options[5][1] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 5 and options[5]|length > 1 and x == options[5][1] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="tax_residency_state_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[5][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 5 and options[5]|length > 2 and x == options[5][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -94,14 +94,14 @@
                 <td>
                     <select class="dropdown" name="federal_filing_status_f">
                         {% for x in TAX_FILING_TYPES %}
-                            <option value="{{x}}" {% if x == options[6][1] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 6 and options[6]|length > 1 and x == options[6][1] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="federal_filing_status_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[6][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 6 and options[6]|length > 2 and x == options[6][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -117,14 +117,14 @@
                 <td>
                     <select class="dropdown" name="state_filing_status_f">
                         {% for x in TAX_FILING_TYPES[0:2] %}
-                            <option value="{{x}}" {% if x == options[7][1] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 7 and options[7]|length > 1 and x == options[7][1] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="state_filing_status_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[7][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 7 and options[7]|length > 2 and x == options[7][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -138,12 +138,12 @@
                     {{ paydf.at[row_headers.index('Dependents'), col_headers[2]] }}
                 </td>
                 <td>
-                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="{{ options[8][1] }}" />
+                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="{% if options|length > 8 and options[8]|length > 1 %}{{ options[8][1] }}{% endif %}" />
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="dependents_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[8][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 8 and options[8]|length > 2 and x == options[8][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -158,15 +158,15 @@
                 </td>
                 <td>
                     <select class="dropdown" name="sgli_coverage_f">
-                        {% for row in SGLI_RATE.itertuples() %}
-                            <option value="{{row.coverage}}" {% if row.coverage == options[9][1] %} selected {% endif %}>{{row.coverage}}</option>
+                        {% for row in SGLI_RATES.itertuples() %}
+                            <option value="{{row.coverage}}" {% if options|length > 9 and options[9]|length > 1 and row.coverage == options[9][1] %} selected {% endif %}>{{row.coverage}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="sgli_coverage_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[9][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 9 and options[9]|length > 2 and x == options[9][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -181,14 +181,14 @@
                 </td>
                 <td>
                     <select class="dropdown" name="combat_zone_f">
-                        <option value="No" {% if options[10][1] == 'No' %} selected {% endif %}>No</option>
-                        <option value="Yes" {% if options[10][1] == 'Yes' %} selected {% endif %}>Yes</option>
+                        <option value="No" {% if options|length > 10 and options[10]|length > 1 and options[10][1] == 'No' %} selected {% endif %}>No</option>
+                        <option value="Yes" {% if options|length > 10 and options[10]|length > 1 and options[10][1] == 'Yes' %} selected {% endif %}>Yes</option>
                     </select>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="combat_zone_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[10][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 10 and options[10]|length > 2 and x == options[10][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -202,12 +202,12 @@
                     {{ paydf.at[row_headers.index('Traditional TSP Rate'), col_headers[2]] }}%
                 </td>
                 <td>
-                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="traditional_tsp_rate_f" value="{{ options[11][1] }}" /><span>&nbsp;&nbsp;%</span>
+                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="traditional_tsp_rate_f" value="{% if options|length > 11 and options[11]|length > 1 %}{{ options[11][1] }}{% endif %}" /><span>&nbsp;&nbsp;%</span>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="traditional_tsp_rate_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[11][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 11 and options[11]|length > 2 and x == options[11][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -221,12 +221,12 @@
                     {{ paydf.at[row_headers.index('Roth TSP Rate'), col_headers[2]] }}%
                 </td>
                 <td>
-                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="roth_tsp_rate_f" value="{{ options[12][1] }}" /><span>&nbsp;&nbsp;%</span>
+                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="roth_tsp_rate_f" value="{% if options|length > 12 and options[12]|length > 1 %}{{ options[12][1] }}{% endif %}" /><span>&nbsp;&nbsp;%</span>
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="roth_tsp_rate_m">
                         {% for x in month_options %}
-                            <option value="{{x}}" {% if x == options[12][2] %} selected {% endif %}>{{x}}</option>
+                            <option value="{{x}}" {% if options|length > 12 and options[12]|length > 2 and x == options[12][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -238,8 +238,8 @@
         <tbody class="pos-table-section">
             {% for opt in options %}
                 {% set header = opt[0] %}
-                {% set future_value = opt[1] %}
-                {% set future_month = opt[2] %}
+                {% set future_value = opt[1] if opt|length > 1 else None %}
+                {% set future_month = opt[2] if opt|length > 2 else None %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.shape[0] > 0 %}
                     {% set varname = row_info.iloc[0]['varname'] %}
