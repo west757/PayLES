@@ -1,3 +1,4 @@
+from multiprocessing import context
 from flask import request, render_template, session
 import io
 import pandas as pd
@@ -53,23 +54,11 @@ def submit_les():
 
     if valid:
         context, les_text = process_les(les_pdf)
-
         paydf, rows, initial_month = build_paydf(les_text)
-
         options = build_options(PAYDF_TEMPLATE, rows, initial_month)
-        print(options)
-
-        context['paydf'], context['row_headers'], context['col_headers'], context['options'], context['months_display'] = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
-        print(paydf)
-
+        context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
         context['modals'] = load_json(flask_app.config['PAYDF_MODALS_JSON'])
-
-
-        print("row_headers:", context['row_headers'])
-        print("col_headers:", context['col_headers'])
-        print("paydf.index:", context['paydf'].index)
-        print("paydf.columns:", context['paydf'].columns)
-
+        
         return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
