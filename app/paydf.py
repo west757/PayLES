@@ -282,6 +282,7 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
 
 
 
+
 def update_variables(paydf, col_dict, month, prev_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
 
@@ -331,11 +332,11 @@ def update_variables(paydf, col_dict, month, prev_month, form):
                 col_dict[header] = int(prev) + 1
 
         elif special == "mha":
-            if mval == month and val is not None:
-                col_dict[header] = val
-            else:
-                zip_code = col_dict["Zip Code"]
-                #col_dict[header] = calculate_mha(zip_code)
+            # Always recalculate MHA based on current Zip Code
+            zip_code = col_dict.get("Zip Code", get_prev("Zip Code"))
+            zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
+            col_dict["Zip Code"] = zip_code
+            col_dict[header] = military_housing_area
 
         else:
             if mval == month and val is not None:
@@ -347,6 +348,7 @@ def update_variables(paydf, col_dict, month, prev_month, form):
                 col_dict[header] = prev
 
     return col_dict
+
 
 
 
