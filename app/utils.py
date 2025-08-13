@@ -1,7 +1,7 @@
 from decimal import Decimal
 import json
-import os
 
+from app import flask_app
 
 def validate_file(file, ALLOWED_EXTENSIONS):
     if file.filename == '':
@@ -64,29 +64,33 @@ def find_multiword_matches(section, shortname):
     return matches
 
 
-def months_in_service(date1, date2):
+def calculate_months_in_service(date1, date2):
     return (date1.year - date2.year) * 12 + date1.month - date2.month
 
 
-def validate_zip_code(MHA_ZIP_CODES, zip_code):
-    if not (MHA_ZIP_CODES.isin([int(zip_code)]).any().any()):
-        return "Not Found"
-    return str(zip_code)
+def validate_calculate_zip_mha(zip_code):
+    MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
 
+    if zip_code in ("00000", "", "Not Found"):
+        return "Not Found", "Not Found"
 
-def calculate_mha(MHA_ZIP_CODES, zip_code):
-    if zip_code != "00000" and zip_code != "" and zip_code != "Not Found":
-        mha_search = MHA_ZIP_CODES[MHA_ZIP_CODES.isin([int(zip_code)])].stack()
-        mha_search_row = mha_search.index[0][0]
-        mha = MHA_ZIP_CODES.loc[mha_search_row, "mha"]
-    else:
-        mha = "Not Found"
+    try:
+        zip_int = int(zip_code)
+        mha_search = MHA_ZIP_CODES[MHA_ZIP_CODES.isin([zip_int])].stack()
 
-    return mha
+        if not mha_search.empty:
+            mha_search_row = mha_search.index[0][0]
+            mha = str(MHA_ZIP_CODES.loc[mha_search_row, "mha"])
+            return str(zip_code), mha
+        else:
+            return "Not Found", "Not Found"
+        
+    except Exception:
+        return "Not Found", "Not Found"
+    
 
-
-def get_option(header, options):
-    for opt in options:
-        if opt[0] == header:
-            return opt[1], opt[2]
-    return None, None
+def validate_home_of_record(home_of_record):
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+    if home_of_record in HOME_OF_RECORDS:
+        return home_of_record
+    return "Not Found"
