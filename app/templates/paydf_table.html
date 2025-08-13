@@ -131,6 +131,7 @@
             {% endfor %}
         </tbody>
 
+
         <tbody>
             {% for i in range(row_headers|length - 6, row_headers|length) %}
                 <tr>
@@ -140,13 +141,8 @@
                         </button>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
-                        {% set value = paydf.at[i, col_headers[x]] %}
                         <td>
-                            {% if value is not none and value != '' %}
-                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                            {% else %}
-                                $0.00
-                            {% endif %}
+                            {{ paydf.at[i, col_headers[x]] }}
                         </td>
                     {% endfor %}
                 </tr>
