@@ -62,20 +62,20 @@
 
             <tr>
                 <td class="row-header-cell">
-                    <button class="modal-button" type="button" data-modal="tax-residency-state-modal">Tax Residency State</button>
+                    <button class="modal-button" type="button" data-modal="home-of-record-modal">Home of Record</button>
                 </td>
                 <td>
-                    {{ paydf.at[row_headers.index('Tax Residency State'), col_headers[2]] }}
+                    {{ paydf.at[row_headers.index('Home of Record'), col_headers[2]] }}
                 </td>
                 <td>
-                    <select class="dropdown" name="tax_residency_state_f">
+                    <select class="dropdown" name="home_of_record_f">
                         {% for x in STATES_SHORT %}
                             <option value="{{x}}" {% if options|length > 5 and options[5]|length > 1 and x == options[5][1] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
                 </td>
                 <td>
-                    <select class="dropdown month-dropdown" name="tax_residency_state_m">
+                    <select class="dropdown month-dropdown" name="home_of_record_m">
                         {% for x in month_options %}
                             <option value="{{x}}" {% if options|length > 5 and options[5]|length > 2 and x == options[5][2] %} selected {% endif %}>{{x}}</option>
                         {% endfor %}

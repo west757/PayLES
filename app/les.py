@@ -4,9 +4,6 @@ import io
 import pdfplumber
 
 from app import flask_app
-from app.utils import (
-    load_json,
-)
 
 
 # =========================
@@ -29,11 +26,10 @@ def process_les(les_pdf):
     LES_RECTANGLES = flask_app.config['LES_RECTANGLES']
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
 
-    context = {}
-    context['les_image'], context['rect_overlay'] = create_les_image(LES_RECTANGLES, les_page)
-    context['les_remarks'] = load_json(flask_app.config['LES_REMARKS_JSON'])
+    les_image, rect_overlay = create_les_image(LES_RECTANGLES, les_page)
     les_text = read_les(LES_RECTANGLES, les_page)
-    return context, les_text
+
+    return les_image, rect_overlay, les_text
 
 
 def create_les_image(LES_RECTANGLES, les_page):

@@ -1,14 +1,12 @@
 from decimal import Decimal
 
 from app import flask_app
-from app import utils
-
 
 # =========================
 # calculation functions
 # =========================
 
-def calculate_taxed_income(PAYDF_TEMPLATE, rows):
+def calculate_taxable_income(PAYDF_TEMPLATE, rows):
         # row_dict is now always a dict
         # Get combat zone value
         combat_zone = rows.get("Combat Zone", "No")
@@ -242,8 +240,8 @@ def calculate_sgli(col_dict, prev_col_dict=None):
 
 def calculate_state_taxes(col_dict, prev_col_dict=None):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
-    state = col_dict.get("Tax Residency State")
-    state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == state]
+    home_of_record = col_dict.get("Home of Record")
+    state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
     filing_status = col_dict.get("State Filing Status")
     taxable_income = col_dict.get("Taxable Income", 0)
     taxable_income = Decimal(taxable_income) * 12

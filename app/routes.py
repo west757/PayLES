@@ -30,10 +30,11 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
+    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+
     action = request.form.get('action')
     les_file = request.files.get('home-input')
 
@@ -53,12 +54,29 @@ def submit_les():
         return render_template("home_form.html", message="Unknown action, no LES or example submitted")
 
     if valid:
-        context, les_text = process_les(les_pdf)
-        paydf, rows, initial_month = build_paydf(les_text)
-        options = build_options(PAYDF_TEMPLATE, rows, initial_month)
-        context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
-        context['modals'] = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+        remove_custom_template_rows(PAYDF_TEMPLATE)
         
+        les_image, rect_overlay, les_text = process_les(les_pdf)
+        paydf, core_list, initial_month = build_paydf(PAYDF_TEMPLATE, les_text)
+        options = build_options(PAYDF_TEMPLATE, core_list, initial_month)
+        paydf, col_headers, row_headers, options, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
+        
+        les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
+        modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+        
+        print(paydf)
+
+        context = {
+            'les_image': les_image,
+            'rect_overlay': rect_overlay,
+            'paydf': paydf,
+            'col_headers': col_headers,
+            'row_headers': row_headers,
+            'options': options,
+            'months_display': months_display,
+            'les_remarks': les_remarks,
+            'modals': modals
+        }
         return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)
@@ -67,6 +85,8 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    remove_custom_template_rows(PAYDF_TEMPLATE)
+
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
     options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
@@ -74,7 +94,7 @@ def update_paydf():
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = parse_custom_rows(custom_rows_json)
 
-    remove_custom_template_rows(PAYDF_TEMPLATE)
+    
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
     paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows, form=request.form)
