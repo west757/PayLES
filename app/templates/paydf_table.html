@@ -70,8 +70,6 @@
                         <td>
                             {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
                                 {{ '{}%'.format(value) }}
-                            {% elif header == 'SGLI Coverage' %}
-                                {{ '{:,.2f}'.format(value) }}
                             {% else %}
                                 {{ value }}
                             {% endif %}

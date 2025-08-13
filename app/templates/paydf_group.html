@@ -35,7 +35,7 @@
                     </tr>
                     {% for row in config['SGLI_RATES'].itertuples() %}
                     <tr>
-                        <td>{{ '${:,.2f}'.format(row.coverage) }}</td>
+                        <td>{{ row.coverage }}</td>
                         <td>{{ '${:,.2f}'.format(row.premium) }}</td>
                         <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
                         <td>{{ '${:,.2f}'.format(row.total) }}</td>
