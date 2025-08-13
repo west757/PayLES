@@ -32,7 +32,6 @@ from app.calculations import (
 
 def build_paydf(les_text):
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     initial_month = les_text[8][3]
     row_dict = {}
 
@@ -46,23 +45,14 @@ def build_paydf(les_text):
     row_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, row_dict)
     row_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, row_dict)
     row_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, row_dict)
-    row_dict["Difference"] = 0
+    row_dict["Difference"] = Decimal(0.00)
 
     # Convert row_dict to rows for DataFrame and options
     rows = [[header, row_dict[header]] for header in row_dict]
     session['paydf_rows'] = rows
     paydf = pd.DataFrame(rows, columns=["header", initial_month])
-    options = build_options(PAYDF_TEMPLATE, rows, initial_month)
-    print("")
-    print(options)
-    print("")
-    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
-    print(paydf)
-    print("")
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['header'].tolist()
 
-    return paydf, col_headers, row_headers, options, DEFAULT_MONTHS_DISPLAY
+    return paydf, rows, initial_month
 
 
 
@@ -302,7 +292,10 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
         # Update prev_col_dict for next iteration
         prev_col_dict = col_dict.copy()
 
-    return paydf
+    col_headers = paydf.columns.tolist()
+    row_headers = paydf['header'].tolist()
+
+    return paydf, col_headers, row_headers, options, months_display
 
 
 
