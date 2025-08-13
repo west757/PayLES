@@ -3,7 +3,6 @@
 <div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
 
-        <!-- Variable rows: first 13 rows (index 0-12) -->
         <tbody>
             {% for header in row_headers[0:13] %}
                 {% set i = loop.index0 %}
@@ -14,7 +13,6 @@
             {% endfor %}
         </tbody>
 
-        <!-- Entitlement, Deduction, Allotment rows: all non-custom rows after index 12 and before last 6 -->
         <tbody>
             {% for i in range(13, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
@@ -59,26 +57,20 @@
                 {% endfor %}
             </tr>
 
-            <!-- Variable rows: first 13 rows (index 0-12) -->
             {% for i in range(0, 13) %}
                 {% set header = row_headers[i] %}
-                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 <tr class="variable-row">
                     <td class="row-header-cell">
-                        {% if row_info.shape[0] > 0 %}
-                        <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                        <button class="modal-button">
                             {{ header }}
                         </button>
-                        {% else %}
-                        {{ header }}
-                        {% endif %}
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% set value = paydf.at[i, col_headers[x]] %}
                         <td>
                             {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
                                 {{ '{}%'.format(value) }}
-                            {% elif row_info.shape[0] > 0 and row_info.iloc[0]['dtype'] == 'Decimal' %}
+                            {% elif header == 'SGLI Coverage' %}
                                 {{ '{:,.2f}'.format(value) }}
                             {% else %}
                                 {{ value }}
@@ -89,7 +81,6 @@
             {% endfor %}
         </tbody>
 
-        <!-- Entitlement, Deduction, Allotment rows: all non-custom rows after index 12 and before last 6 -->
         <tbody class="pos-table-section">
             {% for i in range(13, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
@@ -116,7 +107,6 @@
             {% endfor %}
         </tbody>
 
-
         <tbody id="custom-row-section" class="pos-table-section">
             {% for i in range(0, row_headers|length) %}
                 {% set header = row_headers[i] %}
@@ -141,20 +131,13 @@
             {% endfor %}
         </tbody>
 
-        <!-- Calculation rows: last 6 rows -->
         <tbody>
             {% for i in range(row_headers|length - 6, row_headers|length) %}
-                {% set header = row_headers[i] %}
-                {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 <tr>
                     <td class="row-header-cell">
-                        {% if row_info.shape[0] > 0 %}
-                        <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
-                            {{ header }}
+                        <button class="modal-button">
+                            {{ row_headers[i] }}
                         </button>
-                        {% else %}
-                        {{ header }}
-                        {% endif %}
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% set value = paydf.at[i, col_headers[x]] %}

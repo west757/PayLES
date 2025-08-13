@@ -29,7 +29,9 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
+    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
+    DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     action = request.form.get('action')
     les_file = request.files.get('home-input')
@@ -51,9 +53,23 @@ def submit_les():
 
     if valid:
         context, les_text = process_les(les_pdf)
-        context['paydf'], context['col_headers'], context['row_headers'], context['options'], context['months_display'] = build_paydf(les_text)
-        #run expand_paydf here
+
+        paydf, rows, initial_month = build_paydf(les_text)
+
+        options = build_options(PAYDF_TEMPLATE, rows, initial_month)
+        print(options)
+
+        context['paydf'], context['row_headers'], context['col_headers'], context['options'], context['months_display'] = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
+        print(paydf)
+
         context['modals'] = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+
+
+        print("row_headers:", context['row_headers'])
+        print("col_headers:", context['col_headers'])
+        print("paydf.index:", context['paydf'].index)
+        print("paydf.columns:", context['paydf'].columns)
+
         return render_template('paydf_group.html', **context)
     else:
         return render_template("home_form.html", message=message)

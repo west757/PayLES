@@ -1,5 +1,5 @@
 //constants and global variables
-const DEFAULT_MONTHS_DISPLAY = 6;
+const DEFAULT_MONTHS_DISPLAY = 4;
 const MAX_CUSTOM_ROWS = 9;
 let editingIndex = null;
 let customRows = [];
