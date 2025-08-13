@@ -1,128 +1,129 @@
-﻿header,varname,shortname,longname,sign,required,onetime,standard,tax,option,custom,modal
-Base Pay,base_pay,BASE PAY,Base Pay,1,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,basepay
-BAS,bas,BAS,Basic Allowance for Subsistence,1,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,bas
-Meal Discount,meal_discount,DSCT,Meal Discount,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bas
-SEA,sea,SEA,Subsistence Expense Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bas
-Separation Rations,separation_rations,SR,Separation Rations,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bas
-BAH,bah,BAH,Basic Allowance for Housing,1,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,bah
-BAQ,baq,BAQ,Basic Allowance for Quarters,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bah
-LQA,lqa,LQA,Living Quarters Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bah
-CONUS COLA,conus_cola,CONUS COLA,Continental U.S. Cost of Living Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,cola
-OCONUS COLA,oconus_cola,OCONUS COLA,Outside Continental U.S. Cost of Living Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,cola
-OHA,oha,OHA,Overseas Housing Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bah
-FLPB,flpb,FLPB,Foreign Language Profiency Bonus,1,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,flpb
-Foreign Duty Pay,foreign_duty_pay,FDP,Foreign Duty Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,fdp
-ASP,asp,ASP,Additional Special Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Dive Pay,dive_pay,DP,Dive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Jump Pay,jump_pay,JP,Jump Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-HALO,halo,HALO,High Altitude/Low Altitude Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-MSP,msp,MSP,Multiyear Special Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-SDAP,sdap,SDAP,Special Duty Assignment Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Special Duty Pay,special_duty_pay,SDP,Special Duty Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Specialty Pay,specialty_pay,SP,Specialty Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Variable Special Pay,variable_special_pay,VSP,Variable Special Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-BCP,bcp,BCP,Board Certified Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,specialty
-Combat Duty,combat_duty,CD,Combat Duty,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,combat
-Combat Zone Pay,combat_zone_pay,CZP,Combat Zone Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,combat
-HFP/IDP,hfpidp,HFP/IDP,Hostile Fire/Imminent Danger Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,combat
-HFP-L,hfpl,HFP-L,Hostile Fire Pay - Location,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,combat
-Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,1,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,combat
-Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,1,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,combat
-AIP,aip,AIP,Assignment Incentive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-ACIP,acip,ACIP,Aviation Career Incentive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-CEFIP,cefip,CEFIP,Career Enlisted Flyer Incentive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-Flight Pay,flight_pay,FP,Flight Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-HDIP,hdip,HDIP,Hazardous Duty Incentive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-Incentive Special Pay,incentive_special_pay,ISP,Incentive Special Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,incentive
-HDP-IE,hdpie,HDP-IE,Hardship Duty Pay - Involuntary Extension,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,hardship
-HDP-L,hdpl,HDP-L,Hardship Duty Pay - Location,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,hardship
-HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,hardship
-ACP,acp,ACP,Aviation Continuation Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,continuation
-CONT PAY,cont_pay,CONT PAY,Continuation Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,continuation
-NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,continuation
-Accession Bonus,accession_bonus,AB,Accession Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-CSRB,csrb,CSRB,Critical Skills Retention Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-MRB,mrb,MRB,Multiyear Retention Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-NPAB,npab,NPAB,Nuclear Power Accession Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-SEB,seb,SEB,Selective Enlistment Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-SRB,srb,SRB,Selective Reenlistment Bonus,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,bonus
-PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,1,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,pcs
-Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-MIHA-R,mihar,MIHA-R,Moving Housing Allowance - Rent,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-MIHA-SM,mihasm,MIHA-SM,Housing Allowance - Security,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-TLE CONUS,tle_pcs,TLE CONUS,Temporary Lodging Expense in Continental U.S.,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-TLA,tla,TLA,Temporary Living Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-TLA OCONUS,tla_pcs,TLA OCONUS,Temporary Lodging Allowance Outside Continental U.S.,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-TQSA,tqsa,TQSA,Temporary Quarters Subsistence Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
-CCA,cca,CCA,Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-CCCA,ccca,CCCA,Continuing Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-CCRA,ccra,CCRA,Cash Clothing Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-CMA,cma,CMA,Clothing Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-CRA,cra,CRA,Clothing Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-ICCA,icca,ICCA,Initial Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-MCA,mca,MCA,Maternity Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-PCCA,pcca,PCCA,Partial Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-RBMA,rbma,RBMA,Reserve Basic Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-SMA,sma,SMA,Standard Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-SRA,sra,SRA,Standard Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-SICA,sica,SICA,Standard Initial Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-SUPP CMA,supp_cma,SUPP CMA,Enlisted Supplemental Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-TDY CCA,tdy_cca,TDY CCA,Temporary Duty Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-UEA Initial,uea_initial,UEA INITIAL,Initial Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,clothingallowance
-SBP,sbp,SBP,Military Survivor Benefits Plan,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,sbp
-CIP,cip,CIP,Combat-Related Injury and Rehabilitation,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,cip
-Advance Debt,advance_debt,ADVANCE DEBT,Advance Debt Payment,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-BRA,bra,BRA,Basic Replacement Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-CVI,cvi,CVI,Conditional Voluntary Indefinite Status,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-FSA,fsa,FSA,Family Separation Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-FSH,fsh,FSH,Family Separation Housing,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-FSSA,fssa,FSSA,Family Subsistence Supplemental Allowance,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-OEP,oep,OEP,Overseas Extension Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-Ref Social Security,ref_social_security,REF SOC SECURITY,Refund Social Security,1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,none
-VI,vi,VI,Voluntary Indefinite Status,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,none
-Career Sea Pay,career_sea_pay,CSP,Career Sea Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-CSP-P,cspp,CSP-P,Career Sea Pay - Premium,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-SDIP,sdip,SDIP,Submarine Duty Incentive Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-Sea Pay,sea_pay,SP,Sea Pay,1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-Split Payment Option,split_payment_option,SPO,Split Payment Option,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,-1,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,federaltaxes
-FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,-1,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,fica
-FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,-1,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,fica
-SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,-1,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,sgli
-Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,sgli
-TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,sgli
-State Taxes,state_taxes,STATE TAXES,State Taxes,-1,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,statetaxes
-Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,-1,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,tsp
-Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,-1,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,tsp
-MGIB,mgib,MGIB,Montgomery G.I. Bill Program,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,mgib
-Debt,debt,DEBT,Government Debt,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-Fine,fine,FINE,Military Fines,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-Garnishment,garnishment,GARNISHMENT,Garnished Income,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-AAFES Debt,aafes_debt,AAFES,AAFES Debt,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-GPLD,gpld,GPLD,Government Property Lost or Damaged,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,debt
-Meal Deduction,meal_deduction,MEAL DEDUCT,Meal Deduction,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,bas
-Partial Pay,partial_pay,PARTIAL PAY,Partial Pay,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,none
-Pay Released,pay_released,PAY RELEASED,Pay Released,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,none
-SUPP/COM,suppcom,SUPP/COM DEBT,Spousal Support/Court-Ordered Child Support,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,suppcom
-Prior SUPP/COM,prior_suppcom,PRIOR SUPP/COM,Prior Spousal Support/Court-Ordered Child Support,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,suppcom
-Repay Advance,repay_advance,REPAY ADVANCE,Repayment of Advance Pay,-1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,none
-Split Pay,split_pay,SPLIT PAY,Split Pay Option,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accounting,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,navy
-AFRH,afrh,AFRH,Armed Forces Retirement Home,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,afrh
-USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,afrh
-USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,afrh
-Bank Account Allot,bank_account_allot,BANK ACCT ALLOT,Bank Account Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Discretionary Allot,discretionary_allot,DISCRETIONARY ALT,Discretionary Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Insurance Allot,insurance_allot,INSURANCE ALLOT,Insurance Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-CFC Allot,cfc_allot,CFC ALLOT,Combined Federal Campaign Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-AFAF Allot,afaf_allot,AFAF ALLOT,Air Force Assistance Fund Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-AER Allot,aer_allot,AER ALLOT,Army Emergency Relief Allotment,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-NMCRS Allot,nmcrs_allot,NMCRS ALLOT,Navy-Marine Corp Relief Society,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Tricare Dental,tricare_dental,TRICARE DENTAL,Tricare Dental,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-U.S. Debt,us_debt,US DEBT,U.S. Debt,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Bond 1,bond_1,BOND #01,Bond 1,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Bond 2,bond_2,BOND #02,Bond 2,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
-Bond 3,bond_3,BOND #03,Bond 3,-1,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,allotments
+﻿header,varname,shortname,longname,sign,required,onetime,tax,option,custom,modal
+Base Pay,base_pay,BASE PAY,Base Pay,1,TRUE,FALSE,TRUE,FALSE,FALSE,basepay
+BAS,bas,BAS,Basic Allowance for Subsistence,1,TRUE,FALSE,FALSE,FALSE,FALSE,bas
+Meal Discount,meal_discount,DSCT,Meal Discount,1,FALSE,FALSE,FALSE,TRUE,FALSE,bas
+SEA,sea,SEA,Subsistence Expense Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,bas
+Separation Rations,separation_rations,SR,Separation Rations,1,FALSE,FALSE,FALSE,TRUE,FALSE,bas
+BAH,bah,BAH,Basic Allowance for Housing,1,TRUE,FALSE,FALSE,FALSE,FALSE,bah
+BAQ,baq,BAQ,Basic Allowance for Quarters,1,FALSE,FALSE,FALSE,TRUE,FALSE,bah
+LQA,lqa,LQA,Living Quarters Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,bah
+CONUS COLA,conus_cola,CONUS COLA,Continental U.S. Cost of Living Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,cola
+OCONUS COLA,oconus_cola,OCONUS COLA,Outside Continental U.S. Cost of Living Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,cola
+OHA,oha,OHA,Overseas Housing Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,bah
+FLPB,flpb,FLPB,Foreign Language Profiency Bonus,1,FALSE,FALSE,TRUE,TRUE,FALSE,flpb
+Foreign Duty Pay,foreign_duty_pay,FDP,Foreign Duty Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,fdp
+ASP,asp,ASP,Additional Special Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Fly Pay,fly_pay,FLY PAY,Fly Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Dive Pay,dive_pay,DP,Dive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Jump Pay,jump_pay,JP,Jump Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+HALO,halo,HALO,High Altitude/Low Altitude Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+MSP,msp,MSP,Multiyear Special Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+SDAP,sdap,SDAP,Special Duty Assignment Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Special Duty Pay,special_duty_pay,SDP,Special Duty Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Specialty Pay,specialty_pay,SP,Specialty Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Variable Special Pay,variable_special_pay,VSP,Variable Special Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+BCP,bcp,BCP,Board Certified Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,specialty
+Combat Duty,combat_duty,CD,Combat Duty,1,FALSE,FALSE,FALSE,TRUE,FALSE,combat
+Combat Zone Pay,combat_zone_pay,CZP,Combat Zone Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,combat
+HFP/IDP,hfpidp,HFP/IDP,Hostile Fire/Imminent Danger Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,combat
+HFP-L,hfpl,HFP-L,Hostile Fire Pay - Location,1,FALSE,FALSE,FALSE,TRUE,FALSE,combat
+Hazardous Duty Pay,hazardous_duty_pay,HZD,Hazardous Duty Pay,1,FALSE,FALSE,TRUE,TRUE,FALSE,combat
+Imminent Danger Pay,imminent_danger_pay,IDP,Imminent Danger Pay,1,FALSE,FALSE,TRUE,TRUE,FALSE,combat
+AIP,aip,AIP,Assignment Incentive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+ACIP,acip,ACIP,Aviation Career Incentive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+CEFIP,cefip,CEFIP,Career Enlisted Flyer Incentive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+Flight Pay,flight_pay,FP,Flight Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+HDIP,hdip,HDIP,Hazardous Duty Incentive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+Incentive Special Pay,incentive_special_pay,ISP,Incentive Special Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,incentive
+HDP-IE,hdpie,HDP-IE,Hardship Duty Pay - Involuntary Extension,1,FALSE,FALSE,FALSE,TRUE,FALSE,hardship
+HDP-L,hdpl,HDP-L,Hardship Duty Pay - Location,1,FALSE,FALSE,FALSE,TRUE,FALSE,hardship
+HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,1,FALSE,FALSE,FALSE,TRUE,FALSE,hardship
+ACP,acp,ACP,Aviation Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
+CONT PAY,cont_pay,CONT PAY,Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
+NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
+Accession Bonus,accession_bonus,AB,Accession Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+CSRB,csrb,CSRB,Critical Skills Retention Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+MRB,mrb,MRB,Multiyear Retention Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+NPAB,npab,NPAB,Nuclear Power Accession Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+SEB,seb,SEB,Selective Enlistment Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+SRB,srb,SRB,Selective Reenlistment Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,1,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
+Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+MIHA-R,mihar,MIHA-R,Moving Housing Allowance - Rent,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+MIHA-SM,mihasm,MIHA-SM,Housing Allowance - Security,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+TLE CONUS,tle_pcs,TLE CONUS,Temporary Lodging Expense in Continental U.S.,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+TLA,tla,TLA,Temporary Living Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+TLA OCONUS,tla_pcs,TLA OCONUS,Temporary Lodging Allowance Outside Continental U.S.,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+TQSA,tqsa,TQSA,Temporary Quarters Subsistence Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
+CCA,cca,CCA,Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+CCCA,ccca,CCCA,Continuing Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+CCRA,ccra,CCRA,Cash Clothing Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+CMA,cma,CMA,Clothing Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+CRA,cra,CRA,Clothing Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+ICCA,icca,ICCA,Initial Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+MCA,mca,MCA,Maternity Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+PCCA,pcca,PCCA,Partial Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+RBMA,rbma,RBMA,Reserve Basic Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+SMA,sma,SMA,Standard Maintenance Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+SRA,sra,SRA,Standard Replacement Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+SICA,sica,SICA,Standard Initial Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+SUPP CMA,supp_cma,SUPP CMA,Enlisted Supplemental Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+TDY CCA,tdy_cca,TDY CCA,Temporary Duty Civilian Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+UEA Initial,uea_initial,UEA INITIAL,Initial Clothing Allowance,1,FALSE,TRUE,FALSE,FALSE,FALSE,clothingallowance
+SBP,sbp,SBP,Military Survivor Benefits Plan,1,FALSE,FALSE,FALSE,TRUE,FALSE,sbp
+CIP,cip,CIP,Combat-Related Injury and Rehabilitation,1,FALSE,FALSE,FALSE,TRUE,FALSE,cip
+Advance Debt,advance_debt,ADVANCE DEBT,Advance Debt Payment,1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+BRA,bra,BRA,Basic Replacement Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+CVI,cvi,CVI,Conditional Voluntary Indefinite Status,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+FSA,fsa,FSA,Family Separation Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+FSH,fsh,FSH,Family Separation Housing,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+FSSA,fssa,FSSA,Family Subsistence Supplemental Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+OEP,oep,OEP,Overseas Extension Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+Ref Social Security,ref_social_security,REF SOC SECURITY,Refund Social Security,1,FALSE,TRUE,FALSE,FALSE,FALSE,none
+VI,vi,VI,Voluntary Indefinite Status,1,FALSE,FALSE,FALSE,TRUE,FALSE,none
+Career Sea Pay,career_sea_pay,CSP,Career Sea Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+CSP-P,cspp,CSP-P,Career Sea Pay - Premium,1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+SDIP,sdip,SDIP,Submarine Duty Incentive Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+Sea Pay,sea_pay,SP,Sea Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+Split Payment Option,split_payment_option,SPO,Split Payment Option,1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,-1,TRUE,FALSE,TRUE,FALSE,FALSE,federaltaxes
+FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,-1,TRUE,FALSE,TRUE,FALSE,FALSE,fica
+FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,-1,TRUE,FALSE,TRUE,FALSE,FALSE,fica
+SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,-1,TRUE,FALSE,FALSE,FALSE,FALSE,sgli
+Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,-1,FALSE,FALSE,FALSE,TRUE,FALSE,sgli
+TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,-1,FALSE,FALSE,FALSE,TRUE,FALSE,sgli
+State Taxes,state_taxes,STATE TAXES,State Taxes,-1,TRUE,FALSE,TRUE,FALSE,FALSE,statetaxes
+Traditional TSP,traditional_tsp,TRADITIONAL TSP,Traditional Thrift Savings Plan,-1,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
+Roth TSP,roth_tsp,ROTH TSP,Roth Thrift Savings Plan,-1,TRUE,FALSE,FALSE,FALSE,FALSE,tsp
+MGIB,mgib,MGIB,Montgomery G.I. Bill Program,-1,FALSE,FALSE,FALSE,TRUE,FALSE,mgib
+Debt,debt,DEBT,Government Debt,-1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Fine,fine,FINE,Military Fines,-1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Garnishment,garnishment,GARNISHMENT,Garnished Income,-1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+AAFES Debt,aafes_debt,AAFES,AAFES Debt,-1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+GPLD,gpld,GPLD,Government Property Lost or Damaged,-1,FALSE,TRUE,FALSE,FALSE,FALSE,debt
+Meal Deduction,meal_deduction,MEAL DEDUCT,Meal Deduction,-1,FALSE,FALSE,FALSE,TRUE,FALSE,bas
+Partial Pay,partial_pay,PARTIAL PAY,Partial Pay,-1,FALSE,TRUE,FALSE,FALSE,FALSE,none
+Pay Released,pay_released,PAY RELEASED,Pay Released,-1,FALSE,TRUE,FALSE,FALSE,FALSE,none
+SUPP/COM,suppcom,SUPP/COM DEBT,Spousal Support/Court-Ordered Child Support,-1,FALSE,FALSE,FALSE,TRUE,FALSE,suppcom
+Prior SUPP/COM,prior_suppcom,PRIOR SUPP/COM,Prior Spousal Support/Court-Ordered Child Support,-1,FALSE,FALSE,FALSE,TRUE,FALSE,suppcom
+Repay Advance,repay_advance,REPAY ADVANCE,Repayment of Advance Pay,-1,FALSE,TRUE,FALSE,FALSE,FALSE,none
+Split Pay,split_pay,SPLIT PAY,Split Pay Option,-1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+Split Pay Option,split_pay_option,SPO PAYMENT,Split Pay Option Payment for Accounting,-1,FALSE,FALSE,FALSE,TRUE,FALSE,navy
+AFRH,afrh,AFRH,Armed Forces Retirement Home,-1,FALSE,FALSE,FALSE,TRUE,FALSE,afrh
+USN/MC AFRH,usnmc_afrh,USN/MC RET HOME,Armed Forces Retirement Home,-1,FALSE,FALSE,FALSE,TRUE,FALSE,afrh
+USSH AFRH,ussh_afrh,USSH,Armed Forces Retirement Home,-1,FALSE,FALSE,FALSE,TRUE,FALSE,afrh
+Bank Account Allot,bank_account_allot,BANK ACCT ALLOT,Bank Account Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Discretionary Allot,discretionary_allot,DISCRETIONARY ALT,Discretionary Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Insurance Allot,insurance_allot,INSURANCE ALLOT,Insurance Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+CFC Allot,cfc_allot,CFC ALLOT,Combined Federal Campaign Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+AFAF Allot,afaf_allot,AFAF ALLOT,Air Force Assistance Fund Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+AER Allot,aer_allot,AER ALLOT,Army Emergency Relief Allotment,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+NMCRS Allot,nmcrs_allot,NMCRS ALLOT,Navy-Marine Corp Relief Society,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Tricare Dental,tricare_dental,TRICARE DENTAL,Tricare Dental,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+U.S. Debt,us_debt,US DEBT,U.S. Debt,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Bond 1,bond_1,BOND #01,Bond 1,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Bond 2,bond_2,BOND #02,Bond 2,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments
+Bond 3,bond_3,BOND #03,Bond 3,-1,FALSE,FALSE,FALSE,TRUE,FALSE,allotments

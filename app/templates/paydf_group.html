@@ -33,7 +33,7 @@
                         <td>TSGLI Premium Rate</td>
                         <td>Total Monthly Premium Deduction</td>
                     </tr>
-                    {% for row in config['SGLI_RATE'].itertuples() %}
+                    {% for row in config['SGLI_RATES'].itertuples() %}
                     <tr>
                         <td>{{ '${:,.2f}'.format(row.coverage) }}</td>
                         <td>{{ '${:,.2f}'.format(row.premium) }}</td>
