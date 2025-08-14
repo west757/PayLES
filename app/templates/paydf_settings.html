@@ -1,3 +1,4 @@
+{% set DEFAULT_MONTHS_DISPLAY = config.DEFAULT_MONTHS_DISPLAY %}
 {% set show_all_variables = session.get('show_all_variables', False) %}
 {% set highlight_changes = session.get('highlight_changes', False) %}
 {% set show_all_options = session.get('show_all_options', False) %}
@@ -16,9 +17,9 @@
                 </div>
                 <div class="settings-row">
                     <form id="settings-form">
-                        <select id="month-display-dropdown" class="dropdown" name="months_display">
+                        <select id="months-display-dropdown" class="dropdown" name="months_display">
                             {% for x in range(2, 13) %}
-                                <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
+                                <option value="{{x}}" {% if x==DEFAULT_MONTHS_DISPLAY %} selected {% endif %}>{{x}}</option>
                             {% endfor %}
                         </select>
                     </form>

@@ -171,8 +171,7 @@
         </tbody>
 
 
-
-        <!-- Entitlements/Deductions/Allotments Option Section -->
+        <!-- ent/ded/alt rows -->
         <tbody class="pos-table-section">
             {% for row in PAYDF_TEMPLATE.itertuples() %}
                 {% if row.option %}
@@ -208,9 +207,7 @@
         </tbody>
 
 
-
-
-        <!-- TSP Rate Rows Section -->
+        <!-- TSP rate rows -->
         <tbody class="pos-table-section">
             {% for i in range(11, 19) %}
                 {% set header = row_headers[i] %}
@@ -237,8 +234,7 @@
         </tbody>
 
 
-
-        <!-- Update Button Section -->
+        <!-- update LES button -->
         <tbody>
             <tr>
                 <td colspan="4">

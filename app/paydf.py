@@ -15,9 +15,7 @@ from app.utils import (
 from app.calculations import (
     calculate_taxable_income,
     calculate_total_taxes,
-    calculate_gross_pay,
-    calculate_net_pay,
-    calculate_difference,
+    calculate_gross_net_pay,
     calculate_base_pay,
     calculate_bas,
     calculate_bah,
@@ -37,14 +35,14 @@ from app.calculations import (
 
 def build_paydf(PAYDF_TEMPLATE, les_text):
     initial_month = les_text[8][3]
+    session['initial_month'] = initial_month
     core_dict = {}
 
     core_dict = add_variables(core_dict, les_text)
     core_dict = add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text)
     core_dict["Taxable Income"], core_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, core_dict)
     core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
-    core_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, core_dict)
-    core_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, core_dict)
+    core_dict["Gross Pay"], core_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, core_dict)
     core_dict["Difference"] = Decimal("0.00")
 
     #convert core from dict to ordered list of lists for session variable and dataframe initializing
@@ -179,7 +177,6 @@ def add_variables(core_dict, les_text):
     return core_dict
 
 
-
 def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
@@ -238,205 +235,140 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=None, custom_rows=N
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
-        prev_month = paydf.columns[-1]
-        col_dict = {}
+        next_col_dict = {}
 
-        update_variables(paydf, col_dict, next_month, prev_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
-        col_dict["Taxable Income"], col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
-        col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, col_dict)
-        col_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, col_dict)
-        col_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, col_dict)
-        col_dict["Difference"] = calculate_difference(col_dict, prev_col_dict)
+        update_variables(next_col_dict, prev_col_dict, next_month, form)
+        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf)
+        next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
+        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf)
+        next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
+        next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
+        next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
 
         # assemble col_list in correct order
-        col_list = [col_dict.get(header, 0) for header in row_headers]
+        col_list = [next_col_dict.get(header, 0) for header in row_headers]
         paydf[next_month] = col_list
 
         # Update prev_col_dict for next iteration
-        prev_col_dict = col_dict.copy()
+        prev_col_dict = next_col_dict.copy()
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
 
-    return paydf, col_headers, row_headers, months_display
+    return paydf, col_headers, row_headers
 
 
-
-
-def update_variables(paydf, col_dict, month, prev_month, form):
+def update_variables(next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
+    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
+    variable_headers = list(VARIABLES_MODALS.keys())
 
-    variable_specs = [
-        ("Year", "year_f", "year_m", int, "year"),
-        ("Grade", "grade_f", "grade_m", str, None),
-        ("Months in Service", "months_in_service_f", "months_in_service_m", int, "mis"),
-        ("Zip Code", "zip_code_f", "zip_code_m", str, None),
-        ("Military Housing Area", "military_housing_area_f", "military_housing_area_m", str, "mha"),
-        ("Home of Record", "home_of_record_f", "home_of_record_m", str, None),
-        ("Federal Filing Status", "federal_filing_status_f", "federal_filing_status_m", str, None),
-        ("State Filing Status", "state_filing_status_f", "state_filing_status_m", str, None),
-        ("Dependents", "dependents_f", "dependents_m", int, None),
-        ("Combat Zone", "combat_zone_f", "combat_zone_m", str, None),
-        ("SGLI Coverage", "sgli_coverage_f", "sgli_coverage_m", int, None),
-        ("Trad TSP Base Rate", "trad_tsp_base_rate_f", "trad_tsp_base_rate_m", int, None),
-        ("Trad TSP Specialty Rate", "trad_tsp_specialty_rate_f", "trad_tsp_specialty_rate_m", int, None),
-        ("Trad TSP Incentive Rate", "trad_tsp_incentive_rate_f", "trad_tsp_incentive_rate_m", int, None),
-        ("Trad TSP Bonus Rate", "trad_tsp_bonus_rate_f", "trad_tsp_bonus_rate_m", int, None),
-        ("Roth TSP Base Rate", "roth_tsp_base_rate_f", "roth_tsp_base_rate_m", int, None),
-        ("Roth TSP Specialty Rate", "roth_tsp_specialty_rate_f", "roth_tsp_specialty_rate_m", int, None),
-        ("Roth TSP Incentive Rate", "roth_tsp_incentive_rate_f", "roth_tsp_incentive_rate_m", int, None),
-        ("Roth TSP Bonus Rate", "roth_tsp_bonus_rate_f", "roth_tsp_bonus_rate_m", int, None),
-    ]
+    for header in variable_headers:
+        prev_value = prev_col_dict[header]
+        form_value = form.get(f"{header.lower().replace(' ', '_')}_f")
+        form_month = form.get(f"{header.lower().replace(' ', '_')}_m")
 
-    def get_prev(header):
-        match = paydf[paydf['header'] == header]
-        if match.empty:
-            return 0
-        return match[prev_month].values[0]
-
-    for idx, (header, f_field, m_field, cast, special) in enumerate(variable_specs):
-        prev = get_prev(header)
-        val = form.get(f_field)
-        mval = form.get(m_field)
-        
-        if special == "year":
-            if mval == month and val is not None:
-                try:
-                    col_dict[header] = int(val)
-                except Exception:
-                    col_dict[header] = prev
+        if header == "Year":
+            if MONTHS_SHORT.index(next_month) == 0:
+                next_col_dict[header] = prev_value + 1
             else:
-                if MONTHS_SHORT.index(month) == 0 and MONTHS_SHORT.index(prev_month) == 11:
-                    col_dict[header] = int(prev) + 1
-                else:
-                    col_dict[header] = prev
+                next_col_dict[header] = prev_value
 
-        elif special == "mis":
-            if mval == month and val is not None:
-                try:
-                    col_dict[header] = int(val)
-                except Exception:
-                    col_dict[header] = prev
-            else:
-                col_dict[header] = int(prev) + 1
+        elif header == "Months in Service":
+            next_col_dict[header] = prev_value + 1
 
-        elif special == "mha":
-            # Always recalculate MHA based on current Zip Code
-            zip_code = col_dict.get("Zip Code", get_prev("Zip Code"))
+        elif header == "Military Housing Area":
+            zip_code = next_col_dict["Zip Code"]
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
-            col_dict["Zip Code"] = zip_code
-            col_dict[header] = military_housing_area
+            next_col_dict["Zip Code"] = zip_code
+            next_col_dict[header] = military_housing_area
 
         else:
-            if mval == month and val is not None:
+            if form_month == next_month and form_value is not None:
                 try:
-                    col_dict[header] = cast(val)
+                    next_col_dict[header] = int(form_value) if str(form_value).isdigit() else form_value
                 except Exception:
-                    col_dict[header] = prev
+                    next_col_dict[header] = prev_value
             else:
-                col_dict[header] = prev
+                next_col_dict[header] = prev_value
 
-    return col_dict
+    return next_col_dict
 
 
+def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf):
+    all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
 
-def update_ent_rows(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
-    paydf_headers = set(paydf['header'].tolist())
-    ent_rows = [h for h in PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header'].tolist() if h in paydf_headers]
-    
+    ent_rows = []
+    for header in all_ent_rows:
+        if header in paydf['header'].values:
+            ent_rows.append(header)
+
+    special_calculations = {
+        'Base Pay': calculate_base_pay,
+        'BAS': calculate_bas,
+        'BAH': calculate_bah,
+    }
+
     for header in ent_rows:
-        row_match = paydf[paydf['header'] == header]
-        if row_match.empty:
-            continue
-
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-        if header == 'Base Pay':
-            col_dict[header] = calculate_base_pay(col_dict)
-        elif header == 'BAS':
-            col_dict[header] = calculate_bas(col_dict)
-        elif header == 'BAH':
-            col_dict[header] = calculate_bah(col_dict)
+
+        if header in special_calculations:
+            next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(paydf, header, match, month, prev_month, form, col_dict)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
 
-    return col_dict
+    return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
-    ded_alt_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header'].tolist()
+def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf):
+    all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
+
+    ded_alt_rows = []
+    for header in all_ded_alt_headers:
+        if header in paydf['header'].values:
+            ded_alt_rows.append(header)
+
+    special_calculations = {
+        'Federal Taxes': calculate_federal_taxes,
+        'FICA - Social Security': calculate_fica_social_security,
+        'FICA - Medicare': calculate_fica_medicare,
+        'SGLI': calculate_sgli,
+        'State Taxes': calculate_state_taxes,
+        'Traditional TSP': calculate_traditional_tsp,
+        'Roth TSP': calculate_roth_tsp,
+    }
 
     for header in ded_alt_rows:
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-        if header == 'Federal Taxes':
-            col_dict[header] = calculate_federal_taxes(col_dict)
-        elif header == 'FICA - Social Security':
-            col_dict[header] = calculate_fica_social_security(col_dict)
-        elif header == 'FICA - Medicare':
-            col_dict[header] = calculate_fica_medicare(col_dict)
-        elif header == 'SGLI':
-            col_dict[header] = calculate_sgli(col_dict)
-        elif header == 'State Taxes':
-            col_dict[header] = calculate_state_taxes(col_dict)
-        elif header == 'Traditional TSP':
-            col_dict[header] = calculate_traditional_tsp(col_dict)
-        elif header == 'Roth TSP':
-            col_dict[header] = calculate_roth_tsp(col_dict)
+
+        if header in special_calculations:
+            next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(paydf, header, match, month, prev_month, form, col_dict)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
 
-    return col_dict
+    return next_col_dict
 
 
-
-def update_reg_row(paydf, header, match, month, prev_month, form, col_dict):
-    if bool(match.iloc[0].get('onetime', False)):
-        col_dict[header] = Decimal("0.00")
-        return col_dict
+def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match):
+    if bool(match.iloc[0]['onetime']):
+        next_col_dict[header] = Decimal("0.00")
+        return next_col_dict
 
     varname = match.iloc[0]['varname']
-    new_value = form.get(f"{varname}_f")
-    new_month = form.get(f"{varname}_m")
+    form_value = form.get(f"{varname}_f")
+    form_month = form.get(f"{varname}_m")
+    prev_value = prev_col_dict[header]
 
-    # Get previous value from paydf for this header and prev_month
-    prev_row = paydf[paydf['header'] == header]
-    if not prev_row.empty:
-        prev_value = prev_row[prev_month].values[0]
+    if form_value is None:
+        next_col_dict[header] = prev_value
+        return next_col_dict
+
+    if form_month == next_month:
+        next_col_dict[header] = Decimal(str(form_value))
     else:
-        prev_value = Decimal("0.00")
+        next_col_dict[header] = prev_value
 
-    # If no new value or month is provided, keep previous value
-    if new_value is None or new_month is None:
-        col_dict[header] = prev_value
-        return col_dict
-
-    # Convert new_value to Decimal
-    try:
-        new_value = Decimal(str(new_value))
-    except Exception:
-        new_value = prev_value
-
-    # Get the list of months in paydf columns (excluding 'header')
-    months = [col for col in paydf.columns if col != 'header']
-    # Find the index of the new_month
-    try:
-        new_month_idx = months.index(new_month)
-    except ValueError:
-        # If new_month not found, just keep previous value
-        col_dict[header] = prev_value
-        return col_dict
-
-    # Determine value for the current month
-    # If current month index >= new_month_idx, use new_value, else use prev_value
-    current_month_idx = months.index(month)
-    if current_month_idx >= new_month_idx:
-        col_dict[header] = new_value
-    else:
-        col_dict[header] = prev_value
-
-    return col_dict
-
+    return next_col_dict
 
 
 

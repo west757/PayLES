@@ -226,7 +226,7 @@ function renderCustomRows() {
 
     //get current month display from dropdown or config
     let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
-    const monthsDropdown = document.getElementById('month-display-dropdown');
+    const monthsDropdown = document.getElementById('months-display-dropdown');
     if (monthsDropdown) {
         monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
     }
@@ -482,7 +482,7 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'month-display-dropdown') {
+    if (e.target && e.target.id === 'months-display-dropdown') {
         e.preventDefault();
         updatePaydf();
     }

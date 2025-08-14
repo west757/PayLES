@@ -3,6 +3,11 @@ import json
 
 from app import flask_app
 
+
+def str_to_bool(val):
+    return str(val).strip().upper() == "TRUE"
+
+
 def validate_file(file, ALLOWED_EXTENSIONS):
     if file.filename == '':
         return False, "No file submitted"
@@ -94,3 +99,12 @@ def validate_home_of_record(home_of_record):
     if home_of_record in HOME_OF_RECORDS:
         return home_of_record
     return "Not Found"
+
+
+def sum_rows(row_subset, col_dict):
+    total = Decimal("0.00")
+    for _, row in row_subset.iterrows():
+        header = row['header']
+        value = col_dict[header]
+        total += value
+    return total
