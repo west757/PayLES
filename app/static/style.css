@@ -579,7 +579,7 @@ input[type=file] {
 }
 
 #options-table, #settings-table {
-    width: 31rem;
+    width: 33;
 }
 
 .settings-row {
@@ -653,13 +653,6 @@ input[type=file] {
 .even-row td {
     background-color: var(--secondary_light_accent_color);
 }
-
-/* Remove default nth-child striping to avoid double striping */
-/*
-.pos-table tr:nth-child(even) td {
-    background-color: var(--secondary_light_accent_color);
-}
-*/
 
 .pos-table td:first-child,
 .pos-table td.pos-table-header-cell:first-child {

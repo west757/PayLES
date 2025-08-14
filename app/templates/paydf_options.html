@@ -185,9 +185,14 @@
                             <td class="row-header-cell">
                                 <button class="modal-button" type="button" data-modal="{{ modal }}">{{ header }}</button> 
                             </td>
-                            <td>{{ value }}</td>
+                            <td>{{ '${:,.2f}'.format(value).replace('$-','-$') }}</td>
                             <td>
-                                <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ value }}" />
+                                {% if value < 0 %}
+                                    <span>-$&nbsp;&nbsp;</span>
+                                {% else %}
+                                    <span>$&nbsp;&nbsp;</span>
+                                {% endif %}
+                                <input class="input-num input-num-mid" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ value if value >= 0 else -value }}" />
                             </td>
                             <td>
                                 <select class="dropdown month-dropdown" name="{{ varname }}_m">
