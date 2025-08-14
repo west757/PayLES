@@ -16,7 +16,7 @@
         {% include "les_image.html" %}
     </div>
 
-    {% for modal in modals %}
+    {% for modal in PAYDF_MODALS %}
     <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
     <div class="modal">
         <label class="modal-background" for="{{ modal.id }}"></label>

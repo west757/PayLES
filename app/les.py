@@ -12,7 +12,7 @@ from app import flask_app
 
 def validate_les(les_file):
     with pdfplumber.open(les_file) as les_pdf:
-        #gets the bounding box of the LES title to verify the pdf is an LES
+        # checks bounding box of the LES title to verify the pdf is an LES
         title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
         title_text = title_crop.extract_text_simple()
 
@@ -44,7 +44,7 @@ def create_les_image(LES_RECTANGLES, les_page):
         (710, 165, 980, 220),  # SSN
     ]
 
-    #apply whiteout rectangles
+    # apply whiteout rectangles
     draw = ImageDraw.Draw(scaled_image)
     for rect in whiteout_rects:
         x1 = int(rect[0] * LES_IMAGE_SCALE)
@@ -53,22 +53,20 @@ def create_les_image(LES_RECTANGLES, les_page):
         y2 = int(rect[3] * LES_IMAGE_SCALE)
         draw.rectangle([x1, y1, x2, y2], fill="white")
 
-    #creates les_image as base64 encoded PNG
+    # creates les_image as base64 encoded PNG
     img_io = io.BytesIO()
     scaled_image.save(img_io, format='PNG')
     img_io.seek(0)
     les_image = base64.b64encode(img_io.read()).decode("utf-8")
 
-    #initialize and scale rectangle overlay data
+    # initialize and scale rectangle overlay data
     rect_overlay = []
     for rect in LES_RECTANGLES.to_dict(orient="records"):
         rect_overlay.append({
-            "index": rect["index"],
             "x1": rect["x1"] * LES_IMAGE_SCALE,
             "y1": rect["y1"] * LES_IMAGE_SCALE,
             "x2": rect["x2"] * LES_IMAGE_SCALE,
             "y2": rect["y2"] * LES_IMAGE_SCALE,
-            "title": rect["title"],
             "modal": rect["modal"],
             "tooltip": rect["tooltip"]
         })
@@ -80,7 +78,7 @@ def read_les(LES_RECTANGLES, les_page):
     LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
     les_text = ["text per rectangle"]
 
-    #extracts text from each rectangle defined in LES_RECTANGLES
+    # extracts text from each rectangle defined in LES_RECTANGLES
     for _, row in LES_RECTANGLES.iterrows():
         x1 = float(row['x1']) * LES_COORD_SCALE
         x2 = float(row['x2']) * LES_COORD_SCALE

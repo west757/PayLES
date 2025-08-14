@@ -2,7 +2,7 @@
 {% block content %}
 
 <div id="resources">
-    {% for category in resources %}
+    {% for category in RESOURCES %}
         <h2 id="{{ category.id }}">{{ category.category }}</h2>
         <div class="resource-container shadow">
             {% for item in category['items'] %}

@@ -4,10 +4,9 @@ import json
 from app import flask_app
 
 
-
-
-
-def validate_file(file, ALLOWED_EXTENSIONS):
+def validate_file(file):
+    ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
+    
     if file.filename == '':
         return False, "No file submitted"
     if not allowed_file(file.filename, ALLOWED_EXTENSIONS):
@@ -17,18 +16,6 @@ def validate_file(file, ALLOWED_EXTENSIONS):
 
 def allowed_file(filename, ALLOWED_EXTENSIONS):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def cast_dtype(value, dtype):
-    if dtype == 'int':
-        return int(value)
-    elif dtype == 'str':
-        return str(value)
-    elif dtype == 'Decimal':
-        return Decimal(value)
-    elif dtype == 'bool':
-        return bool(value)
-    return value
 
 
 def load_json(path):
@@ -42,18 +29,6 @@ def load_json(path):
     except Exception as e:
         return {}
 
-
-def cast_dtype(value, dtype):
-    if dtype == 'int':
-        return int(value)
-    elif dtype == 'str':
-        return str(value)
-    elif dtype == 'Decimal':
-        return Decimal(value)
-    elif dtype == 'bool':
-        return bool(value)
-    return value
-    
 
 def find_multiword_matches(section, shortname):
     short_words = shortname.split()
