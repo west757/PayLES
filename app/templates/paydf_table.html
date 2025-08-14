@@ -57,7 +57,7 @@
                 {% endfor %}
             </tr>
 
-            {% for i in range(0, 13) %}
+            {% for i in range(0, 11) %}
                 {% set header = row_headers[i] %}
                 <tr class="variable-row">
                     <td class="row-header-cell">
@@ -68,19 +68,38 @@
                     {% for x in range(1, paydf.shape[1]) %}
                         {% set value = paydf.at[i, col_headers[x]] %}
                         <td>
-                            {% if header in ['Traditional TSP Rate', 'Roth TSP Rate'] %}
-                                {{ '{}%'.format(value) }}
-                            {% else %}
-                                {{ value }}
-                            {% endif %}
+                            {{ value }}
                         </td>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
 
+
+
         <tbody class="pos-table-section">
-            {% for i in range(13, row_headers|length - 6) %}
+            {% for i in range(11, 19) %}
+                {% set header = row_headers[i] %}
+                <tr class="tsp-row">
+                    <td class="row-header-cell">
+                        <button class="modal-button">
+                            {{ header }}
+                        </button>
+                    </td>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td>
+                            {{ '{}%'.format(value) }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+        <tbody class="pos-table-section">
+            {% for i in range(19, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.shape[0] > 0 and not row_info.iloc[0]['custom'] %}
@@ -104,6 +123,7 @@
                 {% endif %}
             {% endfor %}
         </tbody>
+
 
         <tbody id="custom-row-section" class="pos-table-section">
             {% for i in range(0, row_headers|length) %}

@@ -119,7 +119,7 @@
                 <td class="row-header-cell"><button class="modal-button" type="button" data-modal="dependents-modal">Dependents</button></td>
                 <td>{{ dependents }}</td>
                 <td>
-                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="" placeholder="{{ dependents }}" />
+                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="" placeholder="{{ dependents }}" />
                 </td>
                 <td>
                     <select class="dropdown month-dropdown" name="dependents_m">
@@ -215,7 +215,7 @@
             {% for i in range(11, 19) %}
                 {% set header = row_headers[i] %}
                 {% set varname = header|lower|replace(' ', '_') %}
-                <tr>
+                <tr class="tsp-row">
                     {% set tsp = paydf.at[i, col_headers[2]] %}
                     <td class="row-header-cell">
                         <button class="modal-button" type="button" data-modal="{{ tsp }}">{{ header }}</button> 

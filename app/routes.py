@@ -63,8 +63,6 @@ def submit_les():
         
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
-        
-        print(paydf)
 
         context = {
             'les_image': les_image,
