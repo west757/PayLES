@@ -273,17 +273,17 @@ footer {
 }
 
 #submit-les-button {
-    width: 75%;
     height: 3.5rem;
+    width: 73%;
 }
 
 #submit-example-button {
-    width: 23%;
     height: 3.5rem;
+    width: 25%;
 }
 
 #update-les-button, #add-entitlement-button, #add-deduction-button, #return-home-button {
-    width: 9.5rem;
+    width: 10rem;
 }
 
 #update-les-button {

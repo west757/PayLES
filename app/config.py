@@ -91,8 +91,6 @@ class Config:
         "Dependents": "bah",
         "SGLI Coverage": "sgli",
         "Combat Zone": "combatzone",
-        "Traditional TSP Rate": "tsp",
-        "Roth TSP Rate": "tsp",
         "Taxable Income": "taxedincome",
         "Non-Taxable Income": "taxedincome",
         "Total Taxes": "taxedincome",

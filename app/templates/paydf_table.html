@@ -47,6 +47,8 @@
 
 
 
+
+
     <table id="paydf-table" class="pos-table">
 
         <tbody class="pos-table-section">
@@ -57,11 +59,13 @@
                 {% endfor %}
             </tr>
 
+            <!-- variable rows -->
             {% for i in range(0, 11) %}
                 {% set header = row_headers[i] %}
+                {% set modal = VARIABLE_CALC_MODAL_MAP.get(header, '') %}
                 <tr class="variable-row">
                     <td class="row-header-cell">
-                        <button class="modal-button">
+                        <button class="modal-button" data-modal="{{ modal }}">
                             {{ header }}
                         </button>
                     </td>
@@ -76,13 +80,13 @@
         </tbody>
 
 
-
+        <!-- tsp rows -->
         <tbody class="pos-table-section">
             {% for i in range(11, 19) %}
                 {% set header = row_headers[i] %}
                 <tr class="tsp-row">
                     <td class="row-header-cell">
-                        <button class="modal-button">
+                        <button class="modal-button" data-modal="tsp">
                             {{ header }}
                         </button>
                     </td>
@@ -97,7 +101,7 @@
         </tbody>
 
 
-
+        <!-- entitlement/deduction/allotment rows -->
         <tbody class="pos-table-section">
             {% for i in range(19, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
@@ -112,11 +116,7 @@
                         {% for x in range(1, paydf.shape[1]) %}
                             {% set value = paydf.at[i, col_headers[x]] %}
                             <td>
-                                {% if value is not none and value != '' %}
-                                    {{ '${:,.2f}'.format(value).replace('$-','-$') }}
-                                {% else %}
-                                    $0.00
-                                {% endif %}
+                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                             </td>
                         {% endfor %}
                     </tr>
@@ -124,7 +124,7 @@
             {% endfor %}
         </tbody>
 
-
+        <!-- custom rows-->
         <tbody id="custom-row-section" class="pos-table-section">
             {% for i in range(0, row_headers|length) %}
                 {% set header = row_headers[i] %}
@@ -150,17 +150,21 @@
         </tbody>
 
 
+        <!-- calculation rows -->
         <tbody>
             {% for i in range(row_headers|length - 6, row_headers|length) %}
+            {% set modal = VARIABLE_CALC_MODAL_MAP.get(header, '') %}
+
                 <tr>
                     <td class="row-header-cell">
-                        <button class="modal-button">
+                        <button class="modal-button" data-modal="{{ modal }}">
                             {{ row_headers[i] }}
                         </button>
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
                         <td>
-                            {{ paydf.at[i, col_headers[x]] }}
+                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
                         </td>
                     {% endfor %}
                 </tr>

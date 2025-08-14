@@ -34,6 +34,7 @@ def submit_les():
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    VARIABLE_CALC_MODAL_MAP = flask_app.config['VARIABLE_CALC_MODAL_MAP']
 
     action = request.form.get('action')
     les_file = request.files.get('home-input')
@@ -60,7 +61,6 @@ def submit_les():
         paydf, core_list, initial_month = build_paydf(PAYDF_TEMPLATE, les_text)
         options = build_options(PAYDF_TEMPLATE, core_list, initial_month)
         paydf, col_headers, row_headers, options, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
-        
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
 
@@ -73,7 +73,8 @@ def submit_les():
             'options': options,
             'months_display': months_display,
             'les_remarks': les_remarks,
-            'modals': modals
+            'modals': modals,
+            'VARIABLE_CALC_MODAL_MAP': VARIABLE_CALC_MODAL_MAP,
         }
         return render_template('paydf_group.html', **context)
     else:
@@ -83,11 +84,18 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    VARIABLE_CALC_MODAL_MAP = flask_app.config['VARIABLE_CALC_MODAL_MAP']
+
     remove_custom_template_rows(PAYDF_TEMPLATE)
 
+    print(request.form)
+
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
+
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
+
     options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
+
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = parse_custom_rows(custom_rows_json)
@@ -106,6 +114,7 @@ def update_paydf():
         'row_headers': row_headers,
         'options': options,
         'months_display': months_display,
+        'VARIABLE_CALC_MODAL_MAP': VARIABLE_CALC_MODAL_MAP,
     }
     
     return render_template('paydf_table.html', **context)
