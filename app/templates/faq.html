@@ -4,7 +4,7 @@
 <div id="faq">
     <h2>Frequently Asked Questions</h2>
     <div class="tabs shadow">
-        {% for faq in faqs %}
+        {% for faq in FAQS %}
         <div class="tab">
             <input class="faq-checkbox" id="faq{{ loop.index }}" type="checkbox">
             <label class="tab-label" for="faq{{ loop.index }}">{{ faq.label|safe }}</label>
