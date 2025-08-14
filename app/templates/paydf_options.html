@@ -20,7 +20,7 @@
 
             <tr>
                 {% set grade = paydf.at[row_headers.index('Grade'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="grade">Grade</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="basepay">Grade</button></td>
                 <td>{{ grade }}</td>
                 <td>
                     <select class="dropdown" name="grade_f">
@@ -40,7 +40,7 @@
 
             <tr>
                 {% set zip_code = paydf.at[row_headers.index('Zip Code'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="zip-code">Zip Code</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Zip Code</button></td>
                 <td>{{ zip_code }}</td>
                 <td>
                     <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="zip_code_f" value="" placeholder="{{ zip_code }}" />
@@ -56,7 +56,7 @@
 
             <tr>
                 {% set home_of_record = paydf.at[row_headers.index('Home of Record'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="home-of-record">Home of Record</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Home of Record</button></td>
                 <td>{{ home_of_record }}</td>
                 <td>
                     <select class="dropdown" name="home_of_record_f">
@@ -76,7 +76,7 @@
 
             <tr>
                 {% set federal_filing_status = paydf.at[row_headers.index('Federal Filing Status'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="federal-filing-status">Federal Filing Status</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="federaltaxes">Federal Filing Status</button></td>
                 <td>{{ federal_filing_status }}</td>
                 <td>
                     <select class="dropdown" name="federal_filing_status_f">
@@ -96,7 +96,7 @@
 
             <tr>
                 {% set state_filing_status = paydf.at[row_headers.index('State Filing Status'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="state-filing-status-modal">State Filing Status</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="statetaxes">State Filing Status</button></td>
                 <td>{{ state_filing_status }}</td>
                 <td>
                     <select class="dropdown" name="state_filing_status_f">
@@ -116,7 +116,7 @@
 
             <tr>
                 {% set dependents = paydf.at[row_headers.index('Dependents'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="dependents-modal">Dependents</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Dependents</button></td>
                 <td>{{ dependents }}</td>
                 <td>
                     <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="" placeholder="{{ dependents }}" />
@@ -132,7 +132,7 @@
 
             <tr>
                 {% set sgli_coverage = paydf.at[row_headers.index('SGLI Coverage'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="sgli-coverage-modal">SGLI Coverage</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="sgli">SGLI Coverage</button></td>
                 <td>{{ sgli_coverage }}</td>
                 <td>
                     <select class="dropdown" name="sgli_coverage_f">
@@ -152,7 +152,7 @@
 
             <tr>
                 {% set combat_zone = paydf.at[row_headers.index('Combat Zone'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="combat-zone-modal">Combat Zone</button></td>
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="combatzone">Combat Zone</button></td>
                 <td>{{ combat_zone }}</td>
                 <td>
                     <select class="dropdown" name="combat_zone_f">
@@ -218,7 +218,7 @@
                 <tr class="tsp-row">
                     {% set tsp = paydf.at[i, col_headers[2]] %}
                     <td class="row-header-cell">
-                        <button class="modal-button" type="button" data-modal="{{ tsp }}">{{ header }}</button> 
+                        <button class="modal-button" type="button" data-modal="tsp">{{ header }}</button> 
                     </td>
                     <td>{{ '{}%'.format(tsp) }}</td>
                     <td>

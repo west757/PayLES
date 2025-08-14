@@ -40,7 +40,7 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     core_dict = {}
 
     core_dict = add_variables(core_dict, les_text)
-    core_dict = add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text)
+    core_dict = add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text)
     core_dict["Taxable Income"], core_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, core_dict)
     core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
     core_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, core_dict)
@@ -180,7 +180,7 @@ def add_variables(core_dict, les_text):
 
 
 
-def add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text):
+def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
         shortname = str(row['shortname'])
@@ -195,7 +195,7 @@ def add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text):
         else:
             sections = [les_text[10], les_text[11]]
 
-        # search to see if shortname is in the section
+        # search if shortname is in the section
         for section in sections:
             matches = find_multiword_matches(section, shortname)
 
@@ -262,7 +262,6 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
     row_headers = paydf['header'].tolist()
-
     prev_col_dict = {row_headers[i]: paydf.iloc[i, 1] for i in range(len(row_headers))}
 
     for i in range(1, months_display):
@@ -272,9 +271,9 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
         col_dict = {}
 
         update_variables(paydf, col_dict, next_month, prev_month, form)
-        update_entitlements(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
+        update_ent_rows(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
         col_dict["Taxable Income"], col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, col_dict)
-        update_da(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
+        update_ded_alt_rows(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
         col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, col_dict)
         col_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, col_dict)
         col_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, col_dict)
@@ -372,9 +371,10 @@ def update_variables(paydf, col_dict, month, prev_month, form):
 
 
 
-def update_entitlements(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
+def update_ent_rows(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
     paydf_headers = set(paydf['header'].tolist())
     ent_rows = [h for h in PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header'].tolist() if h in paydf_headers]
+    
     for header in ent_rows:
         row_match = paydf[paydf['header'] == header]
         if row_match.empty:
@@ -388,15 +388,15 @@ def update_entitlements(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month
         elif header == 'BAH':
             col_dict[header] = calculate_bah(col_dict)
         else:
-            update_eda_rows(paydf, header, match, month, prev_month, form, col_dict)
+            update_reg_row(paydf, header, match, month, prev_month, form, col_dict)
 
     return col_dict
 
 
-def update_da(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
-    da_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header'].tolist()
+def update_ded_alt_rows(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
+    ded_alt_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header'].tolist()
 
-    for header in da_rows:
+    for header in ded_alt_rows:
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
         if header == 'Federal Taxes':
             col_dict[header] = calculate_federal_taxes(col_dict)
@@ -413,13 +413,13 @@ def update_da(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
         elif header == 'Roth TSP':
             col_dict[header] = calculate_roth_tsp(col_dict)
         else:
-            update_eda_rows(paydf, header, match, month, prev_month, form, col_dict)
+            update_reg_row(paydf, header, match, month, prev_month, form, col_dict)
 
     return col_dict
 
 
 
-def update_eda_rows(paydf, header, match, month, prev_month, form, col_dict):
+def update_reg_row(paydf, header, match, month, prev_month, form, col_dict):
     if bool(match.iloc[0].get('onetime', False)):
         col_dict[header] = Decimal("0.00")
         return col_dict
