@@ -1,13 +1,8 @@
 from datetime import timedelta
 from decimal import Decimal
 from pathlib import Path
-import os
 import pandas as pd
 import secrets
-
-from app.utils import (
-    str_to_bool,
-)
 
 class Config:
     #configuration settings
@@ -30,42 +25,15 @@ class Config:
     PDF_FOLDER = STATIC_FOLDER / "pdf"
     
 
-    #load static files
-    BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv")
-    BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv")
-    FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv")
-    LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv")
-    MHA_ZIP_CODES = pd.read_csv(CSV_FOLDER / "mha_zip_codes.csv")
-    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
-    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
-    STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv")
-    SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv")
-
-    PAYDF_TEMPLATE = pd.read_csv(
-        CSV_FOLDER / "paydf_template.csv",
-        dtype={'sign': int},
-        converters={
-            col: str_to_bool for col in ['required', 'onetime', 'tax', 'option', 'custom']
-        },
-    )
-
-    FAQ_JSON = JSON_FOLDER / "faq.json"
-    LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
-    PAYDF_MODALS_JSON = JSON_FOLDER / "paydf_modals.json"
-    RESOURCES_JSON = JSON_FOLDER / "resources.json"
-
-    EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
-    
-
     #constants   
     DEFAULT_MONTHS_DISPLAY = 4
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
-    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TRADITIONAL_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
+    BAS_AMOUNT = [Decimal(465.77), Decimal(320.78)]
 
     TAX_FILING_TYPES_DEDUCTIONS = {
         "Single": 15000,
@@ -93,14 +61,16 @@ class Config:
         "Dependents": "bah",
         "SGLI Coverage": "sgli",
         "Combat Zone": "combatzone",
-        "Trad TSP Base Rate": "tsp",
-        "Trad TSP Specialty Rate": "tsp",
-        "Trad TSP Incentive Rate": "tsp",
-        "Trad TSP Bonus Rate": "tsp",
-        "Roth TSP Base Rate": "tsp",
-        "Roth TSP Specialty Rate": "tsp",
-        "Roth TSP Incentive Rate": "tsp",
-        "Roth TSP Bonus Rate": "tsp"
+    }
+    TSP_MODALS = {
+        "Trad TSP Base Rate": "basepay",
+        "Trad TSP Specialty Rate": "specialty",
+        "Trad TSP Incentive Rate": "incentive",
+        "Trad TSP Bonus Rate": "bonus",
+        "Roth TSP Base Rate": "basepay",
+        "Roth TSP Specialty Rate": "specialty",
+        "Roth TSP Incentive Rate": "incentive",
+        "Roth TSP Bonus Rate": "bonus",
     }
     CALCULATIONS_MODALS = {
         "Taxable Income": "taxedincome",
@@ -110,3 +80,89 @@ class Config:
         "Net Pay": "grossnetpay",
         "Difference": "grossnetpay",
     }
+
+
+    #load static files
+    dtype_bah = {'mha': str}
+    for grade in GRADES:
+        dtype_bah[grade] = int
+
+    BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv",
+        dtype=dtype_bah
+    )
+    BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv",
+        dtype=dtype_bah
+    )
+    FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
+        dtype={
+            'status': str, 
+            'bracket': int,
+        },
+        converters={
+            'rate': lambda x: Decimal(x),
+        }
+    )
+    LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
+        dtype={
+            'index': int,
+            'x1': int,
+            'y1': int,
+            'x2': int,
+            'y2': int,
+            'title': str,
+            'modal': str,
+            'tooltip': str,
+        }
+    )
+    MHA_ZIP_CODES = pd.read_csv(CSV_FOLDER / "mha_zip_codes.csv",
+        dtype={
+            'mha': str, 
+            'mha_name': str, 
+            'zip_code': str,
+        }
+    )
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
+    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
+    PAYDF_TEMPLATE = pd.read_csv(CSV_FOLDER / "paydf_template.csv",
+        dtype={
+            'header': str,
+            'varname': str,
+            'shortname': str,
+            'longname': str,
+            'sign': int,
+            'required': bool,
+            'onetime': bool,
+            'tax': bool,
+            'option': bool,
+            'custom': bool,
+            'modal': str,
+        }
+    )
+    SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
+        dtype={
+            'coverage': str,
+            'tsgli_premium': int,
+        },
+        converters={
+            'premium': lambda x: Decimal(x),
+            'total': lambda x: Decimal(x),
+        }
+    )
+    STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
+        dtype={
+            'state': str,
+            'single_bracket': int,
+            'married_bracket': int,
+        },
+        converters={
+            'single_rate': lambda x: Decimal(x),
+            'married_rate': lambda x: Decimal(x),
+        }
+    )
+
+    FAQ_JSON = JSON_FOLDER / "faq.json"
+    LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
+    PAYDF_MODALS_JSON = JSON_FOLDER / "paydf_modals.json"
+    RESOURCES_JSON = JSON_FOLDER / "resources.json"
+
+    EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"

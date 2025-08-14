@@ -24,8 +24,7 @@ from app.calculations import (
     calculate_fica_medicare,
     calculate_sgli,
     calculate_state_taxes,
-    calculate_traditional_tsp,
-    calculate_roth_tsp,
+    calculate_trad_roth_tsp,
 )
 
 
@@ -334,14 +333,14 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
         'FICA - Medicare': calculate_fica_medicare,
         'SGLI': calculate_sgli,
         'State Taxes': calculate_state_taxes,
-        'Traditional TSP': calculate_traditional_tsp,
-        'Roth TSP': calculate_roth_tsp,
     }
 
     for header in ded_alt_rows:
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if header in special_calculations:
+        if header == "Traditional TSP":
+            next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
+        elif header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
             update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
