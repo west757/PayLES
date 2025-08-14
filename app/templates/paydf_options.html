@@ -100,7 +100,8 @@
                 <td>{{ state_filing_status }}</td>
                 <td>
                     <select class="dropdown" name="state_filing_status_f">
-                        {% for x in TAX_FILING_TYPES_DEDUCTIONS.keys()|slice(2) %}
+                        {% set filing_types = TAX_FILING_TYPES_DEDUCTIONS.keys()|list %}
+                        {% for x in filing_types[:2] %}
                             <option value="{{x}}" {% if state_filing_status == x %}selected{% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>

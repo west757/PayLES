@@ -1,4 +1,6 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+{% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
+{% set CALCULATIONS_MODALS = config.CALCULATIONS_MODALS %}
 
 <div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
@@ -153,13 +155,17 @@
         <!-- calculation rows -->
         <tbody>
             {% for i in range(row_headers|length - 6, row_headers|length) %}
-            {% set modal = CALCULATIONS_MODALS.get(header, '') %}
-
+                {% set header = row_headers[i] %}
+                {% set modal = CALCULATIONS_MODALS.get(header, '') %}
                 <tr>
-                    <td class="row-header-cell">
-                        <button class="modal-button" data-modal="{{ modal }}">
-                            {{ row_headers[i] }}
-                        </button>
+                    <td class="row-header-cell {% if header == 'Difference' %} difference-cell{% endif %}">
+                        {% if header != "Difference" %}
+                            <button class="modal-button" data-modal="{{ modal }}">
+                                {{ header }}
+                            </button>
+                        {% else %}
+                            {{ header }}
+                        {% endif %}
                     </td>
                     {% for x in range(1, paydf.shape[1]) %}
                         {% set value = paydf.at[i, col_headers[x]] %}

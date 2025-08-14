@@ -218,12 +218,14 @@ def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
         return total
 
     for tsp_var, modal in TSP_MODALS.items():
-        rate = Decimal(col_dict.get(tsp_var, "0.00"))
-
+        rate_str = str(col_dict.get(tsp_var, "0.00")).strip()
+        try:
+            rate = Decimal(rate_str)
+        except Exception:
+            rate = Decimal("0.00")
         if rate > 0:
             total = sum_tsp_rows(modal)
             value = total * rate / Decimal(100)
-
             if tsp_var.startswith("Trad"):
                 trad_total += value
             elif tsp_var.startswith("Roth"):
