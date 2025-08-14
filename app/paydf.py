@@ -52,7 +52,7 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     session['paydf_core'] = core_list
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
-    return paydf, core_list, initial_month
+    return paydf
 
 
 def add_variables(core_dict, les_text):
@@ -225,39 +225,10 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
 
 
 # =========================
-# build options
-# =========================
-
-def build_options(PAYDF_TEMPLATE, core_list, initial_month):
-    template_options = PAYDF_TEMPLATE[PAYDF_TEMPLATE['option'] == True]
-    row_dict = {header: value for header, value in core_list}
-    options = []
-
-    # Loop through template options and add to options array if header is in rows
-    for _, row in template_options.iterrows():
-        header = row['header']
-        if header in row_dict:
-            value = row_dict[header]
-            options.append([header, value, initial_month])
-
-    return options
-
-
-def update_options(PAYDF_TEMPLATE, paydf, form, initial_month=None):
-    """
-    Update the options array based on form input.
-    This function will be responsible for handling form values and updating options accordingly.
-    """
-    # Implementation will depend on your form structure and requirements
-    pass
-
-
-
-# =========================
 # expand paydf
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, custom_rows=None):
+def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=None, custom_rows=None):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -289,7 +260,7 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
 
-    return paydf, col_headers, row_headers, options, months_display
+    return paydf, col_headers, row_headers, months_display
 
 
 

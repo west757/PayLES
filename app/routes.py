@@ -14,7 +14,6 @@ from app.les import (
 )
 from app.paydf import (
     build_paydf,
-    build_options, 
     remove_custom_template_rows, 
     add_custom_template_rows, 
     add_custom_row, 
@@ -58,9 +57,8 @@ def submit_les():
         remove_custom_template_rows(PAYDF_TEMPLATE)
         
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        paydf, core_list, initial_month = build_paydf(PAYDF_TEMPLATE, les_text)
-        options = build_options(PAYDF_TEMPLATE, core_list, initial_month)
-        paydf, col_headers, row_headers, options, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
+        paydf = build_paydf(PAYDF_TEMPLATE, les_text)
+        paydf, col_headers, row_headers, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
 
@@ -70,7 +68,6 @@ def submit_les():
             'paydf': paydf,
             'col_headers': col_headers,
             'row_headers': row_headers,
-            'options': options,
             'months_display': months_display,
             'les_remarks': les_remarks,
             'modals': modals,
@@ -94,8 +91,6 @@ def update_paydf():
 
     paydf = pd.read_json(io.StringIO(session['paydf_json']))
 
-    options = build_options(PAYDF_TEMPLATE, paydf, form=request.form)
-
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = parse_custom_rows(custom_rows_json)
@@ -103,7 +98,7 @@ def update_paydf():
     
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, custom_rows=custom_rows, form=request.form)
+    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, custom_rows=custom_rows, form=request.form)
 
     col_headers = paydf.columns.tolist()
     row_headers = paydf['header'].tolist()
@@ -112,7 +107,6 @@ def update_paydf():
         'paydf': paydf,
         'col_headers': col_headers,
         'row_headers': row_headers,
-        'options': options,
         'months_display': months_display,
         'VARIABLE_CALC_MODAL_MAP': VARIABLE_CALC_MODAL_MAP,
     }
