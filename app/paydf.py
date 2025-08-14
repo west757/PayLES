@@ -421,26 +421,48 @@ def update_da(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
 
 def update_eda_rows(paydf, header, match, month, prev_month, form, col_dict):
     if bool(match.iloc[0].get('onetime', False)):
-        col_dict[header] = Decimal(0)
+        col_dict[header] = Decimal("0.00")
         return col_dict
 
     varname = match.iloc[0]['varname']
-    checkbox_field = f"{varname}_f"
-    month_field = f"{varname}_m"
-    checked = form.get(checkbox_field)
-    checked_month = form.get(month_field)
+    new_value = form.get(f"{varname}_f")
+    new_month = form.get(f"{varname}_m")
 
-    # Use previous value from paydf for this header and prev_month
+    # Get previous value from paydf for this header and prev_month
     prev_row = paydf[paydf['header'] == header]
     if not prev_row.empty:
         prev_value = prev_row[prev_month].values[0]
     else:
-        prev_value = Decimal(0)
+        prev_value = Decimal("0.00")
 
-    if checked_month == month and checked:
+    # If no new value or month is provided, keep previous value
+    if new_value is None or new_month is None:
         col_dict[header] = prev_value
+        return col_dict
+
+    # Convert new_value to Decimal
+    try:
+        new_value = Decimal(str(new_value))
+    except Exception:
+        new_value = prev_value
+
+    # Get the list of months in paydf columns (excluding 'header')
+    months = [col for col in paydf.columns if col != 'header']
+    # Find the index of the new_month
+    try:
+        new_month_idx = months.index(new_month)
+    except ValueError:
+        # If new_month not found, just keep previous value
+        col_dict[header] = prev_value
+        return col_dict
+
+    # Determine value for the current month
+    # If current month index >= new_month_idx, use new_value, else use prev_value
+    current_month_idx = months.index(month)
+    if current_month_idx >= new_month_idx:
+        col_dict[header] = new_value
     else:
-        col_dict[header] = Decimal(0)
+        col_dict[header] = prev_value
 
     return col_dict
 

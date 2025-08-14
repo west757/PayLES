@@ -27,8 +27,7 @@ Cache expensive computations if possible (e.g., with Flask-Caching).
 Avoid unnecessary recomputation of dataframes or images.
 
 
-maybe remove default from paydf_template
-maybe change sgli rate to sgli coverage
+combine calculate traditional and roth tsp rates
 
 
 1. Minimize DataFrame Row-wise Operations
