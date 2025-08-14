@@ -29,7 +29,6 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
@@ -41,7 +40,7 @@ def submit_les():
         if not les_file:
             return render_template("home_form.html", message="No file submitted")
         
-        valid, message = validate_file(les_file, ALLOWED_EXTENSIONS)
+        valid, message = validate_file(les_file)
         if not valid:
             return render_template("home_form.html", message=message)
         
@@ -58,8 +57,8 @@ def submit_les():
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf = build_paydf(PAYDF_TEMPLATE, les_text)
         paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
-        les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
-        modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+        LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
+        PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
 
         context = {
             'les_image': les_image,
@@ -67,8 +66,8 @@ def submit_les():
             'paydf': paydf,
             'col_headers': col_headers,
             'row_headers': row_headers,
-            'les_remarks': les_remarks,
-            'modals': modals,
+            'LES_REMARKS': LES_REMARKS,
+            'PAYDF_MODALS': PAYDF_MODALS,
         }
         return render_template('paydf_group.html', **context)
     else:
@@ -98,7 +97,6 @@ def update_paydf():
         'col_headers': col_headers,
         'row_headers': row_headers,
     }
-    
     return render_template('paydf_table.html', **context)
 
 
@@ -109,14 +107,14 @@ def about():
 
 @flask_app.route('/faq')
 def faq():
-    faqs = load_json(flask_app.config['FAQ_JSON'])
-    return render_template('faq.html', faqs=faqs)
+    FAQS = load_json(flask_app.config['FAQ_JSON'])
+    return render_template('faq.html', FAQs=FAQS)
 
 
 @flask_app.route('/resources')
 def resources():
-    resources = load_json(flask_app.config['RESOURCES_JSON'])
-    return render_template('resources.html', resources=resources)
+    RESOURCES = load_json(flask_app.config['RESOURCES_JSON'])
+    return render_template('resources.html', RESOURCES=RESOURCES)
 
 
 @flask_app.route('/leave_calculator')
