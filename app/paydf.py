@@ -45,7 +45,7 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
     core_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, core_dict)
     core_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, core_dict)
-    core_dict["Difference"] = Decimal(0)
+    core_dict["Difference"] = Decimal("0.00")
 
     #convert core from dict to ordered list of lists for session variable and dataframe initializing
     core_list = [[header, core_dict[header]] for header in core_dict]
@@ -143,18 +143,38 @@ def add_variables(core_dict, les_text):
     core_dict["SGLI Coverage"] = sgli_coverage
 
     try:
-        ttsp_fields = [int(les_text[60][3]), int(les_text[62][3]), int(les_text[64][3]), int(les_text[66][3])]
-        traditional_tsp_rate = next((val for val in ttsp_fields if val > 0), 0)
+        core_dict["Trad TSP Base Rate"] = int(les_text[60][3])
     except Exception:
-        traditional_tsp_rate = 0
-    core_dict["Traditional TSP Rate"] = traditional_tsp_rate
+        core_dict["Trad TSP Base Rate"] = 0
+    try:
+        core_dict["Trad TSP Specialty Rate"] = int(les_text[62][3])
+    except Exception:
+        core_dict["Trad TSP Specialty Rate"] = 0
+    try:
+        core_dict["Trad TSP Incentive Rate"] = int(les_text[64][3])
+    except Exception:
+        core_dict["Trad TSP Incentive Rate"] = 0
+    try:
+        core_dict["Trad TSP Bonus Rate"] = int(les_text[66][3])
+    except Exception:
+        core_dict["Trad TSP Bonus Rate"] = 0
 
     try:
-        rtsp_fields = [int(les_text[69][3]), int(les_text[71][3]), int(les_text[73][3]), int(les_text[75][3])]
-        roth_tsp_rate = next((val for val in rtsp_fields if val > 0), 0)
+        core_dict["Roth TSP Base Rate"] = int(les_text[69][3])
     except Exception:
-        roth_tsp_rate = 0
-    core_dict["Roth TSP Rate"] = roth_tsp_rate
+        core_dict["Roth TSP Base Rate"] = 0
+    try:
+        core_dict["Roth TSP Specialty Rate"] = int(les_text[71][3])
+    except Exception:
+        core_dict["Roth TSP Specialty Rate"] = 0
+    try:
+        core_dict["Roth TSP Incentive Rate"] = int(les_text[73][3])
+    except Exception:
+        core_dict["Roth TSP Incentive Rate"] = 0
+    try:
+        core_dict["Roth TSP Bonus Rate"] = int(les_text[75][3])
+    except Exception:
+        core_dict["Roth TSP Bonus Rate"] = 0
 
     return core_dict
 
@@ -194,7 +214,7 @@ def add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text):
 
         if not found:
             if required:
-                value = 0
+                value = Decimal("0.00")
             else:
                 continue
 
@@ -238,9 +258,6 @@ def update_options(PAYDF_TEMPLATE, paydf, form, initial_month=None):
 # =========================
 
 def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, custom_rows=None):
-    if form is None:
-        form = {}
-
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -250,27 +267,22 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, options, months_display, form=None, cust
 
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
-        new_month = MONTHS_SHORT[month_idx]
+        next_month = MONTHS_SHORT[month_idx]
         prev_month = paydf.columns[-1]
         col_dict = {}
 
-        update_variables(paydf, col_dict, new_month, prev_month, form)
-        update_entitlements(PAYDF_TEMPLATE, paydf, new_month, form, col_dict, prev_month)
-
-        taxable, nontaxable = calculate_taxable_income(PAYDF_TEMPLATE, col_dict)
-        col_dict["Taxable Income"] = taxable
-        col_dict["Non-Taxable Income"] = nontaxable
-
-        update_da(PAYDF_TEMPLATE, paydf, new_month, form, col_dict, prev_month)
-
+        update_variables(paydf, col_dict, next_month, prev_month, form)
+        update_entitlements(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
+        col_dict["Taxable Income"], col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, col_dict)
+        update_da(PAYDF_TEMPLATE, paydf, next_month, form, col_dict, prev_month)
         col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, col_dict)
         col_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, col_dict)
         col_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, col_dict)
         col_dict["Difference"] = calculate_difference(col_dict, prev_col_dict)
 
-        # Assemble col in correct order
-        col = [col_dict.get(header, 0) for header in row_headers]
-        paydf[new_month] = col
+        # assemble col_list in correct order
+        col_list = [col_dict.get(header, 0) for header in row_headers]
+        paydf[next_month] = col_list
 
         # Update prev_col_dict for next iteration
         prev_col_dict = col_dict.copy()
@@ -298,12 +310,21 @@ def update_variables(paydf, col_dict, month, prev_month, form):
         ("Dependents", "dependents_f", "dependents_m", int, None),
         ("Combat Zone", "combat_zone_f", "combat_zone_m", str, None),
         ("SGLI Coverage", "sgli_coverage_f", "sgli_coverage_m", int, None),
-        ("Traditional TSP Rate", "traditional_tsp_rate_f", "traditional_tsp_rate_m", int, None),
-        ("Roth TSP Rate", "roth_tsp_rate_f", "roth_tsp_rate_m", int, None),
+        ("Trad TSP Base Rate", "trad_tsp_base_rate_f", "trad_tsp_base_rate_m", int, None),
+        ("Trad TSP Specialty Rate", "trad_tsp_specialty_rate_f", "trad_tsp_specialty_rate_m", int, None),
+        ("Trad TSP Incentive Rate", "trad_tsp_incentive_rate_f", "trad_tsp_incentive_rate_m", int, None),
+        ("Trad TSP Bonus Rate", "trad_tsp_bonus_rate_f", "trad_tsp_bonus_rate_m", int, None),
+        ("Roth TSP Base Rate", "roth_tsp_base_rate_f", "roth_tsp_base_rate_m", int, None),
+        ("Roth TSP Specialty Rate", "roth_tsp_specialty_rate_f", "roth_tsp_specialty_rate_m", int, None),
+        ("Roth TSP Incentive Rate", "roth_tsp_incentive_rate_f", "roth_tsp_incentive_rate_m", int, None),
+        ("Roth TSP Bonus Rate", "roth_tsp_bonus_rate_f", "roth_tsp_bonus_rate_m", int, None),
     ]
 
     def get_prev(header):
-        return paydf.at[paydf[paydf['header'] == header].index[0], prev_month]
+        match = paydf[paydf['header'] == header]
+        if match.empty:
+            return 0
+        return match[prev_month].values[0]
 
     for idx, (header, f_field, m_field, cast, special) in enumerate(variable_specs):
         prev = get_prev(header)
@@ -348,7 +369,6 @@ def update_variables(paydf, col_dict, month, prev_month, form):
                 col_dict[header] = prev
 
     return col_dict
-
 
 
 
@@ -401,7 +421,7 @@ def update_da(PAYDF_TEMPLATE, paydf, month, form, col_dict, prev_month):
 
 def update_eda_rows(paydf, header, match, month, prev_month, form, col_dict):
     if bool(match.iloc[0].get('onetime', False)):
-        col_dict[header] = 0
+        col_dict[header] = Decimal(0)
         return col_dict
 
     varname = match.iloc[0]['varname']
@@ -415,12 +435,12 @@ def update_eda_rows(paydf, header, match, month, prev_month, form, col_dict):
     if not prev_row.empty:
         prev_value = prev_row[prev_month].values[0]
     else:
-        prev_value = 0
+        prev_value = Decimal(0)
 
     if checked_month == month and checked:
         col_dict[header] = prev_value
     else:
-        col_dict[header] = 0
+        col_dict[header] = Decimal(0)
 
     return col_dict
 

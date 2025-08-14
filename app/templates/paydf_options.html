@@ -9,7 +9,7 @@
 
 
 <form id="options-form">
-    <table class="pos-table" id="options-table">
+    <table id="options-table" class="pos-table">
         <tbody class="pos-table-section">
             <tr class="pos-table-header-row">
                 <td class="pos-table-header-cell"></td>
@@ -194,43 +194,7 @@
                 </td>
             </tr>
 
-            <tr>
-                <td class="row-header-cell">
-                    <button class="modal-button" type="button" data-modal="traditional-tsp-rate-modal">Traditional TSP Rate</button>
-                </td>
-                <td>
-                    {{ paydf.at[row_headers.index('Traditional TSP Rate'), col_headers[2]] }}%
-                </td>
-                <td>
-                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="traditional_tsp_rate_f" value="{% if options|length > 11 and options[11]|length > 1 %}{{ options[11][1] }}{% endif %}" /><span>&nbsp;&nbsp;%</span>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="traditional_tsp_rate_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}" {% if options|length > 11 and options[11]|length > 2 and x == options[11][2] %} selected {% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
 
-            <tr>
-                <td class="row-header-cell">
-                    <button class="modal-button" type="button" data-modal="roth-tsp-rate-modal">Roth TSP Rate</button>
-                </td>
-                <td>
-                    {{ paydf.at[row_headers.index('Roth TSP Rate'), col_headers[2]] }}%
-                </td>
-                <td>
-                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="roth_tsp_rate_f" value="{% if options|length > 12 and options[12]|length > 1 %}{{ options[12][1] }}{% endif %}" /><span>&nbsp;&nbsp;%</span>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="roth_tsp_rate_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}" {% if options|length > 12 and options[12]|length > 2 and x == options[12][2] %} selected {% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
         </tbody>
 
 
