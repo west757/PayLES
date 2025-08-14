@@ -59,6 +59,7 @@ def submit_les():
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf, core_list, initial_month = build_paydf(PAYDF_TEMPLATE, les_text)
         options = build_options(PAYDF_TEMPLATE, core_list, initial_month)
+        print(options)
         paydf, col_headers, row_headers, options, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, options, DEFAULT_MONTHS_DISPLAY, form={})
         
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
