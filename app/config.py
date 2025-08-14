@@ -5,8 +5,9 @@ import os
 import pandas as pd
 import secrets
 
-def str_to_bool(val):
-    return str(val).strip().upper() == "TRUE"
+from app.utils import (
+    str_to_bool,
+)
 
 class Config:
     #configuration settings
@@ -56,7 +57,21 @@ class Config:
     EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
     
 
-    #constants
+    #constants   
+    DEFAULT_MONTHS_DISPLAY = 4
+    LES_IMAGE_SCALE = 0.42
+    LES_COORD_SCALE = 0.24
+    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))
+    FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
+    FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
+    TRADITIONAL_TSP_RATE_MAX = 84
+    ROTH_TSP_RATE_MAX = 60
+
+    TAX_FILING_TYPES_DEDUCTIONS = {
+        "Single": 15000,
+        "Married": 30000,
+        "Head of Household": 22500
+    }
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     HOME_OF_RECORDS = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 
@@ -66,20 +81,7 @@ class Config:
     GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-   
-    LES_IMAGE_SCALE = 0.42
-    LES_COORD_SCALE = 0.24
-    DEFAULT_MONTHS_DISPLAY = 4
-    BAS_AMOUNT = list(map(Decimal, [320.78, 465.77, 931.54]))
-    FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
-    FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
-    TAX_FILING_TYPES = ["Single", "Married", "Head of Household"]
-    STANDARD_DEDUCTIONS = [15000, 30000, 22500]
-    TRADITIONAL_TSP_RATE_MAX = 84
-    ROTH_TSP_RATE_MAX = 60
-    
-
-    VARIABLE_CALC_MODAL_MAP = {
+    VARIABLES_MODALS = {
         "Year": "basepay",
         "Grade": "basepay",
         "Months in Service": "basepay",
@@ -91,6 +93,16 @@ class Config:
         "Dependents": "bah",
         "SGLI Coverage": "sgli",
         "Combat Zone": "combatzone",
+        "Trad TSP Base Rate": "tsp",
+        "Trad TSP Specialty Rate": "tsp",
+        "Trad TSP Incentive Rate": "tsp",
+        "Trad TSP Bonus Rate": "tsp",
+        "Roth TSP Base Rate": "tsp",
+        "Roth TSP Specialty Rate": "tsp",
+        "Roth TSP Incentive Rate": "tsp",
+        "Roth TSP Bonus Rate": "tsp"
+    }
+    CALCULATIONS_MODALS = {
         "Taxable Income": "taxedincome",
         "Non-Taxable Income": "taxedincome",
         "Total Taxes": "taxedincome",

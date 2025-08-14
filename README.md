@@ -8,7 +8,6 @@ run: python -m app.main
 todo:
 instructions for self-host
 create levdf (leave calculator)
-create tspdf (tsp calculator)
 
 add more resources
 add drill pay

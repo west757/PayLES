@@ -1,25 +1,27 @@
 from decimal import Decimal
 
 from app import flask_app
-
+from app.utils import (
+    sum_rows,
+)
 
 # =========================
 # calculation functions
 # =========================
 
 def calculate_taxable_income(PAYDF_TEMPLATE, col_dict):
-    combat_zone = col_dict.get("Combat Zone")
-    taxable = Decimal(0)
-    nontaxable = Decimal(0)
+    combat_zone = col_dict["Combat Zone"]
+    taxable = Decimal("0.00")
+    nontaxable = Decimal("0.00")
 
-    # build a dict of entitlement headers and tax flag
-    entitlements = {}
-    for _, row in PAYDF_TEMPLATE.iterrows():
-        if row['sign'] == 1:
-            entitlements[row['header']] = row['tax']
+    ent_rows = PAYDF_TEMPLATE[
+        (PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ]
 
-    for header, tax in entitlements.items():
-        value = col_dict.get(header, 0)
+    for _, row in ent_rows.iterrows():
+        header = row['header']
+        tax = row['tax']
+        value = col_dict[header]
 
         if combat_zone == "Yes":
             nontaxable += value
@@ -32,69 +34,26 @@ def calculate_taxable_income(PAYDF_TEMPLATE, col_dict):
     return round(taxable, 2), round(nontaxable, 2)
 
 
-def calculate_total_taxes(PAYDF_TEMPLATE, rows):
-    # rows is now always a dict
-    total = Decimal(0)
-    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
-        header = tmpl_row['header']
-        sign = int(tmpl_row['sign'])
-        tax_flag = tmpl_row['tax']
-        # Only process deductions/allotments (sign == -1)
-        if sign == -1 and tax_flag:
-            value = rows.get(header, 0)
-            try:
-                value = Decimal(str(value))
-            except Exception:
-                value = Decimal(0)
-            total += value
+def calculate_total_taxes(PAYDF_TEMPLATE, col_dict):
+    ded_alt_tax_rows = PAYDF_TEMPLATE[
+        (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['tax']) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ]
+    total = sum_rows(ded_alt_tax_rows, col_dict)
     return round(total, 2)
 
 
-def calculate_gross_pay(PAYDF_TEMPLATE, rows):
-    total = Decimal(0)
-    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
-        header = tmpl_row['header']
-        sign = int(tmpl_row['sign'])
-        # Only sum rows with a positive sign (entitlements)
-        if sign == 1:
-            value = rows.get(header, 0)
-            try:
-                value = Decimal(str(value))
-            except Exception:
-                value = Decimal(0)
-            total += value
-    return round(total, 2)
+def calculate_gross_net_pay(PAYDF_TEMPLATE, col_dict):
+    ent_rows = PAYDF_TEMPLATE[
+        (PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ]
+    gross_pay = sum_rows(ent_rows, col_dict)
 
+    ded_rows = PAYDF_TEMPLATE[
+        (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ]
+    net_pay = gross_pay + sum_rows(ded_rows, col_dict)
 
-def calculate_net_pay(PAYDF_TEMPLATE, rows):
-    total = Decimal(0)
-    # Get gross pay
-    gross_pay = rows.get("Gross Pay", 0)
-    try:
-        gross_pay = Decimal(str(gross_pay))
-    except Exception:
-        gross_pay = Decimal(0)
-    total = gross_pay
-    # Subtract all rows with sign == -1
-    for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
-        header = tmpl_row['header']
-        sign = int(tmpl_row['sign'])
-        if sign == -1:
-            value = rows.get(header, 0)
-            try:
-                value = Decimal(str(value))
-            except Exception:
-                value = Decimal(0)
-            total += value
-    return round(total, 2)
-
-
-def calculate_difference(current_row_dict, prev_row_dict):
-    netpay_current = current_row_dict.get("Net Pay", 0)
-    netpay_prev = prev_row_dict.get("Net Pay", 0)
-    difference = Decimal(netpay_current) - Decimal(netpay_prev)
-    return round(difference, 2)
-
+    return round(gross_pay, 2), round(net_pay, 2)
 
 
 # =========================
@@ -103,10 +62,8 @@ def calculate_difference(current_row_dict, prev_row_dict):
 
 def calculate_base_pay(col_dict, prev_col_dict=None):
     PAY_ACTIVE = flask_app.config['PAY_ACTIVE']
-    grade = col_dict.get("Grade", "")
-    months_in_service = col_dict.get("Months in Service", 0)
-    if months_in_service is None:
-        months_in_service = 0
+    grade = col_dict["Grade"]
+    months_in_service = col_dict["Months in Service"]
     pay_active_headers = [int(col) for col in PAY_ACTIVE.columns[1:]]
     pay_active_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
 
@@ -124,7 +81,7 @@ def calculate_base_pay(col_dict, prev_col_dict=None):
 
 def calculate_bas(col_dict, prev_col_dict=None):
     BAS_AMOUNT = flask_app.config['BAS_AMOUNT']
-    grade = col_dict.get("Grade")
+    grade = col_dict["Grade"]
 
     if str(grade).startswith("E"):
         bas_value = BAS_AMOUNT[1]
@@ -135,9 +92,9 @@ def calculate_bas(col_dict, prev_col_dict=None):
 
 
 def calculate_bah(col_dict, prev_col_dict=None):
-    grade = col_dict.get("Grade")
-    military_housing_area = col_dict.get("Military Housing Area")
-    dependents = col_dict.get("Dependents")
+    grade = col_dict["Grade"]
+    military_housing_area = col_dict["Military Housing Area"]
+    dependents = col_dict["Dependents"]
 
     if int(dependents) > 0:
         BAH_DF = flask_app.config['BAH_WITH_DEPENDENTS']
@@ -155,10 +112,10 @@ def calculate_bah(col_dict, prev_col_dict=None):
 def calculate_federal_taxes(col_dict, prev_col_dict=None):
     STANDARD_DEDUCTIONS = flask_app.config['STANDARD_DEDUCTIONS']
     FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
-    filing_status = col_dict.get("Federal Filing Status", "")
+    filing_status = col_dict["Federal Filing Status"]
     if not filing_status:
         return Decimal(0)
-    taxable_income = col_dict.get("Taxable Income", 0)
+    taxable_income = col_dict["Taxable Income"]
     taxable_income = Decimal(taxable_income) * 12
     tax = Decimal(0)
 
@@ -193,20 +150,20 @@ def calculate_federal_taxes(col_dict, prev_col_dict=None):
 
 def calculate_fica_social_security(col_dict, prev_col_dict=None):
     FICA_SOCIALSECURITY_TAX_RATE = flask_app.config['FICA_SOCIALSECURITY_TAX_RATE']
-    taxable_income = col_dict.get("Taxable Income", 0)
+    taxable_income = col_dict["Taxable Income"]
     return round(-Decimal(taxable_income) * FICA_SOCIALSECURITY_TAX_RATE, 2)
 
 
 def calculate_fica_medicare(col_dict, prev_col_dict=None):
     FICA_MEDICARE_TAX_RATE = flask_app.config['FICA_MEDICARE_TAX_RATE']
-    taxable_income = col_dict.get("Taxable Income", 0)
+    taxable_income = col_dict["Taxable Income"]
     return round(-Decimal(taxable_income) * FICA_MEDICARE_TAX_RATE, 2)
 
 
 
 def calculate_sgli(col_dict, prev_col_dict=None):
     SGLI_RATES = flask_app.config['SGLI_RATES']
-    coverage = col_dict.get("SGLI Coverage", 0)
+    coverage = col_dict["SGLI Coverage"]
     try:
         coverage = int(coverage)
     except Exception:
@@ -228,10 +185,10 @@ def calculate_sgli(col_dict, prev_col_dict=None):
 
 def calculate_state_taxes(col_dict, prev_col_dict=None):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
-    home_of_record = col_dict.get("Home of Record")
+    home_of_record = col_dict["Home of Record"]
     state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
-    filing_status = col_dict.get("State Filing Status")
-    taxable_income = col_dict.get("Taxable Income", 0)
+    filing_status = col_dict["State Filing Status"]
+    taxable_income = col_dict["Taxable Income"]
     taxable_income = Decimal(taxable_income) * 12
     tax = Decimal(0)
 
@@ -262,14 +219,14 @@ def calculate_state_taxes(col_dict, prev_col_dict=None):
 
 
 def calculate_traditional_tsp(col_dict, prev_col_dict=None):
-    base_pay = col_dict.get("Base Pay", 0)
-    tsp_rate = col_dict.get("Traditional TSP Rate", 0)
+    base_pay = col_dict["Base Pay"]
+    tsp_rate = col_dict["Traditional TSP Rate"]
     value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
     return -round(value, 2)
 
 
 def calculate_roth_tsp(col_dict, prev_col_dict=None):
-    base_pay = col_dict.get("Base Pay", 0)
-    tsp_rate = col_dict.get("Roth TSP Rate", 0)
+    base_pay = col_dict["Base Pay"]
+    tsp_rate = col_dict["Roth TSP Rate"]
     value = Decimal(base_pay) * Decimal(tsp_rate) / Decimal(100)
     return -round(value, 2)
