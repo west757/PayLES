@@ -41,13 +41,13 @@ HDP-M,hdpm,HDP-M,Hardship Duty Pay - Mission,1,FALSE,FALSE,FALSE,TRUE,FALSE,hard
 ACP,acp,ACP,Aviation Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
 CONT PAY,cont_pay,CONT PAY,Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
 NUCLEAR,nuclear,NUCLEAR,Nuclear Continuation Pay,1,FALSE,FALSE,FALSE,TRUE,FALSE,continuation
-Accession Bonus,accession_bonus,AB,Accession Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-CSRB,csrb,CSRB,Critical Skills Retention Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-MRB,mrb,MRB,Multiyear Retention Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-NPAB,npab,NPAB,Nuclear Power Accession Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-SEB,seb,SEB,Selective Enlistment Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
-SRB,srb,SRB,Selective Reenlistment Bonus,1,FALSE,TRUE,FALSE,TRUE,FALSE,bonus
+Accession Bonus,accession_bonus,ACCESSION BONUS,Accession Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+CSRB,csrb,CSRB,Critical Skills Retention Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+MRB,mrb,MRB,Multiyear Retention Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+NIB,nib,NIB,Nuclear Career Annual Incentive Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+NPAB,npab,NPAB,Nuclear Power Accession Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+SEB,seb,SEB,Selective Enlistment Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
+SRB,srb,SRB,Selective Reenlistment Bonus,1,FALSE,FALSE,FALSE,TRUE,FALSE,bonus
 PCS Member,pcs_member,PCS MEMBER,Permanent Change of Station Payment,1,FALSE,TRUE,FALSE,TRUE,FALSE,pcs
 Dislocation Allowance,dislocation_allowance,DLA,Dislocation Allowance,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
 MIHA-M,miham,MIHA-M,Moving Housing Allowance - Miscellaneous,1,FALSE,FALSE,FALSE,TRUE,FALSE,pcs
