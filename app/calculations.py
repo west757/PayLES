@@ -2,46 +2,34 @@ from decimal import Decimal
 
 from app import flask_app
 
+
 # =========================
 # calculation functions
 # =========================
 
-def calculate_taxable_income(PAYDF_TEMPLATE, rows):
-        # row_dict is now always a dict
-        # Get combat zone value
-        combat_zone = rows.get("Combat Zone", "No")
-        is_combat_zone = str(combat_zone).strip().upper() == 'YES'
+def calculate_taxable_income(PAYDF_TEMPLATE, col_dict):
+    combat_zone = col_dict.get("Combat Zone")
+    taxable = Decimal(0)
+    nontaxable = Decimal(0)
 
-        taxable = Decimal(0)
-        nontaxable = Decimal(0)
+    # build a dict of entitlement headers and tax flag
+    entitlements = {}
+    for _, row in PAYDF_TEMPLATE.iterrows():
+        if row['sign'] == 1:
+            entitlements[row['header']] = row['tax']
 
-        for _, tmpl_row in PAYDF_TEMPLATE.iterrows():
-            header = tmpl_row['header']
-            sign = int(tmpl_row['sign'])
-            tax_flag = tmpl_row['tax']
+    for header, tax in entitlements.items():
+        value = col_dict.get(header, 0)
 
-            # Only process entitlements (sign == 1)
-            if sign != 1:
-                continue
-
-            value = rows.get(header, 0)
-            try:
-                value = Decimal(str(value))
-            except Exception:
-                value = Decimal(0)
-
-            if is_combat_zone:
-                nontaxable += value
+        if combat_zone == "Yes":
+            nontaxable += value
+        else:
+            if tax:
+                taxable += value
             else:
-                if tax_flag:
-                    taxable += value
-                else:
-                    nontaxable += value
+                nontaxable += value
 
-        if is_combat_zone:
-            taxable = Decimal(0)
-
-        return round(taxable, 2), round(nontaxable, 2)
+    return round(taxable, 2), round(nontaxable, 2)
 
 
 def calculate_total_taxes(PAYDF_TEMPLATE, rows):
