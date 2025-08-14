@@ -33,7 +33,8 @@ def submit_les():
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    VARIABLE_CALC_MODAL_MAP = flask_app.config['VARIABLE_CALC_MODAL_MAP']
+    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
+    CALCULATIONS_MODALS = flask_app.config['CALCULATIONS_MODALS']
 
     action = request.form.get('action')
     les_file = request.files.get('home-input')
@@ -58,9 +59,11 @@ def submit_les():
         
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf = build_paydf(PAYDF_TEMPLATE, les_text)
-        paydf, col_headers, row_headers, months_display = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
+        paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+
+        print(paydf)
 
         context = {
             'les_image': les_image,
@@ -68,10 +71,10 @@ def submit_les():
             'paydf': paydf,
             'col_headers': col_headers,
             'row_headers': row_headers,
-            'months_display': months_display,
             'les_remarks': les_remarks,
             'modals': modals,
-            'VARIABLE_CALC_MODAL_MAP': VARIABLE_CALC_MODAL_MAP,
+            'VARIABLES_MODALS': VARIABLES_MODALS,
+            'CALCULATIONS_MODALS': CALCULATIONS_MODALS,
         }
         return render_template('paydf_group.html', **context)
     else:
@@ -81,34 +84,33 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    VARIABLE_CALC_MODAL_MAP = flask_app.config['VARIABLE_CALC_MODAL_MAP']
+    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
+    CALCULATIONS_MODALS = flask_app.config['CALCULATION_MODALS']
+    core_list = session.get('core_list', [])
+    initial_month = session.get('initial_month', None)
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
 
     print(request.form)
 
+
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-
-    paydf = pd.read_json(io.StringIO(session['paydf_json']))
-
+    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = parse_custom_rows(custom_rows_json)
 
-    
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-    paydf = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, custom_rows=custom_rows, form=request.form)
 
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['header'].tolist()
+    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form)
 
     context = {
         'paydf': paydf,
         'col_headers': col_headers,
         'row_headers': row_headers,
-        'months_display': months_display,
-        'VARIABLE_CALC_MODAL_MAP': VARIABLE_CALC_MODAL_MAP,
+        'VARIABLES_MODALS': VARIABLES_MODALS,
+        'CALCULATIONS_MODALS': CALCULATIONS_MODALS,
     }
     
     return render_template('paydf_table.html', **context)
