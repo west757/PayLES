@@ -591,6 +591,10 @@ input[type=file] {
     max-height: 4rem;
 }
 
+.difference-cell {
+    vertical-align: middle !important;
+    text-align: center;
+}
 
 /* =========================
    pos table
