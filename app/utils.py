@@ -4,8 +4,7 @@ import json
 from app import flask_app
 
 
-def str_to_bool(val):
-    return str(val).strip().upper() == "TRUE"
+
 
 
 def validate_file(file, ALLOWED_EXTENSIONS):

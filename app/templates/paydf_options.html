@@ -1,7 +1,7 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
 {% set GRADES = config.GRADES %}
 {% set HOME_OF_RECORDS = config.HOME_OF_RECORDS %}
-{% set TAX_FILING_TYPES = config.TAX_FILING_TYPES %}
+{% set TAX_FILING_TYPES_DEDUCTIONS = config.TAX_FILING_TYPES_DEDUCTIONS %}
 {% set SGLI_RATES = config.SGLI_RATES %}
 {% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
 {% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
@@ -80,7 +80,7 @@
                 <td>{{ federal_filing_status }}</td>
                 <td>
                     <select class="dropdown" name="federal_filing_status_f">
-                        {% for x in TAX_FILING_TYPES %}
+                        {% for x in TAX_FILING_TYPES_DEDUCTIONS.keys() %}
                             <option value="{{x}}" {% if federal_filing_status == x %}selected{% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
@@ -100,7 +100,7 @@
                 <td>{{ state_filing_status }}</td>
                 <td>
                     <select class="dropdown" name="state_filing_status_f">
-                        {% for x in TAX_FILING_TYPES[0:2] %}
+                        {% for x in TAX_FILING_TYPES_DEDUCTIONS.keys()|slice(2) %}
                             <option value="{{x}}" {% if state_filing_status == x %}selected{% endif %}>{{x}}</option>
                         {% endfor %}
                     </select>
