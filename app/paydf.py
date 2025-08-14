@@ -45,7 +45,7 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
     core_dict["Gross Pay"] = calculate_gross_pay(PAYDF_TEMPLATE, core_dict)
     core_dict["Net Pay"] = calculate_net_pay(PAYDF_TEMPLATE, core_dict)
-    core_dict["Difference"] = Decimal(0.00)
+    core_dict["Difference"] = Decimal(0)
 
     #convert core from dict to ordered list of lists for session variable and dataframe initializing
     core_list = [[header, core_dict[header]] for header in core_dict]
@@ -63,7 +63,7 @@ def add_variables(core_dict, les_text):
     core_dict["Year"] = year
 
     try:
-        grade = str(les_text[2][1])
+        grade = les_text[2][1]
     except Exception:
         grade = "Not Found"
     core_dict["Grade"] = grade
@@ -164,8 +164,8 @@ def add_pay_rows(PAYDF_TEMPLATE, core_dict, les_text):
     for _, row in PAYDF_TEMPLATE.iterrows():
         header = row['header']
         shortname = str(row['shortname'])
-        sign = int(row['sign'])
-        required = bool(row['required'])
+        sign = row['sign']
+        required = row['required']
         value = None
         found = False
 
@@ -466,12 +466,9 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
             'varname': '',
             'shortname': '',
             'longname': '',
-            'type': row['type'],
-            'dtype': 'Decimal',
-            'default': 0,
+            'sign': row.get('sign', 1),
             'required': False,
             'onetime': False,
-            'standard': False,
             'tax': row['tax'],
             'option': False,
             'custom': True,

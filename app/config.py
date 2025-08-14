@@ -39,8 +39,14 @@ class Config:
     PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
     STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv")
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv")
-    PAYDF_TEMPLATE = pd.read_csv(CSV_FOLDER / "paydf_template.csv", 
-                                 converters={col: str_to_bool for col in ['required', 'onetime', 'standard', 'tax', 'option']})
+
+    PAYDF_TEMPLATE = pd.read_csv(
+        CSV_FOLDER / "paydf_template.csv",
+        dtype={'sign': int},
+        converters={
+            col: str_to_bool for col in ['required', 'onetime', 'tax', 'option', 'custom']
+        },
+    )
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
     LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
