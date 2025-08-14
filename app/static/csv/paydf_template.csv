@@ -92,7 +92,7 @@ VBSS,vbss,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty",1,FALSE,FALSE
 Federal Taxes,federal_taxes,FEDERAL TAXES,Federal Taxes,-1,TRUE,FALSE,TRUE,FALSE,FALSE,federaltaxes
 FICA - Social Security,fica,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security,-1,TRUE,FALSE,TRUE,FALSE,FALSE,fica
 FICA - Medicare,ficamedicare,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare,-1,TRUE,FALSE,TRUE,FALSE,FALSE,fica
-SGLI,sgli,SGLI,Servicemember's Group Life Insurance Premium,-1,TRUE,FALSE,FALSE,FALSE,FALSE,sgli
+SGLI Rate,sgli_rate,SGLI,Servicemember's Group Life Insurance Premium,-1,TRUE,FALSE,FALSE,FALSE,FALSE,sgli
 Family SGLI,family_sgli,SGLI FAM/SPOUSE,Servicemember's Group Life Insurance Premium for Spouses/Children,-1,FALSE,FALSE,FALSE,TRUE,FALSE,sgli
 TSGLI,tsgli,TSGLI,Servicemember's Group Life Insurance Premium for Traumatic Brain Injury,-1,FALSE,FALSE,FALSE,TRUE,FALSE,sgli
 State Taxes,state_taxes,STATE TAXES,State Taxes,-1,TRUE,FALSE,TRUE,FALSE,FALSE,statetaxes
