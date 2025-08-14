@@ -82,7 +82,7 @@ function updatePaydf() {
         editingIndex = null;
         highlight_changes();
         show_all_variables();
-        show_all_options();
+        show_tsp_options();
         updateButtonStates();
         renderCustomRowButtonTable();
         updateMonthDropdowns();
@@ -154,10 +154,10 @@ function show_all_variables() {
     }
 }
 
-function show_all_options() {
-    var checkbox = document.getElementById('show-all-options-checkbox');
+function show_tsp_options() {
+    var checkbox = document.getElementById('show-tsp-options-checkbox');
     var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('options-standard-row');
+    var rows = document.getElementsByClassName('tsp-row');
 
     for (var row of rows) {
         if (checked) {
@@ -495,8 +495,8 @@ document.addEventListener('change', function(e) {
         show_all_variables();
     }
 
-    if (e.target && e.target.id === 'show-all-options-checkbox') {
-        show_all_options();
+    if (e.target && e.target.id === 'show-tsp-options-checkbox') {
+        show_tsp_options();
     }
 });
 

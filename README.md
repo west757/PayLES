@@ -28,6 +28,7 @@ Avoid unnecessary recomputation of dataframes or images.
 
 
 combine calculate traditional and roth tsp rates
+normalize css: https://necolas.github.io/normalize.css/
 
 
 1. Minimize DataFrame Row-wise Operations
