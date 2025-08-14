@@ -66,6 +66,7 @@ def submit_les():
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
         
         print(paydf)
+        print(col_headers[2])
 
         context = {
             'les_image': les_image,
@@ -134,8 +135,3 @@ def resources():
 @flask_app.route('/leave_calculator')
 def leave_calculator():
     return render_template('leave_calculator.html')
-
-
-@flask_app.route('/tsp_calculator')
-def tsp_calculator():
-    return render_template('tsp_calculator.html')
