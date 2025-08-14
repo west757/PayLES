@@ -78,7 +78,6 @@ class Config:
         "Total Taxes": "taxedincome",
         "Gross Pay": "grossnetpay",
         "Net Pay": "grossnetpay",
-        "Difference": "grossnetpay",
     }
 
 

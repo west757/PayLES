@@ -46,7 +46,7 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
 
     #convert core from dict to ordered list of lists for session variable and dataframe initializing
     core_list = [[header, core_dict[header]] for header in core_dict]
-    session['paydf_core'] = core_list
+    session['core_list'] = core_list
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
     return paydf
@@ -260,10 +260,14 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=None, custom_rows=N
 def update_variables(next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
-    variable_headers = list(VARIABLES_MODALS.keys())
+    TSP_MODALS = flask_app.config['TSP_MODALS']
 
-    for header in variable_headers:
-        prev_value = prev_col_dict[header]
+    variable_headers = list(VARIABLES_MODALS.keys())
+    tsp_headers = list(TSP_MODALS.keys())
+    all_headers = variable_headers + tsp_headers
+
+    for header in all_headers:
+        prev_value = prev_col_dict.get(header, 0)
         form_value = form.get(f"{header.lower().replace(' ', '_')}_f")
         form_month = form.get(f"{header.lower().replace(' ', '_')}_m")
 
@@ -277,7 +281,7 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
             next_col_dict[header] = prev_value + 1
 
         elif header == "Military Housing Area":
-            zip_code = next_col_dict["Zip Code"]
+            zip_code = next_col_dict.get("Zip Code", "")
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
             next_col_dict["Zip Code"] = zip_code
             next_col_dict[header] = military_housing_area
@@ -358,12 +362,15 @@ def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match
     form_month = form.get(f"{varname}_m")
     prev_value = prev_col_dict[header]
 
-    if form_value is None:
+    if form_value is None or str(form_value).strip() == "":
         next_col_dict[header] = prev_value
         return next_col_dict
 
     if form_month == next_month:
-        next_col_dict[header] = Decimal(str(form_value))
+        try:
+            next_col_dict[header] = Decimal(str(form_value))
+        except Exception:
+            next_col_dict[header] = prev_value
     else:
         next_col_dict[header] = prev_value
 

@@ -33,8 +33,6 @@ def submit_les():
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
-    CALCULATIONS_MODALS = flask_app.config['CALCULATIONS_MODALS']
 
     action = request.form.get('action')
     les_file = request.files.get('home-input')
@@ -63,8 +61,6 @@ def submit_les():
         les_remarks = load_json(flask_app.config['LES_REMARKS_JSON'])
         modals = load_json(flask_app.config['PAYDF_MODALS_JSON'])
 
-        print(paydf)
-
         context = {
             'les_image': les_image,
             'rect_overlay': rect_overlay,
@@ -73,8 +69,6 @@ def submit_les():
             'row_headers': row_headers,
             'les_remarks': les_remarks,
             'modals': modals,
-            'VARIABLES_MODALS': VARIABLES_MODALS,
-            'CALCULATIONS_MODALS': CALCULATIONS_MODALS,
         }
         return render_template('paydf_group.html', **context)
     else:
@@ -84,22 +78,16 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
-    CALCULATIONS_MODALS = flask_app.config['CALCULATION_MODALS']
     core_list = session.get('core_list', [])
     initial_month = session.get('initial_month', None)
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
-
-    print(request.form)
-
-
-    months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
+    months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
+    
     custom_rows_json = request.form.get('custom_rows', None)
     custom_rows = parse_custom_rows(custom_rows_json)
-
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
 
@@ -109,8 +97,6 @@ def update_paydf():
         'paydf': paydf,
         'col_headers': col_headers,
         'row_headers': row_headers,
-        'VARIABLES_MODALS': VARIABLES_MODALS,
-        'CALCULATIONS_MODALS': CALCULATIONS_MODALS,
     }
     
     return render_template('paydf_table.html', **context)
