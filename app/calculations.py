@@ -2,9 +2,6 @@ from bisect import bisect_right
 from decimal import Decimal
 
 from app import flask_app
-from app.utils import (
-    sum_rows,
-)
 
 # =========================
 # calculation functions
@@ -39,7 +36,8 @@ def calculate_total_taxes(PAYDF_TEMPLATE, col_dict):
     ded_alt_tax_rows = PAYDF_TEMPLATE[
         (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['tax']) & (PAYDF_TEMPLATE['header'].isin(col_dict))
     ]
-    total = sum_rows(ded_alt_tax_rows, col_dict)
+    headers = ded_alt_tax_rows['header'].tolist()
+    total = sum([col_dict[h] for h in headers])
     return round(total, 2)
 
 
@@ -47,12 +45,14 @@ def calculate_gross_net_pay(PAYDF_TEMPLATE, col_dict):
     ent_rows = PAYDF_TEMPLATE[
         (PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
     ]
-    gross_pay = sum_rows(ent_rows, col_dict)
+    ent_headers = ent_rows['header'].tolist()
+    gross_pay = sum([col_dict[h] for h in ent_headers])
 
     ded_rows = PAYDF_TEMPLATE[
         (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
     ]
-    net_pay = gross_pay + sum_rows(ded_rows, col_dict)
+    ded_headers = ded_rows['header'].tolist()
+    net_pay = gross_pay + sum([col_dict[h] for h in ded_headers])
 
     return round(gross_pay, 2), round(net_pay, 2)
 
@@ -161,7 +161,6 @@ def calculate_sgli(col_dict):
     SGLI_RATES = flask_app.config['SGLI_RATES']
     coverage = str(col_dict["SGLI Coverage"])
     row = SGLI_RATES[SGLI_RATES['coverage'] == coverage]
-
     total = row.iloc[0]['total']
     return -abs(total)
 
@@ -218,11 +217,8 @@ def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
         return total
 
     for tsp_var, modal in TSP_MODALS.items():
-        rate_str = str(col_dict.get(tsp_var, "0.00")).strip()
-        try:
-            rate = Decimal(rate_str)
-        except Exception:
-            rate = Decimal("0.00")
+        rate = Decimal(str(col_dict[tsp_var]))
+
         if rate > 0:
             total = sum_tsp_rows(modal)
             value = total * rate / Decimal(100)
