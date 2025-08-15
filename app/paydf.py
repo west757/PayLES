@@ -229,7 +229,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
 # expand paydf
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=None, custom_rows=None):
+def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -242,9 +242,9 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=None, custom_rows=N
         next_col_dict = {}
 
         update_variables(next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf)
+        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf)
+        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows)
         next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
@@ -299,7 +299,7 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
     return next_col_dict
 
 
-def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf):
+def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None):
     all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
 
     ent_rows = []
@@ -319,12 +319,12 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows)
 
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf):
+def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None):
     all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
 
     ded_alt_rows = []
@@ -348,19 +348,42 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
         elif header == "Traditional TSP":
             next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows)
 
     return next_col_dict
 
 
-def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match):
+def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None):
     if bool(match.iloc[0]['onetime']):
         next_col_dict[header] = Decimal("0.00")
         return next_col_dict
 
+    if bool(match.iloc[0]['custom']) and custom_rows is not None:
+        custom_row = next((row for row in custom_rows if row['header'] == header), None)
+
+        if custom_row:
+            # Find the index for the current month in col_headers (assume col_headers is available)
+            # If not, default to first value
+            # You may need to pass col_headers as an argument if months can be out of order
+            month_idx = None
+            if form and 'col_headers' in form:
+                col_headers = form['col_headers']
+                if next_month in col_headers:
+                    month_idx = col_headers.index(next_month) - 1  # -1 because first column is header
+            # If month_idx is not found, default to 0
+            if month_idx is None:
+                month_idx = 0
+            # Assign value from custom_row['values'] for this month
+            try:
+                next_col_dict[header] = custom_row['values'][month_idx]
+            except Exception:
+                next_col_dict[header] = Decimal("0.00")
+            return next_col_dict
+
+
     varname = match.iloc[0]['varname']
-    form_value = form.get(f"{varname}_f")
-    form_month = form.get(f"{varname}_m")
+    form_value = form.get(f"{varname}_f") if form else None
+    form_month = form.get(f"{varname}_m") if form else None
     prev_value = prev_col_dict[header]
 
     if form_value is None or str(form_value).strip() == "":
@@ -436,11 +459,16 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
 
 
 def add_custom_row(paydf, custom_rows):
-    first_month_col = paydf.columns[1]
+    insert_idx = len(paydf) - 6
 
     for row in custom_rows:
-        if first_month_col:
-            paydf.loc[len(paydf)] = [row['header'], 0]
-        else:
-            paydf.loc[len(paydf)] = [row['header']]
+        new_row = [row['header'], Decimal("0.00")]
+
+        paydf = pd.concat([
+            paydf.iloc[:insert_idx],
+            pd.DataFrame([new_row], columns=paydf.columns),
+            paydf.iloc[insert_idx:]
+        ], ignore_index=True)
+        insert_idx += 1
+
     return paydf
