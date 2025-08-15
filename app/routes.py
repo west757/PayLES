@@ -77,10 +77,10 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    remove_custom_template_rows(PAYDF_TEMPLATE)
+
     core_list = session.get('core_list', [])
     initial_month = session.get('initial_month', None)
-
-    remove_custom_template_rows(PAYDF_TEMPLATE)
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
@@ -89,10 +89,7 @@ def update_paydf():
     custom_rows = parse_custom_rows(custom_rows_json)
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
-
-    print(paydf)
-
-    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form)
+    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
     print("")
     print(paydf)
 

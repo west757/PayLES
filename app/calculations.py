@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from app import flask_app
 
+
 # =========================
 # calculation functions
 # =========================
