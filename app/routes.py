@@ -90,7 +90,11 @@ def update_paydf():
     add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
     paydf = add_custom_row(paydf, custom_rows)
 
+    print(paydf)
+
     paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form)
+    print("")
+    print(paydf)
 
     context = {
         'paydf': paydf,
