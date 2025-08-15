@@ -91,9 +91,8 @@ function updatePaydf() {
 }
 
 function updateMonthDropdowns() {
-    //get colHeaders from the data attribute
     const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
-    //remove the first two column headers (row header and first month)
+    // remove the first two column headers (row header and first month)
     const monthOptions = colHeaders.slice(2);
 
     document.querySelectorAll('select.month-dropdown').forEach(function(select) {
@@ -224,18 +223,14 @@ function renderCustomRows() {
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
 
-    //get current month display from dropdown or config
     let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
     const monthsDropdown = document.getElementById('months-display-dropdown');
     if (monthsDropdown) {
         monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
     }
-
-    //set number of value columns (exclude header column)
     let valueColumns = monthsDisplay - 1;
 
     customRows.forEach((row, idx) => {
-        //if months display is greater than current months display, add zeros for new months, else trim excess months
         if (row.values.length < valueColumns) {
             row.values = row.values.concat(Array(valueColumns - row.values.length).fill(0));
         } else if (row.values.length > valueColumns) {
@@ -244,15 +239,11 @@ function renderCustomRows() {
 
         let tr = document.createElement('tr');
         tr.dataset.index = idx;
-        
-        //if editingIndex matches current index, render as editable row, else render as static row
         if (editingIndex === idx) {
-            //create row header cell with text input
             let headerTd = document.createElement('td');
             headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required />`;
             tr.appendChild(headerTd);
 
-            //create tax checkbox cell with tooltip
             let taxTd = document.createElement('td');
             taxTd.innerHTML = `
                 <div style="display:inline-block; position:relative;">
@@ -260,21 +251,19 @@ function renderCustomRows() {
                     <input class="input-checkbox" type="checkbox" ${row.tax ? 'checked' : ''} style="margin-right:4px;" />
                     <span 
                         class="tax-tooltip-icon"
-                        onmouseenter="showTooltip(event, 'Used to indicate if the row is used for tax purposes. If the row is an entitlement, it sets whether the row is taxable income or non-taxable income. If the row is a deduction, it sets whether or not the row is a tax to be added to total taxes.')"
+                        onmouseenter="showTooltip(event, 'Used to indicate if the row is used for tax purposes. If an entitlement, sets whether the row is taxable income or non-taxable income. If a deduction, sets the row as a tax to be added to total taxes.')"
                         onmouseleave="hideTooltip()"
                     >?</span>
                 </div>
             `;
             tr.appendChild(taxTd);
 
-            //loop through values (created based upon months display) and create num input cells
             for (let i = 0; i < row.values.length; i++) {
                 let value = row.values[i];
-                let sign = row.type === 'D' ? '-' : '';
+                let sign = row.sign === -1 ? '-' : '';
                 let valueAttr = value !== 0 && value !== "0" ? `value="${value}"` : '';
                 let placeholderAttr = value === 0 || value === "0" ? 'placeholder="0"' : '';
                 let valueTd = document.createElement('td');
-                
                 valueTd.innerHTML = `
                     <span>${sign}$&nbsp;&nbsp;</span>
                     <input type="text" class="input-num input-num-mid"
@@ -441,36 +430,31 @@ document.addEventListener('click', function(e) {
 
     if (e.target.id === 'add-entitlement-button') {
         if (editingIndex !== null) return;
-
         if (customRows.length >= MAX_CUSTOM_ROWS) {
             alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
             return;
         }
-
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
         numMonths = headerRow.children.length - 2;
         const values = Array(numMonths).fill(0);
         editingIndex = customRows.length;
-        customRows.push({ header: '', type: 'E', tax: false, values });
+        customRows.push({ header: '', sign: 1, tax: false, values });
         renderCustomRows();
         updateButtonStates();
     }
-
     if (e.target.id === 'add-deduction-button') {
         if (editingIndex !== null) return;
-
         if (customRows.length >= MAX_CUSTOM_ROWS) {
             alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
             return;
         }
-
         const paydfTable = document.getElementById('paydf-table');
         const headerRow = paydfTable.querySelector('tr');
         numMonths = headerRow.children.length - 2;
         const values = Array(numMonths).fill(0);
         editingIndex = customRows.length;
-        customRows.push({ header: '', type: 'D', tax: false, values });
+        customRows.push({ header: '', sign: -1, tax: false, values });
         renderCustomRows();
         updateButtonStates();
     }
@@ -530,7 +514,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-//disable buttons on form submission to prevent multiple submissions
+// disable buttons on form submission to prevent multiple submissions
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('form').forEach(function(form) {
         form.addEventListener('submit', function() {

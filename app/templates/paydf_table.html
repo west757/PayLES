@@ -4,10 +4,15 @@
 
 <div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
 
+        <!-- variable rows -->
         <tbody>
-            {% for header in row_headers[0:13] %}
-                {% set i = loop.index0 %}
+            {% for i in range(0, 11) %}
+                {% set header = row_headers[i] %}
                 <tr class="variable-row">
                     <td></td>
                     <td></td>
@@ -15,8 +20,20 @@
             {% endfor %}
         </tbody>
 
+        <!-- TSP rows -->
         <tbody>
-            {% for i in range(13, row_headers|length - 6) %}
+            {% for i in range(11, 19) %}
+                {% set header = row_headers[i] %}
+                <tr class="tsp-row">
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        <!-- non-custom ent/ded/alt rows -->
+        <tbody>
+            {% for i in range(19, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.shape[0] > 0 and not row_info.iloc[0]['custom'] %}
@@ -28,9 +45,10 @@
             {% endfor %}
         </tbody>
 
+        <!-- custom ent/ded/alt rows -->
         <tbody id="custom-button-section">
-            {% set custom_idx = 0 %}
-            {% for header in row_headers %}
+            {% for i in range(19, row_headers|length - 6) %}
+                {% set header = row_headers[i] %}
                 {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
                 {% if row_info.shape[0] > 0 and row_info.iloc[0]['custom'] %}
                     <tr data-header="{{ header }}">
@@ -41,18 +59,14 @@
                             <button class="button button-custom-row button-remove">&#10005;</button>
                         </td>
                     </tr>
-                    {% set custom_idx = custom_idx + 1 %}
                 {% endif %}
             {% endfor %}
         </tbody>
     </table>
 
 
-
-
-
+    <!-- paydf table -->
     <table id="paydf-table" class="pos-table">
-
         <tbody class="pos-table-section">
             <tr class="pos-table-header-row">
                 <td class="pos-table-header-cell"></td>
@@ -81,7 +95,6 @@
             {% endfor %}
         </tbody>
 
-
         <!-- tsp rows -->
         <tbody class="pos-table-section">
             {% for i in range(11, 19) %}
@@ -103,7 +116,7 @@
         </tbody>
 
 
-        <!-- entitlement/deduction/allotment rows -->
+        <!-- ent/ded/alt rows -->
         <tbody class="pos-table-section">
             {% for i in range(19, row_headers|length - 6) %}
                 {% set header = row_headers[i] %}
@@ -150,7 +163,6 @@
                 {% endif %}
             {% endfor %}
         </tbody>
-
 
         <!-- calculation rows -->
         <tbody>

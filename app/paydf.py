@@ -177,30 +177,36 @@ def add_variables(core_dict, les_text):
 
 
 def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
-    for _, row in PAYDF_TEMPLATE.iterrows():
-        header = row['header']
-        shortname = str(row['shortname'])
-        sign = row['sign']
-        required = row['required']
+    headers = PAYDF_TEMPLATE['header'].values
+    shortnames = PAYDF_TEMPLATE['shortname'].values
+    signs = PAYDF_TEMPLATE['sign'].values
+    required_flags = PAYDF_TEMPLATE['required'].values
+
+    ent_sections = [les_text[9]]
+    ded_sections = [les_text[10], les_text[11]]
+
+    for idx, header in enumerate(headers):
+        shortname = shortnames[idx]
+        sign = signs[idx]
+        required = required_flags[idx]
         value = None
         found = False
 
-        # entitlements in les_text[9], deductions/allotments in les_text[10] and les_text[11]
-        if sign == 1:
-            sections = [les_text[9]]
-        else:
-            sections = [les_text[10], les_text[11]]
+        sections = ent_sections if sign == 1 else ded_sections
 
-        # search if shortname is in the section
+        # Find matches using list comprehensions
+        matches = []
         for section in sections:
-            matches = find_multiword_matches(section, shortname)
+            matches += find_multiword_matches(section, shortname)
 
-            for idx in matches:
-                for j in range(idx + 1, len(section)):
+        # Find the first numeric value after the match
+        for section in sections:
+            for match_idx in find_multiword_matches(section, shortname):
+                for j in range(match_idx + 1, len(section)):
                     s = section[j]
                     is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
                     if is_num:
-                        value = sign * abs(Decimal(section[j]))
+                        value = sign * abs(Decimal(s))
                         found = True
                         break
                 if found:
@@ -208,11 +214,10 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
             if found:
                 break
 
-        if not found:
-            if required:
-                value = Decimal("0.00")
-            else:
-                continue
+        if not found and required:
+            value = Decimal("0.00")
+        elif not found:
+            continue
 
         core_dict[header] = value
 
@@ -261,15 +266,12 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
     TSP_MODALS = flask_app.config['TSP_MODALS']
+    headers = list(VARIABLES_MODALS.keys()) + list(TSP_MODALS.keys())
 
-    variable_headers = list(VARIABLES_MODALS.keys())
-    tsp_headers = list(TSP_MODALS.keys())
-    all_headers = variable_headers + tsp_headers
-
-    for header in all_headers:
-        prev_value = prev_col_dict.get(header, 0)
-        form_value = form.get(f"{header.lower().replace(' ', '_')}_f")
-        form_month = form.get(f"{header.lower().replace(' ', '_')}_m")
+    for header in headers:
+        prev_value = prev_col_dict[header]
+        form_value = form.get(f"{header.lower().replace(' ', '_')}_f") if form else None
+        form_month = form.get(f"{header.lower().replace(' ', '_')}_m") if form else None
 
         if header == "Year":
             if MONTHS_SHORT.index(next_month) == 0:
@@ -281,13 +283,12 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
             next_col_dict[header] = prev_value + 1
 
         elif header == "Military Housing Area":
-            zip_code = next_col_dict.get("Zip Code", "")
+            zip_code = next_col_dict["Zip Code"]
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
-            next_col_dict["Zip Code"] = zip_code
             next_col_dict[header] = military_housing_area
-
+        
         else:
-            if form_month == next_month and form_value is not None:
+            if form_month == next_month and form_value is not None and str(form_value).strip() != "":
                 try:
                     next_col_dict[header] = int(form_value) if str(form_value).isdigit() else form_value
                 except Exception:
@@ -335,17 +336,17 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
         'Federal Taxes': calculate_federal_taxes,
         'FICA - Social Security': calculate_fica_social_security,
         'FICA - Medicare': calculate_fica_medicare,
-        'SGLI': calculate_sgli,
+        'SGLI Rate': calculate_sgli,
         'State Taxes': calculate_state_taxes,
     }
 
     for header in ded_alt_rows:
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
 
-        if header == "Traditional TSP":
-            next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
-        elif header in special_calculations:
+        if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
+        elif header == "Traditional TSP":
+            next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
         else:
             update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match)
 
@@ -398,8 +399,11 @@ def parse_custom_rows(custom_rows_json):
         for row in custom_rows:
             row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
 
-            if row.get('type') == 'D':
+            # Use sign to set deduction values negative
+            if row.get('sign', 1) == -1:
                 row['values'] = [-abs(v) for v in row['values']]
+            else:
+                row['values'] = [abs(v) for v in row['values']]
 
             row['tax'] = row.get('tax', False)
     return custom_rows

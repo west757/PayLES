@@ -6,16 +6,12 @@ from app import flask_app
 
 def validate_file(file):
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
-    
+
     if file.filename == '':
         return False, "No file submitted"
-    if not allowed_file(file.filename, ALLOWED_EXTENSIONS):
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
         return False, "Invalid file type, only PDFs are accepted"
     return True, ""
-
-
-def allowed_file(filename, ALLOWED_EXTENSIONS):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def load_json(path):
@@ -73,12 +69,3 @@ def validate_home_of_record(home_of_record):
     if home_of_record in HOME_OF_RECORDS:
         return home_of_record
     return "Not Found"
-
-
-def sum_rows(row_subset, col_dict):
-    total = Decimal("0.00")
-    for _, row in row_subset.iterrows():
-        header = row['header']
-        value = col_dict[header]
-        total += value
-    return total
