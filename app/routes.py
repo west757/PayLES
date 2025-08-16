@@ -15,11 +15,15 @@ from app.paydf import (
     expand_paydf,
     parse_custom_rows,
 )
+from app.forms import (
+    HomeForm,
+)
 
 
 @flask_app.route('/')
 def index():
-    return render_template('home_group.html')
+    form = HomeForm()
+    return render_template('home_group.html', form=form)
 
 
 @flask_app.route('/submit_les', methods=['POST'])
@@ -28,23 +32,23 @@ def submit_les():
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
 
-    action = request.form.get('action')
-    les_file = request.files.get('home-input')
+    form = HomeForm()
+    if not form.validate_on_submit():
+        return render_template("home_form.html", form=form, message="Invalid submission")
 
-    if action == "submit-les":
+    if form.submit_les.data:
+        les_file = form.home_input.data
         if not les_file:
-            return render_template("home_form.html", message="No file submitted")
-        
+            return render_template("home_form.html", form=form, message="No file submitted")
         valid, message = validate_file(les_file)
         if not valid:
-            return render_template("home_form.html", message=message)
-        
+            return render_template("home_form.html", form=form, message=message)
         valid, message, les_pdf = validate_les(les_file)
 
-    elif action == "submit-example":
+    elif form.submit_example.data:
         valid, message, les_pdf = validate_les(EXAMPLE_LES)
     else:
-        return render_template("home_form.html", message="Unknown action, no LES or example submitted")
+        return render_template("home_form.html", form=form, message="Unknown action, no LES or example submitted")
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
@@ -64,8 +68,8 @@ def submit_les():
         }
         return render_template('paydf_group.html', **context)
     else:
-        return render_template("home_form.html", message=message)
-
+        return render_template("home_form.html", form=form, message=message)
+    
 
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():

@@ -586,6 +586,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.body.addEventListener('htmx:beforeRequest', function(evt) {
+    if (evt.target && evt.target.id === 'home-form') {
+        evt.target.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
+            btn.disabled = true;
+        });
+    }
+});
+
+
+
 
 
 function attachTspBaseListeners() {
