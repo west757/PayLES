@@ -410,28 +410,6 @@ def remove_custom_template_rows(PAYDF_TEMPLATE):
     PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
 
 
-def parse_custom_rows(custom_rows_json):
-    custom_rows = []
-
-    if custom_rows_json:
-        custom_rows = json.loads(custom_rows_json)
-
-        if isinstance(custom_rows, dict):
-            custom_rows = [custom_rows]
-
-        for row in custom_rows:
-            row['values'] = [Decimal(v) if v not in [None, ""] else Decimal(0) for v in row['values']]
-
-            # Use sign to set deduction values negative
-            if row.get('sign', 1) == -1:
-                row['values'] = [-abs(v) for v in row['values']]
-            else:
-                row['values'] = [abs(v) for v in row['values']]
-
-            row['tax'] = row.get('tax', False)
-    return custom_rows
-
-
 def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
     existing_headers = set(PAYDF_TEMPLATE['header'].values)
     
@@ -456,19 +434,3 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
         }
         row['header'] = header
         existing_headers.add(header)
-
-
-def add_custom_row(paydf, custom_rows):
-    insert_idx = len(paydf) - 6
-
-    for row in custom_rows:
-        new_row = [row['header'], Decimal("0.00")]
-
-        paydf = pd.concat([
-            paydf.iloc[:insert_idx],
-            pd.DataFrame([new_row], columns=paydf.columns),
-            paydf.iloc[insert_idx:]
-        ], ignore_index=True)
-        insert_idx += 1
-
-    return paydf
