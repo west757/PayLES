@@ -26,6 +26,7 @@ class Config:
     
 
     #constants   
+    RESERVED_HEADERS = None
     DEFAULT_MONTHS_DISPLAY = 4
     MAX_CUSTOM_ROWS = 9
     LES_IMAGE_SCALE = 0.42
@@ -168,12 +169,11 @@ class Config:
 
     EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
 
-    RESERVED_HEADERS = None
 
-
+#create reserved headers list
 Config.RESERVED_HEADERS = list(set(
-    list(Config.PAYDF_TEMPLATE['header'].tolist()) +
     list(Config.VARIABLES_MODALS.keys()) +
     list(Config.TSP_MODALS.keys()) +
+    list(Config.PAYDF_TEMPLATE['header'].tolist()) +
     list(Config.CALCULATIONS_MODALS.keys())
 ))
