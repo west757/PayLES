@@ -334,8 +334,12 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
 
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
-        elif header == "Traditional TSP":
-            next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
+        elif header in ["Traditional TSP", "Roth TSP"]:
+            trad, roth = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
+            if header == "Traditional TSP":
+                next_col_dict["Traditional TSP"] = trad
+            else:
+                next_col_dict["Roth TSP"] = roth
         else:
             update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, month_index)
 

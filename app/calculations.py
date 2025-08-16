@@ -166,7 +166,7 @@ def calculate_sgli(col_dict):
     return -abs(total)
 
 
-def calculate_state_taxes(col_dict, prev_col_dict=None):
+def calculate_state_taxes(col_dict):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
     home_of_record = col_dict["Home of Record"]
     state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
@@ -206,23 +206,16 @@ def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
     trad_total = Decimal("0.00")
     roth_total = Decimal("0.00")
 
-    def sum_tsp_rows(modal_type):
-        total = Decimal("0.00")
-        rows = PAYDF_TEMPLATE[(PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['modal'] == modal_type)]
-
-        for _, row in rows.iterrows():
-            header = row['header']
-            value = col_dict[header]
-            total += Decimal(value)
-
-        return total
-
     for tsp_var, modal in TSP_MODALS.items():
         rate = Decimal(str(col_dict[tsp_var]))
 
         if rate > 0:
-            total = sum_tsp_rows(modal)
+            rows = PAYDF_TEMPLATE[(PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['modal'] == modal)]
+            headers = rows['header'].tolist()
+
+            total = sum(Decimal(col_dict.get(h, 0)) for h in headers)
             value = total * rate / Decimal(100)
+
             if tsp_var.startswith("Trad"):
                 trad_total += value
             elif tsp_var.startswith("Roth"):
