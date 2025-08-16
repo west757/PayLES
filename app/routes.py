@@ -1,12 +1,10 @@
-from decimal import Decimal
 from flask import request, render_template, session
-import io
 import pandas as pd
 
 from app import flask_app
 from app.utils import (
-    validate_file,
     load_json,
+    validate_file,
 )
 from app.les import (
     validate_les, 
@@ -14,9 +12,8 @@ from app.les import (
 )
 from app.paydf import (
     build_paydf,
-    remove_custom_template_rows, 
-    add_custom_template_rows, 
     expand_paydf,
+    parse_custom_rows,
 )
 
 
@@ -50,8 +47,6 @@ def submit_les():
         return render_template("home_form.html", message="Unknown action, no LES or example submitted")
 
     if valid:
-        remove_custom_template_rows(PAYDF_TEMPLATE)
-        
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf = build_paydf(PAYDF_TEMPLATE, les_text)
         paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
@@ -77,24 +72,8 @@ def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
     initial_month = session.get('initial_month', None)
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-    core_list = session.get('core_list', [])
-
-    custom_rows_json = request.form.get('custom_rows', '[]')
-    custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
-
-    for row in custom_rows:
-        sign = row['sign']
-        row['values'] = [Decimal(f"{sign * float(v):.2f}") for v in row['values']]
-
-    remove_custom_template_rows(PAYDF_TEMPLATE)
-    core_custom_list = [row for row in core_list if not any(row[0] == cr['header'] for cr in custom_rows)]
-
-    add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
-
-    insert_idx = len(core_custom_list) - 6
-    for idx, row in enumerate(custom_rows):
-        new_row = [row['header'], Decimal("0.00")]
-        core_custom_list = core_custom_list[:insert_idx + idx] + [new_row] + core_custom_list[insert_idx + idx:]
+    
+    core_custom_list, custom_rows = parse_custom_rows(PAYDF_TEMPLATE, request.form)
 
     paydf = pd.DataFrame(core_custom_list, columns=["header", initial_month])
     paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)

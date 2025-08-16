@@ -11,6 +11,8 @@ create levdf (leave calculator)
 
 instructions page
 
+update pay active and drill pay in config
+
 add more resources
 add drill pay
 add security, no sql injection, other security attributes

@@ -1,14 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
 from flask import session
-import json
+import io
 import pandas as pd
 import re
 
 from app import flask_app
 from app.utils import (
-    calculate_months_in_service,
     find_multiword_matches,
+    calculate_months_in_service,
     validate_calculate_zip_mha,
     validate_home_of_record,
 )
@@ -33,6 +33,7 @@ from app.calculations import (
 # =========================
 
 def build_paydf(PAYDF_TEMPLATE, les_text):
+    remove_custom_template_rows(PAYDF_TEMPLATE)
     initial_month = les_text[8][3]
     session['initial_month'] = initial_month
     core_dict = {}
@@ -389,7 +390,21 @@ def remove_custom_template_rows(PAYDF_TEMPLATE):
     PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
 
 
-def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
+def parse_custom_rows(PAYDF_TEMPLATE, form):
+    core_list = session.get('core_list', [])
+
+    #read custom rows from form and set correct sign on values
+    custom_rows_json = form.get('custom_rows', '[]')
+    custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
+    for row in custom_rows:
+        sign = row['sign']
+        row['values'] = [Decimal(f"{sign * float(v):.2f}") for v in row['values']]
+
+    #remove custom rows from template and core_list
+    remove_custom_template_rows(PAYDF_TEMPLATE)
+    core_custom_list = [row for row in core_list if not any(row[0] == cr['header'] for cr in custom_rows)]
+
+    #add custom rows to template
     for row in custom_rows:
         header = row['header']
 
@@ -406,3 +421,11 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
             'custom': True,
             'modal': ''
         }
+
+    #add custom rows to core_list inserted above first calculation row
+    insert_idx = len(core_custom_list) - 6
+    for idx, row in enumerate(custom_rows):
+        new_row = [row['header'], Decimal("0.00")]
+        core_custom_list = core_custom_list[:insert_idx + idx] + [new_row] + core_custom_list[insert_idx + idx:]
+
+    return core_custom_list, custom_rows
