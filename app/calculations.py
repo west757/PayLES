@@ -201,6 +201,8 @@ def calculate_state_taxes(col_dict):
     return -round(Decimal(tax), 2)
 
 
+
+#need to add in max tsp yearly limit
 def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
     TSP_MODALS = flask_app.config['TSP_MODALS']
     trad_total = Decimal("0.00")

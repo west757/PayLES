@@ -25,23 +25,6 @@ def validate_file(file):
     return True, ""
 
 
-def find_multiword_matches(section, shortname):
-    short_words = shortname.split()
-    n = len(short_words)
-    matches = []
-
-    for i in range(len(section) - n + 1):
-        candidate = ' '.join(section[i:i+n])
-        if candidate == shortname:
-            matches.append(i + n - 1)
-
-    return matches
-
-
-def calculate_months_in_service(date1, date2):
-    return (date1.year - date2.year) * 12 + date1.month - date2.month
-
-
 def validate_calculate_zip_mha(zip_code):
     MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
 

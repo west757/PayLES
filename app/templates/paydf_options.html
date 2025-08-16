@@ -213,14 +213,33 @@
             {% for i in range(11, 19) %}
                 {% set header = row_headers[i] %}
                 {% set varname = header|lower|replace(' ', '_') %}
+                {% set tsp = paydf.at[i, col_headers[2]] %}
+                {% if header == "Trad TSP Base Rate" %}
+                    {% set max_rate = TRADITIONAL_TSP_RATE_MAX %}
+                    {% set base_type = "trad" %}
+                {% elif header == "Roth TSP Base Rate" %}
+                    {% set max_rate = ROTH_TSP_RATE_MAX %}
+                    {% set base_type = "roth" %}
+                {% else %}
+                    {% set max_rate = 100 %}
+                    {% set base_type = "trad" if header.startswith("Trad") else "roth" %}
+                {% endif %}
                 <tr class="tsp-row">
-                    {% set tsp = paydf.at[i, col_headers[2]] %}
                     <td class="row-header-cell">
                         <button class="modal-button" type="button" data-modal="tsp">{{ header }}</button> 
                     </td>
                     <td>{{ '{}%'.format(tsp) }}</td>
                     <td>
-                        <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="{{ varname }}_f" value="" placeholder="{{ tsp }}" />
+                        <input
+                            class="input-num input-num-mid tsp-rate-input"
+                            type="number"
+                            min="0"
+                            max="{{ max_rate }}"
+                            name="{{ varname }}_f"
+                            value="{{ tsp }}"
+                            data-tsp-type="{{ base_type }}"
+                            data-header="{{ header }}"
+                        />
                         <span>&nbsp;&nbsp;%</span>
                     </td>
                     <td>
