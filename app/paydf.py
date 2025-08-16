@@ -242,18 +242,15 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
         next_col_dict = {}
 
         update_variables(next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows)
+        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, month_index=i)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows)
+        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, month_index=i)
         next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
 
-        # assemble col_list in correct order
         col_list = [next_col_dict.get(header, 0) for header in row_headers]
         paydf[next_month] = col_list
-
-        # Update prev_col_dict for next iteration
         prev_col_dict = next_col_dict.copy()
 
     col_headers = paydf.columns.tolist()
@@ -299,13 +296,9 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
     return next_col_dict
 
 
-def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None):
+def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, month_index=1):
     all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
-
-    ent_rows = []
-    for header in all_ent_rows:
-        if header in paydf['header'].values:
-            ent_rows.append(header)
+    ent_rows = [header for header in all_ent_rows if header in paydf['header'].values]
 
     special_calculations = {
         'Base Pay': calculate_base_pay,
@@ -315,22 +308,17 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
 
     for header in ent_rows:
         match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, month_index)
 
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None):
+def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, month_index=1):
     all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
-
-    ded_alt_rows = []
-    for header in all_ded_alt_headers:
-        if header in paydf['header'].values:
-            ded_alt_rows.append(header)
+    ded_alt_rows = [header for header in all_ded_alt_headers if header in paydf['header'].values]
 
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
@@ -348,38 +336,29 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
         elif header == "Traditional TSP":
             next_col_dict["Traditional TSP"], next_col_dict["Roth TSP"] = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, month_index)
 
     return next_col_dict
 
 
-def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None):
+def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None, month_index=1):
     if bool(match.iloc[0]['onetime']):
         next_col_dict[header] = Decimal("0.00")
         return next_col_dict
 
     if bool(match.iloc[0]['custom']) and custom_rows is not None:
         custom_row = next((row for row in custom_rows if row['header'] == header), None)
-
         if custom_row:
-            # Find the index for the current month in col_headers (assume col_headers is available)
-            # If not, default to first value
-            # You may need to pass col_headers as an argument if months can be out of order
-            month_idx = None
-            if form and 'col_headers' in form:
-                col_headers = form['col_headers']
-                if next_month in col_headers:
-                    month_idx = col_headers.index(next_month) - 1  # -1 because first column is header
-            # If month_idx is not found, default to 0
-            if month_idx is None:
-                month_idx = 0
-            # Assign value from custom_row['values'] for this month
-            try:
-                next_col_dict[header] = custom_row['values'][month_idx]
-            except Exception:
+            values = custom_row.get('values', [])
+            # month_index: 1 for first month after initial, 2 for second, etc.
+            # So for initial month (already set), month_index=0, for next month, month_index=1, etc.
+            if (month_index - 1) < len(values):
+                next_col_dict[header] = values[month_index - 1]
+            elif values:
+                next_col_dict[header] = values[-1]
+            else:
                 next_col_dict[header] = Decimal("0.00")
             return next_col_dict
-
 
     varname = match.iloc[0]['varname']
     form_value = form.get(f"{varname}_f") if form else None
@@ -412,19 +391,20 @@ def remove_custom_template_rows(PAYDF_TEMPLATE):
 
 def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
     existing_headers = set(PAYDF_TEMPLATE['header'].values)
-    
+
     for row in custom_rows:
         header = row['header']
 
-        if header in existing_headers:
-            header = f"{header}_unique"
+        while header in existing_headers:
+            header += "_unique"
+        existing_headers.add(header)
 
         PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
             'header': header,
             'varname': '',
             'shortname': '',
             'longname': '',
-            'sign': row.get('sign', 1),
+            'sign': row['sign'],
             'required': False,
             'onetime': False,
             'tax': row['tax'],
@@ -432,5 +412,6 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
             'custom': True,
             'modal': ''
         }
+
         row['header'] = header
-        existing_headers.add(header)
+
