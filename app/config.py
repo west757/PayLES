@@ -27,6 +27,7 @@ class Config:
 
     #constants   
     DEFAULT_MONTHS_DISPLAY = 4
+    MAX_CUSTOM_ROWS = 9
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
     FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
@@ -78,6 +79,7 @@ class Config:
         "Total Taxes": "taxedincome",
         "Gross Pay": "grossnetpay",
         "Net Pay": "grossnetpay",
+        "Difference": "grossnetpay",
     }
 
 
@@ -165,3 +167,13 @@ class Config:
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
     EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
+
+    RESERVED_HEADERS = None
+
+
+Config.RESERVED_HEADERS = list(set(
+    list(Config.PAYDF_TEMPLATE['header'].tolist()) +
+    list(Config.VARIABLES_MODALS.keys()) +
+    list(Config.TSP_MODALS.keys()) +
+    list(Config.CALCULATIONS_MODALS.keys())
+))
