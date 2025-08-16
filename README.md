@@ -9,6 +9,8 @@ todo:
 instructions for self-host
 create levdf (leave calculator)
 
+instructions page
+
 add more resources
 add drill pay
 add security, no sql injection, other security attributes

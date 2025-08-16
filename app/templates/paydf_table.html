@@ -2,6 +2,13 @@
 {% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
 {% set CALCULATIONS_MODALS = config.CALCULATIONS_MODALS %}
 
+<!-- send config data to script.js -->
+<div id="config-data"
+     data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'
+     data-default-months-display="{{ config.DEFAULT_MONTHS_DISPLAY }}"
+     data-max-custom-rows="{{ config.MAX_CUSTOM_ROWS }}">
+</div>
+
 <div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
         <tr>
