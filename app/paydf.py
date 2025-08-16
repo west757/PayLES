@@ -232,7 +232,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     return core_dict
 
 
-def build_options_form(OptionsForm, col_headers):
+def build_options_form(OptionsForm, paydf, col_headers, row_headers):
     TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
     form = OptionsForm()
 
@@ -251,6 +251,25 @@ def build_options_form(OptionsForm, col_headers):
         form.state_filing_status_m, form.dependents_m, form.sgli_coverage_m, form.combat_zone_m
     ]:
         field.choices = month_options
+
+    #set default values
+    form.grade_f.data = paydf.at[row_headers.index("Grade"), col_headers[2]]
+    form.zip_code_f.data = paydf.at[row_headers.index("Zip Code"), col_headers[2]]
+    form.home_of_record_f.data = paydf.at[row_headers.index("Home of Record"), col_headers[2]]
+    form.federal_filing_status_f.data = paydf.at[row_headers.index("Federal Filing Status"), col_headers[2]]
+    form.state_filing_status_f.data = paydf.at[row_headers.index("State Filing Status"), col_headers[2]]
+    form.dependents_f.data = paydf.at[row_headers.index("Dependents"), col_headers[2]]
+    form.sgli_coverage_f.data = paydf.at[row_headers.index("SGLI Coverage"), col_headers[2]]
+    form.combat_zone_f.data = paydf.at[row_headers.index("Combat Zone"), col_headers[2]]
+
+    form.trad_tsp_base_rate_f.data = paydf.at[row_headers.index("Trad TSP Base Rate"), col_headers[2]]
+    form.trad_tsp_specialty_rate_f.data = paydf.at[row_headers.index("Trad TSP Specialty Rate"), col_headers[2]]
+    form.trad_tsp_incentive_rate_f.data = paydf.at[row_headers.index("Trad TSP Incentive Rate"), col_headers[2]]
+    form.trad_tsp_bonus_rate_f.data = paydf.at[row_headers.index("Trad TSP Bonus Rate"), col_headers[2]]
+    form.roth_tsp_base_rate_f.data = paydf.at[row_headers.index("Roth TSP Base Rate"), col_headers[2]]
+    form.roth_tsp_specialty_rate_f.data = paydf.at[row_headers.index("Roth TSP Specialty Rate"), col_headers[2]]
+    form.roth_tsp_incentive_rate_f.data = paydf.at[row_headers.index("Roth TSP Incentive Rate"), col_headers[2]]
+    form.roth_tsp_bonus_rate_f.data = paydf.at[row_headers.index("Roth TSP Bonus Rate"), col_headers[2]]
 
     return form
 

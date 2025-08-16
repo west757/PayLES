@@ -25,16 +25,22 @@
             {% for header, modal in VARIABLES_MODALS.items() %}
                 {% set varname = header.lower().replace(' ', '_') %}
                 {% if varname ~ '_f' in options_form._fields and varname ~ '_m' in options_form._fields %}
-                    {% set current_value = paydf.at[row_headers.index(header), col_headers[2]] if header in row_headers else '' %}
                     {% set field_f = options_form[varname ~ '_f'] %}
                     {% set field_m = options_form[varname ~ '_m'] %}
+                    {% set current_value = field_f.data %}
                     <tr>
                         <td class="row-header-cell">
                             <button class="modal-button" type="button" data-modal="{{ modal }}">{{ header }}</button>
                         </td>
                         <td>{{ current_value }}</td>
                         <td>
-                            {{ field_f(class="dropdown" if field_f.type == 'SelectField' else "input-num") }}
+                            {% if varname == 'zip_code' %}
+                                {{ field_f(class="input-num input-num-long", value=current_value, placeholder=current_value) }}
+                            {% elif varname == 'dependents' %}
+                                {{ field_f(class="input-num input-num-long", value=current_value, placeholder="0-9") }}
+                            {% else %}
+                                {{ field_f(class="dropdown" if field_f.type == 'SelectField' else "input-num input-num-long") }}
+                            {% endif %}
                         </td>
                         <td>
                             {{ field_m(class="dropdown month-dropdown") }}
@@ -83,54 +89,24 @@
 
         <!-- TSP rate option rows -->
         <tbody class="pos-table-section">
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Base Rate</button></td>
-                <td>{{ trad_tsp_base_rate }}</td>
-                <td>{{ options_form.trad_tsp_base_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.trad_tsp_base_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Base Rate</button></td>
-                <td>{{ roth_tsp_base_rate }}</td>
-                <td>{{ options_form.roth_tsp_base_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.roth_tsp_base_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Specialty Rate</button></td>
-                <td>{{ trad_tsp_specialty_rate }}</td>
-                <td>{{ options_form.trad_tsp_specialty_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.trad_tsp_specialty_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Specialty Rate</button></td>
-                <td>{{ roth_tsp_specialty_rate }}</td>
-                <td>{{ options_form.roth_tsp_specialty_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.roth_tsp_specialty_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Incentive Rate</button></td>
-                <td>{{ trad_tsp_incentive_rate }}</td>
-                <td>{{ options_form.trad_tsp_incentive_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.trad_tsp_incentive_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Incentive Rate</button></td>
-                <td>{{ roth_tsp_incentive_rate }}</td>
-                <td>{{ options_form.roth_tsp_incentive_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.roth_tsp_incentive_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Bonus Rate</button></td>
-                <td>{{ trad_tsp_bonus_rate }}</td>
-                <td>{{ options_form.trad_tsp_bonus_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.trad_tsp_bonus_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
-            <tr class="tsp-row">
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Bonus Rate</button></td>
-                <td>{{ roth_tsp_bonus_rate }}</td>
-                <td>{{ options_form.roth_tsp_bonus_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
-                <td>{{ options_form.roth_tsp_bonus_rate_m(class="dropdown month-dropdown") }}</td>
-            </tr>
+            {% for header, modal in TSP_MODALS.items() %}
+                {% set varname = header.lower().replace(' ', '_') %}
+                {% set field_f = options_form[varname ~ '_f'] %}
+                {% set field_m = options_form[varname ~ '_m'] %}
+                {% set current_value = field_f.data %}
+                <tr class="tsp-row">
+                    <td class="row-header-cell">
+                        <button class="modal-button" type="button" data-modal="tsp">{{ header }}</button>
+                    </td>
+                    <td>{{ current_value }}<span>%</span></td>
+                    <td>
+                        {{ field_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span>
+                    </td>
+                    <td>
+                        {{ field_m(class="dropdown month-dropdown") }}
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
 
 

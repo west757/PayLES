@@ -61,7 +61,7 @@ def submit_les():
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
 
-        options_form = build_options_form(OptionsForm, col_headers)
+        options_form = build_options_form(OptionsForm, paydf, col_headers, row_headers)
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 
