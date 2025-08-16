@@ -27,4 +27,5 @@ Cache expensive computations if possible (e.g., with Flask-Caching).
 normalize css: https://necolas.github.io/normalize.css/
 use python cProfile or line_profiler to find bottlenecks
 
+
 -->
