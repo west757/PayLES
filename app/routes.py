@@ -16,7 +16,6 @@ from app.paydf import (
     build_paydf,
     remove_custom_template_rows, 
     add_custom_template_rows, 
-    add_custom_row, 
     expand_paydf,
 )
 
@@ -77,10 +76,15 @@ def submit_les():
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
     initial_month = session.get('initial_month', None)
+    months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
     core_list = session.get('core_list', [])
 
     custom_rows_json = request.form.get('custom_rows', '[]')
-    custom_rows =  custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
+    custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
+
+    for row in custom_rows:
+        sign = row['sign']
+        row['values'] = [Decimal(f"{sign * float(v):.2f}") for v in row['values']]
 
     remove_custom_template_rows(PAYDF_TEMPLATE)
     core_custom_list = [row for row in core_list if not any(row[0] == cr['header'] for cr in custom_rows)]
@@ -93,9 +97,6 @@ def update_paydf():
         core_custom_list = core_custom_list[:insert_idx + idx] + [new_row] + core_custom_list[insert_idx + idx:]
 
     paydf = pd.DataFrame(core_custom_list, columns=["header", initial_month])
-
-    months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-
     paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
 
     context = {
