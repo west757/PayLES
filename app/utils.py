@@ -1,17 +1,6 @@
-from decimal import Decimal
 import json
 
 from app import flask_app
-
-
-def validate_file(file):
-    ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
-
-    if file.filename == '':
-        return False, "No file submitted"
-    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-        return False, "Invalid file type, only PDFs are accepted"
-    return True, ""
 
 
 def load_json(path):
@@ -24,6 +13,16 @@ def load_json(path):
         return {}
     except Exception as e:
         return {}
+
+
+def validate_file(file):
+    ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
+
+    if file.filename == '':
+        return False, "No file submitted"
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
+        return False, "Invalid file type, only PDFs are accepted"
+    return True, ""
 
 
 def find_multiword_matches(section, shortname):
