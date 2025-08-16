@@ -1,4 +1,4 @@
-from multiprocessing import context
+from decimal import Decimal
 from flask import request, render_template, session
 import io
 import pandas as pd
@@ -18,7 +18,6 @@ from app.paydf import (
     add_custom_template_rows, 
     add_custom_row, 
     expand_paydf,
-    parse_custom_rows,
 )
 
 
@@ -77,21 +76,27 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
-    remove_custom_template_rows(PAYDF_TEMPLATE)
-
-    core_list = session.get('core_list', [])
     initial_month = session.get('initial_month', None)
-    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
+    core_list = session.get('core_list', [])
+
+    custom_rows_json = request.form.get('custom_rows', '[]')
+    custom_rows =  custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
+
+    remove_custom_template_rows(PAYDF_TEMPLATE)
+    core_custom_list = [row for row in core_list if not any(row[0] == cr['header'] for cr in custom_rows)]
+
+    add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
+
+    insert_idx = len(core_custom_list) - 6
+    for idx, row in enumerate(custom_rows):
+        new_row = [row['header'], Decimal("0.00")]
+        core_custom_list = core_custom_list[:insert_idx + idx] + [new_row] + core_custom_list[insert_idx + idx:]
+
+    paydf = pd.DataFrame(core_custom_list, columns=["header", initial_month])
 
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-    
-    custom_rows_json = request.form.get('custom_rows', None)
-    custom_rows = parse_custom_rows(custom_rows_json)
-    add_custom_template_rows(PAYDF_TEMPLATE, custom_rows)
-    paydf = add_custom_row(paydf, custom_rows)
+
     paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
-    print("")
-    print(paydf)
 
     context = {
         'paydf': paydf,
