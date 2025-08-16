@@ -233,6 +233,16 @@ footer {
     
 }
 
+#submit-les-button {
+    height: 3.5rem;
+    width: 73%;
+}
+
+#submit-example-button {
+    height: 3.5rem;
+    width: 25%;
+}
+
 .button-custom-row {
     align-items: center;
     border: none;
@@ -270,16 +280,6 @@ footer {
 
 .modal-button:hover {
     background-color: var(--highlight_green_color);
-}
-
-#submit-les-button {
-    height: 3.5rem;
-    width: 73%;
-}
-
-#submit-example-button {
-    height: 3.5rem;
-    width: 25%;
 }
 
 #update-les-button, #add-entitlement-button, #add-deduction-button, #return-home-button {
@@ -446,7 +446,7 @@ input.input-checkbox {
     background-color: var(--light_text_color);
 }
 
-#home-input {
+#home_input {
     width: 28rem;
 }
 
