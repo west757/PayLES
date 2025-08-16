@@ -53,36 +53,21 @@
 
         <!-- ent/ded/alt option rows -->
         <tbody class="pos-table-section">
-            {% for row in PAYDF_TEMPLATE.itertuples() %}
-                {% if row.option %}
-                    {% set header = row.header %}
-                    {% set varname = row.varname %}
-                    {% set modal = row.modal %}
-                    {% if header in row_headers %}
-                        <tr>
-                            {% set value = paydf.at[row_headers.index(header), col_headers[2]] %}
-                            <td class="row-header-cell">
-                                <button class="modal-button" type="button" data-modal="{{ modal }}">{{ header }}</button> 
-                            </td>
-                            <td>{{ '${:,.2f}'.format(value).replace('$-','-$') }}</td>
-                            <td>
-                                {% if value < 0 %}
-                                    <span>-$&nbsp;&nbsp;</span>
-                                {% else %}
-                                    <span>$&nbsp;&nbsp;</span>
-                                {% endif %}
-                                <input class="input-num input-num-mid" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="{{ varname }}_f" value="" placeholder="{{ value if value >= 0 else -value }}" />
-                            </td>
-                            <td>
-                                <select class="dropdown month-dropdown" name="{{ varname }}_m">
-                                    {% for x in month_options %}
-                                    <option value="{{ x }}">{{ x }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endif %}
+            {% for subform in options_form.ent_ded_alt_rows %}
+                <tr>
+                    <td class="row-header-cell">
+                        <button class="modal-button" type="button" data-modal="{{ PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['modal'] }}">{{ subform.header.data }}</button>
+                    </td>
+                    <td>
+                        {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-', '-$') }}
+                    </td>
+                    <td>
+                        {{ subform.value_f(class="input-num input-num-long") }}
+                    </td>
+                    <td>
+                        {{ subform.value_m(class="dropdown month-dropdown") }}
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
 
@@ -114,7 +99,7 @@
         <tbody>
             <tr>
                 <td colspan="4">
-                    {{ options_form.update_les(id="update-les-button",class="button button-standard") }}
+                    {{ options_form.update_les(id="update-les-button", class="button button-standard") }}
                 </td>
             </tr>
         </tbody>

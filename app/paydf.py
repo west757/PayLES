@@ -24,6 +24,10 @@ from app.calculations import (
     calculate_state_taxes,
     calculate_trad_roth_tsp,
 )
+from app.forms import (
+    OptionsForm,
+    EntDedAltRowForm,
+)
 
 # =========================
 # build paydf
@@ -232,7 +236,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     return core_dict
 
 
-def build_options_form(OptionsForm, paydf, col_headers, row_headers):
+def build_options_form(PAYDF_TEMPLATE, paydf, col_headers, row_headers):
     TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
     form = OptionsForm()
 
@@ -248,7 +252,10 @@ def build_options_form(OptionsForm, paydf, col_headers, row_headers):
     month_options = [(m, m) for m in col_headers[2:]]
     for field in [
         form.grade_m, form.zip_code_m, form.home_of_record_m, form.federal_filing_status_m,
-        form.state_filing_status_m, form.dependents_m, form.sgli_coverage_m, form.combat_zone_m
+        form.state_filing_status_m, form.dependents_m, form.sgli_coverage_m, form.combat_zone_m,
+        form.trad_tsp_base_rate_m, form.roth_tsp_base_rate_m, form.trad_tsp_specialty_rate_m,
+        form.roth_tsp_specialty_rate_m, form.trad_tsp_incentive_rate_m, form.roth_tsp_incentive_rate_m,
+        form.trad_tsp_bonus_rate_m, form.roth_tsp_bonus_rate_m
     ]:
         field.choices = month_options
 
@@ -270,6 +277,22 @@ def build_options_form(OptionsForm, paydf, col_headers, row_headers):
     form.roth_tsp_specialty_rate_f.data = paydf.at[row_headers.index("Roth TSP Specialty Rate"), col_headers[2]]
     form.roth_tsp_incentive_rate_f.data = paydf.at[row_headers.index("Roth TSP Incentive Rate"), col_headers[2]]
     form.roth_tsp_bonus_rate_f.data = paydf.at[row_headers.index("Roth TSP Bonus Rate"), col_headers[2]]
+
+    for header in row_headers:
+        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+        if not match.empty and bool(match.iloc[0]['option']):
+
+            if header in paydf['header'].values:
+                value = paydf.loc[paydf['header'] == header, col_headers[2]].values[0]
+            else:
+                value = 0
+            month = col_headers[2]
+
+            form.ent_ded_alt_rows.append_entry({
+                'header': header,
+                'value_f': value,
+                'value_m': month
+            })
 
     return form
 
