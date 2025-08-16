@@ -6,6 +6,11 @@ navigate to: \Documents\Github\Payles
 run: python -m app.main
 
 todo:
+implement CSRF using Flask-WTF, restructure forms first
+add in rows from paydf_template
+
+set dependents to int input
+set non-special row options to decimal input
 create levdf (leave calculator)
 instructions page
 update pay active and drill pay in config
@@ -16,12 +21,10 @@ update readme
 refactor javascript
 check what all is saved if in combat zone (are state taxes paid?)
 total tsp deduction per year and contribution limits, max tsp percentage
-add in rows from paydf_template
 
 
 possible:
 create unit tests
-implement CSRF using Flask-WTF, restructure forms first
 
 
 end of project:

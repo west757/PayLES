@@ -7,8 +7,6 @@ import re
 
 from app import flask_app
 from app.utils import (
-    find_multiword_matches,
-    calculate_months_in_service,
     validate_calculate_zip_mha,
     validate_home_of_record,
 )
@@ -45,7 +43,6 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     core_dict["Gross Pay"], core_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, core_dict)
     core_dict["Difference"] = Decimal("0.00")
 
-    #convert core from dict to ordered list of lists for session variable and dataframe initializing
     core_list = [[header, core_dict[header]] for header in core_dict]
     session['core_list'] = core_list
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
@@ -69,7 +66,7 @@ def add_variables(core_dict, les_text):
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
         les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
-        months_in_service = calculate_months_in_service(les_date, pay_date)
+        months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
     core_dict["Months in Service"] = months_in_service
@@ -181,31 +178,41 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     headers = PAYDF_TEMPLATE['header'].values
     shortnames = PAYDF_TEMPLATE['shortname'].values
     signs = PAYDF_TEMPLATE['sign'].values
-    required_flags = PAYDF_TEMPLATE['required'].values
-
+    requireds = PAYDF_TEMPLATE['required'].values
     ent_sections = [les_text[9]]
-    ded_sections = [les_text[10], les_text[11]]
+    ded_alt_sections = [les_text[10], les_text[11]]
 
     for idx, header in enumerate(headers):
         shortname = shortnames[idx]
         sign = signs[idx]
-        required = required_flags[idx]
+        required = requireds[idx]
         value = None
         found = False
 
-        sections = ent_sections if sign == 1 else ded_sections
+        sections_to_search = ent_sections if sign == 1 else ded_alt_sections
 
-        # Find matches using list comprehensions
-        matches = []
-        for section in sections:
-            matches += find_multiword_matches(section, shortname)
+        # search each relevant section for the header's shortname
+        for section in sections_to_search:
+            short_words = shortname.split()
+            n = len(short_words)
 
-        # Find the first numeric value after the match
-        for section in sections:
-            for match_idx in find_multiword_matches(section, shortname):
+            # find all indices where the shortname matches a sequence in the section
+            match_indices = [
+                i + n - 1
+                for i in range(len(section) - n + 1)
+                if ' '.join(section[i:i+n]) == shortname
+            ]
+
+            # for each match, look for the first numeric value after the match
+            for match_idx in match_indices:
                 for j in range(match_idx + 1, len(section)):
                     s = section[j]
-                    is_num = s.replace('.', '', 1).replace('-', '', 1).isdigit() or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                    
+                    is_num = (
+                        s.replace('.', '', 1).replace('-', '', 1).isdigit()
+                        or (s.startswith('-') and s[1:].replace('.', '', 1).isdigit())
+                    )
+
                     if is_num:
                         value = sign * abs(Decimal(s))
                         found = True
@@ -215,6 +222,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
             if found:
                 break
 
+        # if not found, assign 0.00 if required, otherwise skip
         if not found and required:
             value = Decimal("0.00")
         elif not found:
@@ -243,9 +251,9 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
         next_col_dict = {}
 
         update_variables(next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, month_index=i)
+        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, month_index=i)
+        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
         next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
@@ -297,7 +305,7 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
     return next_col_dict
 
 
-def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, month_index=1):
+def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
     all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
     ent_rows = [header for header in all_ent_rows if header in paydf['header'].values]
 
@@ -312,12 +320,12 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, month_index)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, col_index)
 
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, month_index=1):
+def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
     all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
     ded_alt_rows = [header for header in all_ded_alt_headers if header in paydf['header'].values]
 
@@ -341,24 +349,24 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
             else:
                 next_col_dict["Roth TSP"] = roth
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, month_index)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, col_index)
 
     return next_col_dict
 
 
-def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None, month_index=1):
+def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None, col_index=1):
     if bool(match.iloc[0]['onetime']):
         next_col_dict[header] = Decimal("0.00")
         return next_col_dict
 
     if bool(match.iloc[0]['custom']) and custom_rows is not None:
         custom_row = next((row for row in custom_rows if row['header'] == header), None)
+
         if custom_row:
             values = custom_row.get('values', [])
-            # month_index: 1 for first month after initial, 2 for second, etc.
-            # So for initial month (already set), month_index=0, for next month, month_index=1, etc.
-            if (month_index - 1) < len(values):
-                next_col_dict[header] = values[month_index - 1]
+
+            if (col_index - 1) < len(values):
+                next_col_dict[header] = values[col_index - 1]
             elif values:
                 next_col_dict[header] = values[-1]
             else:
@@ -397,7 +405,7 @@ def remove_custom_template_rows(PAYDF_TEMPLATE):
 def parse_custom_rows(PAYDF_TEMPLATE, form):
     core_list = session.get('core_list', [])
 
-    #read custom rows from form and set correct sign on values
+    #read custom rows and set correct sign for values
     custom_rows_json = form.get('custom_rows', '[]')
     custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
     for row in custom_rows:

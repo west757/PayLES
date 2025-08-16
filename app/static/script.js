@@ -256,7 +256,7 @@ function renderCustomRows() {
         if (editingIndex === idx) {
             // Editable row
             let headerTd = document.createElement('td');
-            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required maxlength="20"/>`;
+            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required maxlength="18"/>`;
             tr.appendChild(headerTd);
 
             let taxTd = document.createElement('td');
@@ -556,6 +556,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     stripeTable('paydf-table');
     stripeTable('options-table');
     stripeTable('settings-table');
+    attachTspBaseListeners();
+    updateTspInputs();
 });
 
 
@@ -572,6 +574,8 @@ document.addEventListener('keydown', function(e) {
 // disable buttons on form submission to prevent multiple submissions
 document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
+    attachTspBaseListeners();
+
     document.querySelectorAll('form').forEach(function(form) {
         form.addEventListener('submit', function() {
             form.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
@@ -579,4 +583,106 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+});
+
+
+
+
+function attachTspBaseListeners() {
+    document.querySelectorAll('input[data-header="Trad TSP Base Rate"], input[data-header="Roth TSP Base Rate"]').forEach(function(input) {
+        input.removeEventListener('input', updateTspInputs); // Prevent duplicate listeners
+        input.removeEventListener('change', updateTspInputs);
+        input.addEventListener('input', updateTspInputs);
+        input.addEventListener('change', updateTspInputs);
+    });
+}
+
+
+
+
+
+// =========================
+// TSP dynamic enable/disable
+// =========================
+function showTspNotification(message) {
+    let notif = document.getElementById('tsp-notification');
+    if (!notif) {
+        notif = document.createElement('div');
+        notif.id = 'tsp-notification';
+        notif.style.position = 'fixed';
+        notif.style.top = '20px';
+        notif.style.left = '50%';
+        notif.style.transform = 'translateX(-50%)';
+        notif.style.background = '#ffcccc';
+        notif.style.color = '#900';
+        notif.style.padding = '10px 20px';
+        notif.style.borderRadius = '5px';
+        notif.style.zIndex = '1000';
+        notif.style.fontWeight = 'bold';
+        document.body.appendChild(notif);
+    }
+    notif.textContent = message;
+    notif.style.display = 'block';
+    setTimeout(() => { notif.style.display = 'none'; }, 4000);
+}
+
+function updateTspInputs() {
+    console.log("updateTspInputs called");
+
+    const tradBaseInput = document.querySelector('input[data-header="Trad TSP Base Rate"]');
+    const rothBaseInput = document.querySelector('input[data-header="Roth TSP Base Rate"]');
+    const tradBaseValue = tradBaseInput ? parseInt(tradBaseInput.value || tradBaseInput.placeholder || "0", 10) : 0;
+    const rothBaseValue = rothBaseInput ? parseInt(rothBaseInput.value || rothBaseInput.placeholder || "0", 10) : 0;
+
+    let invalidSpecialty = false;
+
+    document.querySelectorAll('.tsp-rate-input').forEach(function(input) {
+        const header = input.getAttribute('data-header');
+        const type = input.getAttribute('data-tsp-type');
+        if (header === "Trad TSP Base Rate" || header === "Roth TSP Base Rate") {
+            input.disabled = false;
+            return;
+        }
+        if (type === "trad" && tradBaseValue < 1) {
+            input.disabled = true;
+            if (parseInt(input.value || "0", 10) > 0) invalidSpecialty = true;
+            input.value = "";
+        } else if (type === "roth" && rothBaseValue < 1) {
+            input.disabled = true;
+            if (parseInt(input.value || "0", 10) > 0) invalidSpecialty = true;
+            input.value = "";
+        } else {
+            input.disabled = false;
+        }
+    });
+
+    // Gray out update buttons if invalid
+    const buttonIds = [
+        'update-les-button',
+        'add-entitlement-button',
+        'add-deduction-button',
+        'export-button'
+    ];
+    buttonIds.forEach(function(id) {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.disabled = invalidSpecialty || editingIndex !== null;
+        }
+    });
+
+    // Show notification if invalid
+    if (invalidSpecialty) {
+        showTspNotification("TSP Specialty/Incentive/Bonus Rates cannot be used unless Base Rate is greater than 0.");
+    }
+}
+
+
+
+document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('tsp-rate-input')) {
+        // Remove non-digit characters and limit to 2 digits
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        e.target.value = val;
+    }
 });
