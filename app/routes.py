@@ -94,7 +94,7 @@ def about():
 @flask_app.route('/faq')
 def faq():
     FAQS = load_json(flask_app.config['FAQ_JSON'])
-    return render_template('faq.html', FAQs=FAQS)
+    return render_template('faq.html', FAQS=FAQS)
 
 
 @flask_app.route('/resources')

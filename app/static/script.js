@@ -256,7 +256,7 @@ function renderCustomRows() {
         if (editingIndex === idx) {
             // Editable row
             let headerTd = document.createElement('td');
-            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required />`;
+            headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required maxlength="20"/>`;
             tr.appendChild(headerTd);
 
             let taxTd = document.createElement('td');
