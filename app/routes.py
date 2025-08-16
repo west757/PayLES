@@ -12,18 +12,21 @@ from app.les import (
 )
 from app.paydf import (
     build_paydf,
+    build_options_form,
     expand_paydf,
     parse_custom_rows,
 )
 from app.forms import (
     HomeForm,
+    OptionsForm,
+    SettingsForm,
 )
 
 
 @flask_app.route('/')
 def index():
-    form = HomeForm()
-    return render_template('home_group.html', form=form)
+    home_form = HomeForm()
+    return render_template('home_group.html', home_form=home_form)
 
 
 @flask_app.route('/submit_les', methods=['POST'])
@@ -32,30 +35,35 @@ def submit_les():
     EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
 
-    form = HomeForm()
-    if not form.validate_on_submit():
-        return render_template("home_form.html", form=form, message="Invalid submission")
+    home_form = HomeForm()
+    if not home_form.validate_on_submit():
+        return render_template("home_form.html", home_form=home_form, message="Invalid submission")
 
-    if form.submit_les.data:
-        les_file = form.home_input.data
+    if home_form.submit_les.data:
+        les_file = home_form.home_input.data
         if not les_file:
-            return render_template("home_form.html", form=form, message="No file submitted")
+            return render_template("home_form.html", home_form=home_form, message="No file submitted")
         valid, message = validate_file(les_file)
         if not valid:
-            return render_template("home_form.html", form=form, message=message)
+            return render_template("home_form.html", home_form=home_form, message=message)
         valid, message, les_pdf = validate_les(les_file)
 
-    elif form.submit_example.data:
+    elif home_form.submit_example.data:
         valid, message, les_pdf = validate_les(EXAMPLE_LES)
     else:
-        return render_template("home_form.html", form=form, message="Unknown action, no LES or example submitted")
+        return render_template("home_form.html", home_form=home_form, message="Unknown action, no LES or example submitted")
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf = build_paydf(PAYDF_TEMPLATE, les_text)
         paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
+
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+
+        options_form = build_options_form(OptionsForm, col_headers)
+        settings_form = SettingsForm()
+        settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 
         context = {
             'les_image': les_image,
@@ -65,11 +73,13 @@ def submit_les():
             'row_headers': row_headers,
             'LES_REMARKS': LES_REMARKS,
             'PAYDF_MODALS': PAYDF_MODALS,
+            'options_form': options_form,
+            'settings_form': settings_form,
         }
         return render_template('paydf_group.html', **context)
     else:
-        return render_template("home_form.html", form=form, message=message)
-    
+        return render_template("home_form.html", home_form=home_form, message=message)
+
 
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():

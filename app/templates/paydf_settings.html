@@ -13,15 +13,9 @@
             <!-- months display-->
             <td>
                 <div class="settings-row">
-                    <label>Months Displayed: &nbsp;</label>
-                </div>
-                <div class="settings-row">
                     <form id="settings-form">
-                        <select id="months-display-dropdown" class="dropdown" name="months_display">
-                            {% for x in range(2, 13) %}
-                                <option value="{{x}}" {% if x==DEFAULT_MONTHS_DISPLAY %} selected {% endif %}>{{x}}</option>
-                            {% endfor %}
-                        </select>
+                        {{ settings_form.months_display.label }}
+                        {{ settings_form.months_display(class="dropdown", id="months-display-dropdown") }}
                     </form>
                 </div>
             </td>
@@ -91,6 +85,7 @@
         </tr>
     </tbody>
     
+
     <tbody>
         <!-- submit new les-->
         <tr>
