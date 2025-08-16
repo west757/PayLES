@@ -21,7 +21,7 @@ update readme
 refactor javascript
 check what all is saved if in combat zone (are state taxes paid?)
 total tsp deduction per year and contribution limits, max tsp percentage
-
+add modals
 
 possible:
 create unit tests

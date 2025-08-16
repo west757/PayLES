@@ -637,8 +637,6 @@ function showTspNotification(message) {
 }
 
 function updateTspInputs() {
-    console.log("updateTspInputs called");
-
     const tradBaseInput = document.querySelector('input[data-header="Trad TSP Base Rate"]');
     const rothBaseInput = document.querySelector('input[data-header="Roth TSP Base Rate"]');
     const tradBaseValue = tradBaseInput ? parseInt(tradBaseInput.value || tradBaseInput.placeholder || "0", 10) : 0;
