@@ -1,9 +1,16 @@
 //constants and global variables
-const DEFAULT_MONTHS_DISPLAY = 4;
-const MAX_CUSTOM_ROWS = 9;
 let editingIndex = null;
 let customRows = [];
 let customRowButtons = [];
+
+function initConfigVars() {
+    const configDiv = document.getElementById('config-data');
+    if (configDiv) {
+        window.RESERVED_HEADERS = JSON.parse(configDiv.dataset.reservedHeaders);
+        window.DEFAULT_MONTHS_DISPLAY = parseInt(configDiv.dataset.defaultMonthsDisplay);
+        window.MAX_CUSTOM_ROWS = parseInt(configDiv.dataset.maxCustomRows);
+    }
+}
 
 
 // =========================
@@ -64,6 +71,7 @@ function stripeTable(tableId) {
     });
 }
 
+
 function updatePaydf() {
     const optionsForm = document.getElementById('options-form');
     const settingsForm = document.getElementById('settings-form');
@@ -90,6 +98,7 @@ function updatePaydf() {
     });
 }
 
+
 function updateMonthDropdowns() {
     const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
     // remove the first two column headers (row header and first month)
@@ -109,6 +118,7 @@ function updateMonthDropdowns() {
         });
     });
 }
+
 
 function highlight_changes() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
@@ -144,6 +154,7 @@ function highlight_changes() {
     }
 }
 
+
 function show_all_variables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
@@ -152,6 +163,7 @@ function show_all_variables() {
         rows[i].style.display = checked ? 'table-row' : 'none';
     }
 }
+
 
 function show_tsp_options() {
     var checkbox = document.getElementById('show-tsp-options-checkbox');
@@ -219,14 +231,15 @@ function renderCustomRowButtonTable() {
     attachCustomRowButtonListeners();
 }
 
+
 function renderCustomRows() {
     const customSection = document.getElementById('custom-row-section');
     customSection.innerHTML = '';
 
-    let monthsDisplay = DEFAULT_MONTHS_DISPLAY;
+    let monthsDisplay = window.DEFAULT_MONTHS_DISPLAY;
     const monthsDropdown = document.getElementById('months-display-dropdown');
     if (monthsDropdown) {
-        monthsDisplay = parseInt(monthsDropdown.value) || DEFAULT_MONTHS_DISPLAY;
+        monthsDisplay = parseInt(monthsDropdown.value) || window.DEFAULT_MONTHS_DISPLAY;
     }
     let valueColumns = monthsDisplay - 1;
 
@@ -239,7 +252,9 @@ function renderCustomRows() {
 
         let tr = document.createElement('tr');
         tr.dataset.index = idx;
+
         if (editingIndex === idx) {
+            // Editable row
             let headerTd = document.createElement('td');
             headerTd.innerHTML = `<input class="input-text" type="text" value="${row.header}" required />`;
             tr.appendChild(headerTd);
@@ -275,11 +290,29 @@ function renderCustomRows() {
                 `;
                 tr.appendChild(valueTd);
             }
-        } 
+        } else {
+            // Static row
+            let headerTd = document.createElement('td');
+            headerTd.textContent = row.header;
+            tr.appendChild(headerTd);
+
+            let taxTd = document.createElement('td');
+            taxTd.textContent = row.tax ? "Taxed" : "Non-Taxed";
+            tr.appendChild(taxTd);
+
+            for (let i = 0; i < row.values.length; i++) {
+                let value = row.values[i];
+                let sign = row.sign === -1 ? '-' : '';
+                let valueTd = document.createElement('td');
+                valueTd.textContent = `${sign}$${value}`;
+                tr.appendChild(valueTd);
+            }
+        }
         customSection.appendChild(tr);
     });
     renderCustomRowButtonTable();
 }
+
 
 function attachCustomRowButtonListeners() {
     customRowButtons.forEach(function(button, idx) {
@@ -297,6 +330,21 @@ function attachCustomRowButtonListeners() {
                     headerInput.focus();
                     return;
                 }
+
+                // Gather all headers from PAYDF_TEMPLATE and other custom rows (except the one being edited)
+                let allHeaders = [
+                    ...window.RESERVED_HEADERS.map(h => h.trim()),
+                    ...customRows.filter((row, idx) => idx !== editingIndex && row.header).map(row => row.header.trim())
+                ];
+
+                // Check for duplicate header
+                const newHeader = headerInput.value.trim();
+                if (allHeaders.includes(newHeader)) {
+                    alert('Header name "' + headerInput.value.trim() + '" is currently in use or reserved. Please use another name.');
+                    headerInput.focus();
+                    return;
+                }
+
 
                 // Get tax checkbox
                 const taxCheckbox = tr.querySelector('input[type="checkbox"]');
@@ -400,6 +448,7 @@ function showTooltip(evt, text) {
     tooltip.style.display = 'block';
 }
 
+
 function hideTooltip() {
     const tooltip = document.getElementById('tooltip');
     tooltip.style.display = 'none';
@@ -430,8 +479,8 @@ document.addEventListener('click', function(e) {
 
     if (e.target.id === 'add-entitlement-button') {
         if (editingIndex !== null) return;
-        if (customRows.length >= MAX_CUSTOM_ROWS) {
-            alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
+        if (customRows.length >= window.MAX_CUSTOM_ROWS) {
+            alert('You can only add up to ' + window.MAX_CUSTOM_ROWS + ' custom rows.');
             return;
         }
         const paydfTable = document.getElementById('paydf-table');
@@ -445,8 +494,8 @@ document.addEventListener('click', function(e) {
     }
     if (e.target.id === 'add-deduction-button') {
         if (editingIndex !== null) return;
-        if (customRows.length >= MAX_CUSTOM_ROWS) {
-            alert('You can only add up to ' + MAX_CUSTOM_ROWS + ' custom rows.');
+        if (customRows.length >= window.MAX_CUSTOM_ROWS) {
+            alert('You can only add up to ' + window.MAX_CUSTOM_ROWS + ' custom rows.');
             return;
         }
         const paydfTable = document.getElementById('paydf-table');
@@ -464,6 +513,7 @@ document.addEventListener('click', function(e) {
         exportPaydf();
     }
 });
+
 
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-display-dropdown') {
@@ -484,6 +534,7 @@ document.addEventListener('change', function(e) {
     }
 });
 
+
 document.addEventListener('mousemove', function(e) {
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
@@ -499,11 +550,14 @@ document.addEventListener('mouseleave', function(e) {
     }
 }, true);
 
+
 document.body.addEventListener('htmx:afterSwap', function(evt) {
+    initConfigVars();
     stripeTable('paydf-table');
     stripeTable('options-table');
     stripeTable('settings-table');
 });
+
 
 // close modals on Escape key press
 document.addEventListener('keydown', function(e) {
@@ -514,8 +568,10 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+
 // disable buttons on form submission to prevent multiple submissions
 document.addEventListener('DOMContentLoaded', function() {
+    initConfigVars();
     document.querySelectorAll('form').forEach(function(form) {
         form.addEventListener('submit', function() {
             form.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {

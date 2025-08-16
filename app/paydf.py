@@ -390,14 +390,8 @@ def remove_custom_template_rows(PAYDF_TEMPLATE):
 
 
 def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
-    existing_headers = set(PAYDF_TEMPLATE['header'].values)
-
     for row in custom_rows:
         header = row['header']
-
-        while header in existing_headers:
-            header += "_unique"
-        existing_headers.add(header)
 
         PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
             'header': header,
@@ -412,6 +406,3 @@ def add_custom_template_rows(PAYDF_TEMPLATE, custom_rows):
             'custom': True,
             'modal': ''
         }
-
-        row['header'] = header
-
