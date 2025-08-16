@@ -1,14 +1,14 @@
 <form id="home-form" hx-post="/submit_les" hx-target="#home" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-    {{ form.hidden_tag() }}
-    <label id="home-drop" for="{{ form.home_input.id }}">
+    {{ home_form.hidden_tag() }}
+    <label id="home-drop" for="{{ home_form.home_input.id }}">
         <span class="text-mid">Drop LES here</span>
         or
-        {{ form.home_input(id="home_input", class="form-control", accept=".pdf") }}
+        {{ home_form.home_input(id="home_input", class="form-control", accept=".pdf") }}
     </label>
 
     <div id="home-buttons-row">
-        {{ form.submit_les(id="submit-les-button", class="button button-standard") }}
-        {{ form.submit_example(id="submit-example-button", class="button button-standard") }}
+        {{ home_form.submit_les(id="submit-les-button", class="button button-standard") }}
+        {{ home_form.submit_example(id="submit-example-button", class="button button-standard") }}
     </div>
 </form>
 

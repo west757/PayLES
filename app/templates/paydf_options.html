@@ -7,6 +7,9 @@
 {% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
 {% set month_options = col_headers[2:] %}
 
+{% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
+{% set TSP_MODALS = config.TSP_MODALS %}
+
 
 <form id="options-form">
     <table id="options-table" class="pos-table">
@@ -18,161 +21,31 @@
                 <td class="pos-table-header-cell">Month</td>
             </tr>
 
-            <tr>
-                {% set grade = paydf.at[row_headers.index('Grade'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="basepay">Grade</button></td>
-                <td>{{ grade }}</td>
-                <td>
-                    <select class="dropdown" name="grade_f">
-                        {% for x in GRADES %}
-                            <option value="{{x}}" {% if grade == x %}selected{% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="grade_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set zip_code = paydf.at[row_headers.index('Zip Code'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Zip Code</button></td>
-                <td>{{ zip_code }}</td>
-                <td>
-                    <input class="input-num input-num-long" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="5" name="zip_code_f" value="" placeholder="{{ zip_code }}" />
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="zip_code_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set home_of_record = paydf.at[row_headers.index('Home of Record'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Home of Record</button></td>
-                <td>{{ home_of_record }}</td>
-                <td>
-                    <select class="dropdown" name="home_of_record_f">
-                        {% for x in HOME_OF_RECORDS %}
-                            <option value="{{x}}" {% if home_of_record == x %}selected{% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="home_of_record_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set federal_filing_status = paydf.at[row_headers.index('Federal Filing Status'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="federaltaxes">Federal Filing Status</button></td>
-                <td>{{ federal_filing_status }}</td>
-                <td>
-                    <select class="dropdown" name="federal_filing_status_f">
-                        {% for x in TAX_FILING_TYPES_DEDUCTIONS.keys() %}
-                            <option value="{{x}}" {% if federal_filing_status == x %}selected{% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="federal_filing_status_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set state_filing_status = paydf.at[row_headers.index('State Filing Status'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="statetaxes">State Filing Status</button></td>
-                <td>{{ state_filing_status }}</td>
-                <td>
-                    <select class="dropdown" name="state_filing_status_f">
-                        {% set filing_types = TAX_FILING_TYPES_DEDUCTIONS.keys()|list %}
-                        {% for x in filing_types[:2] %}
-                            <option value="{{x}}" {% if state_filing_status == x %}selected{% endif %}>{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="state_filing_status_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set dependents = paydf.at[row_headers.index('Dependents'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="bah">Dependents</button></td>
-                <td>{{ dependents }}</td>
-                <td>
-                    <input class="input-num input-num-short" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="2" name="dependents_f" value="" placeholder="{{ dependents }}" />
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="dependents_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set sgli_coverage = paydf.at[row_headers.index('SGLI Coverage'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="sgli">SGLI Coverage</button></td>
-                <td>{{ sgli_coverage }}</td>
-                <td>
-                    <select class="dropdown" name="sgli_coverage_f">
-                        {% for row in SGLI_RATES.itertuples() %}
-                            <option value="{{row.coverage}}" {% if sgli_coverage == row.coverage %}selected{% endif %}>{{row.coverage}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="sgli_coverage_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                {% set combat_zone = paydf.at[row_headers.index('Combat Zone'), col_headers[2]] %}
-                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="combatzone">Combat Zone</button></td>
-                <td>{{ combat_zone }}</td>
-                <td>
-                    <select class="dropdown" name="combat_zone_f">
-                        <option value="No" {% if combat_zone == "No" %}selected{% endif %}>No</option>
-                        <option value="Yes" {% if combat_zone == "Yes" %}selected{% endif %}>Yes</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="dropdown month-dropdown" name="combat_zone_m">
-                        {% for x in month_options %}
-                            <option value="{{x}}">{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
+            <!-- variable option rows -->
+            {% for header, modal in VARIABLES_MODALS.items() %}
+                {% set varname = header.lower().replace(' ', '_') %}
+                {% if varname ~ '_f' in options_form._fields and varname ~ '_m' in options_form._fields %}
+                    {% set current_value = paydf.at[row_headers.index(header), col_headers[2]] if header in row_headers else '' %}
+                    {% set field_f = options_form[varname ~ '_f'] %}
+                    {% set field_m = options_form[varname ~ '_m'] %}
+                    <tr>
+                        <td class="row-header-cell">
+                            <button class="modal-button" type="button" data-modal="{{ modal }}">{{ header }}</button>
+                        </td>
+                        <td>{{ current_value }}</td>
+                        <td>
+                            {{ field_f(class="dropdown" if field_f.type == 'SelectField' else "input-num") }}
+                        </td>
+                        <td>
+                            {{ field_m(class="dropdown month-dropdown") }}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
         </tbody>
 
 
-        <!-- ent/ded/alt rows -->
+        <!-- ent/ded/alt option rows -->
         <tbody class="pos-table-section">
             {% for row in PAYDF_TEMPLATE.itertuples() %}
                 {% if row.option %}
@@ -208,49 +81,56 @@
         </tbody>
 
 
-        <!-- TSP rate rows -->
+        <!-- TSP rate option rows -->
         <tbody class="pos-table-section">
-            {% for i in range(11, 19) %}
-                {% set header = row_headers[i] %}
-                {% set varname = header|lower|replace(' ', '_') %}
-                {% set tsp = paydf.at[i, col_headers[2]] %}
-                {% if header == "Trad TSP Base Rate" %}
-                    {% set max_rate = TRADITIONAL_TSP_RATE_MAX %}
-                    {% set base_type = "trad" %}
-                {% elif header == "Roth TSP Base Rate" %}
-                    {% set max_rate = ROTH_TSP_RATE_MAX %}
-                    {% set base_type = "roth" %}
-                {% else %}
-                    {% set max_rate = 100 %}
-                    {% set base_type = "trad" if header.startswith("Trad") else "roth" %}
-                {% endif %}
-                <tr class="tsp-row">
-                    <td class="row-header-cell">
-                        <button class="modal-button" type="button" data-modal="tsp">{{ header }}</button> 
-                    </td>
-                    <td>{{ '{}%'.format(tsp) }}</td>
-                    <td>
-                        <input
-                            class="input-num input-num-mid tsp-rate-input"
-                            type="number"
-                            min="0"
-                            max="{{ max_rate }}"
-                            name="{{ varname }}_f"
-                            value="{{ tsp }}"
-                            data-tsp-type="{{ base_type }}"
-                            data-header="{{ header }}"
-                        />
-                        <span>&nbsp;&nbsp;%</span>
-                    </td>
-                    <td>
-                        <select class="dropdown month-dropdown" name="{{ varname }}_m">
-                            {% for x in month_options %}
-                            <option value="{{ x }}">{{ x }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-            {% endfor %}
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Base Rate</button></td>
+                <td>{{ trad_tsp_base_rate }}</td>
+                <td>{{ options_form.trad_tsp_base_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.trad_tsp_base_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Base Rate</button></td>
+                <td>{{ roth_tsp_base_rate }}</td>
+                <td>{{ options_form.roth_tsp_base_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.roth_tsp_base_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Specialty Rate</button></td>
+                <td>{{ trad_tsp_specialty_rate }}</td>
+                <td>{{ options_form.trad_tsp_specialty_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.trad_tsp_specialty_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Specialty Rate</button></td>
+                <td>{{ roth_tsp_specialty_rate }}</td>
+                <td>{{ options_form.roth_tsp_specialty_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.roth_tsp_specialty_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Incentive Rate</button></td>
+                <td>{{ trad_tsp_incentive_rate }}</td>
+                <td>{{ options_form.trad_tsp_incentive_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.trad_tsp_incentive_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Incentive Rate</button></td>
+                <td>{{ roth_tsp_incentive_rate }}</td>
+                <td>{{ options_form.roth_tsp_incentive_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.roth_tsp_incentive_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Trad TSP Bonus Rate</button></td>
+                <td>{{ trad_tsp_bonus_rate }}</td>
+                <td>{{ options_form.trad_tsp_bonus_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.trad_tsp_bonus_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
+            <tr class="tsp-row">
+                <td class="row-header-cell"><button class="modal-button" type="button" data-modal="tsp">Roth TSP Bonus Rate</button></td>
+                <td>{{ roth_tsp_bonus_rate }}</td>
+                <td>{{ options_form.roth_tsp_bonus_rate_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span></td>
+                <td>{{ options_form.roth_tsp_bonus_rate_m(class="dropdown month-dropdown") }}</td>
+            </tr>
         </tbody>
 
 
@@ -258,7 +138,7 @@
         <tbody>
             <tr>
                 <td colspan="4">
-                    <button id="update-les-button" class="button button-standard" type="button">Update LES</button>
+                    {{ options_form.update_les(id="update-les-button",class="button button-standard") }}
                 </td>
             </tr>
         </tbody>

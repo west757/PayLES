@@ -25,7 +25,6 @@ from app.calculations import (
     calculate_trad_roth_tsp,
 )
 
-
 # =========================
 # build paydf
 # =========================
@@ -231,6 +230,33 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
         core_dict[header] = value
 
     return core_dict
+
+
+def build_options_form(OptionsForm, col_headers):
+    TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
+    form = OptionsForm()
+
+    form.grade_f.choices = [(g, g) for g in flask_app.config['GRADES']]
+    form.home_of_record_f.choices = [(h, h) for h in flask_app.config['HOME_OF_RECORDS']]
+    federal_types = list(TAX_FILING_TYPES_DEDUCTIONS.keys())
+    form.federal_filing_status_f.choices = [(t, t) for t in federal_types]
+    state_types = federal_types[:2]
+    form.state_filing_status_f.choices = [(t, t) for t in state_types]
+    form.sgli_coverage_f.choices = [(str(row['coverage']), str(row['coverage'])) for _, row in flask_app.config['SGLI_RATES'].iterrows()]
+    form.combat_zone_f.choices = [('No', 'No'), ('Yes', 'Yes')]
+
+    month_options = [(m, m) for m in col_headers[2:]]
+    for field in [
+        form.grade_m, form.zip_code_m, form.home_of_record_m, form.federal_filing_status_m,
+        form.state_filing_status_m, form.dependents_m, form.sgli_coverage_m, form.combat_zone_m
+    ]:
+        field.choices = month_options
+
+    return form
+
+
+
+
 
 
 
