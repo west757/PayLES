@@ -19,9 +19,9 @@ def validate_file(file):
     ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
 
     if file.filename == '':
-        return False, "No file submitted - check from utils"
+        return False, "No file submitted"
     if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
-        return False, "Invalid file type, only PDFs are accepted - check from utils"
+        return False, "Invalid file type, only PDFs are accepted"
     return True, ""
 
 

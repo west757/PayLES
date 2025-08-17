@@ -89,17 +89,14 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
 // show toast messages after htmx response Error
 document.body.addEventListener('htmx:responseError', function(evt) {
-    console.log("htmx:responseError", evt);
     enableAllInputs();
     try {
         const response = JSON.parse(evt.detail.xhr.responseText);
         if (response.message) {
-            console.log("showing toast");
-            console.log("HTMX Response Error:", response.message);
-            showToast(response.message, "error");
+            showToast(response.message);
         }
     } catch (e) {
-        // Not a JSON response, ignore
+        // not a JSON response, ignore
     }
 });
 
