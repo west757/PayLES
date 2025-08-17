@@ -10,7 +10,16 @@ class HomeForm(FlaskForm):
 
 class EntDedAltRowForm(Form):
     header = StringField('Header')
-    value_f = DecimalField('Value Future', validators=[NumberRange(min=0, max=9999)])
+    value_f = DecimalField(
+        'Value Future',
+        validators=[NumberRange(min=0, max=9999)],
+        render_kw={
+            "type": "number",
+            "min": 0,
+            "max": 9999,
+            "inputmode": "numeric"
+        }
+    )
     value_m = SelectField('Month', choices=[])
 
 
@@ -39,18 +48,39 @@ def build_options_form(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, col_headers, ro
 
         elif field_type == "integer":
             if "trad_tsp" in varname:
-                validators.append(NumberRange(min=0, max=TRAD_TSP_RATE_MAX))
+                max_val = TRAD_TSP_RATE_MAX
             elif "roth_tsp" in varname:
-                validators.append(NumberRange(min=0, max=ROTH_TSP_RATE_MAX))
+                max_val = ROTH_TSP_RATE_MAX
             elif "dependents" in varname:
-                validators.append(NumberRange(min=0, max=DEPENDENTS_MAX))
+                max_val = DEPENDENTS_MAX
             else:
-                validators.append(NumberRange(min=0, max=9999))
-            fields[field_f_name] = IntegerField(f"{header} Future", validators=validators)
+                max_val = 9999
+
+            validators.append(NumberRange(min=0, max=max_val))
+            fields[field_f_name] = IntegerField(
+                f"{header} Future",
+                validators=validators,
+                render_kw={
+                    "type": "number",
+                    "min": 0,
+                    "max": max_val,
+                    "inputmode": "numeric"
+                }
+            )
 
         elif field_type == "string" and "zip_code" in varname:
             validators = [Length(min=5, max=5), Regexp(r'^\d{5}$', message="Zip code must be 5 digits")]
-            fields[field_f_name] = StringField(f"{header} Future", validators=validators)
+            fields[field_f_name] = StringField(
+                f"{header} Future",
+                validators=validators,
+                render_kw={
+                    "maxlength": 5,
+                    "minlength": 5,
+                    "pattern": r"\d{5}",
+                    "inputmode": "numeric",
+                    "autocomplete": "postal-code"
+                }
+            )
 
         fields[field_m_name] = SelectField(f"{header} Month", choices=[])
         month_fields.append(field_m_name)
