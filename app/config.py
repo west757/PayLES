@@ -56,38 +56,7 @@ class Config:
     GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
-    VARIABLES_MODALS = {
-        "Year": "basepay",
-        "Grade": "basepay",
-        "Months in Service": "basepay",
-        "Zip Code": "bah",
-        "Military Housing Area": "bah",
-        "Home of Record": "bah",
-        "Federal Filing Status": "federaltaxes",
-        "State Filing Status": "statetaxes",
-        "Dependents": "bah",
-        "SGLI Coverage": "sgli",
-        "Combat Zone": "combatzone",
-    }
-    TSP_MODALS = {
-        "Trad TSP Base Rate": "basepay",
-        "Trad TSP Specialty Rate": "specialty",
-        "Trad TSP Incentive Rate": "incentive",
-        "Trad TSP Bonus Rate": "bonus",
-        "Roth TSP Base Rate": "basepay",
-        "Roth TSP Specialty Rate": "specialty",
-        "Roth TSP Incentive Rate": "incentive",
-        "Roth TSP Bonus Rate": "bonus",
-    }
-    CALCULATIONS_MODALS = {
-        "Taxable Income": "taxedincome",
-        "Non-Taxable Income": "taxedincome",
-        "Total Taxes": "taxedincome",
-        "Gross Pay": "grossnetpay",
-        "Net Pay": "grossnetpay",
-        "Difference": "grossnetpay",
-    }
-
+    
 
     #load static files
     dtype_bah = {'mha': str}

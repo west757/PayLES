@@ -31,8 +31,8 @@ def index():
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
     DEFAULT_MONTHS_DISPLAY = flask_app.config['DEFAULT_MONTHS_DISPLAY']
-    EXAMPLE_LES = flask_app.config['EXAMPLE_LES']
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
 
     home_form = HomeForm()
     if not home_form.validate_on_submit():
@@ -48,19 +48,32 @@ def submit_les():
         valid, message, les_pdf = validate_les(les_file)
 
     elif home_form.submit_example.data:
-        valid, message, les_pdf = validate_les(EXAMPLE_LES)
+        valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
     else:
         return render_template("home_form.html", home_form=home_form, message="Unknown action, no LES or example submitted")
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         paydf = build_paydf(PAYDF_TEMPLATE, les_text)
-        paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
+        paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, DEFAULT_MONTHS_DISPLAY, form={})
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
         
-        options_form = build_options_form(PAYDF_TEMPLATE, paydf, col_headers, row_headers)
+        options_form = build_options_form(
+            PAYDF_TEMPLATE,
+            VARIABLE_TEMPLATE,
+            paydf,
+            col_headers,
+            row_headers,
+            GRADES=flask_app.config['GRADES'],
+            DEPENDENTS_MAX=flask_app.config['DEPENDENTS_MAX'],
+            HOME_OF_RECORDS=flask_app.config['HOME_OF_RECORDS'],
+            ROTH_TSP_RATE_MAX=flask_app.config['ROTH_TSP_RATE_MAX'],
+            SGLI_RATES=flask_app.config['SGLI_RATES'],
+            TAX_FILING_TYPES_DEDUCTIONS=flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'],
+            TRAD_TSP_RATE_MAX=flask_app.config['TRAD_TSP_RATE_MAX'],
+        )
 
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
@@ -84,13 +97,14 @@ def submit_les():
 @flask_app.route('/update_paydf', methods=['POST'])
 def update_paydf():
     PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     initial_month = session.get('initial_month', None)
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-    
+
     core_custom_list, custom_rows = parse_custom_rows(PAYDF_TEMPLATE, request.form)
 
     paydf = pd.DataFrame(core_custom_list, columns=["header", initial_month])
-    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
+    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
 
     context = {
         'paydf': paydf,

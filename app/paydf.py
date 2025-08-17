@@ -237,7 +237,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
 # expand paydf
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
+def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form, custom_rows=None):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -249,7 +249,7 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
         next_month = MONTHS_SHORT[month_idx]
         next_col_dict = {}
 
-        update_variables(next_col_dict, prev_col_dict, next_month, form)
+        update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form)
         update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
         update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
@@ -267,9 +267,8 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
     return paydf, col_headers, row_headers
 
 
-def update_variables(next_col_dict, prev_col_dict, next_month, form):
+def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
 
     # Get all variable and TSP rows from VARIABLE_TEMPLATE
     variable_tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'].isin(['v', 't'])]

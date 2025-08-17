@@ -1,18 +1,8 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
-{% set GRADES = config.GRADES %}
-{% set HOME_OF_RECORDS = config.HOME_OF_RECORDS %}
-{% set TAX_FILING_TYPES_DEDUCTIONS = config.TAX_FILING_TYPES_DEDUCTIONS %}
-{% set SGLI_RATES = config.SGLI_RATES %}
-{% set TRADITIONAL_TSP_RATE_MAX = config.TRADITIONAL_TSP_RATE_MAX %}
-{% set ROTH_TSP_RATE_MAX = config.ROTH_TSP_RATE_MAX %}
-{% set month_options = col_headers[2:] %}
-
-{% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
-{% set TSP_MODALS = config.TSP_MODALS %}
-
 {% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
 <form id="options-form">
+    {{ options_form.hidden_tag() }}
     <table id="options-table" class="pos-table">
         <tbody class="pos-table-section">
             <tr class="pos-table-header-row">

@@ -18,7 +18,7 @@ class SettingsForm(FlaskForm):
     months_display = SelectField('Months Displayed:', choices=[(str(x), str(x)) for x in range(2, 13)])
 
 
-def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, config):
+def build_options_form(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, col_headers, row_headers, GRADES, DEPENDENTS_MAX, HOME_OF_RECORDS, ROTH_TSP_RATE_MAX, SGLI_RATES,TAX_FILING_TYPES_DEDUCTIONS, TRAD_TSP_RATE_MAX):
     fields = {}
     month_fields = []
 
@@ -39,11 +39,11 @@ def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, confi
 
         elif field_type == "integer":
             if "trad_tsp" in varname:
-                validators.append(NumberRange(min=0, max=config['TRADITIONAL_TSP_RATE_MAX']))
+                validators.append(NumberRange(min=0, max=TRAD_TSP_RATE_MAX))
             elif "roth_tsp" in varname:
-                validators.append(NumberRange(min=0, max=config['ROTH_TSP_RATE_MAX']))
+                validators.append(NumberRange(min=0, max=ROTH_TSP_RATE_MAX))
             elif "dependents" in varname:
-                validators.append(NumberRange(min=0, max=config['DEPENDENTS_MAX']))
+                validators.append(NumberRange(min=0, max=DEPENDENTS_MAX))
             else:
                 validators.append(NumberRange(min=0, max=9999))
             fields[field_f_name] = IntegerField(f"{header} Future", validators=validators)
@@ -55,6 +55,7 @@ def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, confi
         fields[field_m_name] = SelectField(f"{header} Month", choices=[])
         month_fields.append(field_m_name)
 
+    fields['ent_ded_alt_rows'] = FieldList(FormField(EntDedAltRowForm))
     fields['update_les'] = SubmitField('Update LES')
 
     OptionsForm = type('OptionsForm', (FlaskForm,), fields)
@@ -79,17 +80,17 @@ def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, confi
 
         if field_type == "select" and hasattr(form, field_f_name):
             if varname == "grade":
-                getattr(form, field_f_name).choices = [(g, g) for g in config['GRADES']]
+                getattr(form, field_f_name).choices = [(g, g) for g in GRADES]
             elif varname == "home_of_record":
-                getattr(form, field_f_name).choices = [(h, h) for h in config['HOME_OF_RECORDS']]
+                getattr(form, field_f_name).choices = [(h, h) for h in HOME_OF_RECORDS]
             elif varname == "federal_filing_status":
-                federal_types = list(config['TAX_FILING_TYPES_DEDUCTIONS'].keys())
+                federal_types = list(TAX_FILING_TYPES_DEDUCTIONS.keys())
                 getattr(form, field_f_name).choices = [(t, t) for t in federal_types]
             elif varname == "state_filing_status":
-                state_types = list(config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2]
+                state_types = list(TAX_FILING_TYPES_DEDUCTIONS.keys())[:2]
                 getattr(form, field_f_name).choices = [(t, t) for t in state_types]
             elif varname == "sgli_coverage":
-                getattr(form, field_f_name).choices = [(str(r['coverage']), str(r['coverage'])) for _, r in config['SGLI_RATES'].iterrows()]
+                getattr(form, field_f_name).choices = [(str(r['coverage']), str(r['coverage'])) for _, r in SGLI_RATES.iterrows()]
             elif varname == "combat_zone":
                 getattr(form, field_f_name).choices = [('No', 'No'), ('Yes', 'Yes')]
 
@@ -98,20 +99,22 @@ def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, confi
             value = paydf.at[row_headers.index(header), col_headers[2]]
             getattr(form, field_f_name).data = value
 
-    if hasattr(form, 'ent_ded_alt_rows'):
-        for _, row in VARIABLE_TEMPLATE.iterrows():
-            if row.get('type', '') == 'eda' and bool(row['option']):
-                header = row['header']
-                value = paydf.at[row_headers.index(header), col_headers[2]] if header in row_headers else 0
-                month = col_headers[2]
-                
-                form.ent_ded_alt_rows.append_entry({
-                    'header': header,
-                    'value_f': value,
-                    'value_m': month
-                })
 
-                subform = form.ent_ded_alt_rows[-1]
-                subform.value_m.choices = month_options
+    for i in range(19, len(row_headers) - 6):
+        header = row_headers[i]
+        template_row = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+
+        if not template_row.empty and bool(template_row.iloc[0]['option']):
+            value = paydf.at[i, col_headers[2]]
+            month = col_headers[2]
+            
+            form.ent_ded_alt_rows.append_entry({
+                'header': header,
+                'value_f': value,
+                'value_m': month
+            })
+
+            subform = form.ent_ded_alt_rows[-1]
+            subform.value_m.choices = month_options
 
     return form
