@@ -269,8 +269,6 @@ def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form,
 
 def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-
-    # Get all variable and TSP rows from VARIABLE_TEMPLATE
     variable_tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'].isin(['v', 't'])]
 
     for _, row in variable_tsp_rows.iterrows():
@@ -389,7 +387,8 @@ def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match
 
     if form_month == next_month:
         try:
-            next_col_dict[header] = sign * Decimal(str(form_value))
+            value = sign * Decimal(str(form_value))
+            next_col_dict[header] = value.quantize(Decimal("0.00"))
         except Exception:
             next_col_dict[header] = prev_value
     else:

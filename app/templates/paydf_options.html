@@ -46,23 +46,27 @@
         <!-- ent/ded/alt option rows -->
         <tbody class="pos-table-section">
             {% for subform in options_form.ent_ded_alt_rows %}
-                <tr>
-                    <td class="row-header-cell">
-                        <button class="modal-button" type="button" data-modal="{{ PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['modal'] }}">{{ subform.header.data }}</button>
-                    </td>
-                    <td>
-                        {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-','-$') }}
-                    </td>
-                    <td>
-                        {% set sign = '-' if PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['sign'] == -1 or subform.value_f.data < 0 else '' %}
-                        <span>{{ sign }}$</span>
-                        {{ subform.value_f(class="input-num input-mid", value=subform.value_f.data|abs) }}
-                    </td>
-                    <td>
-                        {{ subform.value_m(class="dropdown month-dropdown") }}
-                    </td>
-                </tr>
-            {% endfor %}
+                    <tr>
+                        <td class="row-header-cell">
+                            <button class="modal-button" type="button" data-modal="{{ PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['modal'] }}">{{ subform.header.data }}</button>
+                        </td>
+                        <td>
+                            {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-','-$') }}
+                        </td>
+                        <td>
+                            {% set sign = '-' if PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['sign'] == -1 or subform.value_f.data < 0 else '' %}
+                            <span>{{ sign }}$</span>
+                            <input type="number" class="input-num input-mid" name="{{ subform.varname.data ~ '_f' }}" value="{{ subform.value_f.data|abs }}">
+                        </td>
+                        <td>
+                            <select class="dropdown month-dropdown" name="{{ subform.varname.data ~ '_m' }}">
+                                {% for value, label in subform.value_m.choices %}
+                                    <option value="{{ value }}" {% if subform.value_m.data == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
         </tbody>
 
         <!-- TSP rate option rows -->

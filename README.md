@@ -6,11 +6,7 @@ navigate to: \Documents\Github\Payles
 run: python -m app.main
 
 todo:
-implement CSRF using Flask-WTF, restructure forms first
 add in rows from paydf_template
-
-set dependents to int input
-set non-special row options to decimal input
 create levdf (leave calculator)
 instructions page and overlay on example les
 update pay active and drill pay in config
