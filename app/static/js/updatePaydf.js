@@ -3,7 +3,6 @@
 // =========================
 
 function updatePaydf() {
-    console.log("in updatePaydf");
     const optionsForm = document.getElementById('options-form');
     const settingsForm = document.getElementById('settings-form');
     const formData = new FormData(optionsForm);
@@ -11,7 +10,8 @@ function updatePaydf() {
     formData.append('months_display', monthsDropdown.value);
     formData.append('custom_rows', JSON.stringify(customRows));
 
-    console.log("form data: ", formData);
+    console.log("disabling inputs from updatPaydf function")
+    disableAllInputs();
 
     fetch('/update_paydf', {
         method: 'POST',
@@ -24,7 +24,7 @@ function updatePaydf() {
         highlight_changes();
         show_all_variables();
         show_tsp_options();
-        updateButtonStates();
+        //updateButtonStates();
         renderCustomRowButtonTable();
         updateMonthDropdowns();
     });

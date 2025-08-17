@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
+    console.log("re-enabling inputs after htmx swap");
     enableAllInputs();
 
     if (document.getElementById('paydf-group')) {
@@ -33,15 +34,6 @@ document.body.addEventListener('htmx:responseError', function(evt) {
         // not a JSON response, ignore
     }
 });
-
-
-// attach home form listener
-window.attachHomeFormListener = function() {
-    const homeForm = document.getElementById('home-form');
-    homeForm.addEventListener('submit', function(e) {
-        disableAllInputs();
-    });
-};
 
 
 // keydown event listener
@@ -92,7 +84,6 @@ document.addEventListener('click', function(e) {
 
     if (e.target && e.target.id === 'update-les-button') {
         e.preventDefault();
-        disableAllInputs();
         updatePaydf();
     }
 
@@ -107,7 +98,6 @@ document.addEventListener('click', function(e) {
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-display-dropdown') {
         e.preventDefault();
-        disableAllInputs();
         updatePaydf();
     }
 
@@ -123,3 +113,12 @@ document.addEventListener('change', function(e) {
         show_tsp_options();
     }
 });
+
+
+// attach home form listener
+window.attachHomeFormListener = function() {
+    const homeForm = document.getElementById('home-form');
+    homeForm.addEventListener('submit', function(e) {
+        disableAllInputs();
+    });
+};

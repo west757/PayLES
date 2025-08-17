@@ -48,5 +48,4 @@ You can set these headers in Flask using an after_request handler.
 Why it matters:
 Helps prevent XSS, clickjacking, and other browser-based attacks.
 
-
 -->
