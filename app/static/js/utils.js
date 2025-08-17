@@ -55,21 +55,24 @@ function disableAllInputs() {
 
 
 function showToast(message, type = "info", duration = 3500) {
-    document.querySelectorAll('.tooltip-toast').forEach(t => t.remove());
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    // Remove previous toasts (or stack if you want)
+    container.innerHTML = '';
 
     let toast = document.createElement('div');
     toast.className = `tooltip-toast toast-${type}`;
     toast.setAttribute('role', 'alert');
     toast.textContent = message;
 
-    // Optional close button
     let closeBtn = document.createElement('span');
     closeBtn.textContent = '×';
     closeBtn.className = 'toast-close';
     closeBtn.onclick = () => toast.remove();
     toast.appendChild(closeBtn);
 
-    document.body.appendChild(toast);
+    container.appendChild(toast);
 
     setTimeout(() => {
         toast.remove();
