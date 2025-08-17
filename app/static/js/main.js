@@ -1,17 +1,15 @@
+// initialize config variables
 function initConfigVars() {
     const configDiv = document.getElementById('config-data');
     if (configDiv) {
-        window.RESERVED_HEADERS = JSON.parse(configDiv.dataset.reservedHeaders);
         window.DEFAULT_MONTHS_DISPLAY = parseInt(configDiv.dataset.defaultMonthsDisplay);
         window.MAX_CUSTOM_ROWS = parseInt(configDiv.dataset.maxCustomRows);
+        window.RESERVED_HEADERS = JSON.parse(configDiv.dataset.reservedHeaders);
     }
 }
 
 
-// =========================
-// delegate event listeners
-// =========================
-
+// open modals when modal button for a row is clicked
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
@@ -26,24 +24,7 @@ document.addEventListener('click', function(e) {
 });
 
 
-
-document.addEventListener('mousemove', function(e) {
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-});
-
-document.addEventListener('mouseleave', function(e) {
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        hideTooltip();
-    }
-}, true);
-
-
-// close modals on Escape key press
+// close modals on escape key press
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' || e.key === 'Esc') {
         document.querySelectorAll('.modal-state:checked').forEach(function(input) {
@@ -53,9 +34,36 @@ document.addEventListener('keydown', function(e) {
 });
 
 
+// show tooltips on mouse move over
+document.addEventListener('mousemove', function(e) {
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+});
+
+
+// hide tooltips on mouse leave
+document.addEventListener('mouseleave', function(e) {
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+        hideTooltip();
+    }
+}, true);
+
+
+
+
+
+
+
 // disable buttons on form submission to prevent multiple submissions
 document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
+    stripeTable('paydf-table');
+    stripeTable('options-table');
+    stripeTable('settings-table');
     attachTspBaseListeners();
 
     document.querySelectorAll('form').forEach(function(form) {
@@ -69,14 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
+// possible end up removing if in updatePaydf it stripes the table already
 document.body.addEventListener('htmx:afterSwap', function(evt) {
-    initConfigVars();
     stripeTable('paydf-table');
-    stripeTable('options-table');
-    stripeTable('settings-table');
-    attachTspBaseListeners();
-    updateTspInputs();
 });
 
 
@@ -87,3 +90,4 @@ document.body.addEventListener('htmx:beforeRequest', function(evt) {
         });
     }
 });
+

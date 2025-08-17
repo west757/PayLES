@@ -156,6 +156,7 @@ function attachCustomRowButtonListeners() {
                     return;
                 }
 
+                console.log(window.RESERVED_HEADERS);
                 // Gather all headers from PAYDF_TEMPLATE and other custom rows (except the one being edited)
                 let allHeaders = [
                     ...window.RESERVED_HEADERS.map(h => h.trim()),

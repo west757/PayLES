@@ -55,9 +55,17 @@
         </div>
     </footer>
 
+    <!-- send config data to main.js -->
+    <div id="config-data"
+        data-default-months-display="{{ config.DEFAULT_MONTHS_DISPLAY }}"
+        data-max-custom-rows="{{ config.MAX_CUSTOM_ROWS }}"
+        data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'>
+    </div>
+
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/customRows.js') }}"></script>
     <script src="{{ url_for('static', filename='js/updatePaydf.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 </body>
 </html>
