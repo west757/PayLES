@@ -290,6 +290,9 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
         elif header == "Months in Service":
             next_col_dict[header] = prev_value + 1
 
+        #elif header == "Zip Code":
+        #    next_col_dict[header] = str(form_value)
+
         elif header == "Military Housing Area":
             zip_code = next_col_dict.get("Zip Code", "")
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
@@ -298,7 +301,10 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
         else:
             if form_month == next_month and form_value is not None and str(form_value).strip() != "":
                 try:
-                    next_col_dict[header] = int(form_value) if str(form_value).isdigit() else form_value
+                    if str(form_value).isdigit() and header != "Zip Code":
+                        next_col_dict[header] = int(form_value)
+                    else:
+                        next_col_dict[header] = form_value
                 except Exception:
                     next_col_dict[header] = prev_value
             else:
