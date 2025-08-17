@@ -14,44 +14,104 @@ class EntDedAltRowForm(Form):
     value_m = SelectField('Month', choices=[])
 
 
-class OptionsForm(FlaskForm):
-    grade_f = SelectField('Grade Future', choices=[])
-    grade_m = SelectField('Grade Month', choices=[])
-    zip_code_f = StringField('Zip Code Future', validators=[Length(min=5, max=5), Regexp(r'^\d{5}$', message="Zip code must be 5 digits")])
-    zip_code_m = SelectField('Zip Code Month', choices=[])
-    home_of_record_f = SelectField('Home of Record Future', choices=[])
-    home_of_record_m = SelectField('Home of Record Month', choices=[])
-    federal_filing_status_f = SelectField('Federal Filing Status Future', choices=[])
-    federal_filing_status_m = SelectField('Federal Filing Status Month', choices=[])
-    state_filing_status_f = SelectField('State Filing Status Future', choices=[])
-    state_filing_status_m = SelectField('State Filing Status Month', choices=[])
-    dependents_f = IntegerField('Dependents Future', validators=[NumberRange(min=0, max=9)])
-    dependents_m = SelectField('Dependents Month', choices=[])
-    sgli_coverage_f = SelectField('SGLI Coverage Future', choices=[])
-    sgli_coverage_m = SelectField('SGLI Coverage Month', choices=[])
-    combat_zone_f = SelectField('Combat Zone Future', choices=[])
-    combat_zone_m = SelectField('Combat Zone Month', choices=[])
-
-    trad_tsp_base_rate_f = IntegerField('Trad TSP Base Rate Future', validators=[NumberRange(min=0, max=84)])
-    trad_tsp_base_rate_m = SelectField('Trad TSP Base Rate Month', choices=[])
-    roth_tsp_base_rate_f = IntegerField('Roth TSP Base Rate Future', validators=[NumberRange(min=0, max=60)])
-    roth_tsp_base_rate_m = SelectField('Roth TSP Base Rate Month', choices=[])
-    trad_tsp_specialty_rate_f = IntegerField('Specialty Rate Future', validators=[NumberRange(min=0, max=100)])
-    trad_tsp_specialty_rate_m = SelectField('Specialty Rate Month', choices=[])
-    roth_tsp_specialty_rate_f = IntegerField('Specialty Rate Future', validators=[NumberRange(min=0, max=100)])
-    roth_tsp_specialty_rate_m = SelectField('Specialty Rate Month', choices=[])
-    trad_tsp_incentive_rate_f = IntegerField('Incentive Rate Future', validators=[NumberRange(min=0, max=100)])
-    trad_tsp_incentive_rate_m = SelectField('Incentive Rate Month', choices=[])
-    roth_tsp_incentive_rate_f = IntegerField('Incentive Rate Future', validators=[NumberRange(min=0, max=100)])
-    roth_tsp_incentive_rate_m = SelectField('Incentive Rate Month', choices=[])
-    trad_tsp_bonus_rate_f = IntegerField('Bonus Rate Future', validators=[NumberRange(min=0, max=100)])
-    trad_tsp_bonus_rate_m = SelectField('Bonus Rate Month', choices=[])
-    roth_tsp_bonus_rate_f = IntegerField('Bonus Rate Future', validators=[NumberRange(min=0, max=100)])
-    roth_tsp_bonus_rate_m = SelectField('Bonus Rate Month', choices=[])
-
-    ent_ded_alt_rows = FieldList(FormField(EntDedAltRowForm))
-    update_les = SubmitField('Update LES')
-
-
 class SettingsForm(FlaskForm):
     months_display = SelectField('Months Displayed:', choices=[(str(x), str(x)) for x in range(2, 13)])
+
+
+def build_options_form(VARIABLE_TEMPLATE, paydf, col_headers, row_headers, config):
+    fields = {}
+    month_fields = []
+
+    # create form with each option
+    for _, row in VARIABLE_TEMPLATE.iterrows():
+        if not bool(row['option']):
+            continue
+
+        header = row['header']
+        varname = row['varname']
+        field_type = row['field']
+        field_f_name = f"{varname}_f"
+        field_m_name = f"{varname}_m"
+        validators = []
+
+        if field_type == "select":
+            fields[field_f_name] = SelectField(f"{header} Future", choices=[])
+
+        elif field_type == "integer":
+            if "trad_tsp" in varname:
+                validators.append(NumberRange(min=0, max=config['TRADITIONAL_TSP_RATE_MAX']))
+            elif "roth_tsp" in varname:
+                validators.append(NumberRange(min=0, max=config['ROTH_TSP_RATE_MAX']))
+            elif "dependents" in varname:
+                validators.append(NumberRange(min=0, max=config['DEPENDENTS_MAX']))
+            else:
+                validators.append(NumberRange(min=0, max=9999))
+            fields[field_f_name] = IntegerField(f"{header} Future", validators=validators)
+
+        elif field_type == "string" and "zip_code" in varname:
+            validators = [Length(min=5, max=5), Regexp(r'^\d{5}$', message="Zip code must be 5 digits")]
+            fields[field_f_name] = StringField(f"{header} Future", validators=validators)
+
+        fields[field_m_name] = SelectField(f"{header} Month", choices=[])
+        month_fields.append(field_m_name)
+
+    fields['update_les'] = SubmitField('Update LES')
+
+    OptionsForm = type('OptionsForm', (FlaskForm,), fields)
+    form = OptionsForm()
+
+    # set month choices for all month fields
+    month_options = [(m, m) for m in col_headers[2:]]
+    for field_m_name in month_fields:
+        if hasattr(form, field_m_name):
+            getattr(form, field_m_name).choices = month_options
+
+
+    # set values for each option
+    for _, row in VARIABLE_TEMPLATE.iterrows():
+        if not bool(row['option']):
+            continue
+
+        varname = row['varname']
+        header = row['header']
+        field_type = row['field']
+        field_f_name = f"{varname}_f"
+
+        if field_type == "select" and hasattr(form, field_f_name):
+            if varname == "grade":
+                getattr(form, field_f_name).choices = [(g, g) for g in config['GRADES']]
+            elif varname == "home_of_record":
+                getattr(form, field_f_name).choices = [(h, h) for h in config['HOME_OF_RECORDS']]
+            elif varname == "federal_filing_status":
+                federal_types = list(config['TAX_FILING_TYPES_DEDUCTIONS'].keys())
+                getattr(form, field_f_name).choices = [(t, t) for t in federal_types]
+            elif varname == "state_filing_status":
+                state_types = list(config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2]
+                getattr(form, field_f_name).choices = [(t, t) for t in state_types]
+            elif varname == "sgli_coverage":
+                getattr(form, field_f_name).choices = [(str(r['coverage']), str(r['coverage'])) for _, r in config['SGLI_RATES'].iterrows()]
+            elif varname == "combat_zone":
+                getattr(form, field_f_name).choices = [('No', 'No'), ('Yes', 'Yes')]
+
+        # set default for each option future value
+        if hasattr(form, field_f_name) and header in row_headers:
+            value = paydf.at[row_headers.index(header), col_headers[2]]
+            getattr(form, field_f_name).data = value
+
+    if hasattr(form, 'ent_ded_alt_rows'):
+        for _, row in VARIABLE_TEMPLATE.iterrows():
+            if row.get('type', '') == 'eda' and bool(row['option']):
+                header = row['header']
+                value = paydf.at[row_headers.index(header), col_headers[2]] if header in row_headers else 0
+                month = col_headers[2]
+                
+                form.ent_ded_alt_rows.append_entry({
+                    'header': header,
+                    'value_f': value,
+                    'value_m': month
+                })
+
+                subform = form.ent_ded_alt_rows[-1]
+                subform.value_m.choices = month_options
+
+    return form
