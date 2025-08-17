@@ -1,6 +1,7 @@
 {% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
 {% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
+<!-- send col_headers to updateMonthDropdowns function to accurately populate option month dropdowns -->
 <div id="button-paydf-tables" data-col-headers='{{ col_headers|tojson | safe }}'>
     <table id="button-table">
         <tr>

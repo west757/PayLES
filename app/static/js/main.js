@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
-    console.log("re-enabling inputs after htmx swap");
     enableAllInputs();
 
     if (document.getElementById('paydf-group')) {
@@ -113,6 +112,40 @@ document.addEventListener('change', function(e) {
         show_tsp_options();
     }
 });
+
+
+// input event listeners
+document.addEventListener('input', function(e) {
+    // number input
+    if (e.target.classList.contains('input-num')) {
+        // Allow only digits and one decimal point
+        let val = e.target.value;
+        // Remove invalid characters
+        val = val.replace(/[^0-9.]/g, '');
+        // Only one decimal point allowed
+        let parts = val.split('.');
+        if (parts.length > 2) {
+            val = parts[0] + '.' + parts.slice(1).join('');
+        }
+        e.target.value = val;
+    }
+
+    // tsp rate inputs
+    if (e.target.classList.contains('tsp-rate-input')) {
+        // Remove non-digit characters and limit to 2 digits
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 2) val = val.slice(0, 2);
+        e.target.value = val;
+    }
+});
+
+
+// validate if zip code less than 5 digits
+// dependents can have more than 1 digit
+// decimal regular options can have more than 6 digits
+// decimal fields don't allow only one decimal point, currently don't allow any
+// defaults for trad tsp rate are wrong
+
 
 
 // attach home form listener
