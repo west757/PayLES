@@ -104,10 +104,6 @@ function hideTooltip() {
 
 
 
-// =========================
-// delegate event listeners
-// =========================
-
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
