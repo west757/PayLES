@@ -20,6 +20,7 @@ total tsp deduction per year and contribution limits, max tsp percentage
 add modals
 joint spouse with two LES's
 recommendations tab (like if not adding to tsp, put in money)
+rework drag and drop functionality
 
 
 possible:
