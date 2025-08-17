@@ -72,11 +72,7 @@ function setupHomeFormListeners() {
         homeForm.addEventListener('submit', function(e) {
 
             const activeElement = document.activeElement;
-            if (
-                activeElement &&
-                activeElement.id === 'submit-les-button' &&
-                !homeInput.value
-            ) {
+            if (activeElement && activeElement.id === 'submit-les-button' && !homeInput.value) {
                 e.preventDefault();
                 showToast('No file submitted - TEST');
                 return;
