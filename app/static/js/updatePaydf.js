@@ -2,30 +2,16 @@
 // update paydf and GUI
 // =========================
 
-function stripeTable(tableId) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    let rowIndex = 0;
-    table.querySelectorAll('tbody').forEach(function(tbody) {
-        tbody.querySelectorAll('tr').forEach(function(tr) {
-            if (rowIndex % 2 === 1) {
-                tr.classList.add('even-row');
-            } else {
-                tr.classList.remove('even-row');
-            }
-            rowIndex++;
-        });
-    });
-}
-
-
 function updatePaydf() {
+    console.log("in updatePaydf");
     const optionsForm = document.getElementById('options-form');
     const settingsForm = document.getElementById('settings-form');
     const formData = new FormData(optionsForm);
     const monthsDropdown = settingsForm.querySelector('[name="months_display"]');
     formData.append('months_display', monthsDropdown.value);
     formData.append('custom_rows', JSON.stringify(customRows));
+
+    console.log("form data: ", formData);
 
     fetch('/update_paydf', {
         method: 'POST',
@@ -125,44 +111,6 @@ function show_tsp_options() {
     }
 }
 
-
-
-
-
-
-
-// =========================
-// delegate event listeners
-// =========================
-
-document.addEventListener('click', function(e) {
-    if (e.target && e.target.id === 'update-les-button') {
-        e.preventDefault();
-        disableAllInputs();
-        updatePaydf();
-    }
-});
-
-
-document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'months-display-dropdown') {
-        e.preventDefault();
-        disableAllInputs();
-        updatePaydf();
-    }
-
-    if (e.target && e.target.id === 'highlight-changes-checkbox') {
-        highlight_changes();
-    }
-
-    if (e.target && e.target.id === 'show-all-variables-checkbox') {
-        show_all_variables();
-    }
-
-    if (e.target && e.target.id === 'show-tsp-options-checkbox') {
-        show_tsp_options();
-    }
-});
 
 
 function attachTspBaseListeners() {

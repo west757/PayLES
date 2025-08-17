@@ -1,78 +1,12 @@
-// initialize config variables
-function initConfigVars() {
-    const configDiv = document.getElementById('config-data');
-    if (configDiv) {
-        window.DEFAULT_MONTHS_DISPLAY = parseInt(configDiv.dataset.defaultMonthsDisplay);
-        window.MAX_CUSTOM_ROWS = parseInt(configDiv.dataset.maxCustomRows);
-        window.RESERVED_HEADERS = JSON.parse(configDiv.dataset.reservedHeaders);
-    }
-}
-
-
-// open modals when modal button for a row is clicked
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-button')) {
-        const modalId = e.target.getAttribute('data-modal');
-
-        if (modalId) {
-            const modalCheckbox = document.getElementById(modalId);
-            if (modalCheckbox) {
-                modalCheckbox.checked = true;
-            }
-        }
-    }
-});
-
-
-// close modals on escape key press
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
-            input.checked = false;
-        });
-    }
-});
-
-
-// show tooltips on mouse move over
-document.addEventListener('mousemove', function(e) {
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-});
-
-
-// hide tooltips on mouse leave
-document.addEventListener('mouseleave', function(e) {
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        hideTooltip();
-    }
-}, true);
-
-
-
-
-
-
-
+// page load event listener
 document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
-
-    if (document.getElementById('home-form')) {
-        attachHomeFormListener();
-    }
 });
 
 
+// htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     enableAllInputs();
-
-    if (document.getElementById('home-form')) {
-        attachHomeFormListener();
-    }
 
     if (document.getElementById('paydf-group')) {
         stripeTable('options-table');
@@ -87,7 +21,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 });
 
 
-// show toast messages after htmx response Error
+// htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     enableAllInputs();
     try {
@@ -101,13 +35,91 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 });
 
 
-
-function attachHomeFormListener() {
+// attach home form listener
+window.attachHomeFormListener = function() {
     const homeForm = document.getElementById('home-form');
     homeForm.addEventListener('submit', function(e) {
         disableAllInputs();
     });
-}
+};
 
 
+// keydown event listener
+document.addEventListener('keydown', function(e) {
+    // close modals on escape key press
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
+            input.checked = false;
+        });
+    }
+});
 
+
+// mouse move event listener
+document.addEventListener('mousemove', function(e) {
+    // show tooltips on mouse move over
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+});
+
+
+// mouse leave event listener
+document.addEventListener('mouseleave', function(e) {
+    // hide tooltips on mouse leave
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+        hideTooltip();
+    }
+}, true);
+
+
+// click event listeners
+document.addEventListener('click', function(e) {
+    // open modals when modal button for a row is clicked
+    if (e.target.classList.contains('modal-button')) {
+        const modalId = e.target.getAttribute('data-modal');
+
+        if (modalId) {
+            const modalCheckbox = document.getElementById(modalId);
+            if (modalCheckbox) {
+                modalCheckbox.checked = true;
+            }
+        }
+    }
+
+    if (e.target && e.target.id === 'update-les-button') {
+        e.preventDefault();
+        disableAllInputs();
+        updatePaydf();
+    }
+
+    if (e.target && e.target.id === 'export-button') {
+        e.preventDefault();
+        exportPaydf();
+    }
+});
+
+
+// change event listeners
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'months-display-dropdown') {
+        e.preventDefault();
+        disableAllInputs();
+        updatePaydf();
+    }
+
+    if (e.target && e.target.id === 'highlight-changes-checkbox') {
+        highlight_changes();
+    }
+
+    if (e.target && e.target.id === 'show-all-variables-checkbox') {
+        show_all_variables();
+    }
+
+    if (e.target && e.target.id === 'show-tsp-options-checkbox') {
+        show_tsp_options();
+    }
+});
