@@ -60,33 +60,19 @@ document.addEventListener('mouseleave', function(e) {
 
 document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
-    setupHomeFormListeners();
-});
 
-
-function setupHomeFormListeners() {
-    const homeForm = document.getElementById('home-form');
-    const homeInput = document.getElementById('home_input');
-
-    if (homeForm && homeInput) {
-        homeForm.addEventListener('submit', function(e) {
-
-            const activeElement = document.activeElement;
-            if (activeElement && activeElement.id === 'submit-les-button' && !homeInput.value) {
-                e.preventDefault();
-                showToast('No file submitted - TEST');
-                return;
-            }
-            disableAllInputs();
-        });
+    if (document.getElementById('home-form')) {
+        attachHomeFormListener();
     }
-}
+});
 
 
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     enableAllInputs();
-    setupHomeFormListeners();
-    stripeTable('paydf-table');
+
+    if (document.getElementById('home-form')) {
+        attachHomeFormListener();
+    }
 
     if (document.getElementById('paydf-group')) {
         stripeTable('options-table');
@@ -94,21 +80,37 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         attachTspBaseListeners();
     }
 
-    // disable all buttons in forms on submit
-    //document.querySelectorAll('form').forEach(function(form) {
-    //    form.addEventListener('submit', function() {
-    //        disableAllInputs();
-    //    });
-    //});
-    
+    if (document.getElementById('paydf-table')) {
+        stripeTable('paydf-table');
+    }
+
 });
 
 
-//document.body.addEventListener('htmx:beforeRequest', function(evt) {
-//    if (evt.target && evt.target.id === 'home-form') {
-//        evt.target.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
-//            btn.disabled = true;
-//        });
-//    }
-//});
+// show toast messages after htmx response Error
+document.body.addEventListener('htmx:responseError', function(evt) {
+    console.log("htmx:responseError", evt);
+    enableAllInputs();
+    try {
+        const response = JSON.parse(evt.detail.xhr.responseText);
+        if (response.message) {
+            console.log("showing toast");
+            console.log("HTMX Response Error:", response.message);
+            showToast(response.message, "error");
+        }
+    } catch (e) {
+        // Not a JSON response, ignore
+    }
+});
+
+
+
+function attachHomeFormListener() {
+    const homeForm = document.getElementById('home-form');
+    homeForm.addEventListener('submit', function(e) {
+        disableAllInputs();
+    });
+}
+
+
 

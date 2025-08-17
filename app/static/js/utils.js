@@ -54,7 +54,7 @@ function disableAllInputs() {
 
 
 
-function showToast(message, type = "info", duration = 3500) {
+function showToast(message, type = "info", duration = 4500) {
     const container = document.getElementById('toast-container');
     if (!container) return;
 

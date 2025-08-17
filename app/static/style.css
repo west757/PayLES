@@ -237,7 +237,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fadein 0.3s, fadeout 0.5s 2s;
+    animation: fadein 0.3s, fadeout 0.5s 4s;
 }
 .toast-close {
     margin-left: 1em;
@@ -468,7 +468,7 @@ input.input-checkbox {
     max-width: 100%;
 }
 
-#home-group, #remarks, #about, #faq, #resources {
+#home, #remarks, #about, #faq, #resources {
     margin: 0 auto 3rem auto;
     max-width: 60%;
     min-width: 67rem;
@@ -479,11 +479,11 @@ input.input-checkbox {
    home group
    ========================= */
 
-#home-group {
+#home {
     text-align: center;
 }
 
-#home {
+#home-form-container {
     margin: auto;
     width: 36rem;
 }
