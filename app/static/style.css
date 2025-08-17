@@ -324,7 +324,6 @@ select.dropdown {
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
     font-size: 0.92rem;
     height: 1.85rem;
-    margin: -0.5rem;
     padding: 0.25rem;
     text-align: center;
     width: 4.6rem;
@@ -351,7 +350,6 @@ input.input-text {
     font-family: Arial, sans-serif;
     font-size: 0.92rem;
     height: 1.85rem;
-    margin: -0.5rem;
     padding: 0.25rem;
     text-align: center;
     width: 10rem;
@@ -365,21 +363,20 @@ input.input-num {
     font-family: Arial, sans-serif;
     font-size: 0.92rem;
     height: 1.85rem;
-    margin: -0.5rem;
     padding: 0.25rem;
     text-align: center;
 }
 
-input.input-num-long {
-    width: 4.6rem;
+.input-long {
+    width: 5.5rem !important;
 }
 
-input.input-num-mid {
+.input-mid {
+    width: 4.75rem;
+}
+
+.input-short {
     width: 3.5rem;
-}
-
-input.input-num-short {
-    width: 2.5rem;
 }
 
 
@@ -578,7 +575,7 @@ input[type=file] {
 }
 
 #options-table, #settings-table {
-    width: 34rem;
+    width: 34.5rem;
 }
 
 .settings-row {
@@ -622,7 +619,7 @@ input[type=file] {
     border-left: 1px solid var(--table_border_color);
     border-top: 1px solid var(--table_border_color);
     text-align: center;
-    padding: 0 1.25rem 0 1.25rem;
+    padding: 0 1rem 0 1rem;
     vertical-align: middle;
 }
 

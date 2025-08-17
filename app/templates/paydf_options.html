@@ -26,11 +26,13 @@
                         <td>{{ current_value }}</td>
                         <td>
                             {% if varname == 'zip_code' %}
-                                {{ field_f(class="input-num input-num-long", value=current_value, placeholder=current_value) }}
+                                {{ field_f(class="input-num input-mid", value=current_value, placeholder=current_value) }}
                             {% elif varname == 'dependents' %}
-                                {{ field_f(class="input-num input-num-long", value=current_value, placeholder="0-9") }}
+                                {{ field_f(class="input-num input-mid", value=current_value, placeholder="0-9") }}
+                            {% elif varname == 'sgli_coverage' %}
+                                {{ field_f(class="dropdown input-long") }}
                             {% else %}
-                                {{ field_f(class="dropdown" if field_f.type == 'SelectField' else "input-num input-num-long") }}
+                                {{ field_f(class="dropdown" if field_f.type == 'SelectField' else "input-num input-mid") }}
                             {% endif %}
                         </td>
                         <td>
@@ -54,7 +56,7 @@
                     <td>
                         {% set sign = '-' if PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['sign'] == -1 or subform.value_f.data < 0 else '' %}
                         <span>{{ sign }}$</span>
-                        {{ subform.value_f(class="input-num input-num-long", value=subform.value_f.data|abs) }}
+                        {{ subform.value_f(class="input-num input-mid", value=subform.value_f.data|abs) }}
                     </td>
                     <td>
                         {{ subform.value_m(class="dropdown month-dropdown") }}
@@ -77,7 +79,7 @@
                         </td>
                         <td>{{ current_value }}<span>%</span></td>
                         <td>
-                            {{ field_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span>
+                            {{ field_f(class="input-num input-short tsp-rate-input") }}<span>&nbsp;&nbsp;%</span>
                         </td>
                         <td>
                             {{ field_m(class="dropdown month-dropdown") }}
