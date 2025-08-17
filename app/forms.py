@@ -10,6 +10,7 @@ class HomeForm(FlaskForm):
 
 class EntDedAltRowForm(Form):
     header = StringField('Header')
+    varname = StringField('Varname')
     value_f = DecimalField(
         'Value Future',
         validators=[NumberRange(min=0, max=9999)],
@@ -137,9 +138,11 @@ def build_options_form(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, col_headers, ro
         if not template_row.empty and bool(template_row.iloc[0]['option']):
             value = paydf.at[i, col_headers[2]]
             month = col_headers[2]
+            varname = template_row.iloc[0]['varname']
             
             form.ent_ded_alt_rows.append_entry({
                 'header': header,
+                'varname': varname,
                 'value_f': value,
                 'value_m': month
             })
