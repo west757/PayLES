@@ -172,95 +172,46 @@ footer {
    toasts
    ========================= */
 
-   /*
-.tooltip-toast {
-    animation: fadeout 4s forwards;
-    background-color: var(--highlight_red_color);
-    border-radius: 0.5rem;
-    color: var(--light_text_color);
-    display: block;
-    margin: 1rem auto;
-    max-width: 16rem;
-    padding: 0.5rem 1rem;
-    position: relative;
-    text-align: center;
-}
-
-@keyframes fadeout {
-    0% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        visibility: hidden;
-    }
-}
-    */
-/*
-.tooltip-toast {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    background: #333;
-    color: #fff;
-    padding: 1em 2em;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-    font-size: 1.1em;
-    opacity: 0.95;
-    pointer-events: none;
-}
-    */
-
-
-.tooltip-toast {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    min-width: 200px;
-    max-width: 80vw;
-    background: #333;
-    color: #fff;
-    padding: 1em 2em;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-    font-size: 1.1em;
-    opacity: 0.95;
-    pointer-events: auto;
-    display: flex;
+#toast-container {
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    left: 50%;
+    pointer-events: none;
+    position: fixed;
+    transform: translateX(-50%);
+    top: 6.25rem;
+    z-index: 9999;
+}
+
+.toast {
+    align-items: center;
+    animation: fadein 0.3s, fadeout 0.5s 6s;
+    background-color: var(--highlight_red_color);
+    border-radius: 8px;
+    color: var(--light_text_color);
+    display: flex;
     justify-content: center;
-    animation: fadein 0.3s, fadeout 0.5s 4s;
+    max-width: 30rem;
+    min-width: 15rem;
+    padding: 1em 2em;
+    pointer-events: auto;
 }
+
 .toast-close {
-    margin-left: 1em;
     cursor: pointer;
-    font-weight: bold;
+    margin: -0.15rem 0 0 0.75rem;
 }
-.toast-success { background: #0c9a65; }
-.toast-error { background: #f06f65; }
-.toast-warning { background: #baf35f; color: #333; }
-.toast-info { background: #3c94f1; }
 
 @keyframes fadein {
     from { opacity: 0; }
-    to { opacity: 0.95; }
+    to { opacity: 1; }
 }
 @keyframes fadeout {
-    from { opacity: 0.95; }
+    from { opacity: 1; }
     to { opacity: 0; }
 }
-
-
-
-
 
 
 /* =========================

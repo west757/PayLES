@@ -35,19 +35,16 @@ def submit_les():
 
     home_form = HomeForm()
     if not home_form.validate_on_submit():
-            print("Invalid submission, fails in validate_on_submit")
             return jsonify({'message': "Invalid submission"}), 400
 
     if home_form.submit_les.data:
         les_file = home_form.home_input.data
 
         if not les_file:
-            print("not les_file ran")
             return jsonify({'message': "No file submitted"}), 400
         
         valid, message = validate_file(les_file)
         if not valid:
-            print("not a valid file from function")
             return jsonify({'message': message}), 400
         
         valid, message, les_pdf = validate_les(les_file)
@@ -55,7 +52,6 @@ def submit_les():
     elif home_form.submit_example.data:
         valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
     else:
-        print("Unknown action, no LES or example submitted")
         return jsonify({'message': "Unknown action, no LES or example submitted"}), 400
 
     if valid:
@@ -97,7 +93,6 @@ def submit_les():
         }
         return render_template('paydf_group.html', **context)
     else:
-        print("run of jsonify with message at the end")
         return jsonify({'message': message}), 400
     
 

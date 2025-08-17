@@ -53,21 +53,20 @@ function disableAllInputs() {
 }
 
 
-
-function showToast(message, type = "info", duration = 4500) {
+function showToast(message, duration = 6500) {
+    const MAX_TOASTS = 3;
     const container = document.getElementById('toast-container');
-    if (!container) return;
 
-    // Remove previous toasts (or stack if you want)
-    container.innerHTML = '';
+    while (container.children.length >= MAX_TOASTS) {
+        container.removeChild(container.firstChild);
+    }
 
     let toast = document.createElement('div');
-    toast.className = `tooltip-toast toast-${type}`;
-    toast.setAttribute('role', 'alert');
+    toast.className = 'toast shadow';
     toast.textContent = message;
 
     let closeBtn = document.createElement('span');
-    closeBtn.textContent = '×';
+    closeBtn.textContent = '✖';
     closeBtn.className = 'toast-close';
     closeBtn.onclick = () => toast.remove();
     toast.appendChild(closeBtn);
