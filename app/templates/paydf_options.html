@@ -10,6 +10,7 @@
 {% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
 {% set TSP_MODALS = config.TSP_MODALS %}
 
+{% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
 <form id="options-form">
     <table id="options-table" class="pos-table">
@@ -22,15 +23,15 @@
             </tr>
 
             <!-- variable option rows -->
-            {% for header, modal in VARIABLES_MODALS.items() %}
-                {% set varname = header.lower().replace(' ', '_') %}
-                {% if varname ~ '_f' in options_form._fields and varname ~ '_m' in options_form._fields %}
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 'v' and row.option %}
+                    {% set varname = row.varname %}
                     {% set field_f = options_form[varname ~ '_f'] %}
                     {% set field_m = options_form[varname ~ '_m'] %}
                     {% set current_value = field_f.data %}
                     <tr>
                         <td class="row-header-cell">
-                            <button class="modal-button" type="button" data-modal="{{ modal }}">{{ header }}</button>
+                            <button class="modal-button" type="button" data-modal="{{ row.modal }}">{{ row.header }}</button>
                         </td>
                         <td>{{ current_value }}</td>
                         <td>
@@ -50,7 +51,6 @@
             {% endfor %}
         </tbody>
 
-
         <!-- ent/ded/alt option rows -->
         <tbody class="pos-table-section">
             {% for subform in options_form.ent_ded_alt_rows %}
@@ -59,7 +59,7 @@
                         <button class="modal-button" type="button" data-modal="{{ PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['modal'] }}">{{ subform.header.data }}</button>
                     </td>
                     <td>
-                        {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-', '-$') }}
+                        {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-','-$') }}
                     </td>
                     <td>
                         {{ subform.value_f(class="input-num input-num-long") }}
@@ -71,29 +71,29 @@
             {% endfor %}
         </tbody>
 
-
         <!-- TSP rate option rows -->
         <tbody class="pos-table-section">
-            {% for header, modal in TSP_MODALS.items() %}
-                {% set varname = header.lower().replace(' ', '_') %}
-                {% set field_f = options_form[varname ~ '_f'] %}
-                {% set field_m = options_form[varname ~ '_m'] %}
-                {% set current_value = field_f.data %}
-                <tr class="tsp-row">
-                    <td class="row-header-cell">
-                        <button class="modal-button" type="button" data-modal="tsp">{{ header }}</button>
-                    </td>
-                    <td>{{ current_value }}<span>%</span></td>
-                    <td>
-                        {{ field_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span>
-                    </td>
-                    <td>
-                        {{ field_m(class="dropdown month-dropdown") }}
-                    </td>
-                </tr>
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 't' and row.option %}
+                    {% set varname = row.varname %}
+                    {% set field_f = options_form[varname ~ '_f'] %}
+                    {% set field_m = options_form[varname ~ '_m'] %}
+                    {% set current_value = field_f.data %}
+                    <tr class="tsp-row">
+                        <td class="row-header-cell">
+                            <button class="modal-button" type="button" data-modal="{{ row.modal }}">{{ row.header }}</button>
+                        </td>
+                        <td>{{ current_value }}<span>%</span></td>
+                        <td>
+                            {{ field_f(class="input-num input-num-mid tsp-rate-input") }}<span>&nbsp;&nbsp;%</span>
+                        </td>
+                        <td>
+                            {{ field_m(class="dropdown month-dropdown") }}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
-
 
         <!-- update LES button -->
         <tbody>

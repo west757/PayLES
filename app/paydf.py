@@ -24,10 +24,6 @@ from app.calculations import (
     calculate_state_taxes,
     calculate_trad_roth_tsp,
 )
-from app.forms import (
-    OptionsForm,
-    EntDedAltRowForm,
-)
 
 # =========================
 # build paydf
@@ -236,71 +232,6 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
     return core_dict
 
 
-def build_options_form(PAYDF_TEMPLATE, paydf, col_headers, row_headers):
-    TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
-    form = OptionsForm()
-
-    form.grade_f.choices = [(g, g) for g in flask_app.config['GRADES']]
-    form.home_of_record_f.choices = [(h, h) for h in flask_app.config['HOME_OF_RECORDS']]
-    federal_types = list(TAX_FILING_TYPES_DEDUCTIONS.keys())
-    form.federal_filing_status_f.choices = [(t, t) for t in federal_types]
-    state_types = federal_types[:2]
-    form.state_filing_status_f.choices = [(t, t) for t in state_types]
-    form.sgli_coverage_f.choices = [(str(row['coverage']), str(row['coverage'])) for _, row in flask_app.config['SGLI_RATES'].iterrows()]
-    form.combat_zone_f.choices = [('No', 'No'), ('Yes', 'Yes')]
-
-    month_options = [(m, m) for m in col_headers[2:]]
-    for field in [
-        form.grade_m, form.zip_code_m, form.home_of_record_m, form.federal_filing_status_m,
-        form.state_filing_status_m, form.dependents_m, form.sgli_coverage_m, form.combat_zone_m,
-        form.trad_tsp_base_rate_m, form.roth_tsp_base_rate_m, form.trad_tsp_specialty_rate_m,
-        form.roth_tsp_specialty_rate_m, form.trad_tsp_incentive_rate_m, form.roth_tsp_incentive_rate_m,
-        form.trad_tsp_bonus_rate_m, form.roth_tsp_bonus_rate_m
-    ]:
-        field.choices = month_options
-
-    #set default values
-    form.grade_f.data = paydf.at[row_headers.index("Grade"), col_headers[2]]
-    form.zip_code_f.data = paydf.at[row_headers.index("Zip Code"), col_headers[2]]
-    form.home_of_record_f.data = paydf.at[row_headers.index("Home of Record"), col_headers[2]]
-    form.federal_filing_status_f.data = paydf.at[row_headers.index("Federal Filing Status"), col_headers[2]]
-    form.state_filing_status_f.data = paydf.at[row_headers.index("State Filing Status"), col_headers[2]]
-    form.dependents_f.data = paydf.at[row_headers.index("Dependents"), col_headers[2]]
-    form.sgli_coverage_f.data = paydf.at[row_headers.index("SGLI Coverage"), col_headers[2]]
-    form.combat_zone_f.data = paydf.at[row_headers.index("Combat Zone"), col_headers[2]]
-
-    form.trad_tsp_base_rate_f.data = paydf.at[row_headers.index("Trad TSP Base Rate"), col_headers[2]]
-    form.trad_tsp_specialty_rate_f.data = paydf.at[row_headers.index("Trad TSP Specialty Rate"), col_headers[2]]
-    form.trad_tsp_incentive_rate_f.data = paydf.at[row_headers.index("Trad TSP Incentive Rate"), col_headers[2]]
-    form.trad_tsp_bonus_rate_f.data = paydf.at[row_headers.index("Trad TSP Bonus Rate"), col_headers[2]]
-    form.roth_tsp_base_rate_f.data = paydf.at[row_headers.index("Roth TSP Base Rate"), col_headers[2]]
-    form.roth_tsp_specialty_rate_f.data = paydf.at[row_headers.index("Roth TSP Specialty Rate"), col_headers[2]]
-    form.roth_tsp_incentive_rate_f.data = paydf.at[row_headers.index("Roth TSP Incentive Rate"), col_headers[2]]
-    form.roth_tsp_bonus_rate_f.data = paydf.at[row_headers.index("Roth TSP Bonus Rate"), col_headers[2]]
-
-    for header in row_headers:
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-        if not match.empty and bool(match.iloc[0]['option']):
-
-            if header in paydf['header'].values:
-                value = paydf.loc[paydf['header'] == header, col_headers[2]].values[0]
-            else:
-                value = 0
-            month = col_headers[2]
-
-            form.ent_ded_alt_rows.append_entry({
-                'header': header,
-                'value_f': value,
-                'value_m': month
-            })
-
-    return form
-
-
-
-
-
-
 
 # =========================
 # expand paydf
@@ -338,14 +269,20 @@ def expand_paydf(PAYDF_TEMPLATE, paydf, months_display, form, custom_rows=None):
 
 def update_variables(next_col_dict, prev_col_dict, next_month, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    VARIABLES_MODALS = flask_app.config['VARIABLES_MODALS']
-    TSP_MODALS = flask_app.config['TSP_MODALS']
-    headers = list(VARIABLES_MODALS.keys()) + list(TSP_MODALS.keys())
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
 
-    for header in headers:
-        prev_value = prev_col_dict[header]
-        form_value = form.get(f"{header.lower().replace(' ', '_')}_f") if form else None
-        form_month = form.get(f"{header.lower().replace(' ', '_')}_m") if form else None
+    # Get all variable and TSP rows from VARIABLE_TEMPLATE
+    variable_tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'].isin(['v', 't'])]
+
+    for _, row in variable_tsp_rows.iterrows():
+        header = row['header']
+        varname = row['varname']
+        field_f = f"{varname}_f"
+        field_m = f"{varname}_m"
+
+        prev_value = prev_col_dict.get(header)
+        form_value = form.get(field_f) if form else None
+        form_month = form.get(field_m) if form else None
 
         if header == "Year":
             if MONTHS_SHORT.index(next_month) == 0:
@@ -357,10 +294,10 @@ def update_variables(next_col_dict, prev_col_dict, next_month, form):
             next_col_dict[header] = prev_value + 1
 
         elif header == "Military Housing Area":
-            zip_code = next_col_dict["Zip Code"]
+            zip_code = next_col_dict.get("Zip Code", "")
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
             next_col_dict[header] = military_housing_area
-        
+
         else:
             if form_month == next_month and form_value is not None and str(form_value).strip() != "":
                 try:

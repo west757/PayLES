@@ -204,23 +204,29 @@ def calculate_state_taxes(col_dict):
 
 #need to add in max tsp yearly limit
 def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
-    TSP_MODALS = flask_app.config['TSP_MODALS']
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     trad_total = Decimal("0.00")
     roth_total = Decimal("0.00")
 
-    for tsp_var, modal in TSP_MODALS.items():
-        rate = Decimal(str(col_dict[tsp_var]))
+    # Get all TSP rate rows from VARIABLE_TEMPLATE
+    tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
+
+    for _, tsp_row in tsp_rows.iterrows():
+        tsp_var = tsp_row['varname']
+        modal = tsp_row['modal']
+        rate = Decimal(str(col_dict.get(tsp_var, 0)))
 
         if rate > 0:
+            # Find all entitlement rows in PAYDF_TEMPLATE with matching modal
             rows = PAYDF_TEMPLATE[(PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['modal'] == modal)]
             headers = rows['header'].tolist()
 
             total = sum(Decimal(col_dict.get(h, 0)) for h in headers)
             value = total * rate / Decimal(100)
 
-            if tsp_var.startswith("Trad"):
+            if tsp_var.lower().startswith("trad"):
                 trad_total += value
-            elif tsp_var.startswith("Roth"):
+            elif tsp_var.lower().startswith("roth"):
                 roth_total += value
 
     return -round(trad_total, 2), -round(roth_total, 2)

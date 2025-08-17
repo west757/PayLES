@@ -36,9 +36,10 @@ class Config:
     FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
     TSP_CONTRIBUTION_LIMIT = 23000
 
-    TRADITIONAL_TSP_RATE_MAX = 84
+    TRAD_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
-    
+    DEPENDENTS_MAX = 9
+
     BAS_AMOUNT = [Decimal(465.77), Decimal(320.78)]
 
     TAX_FILING_TYPES_DEDUCTIONS = {
@@ -165,6 +166,15 @@ class Config:
             'married_rate': lambda x: Decimal(x),
         }
     )
+    VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
+        dtype={
+            'header': str,
+            'varname': str,
+            'type': str,
+            'option': bool,
+            'modal': str,
+        }
+    )
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
     LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
@@ -176,8 +186,6 @@ class Config:
 
 #create reserved headers list
 Config.RESERVED_HEADERS = list(set(
-    list(Config.VARIABLES_MODALS.keys()) +
-    list(Config.TSP_MODALS.keys()) +
-    list(Config.PAYDF_TEMPLATE['header'].tolist()) +
-    list(Config.CALCULATIONS_MODALS.keys())
+    list(Config.VARIABLE_TEMPLATE['header'].tolist()) +
+    list(Config.PAYDF_TEMPLATE['header'].tolist())
 ))

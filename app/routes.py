@@ -12,13 +12,13 @@ from app.les import (
 )
 from app.paydf import (
     build_paydf,
-    build_options_form,
     expand_paydf,
     parse_custom_rows,
 )
 from app.forms import (
     HomeForm,
     SettingsForm,
+    build_options_form,
 )
 
 
@@ -59,8 +59,9 @@ def submit_les():
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
-
+        
         options_form = build_options_form(PAYDF_TEMPLATE, paydf, col_headers, row_headers)
+
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 

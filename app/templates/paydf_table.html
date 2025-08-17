@@ -2,6 +2,8 @@
 {% set VARIABLES_MODALS = config.VARIABLES_MODALS %}
 {% set CALCULATIONS_MODALS = config.CALCULATIONS_MODALS %}
 
+{% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
+
 <!-- send config data to script.js -->
 <div id="config-data"
      data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'
@@ -18,23 +20,25 @@
 
         <!-- variable rows -->
         <tbody>
-            {% for i in range(0, 11) %}
-                {% set header = row_headers[i] %}
-                <tr class="variable-row">
-                    <td></td>
-                    <td></td>
-                </tr>
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 'v' %}
+                    <tr class="variable-row">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
 
         <!-- TSP rows -->
         <tbody>
-            {% for i in range(11, 19) %}
-                {% set header = row_headers[i] %}
-                <tr class="tsp-row">
-                    <td></td>
-                    <td></td>
-                </tr>
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 't' %}
+                    <tr class="tsp-row">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
 
@@ -83,42 +87,45 @@
             </tr>
 
             <!-- variable rows -->
-            {% for i in range(0, 11) %}
-                {% set header = row_headers[i] %}
-                {% set modal = VARIABLES_MODALS.get(header, '') %}
-                <tr class="variable-row">
-                    <td class="row-header-cell">
-                        <button class="modal-button" data-modal="{{ modal }}">
-                            {{ header }}
-                        </button>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% set value = paydf.at[i, col_headers[x]] %}
-                        <td>
-                            {{ value }}
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 'v' %}
+                    {% set i = row_headers.index(row.header) %}
+                    <tr class="variable-row">
+                        <td class="row-header-cell">
+                            <button class="modal-button" data-modal="{{ row.modal }}">
+                                {{ row.header }}
+                            </button>
                         </td>
-                    {% endfor %}
-                </tr>
+                        {% for x in range(1, paydf.shape[1]) %}
+                            {% set value = paydf.at[i, col_headers[x]] %}
+                            <td>
+                                {{ value }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
 
         <!-- tsp rows -->
         <tbody class="pos-table-section">
-            {% for i in range(11, 19) %}
-                {% set header = row_headers[i] %}
-                <tr class="tsp-row">
-                    <td class="row-header-cell">
-                        <button class="modal-button" data-modal="tsp">
-                            {{ header }}
-                        </button>
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% set value = paydf.at[i, col_headers[x]] %}
-                        <td>
-                            {{ '{}%'.format(value) }}
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 't' %}
+                    {% set i = row_headers.index(row.header) %}
+                    <tr class="tsp-row">
+                        <td class="row-header-cell">
+                            <button class="modal-button" data-modal="{{ row.modal }}">
+                                {{ row.header }}
+                            </button>
                         </td>
-                    {% endfor %}
-                </tr>
+                        {% for x in range(1, paydf.shape[1]) %}
+                            {% set value = paydf.at[i, col_headers[x]] %}
+                            <td>
+                                {{ '{}%'.format(value) }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
 
@@ -173,26 +180,27 @@
 
         <!-- calculation rows -->
         <tbody>
-            {% for i in range(row_headers|length - 6, row_headers|length) %}
-                {% set header = row_headers[i] %}
-                {% set modal = CALCULATIONS_MODALS.get(header, '') %}
-                <tr>
-                    <td class="row-header-cell {% if header == 'Difference' %} difference-cell{% endif %}">
-                        {% if header != "Difference" %}
-                            <button class="modal-button" data-modal="{{ modal }}">
-                                {{ header }}
-                            </button>
-                        {% else %}
-                            {{ header }}
-                        {% endif %}
-                    </td>
-                    {% for x in range(1, paydf.shape[1]) %}
-                        {% set value = paydf.at[i, col_headers[x]] %}
-                        <td>
-                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+            {% for row in VARIABLE_TEMPLATE.itertuples() %}
+                {% if row.type == 'c' %}
+                    {% set i = row_headers.index(row.header) %}
+                    <tr>
+                        <td class="row-header-cell {% if row.header == 'Difference' %} difference-cell{% endif %}">
+                            {% if row.header != "Difference" %}
+                                <button class="modal-button" data-modal="{{ row.modal }}">
+                                    {{ row.header }}
+                                </button>
+                            {% else %}
+                                {{ row.header }}
+                            {% endif %}
                         </td>
-                    {% endfor %}
-                </tr>
+                        {% for x in range(1, paydf.shape[1]) %}
+                            {% set value = paydf.at[i, col_headers[x]] %}
+                            <td>
+                                {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
