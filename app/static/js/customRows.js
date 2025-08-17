@@ -52,7 +52,7 @@ function renderCustomRowButtonTable() {
         customBody.appendChild(tr);
         customRowButtons[idx] = { confirmButton, editButton, removeButton };
     });
-    updateButtonStates();
+    //updateButtonStates();
     attachCustomRowButtonListeners();
 }
 
@@ -207,7 +207,7 @@ function attachCustomRowButtonListeners() {
                 if (editingIndex !== null) return;
                 editingIndex = idx;
                 renderCustomRows();
-                updateButtonStates();
+                //updateButtonStates();
             };
         }
 
@@ -243,7 +243,7 @@ document.addEventListener('click', function(e) {
         editingIndex = customRows.length;
         customRows.push({ header: '', sign: 1, tax: false, values });
         renderCustomRows();
-        updateButtonStates();
+        //updateButtonStates();
     }
 
     if (e.target.id === 'add-deduction-button') {
@@ -259,6 +259,6 @@ document.addEventListener('click', function(e) {
         editingIndex = customRows.length;
         customRows.push({ header: '', sign: -1, tax: false, values });
         renderCustomRows();
-        updateButtonStates();
+        //updateButtonStates();
     }
 });
