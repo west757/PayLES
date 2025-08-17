@@ -172,6 +172,7 @@ footer {
    toasts
    ========================= */
 
+   /*
 .tooltip-toast {
     animation: fadeout 4s forwards;
     background-color: var(--highlight_red_color);
@@ -197,6 +198,69 @@ footer {
         visibility: hidden;
     }
 }
+    */
+/*
+.tooltip-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: #333;
+    color: #fff;
+    padding: 1em 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    font-size: 1.1em;
+    opacity: 0.95;
+    pointer-events: none;
+}
+    */
+
+
+.tooltip-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    min-width: 200px;
+    max-width: 80vw;
+    background: #333;
+    color: #fff;
+    padding: 1em 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    font-size: 1.1em;
+    opacity: 0.95;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadein 0.3s, fadeout 0.5s 2s;
+}
+.toast-close {
+    margin-left: 1em;
+    cursor: pointer;
+    font-weight: bold;
+}
+.toast-success { background: #0c9a65; }
+.toast-error { background: #f06f65; }
+.toast-warning { background: #baf35f; color: #333; }
+.toast-info { background: #3c94f1; }
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 0.95; }
+}
+@keyframes fadeout {
+    from { opacity: 0.95; }
+    to { opacity: 0; }
+}
+
+
+
+
 
 
 /* =========================

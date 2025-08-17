@@ -58,36 +58,61 @@ document.addEventListener('mouseleave', function(e) {
 
 
 
-// disable buttons on form submission to prevent multiple submissions
 document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
-    stripeTable('paydf-table');
-    stripeTable('options-table');
-    stripeTable('settings-table');
-    attachTspBaseListeners();
-
-    document.querySelectorAll('form').forEach(function(form) {
-        form.addEventListener('submit', function() {
-            form.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
-                btn.disabled = true;
-            });
-        });
-    });
+    setupHomeFormListeners();
 });
 
 
+function setupHomeFormListeners() {
+    const homeForm = document.getElementById('home-form');
+    const homeInput = document.getElementById('home_input');
 
-// possible end up removing if in updatePaydf it stripes the table already
-document.body.addEventListener('htmx:afterSwap', function(evt) {
-    stripeTable('paydf-table');
-});
+    if (homeForm && homeInput) {
+        homeForm.addEventListener('submit', function(e) {
 
-
-document.body.addEventListener('htmx:beforeRequest', function(evt) {
-    if (evt.target && evt.target.id === 'home-form') {
-        evt.target.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
-            btn.disabled = true;
+            const activeElement = document.activeElement;
+            if (
+                activeElement &&
+                activeElement.id === 'submit-les-button' &&
+                !homeInput.value
+            ) {
+                e.preventDefault();
+                showToast('No file submitted - TEST');
+                return;
+            }
+            disableAllInputs();
         });
     }
+}
+
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    enableAllInputs();
+    setupHomeFormListeners();
+    stripeTable('paydf-table');
+
+    if (document.getElementById('paydf-group')) {
+        stripeTable('options-table');
+        stripeTable('settings-table');
+        attachTspBaseListeners();
+    }
+
+    // disable all buttons in forms on submit
+    //document.querySelectorAll('form').forEach(function(form) {
+    //    form.addEventListener('submit', function() {
+    //        disableAllInputs();
+    //    });
+    //});
+    
 });
+
+
+//document.body.addEventListener('htmx:beforeRequest', function(evt) {
+//    if (evt.target && evt.target.id === 'home-form') {
+//        evt.target.querySelectorAll('button, input[type="submit"]').forEach(function(btn) {
+//            btn.disabled = true;
+//        });
+//    }
+//});
 
