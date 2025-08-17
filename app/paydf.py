@@ -381,6 +381,7 @@ def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match
     form_value = form.get(f"{varname}_f") if form else None
     form_month = form.get(f"{varname}_m") if form else None
     prev_value = prev_col_dict[header]
+    sign = match.iloc[0]['sign']
 
     if form_value is None or str(form_value).strip() == "":
         next_col_dict[header] = prev_value
@@ -388,7 +389,7 @@ def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match
 
     if form_month == next_month:
         try:
-            next_col_dict[header] = Decimal(str(form_value))
+            next_col_dict[header] = sign * Decimal(str(form_value))
         except Exception:
             next_col_dict[header] = prev_value
     else:

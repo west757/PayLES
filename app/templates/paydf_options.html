@@ -52,7 +52,9 @@
                         {{ ('$' ~ '{:,.2f}'.format(subform.value_f.data)).replace('$-','-$') }}
                     </td>
                     <td>
-                        {{ subform.value_f(class="input-num input-num-long") }}
+                        {% set sign = '-' if PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == subform.header.data].iloc[0]['sign'] == -1 or subform.value_f.data < 0 else '' %}
+                        <span>{{ sign }}$</span>
+                        {{ subform.value_f(class="input-num input-num-long", value=subform.value_f.data|abs) }}
                     </td>
                     <td>
                         {{ subform.value_m(class="dropdown month-dropdown") }}
