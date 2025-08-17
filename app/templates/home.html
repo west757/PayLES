@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div id="home-group">
+<div id="home">
     <p class="text-large">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
     </p>
@@ -11,8 +11,20 @@
         Or, use the example LES provided to see how PayLES works.
     </p>
 
-    <div id="home">
-        {% include "home_form.html" %}
+    <div id="home-form-container">
+        <form id="home-form" hx-post="/submit_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+            {{ home_form.hidden_tag() }}
+            <label id="home-drop" for="{{ home_form.home_input.id }}">
+                <span class="text-mid">Drop LES here</span>
+                or
+                {{ home_form.home_input(id="home_input", class="form-control", accept=".pdf") }}
+            </label>
+
+            <div id="home-buttons-row">
+                {{ home_form.submit_les(id="submit-les-button", class="button button-standard") }}
+                {{ home_form.submit_example(id="submit-example-button", class="button button-standard") }}
+            </div>
+        </form>
     </div>
 
     <div id="disclaimer">
