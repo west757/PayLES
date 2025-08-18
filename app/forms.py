@@ -50,23 +50,14 @@ def build_options_form(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, col_headers, ro
             fields[field_f_name] = SelectField(f"{header} Future", choices=[])
 
         elif field_type == "integer":
-            if "trad_tsp" in varname:
-                max_val = TRAD_TSP_RATE_MAX
-            elif "roth_tsp" in varname:
-                max_val = ROTH_TSP_RATE_MAX
-            elif "dependents" in varname:
-                max_val = DEPENDENTS_MAX
-            else:
-                max_val = 9999
-
-            validators.append(NumberRange(min=0, max=max_val))
+            validators.append(NumberRange(min=0, max=999))
             fields[field_f_name] = IntegerField(
                 f"{header} Future",
                 validators=validators,
                 render_kw={
                     "type": "number",
                     "min": 0,
-                    "max": max_val,
+                    "max": 999,
                     "inputmode": "numeric"
                 }
             )

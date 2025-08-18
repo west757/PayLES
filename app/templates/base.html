@@ -61,7 +61,9 @@
     <div id="config-data"
         data-default-months-display="{{ config.DEFAULT_MONTHS_DISPLAY }}"
         data-max-custom-rows="{{ config.MAX_CUSTOM_ROWS }}"
-        data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'>
+        data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'
+        data-trad-tsp-rate-max="{{ config.TRAD_TSP_RATE_MAX }}"
+        data-roth-tsp-rate-max="{{ config.ROTH_TSP_RATE_MAX }}">
     </div>
 
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>

@@ -11,7 +11,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (document.getElementById('paydf-group')) {
         stripeTable('options-table');
         stripeTable('settings-table');
-        attachTspBaseListeners();
+        updateTspRateFields();
     }
 
     if (document.getElementById('paydf-table')) {
@@ -116,6 +116,12 @@ document.addEventListener('change', function(e) {
 
 // input event listeners
 document.addEventListener('input', function(e) {
+    // restrict zip_code_f input to digits only
+    if (e.target.id === "zip_code_f") {
+        let val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
+    }
+
     // restrict dependents_f input
     if (e.target.id === "dependents_f") {
         let val = e.target.value.replace(/\D/g, '');
@@ -123,19 +129,21 @@ document.addEventListener('input', function(e) {
         e.target.value = val;
     }
 
-    // tsp rate inputs
+    // restrict tsp rate input
     if (e.target.classList.contains('tsp-rate-input')) {
-        // Remove non-digit characters and limit to 2 digits
+        updateTspRateFields();
+
         let val = e.target.value.replace(/\D/g, '');
-        if (val.length > 2) val = val.slice(0, 2);
+        if (val.length > 3) val = val.slice(0, 3); 
         e.target.value = val;
     }
 });
 
 
 
-
+// beforeinput event listeners
 document.addEventListener('beforeinput', function(e) {
+    // restricts decimal inpuit
     if (e.target.classList.contains('input-decimal')) {
         const input = e.target;
         const value = input.value;
@@ -144,7 +152,7 @@ document.addEventListener('beforeinput', function(e) {
         const newChar = e.data || '';
         let newValue;
 
-        // Simulate the new value if this input is allowed
+        // simulate the new value if this input is allowed
         if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
             newValue = value.slice(0, selectionStart) + newChar + value.slice(selectionEnd);
         } else if (e.inputType === 'deleteContentBackward') {
@@ -155,29 +163,17 @@ document.addEventListener('beforeinput', function(e) {
             newValue = value;
         }
 
-        // Check overall length
         if (newValue.length > 7) {
             e.preventDefault();
             return;
         }
 
-        // Only allow digits and one decimal point
         if (!/^\d{0,4}(\.\d{0,2})?$/.test(newValue)) {
             e.preventDefault();
             return;
         }
     }
 });
-
-
-  
-
-
-// dependents can have more than 1 digit
-// decimal regular options can have more than 6 digits
-// decimal fields don't allow only one decimal point, currently don't allow any
-// defaults for trad tsp rate are wrong
-
 
 
 // attach home form listener
