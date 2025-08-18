@@ -201,32 +201,37 @@ def calculate_state_taxes(col_dict):
     return -round(Decimal(tax), 2)
 
 
-
-#need to add in max tsp yearly limit
-def calculate_trad_roth_tsp(PAYDF_TEMPLATE, col_dict):
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+def calculate_trad_roth_tsp(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, col_dict):
+    tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
     trad_total = Decimal("0.00")
     roth_total = Decimal("0.00")
 
-    # Get all TSP rate rows from VARIABLE_TEMPLATE
-    tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
-
+    ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]
+    specialty_rows = ent_rows[ent_rows['modal'] == 'specialty']['header'].tolist()
+    incentive_rows = ent_rows[ent_rows['modal'] == 'incentive']['header'].tolist()
+    bonus_rows = ent_rows[ent_rows['modal'] == 'bonus']['header'].tolist()
+    
     for _, tsp_row in tsp_rows.iterrows():
-        tsp_var = tsp_row['varname']
-        modal = tsp_row['modal']
-        rate = Decimal(str(col_dict.get(tsp_var, 0)))
+        tsp_var = tsp_row['header']
+        rate = Decimal(str(col_dict[tsp_var]))
 
         if rate > 0:
-            # Find all entitlement rows in PAYDF_TEMPLATE with matching modal
-            rows = PAYDF_TEMPLATE[(PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['modal'] == modal)]
-            headers = rows['header'].tolist()
+            if 'Base' in tsp_var:
+                total = Decimal(col_dict['Base Pay'])
+            elif 'Specialty' in tsp_var:
+                total = sum(Decimal(col_dict.get(h, 0)) for h in specialty_rows)
+            elif 'Incentive' in tsp_var:
+                total = sum(Decimal(col_dict.get(h, 0)) for h in incentive_rows)
+            elif 'Bonus' in tsp_var:
+                total = sum(Decimal(col_dict.get(h, 0)) for h in bonus_rows)
+            else:
+                total = Decimal("0.00")
 
-            total = sum(Decimal(col_dict.get(h, 0)) for h in headers)
             value = total * rate / Decimal(100)
 
-            if tsp_var.lower().startswith("trad"):
+            if tsp_var.startswith("Trad"):
                 trad_total += value
-            elif tsp_var.lower().startswith("roth"):
+            elif tsp_var.startswith("Roth"):
                 roth_total += value
 
     return -round(trad_total, 2), -round(roth_total, 2)

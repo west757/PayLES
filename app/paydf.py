@@ -57,18 +57,18 @@ def add_variables(core_dict, les_text):
     core_dict["Year"] = year
 
     try:
-        grade = les_text[2][1]
-    except Exception:
-        grade = "Not Found"
-    core_dict["Grade"] = grade
-
-    try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
         les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
         months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
     core_dict["Months in Service"] = months_in_service
+
+    try:
+        grade = les_text[2][1]
+    except Exception:
+        grade = "Not Found"
+    core_dict["Grade"] = grade
 
     try:
         zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
@@ -82,6 +82,12 @@ def add_variables(core_dict, les_text):
     except Exception:
         home_of_record = "Not Found"
     core_dict["Home of Record"] = home_of_record
+
+    try:
+        dependents = int(les_text[53][1])
+    except Exception:
+        dependents = 0
+    core_dict["Dependents"] = dependents
 
     try:
         status = les_text[24][1]
@@ -110,15 +116,6 @@ def add_variables(core_dict, les_text):
     core_dict["State Filing Status"] = state_filing_status
 
     try:
-        dependents = int(les_text[53][1])
-    except Exception:
-        dependents = 0
-    core_dict["Dependents"] = dependents
-
-    combat_zone = "No"
-    core_dict["Combat Zone"] = combat_zone
-
-    try:
         sgli_coverage = ""
         remarks = les_text[96]
 
@@ -135,6 +132,14 @@ def add_variables(core_dict, les_text):
     except Exception:
         sgli_coverage = "Not Found"
     core_dict["SGLI Coverage"] = sgli_coverage
+
+    combat_zone = "No"
+    core_dict["Combat Zone"] = combat_zone
+
+    try:
+        core_dict["TSP YTD Deductions"] = Decimal(str(les_text[78][2]))
+    except Exception:
+        core_dict["TSP YTD Deductions"] = Decimal("0.00")
 
     try:
         core_dict["Trad TSP Base Rate"] = int(les_text[60][3])
@@ -252,7 +257,8 @@ def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form,
         update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form)
         update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
+        update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
+        next_col_dict["TSP YTD Deductions"] = calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict)
         next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
@@ -295,6 +301,9 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
             zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
             next_col_dict[header] = military_housing_area
 
+        elif header == "TSP YTD Deductions":
+            next_col_dict[header] = Decimal("0.00")
+
         else:
             if form_month == next_month and form_value is not None and str(form_value).strip() != "":
                 try:
@@ -330,7 +339,7 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
+def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
     all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
     ded_alt_rows = [header for header in all_ded_alt_headers if header in paydf['header'].values]
 
@@ -348,7 +357,7 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         elif header in ["Traditional TSP", "Roth TSP"]:
-            trad, roth = calculate_trad_roth_tsp(PAYDF_TEMPLATE, next_col_dict)
+            trad, roth = calculate_trad_roth_tsp(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict)
             if header == "Traditional TSP":
                 next_col_dict["Traditional TSP"] = trad
             else:
@@ -400,6 +409,17 @@ def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match
     return next_col_dict
 
 
+def calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict):
+    trad = abs(next_col_dict["Traditional TSP"])
+    roth = abs(next_col_dict["Roth TSP"])
+    is_new_year = next_col_dict["Year"] != prev_col_dict["Year"]
+
+    if is_new_year:
+        return trad + roth
+    else:
+        prev_ytd = prev_col_dict["TSP YTD Deductions"]
+        return prev_ytd + trad + roth
+    
 
 # =========================
 # update custom rows
