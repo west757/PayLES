@@ -11,14 +11,16 @@ class HomeForm(FlaskForm):
 class EntDedAltRowForm(Form):
     header = StringField('Header')
     varname = StringField('Varname')
-    value_f = DecimalField(
+    value_f = StringField(
         'Value Future',
-        validators=[NumberRange(min=0, max=9999)],
+        validators=[
+            Regexp(r'^\d{1,4}(\.\d{1,2})?$', message="Enter up to 4 digits and optionally up to 2 decimals")
+        ],
         render_kw={
-            "type": "number",
-            "min": 0,
-            "max": 9999,
-            "inputmode": "numeric"
+            "type": "text",
+            "inputmode": "decimal",
+            "pattern": r"\d{1,4}(\.\d{1,2})?",
+            "maxlength": 7
         }
     )
     value_m = SelectField('Month', choices=[])

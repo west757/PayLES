@@ -116,17 +116,10 @@ document.addEventListener('change', function(e) {
 
 // input event listeners
 document.addEventListener('input', function(e) {
-    // number input
-    if (e.target.classList.contains('input-num')) {
-        // Allow only digits and one decimal point
-        let val = e.target.value;
-        // Remove invalid characters
-        val = val.replace(/[^0-9.]/g, '');
-        // Only one decimal point allowed
-        let parts = val.split('.');
-        if (parts.length > 2) {
-            val = parts[0] + '.' + parts.slice(1).join('');
-        }
+    // restrict dependents_f input
+    if (e.target.id === "dependents_f") {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 1) val = val.slice(0, 1);
         e.target.value = val;
     }
 
@@ -140,7 +133,46 @@ document.addEventListener('input', function(e) {
 });
 
 
-// validate if zip code less than 5 digits
+
+
+document.addEventListener('beforeinput', function(e) {
+    if (e.target.classList.contains('input-decimal')) {
+        const input = e.target;
+        const value = input.value;
+        const selectionStart = input.selectionStart;
+        const selectionEnd = input.selectionEnd;
+        const newChar = e.data || '';
+        let newValue;
+
+        // Simulate the new value if this input is allowed
+        if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
+            newValue = value.slice(0, selectionStart) + newChar + value.slice(selectionEnd);
+        } else if (e.inputType === 'deleteContentBackward') {
+            newValue = value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
+        } else if (e.inputType === 'deleteContentForward') {
+            newValue = value.slice(0, selectionStart) + value.slice(selectionEnd + 1);
+        } else {
+            newValue = value;
+        }
+
+        // Check overall length
+        if (newValue.length > 7) {
+            e.preventDefault();
+            return;
+        }
+
+        // Only allow digits and one decimal point
+        if (!/^\d{0,4}(\.\d{0,2})?$/.test(newValue)) {
+            e.preventDefault();
+            return;
+        }
+    }
+});
+
+
+  
+
+
 // dependents can have more than 1 digit
 // decimal regular options can have more than 6 digits
 // decimal fields don't allow only one decimal point, currently don't allow any
