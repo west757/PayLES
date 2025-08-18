@@ -23,6 +23,7 @@ recommendations tab (like if not adding to tsp, put in money)
 rework drag and drop functionality
 add in charity contributions
 go through other les variables and see if they apply
+get combat zone from les
 
 
 possible:

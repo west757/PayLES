@@ -34,7 +34,6 @@ function updatePaydf() {
     });
 }
 
-
 // validate options form
 function validateOptionsForm() {
     const optionsForm = document.getElementById('options-form');
@@ -68,6 +67,20 @@ function validateOptionsForm() {
         const input = document.getElementById(id);
         if (input && parseInt(input.value, 10) > 100) {
             errors.push("TSP rates cannot exceed 100%");
+        }
+    });
+
+    // Validate combined trad/roth rates for specialty, incentive, bonus
+    const ratePairs = [
+        ['trad_tsp_specialty_rate_f', 'roth_tsp_specialty_rate_f', 'Specialty'],
+        ['trad_tsp_incentive_rate_f', 'roth_tsp_incentive_rate_f', 'Incentive'],
+        ['trad_tsp_bonus_rate_f', 'roth_tsp_bonus_rate_f', 'Bonus']
+    ];
+    ratePairs.forEach(([tradId, rothId, label]) => {
+        const tradVal = parseInt(document.getElementById(tradId)?.value || "0", 10);
+        const rothVal = parseInt(document.getElementById(rothId)?.value || "0", 10);
+        if (tradVal + rothVal > 100) {
+            errors.push(`Combined Trad/Roth TSP ${label} Rate cannot exceed 100%`);
         }
     });
 
