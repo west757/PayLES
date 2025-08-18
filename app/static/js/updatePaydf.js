@@ -2,7 +2,7 @@
 function updatePaydf() {
     if (!validateOptionsForm()) {
         enableAllInputs();
-        return; // Block submission if validation fails
+        return;
     }
 
     const optionsForm = document.getElementById('options-form');

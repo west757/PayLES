@@ -76,15 +76,15 @@ index,x1,y1,x2,y2,title,modal,tooltip
 75,1920,1340,2174,1438,roth bonus pay rate,tsp,Percentage of bonus pay elected for roth TSP contribution
 76,2174,1340,2474,1438,roth bonus pay current,tsp,This field is unused
 77,74,1440,374,1538,contributions total,tsp,Contributions total
-78,376,1440,695,1538,ytd deductions,tsp,Amount of TSP contributions deducted throughout the calendar year
-79,696,1440,1013,1538,ytd tsp deferred,tsp,Amount of TSP contributions deferred for tax purposes
-80,1334,1440,1652,1538,ytd tsp exempt,tsp,Amount of TSP contributions that are reported as tax exempt to the IRS
-81,1652,1440,2042,1538,ytd roth,tsp,Total contributions to roth TSP
-82,2044,1440,2474,1538,ytd tsp agency auto,tsp,Total auto contributions year-to-date made by the member's contributing agency
-83,1014,1440,1332,1538,ytd tsp agency match,tsp,Total matched contributions year-to-date made by the member's contributing agency
+78,376,1440,695,1538,ytd deductions,tsp,Amount of YTD TSP contributions (combined Traditional and Roth)
+79,696,1440,1013,1538,ytd tsp deferred,tsp,Amount of YTD TSP contributions deferred for tax purposes. Typically same as total Traditional TSP contributions unless contributions were made in a combat zone
+80,1014,1440,1332,1538,ytd tsp exempt,tsp,Amount of YTD TSP contributions that tax exempt. TSP contributions (whether Traditional or Roth) made in a combat zone are tax-exempt
+81,1334,1440,1652,1538,ytd roth,tsp,Amount of YTD TSP contributions post-tax. Typically same as total Roth TSP contributions unless contributions were made in a combat zone
+82,1652,1440,2042,1538,ytd tsp agency auto,tsp,Total YTD auto contributions (1%) made by the member's contributing agency.
+83,2044,1440,2474,1538,ytd tsp agency match,tsp,Total YTD matched contributions (additional 1%-4%) made by the member's contributing agency. Additional percentage depends on base pay rate.
 84,74,1540,374,1642,cm agency contribution,tsp,Contributing agency
-85,376,1540,724,1642,cm agency auto,tsp,Auto amount of contributions made by the member's contributing agency
-86,724,1540,1074,1642,cm agency match,tsp,Matched amount of contributions made by the member's contributing agency
+85,376,1540,724,1642,cm agency auto,tsp,Monthly auto contributions (1%) made by the member's contributing agency
+86,724,1540,1074,1642,cm agency match,tsp,Monthly matched contributions (additional 1%-4%) made by the member's contributing agency. Additional percentage depends on base pay rate.
 87,1074,1540,1253,1642,leave,leave,Leave
 88,1252,1540,1404,1642,leave initial balance,leave,"Brought forward leave balance. Balance may be at the beginning of the fiscal year, when active duty for the member began, or the day after the member was paid a Lump Sum Leave (LSL)"
 89,1406,1540,1553,1642,leave earned,leave,Cumulative amount of leave earned in the current fiscal year or current term of enlistement if the member reenlisted/extended since the beginning of the fiscal year. Normally increases by 2.5 days each month
