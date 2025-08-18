@@ -24,7 +24,7 @@ rework drag and drop functionality
 add in charity contributions
 go through other les variables and see if they apply
 get combat zone from les
-
+advanced version where every single cell in paydf is editable, or that expands to add an additional future and month column in options
 
 possible:
 create unit tests
