@@ -5,6 +5,8 @@ function initConfigVars() {
         window.DEFAULT_MONTHS_DISPLAY = parseInt(configDiv.dataset.defaultMonthsDisplay);
         window.MAX_CUSTOM_ROWS = parseInt(configDiv.dataset.maxCustomRows);
         window.RESERVED_HEADERS = JSON.parse(configDiv.dataset.reservedHeaders);
+        window.TRAD_TSP_RATE_MAX = parseInt(configDiv.dataset.tradTspRateMax);
+        window.ROTH_TSP_RATE_MAX = parseInt(configDiv.dataset.rothTspRateMax);
     }
 }
 
@@ -164,6 +166,38 @@ function exportPaydf() {
     }
 }
 
+
+// input validation for TSP rates
+function updateTspRateFields() {
+    const tradBaseRate = document.getElementById('trad_tsp_base_rate_f');
+    const tradSpecialtyRate = document.getElementById('trad_tsp_specialty_rate_f');
+    const tradIncentiveRate = document.getElementById('trad_tsp_incentive_rate_f');
+    const tradBonusRate = document.getElementById('trad_tsp_bonus_rate_f');
+    const rothBaseRate = document.getElementById('roth_tsp_base_rate_f');
+    const rothSpecialtyRate = document.getElementById('roth_tsp_specialty_rate_f');
+    const rothIncentiveRate = document.getElementById('roth_tsp_incentive_rate_f');
+    const rothBonusRate = document.getElementById('roth_tsp_bonus_rate_f');
+
+    let tradRateDisable = false;
+    let rothRateDisable = false;
+    const tradRateValue = tradBaseRate.value;
+    const rothBaseValue = rothBaseRate.value;
+
+    if (tradRateValue === "" || parseInt(tradRateValue, 10) === 0) {
+        tradRateDisable = true;
+    }
+
+    if (rothBaseValue === "" || parseInt(rothBaseValue, 10) === 0) {
+        rothRateDisable = true;
+    }
+
+    tradSpecialtyRate.disabled = tradRateDisable;
+    tradIncentiveRate.disabled = tradRateDisable;
+    tradBonusRate.disabled = tradRateDisable;
+    rothSpecialtyRate.disabled = rothRateDisable;
+    rothIncentiveRate.disabled = rothRateDisable;
+    rothBonusRate.disabled = rothRateDisable;
+}
 
 
 
