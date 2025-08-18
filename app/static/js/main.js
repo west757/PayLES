@@ -116,7 +116,7 @@ document.addEventListener('change', function(e) {
 
 // input event listeners
 document.addEventListener('input', function(e) {
-    // restrict zip_code_f input to digits only
+    // restrict zip_code_f input
     if (e.target.id === "zip_code_f") {
         let val = e.target.value.replace(/\D/g, '');
         e.target.value = val;
