@@ -91,6 +91,87 @@ function validateOptionsForm() {
 }
 
 
+
+
+function validateTspRateMonths() {
+    const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);
+    const months = colHeaders.slice(2);
+
+    // Helper to get all changes for a type (trad/roth)
+    function getBaseRateChanges(type) {
+        // Collect all base rate changes (could be multiple if UI allows)
+        // For now, assume one change per type
+        const rate = parseInt(document.getElementById(`${type}_tsp_base_rate_f`)?.value || "0", 10);
+        const month = document.getElementById(`${type}_tsp_base_rate_m`)?.value || months[0];
+        return [{ month, rate }];
+    }
+
+    // Build month-by-month base rate map for trad/roth
+    function buildBaseRateMap(type) {
+        const changes = getBaseRateChanges(type);
+        let map = [];
+        let currentRate = 0;
+        let changeIdx = 0;
+        for (let i = 0; i < months.length; i++) {
+            if (changeIdx < changes.length && months[i] === changes[changeIdx].month) {
+                currentRate = changes[changeIdx].rate;
+                changeIdx++;
+            }
+            map.push(currentRate);
+        }
+        return map;
+    }
+
+    const tradBaseMap = buildBaseRateMap('trad');
+    const rothBaseMap = buildBaseRateMap('roth');
+
+    // For each type and modal, update dropdowns and inputs
+    ['trad', 'roth'].forEach((type) => {
+        const baseMap = type === 'trad' ? tradBaseMap : rothBaseMap;
+        ['specialty', 'incentive', 'bonus'].forEach((modal) => {
+            const rateInput = document.getElementById(`${type}_tsp_${modal}_rate_f`);
+            const monthDropdown = document.getElementById(`${type}_tsp_${modal}_rate_m`);
+            if (!rateInput || !monthDropdown) return;
+
+            // Clear and repopulate month dropdown
+            monthDropdown.innerHTML = '';
+            months.forEach((m, idx) => {
+                const option = document.createElement('option');
+                option.value = m;
+                option.textContent = m;
+                if (baseMap[idx] > 0) {
+                    option.disabled = false;
+                } else {
+                    option.disabled = true;
+                }
+                monthDropdown.appendChild(option);
+            });
+
+            // If selected month is not available, select first available
+            if (monthDropdown.options[monthDropdown.selectedIndex]?.disabled) {
+                for (let i = 0; i < monthDropdown.options.length; i++) {
+                    if (!monthDropdown.options[i].disabled) {
+                        monthDropdown.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Disable input if base rate for selected month is 0
+            const selectedMonthIdx = months.indexOf(monthDropdown.value);
+            if (baseMap[selectedMonthIdx] === 0) {
+                rateInput.value = 0;
+                rateInput.disabled = true;
+            } else {
+                rateInput.disabled = false;
+            }
+        });
+    });
+}
+
+
+
+
 // populate option month dropdowns
 function updateMonthDropdowns() {
     const colHeaders = JSON.parse(document.getElementById('button-paydf-tables').dataset.colHeaders);

@@ -12,6 +12,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         stripeTable('options-table');
         stripeTable('settings-table');
         updateTspRateFields();
+        validateTspRateMonths();
     }
 
     if (document.getElementById('paydf-table')) {
@@ -111,6 +112,10 @@ document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
         show_tsp_options();
     }
+
+    if (e.target && (e.target.id === 'trad_tsp_base_rate_m' || e.target.id === 'roth_tsp_base_rate_m')) {
+        validateTspRateMonths();
+    }
 });
 
 
@@ -136,6 +141,10 @@ document.addEventListener('input', function(e) {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 3) val = val.slice(0, 3); 
         e.target.value = val;
+    }
+
+    if (e.target.id === 'trad_tsp_base_rate_f' || e.target.id === 'roth_tsp_base_rate_f') {
+        validateTspRateMonths();
     }
 });
 

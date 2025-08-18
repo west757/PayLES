@@ -316,6 +316,15 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
             else:
                 next_col_dict[header] = prev_value
 
+    if next_col_dict["Trad TSP Base Rate"] == 0:
+        next_col_dict["Trad TSP Specialty Rate"] = 0
+        next_col_dict["Trad TSP Incentive Rate"] = 0
+        next_col_dict["Trad TSP Bonus Rate"] = 0
+    if next_col_dict["Roth TSP Base Rate"] == 0:
+        next_col_dict["Roth TSP Specialty Rate"] = 0
+        next_col_dict["Roth TSP Incentive Rate"] = 0
+        next_col_dict["Roth TSP Bonus Rate"] = 0
+
     return next_col_dict
 
 
