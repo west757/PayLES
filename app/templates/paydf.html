@@ -28,14 +28,14 @@
                         {{ row.header }}
                     </button>
                 </td>
-                {% for col in row.columns %}
+                {% for col in col_headers[1:] %}
                     <td>
                         {% if row.header in PAYDF_TEMPLATE or (row.header in VARIABLE_TEMPLATE and VARIABLE_TEMPLATE[row.header]['editable']) %}
                             <button class="edit-cell-btn" data-row="{{ row.header }}" data-col="{{ col.name }}">
-                                {{ col.value }}
+                                {{ row[col] }}
                             </button>
                         {% else %}
-                            {{ col.value }}
+                            {{ row[col] }}
                         {% endif %}
                     </td>
                 {% endfor %}

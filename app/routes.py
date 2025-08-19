@@ -63,10 +63,12 @@ def submit_les():
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 
+        paydf_rows = paydf.to_dict(orient='records')
+
         context = {
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'paydf': paydf,
+            'paydf': paydf_rows,
             'col_headers': col_headers,
             'row_headers': row_headers,
             'LES_REMARKS': LES_REMARKS,

@@ -1,10 +1,3 @@
-// page load event listener
-document.addEventListener('DOMContentLoaded', function() {
-    initConfigVars();
-});
-
-
-
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     enableAllInputs();
@@ -56,6 +49,8 @@ document.addEventListener('click', function(e) {
     // open modals when modal button for a row is clicked
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
+
+        console.log('Opening modal:', modalId);
 
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
