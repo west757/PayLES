@@ -28,10 +28,22 @@ from app.calculations import (
 # build paydf
 # =========================
 
-def build_paydf(PAYDF_TEMPLATE, les_text):
-    initial_month = les_text[8][3]
-    session['initial_month'] = initial_month
-    core_dict = {}
+def build_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, les_text):
+    MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
+
+    try:
+        initial_month = les_text[8][3]
+        if initial_month not in MONTHS_SHORT:
+            raise ValueError(f"Error: les_text[8][3], '{initial_month}', is not in MONTHS_SHORT")
+    except Exception as e:
+        raise Exception(f"Error determining initial month: {e}")
+
+
+
+    #session['initial_month'] = initial_month
+    #core_dict = {}
+
+    
 
     core_dict = add_variables(core_dict, les_text)
     core_dict = add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text)
@@ -45,6 +57,21 @@ def build_paydf(PAYDF_TEMPLATE, les_text):
     paydf = pd.DataFrame(core_list, columns=["header", initial_month])
 
     return paydf
+
+
+def populate_metadata(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, header):
+    meta = {}
+
+    paydf_row = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+    if not paydf_row.empty:
+        for col in paydf_row.columns:
+            meta[col] = paydf_row.iloc[0][col]
+
+    var_row = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['header'] == header]
+    if not var_row.empty:
+        for col in var_row.columns:
+            meta[col] = var_row.iloc[0][col]
+    return meta
 
 
 def add_variables(core_dict, les_text):

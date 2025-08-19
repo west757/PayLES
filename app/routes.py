@@ -54,7 +54,7 @@ def submit_les():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        paydf = build_paydf(PAYDF_TEMPLATE, les_text)
+        paydf = build_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, les_text)
         paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
