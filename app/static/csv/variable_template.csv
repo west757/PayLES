@@ -1,27 +1,27 @@
-﻿header,varname,type,editable,field,modal
-Year,year,v,False,none,basepay
-Months in Service,months_in_service,v,False,none,basepay
-Grade,grade,v,True,select,basepay
-Zip Code,zip_code,v,True,string,bah
-Military Housing Area,military_housing_area,v,False,none,bah
-Home of Record,home_of_record,v,True,select,bah
-Dependents,dependents,v,True,integer,bah
-Federal Filing Status,federal_filing_status,v,True,select,federaltaxes
-State Filing Status,state_filing_status,v,True,select,statetaxes
-SGLI Coverage,sgli_coverage,v,True,select,sgli
-Combat Zone,combat_zone,v,True,select,combatzone
-TSP YTD Deductions,tsp_ytd_deductions,v,False,none,tsp
-Trad TSP Base Rate,trad_tsp_base_rate,t,True,integer,basepay
-Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,True,integer,specialty
-Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,True,integer,incentive
-Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,True,integer,bonus
-Roth TSP Base Rate,roth_tsp_base_rate,t,True,integer,basepay
-Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,True,integer,specialty
-Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,True,integer,incentive
-Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,True,integer,bonus
-Taxable Income,taxable_income,c,False,none,taxedincome
-Non-Taxable Income,non-taxable_income,c,False,none,taxedincome
-Total Taxes,total_taxes,c,False,none,taxedincome
-Gross Pay,gross_pay,c,False,none,grossnetpay
-Net Pay,net_pay,c,False,none,grossnetpay
-Difference,difference,c,False,none,grossnetpay
+﻿header,varname,type,dtype,tax,editable,field,modal
+Year,year,v,int,False,False,none,basepay
+Months in Service,months_in_service,v,int,False,False,none,basepay
+Grade,grade,v,string,False,True,select,basepay
+Zip Code,zip_code,v,string,False,True,string,bah
+Military Housing Area,military_housing_area,v,string,False,False,none,bah
+Home of Record,home_of_record,v,string,False,True,select,bah
+Dependents,dependents,v,int,False,True,integer,bah
+Federal Filing Status,federal_filing_status,v,string,False,True,select,federaltaxes
+State Filing Status,state_filing_status,v,string,False,True,select,statetaxes
+SGLI Coverage,sgli_coverage,v,string,False,True,select,sgli
+Combat Zone,combat_zone,v,string,False,True,select,combatzone
+TSP YTD Deductions,tsp_ytd_deductions,v,decimal,False,False,none,tsp
+Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,integer,basepay
+Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,integer,specialty
+Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,integer,incentive
+Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,int,False,True,integer,bonus
+Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,integer,basepay
+Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,integer,specialty
+Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,integer,incentive
+Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,integer,bonus
+Taxable Income,taxable_income,c,decimal,False,False,none,taxedincome
+Non-Taxable Income,non-taxable_income,c,decimal,False,False,none,taxedincome
+Total Taxes,total_taxes,c,decimal,False,False,none,taxedincome
+Gross Pay,gross_pay,c,decimal,False,False,none,grossnetpay
+Net Pay,net_pay,c,decimal,False,False,none,grossnetpay
+Difference,difference,c,decimal,False,False,none,grossnetpay

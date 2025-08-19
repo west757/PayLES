@@ -55,6 +55,17 @@ class Config:
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
     
+    PAYDF_STRUCTURE = {
+        'header': ...,
+        'varname': ...,
+        'type': ...,
+        'dtype': ...,
+        'tax': ...,
+        'editable': ...,
+        'field': ...,
+        'modal': ...,
+    }
+    
 
     #load static files
     dtype_bah = {'mha': str}
