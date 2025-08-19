@@ -82,7 +82,7 @@ function highlight_changes() {
 function show_all_variables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('variable-row');
+    var rows = document.getElementsByClassName('var-row');
     for (var i = 0; i < rows.length; i++) {
         rows[i].style.display = checked ? 'table-row' : 'none';
     }

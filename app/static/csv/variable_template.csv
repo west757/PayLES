@@ -1,4 +1,4 @@
-﻿header,varname,type,option,field,modal
+﻿header,varname,type,editable,field,modal
 Year,year,v,False,none,basepay
 Months in Service,months_in_service,v,False,none,basepay
 Grade,grade,v,True,select,basepay

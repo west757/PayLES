@@ -65,6 +65,14 @@ document.addEventListener('click', function(e) {
         }
     }
 
+
+    if (e.target.classList.contains('edit-cell-button')) {
+        const rowHeader = e.target.getAttribute('data-row');
+        const colName = e.target.getAttribute('data-col');
+        console.log('Row header:', rowHeader, 'Column name:', colName);
+    }
+
+
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
         exportPaydf();
