@@ -398,7 +398,7 @@ input.input-checkbox {
    content div
    ========================= */
 
-#home, #les-container, #about, #faq, #resources {
+#home, #remarks, #about, #faq, #resources {
     margin: 0 auto 3rem auto;
     max-width: 60%;
     min-width: 70rem;
@@ -465,11 +465,47 @@ input[type=file] {
    content
    ========================= */
 
+#paydf-settings {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin: 1rem;
+}
+
+#paydf {
+    display: block;
+    margin: 1rem;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+#settings-container {
+    width: 14rem;
+    min-width: 14rem;
+    max-width: 14rem;
+    position: relative;
+    flex-shrink: 0;
+    margin: 1rem;
+}
+
+#settings {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
 #les-image {
     border: 1px solid var(--table_border_color);
     line-height: 0;
-    margin: 1rem;
+    margin: 1rem auto 1rem auto;
     position: relative;
+    width: fit-content;
+}
+
+.h2-center {
+    text-align: center;
 }
 
 
@@ -824,37 +860,4 @@ input[type=file] {
     background-color: var(--highlight_green_color);
 }
 
-/* =========================
-   paydf-settings, paydf, settings layout
-   ========================= */
 
-#paydf-settings {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    margin: 1rem;
-}
-
-#paydf {
-    display: block;
-    margin: 1rem;
-    min-width: 0;
-    overflow-x: auto;
-}
-
-#settings-container {
-    width: 14rem;
-    min-width: 14rem;
-    max-width: 14rem;
-    position: relative;
-    flex-shrink: 0;
-    margin: 1rem;
-}
-
-#settings {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-}
