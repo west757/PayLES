@@ -36,7 +36,7 @@
                         <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mental-health-resources') }}">Mental Health Resources</a></li>
                     </ul>
                 </li>
-                <li class="nav-top"><a href="{{ url_for('leave_calculator') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="{{ url_for('levdf') }}">Leave Calculator</a></li>
                 <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
             </ul>
         </nav>
@@ -57,18 +57,7 @@
 
     <div id="toast-container"></div>
 
-    <!-- send config data to main.js -->
-    <div id="config-data"
-        data-default-months-display="{{ config.DEFAULT_MONTHS_DISPLAY }}"
-        data-max-custom-rows="{{ config.MAX_CUSTOM_ROWS }}"
-        data-reserved-headers='{{ config.RESERVED_HEADERS|tojson|safe }}'
-        data-trad-tsp-rate-max="{{ config.TRAD_TSP_RATE_MAX }}"
-        data-roth-tsp-rate-max="{{ config.ROTH_TSP_RATE_MAX }}">
-    </div>
-
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/customRows.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/updatePaydf.js') }}"></script>
 </body>
 </html>

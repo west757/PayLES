@@ -4,23 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// htmx after swap event listener
-document.body.addEventListener('htmx:afterSwap', function(evt) {
-    enableAllInputs();
-
-    if (document.getElementById('paydf-group')) {
-        stripeTable('options-table');
-        stripeTable('settings-table');
-        updateTspRateFields();
-        validateTspRateMonths();
-    }
-
-    if (document.getElementById('paydf-table')) {
-        stripeTable('paydf-table');
-    }
-
-});
-
 
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
@@ -82,11 +65,6 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    if (e.target && e.target.id === 'update-les-button') {
-        e.preventDefault();
-        updatePaydf();
-    }
-
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
         exportPaydf();
@@ -98,7 +76,6 @@ document.addEventListener('click', function(e) {
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-display-dropdown') {
         e.preventDefault();
-        updatePaydf();
     }
 
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
@@ -111,40 +88,6 @@ document.addEventListener('change', function(e) {
 
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
         show_tsp_options();
-    }
-
-    if (e.target && (e.target.id === 'trad_tsp_base_rate_m' || e.target.id === 'roth_tsp_base_rate_m')) {
-        validateTspRateMonths();
-    }
-});
-
-
-// input event listeners
-document.addEventListener('input', function(e) {
-    // restrict zip_code_f input
-    if (e.target.id === "zip_code_f") {
-        let val = e.target.value.replace(/\D/g, '');
-        e.target.value = val;
-    }
-
-    // restrict dependents_f input
-    if (e.target.id === "dependents_f") {
-        let val = e.target.value.replace(/\D/g, '');
-        if (val.length > 1) val = val.slice(0, 1);
-        e.target.value = val;
-    }
-
-    // restrict tsp rate input
-    if (e.target.classList.contains('tsp-rate-input')) {
-        updateTspRateFields();
-
-        let val = e.target.value.replace(/\D/g, '');
-        if (val.length > 3) val = val.slice(0, 3); 
-        e.target.value = val;
-    }
-
-    if (e.target.id === 'trad_tsp_base_rate_f' || e.target.id === 'roth_tsp_base_rate_f') {
-        validateTspRateMonths();
     }
 });
 
@@ -185,10 +128,42 @@ document.addEventListener('beforeinput', function(e) {
 });
 
 
-// attach home form listener
-window.attachHomeFormListener = function() {
-    const homeForm = document.getElementById('home-form');
-    homeForm.addEventListener('submit', function(e) {
-        disableAllInputs();
-    });
-};
+
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    // Only run if the swapped content is #content (from content.html)
+    if (evt.target && evt.target.id === 'content') {
+        const paydf = document.getElementById('paydf');
+        const settingsContainer = document.getElementById('settings-container');
+        const settings = document.getElementById('settings');
+
+        if (!paydf || !settingsContainer || !settings) return;
+
+        // Set settings-container height to match paydf
+        function syncHeight() {
+            settingsContainer.style.height = paydf.offsetHeight + 'px';
+        }
+        syncHeight();
+        window.addEventListener('resize', syncHeight);
+
+        // Smart sticky logic
+        window.addEventListener('scroll', function() {
+            const containerRect = settingsContainer.getBoundingClientRect();
+            const settingsHeight = settings.offsetHeight;
+
+            if (containerRect.top > 2 * 16) { // 2rem = 32px
+                // At the top: stick to top of container
+                settings.style.position = 'absolute';
+                settings.style.top = '0px';
+            } else if (containerRect.bottom < settingsHeight + 2 * 16) {
+                // At the bottom: stick to bottom of container
+                settings.style.position = 'absolute';
+                settings.style.top = (containerRect.height - settingsHeight) + 'px';
+            } else {
+                // In between: fixed to top of viewport with 2rem buffer
+                settings.style.position = 'fixed';
+                settings.style.top = '2rem';
+            }
+        });
+    }
+});

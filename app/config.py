@@ -15,7 +15,7 @@ class Config:
     WTF_CSRD_ENABLED = True
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #16MB
     ALLOWED_EXTENSIONS = {'pdf'}
-    VERSION = "Version 0.1.0 2025-08-11"
+    VERSION = "Version 0.1.0 2025-08-18"
 
 
     #folders
@@ -149,10 +149,3 @@ class Config:
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
     EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
-
-
-#create reserved headers list
-Config.RESERVED_HEADERS = list(set(
-    list(Config.VARIABLE_TEMPLATE['header'].tolist()) +
-    list(Config.PAYDF_TEMPLATE['header'].tolist())
-))

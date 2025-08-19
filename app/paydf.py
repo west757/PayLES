@@ -1,7 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
 from flask import session
-import io
 import pandas as pd
 import re
 
@@ -30,7 +29,6 @@ from app.calculations import (
 # =========================
 
 def build_paydf(PAYDF_TEMPLATE, les_text):
-    remove_custom_template_rows(PAYDF_TEMPLATE)
     initial_month = les_text[8][3]
     session['initial_month'] = initial_month
     core_dict = {}
@@ -242,7 +240,7 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
 # expand paydf
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form, custom_rows=None):
+def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = paydf.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
@@ -255,9 +253,9 @@ def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form,
         next_col_dict = {}
 
         update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
+        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=i)
         next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows, col_index=i)
+        update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=i)
         next_col_dict["TSP YTD Deductions"] = calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict)
         next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
         next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
@@ -328,7 +326,7 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
     return next_col_dict
 
 
-def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
+def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=1):
     all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
     ent_rows = [header for header in all_ent_rows if header in paydf['header'].values]
 
@@ -343,12 +341,12 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, col_index)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index)
 
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, custom_rows=None, col_index=1):
+def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=1):
     all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
     ded_alt_rows = [header for header in all_ded_alt_headers if header in paydf['header'].values]
 
@@ -372,29 +370,15 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_c
             else:
                 next_col_dict["Roth TSP"] = roth
         else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows, col_index)
+            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index)
 
     return next_col_dict
 
 
-def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, custom_rows=None, col_index=1):
+def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index=1):
     if bool(match.iloc[0]['onetime']):
         next_col_dict[header] = Decimal("0.00")
         return next_col_dict
-
-    if bool(match.iloc[0]['custom']) and custom_rows is not None:
-        custom_row = next((row for row in custom_rows if row['header'] == header), None)
-
-        if custom_row:
-            values = custom_row.get('values', [])
-
-            if (col_index - 1) < len(values):
-                next_col_dict[header] = values[col_index - 1]
-            elif values:
-                next_col_dict[header] = values[-1]
-            else:
-                next_col_dict[header] = Decimal("0.00")
-            return next_col_dict
 
     varname = match.iloc[0]['varname']
     form_value = form.get(f"{varname}_f") if form else None
@@ -429,51 +413,3 @@ def calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict):
         prev_ytd = prev_col_dict["TSP YTD Deductions"]
         return prev_ytd + trad + roth
     
-
-# =========================
-# update custom rows
-# =========================
-
-def remove_custom_template_rows(PAYDF_TEMPLATE):
-    PAYDF_TEMPLATE.drop(PAYDF_TEMPLATE[PAYDF_TEMPLATE['custom'] == True].index, inplace=True)
-
-
-def parse_custom_rows(PAYDF_TEMPLATE, form):
-    core_list = session.get('core_list', [])
-
-    #read custom rows and set correct sign for values
-    custom_rows_json = form.get('custom_rows', '[]')
-    custom_rows = pd.read_json(io.StringIO(custom_rows_json)).to_dict(orient='records')
-    for row in custom_rows:
-        sign = row['sign']
-        row['values'] = [Decimal(f"{sign * float(v):.2f}") for v in row['values']]
-
-    #remove custom rows from template and core_list
-    remove_custom_template_rows(PAYDF_TEMPLATE)
-    core_custom_list = [row for row in core_list if not any(row[0] == cr['header'] for cr in custom_rows)]
-
-    #add custom rows to template
-    for row in custom_rows:
-        header = row['header']
-
-        PAYDF_TEMPLATE.loc[len(PAYDF_TEMPLATE)] = {
-            'header': header,
-            'varname': '',
-            'shortname': '',
-            'longname': '',
-            'sign': row['sign'],
-            'required': False,
-            'onetime': False,
-            'tax': row['tax'],
-            'option': False,
-            'custom': True,
-            'modal': ''
-        }
-
-    #add custom rows to core_list inserted above first calculation row
-    insert_idx = len(core_custom_list) - 6
-    for idx, row in enumerate(custom_rows):
-        new_row = [row['header'], Decimal("0.00")]
-        core_custom_list = core_custom_list[:insert_idx + idx] + [new_row] + core_custom_list[insert_idx + idx:]
-
-    return core_custom_list, custom_rows

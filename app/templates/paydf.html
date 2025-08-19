@@ -1,0 +1,145 @@
+{% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+{% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
+
+<!-- paydf table -->
+<table id="paydf-table" class="pos-table">
+    <tbody class="pos-table-section">
+        <tr class="pos-table-header-row">
+            <td class="pos-table-header-cell"></td>
+            {% for col in col_headers[1:] %}
+                <td class="pos-table-header-cell">{{ col }}</td>
+            {% endfor %}
+        </tr>
+
+        <!-- variable rows -->
+        {% for row in VARIABLE_TEMPLATE.itertuples() %}
+            {% if row.type == 'v' %}
+                {% set i = row_headers.index(row.header) %}
+                <tr class="variable-row">
+                    <td class="row-header-cell">
+                        <button class="modal-button" data-modal="{{ row.modal }}">
+                            {{ row.header }}
+                        </button>
+                    </td>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td>
+                            {{ value }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+
+    <!-- tsp rows -->
+    <tbody class="pos-table-section">
+        {% for row in VARIABLE_TEMPLATE.itertuples() %}
+            {% if row.type == 't' %}
+                {% set i = row_headers.index(row.header) %}
+                <tr class="tsp-row">
+                    <td class="row-header-cell">
+                        <button class="modal-button" data-modal="{{ row.modal }}">
+                            {{ row.header }}
+                        </button>
+                    </td>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td>
+                            {{ '{}%'.format(value) }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+
+
+    <!-- ent/ded/alt rows -->
+    <tbody class="pos-table-section">
+        {% for i in range(19, row_headers|length - 6) %}
+            {% set header = row_headers[i] %}
+            {% set row_info = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header] %}
+            {% if row_info.shape[0] > 0 and not row_info.iloc[0]['custom'] %}
+                <tr>
+                    <td class="row-header-cell">
+                        <button class="modal-button" data-modal="{{ row_info.iloc[0]['modal'] }}">
+                            {{ header }}
+                        </button>
+                    </td>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td>
+                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+
+    <!-- calculation rows -->
+    <tbody>
+        {% for row in VARIABLE_TEMPLATE.itertuples() %}
+            {% if row.type == 'c' %}
+                {% set i = row_headers.index(row.header) %}
+                <tr>
+                    <td class="row-header-cell {% if row.header == 'Difference' %} difference-cell{% endif %}">
+                        {% if row.header != "Difference" %}
+                            <button class="modal-button" data-modal="{{ row.modal }}">
+                                {{ row.header }}
+                            </button>
+                        {% else %}
+                            {{ row.header }}
+                        {% endif %}
+                    </td>
+                    {% for x in range(1, paydf.shape[1]) %}
+                        {% set value = paydf.at[i, col_headers[x]] %}
+                        <td>
+                            {{ '${:,.2f}'.format(value).replace('$-','-$') }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% for modal in PAYDF_MODALS %}
+    <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="{{ modal.id }}"></label>
+        <div class="modal-inner">
+            <label class="modal-close" for="{{ modal.id }}"></label>
+            <h2>{{ modal.title }}</h2>
+            <p>{{ modal.content|safe }}</p>
+
+            {% if modal.id == "sgli" %}
+                <table class="modal-table">
+                    <tr>
+                        <td>Coverage Amount</td>
+                        <td>Monthly Premium Rate</td>
+                        <td>TSGLI Premium Rate</td>
+                        <td>Total Monthly Premium Deduction</td>
+                    </tr>
+                    {% for row in config['SGLI_RATES'].itertuples() %}
+                    <tr>
+                        <td>{{ row.coverage }}</td>
+                        <td>{{ '${:,.2f}'.format(row.premium) }}</td>
+                        <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
+                        <td>{{ '${:,.2f}'.format(row.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+            <p>More Resources:</p>
+            <ul>
+                {% for resource in modal.resources %}
+                    <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endfor %}

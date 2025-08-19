@@ -13,12 +13,10 @@ from app.les import (
 from app.paydf import (
     build_paydf,
     expand_paydf,
-    parse_custom_rows,
 )
 from app.forms import (
     HomeForm,
     SettingsForm,
-    build_options_form,
 )
 
 
@@ -61,21 +59,6 @@ def submit_les():
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
-        
-        options_form = build_options_form(
-            PAYDF_TEMPLATE,
-            VARIABLE_TEMPLATE,
-            paydf,
-            col_headers,
-            row_headers,
-            GRADES=flask_app.config['GRADES'],
-            DEPENDENTS_MAX=flask_app.config['DEPENDENTS_MAX'],
-            HOME_OF_RECORDS=flask_app.config['HOME_OF_RECORDS'],
-            ROTH_TSP_RATE_MAX=flask_app.config['ROTH_TSP_RATE_MAX'],
-            SGLI_RATES=flask_app.config['SGLI_RATES'],
-            TAX_FILING_TYPES_DEDUCTIONS=flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'],
-            TRAD_TSP_RATE_MAX=flask_app.config['TRAD_TSP_RATE_MAX'],
-        )
 
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
@@ -88,10 +71,9 @@ def submit_les():
             'row_headers': row_headers,
             'LES_REMARKS': LES_REMARKS,
             'PAYDF_MODALS': PAYDF_MODALS,
-            'options_form': options_form,
             'settings_form': settings_form,
         }
-        return render_template('paydf_group.html', **context)
+        return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
     
@@ -102,18 +84,16 @@ def update_paydf():
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     initial_month = session.get('initial_month', None)
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-
-    core_custom_list, custom_rows = parse_custom_rows(PAYDF_TEMPLATE, request.form)
-
-    paydf = pd.DataFrame(core_custom_list, columns=["header", initial_month])
-    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form=request.form, custom_rows=custom_rows)
+    core_list = session.get('core_list', [])
+    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
+    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form=request.form)
 
     context = {
         'paydf': paydf,
         'col_headers': col_headers,
         'row_headers': row_headers,
     }
-    return render_template('paydf_table.html', **context)
+    return render_template('paydf.html', **context)
 
 
 @flask_app.route('/about')
@@ -133,6 +113,6 @@ def resources():
     return render_template('resources.html', RESOURCES=RESOURCES)
 
 
-@flask_app.route('/leave_calculator')
-def leave_calculator():
-    return render_template('leave_calculator.html')
+@flask_app.route('/levdf')
+def levdf():
+    return render_template('levdf.html')

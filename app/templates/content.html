@@ -1,0 +1,144 @@
+{% set DEFAULT_MONTHS_DISPLAY = config.DEFAULT_MONTHS_DISPLAY %}
+{% set show_all_variables = session.get('show_all_variables', False) %}
+{% set highlight_changes = session.get('highlight_changes', False) %}
+{% set show_all_options = session.get('show_all_options', False) %}
+
+<div id="content" hx-swap-oob="true">
+    <div id="paydf-settings">
+        <div id="paydf">
+            {% include 'paydf.html' %}
+        </div>
+
+        <div id="settings-container">
+            <div id="settings">
+                <table class="pos-table" id="settings-table">
+                    <tbody class="pos-table-section">
+                        <tr class="pos-table-header-row">
+                            <td class="pos-table-header-cell">Settings</td>
+                        </tr>
+
+                        <!-- months display-->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <form id="settings-form">
+                                        {{ settings_form.hidden_tag() }}
+                                        {{ settings_form.months_display.label }}
+                                        {{ settings_form.months_display(class="dropdown", id="months-display-dropdown") }}
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <!-- highlight changes -->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <label for="highlight-changes-checkbox">Highlight Changes:</label>
+                                    <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+                        
+                        <!-- show all variables -->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <label for="show-all-variables-checkbox">Show All Variables:</label>
+                                    <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <!-- show TSP options -->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <label for="show-tsp-options-checkbox">Show TSP Options:</label>
+                                    <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <!-- add custom row-->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <label>Add Custom Row:</label>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <!-- export-->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <select id="export-dropdown" class="dropdown">
+                                        <option value="xlsx" selected>Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                </div>
+                                <div class="settings-row">
+                                    <button id="export-button" class="button button-standard">Export</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    
+
+                    <tbody>
+                        <!-- submit new les-->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <button id="return-home-button" class="button button-standard" onclick="window.location.href='/'">Upload New LES</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="les-container">
+        <div id="les-image">
+            <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
+
+            {% for rect in rect_overlay %}
+            <button
+                type="button"
+                {% if rect.modal != "none" %}
+                    class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable{% endif %}"
+                    data-modal="{{rect.modal}}"
+                {% else %}
+                    class="rect-highlight"
+                {% endif %}
+                style="
+                    left: {{rect.x1}}px;
+                    top: {{rect.y1}}px;
+                    width: {{rect.x2 - rect.x1}}px;
+                    height: {{rect.y2 - rect.y1}}px;"
+                data-tooltip="{{rect.tooltip}}">
+            </button>
+            {% endfor %}
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
+
+        <h2>Common LES Remarks</h2>
+        <div id="remarks" class="shadow">
+            {% for remark in LES_REMARKS %}
+                <div class="remark">
+                    {{ remark.text|safe }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
