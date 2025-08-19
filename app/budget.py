@@ -25,10 +25,10 @@ from app.calculations import (
 )
 
 # =========================
-# build paydf
+# build budget
 # =========================
 
-def build_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, les_text):
+def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
 
     try:
@@ -38,34 +38,25 @@ def build_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     except Exception as e:
         raise Exception(f"Error determining initial month: {e}")
 
+    months = [initial_month]
+
+    budget_core = add_variables(budget_core, les_text)
+    budget_core = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget_core, les_text)
+    budget_core["Taxable Income"], budget_core["Non-Taxable Income"] = calculate_taxable_income(BUDGET_TEMPLATE, budget_core)
+    budget_core["Total Taxes"] = calculate_total_taxes(BUDGET_TEMPLATE, budget_core)
+    budget_core["Gross Pay"], budget_core["Net Pay"] = calculate_gross_net_pay(BUDGET_TEMPLATE, budget_core)
+    budget_core["Difference"] = Decimal("0.00")
+
+    return budget_core
 
 
-    #session['initial_month'] = initial_month
-    #core_dict = {}
-
-    
-
-    core_dict = add_variables(core_dict, les_text)
-    core_dict = add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text)
-    core_dict["Taxable Income"], core_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, core_dict)
-    core_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, core_dict)
-    core_dict["Gross Pay"], core_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, core_dict)
-    core_dict["Difference"] = Decimal("0.00")
-
-    core_list = [[header, core_dict[header]] for header in core_dict]
-    session['core_list'] = core_list
-    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
-
-    return paydf
-
-
-def populate_metadata(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, header):
+def populate_metadata(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, header):
     meta = {}
 
-    paydf_row = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
-    if not paydf_row.empty:
-        for col in paydf_row.columns:
-            meta[col] = paydf_row.iloc[0][col]
+    budget_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
+    if not budget_row.empty:
+        for col in budget_row.columns:
+            meta[col] = budget_row.iloc[0][col]
 
     var_row = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['header'] == header]
     if not var_row.empty:
@@ -74,12 +65,12 @@ def populate_metadata(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, header):
     return meta
 
 
-def add_variables(core_dict, les_text):
+def add_variables(budget_core, les_text):
     try:
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    core_dict["Year"] = year
+    budget_core["Year"] = year
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
@@ -87,32 +78,32 @@ def add_variables(core_dict, les_text):
         months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
-    core_dict["Months in Service"] = months_in_service
+    budget_core["Months in Service"] = months_in_service
 
     try:
         grade = les_text[2][1]
     except Exception:
         grade = "Not Found"
-    core_dict["Grade"] = grade
+    budget_core["Grade"] = grade
 
     try:
         zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
     except Exception:
         zip_code, military_housing_area = "Not Found", "Not Found"
-    core_dict["Zip Code"] = zip_code
-    core_dict['Military Housing Area'] = military_housing_area
+    budget_core["Zip Code"] = zip_code
+    budget_core['Military Housing Area'] = military_housing_area
 
     try:
         home_of_record = validate_home_of_record(les_text[39][1])
     except Exception:
         home_of_record = "Not Found"
-    core_dict["Home of Record"] = home_of_record
+    budget_core["Home of Record"] = home_of_record
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    core_dict["Dependents"] = dependents
+    budget_core["Dependents"] = dependents
 
     try:
         status = les_text[24][1]
@@ -126,7 +117,7 @@ def add_variables(core_dict, les_text):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    core_dict["Federal Filing Status"] = federal_filing_status
+    budget_core["Federal Filing Status"] = federal_filing_status
 
     try:
         status = les_text[42][1]
@@ -138,7 +129,7 @@ def add_variables(core_dict, les_text):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    core_dict["State Filing Status"] = state_filing_status
+    budget_core["State Filing Status"] = state_filing_status
 
     try:
         sgli_coverage = ""
@@ -156,58 +147,58 @@ def add_variables(core_dict, les_text):
             
     except Exception:
         sgli_coverage = "Not Found"
-    core_dict["SGLI Coverage"] = sgli_coverage
+    budget_core["SGLI Coverage"] = sgli_coverage
 
     combat_zone = "No"
-    core_dict["Combat Zone"] = combat_zone
+    budget_core["Combat Zone"] = combat_zone
 
     try:
-        core_dict["TSP YTD Deductions"] = Decimal(str(les_text[78][2]))
+        budget_core["TSP YTD Deductions"] = Decimal(str(les_text[78][2]))
     except Exception:
-        core_dict["TSP YTD Deductions"] = Decimal("0.00")
+        budget_core["TSP YTD Deductions"] = Decimal("0.00")
 
     try:
-        core_dict["Trad TSP Base Rate"] = int(les_text[60][3])
+        budget_core["Trad TSP Base Rate"] = int(les_text[60][3])
     except Exception:
-        core_dict["Trad TSP Base Rate"] = 0
+        budget_core["Trad TSP Base Rate"] = 0
     try:
-        core_dict["Trad TSP Specialty Rate"] = int(les_text[62][3])
+        budget_core["Trad TSP Specialty Rate"] = int(les_text[62][3])
     except Exception:
-        core_dict["Trad TSP Specialty Rate"] = 0
+        budget_core["Trad TSP Specialty Rate"] = 0
     try:
-        core_dict["Trad TSP Incentive Rate"] = int(les_text[64][3])
+        budget_core["Trad TSP Incentive Rate"] = int(les_text[64][3])
     except Exception:
-        core_dict["Trad TSP Incentive Rate"] = 0
+        budget_core["Trad TSP Incentive Rate"] = 0
     try:
-        core_dict["Trad TSP Bonus Rate"] = int(les_text[66][3])
+        budget_core["Trad TSP Bonus Rate"] = int(les_text[66][3])
     except Exception:
-        core_dict["Trad TSP Bonus Rate"] = 0
+        budget_core["Trad TSP Bonus Rate"] = 0
 
     try:
-        core_dict["Roth TSP Base Rate"] = int(les_text[69][3])
+        budget_core["Roth TSP Base Rate"] = int(les_text[69][3])
     except Exception:
-        core_dict["Roth TSP Base Rate"] = 0
+        budget_core["Roth TSP Base Rate"] = 0
     try:
-        core_dict["Roth TSP Specialty Rate"] = int(les_text[71][3])
+        budget_core["Roth TSP Specialty Rate"] = int(les_text[71][3])
     except Exception:
-        core_dict["Roth TSP Specialty Rate"] = 0
+        budget_core["Roth TSP Specialty Rate"] = 0
     try:
-        core_dict["Roth TSP Incentive Rate"] = int(les_text[73][3])
+        budget_core["Roth TSP Incentive Rate"] = int(les_text[73][3])
     except Exception:
-        core_dict["Roth TSP Incentive Rate"] = 0
+        budget_core["Roth TSP Incentive Rate"] = 0
     try:
-        core_dict["Roth TSP Bonus Rate"] = int(les_text[75][3])
+        budget_core["Roth TSP Bonus Rate"] = int(les_text[75][3])
     except Exception:
-        core_dict["Roth TSP Bonus Rate"] = 0
+        budget_core["Roth TSP Bonus Rate"] = 0
 
-    return core_dict
+    return budget_core
 
 
-def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
-    headers = PAYDF_TEMPLATE['header'].values
-    shortnames = PAYDF_TEMPLATE['shortname'].values
-    signs = PAYDF_TEMPLATE['sign'].values
-    requireds = PAYDF_TEMPLATE['required'].values
+def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget_core, les_text):
+    headers = BUDGET_TEMPLATE['header'].values
+    shortnames = BUDGET_TEMPLATE['shortname'].values
+    signs = BUDGET_TEMPLATE['sign'].values
+    requireds = BUDGET_TEMPLATE['required'].values
     ent_sections = [les_text[9]]
     ded_alt_sections = [les_text[10], les_text[11]]
 
@@ -257,22 +248,22 @@ def add_ent_ded_alt_rows(PAYDF_TEMPLATE, core_dict, les_text):
         elif not found:
             continue
 
-        core_dict[header] = value
+        budget_core[header] = value
 
-    return core_dict
+    return budget_core
 
 
 
 # =========================
-# expand paydf
+# expand budget
 # =========================
 
-def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form):
+def expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, months_display, form):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    initial_month = paydf.columns[1]
+    initial_month = budget.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
-    row_headers = paydf['header'].tolist()
-    prev_col_dict = {row_headers[i]: paydf.iloc[i, 1] for i in range(len(row_headers))}
+    row_headers = budget['header'].tolist()
+    prev_col_dict = {row_headers[i]: budget.iloc[i, 1] for i in range(len(row_headers))}
 
     for i in range(1, months_display):
         month_idx = (month_idx + 1) % 12
@@ -280,22 +271,22 @@ def expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form)
         next_col_dict = {}
 
         update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=i)
-        next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(PAYDF_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=i)
+        update_ent_rows(BUDGET_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=i)
+        next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(BUDGET_TEMPLATE, next_col_dict)
+        update_ded_alt_rows(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=i)
         next_col_dict["TSP YTD Deductions"] = calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict)
-        next_col_dict["Total Taxes"] = calculate_total_taxes(PAYDF_TEMPLATE, next_col_dict)
-        next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(PAYDF_TEMPLATE, next_col_dict)
+        next_col_dict["Total Taxes"] = calculate_total_taxes(BUDGET_TEMPLATE, next_col_dict)
+        next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(BUDGET_TEMPLATE, next_col_dict)
         next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
 
         col_list = [next_col_dict.get(header, 0) for header in row_headers]
-        paydf[next_month] = col_list
+        budget[next_month] = col_list
         prev_col_dict = next_col_dict.copy()
 
-    col_headers = paydf.columns.tolist()
-    row_headers = paydf['header'].tolist()
+    col_headers = budget.columns.tolist()
+    row_headers = budget['header'].tolist()
 
-    return paydf, col_headers, row_headers
+    return budget, col_headers, row_headers
 
 
 def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form):
@@ -353,9 +344,9 @@ def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month
     return next_col_dict
 
 
-def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=1):
-    all_ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]['header']
-    ent_rows = [header for header in all_ent_rows if header in paydf['header'].values]
+def update_ent_rows(BUDGET_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=1):
+    all_ent_rows = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == 1]['header']
+    ent_rows = [header for header in all_ent_rows if header in budget['header'].values]
 
     special_calculations = {
         'Base Pay': calculate_base_pay,
@@ -364,7 +355,7 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
     }
 
     for header in ent_rows:
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+        match = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         else:
@@ -373,9 +364,9 @@ def update_ent_rows(PAYDF_TEMPLATE, next_col_dict, prev_col_dict, next_month, fo
     return next_col_dict
 
 
-def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, paydf, col_index=1):
-    all_ded_alt_headers = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == -1]['header']
-    ded_alt_rows = [header for header in all_ded_alt_headers if header in paydf['header'].values]
+def update_ded_alt_rows(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=1):
+    all_ded_alt_headers = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == -1]['header']
+    ded_alt_rows = [header for header in all_ded_alt_headers if header in budget['header'].values]
 
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
@@ -386,12 +377,12 @@ def update_ded_alt_rows(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_c
     }
 
     for header in ded_alt_rows:
-        match = PAYDF_TEMPLATE[PAYDF_TEMPLATE['header'] == header]
+        match = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
 
         if header in special_calculations:
             next_col_dict[header] = special_calculations[header](next_col_dict)
         elif header in ["Traditional TSP", "Roth TSP"]:
-            trad, roth = calculate_trad_roth_tsp(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict)
+            trad, roth = calculate_trad_roth_tsp(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict)
             if header == "Traditional TSP":
                 next_col_dict["Traditional TSP"] = trad
             else:

@@ -55,7 +55,7 @@ class Config:
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
     
-    PAYDF_STRUCTURE = {
+    BUDGET_STRUCTURE = {
         'header': ...,
         'varname': ...,
         'type': ...,
@@ -77,6 +77,21 @@ class Config:
     )
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv",
         dtype=dtype_bah
+    )
+    BUDGET_TEMPLATE = pd.read_csv(CSV_FOLDER / "budget_template.csv",
+        dtype={
+            'header': str,
+            'varname': str,
+            'shortname': str,
+            'longname': str,
+            'sign': int,
+            'required': bool,
+            'onetime': bool,
+            'tax': bool,
+            'option': bool,
+            'custom': bool,
+            'modal': str,
+        }
     )
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
         dtype={
@@ -108,21 +123,6 @@ class Config:
     )
     PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
     PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
-    PAYDF_TEMPLATE = pd.read_csv(CSV_FOLDER / "paydf_template.csv",
-        dtype={
-            'header': str,
-            'varname': str,
-            'shortname': str,
-            'longname': str,
-            'sign': int,
-            'required': bool,
-            'onetime': bool,
-            'tax': bool,
-            'option': bool,
-            'custom': bool,
-            'modal': str,
-        }
-    )
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={
             'coverage': str,
@@ -156,7 +156,7 @@ class Config:
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
     LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
-    PAYDF_MODALS_JSON = JSON_FOLDER / "paydf_modals.json"
+    MODALS_JSON = JSON_FOLDER / "modals.json"
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
     EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"

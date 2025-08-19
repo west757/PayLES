@@ -8,13 +8,13 @@ from app import flask_app
 # calculation functions
 # =========================
 
-def calculate_taxable_income(PAYDF_TEMPLATE, col_dict):
+def calculate_taxable_income(BUDGET_TEMPLATE, col_dict):
     combat_zone = col_dict["Combat Zone"]
     taxable = Decimal("0.00")
     nontaxable = Decimal("0.00")
 
-    ent_rows = PAYDF_TEMPLATE[
-        (PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ent_rows = BUDGET_TEMPLATE[
+        (BUDGET_TEMPLATE['sign'] == 1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
     ]
 
     for _, row in ent_rows.iterrows():
@@ -33,24 +33,24 @@ def calculate_taxable_income(PAYDF_TEMPLATE, col_dict):
     return round(taxable, 2), round(nontaxable, 2)
 
 
-def calculate_total_taxes(PAYDF_TEMPLATE, col_dict):
-    ded_alt_tax_rows = PAYDF_TEMPLATE[
-        (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['tax']) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+def calculate_total_taxes(BUDGET_TEMPLATE, col_dict):
+    ded_alt_tax_rows = BUDGET_TEMPLATE[
+        (BUDGET_TEMPLATE['sign'] == -1) & (BUDGET_TEMPLATE['tax']) & (BUDGET_TEMPLATE['header'].isin(col_dict))
     ]
     headers = ded_alt_tax_rows['header'].tolist()
     total = sum([col_dict[h] for h in headers])
     return round(total, 2)
 
 
-def calculate_gross_net_pay(PAYDF_TEMPLATE, col_dict):
-    ent_rows = PAYDF_TEMPLATE[
-        (PAYDF_TEMPLATE['sign'] == 1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+def calculate_gross_net_pay(BUDGET_TEMPLATE, col_dict):
+    ent_rows = BUDGET_TEMPLATE[
+        (BUDGET_TEMPLATE['sign'] == 1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
     ]
     ent_headers = ent_rows['header'].tolist()
     gross_pay = sum([col_dict[h] for h in ent_headers])
 
-    ded_rows = PAYDF_TEMPLATE[
-        (PAYDF_TEMPLATE['sign'] == -1) & (PAYDF_TEMPLATE['header'].isin(col_dict))
+    ded_rows = BUDGET_TEMPLATE[
+        (BUDGET_TEMPLATE['sign'] == -1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
     ]
     ded_headers = ded_rows['header'].tolist()
     net_pay = gross_pay + sum([col_dict[h] for h in ded_headers])
@@ -201,12 +201,12 @@ def calculate_state_taxes(col_dict):
     return -round(Decimal(tax), 2)
 
 
-def calculate_trad_roth_tsp(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, col_dict):
+def calculate_trad_roth_tsp(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, col_dict):
     tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
     trad_total = Decimal("0.00")
     roth_total = Decimal("0.00")
 
-    ent_rows = PAYDF_TEMPLATE[PAYDF_TEMPLATE['sign'] == 1]
+    ent_rows = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == 1]
     specialty_rows = ent_rows[ent_rows['modal'] == 'specialty']['header'].tolist()
     incentive_rows = ent_rows[ent_rows['modal'] == 'incentive']['header'].tolist()
     bonus_rows = ent_rows[ent_rows['modal'] == 'bonus']['header'].tolist()

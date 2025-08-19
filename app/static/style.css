@@ -481,7 +481,7 @@ input[type=file] {
    content
    ========================= */
 
-#paydf-settings {
+#budget-settings {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -490,7 +490,7 @@ input[type=file] {
     margin: 1rem;
 }
 
-#paydf {
+#budget {
     display: block;
     margin: 1rem;
     min-width: 0;
@@ -526,10 +526,10 @@ input[type=file] {
 
 
 /* =========================
-   button and paydf table
+   button and budget table
    ========================= */
 
-#paydf-table {
+#budget-table {
     margin-left: 0;
     overflow: visible !important;
     display: table;
@@ -537,7 +537,7 @@ input[type=file] {
     min-width: 0;
 }
 
-#paydf-table.highlight-mode .paydf-highlight {
+#budget-table.highlight-mode .budget-highlight {
     background-color: var(--highlight_yellow_color);
 }
 
@@ -690,7 +690,7 @@ input[type=file] {
 
 
 /* =========================
-   paydf modals
+   modals
    ========================= */
 
 .modal {

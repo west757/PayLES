@@ -70,7 +70,7 @@ document.addEventListener('click', function(e) {
 
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
-        exportPaydf();
+        exportbudget();
     }
 });
 
@@ -136,15 +136,15 @@ document.addEventListener('beforeinput', function(e) {
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     // Only run if the swapped content is #content (from content.html)
     if (evt.target && evt.target.id === 'content') {
-        const paydf = document.getElementById('paydf');
+        const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
         const settings = document.getElementById('settings');
 
-        if (!paydf || !settingsContainer || !settings) return;
+        if (!budget || !settingsContainer || !settings) return;
 
-        // Set settings-container height to match paydf
+        // Set settings-container height to match budget
         function syncHeight() {
-            settingsContainer.style.height = paydf.offsetHeight + 'px';
+            settingsContainer.style.height = budget.offsetHeight + 'px';
         }
         syncHeight();
         window.addEventListener('resize', syncHeight);

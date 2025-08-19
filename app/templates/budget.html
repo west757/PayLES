@@ -1,8 +1,8 @@
-{% set PAYDF_TEMPLATE = config.PAYDF_TEMPLATE %}
+{% set BUDGET_TEMPLATE = config.BUDGET_TEMPLATE %}
 {% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
-<!-- paydf table -->
-<table id="paydf-table" class="pos-table">
+<!-- budget table -->
+<table id="budget-table" class="pos-table">
     <tbody>
         <tr class="pos-table-header-row">
             <td class="pos-table-header-cell"></td>
@@ -11,7 +11,7 @@
             {% endfor %}
         </tr>
 
-        {% for row in paydf %}
+        {% for row in budget %}
             {% set row_class = "" %}
 
             {% if row.header in VARIABLE_TEMPLATE %}
@@ -30,7 +30,7 @@
                 </td>
                 {% for col in col_headers[1:] %}
                     <td>
-                        {% if row.header in PAYDF_TEMPLATE or (row.header in VARIABLE_TEMPLATE and VARIABLE_TEMPLATE[row.header]['editable']) %}
+                        {% if row.header in BUDGET_TEMPLATE or (row.header in VARIABLE_TEMPLATE and VARIABLE_TEMPLATE[row.header]['editable']) %}
                             <button class="edit-cell-btn" data-row="{{ row.header }}" data-col="{{ col.name }}">
                                 {{ row[col] }}
                             </button>
@@ -46,7 +46,7 @@
 </table>
 
 
-{% for modal in PAYDF_MODALS %}
+{% for modal in MODALS %}
     <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
     <div class="modal">
         <label class="modal-background" for="{{ modal.id }}"></label>
