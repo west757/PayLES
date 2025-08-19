@@ -47,7 +47,7 @@ function highlight_changes() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     var checkbox = document.getElementById('highlight-changes-checkbox');
     var checked = checkbox.checked;
-    var table = document.getElementById('paydf-table');
+    var table = document.getElementById('budget-table');
     var rows = table.getElementsByTagName('tr');
 
     for (var i = 1; i < rows.length; i++) {
@@ -105,13 +105,13 @@ function show_tsp_options() {
 }
 
 
-// export paydf
-function exportPaydf() {
-    var table = document.getElementById('paydf-table');
+// export budget
+function exportBudget() {
+    var table = document.getElementById('budget-table');
     var filetype = document.getElementById('export-dropdown').value;
     var filename = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
 
-    var workbook = XLSX.utils.table_to_book(table, {sheet: "PayDF", raw: true});
+    var workbook = XLSX.utils.table_to_book(table, {sheet: "Budget", raw: true});
     if (filetype === 'csv') {
         XLSX.writeFile(workbook, filename, {bookType: 'csv'});
     } else {

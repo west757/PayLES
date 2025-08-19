@@ -10,9 +10,9 @@ from app.les import (
     validate_les, 
     process_les,
 )
-from app.paydf import (
-    build_paydf,
-    expand_paydf,
+from app.budget import (
+    build_budget,
+    expand_budget,
 )
 from app.forms import (
     HomeForm,
@@ -28,7 +28,7 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
 
     home_form = HomeForm()
@@ -54,25 +54,25 @@ def submit_les():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        paydf = build_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
+        budget = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
+        budget, col_headers, row_headers = expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
-        PAYDF_MODALS = load_json(flask_app.config['PAYDF_MODALS_JSON'])
+        MODALS = load_json(flask_app.config['MODALS_JSON'])
 
         settings_form = SettingsForm()
         settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 
-        paydf_rows = paydf.to_dict(orient='records')
+        budget_rows = budget.to_dict(orient='records')
 
         context = {
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'paydf': paydf_rows,
+            'budget': budget_rows,
             'col_headers': col_headers,
             'row_headers': row_headers,
             'LES_REMARKS': LES_REMARKS,
-            'PAYDF_MODALS': PAYDF_MODALS,
+            'MODALS': MODALS,
             'settings_form': settings_form,
         }
         return render_template('content.html', **context)
@@ -80,22 +80,22 @@ def submit_les():
         return jsonify({'message': message}), 400
     
 
-@flask_app.route('/update_paydf', methods=['POST'])
-def update_paydf():
-    PAYDF_TEMPLATE = flask_app.config['PAYDF_TEMPLATE']
+@flask_app.route('/update_budget', methods=['POST'])
+def update_budget():
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     initial_month = session.get('initial_month', None)
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
     core_list = session.get('core_list', [])
-    paydf = pd.DataFrame(core_list, columns=["header", initial_month])
-    paydf, col_headers, row_headers = expand_paydf(PAYDF_TEMPLATE, VARIABLE_TEMPLATE, paydf, months_display, form=request.form)
+    budget = pd.DataFrame(core_list, columns=["header", initial_month])
+    budget, col_headers, row_headers = expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, months_display, form=request.form)
 
     context = {
-        'paydf': paydf,
+        'budget': budget,
         'col_headers': col_headers,
         'row_headers': row_headers,
     }
-    return render_template('paydf.html', **context)
+    return render_template('budget.html', **context)
 
 
 @flask_app.route('/about')
