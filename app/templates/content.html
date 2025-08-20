@@ -21,9 +21,11 @@
                         <tr>
                             <td>
                                 <div class="settings-row">
-                                    <form id="settings-form">
-                                        
-                                    </form>
+                                    <select id="month-display-dropdown" class="dropdown" name="months_display">
+                                        {% for x in range(2, 13) %}
+                                            <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </td>
                         </tr>
