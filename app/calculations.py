@@ -8,54 +8,87 @@ from app import flask_app
 # calculation functions
 # =========================
 
-def calculate_taxable_income(BUDGET_TEMPLATE, col_dict):
-    combat_zone = col_dict["Combat Zone"]
+def calculate_taxable_income(budget, month, init=False):
     taxable = Decimal("0.00")
     nontaxable = Decimal("0.00")
 
-    ent_rows = BUDGET_TEMPLATE[
-        (BUDGET_TEMPLATE['sign'] == 1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
-    ]
+    # Find Combat Zone value
+    combat_zone_row = next((row for row in budget if row['header'] == "Combat Zone"), None)
+    combat_zone = combat_zone_row[month] if combat_zone_row and month in combat_zone_row else "No"
 
-    for _, row in ent_rows.iterrows():
-        header = row['header']
-        tax = row['tax']
-        value = col_dict[header]
+    for row in budget:
+        if row.get('type') == 'e' and month in row:
+            value = row[month]
+            tax = row.get('tax', False)
 
-        if combat_zone == "Yes":
-            nontaxable += value
-        else:
-            if tax:
-                taxable += value
-            else:
+            if combat_zone == "Yes":
                 nontaxable += value
+            else:
+                if tax:
+                    taxable += value
+                else:
+                    nontaxable += value
 
-    return round(taxable, 2), round(nontaxable, 2)
+    taxable = round(taxable, 2)
+    nontaxable = round(nontaxable, 2)
+
+    if init:
+        budget.append({'header': 'Taxable Income', month: taxable})
+        budget.append({'header': 'Non-Taxable Income', month: nontaxable})
+    else:
+        for row in budget:
+            if row['header'] == 'Taxable Income':
+                row[month] = taxable
+            elif row['header'] == 'Non-Taxable Income':
+                row[month] = nontaxable
+
+    return budget
 
 
-def calculate_total_taxes(BUDGET_TEMPLATE, col_dict):
-    ded_alt_tax_rows = BUDGET_TEMPLATE[
-        (BUDGET_TEMPLATE['sign'] == -1) & (BUDGET_TEMPLATE['tax']) & (BUDGET_TEMPLATE['header'].isin(col_dict))
-    ]
-    headers = ded_alt_tax_rows['header'].tolist()
-    total = sum([col_dict[h] for h in headers])
-    return round(total, 2)
+def calculate_total_taxes(budget, month, init=False):
+    total_taxes = Decimal("0.00")
+
+    for row in budget:
+        if row.get('type') in ('d', 'a') and row.get('tax', False) and month in row:
+            total_taxes += row[month]
+
+    total_taxes = round(total_taxes, 2)
+
+    if init:
+        budget.append({'header': 'Total Taxes', month: total_taxes})
+    else:
+        for row in budget:
+            if row['header'] == 'Total Taxes':
+                row[month] = total_taxes
+
+    return budget
 
 
-def calculate_gross_net_pay(BUDGET_TEMPLATE, col_dict):
-    ent_rows = BUDGET_TEMPLATE[
-        (BUDGET_TEMPLATE['sign'] == 1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
-    ]
-    ent_headers = ent_rows['header'].tolist()
-    gross_pay = sum([col_dict[h] for h in ent_headers])
+def calculate_gross_net_pay(budget, month, init=False):
+    gross_pay = Decimal("0.00")
+    for row in budget:
+        if row.get('type') == 'e' and month in row:
+            gross_pay += row[month]
 
-    ded_rows = BUDGET_TEMPLATE[
-        (BUDGET_TEMPLATE['sign'] == -1) & (BUDGET_TEMPLATE['header'].isin(col_dict))
-    ]
-    ded_headers = ded_rows['header'].tolist()
-    net_pay = gross_pay + sum([col_dict[h] for h in ded_headers])
+    net_pay = gross_pay
+    for row in budget:
+        if row.get('type') in ('d', 'a') and month in row:
+            net_pay += row[month]
 
-    return round(gross_pay, 2), round(net_pay, 2)
+    gross_pay = round(gross_pay, 2)
+    net_pay = round(net_pay, 2)
+
+    if init:
+        budget.append({'header': 'Gross Pay', month: gross_pay})
+        budget.append({'header': 'Net Pay', month: net_pay})
+    else:
+        for row in budget:
+            if row['header'] == 'Gross Pay':
+                row[month] = gross_pay
+            elif row['header'] == 'Net Pay':
+                row[month] = net_pay
+
+    return budget
 
 
 
