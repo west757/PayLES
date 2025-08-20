@@ -1,4 +1,4 @@
-from flask import render_template, make_response, jsonify
+from flask import render_template
 from werkzeug.exceptions import RequestEntityTooLarge
 from app import flask_app
 

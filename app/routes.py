@@ -1,5 +1,4 @@
 from flask import request, render_template, session, jsonify
-import pandas as pd
 
 from app import flask_app
 from app.utils import (
@@ -52,30 +51,17 @@ def submit_les():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget_core = build_budget(les_text)
-
-        for row in budget_core:
-            print(row)
-            print("")
-
-        budget, col_headers, row_headers = expand_budget(budget_core, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
+        budget = expand_budget(budget_core, flask_app.config['DEFAULT_MONTHS_DISPLAY'])
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
 
-        settings_form = SettingsForm()
-        settings_form.months_display.data = str(flask_app.config['DEFAULT_MONTHS_DISPLAY'])
-
-        budget_rows = budget.to_dict(orient='records')
-
         context = {
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'budget': budget_rows,
-            'col_headers': col_headers,
-            'row_headers': row_headers,
+            'budget': budget,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
-            'settings_form': settings_form,
         }
         return render_template('content.html', **context)
     else:
@@ -86,16 +72,12 @@ def submit_les():
 def update_budget():
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-    initial_month = session.get('initial_month', None)
+
     months_display = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_DISPLAY']))
-    core_list = session.get('core_list', [])
-    budget = pd.DataFrame(core_list, columns=["header", initial_month])
-    budget, col_headers, row_headers = expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, months_display, form=request.form)
+    budget = expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, months_display, form=request.form)
 
     context = {
         'budget': budget,
-        'col_headers': col_headers,
-        'row_headers': row_headers,
     }
     return render_template('budget.html', **context)
 
