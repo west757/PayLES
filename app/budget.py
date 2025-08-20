@@ -146,39 +146,23 @@ def add_variables(budget_core, les_text, month):
     except Exception:
         budget_core.append(add_row(VARIABLE_TEMPLATE, 'TSP YTD Deductions', Decimal("0.00"), month))
 
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Base Rate', int(les_text[60][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Base Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Specialty Rate', int(les_text[62][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Specialty Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Incentive Rate', int(les_text[64][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Incentive Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Bonus Rate', int(les_text[66][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Bonus Rate', 0, month))
+    tsp_rates = [
+        ("Trad TSP Base Rate", 60),
+        ("Trad TSP Specialty Rate", 62),
+        ("Trad TSP Incentive Rate", 64),
+        ("Trad TSP Bonus Rate", 66),
+        ("Roth TSP Base Rate", 69),
+        ("Roth TSP Specialty Rate", 71),
+        ("Roth TSP Incentive Rate", 73),
+        ("Roth TSP Bonus Rate", 75),
+    ]
 
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Base Rate', int(les_text[69][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Base Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Specialty Rate', int(les_text[71][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Specialty Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Incentive Rate', int(les_text[73][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Incentive Rate', 0, month))
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Bonus Rate', int(les_text[75][3]), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Bonus Rate', 0, month))
+    for rate_name, idx in tsp_rates:
+        try:
+            value = int(les_text[idx][3])
+        except Exception:
+            value = 0
+        budget_core.append(add_row(VARIABLE_TEMPLATE, rate_name, value, month))
 
     return budget_core
 
@@ -186,7 +170,6 @@ def add_variables(budget_core, les_text, month):
 def add_ent_ded_alt_rows(budget_core, les_text, month):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
 
-    print(les_text[9])
     ents = parse_pay_section(les_text[9])
     deds = parse_pay_section(les_text[10])
     alts = parse_pay_section(les_text[11])
@@ -224,7 +207,7 @@ def parse_pay_section(les_text):
 
     while i < len(text_list):
         header_parts = []
-        # Collect header parts, skipping single-character labels
+        # collect header parts, skipping single-character labels
         while i < len(text_list) and not is_number(text_list[i]):
             if len(text_list[i]) == 1 and text_list[i].isalpha():
                 i += 1
