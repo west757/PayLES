@@ -28,9 +28,6 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-
     home_form = HomeForm()
     if not home_form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400
@@ -54,8 +51,13 @@ def submit_les():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        budget, col_headers, row_headers = expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
+        budget_core = build_budget(les_text)
+
+        for row in budget_core:
+            print(row)
+            print("")
+
+        budget, col_headers, row_headers = expand_budget(budget_core, flask_app.config['DEFAULT_MONTHS_DISPLAY'], form={})
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
