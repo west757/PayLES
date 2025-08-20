@@ -42,10 +42,10 @@ def build_budget(les_text):
     budget_core = add_variables(budget_core, les_text, month)
     budget_core = add_ent_ded_alt_rows(budget_core, les_text, month)
 
-    #budget_core["Taxable Income"], budget_core["Non-Taxable Income"] = calculate_taxable_income(BUDGET_TEMPLATE, budget_core)
-    #budget_core["Total Taxes"] = calculate_total_taxes(BUDGET_TEMPLATE, budget_core)
-    #budget_core["Gross Pay"], budget_core["Net Pay"] = calculate_gross_net_pay(BUDGET_TEMPLATE, budget_core)
-    #budget_core["Difference"] = Decimal("0.00")
+    budget_core = calculate_taxable_income(budget_core, month, init=True)
+    budget_core = calculate_total_taxes(budget_core, month, init=True)
+    budget_core = calculate_gross_net_pay(budget_core, month, init=True)
+    budget_core.append({'header': 'Difference', month: Decimal("0.00")})
 
     return budget_core
 
@@ -186,6 +186,7 @@ def add_variables(budget_core, les_text, month):
 def add_ent_ded_alt_rows(budget_core, les_text, month):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
 
+    print(les_text[9])
     ents = parse_pay_section(les_text[9])
     deds = parse_pay_section(les_text[10])
     alts = parse_pay_section(les_text[11])
@@ -213,21 +214,21 @@ def add_ent_ded_alt_rows(budget_core, les_text, month):
     return budget_core
 
 
-
-
 def parse_pay_section(les_text):
     text_list = les_text[3:-1] 
     results = []
     i = 0
 
+    def is_number(s):
+        return bool(re.match(r"^-?\d+(\.\d{1,2})?$", s))
+
     while i < len(text_list):
         header_parts = []
-
-        while (i < len(text_list) and not (len(text_list[i]) == 1 and text_list[i].isalpha()) and not bool(re.match(r"^-?\d+(\.\d{1,2})?$", text_list[i]))):
+        # Collect header parts, skipping single-character labels
+        while i < len(text_list) and not is_number(text_list[i]):
             if len(text_list[i]) == 1 and text_list[i].isalpha():
                 i += 1
                 continue
-
             header_parts.append(text_list[i])
             i += 1
 
@@ -241,11 +242,15 @@ def parse_pay_section(les_text):
             value = Decimal("0.00")
 
         header = " ".join(header_parts)
-        if header != "TOTAL" and header != "":
+        if header.upper() != "TOTAL" and header != "":
             results.append({"header": header, "value": value})
         i += 1
 
     return results
+
+
+def is_number(s):
+    return bool(re.match(r"^-?\d+(\.\d{1,2})?$", s))
 
 
 def add_row(TEMPLATE, header, value, month):
@@ -261,7 +266,6 @@ def add_row(TEMPLATE, header, value, month):
     row.update(metadata)
     row[month] = value
     return row
-
 
 
 # =========================
