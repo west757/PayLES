@@ -6,8 +6,8 @@ navigate to: \Documents\Github\Payles
 run: python -m app.main
 
 todo:
-add in rows from paydf_template
 create levdf (leave calculator)
+add in rows from budget template into budget from settings
 instructions page and overlay on example les
 update pay active and drill pay in config
 add more resources
