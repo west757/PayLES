@@ -249,10 +249,6 @@ def parse_pay_section(les_text):
     return results
 
 
-def is_number(s):
-    return bool(re.match(r"^-?\d+(\.\d{1,2})?$", s))
-
-
 def add_row(TEMPLATE, header, value, month):
     ROW_METADATA = flask_app.config['ROW_METADATA']
     row_data = TEMPLATE[TEMPLATE['header'] == header]
