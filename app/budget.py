@@ -40,7 +40,7 @@ def build_budget(les_text):
 
     budget_core = []
     budget_core = add_variables(budget_core, les_text, month)
-    budget_core = add_ent_ded_alt_rows(budget_core, les_text)
+    budget_core = add_ent_ded_alt_rows(budget_core, les_text, month)
 
     #budget_core["Taxable Income"], budget_core["Non-Taxable Income"] = calculate_taxable_income(BUDGET_TEMPLATE, budget_core)
     #budget_core["Total Taxes"] = calculate_total_taxes(BUDGET_TEMPLATE, budget_core)
@@ -51,11 +51,13 @@ def build_budget(les_text):
 
 
 def add_variables(budget_core, les_text, month):
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+
     try:
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    budget_core.append(add_row('Year', year, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Year', year, month))
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
@@ -63,32 +65,32 @@ def add_variables(budget_core, les_text, month):
         months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
-    budget_core.append(add_row('Months in Service', months_in_service, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', months_in_service, month))
 
     try:
         grade = les_text[2][1]
     except Exception:
         grade = "Not Found"
-    budget_core.append(add_row('Grade', grade, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Grade', grade, month))
 
     try:
         zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
     except Exception:
         zip_code, military_housing_area = "Not Found", "Not Found"
-    budget_core.append(add_row('Zip Code', zip_code, month))
-    budget_core.append(add_row('Military Housing Area', military_housing_area, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', zip_code, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', military_housing_area, month))
 
     try:
         home_of_record = validate_home_of_record(les_text[39][1])
     except Exception:
         home_of_record = "Not Found"
-    budget_core.append(add_row('Home of Record', home_of_record, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', home_of_record, month))
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    budget_core.append(add_row('Dependents', dependents, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Dependents', dependents, month))
 
     try:
         status = les_text[24][1]
@@ -102,7 +104,7 @@ def add_variables(budget_core, les_text, month):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    budget_core.append(add_row('Federal Filing Status', federal_filing_status, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', federal_filing_status, month))
 
     try:
         status = les_text[42][1]
@@ -114,8 +116,10 @@ def add_variables(budget_core, les_text, month):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    budget_core.append(add_row('State Filing Status', state_filing_status, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', state_filing_status, month))
 
+
+    #POSSIBLY SIMPLIFY AND UPDATE AFTER CAPTURING SGLI
     try:
         sgli_coverage = ""
         remarks = les_text[96]
@@ -132,162 +136,129 @@ def add_variables(budget_core, les_text, month):
             
     except Exception:
         sgli_coverage = "Not Found"
-    budget_core.append(add_row('SGLI Coverage', sgli_coverage, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', sgli_coverage, month))
 
     combat_zone = "No"
-    budget_core.append(add_row('Combat Zone', combat_zone, month))
+    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
 
     try:
-        budget_core.append(add_row('TSP YTD Deductions', Decimal(str(les_text[78][2])), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'TSP YTD Deductions', Decimal(str(les_text[78][2])), month))
     except Exception:
-        budget_core.append(add_row('TSP YTD Deductions', Decimal("0.00"), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'TSP YTD Deductions', Decimal("0.00"), month))
 
     try:
-        budget_core.append(add_row('Trad TSP Base Rate', int(les_text[60][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Base Rate', int(les_text[60][3]), month))
     except Exception:
-        budget_core.append(add_row('Trad TSP Base Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Base Rate', 0, month))
     try:
-        budget_core.append(add_row('Trad TSP Specialty Rate', int(les_text[62][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Specialty Rate', int(les_text[62][3]), month))
     except Exception:
-        budget_core.append(add_row('Trad TSP Specialty Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Specialty Rate', 0, month))
     try:
-        budget_core.append(add_row('Trad TSP Incentive Rate', int(les_text[64][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Incentive Rate', int(les_text[64][3]), month))
     except Exception:
-        budget_core.append(add_row('Trad TSP Incentive Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Incentive Rate', 0, month))
     try:
-        budget_core.append(add_row('Trad TSP Bonus Rate', int(les_text[66][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Bonus Rate', int(les_text[66][3]), month))
     except Exception:
-        budget_core.append(add_row('Trad TSP Bonus Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Trad TSP Bonus Rate', 0, month))
 
     try:
-        budget_core.append(add_row('Roth TSP Base Rate', int(les_text[69][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Base Rate', int(les_text[69][3]), month))
     except Exception:
-        budget_core.append(add_row('Roth TSP Base Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Base Rate', 0, month))
     try:
-        budget_core.append(add_row('Roth TSP Specialty Rate', int(les_text[71][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Specialty Rate', int(les_text[71][3]), month))
     except Exception:
-        budget_core.append(add_row('Roth TSP Specialty Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Specialty Rate', 0, month))
     try:
-        budget_core.append(add_row('Roth TSP Incentive Rate', int(les_text[73][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Incentive Rate', int(les_text[73][3]), month))
     except Exception:
-        budget_core.append(add_row('Roth TSP Incentive Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Incentive Rate', 0, month))
     try:
-        budget_core.append(add_row('Roth TSP Bonus Rate', int(les_text[75][3]), month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Bonus Rate', int(les_text[75][3]), month))
     except Exception:
-        budget_core.append(add_row('Roth TSP Bonus Rate', 0, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, 'Roth TSP Bonus Rate', 0, month))
 
     return budget_core
 
 
-def add_ent_ded_alt_rows(budget_core, les_text, month=None):
-    # Parse each section into a list of dicts
-    entitlements = parse_pay_section(les_text[9])
-    deductions = parse_pay_section(les_text[10])
-    allotments = parse_pay_section(les_text[11])
+def add_ent_ded_alt_rows(budget_core, les_text, month):
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
 
-    # Combine all into a single dict: {header: value}
+    ents = parse_pay_section(les_text[9])
+    deds = parse_pay_section(les_text[10])
+    alts = parse_pay_section(les_text[11])
+
+    #combine ents, deds, and alts into a single dictionary and apply sign
     ent_ded_alt_dict = {}
-    for section, sign in zip([entitlements, deductions, allotments], [1, -1, -1]):
+    for section, sign in zip([ents, deds, alts], [1, -1, -1]):
         for item in section:
             ent_ded_alt_dict[item['header'].upper()] = sign * item['value']
 
-    # Get BUDGET_TEMPLATE from config
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-
-    # Loop through all rows in BUDGET_TEMPLATE
     for _, row in BUDGET_TEMPLATE.iterrows():
-        shortname = row['shortname'].upper()
         header = row['header']
-        required = bool(row.get('required', False))  # Use .get in case 'required' is missing
+        required = row['required']
+        lesname = row['lesname']
 
-        # If the shortname is found in ent_ded_alt_dict, use its value
-        if shortname in ent_ded_alt_dict:
-            value = ent_ded_alt_dict[shortname]
-        # If not found but required, set value to 0
+        if lesname in ent_ded_alt_dict:
+            value = ent_ded_alt_dict[lesname]
         elif required:
             value = Decimal("0.00")
-        # If not found and not required, skip this row
         else:
             continue
 
-        # Add the row to budget_core
-        budget_core.append(add_row(header, value, month))
+        budget_core.append(add_row(BUDGET_TEMPLATE, header, value, month))
 
     return budget_core
 
 
 
 
-def parse_pay_section(text_list):
-    # Remove the first three header strings
-    text_list = text_list[3:]
+def parse_pay_section(les_text):
+    text_list = les_text[3:-1] 
     results = []
     i = 0
-    while i < len(text_list):
-        # Ignore single-character entries (e.g., 'A', 'B', etc.)
-        if len(text_list[i]) == 1 and text_list[i].isalpha():
-            i += 1
-            continue
 
-        # Collect header parts until a number is found
+    while i < len(text_list):
         header_parts = []
-        while i < len(text_list) and not is_number(text_list[i]):
-            # Ignore single-character entries in header
+
+        while (i < len(text_list) and not (len(text_list[i]) == 1 and text_list[i].isalpha()) and not bool(re.match(r"^-?\d+(\.\d{1,2})?$", text_list[i]))):
             if len(text_list[i]) == 1 and text_list[i].isalpha():
                 i += 1
                 continue
+
             header_parts.append(text_list[i])
             i += 1
 
-        # If no header found, break
-        if not header_parts:
+        if not header_parts or i >= len(text_list):
             break
 
-        # Get value if present
-        if i < len(text_list) and is_number(text_list[i]):
-            value_str = text_list[i].replace(',', '')
-            try:
-                value = Decimal(value_str)
-            except Exception:
-                value = Decimal("0.00")
-            header = " ".join(header_parts)
-            # Ignore totals or blank headers
-            if header.upper() != "TOTAL" and header != "":
-                results.append({"header": header, "value": value})
-            i += 1
-        else:
-            # If no value found, skip to next
-            i += 1
+        value_str = text_list[i]
+        try:
+            value = Decimal(value_str)
+        except Exception:
+            value = Decimal("0.00")
+
+        header = " ".join(header_parts)
+        if header != "TOTAL" and header != "":
+            results.append({"header": header, "value": value})
+        i += 1
 
     return results
 
-def is_number(s):
-    # Accepts numbers like 320.78, -320.78, 1,234.56, etc.
-    return bool(re.match(r"^-?\d{1,3}(?:,\d{3})*(?:\.\d+)?$", s)) or s.replace('.', '', 1).replace('-', '', 1).isdigit()
 
-
-
-
-def add_row(header, value, month):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+def add_row(TEMPLATE, header, value, month):
     ROW_METADATA = flask_app.config['ROW_METADATA']
-    meta = {}
-    # Try to get metadata from BUDGET_TEMPLATE
-    budget_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
-    if not budget_row.empty:
-        for col in ROW_METADATA:
-            if col in budget_row.columns:
-                meta[col] = budget_row.iloc[0][col]
-    # Try to get metadata from VARIABLE_TEMPLATE
-    var_row = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['header'] == header]
-    if not var_row.empty:
-        for col in ROW_METADATA:
-            if col in var_row.columns:
-                meta[col] = var_row.iloc[0][col]
-    # Build row dict: header and metadata first, then month value
+    row_data = TEMPLATE[TEMPLATE['header'] == header]
+    metadata = {}
+    
+    for col in ROW_METADATA:
+        if col in row_data.columns:
+            metadata[col] = row_data.iloc[0][col]
+
     row = {'header': header}
-    row.update(meta)
+    row.update(metadata)
     row[month] = value
     return row
 
