@@ -141,28 +141,24 @@ def add_variables(budget_core, les_text, month):
     combat_zone = "No"
     budget_core.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
 
-    try:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'TSP YTD Deductions', Decimal(str(les_text[78][2])), month))
-    except Exception:
-        budget_core.append(add_row(VARIABLE_TEMPLATE, 'TSP YTD Deductions', Decimal("0.00"), month))
-
-    tsp_rates = [
-        ("Trad TSP Base Rate", 60),
-        ("Trad TSP Specialty Rate", 62),
-        ("Trad TSP Incentive Rate", 64),
-        ("Trad TSP Bonus Rate", 66),
-        ("Roth TSP Base Rate", 69),
-        ("Roth TSP Specialty Rate", 71),
-        ("Roth TSP Incentive Rate", 73),
-        ("Roth TSP Bonus Rate", 75),
+    tsp_rows = [
+        ("TSP YTD Deductions", 78, 2),
+        ("Trad TSP Base Rate", 60, 3),
+        ("Trad TSP Specialty Rate", 62, 3),
+        ("Trad TSP Incentive Rate", 64, 3),
+        ("Trad TSP Bonus Rate", 66, 3),
+        ("Roth TSP Base Rate", 69, 3),
+        ("Roth TSP Specialty Rate", 71, 3),
+        ("Roth TSP Incentive Rate", 73, 3),
+        ("Roth TSP Bonus Rate", 75, 3),
     ]
 
-    for rate_name, idx in tsp_rates:
+    for header, idx, idx2 in tsp_rows:
         try:
-            value = int(les_text[idx][3])
+            value = int(les_text[idx][idx2])
         except Exception:
             value = 0
-        budget_core.append(add_row(VARIABLE_TEMPLATE, rate_name, value, month))
+        budget_core.append(add_row(VARIABLE_TEMPLATE, header, value, month))
 
     return budget_core
 
@@ -251,14 +247,14 @@ def add_row(TEMPLATE, header, value, month):
 # expand budget
 # =========================
 
-def expand_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, budget, months_display, form):
+def expand_budget(budget, months_num):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     initial_month = budget.columns[1]
     month_idx = MONTHS_SHORT.index(initial_month)
     row_headers = budget['header'].tolist()
     prev_col_dict = {row_headers[i]: budget.iloc[i, 1] for i in range(len(row_headers))}
 
-    for i in range(1, months_display):
+    for i in range(1, months_num):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
         next_col_dict = {}
