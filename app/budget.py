@@ -47,6 +47,9 @@ def build_budget(les_text):
     budget_core = calculate_gross_net_pay(budget_core, month, init=True)
     budget_core.append({'header': 'Difference', month: Decimal("0.00")})
 
+    session['budget_core'] = budget_core
+    session['initial_month'] = month
+
     return budget_core
 
 
@@ -247,35 +250,110 @@ def add_row(TEMPLATE, header, value, month):
 # expand budget
 # =========================
 
-def expand_budget(budget, months_num):
+def expand_budget(months_num, row_header="", col_month="", value=None, repeat=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    initial_month = budget.columns[1]
-    month_idx = MONTHS_SHORT.index(initial_month)
-    row_headers = budget['header'].tolist()
-    prev_col_dict = {row_headers[i]: budget.iloc[i, 1] for i in range(len(row_headers))}
+    budget = session.get('budget_core', [])
+    prev_month = session.get('initial_month', None)
+    month_idx = MONTHS_SHORT.index(prev_month)
 
     for i in range(1, months_num):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
-        next_col_dict = {}
+        last_month = prev_month
 
-        update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form)
-        update_ent_rows(BUDGET_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=i)
-        next_col_dict["Taxable Income"], next_col_dict["Non-Taxable Income"] = calculate_taxable_income(BUDGET_TEMPLATE, next_col_dict)
-        update_ded_alt_rows(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=i)
-        next_col_dict["TSP YTD Deductions"] = calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict)
-        next_col_dict["Total Taxes"] = calculate_total_taxes(BUDGET_TEMPLATE, next_col_dict)
-        next_col_dict["Gross Pay"], next_col_dict["Net Pay"] = calculate_gross_net_pay(BUDGET_TEMPLATE, next_col_dict)
-        next_col_dict["Difference"] = next_col_dict["Net Pay"] - prev_col_dict["Net Pay"]
+        update_variable_rows(budget, last_month, next_month, row_header, col_month, value, repeat)
+        update_entitlement_rows(budget, last_month, next_month, row_header, col_month, value, repeat)
+        budget = calculate_taxable_income(budget, next_month)
+        update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_month, value, repeat)
+        budget = calculate_total_taxes(budget, next_month)
+        budget = calculate_gross_net_pay(budget, next_month)
+        for row in budget:
+            if row['header'] == "Difference":
+                net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
+                prev_net_pay = net_pay_row.get(last_month, Decimal("0.00"))
+                curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
+                row[next_month] = curr_net_pay - prev_net_pay
 
-        col_list = [next_col_dict.get(header, 0) for header in row_headers]
-        budget[next_month] = col_list
-        prev_col_dict = next_col_dict.copy()
+            if row['header'] == "TSP YTD Deductions":
+                trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
+                roth_row = next(r for r in budget if r['header'] == "Roth TSP")
+                row[next_month] = abs(trad_row.get(next_month, Decimal("0.00"))) + abs(roth_row.get(next_month, Decimal("0.00")))
 
-    col_headers = budget.columns.tolist()
-    row_headers = budget['header'].tolist()
+        prev_month = next_month
 
-    return budget, col_headers, row_headers
+    return budget
+
+def update_variable_rows(budget, last_month, next_month, row_header, col_month, value, repeat):
+    for row in budget:
+        if row.get('type') in ('v', 't'):
+
+            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+                row[next_month] = value
+                continue
+
+            prev_value = row.get(last_month)
+            
+            if row['header'] == "Year":
+                if next_month == "JAN":
+                    row[next_month] = prev_value + 1
+                else:
+                    row[next_month] = prev_value
+            elif row['header'] == "Months in Service":
+                row[next_month] = prev_value + 1
+            else:
+                row[next_month] = prev_value
+
+
+def update_entitlement_rows(budget, last_month, next_month, row_header, col_month, value, repeat):
+    special_calculations = {
+        'Base Pay': calculate_base_pay,
+        'BAS': calculate_bas,
+        'BAH': calculate_bah,
+    }
+    for row in budget:
+        if row.get('type') == 'e':
+            # User edit logic
+            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+                row[next_month] = value
+                continue
+            if row['header'] in special_calculations:
+                row[next_month] = special_calculations[row['header']](budget, next_month)
+            else:
+                prev_value = row.get(last_month)
+                row[next_month] = prev_value
+
+def update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_month, value, repeat):
+    special_calculations = {
+        'Federal Taxes': calculate_federal_taxes,
+        'FICA - Social Security': calculate_fica_social_security,
+        'FICA - Medicare': calculate_fica_medicare,
+        'SGLI Rate': calculate_sgli,
+        'State Taxes': calculate_state_taxes,
+    }
+    for row in budget:
+        if row.get('type') in ('d', 'a'):
+            # User edit logic
+            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+                row[next_month] = value
+                continue
+            if row['header'] in special_calculations:
+                row[next_month] = special_calculations[row['header']](budget, next_month)
+            elif row['header'] in ["Traditional TSP", "Roth TSP"]:
+                trad, roth = calculate_trad_roth_tsp(budget, next_month)
+                if row['header'] == "Traditional TSP":
+                    row[next_month] = trad
+                else:
+                    row[next_month] = roth
+            else:
+                prev_value = row.get(last_month)
+                row[next_month] = prev_value
+
+
+
+
+
+
+
 
 
 def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form):

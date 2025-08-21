@@ -10,7 +10,7 @@ Federal Filing Status,federal_filing_status,v,string,False,True,select,federalta
 State Filing Status,state_filing_status,v,string,False,True,select,statetaxes
 SGLI Coverage,sgli_coverage,v,string,False,True,select,sgli
 Combat Zone,combat_zone,v,string,False,True,select,combatzone
-TSP YTD Deductions,tsp_ytd_deductions,v,decimal,False,False,none,tsp
+TSP YTD Deductions,tsp_ytd_deductions,z,decimal,False,False,none,tsp
 Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,integer,basepay
 Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,integer,specialty
 Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,integer,incentive
@@ -19,9 +19,3 @@ Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,integer,basepay
 Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,integer,specialty
 Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,integer,incentive
 Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,integer,bonus
-Taxable Income,taxable_income,c,decimal,False,False,none,taxedincome
-Non-Taxable Income,non-taxable_income,c,decimal,False,False,none,taxedincome
-Total Taxes,total_taxes,c,decimal,False,False,none,taxedincome
-Gross Pay,gross_pay,c,decimal,False,False,none,grossnetpay
-Net Pay,net_pay,c,decimal,False,False,none,grossnetpay
-Difference,difference,c,decimal,False,False,none,grossnetpay
