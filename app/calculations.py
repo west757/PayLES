@@ -96,10 +96,13 @@ def calculate_gross_net_pay(budget, month, init=False):
 # calculate special rows
 # =========================
 
-def calculate_base_pay(col_dict):
+def calculate_base_pay(budget, next_month):
     PAY_ACTIVE = flask_app.config['PAY_ACTIVE']
-    grade = col_dict["Grade"]
-    months_in_service = int(col_dict["Months in Service"])
+    grade_row = next((row for row in budget if row['header'] == "Grade"), None)
+    months_row = next((row for row in budget if row['header'] == "Months in Service"), None)
+    grade = grade_row.get(next_month) if grade_row else "Not Found"
+    months_in_service = int(months_row.get(next_month, 0)) if months_row else 0
+
     pay_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
 
     month_cols = []
@@ -115,11 +118,12 @@ def calculate_base_pay(col_dict):
     return round(Decimal(pay), 2)
 
 
-def calculate_bas(col_dict):
+def calculate_bas(budget, next_month):
     BAS_AMOUNT = flask_app.config['BAS_AMOUNT']
-    grade = col_dict["Grade"]
+    grade_row = next((row for row in budget if row['header'] == "Grade"), None)
+    grade = grade_row.get(next_month) if grade_row else "Not Found"
 
-    if grade.startswith("E"):
+    if str(grade).startswith("E"):
         bas = BAS_AMOUNT[0]
     else:
         bas = BAS_AMOUNT[1]
@@ -127,10 +131,14 @@ def calculate_bas(col_dict):
     return round(Decimal(bas), 2)
 
 
-def calculate_bah(col_dict):
-    grade = col_dict["Grade"]
-    military_housing_area = col_dict["Military Housing Area"]
-    dependents = col_dict["Dependents"]
+def calculate_bah(budget, next_month):
+    grade_row = next((row for row in budget if row['header'] == "Grade"), None)
+    mha_row = next((row for row in budget if row['header'] == "Military Housing Area"), None)
+    dependents_row = next((row for row in budget if row['header'] == "Dependents"), None)
+
+    grade = grade_row.get(next_month) if grade_row else "Not Found"
+    military_housing_area = mha_row.get(next_month) if mha_row else "Not Found"
+    dependents = dependents_row.get(next_month) if dependents_row else 0
 
     if military_housing_area == "Not Found":
         return Decimal("0.00")
@@ -145,20 +153,24 @@ def calculate_bah(col_dict):
     return round(Decimal(str(bah)), 2)
 
 
-def calculate_federal_taxes(col_dict):
+def calculate_federal_taxes(budget, next_month):
     TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
     FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
-    filing_status = col_dict["Federal Filing Status"]
-    taxable_income = col_dict["Taxable Income"] * 12
-    tax = 0
+    filing_status_row = next((row for row in budget if row['header'] == "Federal Filing Status"), None)
+    taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
+
+    filing_status = filing_status_row.get(next_month) if filing_status_row else "Not Found"
+    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
+    taxable_income = Decimal(taxable_income) * 12
+    tax = Decimal("0.00")
 
     if filing_status == "Not Found":
         return Decimal("0.00")
 
     deduction = TAX_FILING_TYPES_DEDUCTIONS[filing_status]
     taxable_income -= deduction
-
     taxable_income = max(taxable_income, 0)
+
     brackets = FEDERAL_TAX_RATES[FEDERAL_TAX_RATES['status'] == filing_status]
     brackets = brackets.sort_values(by='bracket').reset_index(drop=True)
 
@@ -179,34 +191,41 @@ def calculate_federal_taxes(col_dict):
     return -round(Decimal(tax), 2)
 
 
-def calculate_fica_social_security(col_dict):
+def calculate_fica_social_security(budget, next_month):
     FICA_SOCIALSECURITY_TAX_RATE = flask_app.config['FICA_SOCIALSECURITY_TAX_RATE']
-    taxable_income = col_dict["Taxable Income"]
+    taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
+    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
     return round(-Decimal(taxable_income) * FICA_SOCIALSECURITY_TAX_RATE, 2)
 
-
-def calculate_fica_medicare(col_dict):
+def calculate_fica_medicare(budget, next_month):
     FICA_MEDICARE_TAX_RATE = flask_app.config['FICA_MEDICARE_TAX_RATE']
-    taxable_income = col_dict["Taxable Income"]
+    taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
+    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
     return round(-Decimal(taxable_income) * FICA_MEDICARE_TAX_RATE, 2)
 
 
-def calculate_sgli(col_dict):
+def calculate_sgli(budget, next_month):
     SGLI_RATES = flask_app.config['SGLI_RATES']
-    coverage = str(col_dict["SGLI Coverage"])
+    coverage_row = next((row for row in budget if row['header'] == "SGLI Coverage"), None)
+    coverage = str(coverage_row.get(next_month)) if coverage_row and next_month in coverage_row else "0"
     row = SGLI_RATES[SGLI_RATES['coverage'] == coverage]
-    total = row.iloc[0]['total']
+    total = row.iloc[0]['total'] if not row.empty else 0
     return -abs(total)
 
 
-def calculate_state_taxes(col_dict):
+def calculate_state_taxes(budget, next_month):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
-    home_of_record = col_dict["Home of Record"]
-    state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
-    filing_status = col_dict["State Filing Status"]
-    taxable_income = col_dict["Taxable Income"]
+    home_of_record_row = next((row for row in budget if row['header'] == "Home of Record"), None)
+    filing_status_row = next((row for row in budget if row['header'] == "State Filing Status"), None)
+    taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
+
+    home_of_record = home_of_record_row.get(next_month) if home_of_record_row else "Not Found"
+    filing_status = filing_status_row.get(next_month) if filing_status_row else "Single"
+    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
     taxable_income = Decimal(taxable_income) * 12
     tax = Decimal("0.00")
+
+    state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
 
     if filing_status == "Single":
         brackets = state_brackets[['single_bracket', 'single_rate']].rename(columns={'single_bracket': 'bracket', 'single_rate': 'rate'})
@@ -234,29 +253,34 @@ def calculate_state_taxes(col_dict):
     return -round(Decimal(tax), 2)
 
 
-def calculate_trad_roth_tsp(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, col_dict):
+def calculate_trad_roth_tsp(budget, next_month):
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
     trad_total = Decimal("0.00")
     roth_total = Decimal("0.00")
 
-    ent_rows = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == 1]
-    specialty_rows = ent_rows[ent_rows['modal'] == 'specialty']['header'].tolist()
-    incentive_rows = ent_rows[ent_rows['modal'] == 'incentive']['header'].tolist()
-    bonus_rows = ent_rows[ent_rows['modal'] == 'bonus']['header'].tolist()
-    
+    specialty_rows = [row['header'] for row in budget if row.get('modal') == 'specialty' and row.get('sign') == 1]
+    incentive_rows = [row['header'] for row in budget if row.get('modal') == 'incentive' and row.get('sign') == 1]
+    bonus_rows = [row['header'] for row in budget if row.get('modal') == 'bonus' and row.get('sign') == 1]
+
+    # Helper to get value from budget for a header
+    def get_value(header):
+        row = next((r for r in budget if r['header'] == header), None)
+        return Decimal(row.get(next_month, 0)) if row and next_month in row else Decimal("0.00")
+
     for _, tsp_row in tsp_rows.iterrows():
         tsp_var = tsp_row['header']
-        rate = Decimal(str(col_dict[tsp_var]))
+        rate = Decimal(str(get_value(tsp_var)))
 
         if rate > 0:
             if 'Base' in tsp_var:
-                total = Decimal(col_dict['Base Pay'])
+                total = get_value('Base Pay')
             elif 'Specialty' in tsp_var:
-                total = sum(Decimal(col_dict.get(h, 0)) for h in specialty_rows)
+                total = sum(get_value(h) for h in specialty_rows)
             elif 'Incentive' in tsp_var:
-                total = sum(Decimal(col_dict.get(h, 0)) for h in incentive_rows)
+                total = sum(get_value(h) for h in incentive_rows)
             elif 'Bonus' in tsp_var:
-                total = sum(Decimal(col_dict.get(h, 0)) for h in bonus_rows)
+                total = sum(get_value(h) for h in bonus_rows)
             else:
                 total = Decimal("0.00")
 
