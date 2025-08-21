@@ -261,12 +261,12 @@ def expand_budget(months_num, row_header="", col_month="", value=None, repeat=Fa
         next_month = MONTHS_SHORT[month_idx]
         prev_month = prev_month
 
-        update_variable_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        update_entitlement_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        budget = calculate_taxable_income(budget, next_month)
-        update_ded_alt_rows_new(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        budget = calculate_total_taxes(budget, next_month)
-        budget = calculate_gross_net_pay(budget, next_month)
+        update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat)
+        update_ent_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+        calculate_taxable_income(budget, next_month)
+        update_ded_alt_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+        calculate_total_taxes(budget, next_month)
+        calculate_gross_net_pay(budget, next_month)
 
         for row in budget:
             if row['header'] == "TSP YTD Deductions":
@@ -285,11 +285,11 @@ def expand_budget(months_num, row_header="", col_month="", value=None, repeat=Fa
     return budget
 
 
-def update_variable_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat):
     for row in budget:
         if row.get('type') in ('v', 't'):
 
-            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+            if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
                 row[next_month] = value
                 continue
 
@@ -300,13 +300,21 @@ def update_variable_rows(budget, prev_month, next_month, row_header, col_month, 
                     row[next_month] = prev_value + 1
                 else:
                     row[next_month] = prev_value
+
             elif row['header'] == "Months in Service":
                 row[next_month] = prev_value + 1
+
+            elif row['header'] == "Military Housing Area":
+                zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
+                zip_code = zip_row.get(next_month) if zip_row else "Not Found"
+                _, military_housing_area = validate_calculate_zip_mha(zip_code)
+                row[next_month] = military_housing_area
+
             else:
                 row[next_month] = prev_value
 
 
-def update_entitlement_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_ent_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
 
     special_calculations = {
         'Base Pay': calculate_base_pay,
@@ -316,18 +324,19 @@ def update_entitlement_rows(budget, prev_month, next_month, row_header, col_mont
 
     for row in budget:
         if row.get('type') == 'e':
-            # User edit logic
-            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+            if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
                 row[next_month] = value
                 continue
+
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)
+
             else:
                 prev_value = row.get(prev_month)
                 row[next_month] = prev_value
 
 
-def update_ded_alt_rows_new(budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_ded_alt_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
 
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
@@ -339,169 +348,20 @@ def update_ded_alt_rows_new(budget, prev_month, next_month, row_header, col_mont
     
     for row in budget:
         if row.get('type') in ('d', 'a'):
-            # User edit logic
-            if row_header and (next_month == col_month or repeat) and row['header'] == row_header:
+            if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
                 row[next_month] = value
                 continue
+
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)
+
             elif row['header'] in ["Traditional TSP", "Roth TSP"]:
                 trad, roth = calculate_trad_roth_tsp(budget, next_month)
                 if row['header'] == "Traditional TSP":
                     row[next_month] = trad
                 else:
                     row[next_month] = roth
+
             else:
                 prev_value = row.get(prev_month)
                 row[next_month] = prev_value
-
-
-
-
-
-
-
-
-
-def update_variables(VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form):
-    MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    variable_tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'].isin(['v', 't'])]
-
-    for _, row in variable_tsp_rows.iterrows():
-        header = row['header']
-        varname = row['varname']
-        field_f = f"{varname}_f"
-        field_m = f"{varname}_m"
-
-        prev_value = prev_col_dict.get(header)
-        form_value = form.get(field_f) if form else None
-        form_month = form.get(field_m) if form else None
-
-        if header == "Year":
-            if MONTHS_SHORT.index(next_month) == 0:
-                next_col_dict[header] = prev_value + 1
-            else:
-                next_col_dict[header] = prev_value
-
-        elif header == "Months in Service":
-            next_col_dict[header] = prev_value + 1
-
-        elif header == "Military Housing Area":
-            zip_code = next_col_dict.get("Zip Code", "")
-            zip_code, military_housing_area = validate_calculate_zip_mha(zip_code)
-            next_col_dict[header] = military_housing_area
-
-        elif header == "TSP YTD Deductions":
-            next_col_dict[header] = Decimal("0.00")
-
-        else:
-            if form_month == next_month and form_value is not None and str(form_value).strip() != "":
-                try:
-                    if str(form_value).isdigit() and header != "Zip Code":
-                        next_col_dict[header] = int(form_value)
-                    else:
-                        next_col_dict[header] = form_value
-                except Exception:
-                    next_col_dict[header] = prev_value
-            else:
-                next_col_dict[header] = prev_value
-
-    if next_col_dict["Trad TSP Base Rate"] == 0:
-        next_col_dict["Trad TSP Specialty Rate"] = 0
-        next_col_dict["Trad TSP Incentive Rate"] = 0
-        next_col_dict["Trad TSP Bonus Rate"] = 0
-    if next_col_dict["Roth TSP Base Rate"] == 0:
-        next_col_dict["Roth TSP Specialty Rate"] = 0
-        next_col_dict["Roth TSP Incentive Rate"] = 0
-        next_col_dict["Roth TSP Bonus Rate"] = 0
-
-    return next_col_dict
-
-
-def update_ent_rows(BUDGET_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=1):
-    all_ent_rows = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == 1]['header']
-    ent_rows = [header for header in all_ent_rows if header in budget['header'].values]
-
-    special_calculations = {
-        'Base Pay': calculate_base_pay,
-        'BAS': calculate_bas,
-        'BAH': calculate_bah,
-    }
-
-    for header in ent_rows:
-        match = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
-        if header in special_calculations:
-            next_col_dict[header] = special_calculations[header](next_col_dict)
-        else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index)
-
-    return next_col_dict
-
-
-def update_ded_alt_rows(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict, prev_col_dict, next_month, form, budget, col_index=1):
-    all_ded_alt_headers = BUDGET_TEMPLATE[BUDGET_TEMPLATE['sign'] == -1]['header']
-    ded_alt_rows = [header for header in all_ded_alt_headers if header in budget['header'].values]
-
-    special_calculations = {
-        'Federal Taxes': calculate_federal_taxes,
-        'FICA - Social Security': calculate_fica_social_security,
-        'FICA - Medicare': calculate_fica_medicare,
-        'SGLI Rate': calculate_sgli,
-        'State Taxes': calculate_state_taxes,
-    }
-
-    for header in ded_alt_rows:
-        match = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == header]
-
-        if header in special_calculations:
-            next_col_dict[header] = special_calculations[header](next_col_dict)
-        elif header in ["Traditional TSP", "Roth TSP"]:
-            trad, roth = calculate_trad_roth_tsp(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, next_col_dict)
-            if header == "Traditional TSP":
-                next_col_dict["Traditional TSP"] = trad
-            else:
-                next_col_dict["Roth TSP"] = roth
-        else:
-            update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index)
-
-    return next_col_dict
-
-
-def update_reg_row(next_col_dict, next_month, prev_col_dict, form, header, match, col_index=1):
-    if bool(match.iloc[0]['onetime']):
-        next_col_dict[header] = Decimal("0.00")
-        return next_col_dict
-
-    varname = match.iloc[0]['varname']
-    form_value = form.get(f"{varname}_f") if form else None
-    form_month = form.get(f"{varname}_m") if form else None
-    prev_value = prev_col_dict[header]
-    sign = match.iloc[0]['sign']
-
-    if form_value is None or str(form_value).strip() == "":
-        next_col_dict[header] = prev_value
-        return next_col_dict
-
-    if form_month == next_month:
-        try:
-            value = sign * Decimal(str(form_value))
-            next_col_dict[header] = value.quantize(Decimal("0.00"))
-        except Exception:
-            next_col_dict[header] = prev_value
-    else:
-        next_col_dict[header] = prev_value
-
-    return next_col_dict
-
-
-def calculate_tsp_ytd_deductions(next_col_dict, prev_col_dict):
-    trad = abs(next_col_dict["Traditional TSP"])
-    roth = abs(next_col_dict["Roth TSP"])
-    is_new_year = next_col_dict["Year"] != prev_col_dict["Year"]
-
-    if is_new_year:
-        return trad + roth
-    else:
-        prev_ytd = prev_col_dict["TSP YTD Deductions"]
-        return prev_ytd + trad + roth
-    
