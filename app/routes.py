@@ -49,12 +49,18 @@ def submit_les():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget_core = build_budget(les_text)
-
-        for row in budget_core:
-            print(row)
-
+        budget = build_budget(les_text)
         budget = expand_budget(flask_app.config['DEFAULT_MONTHS_NUM'])
+
+        difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
+        if difference_row:
+            month_headers = [key for key in difference_row.keys() if key != 'header']
+        else:
+            month_headers = []
+
+        #for row in budget_core:
+        #    print(row)
+        #    print("")
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
@@ -63,6 +69,7 @@ def submit_les():
             'les_image': les_image,
             'rect_overlay': rect_overlay,
             'budget': budget,
+            'month_headers': month_headers,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
         }
@@ -76,8 +83,15 @@ def update_budget():
     months_num = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_NUM']))
     budget = expand_budget(months_num)
 
+    difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
+    if difference_row:
+        month_headers = [key for key in difference_row.keys() if key != 'header']
+    else:
+        month_headers = []
+
     context = {
         'budget': budget,
+        'month_headers': month_headers,
     }
     return render_template('budget.html', **context)
 

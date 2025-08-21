@@ -632,10 +632,6 @@ input[type=file] {
     width: 100%;
 }
 
-.even-row td {
-    background-color: var(--secondary_light_accent_color);
-}
-
 .pos-table td:first-child,
 .pos-table td.pos-table-header-cell:first-child {
     border-left: none;
@@ -704,6 +700,7 @@ input[type=file] {
     top: 0;
     transition: opacity .3s ease;
     visibility: hidden;
+    z-index: 2000;
 }
 
 .modal-background {
@@ -713,6 +710,7 @@ input[type=file] {
     position: absolute;
     right: 0;
     top: 0;
+    z-index: 2001;
 }
 
 .modal-state {

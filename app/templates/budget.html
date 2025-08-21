@@ -1,12 +1,30 @@
 {% set BUDGET_TEMPLATE = config.BUDGET_TEMPLATE %}
 {% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
+{% macro format_cell(row, col) %}
+    {% set cell_val = row[col] %}
+    {% if row.dtype != 'decimal' %}
+        {% if row.type == 't' %}
+            {{ cell_val }}%
+        {% else %}
+            {{ cell_val }}
+        {% endif %}
+    {% else %}
+        {% set val = cell_val|string %}
+        {% if val.startswith('-') %}
+            -${{ val[1:] }}
+        {% else %}
+            ${{ val }}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
 <!-- budget table -->
 <table id="budget-table" class="pos-table">
     <tbody>
         <tr class="pos-table-header-row">
             <td class="pos-table-header-cell"></td>
-            {% for col in col_headers[1:] %}
+            {% for col in month_headers %}
                 <td class="pos-table-header-cell">{{ col }}</td>
             {% endfor %}
         </tr>
@@ -24,18 +42,22 @@
 
             <tr class="{{ row_class }}">
                 <td class="row-header-cell">
-                    <button class="modal-button" data-modal="{{ row.modal }}">
+                    {% if row.type %}
+                        <button class="modal-button" data-modal="{{ row.modal }}">
+                            {{ row.header }}
+                        </button>
+                    {% else %}
                         {{ row.header }}
-                    </button>
+                    {% endif %}
                 </td>
-                {% for col in col_headers[1:] %}
+                {% for col in month_headers %}
                     <td>
-                        {% if row.header in BUDGET_TEMPLATE or (row.header in VARIABLE_TEMPLATE and VARIABLE_TEMPLATE[row.header]['editable']) %}
-                            <button class="edit-cell-btn" data-row="{{ row.header }}" data-col="{{ col.name }}">
-                                {{ row[col] }}
+                        {% if row.editable %}
+                            <button class="edit-cell-btn" data-row="{{ row.header }}" data-col="{{ col }}">
+                                {{ format_cell(row, col) }}
                             </button>
                         {% else %}
-                            {{ row[col] }}
+                            {{ format_cell(row, col) }}
                         {% endif %}
                     </td>
                 {% endfor %}
