@@ -259,31 +259,33 @@ def expand_budget(months_num, row_header="", col_month="", value=None, repeat=Fa
     for i in range(1, months_num):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
-        last_month = prev_month
+        prev_month = prev_month
 
-        update_variable_rows(budget, last_month, next_month, row_header, col_month, value, repeat)
-        update_entitlement_rows(budget, last_month, next_month, row_header, col_month, value, repeat)
+        update_variable_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+        update_entitlement_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
         budget = calculate_taxable_income(budget, next_month)
-        update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_month, value, repeat)
+        update_ded_alt_rows_new(budget, prev_month, next_month, row_header, col_month, value, repeat)
         budget = calculate_total_taxes(budget, next_month)
         budget = calculate_gross_net_pay(budget, next_month)
-        for row in budget:
-            if row['header'] == "Difference":
-                net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
-                prev_net_pay = net_pay_row.get(last_month, Decimal("0.00"))
-                curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
-                row[next_month] = curr_net_pay - prev_net_pay
 
+        for row in budget:
             if row['header'] == "TSP YTD Deductions":
                 trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
                 roth_row = next(r for r in budget if r['header'] == "Roth TSP")
                 row[next_month] = abs(trad_row.get(next_month, Decimal("0.00"))) + abs(roth_row.get(next_month, Decimal("0.00")))
 
+            if row['header'] == "Difference":
+                net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
+                prev_net_pay = net_pay_row.get(prev_month, Decimal("0.00"))
+                curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
+                row[next_month] = curr_net_pay - prev_net_pay
+
         prev_month = next_month
 
     return budget
 
-def update_variable_rows(budget, last_month, next_month, row_header, col_month, value, repeat):
+
+def update_variable_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
     for row in budget:
         if row.get('type') in ('v', 't'):
 
@@ -291,8 +293,8 @@ def update_variable_rows(budget, last_month, next_month, row_header, col_month, 
                 row[next_month] = value
                 continue
 
-            prev_value = row.get(last_month)
-            
+            prev_value = row.get(prev_month)
+
             if row['header'] == "Year":
                 if next_month == "JAN":
                     row[next_month] = prev_value + 1
@@ -304,12 +306,14 @@ def update_variable_rows(budget, last_month, next_month, row_header, col_month, 
                 row[next_month] = prev_value
 
 
-def update_entitlement_rows(budget, last_month, next_month, row_header, col_month, value, repeat):
+def update_entitlement_rows(budget, prev_month, next_month, row_header, col_month, value, repeat):
+
     special_calculations = {
         'Base Pay': calculate_base_pay,
         'BAS': calculate_bas,
         'BAH': calculate_bah,
     }
+
     for row in budget:
         if row.get('type') == 'e':
             # User edit logic
@@ -319,10 +323,12 @@ def update_entitlement_rows(budget, last_month, next_month, row_header, col_mont
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)
             else:
-                prev_value = row.get(last_month)
+                prev_value = row.get(prev_month)
                 row[next_month] = prev_value
 
-def update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_month, value, repeat):
+
+def update_ded_alt_rows_new(budget, prev_month, next_month, row_header, col_month, value, repeat):
+
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
         'FICA - Social Security': calculate_fica_social_security,
@@ -330,6 +336,7 @@ def update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_mont
         'SGLI Rate': calculate_sgli,
         'State Taxes': calculate_state_taxes,
     }
+    
     for row in budget:
         if row.get('type') in ('d', 'a'):
             # User edit logic
@@ -345,7 +352,7 @@ def update_ded_alt_rows_new(budget, last_month, next_month, row_header, col_mont
                 else:
                     row[next_month] = roth
             else:
-                prev_value = row.get(last_month)
+                prev_value = row.get(prev_month)
                 row[next_month] = prev_value
 
 
