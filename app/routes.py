@@ -50,8 +50,11 @@ def submit_les():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget_core = build_budget(les_text)
-        session['budget_core'] = budget_core
-        budget = expand_budget(budget_core, flask_app.config['DEFAULT_MONTHS_NUM'])
+
+        for row in budget_core:
+            print(row)
+
+        budget = expand_budget(flask_app.config['DEFAULT_MONTHS_NUM'])
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
@@ -71,7 +74,7 @@ def submit_les():
 @flask_app.route('/update_budget', methods=['POST'])
 def update_budget():
     months_num = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_NUM']))
-    budget = expand_budget(session['budget_core'], months_num)
+    budget = expand_budget(months_num)
 
     context = {
         'budget': budget,

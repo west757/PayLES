@@ -64,6 +64,13 @@ class Config:
     'modal',
     ]
     
+    #row types:
+    # a = allotment row
+    # d = deduction row
+    # e = entitlement
+    # t = tsp row
+    # v = variable row calculated first
+    # z = variable row calculated last
 
     #load static files
     dtype_bah = {'mha': str}
