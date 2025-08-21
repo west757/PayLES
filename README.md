@@ -21,7 +21,7 @@ add modals
 joint spouse with two LES's
 recommendations tab (like if not adding to tsp, put in money)
 rework drag and drop functionality
-add in charity contributions
+add in charity contributions as a row
 go through other les variables and see if they apply
 get combat zone from les
 
