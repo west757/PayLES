@@ -1,4 +1,3 @@
-{% set DEFAULT_MONTHS_DISPLAY = config.DEFAULT_MONTHS_DISPLAY %}
 {% set show_all_variables = session.get('show_all_variables', False) %}
 {% set highlight_changes = session.get('highlight_changes', False) %}
 {% set show_all_options = session.get('show_all_options', False) %}
@@ -21,9 +20,10 @@
                         <tr>
                             <td>
                                 <div class="settings-row">
-                                    <select id="month-display-dropdown" class="dropdown" name="months_display">
+                                    <label for="months-display-dropdown">Months Displayed:</label>
+                                    <select id="months-display-dropdown" class="dropdown" name="months_display">
                                         {% for x in range(2, 13) %}
-                                            <option value="{{x}}" {% if x==months_display %} selected {% endif %}>{{x}}</option>
+                                            <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -136,4 +136,46 @@
             </div>
         {% endfor %}
     </div>
+
+
+    {% for modal in MODALS %}
+        <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
+        <div class="modal">
+            <label class="modal-background" for="{{ modal.id }}"></label>
+            <div class="modal-inner">
+                <label class="modal-close" for="{{ modal.id }}"></label>
+                <h2>{{ modal.title }}</h2>
+                <p>{{ modal.content|safe }}</p>
+
+                {% if modal.id == "sgli" %}
+                    <table class="modal-table">
+                        <tr>
+                            <td>Coverage Amount</td>
+                            <td>Monthly Premium Rate</td>
+                            <td>TSGLI Premium Rate</td>
+                            <td>Total Monthly Premium Deduction</td>
+                        </tr>
+                        {% for row in config['SGLI_RATES'].itertuples() %}
+                        <tr>
+                            <td>{{ row.coverage }}</td>
+                            <td>{{ '${:,.2f}'.format(row.premium) }}</td>
+                            <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
+                            <td>{{ '${:,.2f}'.format(row.total) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+
+                <p>More Resources:</p>
+                <ul>
+                    {% for resource in modal.resources %}
+                        <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+
 </div>
+
+

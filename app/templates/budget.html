@@ -44,7 +44,7 @@
             <tr class="{{ row_class }}">
                 {% if row.type %}
                     <td class="cell">
-                        <button class="cell-button" data-modal="{{ row.modal }}">
+                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}">
                             {{ row.header }}
                         </button>
                     </td>
@@ -57,7 +57,7 @@
                 {% for col in month_headers %}
                     {% if row.editable %}
                         <td class="cell">
-                            <button class="cell-button" data-row="{{ row.header }}" data-col="{{ col }}">
+                            <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}">
                                 {{ format_cell(row, col) }}
                             </button>
                         </td>
@@ -71,42 +71,3 @@
         {% endfor %}
     </tbody>
 </table>
-
-
-{% for modal in MODALS %}
-    <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="{{ modal.id }}"></label>
-        <div class="modal-inner">
-            <label class="modal-close" for="{{ modal.id }}"></label>
-            <h2>{{ modal.title }}</h2>
-            <p>{{ modal.content|safe }}</p>
-
-            {% if modal.id == "sgli" %}
-                <table class="modal-table">
-                    <tr>
-                        <td>Coverage Amount</td>
-                        <td>Monthly Premium Rate</td>
-                        <td>TSGLI Premium Rate</td>
-                        <td>Total Monthly Premium Deduction</td>
-                    </tr>
-                    {% for row in config['SGLI_RATES'].itertuples() %}
-                    <tr>
-                        <td>{{ row.coverage }}</td>
-                        <td>{{ '${:,.2f}'.format(row.premium) }}</td>
-                        <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
-                        <td>{{ '${:,.2f}'.format(row.total) }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
-
-            <p>More Resources:</p>
-            <ul>
-                {% for resource in modal.resources %}
-                    <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-{% endfor %}

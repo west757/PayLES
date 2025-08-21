@@ -81,6 +81,7 @@ def submit_les():
 @flask_app.route('/update_budget', methods=['POST'])
 def update_budget():
     months_num = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_NUM']))
+    print(months_num)
     budget = expand_budget(months_num)
 
     difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)

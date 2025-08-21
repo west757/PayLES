@@ -46,23 +46,28 @@ document.addEventListener('mouseleave', function(e) {
 
 // click event listeners
 document.addEventListener('click', function(e) {
-    // open modals when cell button for a row is clicked
-    if (e.target.classList.contains('cell-button')) {
+    // open modals when modal button is clicked
+    if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
-        const rowHeader = e.target.getAttribute('data-row');
-        const colName = e.target.getAttribute('data-col');
-
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
             if (modalCheckbox) {
                 modalCheckbox.checked = true;
             }
         }
-        else {
-            console.log('Row header:', rowHeader, 'Column name:', colName);
-        }
     }
 
+    
+    // enter edit mode for clicked cell
+    if (e.target.classList.contains('cell-button')) {
+        const rowHeader = e.target.getAttribute('data-row');
+        const colName = e.target.getAttribute('data-col');
+
+        console.log('Row header:', rowHeader, 'Column name:', colName, "Value: ", e.target.innerText);
+    }
+
+
+    // export button
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
         exportbudget();
@@ -73,7 +78,7 @@ document.addEventListener('click', function(e) {
 // change event listeners
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-display-dropdown') {
-        e.preventDefault();
+        updateBudget(e.target.value);
     }
 
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
