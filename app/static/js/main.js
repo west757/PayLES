@@ -46,11 +46,11 @@ document.addEventListener('mouseleave', function(e) {
 
 // click event listeners
 document.addEventListener('click', function(e) {
-    // open modals when modal button for a row is clicked
-    if (e.target.classList.contains('modal-button')) {
+    // open modals when cell button for a row is clicked
+    if (e.target.classList.contains('cell-button')) {
         const modalId = e.target.getAttribute('data-modal');
-
-        console.log('Opening modal:', modalId);
+        const rowHeader = e.target.getAttribute('data-row');
+        const colName = e.target.getAttribute('data-col');
 
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
@@ -58,15 +58,10 @@ document.addEventListener('click', function(e) {
                 modalCheckbox.checked = true;
             }
         }
+        else {
+            console.log('Row header:', rowHeader, 'Column name:', colName);
+        }
     }
-
-
-    if (e.target.classList.contains('edit-cell-button')) {
-        const rowHeader = e.target.getAttribute('data-row');
-        const colName = e.target.getAttribute('data-col');
-        console.log('Row header:', rowHeader, 'Column name:', colName);
-    }
-
 
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
