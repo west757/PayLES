@@ -1,5 +1,5 @@
 from flask import request, render_template, session, jsonify
-from flask_wtf.csrf import CSRFProtect
+#from flask_wtf.csrf import CSRFProtect
 from app import csrf
 
 from app import flask_app
@@ -30,6 +30,7 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
+    print("budget template dtypes: ", flask_app.config['BUDGET_TEMPLATE'].dtypes)
     home_form = HomeForm()
     if not home_form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400

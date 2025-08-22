@@ -1,5 +1,4 @@
 from bisect import bisect_right
-from decimal import Decimal
 
 from app import flask_app
 
@@ -9,8 +8,8 @@ from app import flask_app
 # =========================
 
 def calculate_taxable_income(budget, month, init=False):
-    taxable = Decimal("0.00")
-    nontaxable = Decimal("0.00")
+    taxable = 0.00
+    nontaxable = 0.00
 
     # Find Combat Zone value
     combat_zone_row = next((row for row in budget if row['header'] == "Combat Zone"), None)
@@ -46,7 +45,7 @@ def calculate_taxable_income(budget, month, init=False):
 
 
 def calculate_total_taxes(budget, month, init=False):
-    total_taxes = Decimal("0.00")
+    total_taxes = 0.00
 
     for row in budget:
         if row.get('type') in ('d', 'a') and row.get('tax', False) and month in row:
@@ -65,7 +64,7 @@ def calculate_total_taxes(budget, month, init=False):
 
 
 def calculate_gross_net_pay(budget, month, init=False):
-    gross_pay = Decimal("0.00")
+    gross_pay = 0.00
     for row in budget:
         if row.get('type') == 'e' and month in row:
             gross_pay += row[month]
@@ -114,8 +113,8 @@ def calculate_base_pay(budget, next_month):
     idx = bisect_right(month_cols, months_in_service) - 1
     selected_month_num = str(month_cols[idx])
 
-    pay = pay_row[selected_month_num].iloc[0]
-    return round(Decimal(pay), 2)
+    base_pay = pay_row[selected_month_num].iloc[0]
+    return round(base_pay, 2)
 
 
 def calculate_bas(budget, next_month):
@@ -128,7 +127,7 @@ def calculate_bas(budget, next_month):
     else:
         bas = BAS_AMOUNT[1]
 
-    return round(Decimal(bas), 2)
+    return round(bas, 2)
 
 
 def calculate_bah(budget, next_month):
@@ -141,7 +140,7 @@ def calculate_bah(budget, next_month):
     dependents = dependents_row.get(next_month) if dependents_row else 0
 
     if military_housing_area == "Not Found":
-        return Decimal("0.00")
+        return 0.00
 
     if dependents > 0:
         BAH_DF = flask_app.config['BAH_WITH_DEPENDENTS']
@@ -150,7 +149,7 @@ def calculate_bah(budget, next_month):
 
     bah_row = BAH_DF[BAH_DF["mha"] == military_housing_area]
     bah = bah_row[grade].values[0]
-    return round(Decimal(str(bah)), 2)
+    return round(bah, 2)
 
 
 def calculate_federal_taxes(budget, next_month):
@@ -160,12 +159,12 @@ def calculate_federal_taxes(budget, next_month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
 
     filing_status = filing_status_row.get(next_month) if filing_status_row else "Not Found"
-    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
-    taxable_income = Decimal(taxable_income) * 12
-    tax = Decimal("0.00")
+    taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
+    taxable_income = taxable_income * 12
+    tax = 0.00
 
     if filing_status == "Not Found":
-        return Decimal("0.00")
+        return 0.00
 
     deduction = TAX_FILING_TYPES_DEDUCTIONS[filing_status]
     taxable_income -= deduction
@@ -183,25 +182,25 @@ def calculate_federal_taxes(budget, next_month):
         else:
             upper_bracket = 10**7
 
-        if taxable_income > Decimal(str(lower_bracket)):
+        if taxable_income > lower_bracket:
             taxable_at_rate = min(taxable_income, upper_bracket) - lower_bracket
             tax += taxable_at_rate * rate
 
     tax = tax / 12
-    return -round(Decimal(tax), 2)
+    return -round(tax, 2)
 
 
 def calculate_fica_social_security(budget, next_month):
     FICA_SOCIALSECURITY_TAX_RATE = flask_app.config['FICA_SOCIALSECURITY_TAX_RATE']
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
-    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
-    return round(-Decimal(taxable_income) * FICA_SOCIALSECURITY_TAX_RATE, 2)
+    taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
+    return round(-taxable_income * FICA_SOCIALSECURITY_TAX_RATE, 2)
 
 def calculate_fica_medicare(budget, next_month):
     FICA_MEDICARE_TAX_RATE = flask_app.config['FICA_MEDICARE_TAX_RATE']
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
-    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
-    return round(-Decimal(taxable_income) * FICA_MEDICARE_TAX_RATE, 2)
+    taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
+    return round(-taxable_income * FICA_MEDICARE_TAX_RATE, 2)
 
 
 def calculate_sgli(budget, next_month):
@@ -221,9 +220,9 @@ def calculate_state_taxes(budget, next_month):
 
     home_of_record = home_of_record_row.get(next_month) if home_of_record_row else "Not Found"
     filing_status = filing_status_row.get(next_month) if filing_status_row else "Single"
-    taxable_income = taxable_income_row.get(next_month, Decimal("0.00")) if taxable_income_row else Decimal("0.00")
-    taxable_income = Decimal(taxable_income) * 12
-    tax = Decimal("0.00")
+    taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
+    taxable_income = taxable_income * 12
+    tax = 0.00
 
     state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
 
@@ -232,7 +231,7 @@ def calculate_state_taxes(budget, next_month):
     elif filing_status == "Married":
         brackets = state_brackets[['married_bracket', 'married_rate']].rename(columns={'married_bracket': 'bracket', 'married_rate': 'rate'})
     else:
-        return Decimal("0.00")
+        return 0.00
 
     brackets = brackets.sort_values(by='bracket').reset_index(drop=True)
     
@@ -245,19 +244,19 @@ def calculate_state_taxes(budget, next_month):
         else:
             upper_bracket = 10**7
 
-        if taxable_income > Decimal(str(lower_bracket)):
+        if taxable_income > lower_bracket:
             taxable_rate = min(taxable_income, upper_bracket) - lower_bracket
             tax += taxable_rate * rate
 
     tax = tax / 12
-    return -round(Decimal(tax), 2)
+    return -round(tax, 2)
 
 
 def calculate_trad_roth_tsp(budget, next_month):
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
-    trad_total = Decimal("0.00")
-    roth_total = Decimal("0.00")
+    trad_total = 0.00
+    roth_total = 0.00
 
     specialty_rows = [row['header'] for row in budget if row.get('modal') == 'specialty' and row.get('sign') == 1]
     incentive_rows = [row['header'] for row in budget if row.get('modal') == 'incentive' and row.get('sign') == 1]
@@ -266,11 +265,11 @@ def calculate_trad_roth_tsp(budget, next_month):
     # Helper to get value from budget for a header
     def get_value(header):
         row = next((r for r in budget if r['header'] == header), None)
-        return Decimal(row.get(next_month, 0)) if row and next_month in row else Decimal("0.00")
+        return row.get(next_month, 0) if row and next_month in row else 0.00
 
     for _, tsp_row in tsp_rows.iterrows():
         tsp_var = tsp_row['header']
-        rate = Decimal(str(get_value(tsp_var)))
+        rate = get_value(tsp_var)
 
         if rate > 0:
             if 'Base' in tsp_var:
@@ -282,9 +281,9 @@ def calculate_trad_roth_tsp(budget, next_month):
             elif 'Bonus' in tsp_var:
                 total = sum(get_value(h) for h in bonus_rows)
             else:
-                total = Decimal("0.00")
+                total = 0.00
 
-            value = total * rate / Decimal(100)
+            value = total * rate / 100
 
             if tsp_var.startswith("Trad"):
                 trad_total += value
