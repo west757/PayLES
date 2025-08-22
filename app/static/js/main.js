@@ -1,6 +1,5 @@
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
-    enableAllInputs();
     try {
         const response = JSON.parse(evt.detail.xhr.responseText);
         if (response.message) {
@@ -78,7 +77,7 @@ document.addEventListener('click', function(e) {
 // change event listeners
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'months-display-dropdown') {
-        updateBudget(e.target.value);
+        console.log("Months number changed to:", e.target.value);
     }
 
     if (e.target && e.target.id === 'highlight-changes-checkbox') {

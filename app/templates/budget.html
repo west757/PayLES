@@ -57,7 +57,9 @@
                 {% for col in month_headers %}
                     {% if row.editable %}
                         <td class="cell">
-                            <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}">
+                            <button class="styled-table-button cell-button" hx-post="/update_budget_cell" 
+                                    hx-vals='{"row": "{{ row.header }}", "col": "{{ col }}", "value": "{{ row[col] }}"}' 
+                                    hx-target="#budget" hx-swap="outerHTML">
                                 {{ format_cell(row, col) }}
                             </button>
                         </td>
