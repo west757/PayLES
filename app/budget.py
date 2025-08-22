@@ -12,6 +12,7 @@ from app.calculations import (
     calculate_taxable_income,
     calculate_total_taxes,
     calculate_gross_net_pay,
+    calculate_difference,
     calculate_base_pay,
     calculate_bas,
     calculate_bah,
@@ -140,7 +141,7 @@ def add_variables(budget, les_text, month):
     budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
 
     tsp_rows = [
-        ("TSP YTD Deductions", 78, 2),
+        #("TSP YTD Deductions", 78, 2),
         ("Trad TSP Base Rate", 60, 3),
         ("Trad TSP Specialty Rate", 62, 3),
         ("Trad TSP Incentive Rate", 64, 3),
@@ -263,7 +264,7 @@ def add_months(budget, prev_month, months_num, row_header="", col_month="", valu
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
 
-        add_month(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+        build_month(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
         month_headers.append(next_month)
         prev_month = next_month
@@ -273,7 +274,31 @@ def add_months(budget, prev_month, months_num, row_header="", col_month="", valu
     return budget, month_headers
 
 
-def add_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False):
+def update_months(budget, prev_month, month_headers, row_header, col_month, value, repeat):
+    idx = month_headers.index(col_month)
+
+    for i in range(idx, len(month_headers)):
+        month = month_headers[i]
+
+        for row in budget:
+            if row['header'] == row_header:
+                if repeat or month == col_month:
+                    row[month] = value
+
+        build_month(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat, )
+
+        #update_variables(budget, None, month, None, None, None, False, recalculate_dependents=True)
+        #update_ent_rows(budget, None, month, None, None, None, False, recalculate_dependents=True)
+        #calculate_taxable_income(budget, month)
+        #update_ded_alt_rows(budget, None, month, None, None, None, False, recalculate_dependents=True)
+        #calculate_total_taxes(budget, month)
+        #calculate_gross_net_pay(budget, month)
+        #calculate_difference(budget, month_headers, i)
+
+    return budget
+
+
+def build_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False):
     update_variables(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
     update_ent_rows(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
     calculate_taxable_income(budget, next_month)
@@ -281,17 +306,9 @@ def add_month(budget, prev_month, next_month, row_header="", col_month="", value
     calculate_total_taxes(budget, next_month)
     calculate_gross_net_pay(budget, next_month)
 
-    for row in budget:
-        if row['header'] == "TSP YTD Deductions":
-            trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
-            roth_row = next(r for r in budget if r['header'] == "Roth TSP")
-            row[next_month] = abs(trad_row.get(next_month, 0.00)) + abs(roth_row.get(next_month, 0.00))
-
-        if row['header'] == "Difference":
-            net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
-            prev_net_pay = net_pay_row.get(prev_month, 0.00)
-            curr_net_pay = net_pay_row.get(next_month, 0.00)
-            row[next_month] = curr_net_pay - prev_net_pay
+    month_headers = get_month_headers(budget)
+    current_idx = month_headers.index(next_month)
+    calculate_difference(budget, month_headers, current_idx)
 
 
 def update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat):

@@ -54,14 +54,8 @@
                 {% endif %}
                 
                 {% for col in month_headers %}
-                    {% if row.editable %}
+                    {% if row.editable and not loop.first %}
                         <td class="cell">
-                            <!--
-                            <button class="styled-table-button cell-button" hx-post="/update_cells" hx-target="#budget" hx-swap="innerHTML"
-                                    hx-vals='{"row": "{{ row.header }}", "col": "{{ col }}", "value": "{{ row[col] }}"}'>
-                                {{ format_cell(row, col) }}
-                            </button>
-                            -->
                             <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}" data-field="{{ row.field }}">
                                 {{ format_cell(row, col) }}
                             </button>

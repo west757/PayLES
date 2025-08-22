@@ -161,14 +161,14 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     onetimeButton.textContent = '▼';
     onetimeButton.classList.add('editing-button', 'onetime-button');
     onetimeButton.onclick = function() {
-        updateCells(false);
+        updateBudget(false);
     };
 
     let repeatButton = document.createElement('button');
     repeatButton.textContent = '▶';
     repeatButton.classList.add('editing-button', 'repeat-button');
     repeatButton.onclick = function() {
-        updateCells(true);
+        updateBudget(true);
     };
 
     let cancelButton = document.createElement('button');
@@ -188,17 +188,25 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 }
 
 
-function updateCells(repeat) {
+function updateBudget(repeat) {
     let {rowHeader, colMonth, fieldType} = currentEdit;
 
     let input = document.querySelector('.input-int, .input-string, .input-float, select');
     let value = input.value;
+    console.log("raw value: ", value, "dtype: ", typeof value, "repeat: ", repeat);
+
+    if (fieldType === 'int') {
+        value = parseInt(value, 10);
+    } else if (fieldType === 'float') {
+        value = parseFloat(value);
+        value = round(value, 2);
+    }
 
     if (!validateInput(fieldType, rowHeader, value)) return;
 
     exitEditMode();
 
-    htmx.ajax('POST', '/update_cells', {
+    htmx.ajax('POST', '/update_budget', {
         target: '#budget',
         swap: 'innerHTML',
         values: {
@@ -214,6 +222,7 @@ function updateCells(repeat) {
 
 
 function validateInput(fieldType, rowHeader, value) {
+    console.log("value: ", value);
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
         return false;

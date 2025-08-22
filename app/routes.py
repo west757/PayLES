@@ -1,10 +1,10 @@
 from flask import request, render_template, session, jsonify
-#from flask_wtf.csrf import CSRFProtect
 from app import csrf
 
 from app import flask_app
 from app.utils import (
     load_json,
+    convert_numpy_types,
     validate_file,
 )
 from app.les import (
@@ -15,6 +15,7 @@ from app.budget import (
     build_budget,
     remove_month,
     add_months,
+    update_months,
     get_month_headers,
 )
 from app.forms import (
@@ -30,7 +31,6 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    print("budget template dtypes: ", flask_app.config['BUDGET_TEMPLATE'].dtypes)
     home_form = HomeForm()
     if not home_form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400
@@ -65,7 +65,7 @@ def submit_les():
         context = {
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'budget': budget,
+            'budget': convert_numpy_types(budget),
             'month_headers': month_headers,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
@@ -94,37 +94,33 @@ def update_months():
         prev_month = month_headers[-1]
         budget, month_headers = add_months(budget, prev_month, months_num)
 
+    session['budget'] = budget
+
     context = {
-        'budget': budget,
+        'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
     }
     return render_template('budget.html', **context)
 
 
 @csrf.exempt
-@flask_app.route('/update_cells', methods=['POST'])
-def update_cells():
+@flask_app.route('/update_budget', methods=['POST'])
+def update_budget():
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+    prev_month = month_headers[-1]
     row_header = request.form.get('row_header', '')
     col_month = request.form.get('col_month', '')
     value = request.form.get('value', 0)
     repeat = request.form.get('repeat', False)
-    budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
-    months_num = len(month_headers)
-
+    
     if col_month in month_headers:
-        idx = month_headers.index(col_month)
-        months_to_remove = month_headers[idx:]
-        for month in months_to_remove:
-            remove_month(budget, month)
-        month_headers = month_headers[:idx]
+        budget = update_months(budget, prev_month, month_headers, row_header, col_month, value, repeat)
 
-    months_num = months_num - len(month_headers)
-    prev_month = month_headers[-1] if month_headers else session.get('initial_month')
-    budget, month_headers = add_months(budget, prev_month, months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+    session['budget'] = budget
 
     context = {
-        'budget': budget,
+        'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
     }
     return render_template('budget.html', **context)

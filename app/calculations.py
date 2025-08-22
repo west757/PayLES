@@ -90,6 +90,19 @@ def calculate_gross_net_pay(budget, month, init=False):
     return budget
 
 
+def calculate_difference(budget, month_headers, current_idx):
+    curr_month = month_headers[current_idx]
+    prev_month = month_headers[current_idx - 1]
+
+    net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
+    diff_row = next((r for r in budget if r['header'] == "Difference"), None)
+
+    if net_pay_row and diff_row:
+        prev_net_pay = net_pay_row.get(prev_month, 0.00)
+        curr_net_pay = net_pay_row.get(curr_month, 0.00)
+        diff_row[curr_month] = curr_net_pay - prev_net_pay
+
+
 
 # =========================
 # calculate special rows
