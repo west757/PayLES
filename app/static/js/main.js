@@ -69,9 +69,6 @@ document.addEventListener('click', function(e) {
         let colMonth = e.target.getAttribute('data-col');
         let value = e.target.innerText;
         let fieldType = e.target.getAttribute('data-field');
-
-        console.log('Row header:', rowHeader, 'Column name:', colMonth, "Value: ", value, "Field type: ", fieldType);
-
         enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
     }
     

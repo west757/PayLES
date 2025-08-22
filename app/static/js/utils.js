@@ -134,7 +134,7 @@ function exportBudget() {
 }
 
 
-
+/*
 function showOverlay() {
     let overlay = document.createElement('div');
     overlay.id = 'edit-overlay';
@@ -154,6 +154,7 @@ function hideOverlay() {
     let overlay = document.getElementById('edit-overlay');
     if (overlay) overlay.remove();
 }
+    */
 
 
 function disableInputsExcept(exceptions=[]) {
