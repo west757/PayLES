@@ -1,7 +1,6 @@
 {% set BUDGET_TEMPLATE = config.BUDGET_TEMPLATE %}
 {% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
 
-
 {% macro format_cell(row, col) %}
     {% set cell_val = row[col] %}
     {% if row.dtype != 'decimal' %}
@@ -19,7 +18,6 @@
         {% endif %}
     {% endif %}
 {% endmacro %}
-
 
 <table id="budget-table" class="styled-table">
     <tbody>
@@ -57,9 +55,8 @@
                 {% for col in month_headers %}
                     {% if row.editable %}
                         <td class="cell">
-                            <button class="styled-table-button cell-button" hx-post="/update_budget_cell" 
-                                    hx-vals='{"row": "{{ row.header }}", "col": "{{ col }}", "value": "{{ row[col] }}"}' 
-                                    hx-target="#budget" hx-swap="outerHTML">
+                            <button class="styled-table-button cell-button" hx-post="/update_cells" hx-target="#budget" hx-swap="innerHTML"
+                                    hx-vals='{"row": "{{ row.header }}", "col": "{{ col }}", "value": "{{ row[col] }}"}'>
                                 {{ format_cell(row, col) }}
                             </button>
                         </td>

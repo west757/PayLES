@@ -1,4 +1,6 @@
 from flask import request, render_template, session, jsonify
+from flask_wtf.csrf import CSRFProtect
+from app import csrf
 
 from app import flask_app
 from app.utils import (
@@ -72,13 +74,9 @@ def submit_les():
         return jsonify({'message': message}), 400
     
 
-
-
-
-
-
-@flask_app.route('/update_budget_months', methods=['POST'])
-def update_budget_months():
+@csrf.exempt
+@flask_app.route('/update_months', methods=['POST'])
+def update_months():
     next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
@@ -91,9 +89,9 @@ def update_budget_months():
         month_headers = month_headers[:next_months_num]
 
     elif next_months_num > prev_months_num:
-        months_to_add = next_months_num - prev_months_num
+        months_num = next_months_num - prev_months_num
         prev_month = month_headers[-1]
-        budget, month_headers = add_months(budget, prev_month, months_to_add)
+        budget, month_headers = add_months(budget, prev_month, months_num)
 
     context = {
         'budget': budget,
@@ -102,9 +100,9 @@ def update_budget_months():
     return render_template('budget.html', **context)
 
 
-
-@flask_app.route('/update_budget_cell', methods=['POST'])
-def update_budget_cell():
+@csrf.exempt
+@flask_app.route('/update_cells', methods=['POST'])
+def update_cells():
     next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     row_header = request.form.get('row_header', '')
     col_month = request.form.get('col_month', '')
@@ -120,9 +118,9 @@ def update_budget_cell():
             remove_month(budget, month)
         month_headers = month_headers[:idx]
 
-    months_to_add = next_months_num - len(month_headers)
+    months_num = next_months_num - len(month_headers)
     prev_month = month_headers[-1] if month_headers else session.get('initial_month')
-    budget, month_headers = add_months(budget, prev_month, months_to_add, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+    budget, month_headers = add_months(budget, prev_month, months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
     context = {
         'budget': budget,

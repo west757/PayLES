@@ -259,7 +259,7 @@ def add_months(budget, prev_month, months_num):
     month_idx = MONTHS_SHORT.index(prev_month)
     month_headers = []
 
-    for i in range(months_num):
+    for i in range(months_num - 1):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
 
