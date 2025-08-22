@@ -6,6 +6,7 @@ from app.utils import (
     load_json,
     convert_numpy_types,
     validate_file,
+    get_month_headers,
 )
 from app.les import (
     validate_les, 
@@ -14,9 +15,7 @@ from app.les import (
 from app.budget import (
     build_budget,
     remove_month,
-    add_months,
-    update_months,
-    get_month_headers,
+    build_months,
 )
 from app.forms import (
     HomeForm,
@@ -55,7 +54,7 @@ def submit_les():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, initial_month = build_budget(les_text)
-        budget, month_headers = add_months(budget, initial_month, flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
+        budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=initial_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
 
         session['budget'] = budget
 
@@ -76,6 +75,30 @@ def submit_les():
     
 
 @csrf.exempt
+@flask_app.route('/update_budget', methods=['POST'])
+def update_budget():
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+    row_header = request.form.get('row_header', '')
+    col_month = request.form.get('col_month', '')
+    value = request.form.get('value', 0)
+    repeat = request.form.get('repeat', False)
+
+    if col_month in month_headers:
+        idx = month_headers.index(col_month)
+        months_num = len(month_headers) - idx
+        budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=col_month, months_num=months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+
+    session['budget'] = budget
+
+    context = {
+        'budget': convert_numpy_types(budget),
+        'month_headers': month_headers,
+    }
+    return render_template('budget.html', **context)
+
+
+@csrf.exempt
 @flask_app.route('/update_months', methods=['POST'])
 def update_months():
     next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
@@ -92,30 +115,7 @@ def update_months():
     elif next_months_num > prev_months_num:
         months_num = next_months_num - prev_months_num
         prev_month = month_headers[-1]
-        budget, month_headers = add_months(budget, prev_month, months_num)
-
-    session['budget'] = budget
-
-    context = {
-        'budget': convert_numpy_types(budget),
-        'month_headers': month_headers,
-    }
-    return render_template('budget.html', **context)
-
-
-@csrf.exempt
-@flask_app.route('/update_budget', methods=['POST'])
-def update_budget():
-    budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
-    prev_month = month_headers[-1]
-    row_header = request.form.get('row_header', '')
-    col_month = request.form.get('col_month', '')
-    value = request.form.get('value', 0)
-    repeat = request.form.get('repeat', False)
-    
-    if col_month in month_headers:
-        budget = update_months(budget, prev_month, month_headers, row_header, col_month, value, repeat)
+        budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=prev_month, months_num=months_num)
 
     session['budget'] = budget
 
