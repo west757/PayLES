@@ -59,12 +59,12 @@
 
     <!-- send config data to main.js -->
     <div id="config-data"
-        data-dependents-max="{{ config.DEPENDENTS_MAX }}"
-        data-trad-tsp-rate-max="{{ config.TRAD_TSP_RATE_MAX }}"
-        data-roth-tsp-rate-max="{{ config.ROTH_TSP_RATE_MAX }}"
-        data-home-of-records="{{ config.HOME_OF_RECORDS|tojson|safe }}"
-        data-grades="{{ config.GRADES|tojson|safe }}"
-        data-sgli-coverages="{{ config.SGLI_COVERAGES|tojson|safe }}"
+        data-dependents-max='{{ config.DEPENDENTS_MAX }}'
+        data-trad-tsp-rate-max='{{ config.TRAD_TSP_RATE_MAX }}'
+        data-roth-tsp-rate-max='{{ config.ROTH_TSP_RATE_MAX }}'
+        data-home-of-records='{{ config.HOME_OF_RECORDS|tojson|safe }}'
+        data-grades='{{ config.GRADES|tojson|safe }}'
+        data-sgli-coverages='{{ config.SGLI_COVERAGES|tojson|safe }}'
         >
     </div>
 

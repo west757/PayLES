@@ -218,7 +218,7 @@ footer {
    buttons
    ========================= */
 
-.button, input[type=file]::file-selector-button {
+.independent-button, input[type=file]::file-selector-button {
     border-radius: 0.5rem;
     color: var(--light_text_color);
     cursor: pointer;
@@ -230,7 +230,7 @@ footer {
     will-change: transform;
 }
 
-.button:hover, input[type=file]::file-selector-button:hover {
+.independent-button:hover, input[type=file]::file-selector-button:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.25rem 0.5rem;
     transform: translateY(-2px);
 }
@@ -279,6 +279,40 @@ footer {
     background-color: var(--highlight_green_color);
 }
 
+
+.editing-button {
+    height: 1.5rem;
+    width: 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.4rem;
+    border: none;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    margin: 0 1px;
+    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
+}
+
+.editing-button.onetime-button {
+    background: var(--primary_green_accent_color);
+}
+.editing-button.repeat-button {
+    background: var(--primary_green_accent_color);
+}
+.editing-button.cancel-button {
+    background: var(--highlight_red_color);
+}
+.editing-button:disabled {
+    background: var(--button_disabled_color);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+
 #return-home-button {
     width: 10rem;
 }
@@ -295,7 +329,7 @@ footer {
     background-color: rgba(var(--highlight-green-color-rgb), 0.5);
 }
 
-.button:disabled,
+.independent-button:disabled,
 input[type="button"]:disabled,
 input[type="submit"]:disabled {
     background: var(--button_disabled_color) !important;
@@ -319,7 +353,7 @@ select.dropdown {
     height: 1.85rem;
     padding: 0.25rem;
     text-align: center;
-    width: 4.6rem;
+    width: 4.75rem;
 }
 
 #months-num-dropdown {
@@ -335,7 +369,7 @@ select.dropdown {
    input boxes
    ========================= */
 
-input.input-text {
+input.input-box {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
@@ -345,31 +379,18 @@ input.input-text {
     height: 1.85rem;
     padding: 0.25rem;
     text-align: center;
-    width: 10rem;
-}
-
-input.input-num {
-    background-color: var(--input_background_color);
-    border: 1px solid #999;
-    border-radius: 0.25rem;
-    box-shadow: 1px 1px 2px #999;
-    font-family: Arial, sans-serif;
-    font-size: 0.92rem;
-    height: 1.85rem;
-    padding: 0.25rem;
-    text-align: center;
 }
 
 .input-long {
-    width: 5.5rem !important;
+    width: 10rem;
 }
 
 .input-mid {
-    width: 4.75rem;
+    width: 5.5rem;
 }
 
 .input-short {
-    width: 3.5rem;
+    width: 4.75rem;
 }
 
 
@@ -588,6 +609,14 @@ input[type=file] {
 
 #budget-table.highlight-mode .budget-highlight {
     background-color: var(--highlight_yellow_color);
+}
+
+.editingButtonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    z-index: 9000;
 }
 
 .settings-row {

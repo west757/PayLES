@@ -9,13 +9,14 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     isEditing = true;
     currentEdit = {cellButton, rowHeader, colMonth, value, fieldType};
 
-    showOverlay();
+    //showOverlay();
     disableInputsExcept([]);
 
     let input;
 
     if (fieldType === 'select') {
         input = document.createElement('select');
+        input.classList.add('dropdown');
         let options = [];
 
         if (rowHeader === 'Grade') options = window.GRADES;
@@ -38,7 +39,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.type = 'number';
         input.maxLength = 3;
         input.placeholder = value;
-        input.classList.add('input-int');
+        input.classList.add('input-box', 'input-short');
         input.pattern = '\\d{1,3}';
 
     } else if (fieldType === 'string') {
@@ -46,14 +47,14 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.type = 'text';
         input.maxLength = 5;
         input.placeholder = value;
-        input.classList.add('input-string');
+        input.classList.add('input-box', 'input-mid');
 
     } else if (fieldType === 'decimal') {
         input = document.createElement('input');
         input.type = 'text';
         input.maxLength = 7;
         input.placeholder = value;
-        input.classList.add('input-decimal');
+        input.classList.add('input-box', 'input-mid');
     }
 
     cellButton.style.display = 'none';
@@ -61,32 +62,25 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     cell.appendChild(input);
 
     let buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.justifyContent = 'center';
-    buttonContainer.style.gap = '2px';
-    buttonContainer.style.marginBottom = '4px';
-    buttonContainer.style.zIndex = 9999;
+    buttonContainer.className = 'editingButtonContainer';
 
     let onetimeButton = document.createElement('button');
     onetimeButton.textContent = '▼';
-    onetimeButton.style.background = 'green';
-    onetimeButton.style.color = 'white';
+    onetimeButton.classList.add('editing-button', 'onetime-button');
     onetimeButton.onclick = function() {
         handleEditSubmit(false);
     };
 
     let repeatButton = document.createElement('button');
     repeatButton.textContent = '▶';
-    repeatButton.style.background = 'green';
-    repeatButton.style.color = 'white';
+    repeatButton.classList.add('editing-button', 'repeat-button');
     repeatButton.onclick = function() {
         handleEditSubmit(true);
     };
 
     let cancelButton = document.createElement('button');
     cancelButton.textContent = '✖';
-    cancelButton.style.background = 'red';
-    cancelButton.style.color = 'white';
+    cancelButton.classList.add('editing-button', 'cancel-button');
     cancelButton.onclick = function() {
         exitEditMode();
     };
@@ -113,7 +107,7 @@ function exitEditMode() {
     });
 
     cellButton.style.display = '';
-    hideOverlay();
+    //hideOverlay();
     enableAllInputs();
     isEditing = false;
     currentEdit = null;
@@ -174,11 +168,7 @@ function handleEditSubmit(repeat) {
     if (!validateInput(fieldType, rowHeader, value)) return;
 
     exitEditMode();
-    update_budget_cell(rowHeader, colMonth, value, repeat);
-}
 
-
-function update_budget_cell(rowHeader, colMonth, value, repeat) {
     htmx.ajax('POST', '/update_cells', {
         target: '#budget',
         swap: 'innerHTML',
