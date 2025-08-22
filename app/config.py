@@ -68,8 +68,7 @@ class Config:
     # d = deduction row
     # e = entitlement
     # t = tsp row
-    # v = variable row calculated first
-    # z = variable row calculated last
+    # v = variable row
 
     #load static files
     dtype_bah = {'mha': str}

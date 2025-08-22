@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 from app import flask_app
 
@@ -13,6 +14,20 @@ def load_json(path):
         return {}
     except Exception as e:
         return {}
+
+
+def convert_numpy_types(obj):
+    if isinstance(obj, np.integer):
+        return int(obj)
+    if isinstance(obj, np.floating):
+        return float(obj)
+    if isinstance(obj, np.bool_):
+        return bool(obj)
+    if isinstance(obj, dict):
+        return {k: convert_numpy_types(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [convert_numpy_types(v) for v in obj]
+    return obj
 
 
 def validate_file(file):

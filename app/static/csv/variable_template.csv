@@ -10,7 +10,6 @@ Federal Filing Status,federal_filing_status,v,string,False,True,select,federalta
 State Filing Status,state_filing_status,v,string,False,True,select,statetaxes
 SGLI Coverage,sgli_coverage,v,string,False,True,select,sgli
 Combat Zone,combat_zone,v,string,False,True,select,combatzone
-TSP YTD Deductions,tsp_ytd_deductions,z,float,False,False,none,tsp
 Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,int,basepay
 Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,int,specialty
 Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,int,incentive
