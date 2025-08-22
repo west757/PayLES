@@ -103,13 +103,13 @@ def update_months():
 @csrf.exempt
 @flask_app.route('/update_cells', methods=['POST'])
 def update_cells():
-    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     row_header = request.form.get('row_header', '')
     col_month = request.form.get('col_month', '')
     value = request.form.get('value', 0)
     repeat = request.form.get('repeat', False)
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
+    months_num = len(month_headers)
 
     if col_month in month_headers:
         idx = month_headers.index(col_month)
@@ -118,7 +118,7 @@ def update_cells():
             remove_month(budget, month)
         month_headers = month_headers[:idx]
 
-    months_num = next_months_num - len(month_headers)
+    months_num = months_num - len(month_headers)
     prev_month = month_headers[-1] if month_headers else session.get('initial_month')
     budget, month_headers = add_months(budget, prev_month, months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 

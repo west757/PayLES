@@ -1,3 +1,17 @@
+// initialize config variables
+function initConfigVars() {
+    const configDiv = document.getElementById('config-data');
+    if (configDiv) {
+        window.DEPENDENTS_MAX = parseInt(configDiv.dataset.dependentsMax);
+        window.TRAD_TSP_RATE_MAX = parseInt(configDiv.dataset.tradTspRateMax);
+        window.ROTH_TSP_RATE_MAX = parseInt(configDiv.dataset.rothTspRateMax);
+        window.HOME_OF_RECORDS = JSON.parse(configDiv.dataset.homeOfRecords);
+        window.GRADES = JSON.parse(configDiv.dataset.grades);
+        window.SGLI_COVERAGES = JSON.parse(configDiv.dataset.sgliCoverages);
+    }
+}
+
+
 // show tooltip
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');
@@ -28,11 +42,11 @@ function showToast(message, duration = 6500) {
     toast.className = 'toast shadow';
     toast.textContent = message;
 
-    let closeBtn = document.createElement('span');
-    closeBtn.textContent = '✖';
-    closeBtn.className = 'toast-close';
-    closeBtn.onclick = () => toast.remove();
-    toast.appendChild(closeBtn);
+    let closeButton = document.createElement('span');
+    closeButton.textContent = '✖';
+    closeButton.className = 'toast-close';
+    closeButton.onclick = () => toast.remove();
+    toast.appendChild(closeButton);
 
     container.appendChild(toast);
 
@@ -118,6 +132,50 @@ function exportBudget() {
         XLSX.writeFile(workbook, filename);
     }
 }
+
+
+
+function showOverlay() {
+    let overlay = document.createElement('div');
+    overlay.id = 'edit-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'rgba(220,220,220,0.5)';
+    overlay.style.zIndex = 9998;
+    overlay.style.pointerEvents = 'none';
+    document.body.appendChild(overlay);
+}
+
+
+function hideOverlay() {
+    let overlay = document.getElementById('edit-overlay');
+    if (overlay) overlay.remove();
+}
+
+
+function disableInputsExcept(exceptions=[]) {
+    document.querySelectorAll('input, button, select, textarea').forEach(el => {
+        if (!exceptions.includes(el)) {
+            el.disabled = true;
+        }
+    });
+}
+
+
+function enableAllInputs() {
+    document.querySelectorAll('input, button, select, textarea').forEach(el => {
+        el.disabled = false;
+    });
+}
+
+
+
+
+
+
 
 
 

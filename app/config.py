@@ -39,11 +39,6 @@ class Config:
     TSP_CONTRIBUTION_LIMIT = 23500
     BAS_AMOUNT = [Decimal(465.77), Decimal(320.78)]
 
-    TAX_FILING_TYPES_DEDUCTIONS = {
-        "Single": 15000,
-        "Married": 30000,
-        "Head of Household": 22500
-    }
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     HOME_OF_RECORDS = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 
@@ -53,6 +48,11 @@ class Config:
     GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
               'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
               'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
+    TAX_FILING_TYPES_DEDUCTIONS = {
+        "Single": 15000,
+        "Married": 30000,
+        "Head of Household": 22500
+    }
     
     ROW_METADATA = [
     'varname',
@@ -138,6 +138,7 @@ class Config:
             'total': lambda x: Decimal(x),
         }
     )
+    SGLI_COVERAGES = SGLI_RATES['coverage'].tolist()
     STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
         dtype={
             'state': str,
