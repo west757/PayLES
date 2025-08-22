@@ -51,3 +51,10 @@ def validate_home_of_record(home_of_record):
     if home_of_record in HOME_OF_RECORDS:
         return home_of_record
     return "Not Found"
+
+
+def get_month_headers(budget):
+    difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
+    if difference_row:
+        return [key for key in difference_row.keys() if key != 'header']
+    return []

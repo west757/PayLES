@@ -21,7 +21,8 @@
                             <td>
                                 <div class="settings-row">
                                     <label for="months-display-dropdown">Months Displayed:</label>
-                                    <select id="months-display-dropdown" class="dropdown" name="months_display">
+                                    <select id="months-display-dropdown" class="dropdown" name="months_num" 
+                                            hx-post="/update_budget_months" hx-target="#budget" hx-swap="outerHTML">
                                         {% for x in range(2, 13) %}
                                             <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
                                         {% endfor %}

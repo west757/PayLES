@@ -8,6 +8,7 @@ from app import flask_app
 from app.utils import (
     validate_calculate_zip_mha,
     validate_home_of_record,
+    get_month_headers,
 )
 from app.calculations import (
     calculate_taxable_income,
@@ -32,35 +33,31 @@ def build_budget(les_text):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
 
     try:
-        month = les_text[8][3]
-        if month not in MONTHS_SHORT:
-            raise ValueError(f"Error: les_text[8][3], '{month}', is not in MONTHS_SHORT")
+        initial_month = les_text[8][3]
+        if initial_month not in MONTHS_SHORT:
+            raise ValueError(f"Error: les_text[8][3], '{initial_month}', is not in MONTHS_SHORT")
     except Exception as e:
         raise Exception(f"Error determining initial month: {e}")
 
-    budget_core = []
-    budget_core = add_variables(budget_core, les_text, month)
-    budget_core = add_ent_ded_alt_rows(budget_core, les_text, month)
+    budget = []
+    budget = add_variables(budget, les_text, initial_month)
+    budget = add_ent_ded_alt_rows(budget, les_text, initial_month)
+    budget = calculate_taxable_income(budget, initial_month, init=True)
+    budget = calculate_total_taxes(budget, initial_month, init=True)
+    budget = calculate_gross_net_pay(budget, initial_month, init=True)
+    budget.append({'header': 'Difference', initial_month: Decimal("0.00")})
 
-    budget_core = calculate_taxable_income(budget_core, month, init=True)
-    budget_core = calculate_total_taxes(budget_core, month, init=True)
-    budget_core = calculate_gross_net_pay(budget_core, month, init=True)
-    budget_core.append({'header': 'Difference', month: Decimal("0.00")})
-
-    session['budget_core'] = budget_core
-    session['initial_month'] = month
-
-    return budget_core
+    return budget, initial_month
 
 
-def add_variables(budget_core, les_text, month):
+def add_variables(budget, les_text, month):
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
 
     try:
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Year', year, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Year', year, month))
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
@@ -68,32 +65,32 @@ def add_variables(budget_core, les_text, month):
         months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', months_in_service, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', months_in_service, month))
 
     try:
         grade = les_text[2][1]
     except Exception:
         grade = "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Grade', grade, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Grade', grade, month))
 
     try:
         zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
     except Exception:
         zip_code, military_housing_area = "Not Found", "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', zip_code, month))
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', military_housing_area, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', zip_code, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', military_housing_area, month))
 
     try:
         home_of_record = validate_home_of_record(les_text[39][1])
     except Exception:
         home_of_record = "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', home_of_record, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', home_of_record, month))
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Dependents', dependents, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Dependents', dependents, month))
 
     try:
         status = les_text[24][1]
@@ -107,7 +104,7 @@ def add_variables(budget_core, les_text, month):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', federal_filing_status, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', federal_filing_status, month))
 
     try:
         status = les_text[42][1]
@@ -119,7 +116,7 @@ def add_variables(budget_core, les_text, month):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', state_filing_status, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', state_filing_status, month))
 
 
     #POSSIBLY SIMPLIFY AND UPDATE AFTER CAPTURING SGLI
@@ -139,10 +136,10 @@ def add_variables(budget_core, les_text, month):
             
     except Exception:
         sgli_coverage = "Not Found"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', sgli_coverage, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', sgli_coverage, month))
 
     combat_zone = "No"
-    budget_core.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
 
     tsp_rows = [
         ("TSP YTD Deductions", 78, 2),
@@ -161,12 +158,12 @@ def add_variables(budget_core, les_text, month):
             value = int(les_text[idx][idx2])
         except Exception:
             value = 0
-        budget_core.append(add_row(VARIABLE_TEMPLATE, header, value, month))
+        budget.append(add_row(VARIABLE_TEMPLATE, header, value, month))
 
-    return budget_core
+    return budget
 
 
-def add_ent_ded_alt_rows(budget_core, les_text, month):
+def add_ent_ded_alt_rows(budget, les_text, month):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
 
     ents = parse_pay_section(les_text[9])
@@ -191,9 +188,9 @@ def add_ent_ded_alt_rows(budget_core, les_text, month):
         else:
             continue
 
-        budget_core.append(add_row(BUDGET_TEMPLATE, header, value, month))
+        budget.append(add_row(BUDGET_TEMPLATE, header, value, month))
 
-    return budget_core
+    return budget
 
 
 def parse_pay_section(les_text):
@@ -246,43 +243,55 @@ def add_row(TEMPLATE, header, value, month):
     return row
 
 
+
 # =========================
-# expand budget
+# add and remove months
 # =========================
 
-def expand_budget(months_num, row_header="", col_month="", value=None, repeat=False):
+def remove_month(budget, month):
+    for row in budget:
+        if month in row:
+            del row[month]
+
+
+def add_months(budget, prev_month, months_num):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    budget = session.get('budget_core', [])
-    prev_month = session.get('initial_month', None)
     month_idx = MONTHS_SHORT.index(prev_month)
+    month_headers = []
 
-    for i in range(1, months_num):
+    for i in range(months_num):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
-        prev_month = prev_month
 
-        update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        update_ent_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        calculate_taxable_income(budget, next_month)
-        update_ded_alt_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
-        calculate_total_taxes(budget, next_month)
-        calculate_gross_net_pay(budget, next_month)
+        add_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False)
 
-        for row in budget:
-            if row['header'] == "TSP YTD Deductions":
-                trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
-                roth_row = next(r for r in budget if r['header'] == "Roth TSP")
-                row[next_month] = abs(trad_row.get(next_month, Decimal("0.00"))) + abs(roth_row.get(next_month, Decimal("0.00")))
-
-            if row['header'] == "Difference":
-                net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
-                prev_net_pay = net_pay_row.get(prev_month, Decimal("0.00"))
-                curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
-                row[next_month] = curr_net_pay - prev_net_pay
-
+        month_headers.append(next_month)
         prev_month = next_month
 
-    return budget
+    month_headers = get_month_headers(budget)
+
+    return budget, month_headers
+
+
+def add_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False):
+    update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat)
+    update_ent_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+    calculate_taxable_income(budget, next_month)
+    update_ded_alt_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+    calculate_total_taxes(budget, next_month)
+    calculate_gross_net_pay(budget, next_month)
+
+    for row in budget:
+        if row['header'] == "TSP YTD Deductions":
+            trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
+            roth_row = next(r for r in budget if r['header'] == "Roth TSP")
+            row[next_month] = abs(trad_row.get(next_month, Decimal("0.00"))) + abs(roth_row.get(next_month, Decimal("0.00")))
+
+        if row['header'] == "Difference":
+            net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
+            prev_net_pay = net_pay_row.get(prev_month, Decimal("0.00"))
+            curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
+            row[next_month] = curr_net_pay - prev_net_pay
 
 
 def update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat):

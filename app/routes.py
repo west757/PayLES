@@ -11,7 +11,9 @@ from app.les import (
 )
 from app.budget import (
     build_budget,
-    expand_budget,
+    remove_month,
+    add_months,
+    get_month_headers,
 )
 from app.forms import (
     HomeForm,
@@ -49,18 +51,10 @@ def submit_les():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget = build_budget(les_text)
-        budget = expand_budget(flask_app.config['DEFAULT_MONTHS_NUM'])
+        budget, initial_month = build_budget(les_text)
+        budget, month_headers = add_months(budget, initial_month, flask_app.config['DEFAULT_MONTHS_NUM'])
 
-        difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
-        if difference_row:
-            month_headers = [key for key in difference_row.keys() if key != 'header']
-        else:
-            month_headers = []
-
-        #for row in budget_core:
-        #    print(row)
-        #    print("")
+        session['budget'] = budget
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
@@ -78,17 +72,57 @@ def submit_les():
         return jsonify({'message': message}), 400
     
 
-@flask_app.route('/update_budget', methods=['POST'])
-def update_budget():
-    months_num = int(request.form.get('months_display', flask_app.config['DEFAULT_MONTHS_NUM']))
-    print(months_num)
-    budget = expand_budget(months_num)
 
-    difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
-    if difference_row:
-        month_headers = [key for key in difference_row.keys() if key != 'header']
-    else:
-        month_headers = []
+
+
+
+
+@flask_app.route('/update_budget_months', methods=['POST'])
+def update_budget_months():
+    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+    prev_months_num = len(month_headers)
+
+    if next_months_num < prev_months_num:
+        months_to_remove = month_headers[next_months_num:]
+        for month in months_to_remove:
+            remove_month(budget, month)
+        month_headers = month_headers[:next_months_num]
+
+    elif next_months_num > prev_months_num:
+        months_to_add = next_months_num - prev_months_num
+        prev_month = month_headers[-1]
+        budget, month_headers = add_months(budget, prev_month, months_to_add)
+
+    context = {
+        'budget': budget,
+        'month_headers': month_headers,
+    }
+    return render_template('budget.html', **context)
+
+
+
+@flask_app.route('/update_budget_cell', methods=['POST'])
+def update_budget_cell():
+    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
+    row_header = request.form.get('row_header', '')
+    col_month = request.form.get('col_month', '')
+    value = request.form.get('value', 0)
+    repeat = request.form.get('repeat', False)
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+
+    if col_month in month_headers:
+        idx = month_headers.index(col_month)
+        months_to_remove = month_headers[idx:]
+        for month in months_to_remove:
+            remove_month(budget, month)
+        month_headers = month_headers[:idx]
+
+    months_to_add = next_months_num - len(month_headers)
+    prev_month = month_headers[-1] if month_headers else session.get('initial_month')
+    budget, month_headers = add_months(budget, prev_month, months_to_add, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
     context = {
         'budget': budget,
