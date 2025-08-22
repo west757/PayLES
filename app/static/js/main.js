@@ -99,8 +99,8 @@ document.addEventListener('change', function(e) {
 
 // beforeinput event listeners
 document.addEventListener('beforeinput', function(e) {
-    // restricts decimal inpuit
-    if (e.target.classList.contains('input-decimal')) {
+    // restricts float inpuit
+    if (e.target.classList.contains('input-float')) {
         const input = e.target;
         const value = input.value;
         const selectionStart = input.selectionStart;

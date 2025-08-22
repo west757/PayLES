@@ -1,5 +1,4 @@
 from datetime import timedelta
-from decimal import Decimal
 from pathlib import Path
 import pandas as pd
 import secrets
@@ -32,12 +31,12 @@ class Config:
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
     DEPENDENTS_MAX = 9
-    FICA_SOCIALSECURITY_TAX_RATE = Decimal(0.062)
-    FICA_MEDICARE_TAX_RATE = Decimal(0.0145)
+    FICA_SOCIALSECURITY_TAX_RATE = 0.062
+    FICA_MEDICARE_TAX_RATE = 0.0145
     TRAD_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
     TSP_CONTRIBUTION_LIMIT = 23500
-    BAS_AMOUNT = [Decimal(465.77), Decimal(320.78)]
+    BAS_AMOUNT = [465.77, 320.78]
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -102,10 +101,8 @@ class Config:
         dtype={
             'status': str, 
             'bracket': int,
+            'rate': float,
         },
-        converters={
-            'rate': lambda x: Decimal(x),
-        }
     )
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
         dtype={
@@ -131,23 +128,19 @@ class Config:
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={
             'coverage': str,
+            'premium': float,
             'tsgli_premium': int,
+            'total': float,
         },
-        converters={
-            'premium': lambda x: Decimal(x),
-            'total': lambda x: Decimal(x),
-        }
     )
     SGLI_COVERAGES = SGLI_RATES['coverage'].tolist()
     STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
         dtype={
             'state': str,
             'single_bracket': int,
+            'single_rate': float,
             'married_bracket': int,
-        },
-        converters={
-            'single_rate': lambda x: Decimal(x),
-            'married_rate': lambda x: Decimal(x),
+            'married_rate': float,
         }
     )
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",

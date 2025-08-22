@@ -1,6 +1,4 @@
 from datetime import datetime
-from decimal import Decimal
-from flask import session
 import pandas as pd
 import re
 
@@ -45,7 +43,7 @@ def build_budget(les_text):
     budget = calculate_taxable_income(budget, initial_month, init=True)
     budget = calculate_total_taxes(budget, initial_month, init=True)
     budget = calculate_gross_net_pay(budget, initial_month, init=True)
-    budget.append({'header': 'Difference', initial_month: Decimal("0.00")})
+    budget.append({'header': 'Difference', initial_month: 0.00})
 
     return budget, initial_month
 
@@ -184,7 +182,7 @@ def add_ent_ded_alt_rows(budget, les_text, month):
         if lesname in ent_ded_alt_dict:
             value = ent_ded_alt_dict[lesname]
         elif required:
-            value = Decimal("0.00")
+            value = 0.00
         else:
             continue
 
@@ -216,9 +214,11 @@ def parse_pay_section(les_text):
 
         value_str = text_list[i]
         try:
-            value = Decimal(value_str)
+            value = float(value_str)
         except Exception:
-            value = Decimal("0.00")
+            value = 0.00
+
+        value = round(value, 2)
 
         header = " ".join(header_parts)
         if header.upper() != "TOTAL" and header != "":
@@ -285,12 +285,12 @@ def add_month(budget, prev_month, next_month, row_header="", col_month="", value
         if row['header'] == "TSP YTD Deductions":
             trad_row = next(r for r in budget if r['header'] == "Traditional TSP")
             roth_row = next(r for r in budget if r['header'] == "Roth TSP")
-            row[next_month] = abs(trad_row.get(next_month, Decimal("0.00"))) + abs(roth_row.get(next_month, Decimal("0.00")))
+            row[next_month] = abs(trad_row.get(next_month, 0.00)) + abs(roth_row.get(next_month, 0.00))
 
         if row['header'] == "Difference":
             net_pay_row = next(r for r in budget if r['header'] == "Net Pay")
-            prev_net_pay = net_pay_row.get(prev_month, Decimal("0.00"))
-            curr_net_pay = net_pay_row.get(next_month, Decimal("0.00"))
+            prev_net_pay = net_pay_row.get(prev_month, 0.00)
+            curr_net_pay = net_pay_row.get(next_month, 0.00)
             row[next_month] = curr_net_pay - prev_net_pay
 
 

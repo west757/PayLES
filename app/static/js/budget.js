@@ -110,7 +110,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         inputWrapper = input;
     }
 
-    else if (fieldType === 'decimal') {
+    else if (fieldType === 'float') {
         inputWrapper = document.createElement('div');
         inputWrapper.style.display = 'flex';
         inputWrapper.style.alignItems = 'center';
@@ -191,7 +191,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 function updateCells(repeat) {
     let {rowHeader, colMonth, fieldType} = currentEdit;
 
-    let input = document.querySelector('.input-int, .input-string, .input-decimal, select');
+    let input = document.querySelector('.input-int, .input-string, .input-float, select');
     let value = input.value;
 
     if (!validateInput(fieldType, rowHeader, value)) return;
@@ -242,7 +242,7 @@ function validateInput(fieldType, rowHeader, value) {
         }
     }
 
-    if (fieldType === 'decimal') {
+    if (fieldType === 'float') {
         if (!/^\d{0,4}(\.\d{0,2})?$/.test(value)) {
             showToast('Value must be a decimal with up to 4 digits before and 2 after the decimal.');
             return false;
