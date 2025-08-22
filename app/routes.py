@@ -54,7 +54,7 @@ def submit_les():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, initial_month = build_budget(les_text)
-        budget, month_headers = add_months(budget, initial_month, flask_app.config['DEFAULT_MONTHS_NUM'])
+        budget, month_headers = add_months(budget, initial_month, flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
 
         session['budget'] = budget
 

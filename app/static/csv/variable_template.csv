@@ -5,17 +5,17 @@ Grade,grade,v,string,False,True,select,basepay
 Zip Code,zip_code,v,string,False,True,string,bah
 Military Housing Area,military_housing_area,v,string,False,False,none,bah
 Home of Record,home_of_record,v,string,False,True,select,bah
-Dependents,dependents,v,int,False,True,integer,bah
+Dependents,dependents,v,int,False,True,int,bah
 Federal Filing Status,federal_filing_status,v,string,False,True,select,federaltaxes
 State Filing Status,state_filing_status,v,string,False,True,select,statetaxes
 SGLI Coverage,sgli_coverage,v,string,False,True,select,sgli
 Combat Zone,combat_zone,v,string,False,True,select,combatzone
 TSP YTD Deductions,tsp_ytd_deductions,z,decimal,False,False,none,tsp
-Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,integer,basepay
-Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,integer,specialty
-Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,integer,incentive
-Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,int,False,True,integer,bonus
-Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,integer,basepay
-Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,integer,specialty
-Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,integer,incentive
-Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,integer,bonus
+Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,int,basepay
+Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,int,specialty
+Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,int,incentive
+Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,int,False,True,int,bonus
+Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,int,basepay
+Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,int,specialty
+Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,int,incentive
+Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,int,bonus

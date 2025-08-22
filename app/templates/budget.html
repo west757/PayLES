@@ -3,18 +3,18 @@
 
 {% macro format_cell(row, col) %}
     {% set cell_val = row[col] %}
-    {% if row.dtype != 'decimal' %}
+    {% if row.dtype != 'decimal' and row.dtype is defined %}
         {% if row.type == 't' %}
             {{ cell_val }}%
         {% else %}
             {{ cell_val }}
         {% endif %}
     {% else %}
-        {% set val = cell_val|string %}
-        {% if val.startswith('-') %}
-            -${{ val[1:] }}
+        {% set val = cell_val|float %}
+        {% if val < 0 %}
+            -${{ "{:,.2f}".format(-val) }}
         {% else %}
-            ${{ val }}
+            ${{ "{:,.2f}".format(val) }}
         {% endif %}
     {% endif %}
 {% endmacro %}
@@ -30,13 +30,10 @@
 
         {% for row in budget %}
             {% set row_class = "" %}
-
-            {% if row.header in VARIABLE_TEMPLATE %}
-                {% if VARIABLE_TEMPLATE[row.header]['type'] == 'v' %}
-                    {% set row_class = "var-row" %}
-                {% elif VARIABLE_TEMPLATE[row.header]['type'] == 't' %}
-                    {% set row_class = "tsp-row" %}
-                {% endif %}
+            {% if row.type == 'v' %}
+                {% set row_class = "var-row" %}
+            {% elif row.type == 't' %}
+                {% set row_class = "tsp-row" %}
             {% endif %}
 
             <tr class="{{ row_class }}">
@@ -55,8 +52,13 @@
                 {% for col in month_headers %}
                     {% if row.editable %}
                         <td class="cell">
+                            <!--
                             <button class="styled-table-button cell-button" hx-post="/update_cells" hx-target="#budget" hx-swap="innerHTML"
                                     hx-vals='{"row": "{{ row.header }}", "col": "{{ col }}", "value": "{{ row[col] }}"}'>
+                                {{ format_cell(row, col) }}
+                            </button>
+                            -->
+                            <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}">
                                 {{ format_cell(row, col) }}
                             </button>
                         </td>
