@@ -76,9 +76,9 @@ document.addEventListener('click', function(e) {
 
 // change event listeners
 document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'months-display-dropdown') {
-        console.log("Months number changed to:", e.target.value);
-    }
+    //if (e.target && e.target.id === 'months-display-dropdown') {
+    //    console.log("Months number changed to:", e.target.value);
+    //}
 
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
         highlight_changes();
