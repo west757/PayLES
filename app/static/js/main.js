@@ -1,3 +1,9 @@
+// page load event listener
+document.addEventListener('DOMContentLoaded', function() {
+    initConfigVars();
+});
+
+
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     try {
@@ -56,15 +62,19 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    
+
     // enter edit mode for clicked cell
     if (e.target.classList.contains('cell-button')) {
-        const rowHeader = e.target.getAttribute('data-row');
-        const colName = e.target.getAttribute('data-col');
+        let rowHeader = e.target.getAttribute('data-row');
+        let colMonth = e.target.getAttribute('data-col');
+        let value = e.target.innerText;
+        let fieldType = e.target.getAttribute('data-field');
 
-        console.log('Row header:', rowHeader, 'Column name:', colName, "Value: ", e.target.innerText);
+        console.log('Row header:', rowHeader, 'Column name:', colMonth, "Value: ", value, "Field type: ", fieldType);
+
+        enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
     }
-
+    
 
     // export button
     if (e.target && e.target.id === 'export-button') {
