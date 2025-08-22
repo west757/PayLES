@@ -254,7 +254,7 @@ def remove_month(budget, month):
             del row[month]
 
 
-def add_months(budget, prev_month, months_num):
+def add_months(budget, prev_month, months_num, row_header="", col_month="", value=None, repeat=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     month_idx = MONTHS_SHORT.index(prev_month)
     month_headers = []
@@ -263,7 +263,7 @@ def add_months(budget, prev_month, months_num):
         month_idx = (month_idx + 1) % 12
         next_month = MONTHS_SHORT[month_idx]
 
-        add_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False)
+        add_month(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
         month_headers.append(next_month)
         prev_month = next_month
@@ -274,10 +274,10 @@ def add_months(budget, prev_month, months_num):
 
 
 def add_month(budget, prev_month, next_month, row_header="", col_month="", value=None, repeat=False):
-    update_variables(budget, prev_month, next_month, row_header, col_month, value, repeat)
-    update_ent_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+    update_variables(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+    update_ent_rows(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
     calculate_taxable_income(budget, next_month)
-    update_ded_alt_rows(budget, prev_month, next_month, row_header, col_month, value, repeat)
+    update_ded_alt_rows(budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
     calculate_total_taxes(budget, next_month)
     calculate_gross_net_pay(budget, next_month)
 

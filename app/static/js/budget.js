@@ -12,19 +12,36 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     //showOverlay();
     disableInputsExcept([]);
 
-    let input;
+    let input, inputWrapper;
 
     if (fieldType === 'select') {
         input = document.createElement('select');
-        input.classList.add('dropdown');
         let options = [];
 
-        if (rowHeader === 'Grade') options = window.GRADES;
-        else if (rowHeader === 'Home of Record') options = window.HOME_OF_RECORDS;
-        else if (rowHeader === 'Federal Filing Status') options = ['Single', 'Married', 'Head of Household'];
-        else if (rowHeader === 'State Filing Status') options = ['Single', 'Married'];
-        else if (rowHeader === 'SGLI Coverage') options = window.SGLI_COVERAGES;
-        else if (rowHeader === 'Combat Zone') options = ['No', 'Yes'];
+        if (rowHeader === 'Grade') {
+            options = window.GRADES;
+            input.classList.add('input-short');
+        }
+        else if (rowHeader === 'Home of Record') {
+            options = window.HOME_OF_RECORDS;
+            input.classList.add('input-short');
+        }
+        else if (rowHeader === 'Federal Filing Status') {
+            options = ['Single', 'Married', 'Head of Household'];
+            input.classList.add('input-mid');
+        }
+        else if (rowHeader === 'State Filing Status') {
+            options = ['Single', 'Married'];
+            input.classList.add('input-mid');
+        }
+        else if (rowHeader === 'SGLI Coverage') {
+            options = window.SGLI_COVERAGES;
+            input.classList.add('input-mid');
+        }
+        else if (rowHeader === 'Combat Zone') {
+            options = ['No', 'Yes'];
+            input.classList.add('input-short');
+        }
 
         options.forEach(opt => {
             let o = document.createElement('option');
@@ -33,33 +50,109 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             if (opt === value) o.selected = true;
             input.appendChild(o);
         });
+        inputWrapper = input;
+    } 
 
-    } else if (fieldType === 'int') {
-        input = document.createElement('input');
-        input.type = 'number';
-        input.maxLength = 3;
-        input.placeholder = value;
-        input.classList.add('styled-table-input');
-        input.pattern = '\\d{1,3}';
+    else if (fieldType === 'int' && rowHeader.toLowerCase().includes('tsp')) {
+        inputWrapper = document.createElement('div');
+        inputWrapper.style.display = 'flex';
+        inputWrapper.style.alignItems = 'center';
+        inputWrapper.style.gap = '4px';
 
-    } else if (fieldType === 'string') {
         input = document.createElement('input');
+        input.classList.add('input-short');
         input.type = 'text';
-        input.maxLength = 5;
-        input.placeholder = value;
-        input.classList.add('styled-table-input');
+        input.maxLength = 3;
+        let numValue = String(value).replace('%', '').trim();
+        input.placeholder = numValue;
+        input.value = '';
+        input.addEventListener('input', function(e) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 3);
+        });
 
-    } else if (fieldType === 'decimal') {
+        let percentSpan = document.createElement('span');
+        percentSpan.textContent = '%';
+        percentSpan.style.marginLeft = '2px';
+
+        inputWrapper.appendChild(input);
+        inputWrapper.appendChild(percentSpan);
+    }
+
+    else if (fieldType === 'int' && rowHeader === 'Dependents') {
         input = document.createElement('input');
+        input.classList.add('input-short');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.placeholder = "0-9";
+        input.value = '';
+        input.addEventListener('input', function(e) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 1);
+        });
+        inputWrapper = input;
+    }
+
+    else if (fieldType === 'string') {
+        input = document.createElement('input');
+        input.classList.add('input-mid');
+        input.type = 'text';
+        if (rowHeader === 'Zip Code') {
+            input.maxLength = 5;
+            input.placeholder = value;
+            input.value = '';
+            input.addEventListener('input', function(e) {
+                input.value = input.value.replace(/\D/g, '').slice(0, 5);
+            });
+        } else {
+            input.maxLength = 5;
+            input.placeholder = value;
+            input.value = '';
+        }
+        inputWrapper = input;
+    }
+
+    else if (fieldType === 'decimal') {
+        inputWrapper = document.createElement('div');
+        inputWrapper.style.display = 'flex';
+        inputWrapper.style.alignItems = 'center';
+        inputWrapper.style.gap = '4px';
+
+        let isNegative = false;
+        let numValue = value;
+        if (typeof value === 'string') {
+            isNegative = value.startsWith('-');
+            numValue = value.replace(/[^0-9.]/g, '');
+        } else if (typeof value === 'number' && value < 0) {
+            isNegative = true;
+            numValue = Math.abs(value).toString();
+        }
+
+        let dollarSpan = document.createElement('span');
+        dollarSpan.textContent = (isNegative ? '-$' : '$');
+        dollarSpan.style.marginRight = '2px';
+
+        input = document.createElement('input');
+        input.classList.add('input-mid');
         input.type = 'text';
         input.maxLength = 7;
+        input.placeholder = numValue;
+        input.value = '';
+
+        inputWrapper.appendChild(dollarSpan);
+        inputWrapper.appendChild(input);
+    }
+
+    else {
+        input = document.createElement('input');
+        input.classList.add('input-mid');
+        input.type = 'text';
         input.placeholder = value;
-        input.classList.add('styled-table-input');
+        input.value = '';
+        inputWrapper = input;
     }
 
     cellButton.style.display = 'none';
     let cell = cellButton.parentElement;
-    cell.appendChild(input);
+    cell.appendChild(inputWrapper);
 
     let buttonContainer = document.createElement('div');
     buttonContainer.className = 'editingButtonContainer';
@@ -68,14 +161,14 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     onetimeButton.textContent = '▼';
     onetimeButton.classList.add('editing-button', 'onetime-button');
     onetimeButton.onclick = function() {
-        handleEditSubmit(false);
+        updateCells(false);
     };
 
     let repeatButton = document.createElement('button');
     repeatButton.textContent = '▶';
     repeatButton.classList.add('editing-button', 'repeat-button');
     repeatButton.onclick = function() {
-        handleEditSubmit(true);
+        updateCells(true);
     };
 
     let cancelButton = document.createElement('button');
@@ -89,30 +182,35 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     buttonContainer.appendChild(repeatButton);
     buttonContainer.appendChild(cancelButton);
 
-    cell.insertBefore(buttonContainer, input);
+    cell.insertBefore(buttonContainer, inputWrapper);
 
     disableInputsExcept([input, onetimeButton, repeatButton, cancelButton]);
 }
 
 
+function updateCells(repeat) {
+    let {rowHeader, colMonth, fieldType} = currentEdit;
 
-function exitEditMode() {
-    if (!isEditing || !currentEdit) return;
+    let input = document.querySelector('.input-int, .input-string, .input-decimal, select');
+    let value = input.value;
 
-    let {cellButton} = currentEdit;
-    let cell = cellButton.parentElement;
+    if (!validateInput(fieldType, rowHeader, value)) return;
 
-    cell.querySelectorAll('input, select, div').forEach(el => {
-        if (el !== cellButton) el.remove();
+    exitEditMode();
+
+    htmx.ajax('POST', '/update_cells', {
+        target: '#budget',
+        swap: 'innerHTML',
+        values: {
+            row_header: rowHeader,
+            col_month: colMonth,
+            value: value,
+            repeat: repeat
+        }
     });
 
-    cellButton.style.display = '';
-    //hideOverlay();
-    enableAllInputs();
-    isEditing = false;
-    currentEdit = null;
+    showToast(`Updated ${rowHeader} for ${colMonth} to ${value} (${repeat ? 'repeat' : 'onetime'})`);
 }
-
 
 
 function validateInput(fieldType, rowHeader, value) {
@@ -158,27 +256,19 @@ function validateInput(fieldType, rowHeader, value) {
 }
 
 
+function exitEditMode() {
+    if (!isEditing || !currentEdit) return;
 
-function handleEditSubmit(repeat) {
-    let {rowHeader, colMonth, fieldType} = currentEdit;
+    let {cellButton} = currentEdit;
+    let cell = cellButton.parentElement;
 
-    let input = document.querySelector('.input-int, .input-string, .input-decimal, select');
-    let value = input.value;
-
-    if (!validateInput(fieldType, rowHeader, value)) return;
-
-    exitEditMode();
-
-    htmx.ajax('POST', '/update_cells', {
-        target: '#budget',
-        swap: 'innerHTML',
-        values: {
-            row_header: rowHeader,
-            col_month: colMonth,
-            value: value,
-            repeat: repeat
-        }
+    cell.querySelectorAll('input, select, div').forEach(el => {
+        if (el !== cellButton) el.remove();
     });
 
-    showToast(`Updated ${rowHeader} for ${colMonth} to ${value} (${repeat ? 'repeat' : 'onetime'})`);
+    cellButton.style.display = '';
+    //hideOverlay();
+    enableAllInputs();
+    isEditing = false;
+    currentEdit = null;
 }

@@ -19,6 +19,10 @@
     {% endif %}
 {% endmacro %}
 
+<script id="budget-data" type="application/json">
+    {{ budget|tojson|safe }}
+</script>
+
 <table id="budget-table" class="styled-table">
     <tbody>
         <tr>
