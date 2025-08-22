@@ -173,7 +173,11 @@ function enableAllInputs() {
 }
 
 
-
+function getBudgetValue(rowHeader, colMonth) {
+    if (!window.BUDGET_DATA) return '';
+    let row = window.BUDGET_DATA.find(r => r.header === rowHeader);
+    return row && row[colMonth] !== undefined ? row[colMonth] : '';
+}
 
 
 

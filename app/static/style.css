@@ -357,11 +357,18 @@ input[type="text"], select {
     height: 1.75rem;
     padding: 0.25rem;
     text-align: center;
-    width: 5.5rem;
 }
 
 .input-long {
     width: 10rem;
+}
+
+.input-mid {
+    width: 5.5rem;
+}
+
+.input-short {
+    width: 3.5rem;
 }
 
 #months-num-dropdown {

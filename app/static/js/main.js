@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
 });
 
-
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     try {
@@ -67,8 +66,8 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
         let colMonth = e.target.getAttribute('data-col');
-        let value = e.target.innerText;
         let fieldType = e.target.getAttribute('data-field');
+        let value = getBudgetValue(rowHeader, colMonth);
         enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
     }
     
@@ -136,7 +135,6 @@ document.addEventListener('beforeinput', function(e) {
 
 
 document.body.addEventListener('htmx:afterSwap', function(evt) {
-    // Only run if the swapped content is #content (from content.html)
     if (evt.target && evt.target.id === 'content') {
         const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
@@ -170,5 +168,10 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
                 settings.style.top = '2rem';
             }
         });
+    }
+
+    const budgetDataScript = document.getElementById('budget-data');
+    if (budgetDataScript) {
+        window.BUDGET_DATA = JSON.parse(budgetDataScript.textContent);
     }
 });
