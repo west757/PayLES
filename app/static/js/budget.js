@@ -39,7 +39,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.type = 'number';
         input.maxLength = 3;
         input.placeholder = value;
-        input.classList.add('input-box', 'input-short');
+        input.classList.add('styled-table-input');
         input.pattern = '\\d{1,3}';
 
     } else if (fieldType === 'string') {
@@ -47,14 +47,14 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.type = 'text';
         input.maxLength = 5;
         input.placeholder = value;
-        input.classList.add('input-box', 'input-mid');
+        input.classList.add('styled-table-input');
 
     } else if (fieldType === 'decimal') {
         input = document.createElement('input');
         input.type = 'text';
         input.maxLength = 7;
         input.placeholder = value;
-        input.classList.add('input-box', 'input-mid');
+        input.classList.add('styled-table-input');
     }
 
     cellButton.style.display = 'none';

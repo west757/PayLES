@@ -281,30 +281,33 @@ footer {
 
 
 .editing-button {
-    height: 1.5rem;
-    width: 1.5rem;
-    font-size: 1rem;
-    border-radius: 0.4rem;
-    border: none;
-    cursor: pointer;
-    color: white;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-    margin: 0 1px;
+    border: none;
+    border-radius: 0.5rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    height: 1.5rem;
+    justify-content: center;
+    margin: 0.2rem 0.2rem;
+    transition: background 0.2s;
+    width: 1.5rem;
 }
 
 .editing-button.onetime-button {
     background: var(--primary_green_accent_color);
 }
+
 .editing-button.repeat-button {
     background: var(--primary_green_accent_color);
 }
+
 .editing-button.cancel-button {
     background: var(--highlight_red_color);
 }
+
 .editing-button:disabled {
     background: var(--button_disabled_color);
     cursor: not-allowed;
@@ -341,19 +344,24 @@ input[type="submit"]:disabled {
 
 
 /* =========================
-   dropdowns
+   inputs and dropdowns
    ========================= */
 
-select.dropdown {
+input[type="text"], select {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
+    font-family: Arial, sans-serif;
     font-size: 0.92rem;
-    height: 1.85rem;
+    height: 1.75rem;
     padding: 0.25rem;
     text-align: center;
-    width: 4.75rem;
+    width: 5.5rem;
+}
+
+.input-long {
+    width: 10rem;
 }
 
 #months-num-dropdown {
@@ -362,35 +370,6 @@ select.dropdown {
 
 #export-dropdown {
     margin: 0;
-}
-
-
-/* =========================
-   input boxes
-   ========================= */
-
-input.input-box {
-    background-color: var(--input_background_color);
-    border: 1px solid var(--secondary_dark_accent_color);
-    border-radius: 0.25rem;
-    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
-    font-family: Arial, sans-serif;
-    font-size: 0.92rem;
-    height: 1.85rem;
-    padding: 0.25rem;
-    text-align: center;
-}
-
-.input-long {
-    width: 10rem;
-}
-
-.input-mid {
-    width: 5.5rem;
-}
-
-.input-short {
-    width: 4.75rem;
 }
 
 
@@ -614,8 +593,6 @@ input[type=file] {
 .editingButtonContainer {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 4px;
     z-index: 9000;
 }
 
