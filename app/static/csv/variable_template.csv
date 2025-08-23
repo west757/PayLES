@@ -1,20 +1,20 @@
-﻿header,varname,type,dtype,tax,editable,field,modal
-Year,year,v,int,False,False,none,basepay
-Months in Service,months_in_service,v,int,False,False,none,basepay
-Grade,grade,v,string,False,True,select,basepay
-Zip Code,zip_code,v,string,False,True,string,bah
-Military Housing Area,military_housing_area,v,string,False,False,none,bah
-Home of Record,home_of_record,v,string,False,True,select,bah
-Dependents,dependents,v,int,False,True,int,bah
-Federal Filing Status,federal_filing_status,v,string,False,True,select,federaltaxes
-State Filing Status,state_filing_status,v,string,False,True,select,statetaxes
-SGLI Coverage,sgli_coverage,v,string,False,True,select,sgli
-Combat Zone,combat_zone,v,string,False,True,select,combatzone
-Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,int,basepay
-Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,int,specialty
-Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,int,incentive
-Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,int,False,True,int,bonus
-Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,int,basepay
-Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,int,specialty
-Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,int,incentive
-Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,int,bonus
+﻿header,varname,type,dtype,tax,editable,modal
+Year,year,v,none,False,False,basepay
+Months in Service,months_in_service,v,none,False,False,basepay
+Grade,grade,v,select,False,True,basepay
+Zip Code,zip_code,v,string,False,True,bah
+Military Housing Area,military_housing_area,v,none,False,False,bah
+Home of Record,home_of_record,v,select,False,True,bah
+Dependents,dependents,v,int,False,True,bah
+Federal Filing Status,federal_filing_status,v,select,False,True,federaltaxes
+State Filing Status,state_filing_status,v,select,False,True,statetaxes
+SGLI Coverage,sgli_coverage,v,select,False,True,sgli
+Combat Zone,combat_zone,v,select,False,True,combatzone
+Trad TSP Base Rate,trad_tsp_base_rate,t,int,False,True,basepay
+Trad TSP Specialty Rate,trad_tsp_specialty_rate,t,int,False,True,specialty
+Trad TSP Incentive Rate,trad_tsp_incentive_rate,t,int,False,True,incentive
+Trad TSP Bonus Rate,trad_tsp_bonus_rate,t,int,False,True,bonus
+Roth TSP Base Rate,roth_tsp_base_rate,t,int,False,True,basepay
+Roth TSP Specialty Rate,roth_tsp_specialty_rate,t,int,False,True,specialty
+Roth TSP Incentive Rate,roth_tsp_incentive_rate,t,int,False,True,incentive
+Roth TSP Bonus Rate,roth_tsp_bonus_rate,t,int,False,True,bonus

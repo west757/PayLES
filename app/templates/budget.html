@@ -3,7 +3,7 @@
 
 {% macro format_cell(row, col) %}
     {% set cell_val = row[col] %}
-    {% if row.dtype != 'float' and row.dtype is defined %}
+    {% if row.field != 'float' and row.field is defined %}
         {% if row.type == 't' %}
             {{ cell_val }}%
         {% else %}
