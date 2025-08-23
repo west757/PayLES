@@ -184,12 +184,53 @@ function enableAllInputs() {
 
 
 function getBudgetValue(rowHeader, colMonth) {
+    // If budget data is not loaded, return empty string
     if (!window.BUDGET_DATA) return '';
-    let row = window.BUDGET_DATA.find(r => r.header === rowHeader);
-    return row && row[colMonth] !== undefined ? row[colMonth] : '';
+
+    // Find the row object with the matching header
+    const row = window.BUDGET_DATA.find(r => r.header === rowHeader);
+
+    // If row exists and has the column value, return it; otherwise, return empty string
+    if (row && row.hasOwnProperty(colMonth)) {
+        return row[colMonth];
+    }
+    return '';
 }
 
 
+function extractMonthHeaders() {
+    const differenceRow = window.BUDGET_DATA.find(r => r.header === "Difference");
+    return Object.keys(differenceRow).filter(k => k !== "header");
+}
+
+
+function disableTSPRateButtons() {
+    const months = extractMonthHeaders();
+    months.forEach(month => {
+        const tradBase = getBudgetValue('Trad TSP Base Rate', month);
+        const rothBase = getBudgetValue('Roth TSP Base Rate', month);
+
+        const tradRows = [
+            'Trad TSP Specialty Rate',
+            'Trad TSP Incentive Rate',
+            'Trad TSP Bonus Rate'
+        ];
+        const rothRows = [
+            'Roth TSP Specialty Rate',
+            'Roth TSP Incentive Rate',
+            'Roth TSP Bonus Rate'
+        ];
+
+        tradRows.forEach(row => {
+            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-col="${month}"]`);
+            if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
+        });
+        rothRows.forEach(row => {
+            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-col="${month}"]`);
+            if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
+        });
+    });
+}
 
 
 

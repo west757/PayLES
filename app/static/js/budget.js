@@ -76,7 +76,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         inputWrapper.style.gap = '4px';
 
         input = document.createElement('input');
-        input.classList.add('input-short');
+        input.classList.add('table-input', 'input-short');
         input.type = 'text';
         input.maxLength = 3;
         let numValue = String(value).replace('%', '').trim();
@@ -236,8 +236,6 @@ function updateBudget(repeat) {
         value = round(value, 2);
     }
 
-    console.log("value: ", value, " and dtype: ", typeof value);
-
     if (!validateInput(fieldType, rowHeader, value)) return;
 
     exitEditMode();
@@ -296,6 +294,74 @@ function validateInput(fieldType, rowHeader, value) {
             return false;
         }
     }
+
+
+    // TSP base rate validation
+    if (rowHeader === 'Trad TSP Base Rate') {
+        if (value > window.TRAD_TSP_RATE_MAX) {
+            showToast(`Trad TSP Base Rate cannot be more than ${window.TRAD_TSP_RATE_MAX}.`);
+            return false;
+        }
+
+        const month = currentEdit.colMonth;
+        const rows = [
+            'Trad TSP Specialty Rate',
+            'Trad TSP Incentive Rate',
+            'Trad TSP Bonus Rate'
+        ];
+
+        for (let r of rows) {
+            const v = getBudgetValue(r, month);
+            if (parseInt(v, 10) > 0 && value === 0) {
+                showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0.');
+                return false;
+            }
+        }
+    }
+
+    if (rowHeader === 'Roth TSP Base Rate') {
+        if (value > window.ROTH_TSP_RATE_MAX) {
+            showToast(`Roth TSP Base Rate cannot be more than ${window.ROTH_TSP_RATE_MAX}.`);
+            return false;
+        }
+
+        const month = currentEdit.colMonth;
+        const rows = [
+            'Roth TSP Specialty Rate',
+            'Roth TSP Incentive Rate',
+            'Roth TSP Bonus Rate'
+        ];
+
+        for (let r of rows) {
+            const v = getBudgetValue(r, month);
+            if (parseInt(v, 10) > 0 && value === 0) {
+                showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0.');
+                return false;
+            }
+        }
+
+    }
+
+    if (
+        rowHeader.includes('Specialty Rate') ||
+        rowHeader.includes('Incentive Rate') ||
+        rowHeader.includes('Bonus Rate')
+    ) {
+        if (value > 100) {
+            showToast('Specialty/Incentive/Bonus Rate cannot be more than 100.');
+            return false;
+        }
+        if (rowHeader.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.colMonth) === 0) {
+            showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0.');
+            return false;
+        }
+        if (rowHeader.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.colMonth) === 0) {
+            showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0.');
+            return false;
+        }
+    }
+
+
     return true;
 }
 
@@ -314,7 +380,10 @@ function exitEditMode() {
     cellButton.style.display = '';
     //hideOverlay();
     enableAllInputs();
+    disableTSPRateButtons();
     isEditing = false;
     currentEdit = null;
 }
+
+
 
