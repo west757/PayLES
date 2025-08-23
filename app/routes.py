@@ -136,8 +136,8 @@ def update_months():
 
 
 @csrf.exempt
-@flask_app.route('/add_custom_row', methods=['POST'])
-def add_row():
+@flask_app.route('/update_custom', methods=['POST'])
+def update_custom():
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
     method = request.form.get('method', '')

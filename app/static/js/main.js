@@ -72,6 +72,13 @@ document.addEventListener('click', function(e) {
         }
     }
 
+    // open custom modal
+    if (e.target && e.target.id === 'button-custom') {
+        const customModalCheckbox = document.getElementById('custom');
+        customModalCheckbox.checked = true;
+        resetCustomModal();
+    }
+
     // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
@@ -79,14 +86,6 @@ document.addEventListener('click', function(e) {
         let fieldType = e.target.getAttribute('data-field');
         let value = getBudgetValue(rowHeader, colMonth);
         enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
-    }
-
-    // open add row modal
-    if (e.target && e.target.id === 'button-add-row') {
-        console.log("Open add row modal");
-        const addRowModalCheckbox = document.getElementById('add-row-modal');
-        addRowModalCheckbox.checked = true;
-        resetAddRowModal();
     }
 
     // export button
@@ -119,6 +118,8 @@ document.addEventListener('change', function(e) {
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
+        attachCustomModalListeners();
+
         const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
         const settings = document.getElementById('settings');
