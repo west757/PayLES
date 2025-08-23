@@ -193,7 +193,6 @@ function updateBudget(repeat) {
 
     let input = document.querySelector('.input-int, .input-string, .input-float, select');
     let value = input.value;
-    console.log("raw value: ", value, "dtype: ", typeof value, "repeat: ", repeat);
 
     if (fieldType === 'int') {
         value = parseInt(value, 10);
@@ -222,7 +221,6 @@ function updateBudget(repeat) {
 
 
 function validateInput(fieldType, rowHeader, value) {
-    console.log("value: ", value);
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
         return false;
