@@ -12,6 +12,16 @@ function initConfigVars() {
 }
 
 
+// sync settings container height with budget table
+function syncSettingsContainerHeight() {
+    const budget = document.getElementById('budget');
+    const settingsContainer = document.getElementById('settings-container');
+    if (budget && settingsContainer) {
+        settingsContainer.style.height = budget.offsetHeight + 'px';
+    }
+}
+
+
 // show tooltip
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');

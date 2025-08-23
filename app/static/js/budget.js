@@ -14,6 +14,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 
     let input, inputWrapper;
 
+    // dropdown inputs
     if (fieldType === 'select') {
         input = document.createElement('select');
         let options = [];
@@ -53,6 +54,21 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         inputWrapper = input;
     } 
 
+    // dependents input
+    else if (fieldType === 'int' && rowHeader === 'Dependents') {
+        input = document.createElement('input');
+        input.classList.add('table-input', 'input-short');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.placeholder = "0-9";
+        input.value = '';
+        input.addEventListener('input', function(e) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 1);
+        });
+        inputWrapper = input;
+    }
+
+    // tsp inputs
     else if (fieldType === 'int' && rowHeader.toLowerCase().includes('tsp')) {
         inputWrapper = document.createElement('div');
         inputWrapper.style.display = 'flex';
@@ -72,29 +88,17 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 
         let percentSpan = document.createElement('span');
         percentSpan.textContent = '%';
-        percentSpan.style.marginLeft = '2px';
 
         inputWrapper.appendChild(input);
         inputWrapper.appendChild(percentSpan);
     }
 
-    else if (fieldType === 'int' && rowHeader === 'Dependents') {
-        input = document.createElement('input');
-        input.classList.add('input-short');
-        input.type = 'text';
-        input.maxLength = 1;
-        input.placeholder = "0-9";
-        input.value = '';
-        input.addEventListener('input', function(e) {
-            input.value = input.value.replace(/\D/g, '').slice(0, 1);
-        });
-        inputWrapper = input;
-    }
-
+    // string inputs
     else if (fieldType === 'string') {
         input = document.createElement('input');
-        input.classList.add('input-mid');
+        input.classList.add('table-input', 'input-mid');
         input.type = 'text';
+
         if (rowHeader === 'Zip Code') {
             input.maxLength = 5;
             input.placeholder = value;
@@ -107,9 +111,11 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             input.placeholder = value;
             input.value = '';
         }
+
         inputWrapper = input;
     }
 
+    // float inputs
     else if (fieldType === 'float') {
         inputWrapper = document.createElement('div');
         inputWrapper.style.display = 'flex';
@@ -126,32 +132,61 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             numValue = Math.abs(value).toString();
         }
 
-        let dollarSpan = document.createElement('span');
-        dollarSpan.textContent = (isNegative ? '-$' : '$');
-        dollarSpan.style.marginRight = '2px';
+        // Dollar and negative sign
+        let signSpan = document.createElement('span');
+        signSpan.textContent = (isNegative ? '-$' : '$');
 
         input = document.createElement('input');
-        input.classList.add('input-mid');
+        input.classList.add('table-input', 'input-mid2', 'input-float');
         input.type = 'text';
         input.maxLength = 7;
         input.placeholder = numValue;
         input.value = '';
 
-        inputWrapper.appendChild(dollarSpan);
-        inputWrapper.appendChild(input);
-    }
+        // Float input validation
+        input.addEventListener('input', function(e) {
+            let val = input.value;
 
-    else {
-        input = document.createElement('input');
-        input.classList.add('input-mid');
-        input.type = 'text';
-        input.placeholder = value;
-        input.value = '';
-        inputWrapper = input;
+            // Remove invalid characters
+            val = val.replace(/[^0-9.]/g, '');
+
+            // Only one decimal point
+            let parts = val.split('.');
+            if (parts.length > 2) {
+                val = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            // Limit digits before and after decimal
+            if (parts[0].length > 4) {
+                parts[0] = parts[0].slice(0, 4);
+            }
+            if (parts.length > 1 && parts[1].length > 2) {
+                parts[1] = parts[1].slice(0, 2);
+            }
+            val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+
+            // Trim leading zeros except for "0" or "0.xx"
+            if (val.startsWith('00')) {
+                val = val.replace(/^0+/, '0');
+            } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {
+                val = val.replace(/^0+/, '');
+            }
+
+            // Limit total length to 7
+            if (val.length > 7) {
+                val = val.slice(0, 7);
+            }
+
+            input.value = val;
+        });
+
+        inputWrapper.appendChild(signSpan);
+        inputWrapper.appendChild(input);
     }
 
     cellButton.style.display = 'none';
     let cell = cellButton.parentElement;
+    cell.classList.add('editing-cell');
     cell.appendChild(inputWrapper);
 
     let buttonContainer = document.createElement('div');
@@ -191,7 +226,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 function updateBudget(repeat) {
     let {rowHeader, colMonth, fieldType} = currentEdit;
 
-    let input = document.querySelector('.input-int, .input-string, .input-float, select');
+    let input = document.querySelector('.table-input, select');
     let value = input.value;
 
     if (fieldType === 'int') {
@@ -200,6 +235,8 @@ function updateBudget(repeat) {
         value = parseFloat(value);
         value = round(value, 2);
     }
+
+    console.log("value: ", value, " and dtype: ", typeof value);
 
     if (!validateInput(fieldType, rowHeader, value)) return;
 
@@ -242,13 +279,6 @@ function validateInput(fieldType, rowHeader, value) {
         }
     }
 
-    if (fieldType === 'string') {
-        if (value.length > 5) {
-            showToast('Value must be at most 5 characters.');
-            return false;
-        }
-    }
-
     if (fieldType === 'float') {
         if (!/^\d{0,4}(\.\d{0,2})?$/.test(value)) {
             showToast('Value must be a decimal with up to 4 digits before and 2 after the decimal.');
@@ -256,6 +286,13 @@ function validateInput(fieldType, rowHeader, value) {
         }
         if (value.length > 7) {
             showToast('Value must be at most 7 characters.');
+            return false;
+        }
+    }
+    
+    if (rowHeader === 'Zip Code') {
+        if (!/^\d{5}$/.test(value)) {
+            showToast('Zip code must be exactly 5 digits.');
             return false;
         }
     }
@@ -268,6 +305,7 @@ function exitEditMode() {
 
     let {cellButton} = currentEdit;
     let cell = cellButton.parentElement;
+    cell.classList.remove('editing-cell');
 
     cell.querySelectorAll('input, select, div').forEach(el => {
         if (el !== cellButton) el.remove();
@@ -279,3 +317,4 @@ function exitEditMode() {
     isEditing = false;
     currentEdit = null;
 }
+
