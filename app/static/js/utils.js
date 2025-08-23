@@ -144,29 +144,6 @@ function exportBudget() {
 }
 
 
-/*
-function showOverlay() {
-    let overlay = document.createElement('div');
-    overlay.id = 'edit-overlay';
-    overlay.style.position = 'fixed';
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = '100vw';
-    overlay.style.height = '100vh';
-    overlay.style.background = 'rgba(220,220,220,0.5)';
-    overlay.style.zIndex = 9998;
-    overlay.style.pointerEvents = 'none';
-    document.body.appendChild(overlay);
-}
-
-
-function hideOverlay() {
-    let overlay = document.getElementById('edit-overlay');
-    if (overlay) overlay.remove();
-}
-    */
-
-
 function disableInputsExcept(exceptions=[]) {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         if (!exceptions.includes(el)) {
@@ -184,13 +161,10 @@ function enableAllInputs() {
 
 
 function getBudgetValue(rowHeader, colMonth) {
-    // If budget data is not loaded, return empty string
     if (!window.BUDGET_DATA) return '';
-
-    // Find the row object with the matching header
+    
     const row = window.BUDGET_DATA.find(r => r.header === rowHeader);
 
-    // If row exists and has the column value, return it; otherwise, return empty string
     if (row && row.hasOwnProperty(colMonth)) {
         return row[colMonth];
     }

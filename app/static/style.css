@@ -554,7 +554,7 @@ input[type=file] {
 .styled-table td {
     border-left: 1px solid var(--table_border_color);
     border-top: 1px solid var(--table_border_color);
-    min-width: 6rem;
+    min-width: 7.25rem;
     text-align: center;
     padding: 0 1rem 0 1rem;
     vertical-align: middle;
