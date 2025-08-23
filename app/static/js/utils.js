@@ -12,33 +12,6 @@ function initConfigVars() {
 }
 
 
-// sync settings container height with budget table
-function syncSettingsContainerHeight() {
-    const budget = document.getElementById('budget');
-    const settingsContainer = document.getElementById('settings-container');
-    if (budget && settingsContainer) {
-        settingsContainer.style.height = budget.offsetHeight + 'px';
-    }
-}
-
-
-// show tooltip
-function showTooltip(evt, text) {
-    const tooltip = document.getElementById('tooltip');
-    tooltip.innerText = text;
-    tooltip.style.left = (evt.pageX + 10) + 'px';
-    tooltip.style.top = (evt.pageY + 10) + 'px';
-    tooltip.style.display = 'block';
-}
-
-
-// hide tooltip
-function hideTooltip() {
-    const tooltip = document.getElementById('tooltip');
-    tooltip.style.display = 'none';
-}
-
-
 // show toast messages
 function showToast(message, duration = 6500) {
     const MAX_TOASTS = 3;
@@ -66,8 +39,83 @@ function showToast(message, duration = 6500) {
 }
 
 
+// show tooltip
+function showTooltip(evt, text) {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.innerText = text;
+    tooltip.style.left = (evt.pageX + 10) + 'px';
+    tooltip.style.top = (evt.pageY + 10) + 'px';
+    tooltip.style.display = 'block';
+}
+
+
+// hide tooltip
+function hideTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.style.display = 'none';
+}
+
+
+// disable all inputs except those in exceptions array
+function disableInputsExcept(exceptions=[]) {
+    document.querySelectorAll('input, button, select, textarea').forEach(el => {
+        if (!exceptions.includes(el)) {
+            el.disabled = true;
+        }
+    });
+}
+
+
+// enable all inputs
+function enableAllInputs() {
+    document.querySelectorAll('input, button, select, textarea').forEach(el => {
+        el.disabled = false;
+    });
+}
+
+
+// drag and drop file upload
+(function() {
+    const dropContainer = document.getElementById("home-drop");
+    const fileInput = document.getElementById("home_input");
+
+    if (!dropContainer || !fileInput) return;
+
+    // prevent default browser behavior for drag/drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropContainer.addEventListener(eventName, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    });
+
+    // Highlight drop area on dragenter/dragover
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropContainer.addEventListener(eventName, function() {
+            dropContainer.classList.add('drag-active');
+        }, false);
+    });
+
+    // Remove highlight on dragleave/drop
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropContainer.addEventListener(eventName, function() {
+            dropContainer.classList.remove('drag-active');
+        }, false);
+    });
+
+    // Handle dropped files
+    dropContainer.addEventListener('drop', function(e) {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            // Optionally, trigger change event if needed
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+})();
+
+
 // highlight changes
-function highlight_changes() {
+function highlightChanges() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     var checkbox = document.getElementById('highlight-changes-checkbox');
     var checked = checkbox.checked;
@@ -103,7 +151,7 @@ function highlight_changes() {
 
 
 // show all variables
-function show_all_variables() {
+function showAllVariables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
     var rows = document.getElementsByClassName('var-row');
@@ -114,7 +162,7 @@ function show_all_variables() {
 
 
 // show tsp options
-function show_tsp_options() {
+function showTSPOptions() {
     var checkbox = document.getElementById('show-tsp-options-checkbox');
     var checked = checkbox.checked;
     var rows = document.getElementsByClassName('tsp-row');
@@ -144,22 +192,17 @@ function exportBudget() {
 }
 
 
-function disableInputsExcept(exceptions=[]) {
-    document.querySelectorAll('input, button, select, textarea').forEach(el => {
-        if (!exceptions.includes(el)) {
-            el.disabled = true;
-        }
-    });
+// sync settings container height with budget table
+function syncSettingsContainerHeight() {
+    const budget = document.getElementById('budget');
+    const settingsContainer = document.getElementById('settings-container');
+    if (budget && settingsContainer) {
+        settingsContainer.style.height = budget.offsetHeight + 'px';
+    }
 }
 
 
-function enableAllInputs() {
-    document.querySelectorAll('input, button, select, textarea').forEach(el => {
-        el.disabled = false;
-    });
-}
-
-
+// get budget value for a specific cell
 function getBudgetValue(rowHeader, colMonth) {
     if (!window.BUDGET_DATA) return '';
     
@@ -172,12 +215,14 @@ function getBudgetValue(rowHeader, colMonth) {
 }
 
 
+// extract month headers from the budget data
 function extractMonthHeaders() {
     const differenceRow = window.BUDGET_DATA.find(r => r.header === "Difference");
     return Object.keys(differenceRow).filter(k => k !== "header");
 }
 
 
+// disable TSP rate buttons
 function disableTSPRateButtons() {
     const months = extractMonthHeaders();
     months.forEach(month => {
@@ -206,42 +251,3 @@ function disableTSPRateButtons() {
     });
 }
 
-
-
-
-// =========================
-// drag and drop file upload
-// =========================
-
-(function() {
-    var dropContainer = document.getElementById("home-drop");
-    var fileInput = document.getElementById("home-input");
-    var form = dropContainer.closest("form");
-
-    if (!dropContainer || !fileInput || !form) return;
-
-    // prevent default drag behaviors
-    ["dragenter", "dragover", "dragleave", "drop"].forEach(function(eventName) {
-        dropContainer.addEventListener(eventName, function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }, false);
-    });
-
-    dropContainer.addEventListener("dragenter", function() {
-        dropContainer.classList.add("drag-active");
-    });
-
-    dropContainer.addEventListener("dragleave", function(e) {
-        if (e.target === dropContainer) {
-            dropContainer.classList.remove("drag-active");
-        }
-    });
-
-    dropContainer.addEventListener("drop", function(e) {
-        dropContainer.classList.remove("drag-active");
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            fileInput.files = e.dataTransfer.files;
-        }
-    });
-})();

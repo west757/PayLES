@@ -56,10 +56,9 @@ class Config:
     ROW_METADATA = [
     'varname',
     'type',
-    'dtype',
+    'field',
     'tax',
     'editable',
-    'field',
     'modal',
     ]
     

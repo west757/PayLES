@@ -85,10 +85,10 @@ def update_budget():
     repeat = request.form.get('repeat', False)
 
     row = next((r for r in budget if r.get('header') == row_header), None)
-    dtype = row.get('dtype')
-    if dtype in ('int', int):
+    field = row.get('field')
+    if field in ('int', int):
         value = int(value)
-    elif dtype in ('float', float):
+    elif field in ('float', float):
         value = float(value)
     repeat = str(repeat).lower() == "true"
 

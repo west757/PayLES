@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initConfigVars();
 });
 
+
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     try {
@@ -61,7 +62,6 @@ document.addEventListener('click', function(e) {
         }
     }
 
-
     // enter edit mode for clicked cell
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
@@ -71,14 +71,13 @@ document.addEventListener('click', function(e) {
         enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
     }
     
-
     // export button
     if (e.target && e.target.id === 'export-button') {
         e.preventDefault();
-        exportbudget();
+        exportBudget();
     }
 
-
+    // return home button
     if (e.target && e.target.id === 'return-home-button') {
         e.preventDefault();
         if (confirm("Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.")) {
@@ -91,16 +90,16 @@ document.addEventListener('click', function(e) {
 // change event listeners
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
-        highlight_changes();
+        highlightChanges();
     }
 
     if (e.target && e.target.id === 'show-all-variables-checkbox') {
-        show_all_variables();
+        showAllVariables();
         syncSettingsContainerHeight();
     }
 
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
-        show_tsp_options();
+        showTSPOptions();
         syncSettingsContainerHeight();
     }
 });
@@ -148,8 +147,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (budgetDataScript) {
         window.BUDGET_DATA = JSON.parse(budgetDataScript.textContent);
     }
-    highlight_changes();
-    show_all_variables();
-    show_tsp_options();
+    highlightChanges();
+    showAllVariables();
+    showTSPOptions();
     disableTSPRateButtons();
 });

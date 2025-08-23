@@ -243,7 +243,7 @@ function updateBudget(repeat) {
         }
     });
 
-    showToast(`Updated ${rowHeader} for ${colMonth} to ${value} (${repeat ? 'repeat' : 'onetime'})`);
+    /*showToast(`Updated ${rowHeader} for ${colMonth} to ${value} (${repeat ? 'repeat' : 'onetime'})`);*/
 }
 
 
