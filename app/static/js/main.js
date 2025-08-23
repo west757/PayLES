@@ -137,10 +137,11 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     }
 
     const budgetDataScript = document.getElementById('budget-data');
-    highlight_changes();
-    show_all_variables();
-    show_tsp_options();
     if (budgetDataScript) {
         window.BUDGET_DATA = JSON.parse(budgetDataScript.textContent);
     }
+    highlight_changes();
+    show_all_variables();
+    show_tsp_options();
+    disableTSPRateButtons();
 });
