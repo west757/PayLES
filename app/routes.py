@@ -84,6 +84,14 @@ def update_budget():
     value = request.form.get('value', 0)
     repeat = request.form.get('repeat', False)
 
+    row = next((r for r in budget if r.get('header') == row_header), None)
+    dtype = row.get('dtype')
+    if dtype == int:
+        value = int(value)
+    elif dtype == float:
+        value = float(value)
+    repeat = str(repeat).lower() == "true"
+
     if col_month in month_headers:
         idx = month_headers.index(col_month)
         months_num = len(month_headers) - idx

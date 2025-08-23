@@ -257,15 +257,19 @@ def remove_month(budget, month):
 
 def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_month=None, value=None, repeat=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    month_idx = MONTHS_SHORT.index(prev_month)
     month_headers = get_month_headers(budget)
+    month_idx_headers = month_headers.index(prev_month)
+    month_idx_short = MONTHS_SHORT.index(prev_month)
 
     for i in range(months_num):
         if all_rows:
-            month_idx = (month_idx + 1) % 12
-            next_month = MONTHS_SHORT[month_idx]
+            month_idx_short = (month_idx_short + 1) % 12
+            next_month = MONTHS_SHORT[month_idx_short]
+            month_headers.append(next_month)
         else:
-            next_month = month_headers[month_idx + i]
+            if month_idx_headers + i >= len(month_headers):
+                break
+            next_month = month_headers[month_idx_headers + i]
 
         update_variables(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
         update_ent_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
@@ -274,10 +278,9 @@ def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_
         calculate_total_taxes(budget, next_month)
         calculate_gross_net_pay(budget, next_month)
         calculate_difference(budget, month_headers, month_headers.index(next_month))
-        
+
         prev_month = next_month
 
-    month_headers = get_month_headers(budget)
     return budget, month_headers
 
 
@@ -287,14 +290,22 @@ def update_variables(all_rows, budget, prev_month, next_month, row_header, col_m
 
             if row['header'] == "Military Housing Area":
                 zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
-                zip_code = zip_row.get(next_month) if zip_row else "Not Found"
+                zip_code = zip_row.get(next_month)
                 _, military_housing_area = validate_calculate_zip_mha(zip_code)
                 row[next_month] = military_housing_area
                 continue
 
             if not all_rows:
-                if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
-                    row[next_month] = value
+                if row_header and (row['header'] == row_header):
+                    print("row_header is ", row_header, " and col_month is ", col_month, " next month is ", next_month, " and repeat is ", repeat)
+                    print(f"Comparing next_month='{next_month}' to col_month='{col_month}'")
+                    print(f"repeat={repeat}")
+                    print(f"Month result: {next_month == col_month}")
+                    print(f"Condition result: {next_month == col_month or repeat}")
+                    print("repeat dtype: ", type(repeat))
+                    if next_month == col_month or repeat:
+                        print("Setting row[", next_month, "] to ", value)
+                        row[next_month] = value
                 continue
 
             prev_value = row.get(prev_month)
@@ -319,8 +330,9 @@ def update_ent_rows(all_rows, budget, prev_month, next_month, row_header, col_mo
                 continue
 
             if not all_rows:
-                if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
-                    row[next_month] = value
+                if row_header and (row['header'] == row_header):
+                    if next_month == col_month or repeat:
+                        row[next_month] = value
                 continue
 
             prev_value = row.get(prev_month)
@@ -346,8 +358,9 @@ def update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header, co
                 continue
 
             if not all_rows:
-                if row_header and (row['header'] == row_header) and (next_month == col_month or repeat):
-                    row[next_month] = value
+                if row_header and (row['header'] == row_header):
+                    if next_month == col_month or repeat:
+                        row[next_month] = value
                 continue
 
             prev_value = row.get(prev_month)

@@ -260,7 +260,7 @@ footer {
 
 .styled-table-button {
     align-items: center;
-    background: none;
+    background: rgb(197, 224, 233);
     border: none;
     box-sizing: border-box;
     cursor: pointer;
