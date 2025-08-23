@@ -30,6 +30,7 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
+    print("test")
     home_form = HomeForm()
     if not home_form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400

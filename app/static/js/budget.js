@@ -9,7 +9,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     isEditing = true;
     currentEdit = {cellButton, rowHeader, colMonth, value, fieldType};
 
-    disableInputsExcept([]);
+    disableInputs([]);
 
     let input, inputWrapper;
 
@@ -212,7 +212,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 
     cell.insertBefore(buttonContainer, inputWrapper);
 
-    disableInputsExcept([input, onetimeButton, repeatButton, cancelButton]);
+    disableInputs([input, onetimeButton, repeatButton, cancelButton]);
 }
 
 
@@ -387,7 +387,7 @@ function exitEditMode() {
     });
 
     cellButton.style.display = '';
-    enableAllInputs();
+    enableInputs();
     disableTSPRateButtons();
     isEditing = false;
     currentEdit = null;

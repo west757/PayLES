@@ -4,6 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// attach home form listener
+window.attachHomeFormListener = function() {
+    const homeForm = document.getElementById('home-form');
+    homeForm.addEventListener('submit', function(e) {
+        disableInputs();
+    });
+};
+
+
 // htmx response error event listener
 document.body.addEventListener('htmx:responseError', function(evt) {
     try {
@@ -14,6 +23,7 @@ document.body.addEventListener('htmx:responseError', function(evt) {
     } catch (e) {
         // not a JSON response, ignore
     }
+    enableInputs();
 });
 
 
@@ -72,17 +82,9 @@ document.addEventListener('click', function(e) {
     }
     
     // export button
-    if (e.target && e.target.id === 'export-button') {
+    if (e.target && e.target.id === 'button-export') {
         e.preventDefault();
         exportBudget();
-    }
-
-    // return home button
-    if (e.target && e.target.id === 'return-home-button') {
-        e.preventDefault();
-        if (confirm("Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.")) {
-            window.location.href = '/';
-        }
     }
 });
 
@@ -108,6 +110,7 @@ document.addEventListener('change', function(e) {
 // htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
+        //window.addEventListener('beforeunload', budgetUnloadPrompt);
         const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
         const settings = document.getElementById('settings');
