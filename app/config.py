@@ -54,7 +54,6 @@ class Config:
     }
     
     ROW_METADATA = [
-    'varname',
     'type',
     'field',
     'tax',
@@ -83,7 +82,6 @@ class Config:
     BUDGET_TEMPLATE = pd.read_csv(CSV_FOLDER / "budget_template.csv",
         dtype={
             'header': str,
-            'varname': str,
             'shortname': str,
             'longname': str,
             'sign': int,
@@ -144,7 +142,6 @@ class Config:
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
         dtype={
             'header': str,
-            'varname': str,
             'type': str,
             'option': bool,
             'modal': str,

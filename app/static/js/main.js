@@ -61,7 +61,7 @@ document.addEventListener('mouseleave', function(e) {
 
 // click event listeners
 document.addEventListener('click', function(e) {
-    // open modals when modal button is clicked
+    // open modals
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
         if (modalId) {
@@ -72,7 +72,7 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    // enter edit mode for clicked cell
+    // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
         let colMonth = e.target.getAttribute('data-col');
@@ -80,7 +80,15 @@ document.addEventListener('click', function(e) {
         let value = getBudgetValue(rowHeader, colMonth);
         enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
     }
-    
+
+    // open add row modal
+    if (e.target && e.target.id === 'button-add-row') {
+        console.log("Open add row modal");
+        const addRowModalCheckbox = document.getElementById('add-row-modal');
+        addRowModalCheckbox.checked = true;
+        resetAddRowModal();
+    }
+
     // export button
     if (e.target && e.target.id === 'button-export') {
         e.preventDefault();
