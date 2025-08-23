@@ -67,7 +67,6 @@ function hideTooltip() {
 function disableInputs(exceptions=[]) {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         if (!exceptions.includes(el)) {
-            console.log("Disabling element:", el);
             el.disabled = true;
         }
     });

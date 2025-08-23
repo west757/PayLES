@@ -254,9 +254,9 @@ input[type=file]::file-selector-button {
     width: 25%;
 }
 
-#button-view-recs {
+#button-add-row, #button-view-recs {
     height: 3rem;
-    width: 10rem;
+    width: 11rem;
 }
 
 #button-export {
@@ -847,3 +847,73 @@ input[type=file] {
 }
 
 
+
+
+.add-custom-row-modal-inner {
+    min-height: 22rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-row-modal-content {
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem;
+    width: 100%;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.add-row-modal-left, .add-row-modal-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 16rem;
+}
+
+.add-row-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.add-row-label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.add-row-radio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+}
+
+#add-row-template-dropdown, #add-row-custom-header {
+    width: 14rem;
+    margin-right: 1rem;
+}
+
+#add-row-template-value, #add-row-custom-value {
+    width: 6rem;
+    margin-right: 1rem;
+}
+
+#add-row-template-submit, #add-row-custom-submit {
+    margin-top: 0.5rem;
+    min-width: 7rem;
+    height: 2.5rem;
+}
+
+.add-row-modal-error {
+    color: var(--highlight_red_color);
+    font-size: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+    min-height: 1.5rem;
+}

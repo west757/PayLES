@@ -68,7 +68,7 @@
                         <tr>
                             <td>
                                 <div class="settings-row">
-                                    <label>Add Custom Row</label>
+                                    <button id="button-add-row" class="button-solo">Add Custom Row</button>
                                 </div>
                             </td>
                         </tr>
@@ -174,5 +174,64 @@
             </div>
         </div>
     {% endfor %}
+
+
+    <input id="add-row-modal" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="add-row-modal"></label>
+        <div class="modal-inner add-row-modal-inner">
+            <label class="modal-close" for="add-row-modal"></label>
+            <h2>Add Custom Entitlement/Deduction Row</h2>
+
+            <div class="add-row-modal-content">
+                <div class="add-row-modal-left">
+                    <div class="add-row-section">
+                        <span class="add-row-label">Choose Row Type:</span>
+                        <label class="add-row-radio">
+                            <input type="radio" name="row-type" value="e" id="row-type-entitlement">
+                            Entitlement
+                        </label>
+                        <label class="add-row-radio">
+                            <input type="radio" name="row-type" value="d" id="row-type-deduction">
+                            Deduction
+                        </label>
+                    </div>
+                </div>
+
+                <div class="add-row-modal-right">
+                    <div id="add-row-method-section" class="add-row-section" style="display:none;">
+                        <span class="add-row-label">Method:</span>
+                        <label class="add-row-radio">
+                            <input type="radio" name="add-row-method" value="template" id="add-row-method-template">
+                            Choose from Template
+                        </label>
+                        <label class="add-row-radio">
+                            <input type="radio" name="add-row-method" value="custom" id="add-row-method-custom">
+                            Create Custom Row
+                        </label>
+                    </div>
+
+                    <div id="add-row-template-section" class="add-row-section" style="display:none;">
+                        <span class="add-row-label">Row:</span>
+                        <select id="add-row-template-dropdown" class="input-long"></select>
+                        <span class="add-row-label">Enter Initial Value:</span>
+                        <input type="text" id="add-row-template-value" class="input-mid2" placeholder="0.00">
+                        <button id="add-row-template-submit" class="button-solo">Add Row</button>
+                    </div>
+
+                    <div id="add-row-custom-section" class="add-row-section" style="display:none;">
+                        <span class="add-row-label">Row Header:</span>
+                        <input type="text" id="add-row-custom-header" class="input-long" placeholder="Custom Row Name">
+                        <span class="add-row-label">Tax:</span>
+                        <input type="checkbox" id="add-row-custom-tax" class="input-checkbox">
+                        <span class="add-row-label">Enter Initial Value:</span>
+                        <input type="text" id="add-row-custom-value" class="input-mid2" placeholder="0.00">
+                        <button id="add-row-custom-submit" class="button-solo">Add Row</button>
+                    </div>
+                </div>
+            </div>
+            <div id="add-row-modal-error" class="add-row-modal-error"></div>
+        </div>
+    </div>
 
 </div>

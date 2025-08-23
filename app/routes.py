@@ -30,7 +30,6 @@ def index():
 
 @flask_app.route('/submit_les', methods=['POST'])
 def submit_les():
-    print("test")
     home_form = HomeForm()
     if not home_form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400
@@ -133,6 +132,84 @@ def update_months():
         'month_headers': month_headers,
     }
     return render_template('budget.html', **context)
+
+
+
+@csrf.exempt
+@flask_app.route('/add_custom_row', methods=['POST'])
+def add_row():
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+    method = request.form.get('method', '')
+    row_type = request.form.get('row_type', '')
+    header = request.form.get('header', '').strip()
+    value = request.form.get('value', '0').strip()
+    tax = request.form.get('tax', 'false').lower() == 'true'
+
+    # Validate header
+    reserved_headers = set()
+    # Add all template headers
+    if hasattr(flask_app.config, 'BUDGET_TEMPLATE'):
+        reserved_headers.update([str(h).lower() for h in flask_app.config.BUDGET_TEMPLATE['header'].tolist()])
+    if hasattr(flask_app.config, 'VARIABLE_TEMPLATE'):
+        reserved_headers.update([str(h).lower() for h in flask_app.config.VARIABLE_TEMPLATE['header'].tolist()])
+    # Add custom row headers already in budget
+    reserved_headers.update([str(r['header']).lower() for r in budget if r.get('custom')])
+
+    if header.lower() in reserved_headers and method == 'custom':
+        return jsonify({'message': 'Row header is reserved or already used.'}), 400
+
+    # Validate value
+    try:
+        value = float(value)
+    except Exception:
+        value = 0.0
+
+    # Only allow up to MAX_CUSTOM_ROWS
+    custom_rows = [r for r in budget if r.get('custom')]
+    if method == 'custom' and len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
+        return jsonify({'message': f'Maximum custom rows ({flask_app.config["MAX_CUSTOM_ROWS"]}) reached.'}), 400
+
+    # Add row
+    if method == 'template':
+        # Find template row
+        template_df = flask_app.config.BUDGET_TEMPLATE
+        row_df = template_df[template_df['header'] == header]
+        if row_df.empty:
+            return jsonify({'message': 'Template row not found.'}), 400
+        row = row_df.iloc[0].to_dict()
+        row['custom'] = True
+        row['editable'] = True
+        for m in month_headers:
+            row[m] = value
+        budget.append(row)
+    elif method == 'custom':
+        # Create custom row
+        row = {
+            'header': header,
+            'type': row_type,
+            'field': 'float',
+            'tax': tax,
+            'editable': True,
+            'modal': None,
+            'custom': True,
+        }
+        for m in month_headers:
+            row[m] = value
+        budget.append(row)
+    else:
+        return jsonify({'message': 'Invalid method.'}), 400
+
+    session['budget'] = budget
+
+    context = {
+        'budget': convert_numpy_types(budget),
+        'month_headers': month_headers,
+    }
+    return render_template('budget.html', **context)
+
+
+
 
 
 @flask_app.route('/about')
