@@ -64,11 +64,11 @@
                         </tr>
 
 
-                        <!-- add custom row-->
+                        <!-- add inject row-->
                         <tr>
                             <td>
                                 <div class="settings-row">
-                                    <button id="button-custom" class="button-solo">Add Custom Row</button>
+                                    <button id="button-inject" class="button-solo">Add Custom Row</button>
                                 </div>
                             </td>
                         </tr>
@@ -176,55 +176,55 @@
     {% endfor %}
 
 
-    <input id="custom" class="modal-state" type="checkbox" />
+    <input id="inject" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="custom"></label>
-        <div class="modal-inner modal-inner-custom">
-            <label class="modal-close" for="custom"></label>
+        <label class="modal-background" for="inject"></label>
+        <div class="modal-inner modal-inner-inject">
+            <label class="modal-close" for="inject"></label>
             <h2>Add Custom Entitlement/Deduction Row</h2>
 
-            <div class="custom-type-method">
-                <div id="custom-type">
+            <div class="inject-type-method">
+                <div id="inject-type">
                     <span>Choose Row Type:</span>
                     <label>
-                        <input id="custom-type-entitlement" type="radio" name="row-type" value="e" >
+                        <input id="inject-type-entitlement" type="radio" name="row-type" value="e" >
                         Entitlement
                     </label>
                     <label>
-                        <input id="custom-type-deduction" type="radio" name="row-type" value="d">
+                        <input id="inject-type-deduction" type="radio" name="row-type" value="d">
                         Deduction
                     </label>
                 </div>
 
-                <div id="custom-method">
+                <div id="inject-method">
                     <span>Method:</span>
                     <label>
-                        <input id="custom-method-template" type="radio" name="row-method" value="template">
-                        Choose from Template
+                        <input id="inject-method-template" type="radio" name="row-method" value="template">
+                        Choose From Template
                     </label>
                     <label>
-                        <input id="custom-method-blank" type="radio" name="row-method" value="blank">
-                        Create Blank New Row
+                        <input id="inject-method-custom" type="radio" name="row-method" value="custom">
+                        Create Custom Row
                     </label>
                 </div>
             </div>
 
-            <div id="custom-template">
+            <div id="inject-template">
                 <span>Row:</span>
-                <select id="custom-template-select" class="input-long"></select>
+                <select id="inject-template-select" class="input-long"></select>
                 <span>Enter Initial Value:</span>
-                <input id="custom-template-value" class="input-mid2" type="text" placeholder="0.00">
-                <button id="custom-template-button-add" class="button-solo">Add Row</button>
+                <input id="inject-template-value" class="input-mid2" type="text" placeholder="0.00">
+                <button id="inject-template-button-add" class="button-solo">Add Row</button>
             </div>
 
-            <div id="custom-blank">
+            <div id="inject-custom">
                 <span>Row Header:</span>
-                <input id="custom-blank-header" class="input-long" type="text" placeholder="unique row header">
+                <input id="inject-custom-header" class="input-long" type="text" placeholder="unique row header">
                 <span>Tax:</span>
-                <input type="checkbox" id="custom-blank-tax" class="input-checkbox">
+                <input type="checkbox" id="inject-custom-tax" class="input-checkbox">
                 <span>Enter Initial Value:</span>
-                <input id="custom-blank-value" class="input-mid2" type="text" placeholder="0.00">
-                <button id="custom-blank-button-add" class="button-solo">Add Row</button>
+                <input id="inject-custom-value" class="input-mid2" type="text" placeholder="0.00">
+                <button id="inject-custom-button-add" class="button-solo">Add Row</button>
             </div>
         </div>
     </div>
