@@ -72,6 +72,13 @@ document.addEventListener('click', function(e) {
         }
     }
 
+    // close modals
+    if (e.target.classList.contains('modal-close')) {
+        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
+            input.checked = false;
+        });
+    }
+
     // open inject modal
     if (e.target && e.target.id === 'button-inject') {
         const injectModalCheckbox = document.getElementById('inject');

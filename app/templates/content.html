@@ -142,7 +142,7 @@
         <div class="modal">
             <label class="modal-background" for="{{ modal.id }}"></label>
             <div class="modal-inner">
-                <label class="modal-close" for="{{ modal.id }}"></label>
+                <button class="modal-close" type="button">✖</button>
                 <h2>{{ modal.title }}</h2>
                 <p>{{ modal.content|safe }}</p>
 
@@ -180,7 +180,7 @@
     <div class="modal">
         <label class="modal-background" for="inject"></label>
         <div class="modal-inner modal-inner-inject">
-            <label class="modal-close" for="inject"></label>
+            <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Entitlement/Deduction Row</h2>
 
             <div class="inject-type-method">
@@ -214,7 +214,7 @@
                 <select id="inject-template-select" class="input-long"></select>
                 <span>Enter Initial Value:</span>
                 <input id="inject-template-value" class="input-mid2" type="text" placeholder="0.00">
-                <button id="inject-template-button-add" class="button-solo">Add Row</button>
+                <button id="inject-template-button" class="button-solo">Add Row</button>
             </div>
 
             <div id="inject-custom">
@@ -224,7 +224,7 @@
                 <input type="checkbox" id="inject-custom-tax" class="input-checkbox">
                 <span>Enter Initial Value:</span>
                 <input id="inject-custom-value" class="input-mid2" type="text" placeholder="0.00">
-                <button id="inject-custom-button-add" class="button-solo">Add Row</button>
+                <button id="inject-custom-button" class="button-solo">Add Row</button>
             </div>
         </div>
     </div>
