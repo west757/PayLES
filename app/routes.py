@@ -109,9 +109,9 @@ def update_budget():
 @csrf.exempt
 @flask_app.route('/update_months', methods=['POST'])
 def update_months():
-    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
+    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     prev_months_num = len(month_headers)
 
     if next_months_num < prev_months_num:

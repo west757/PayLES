@@ -72,11 +72,11 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    // open custom modal
-    if (e.target && e.target.id === 'button-custom') {
-        const customModalCheckbox = document.getElementById('custom');
-        customModalCheckbox.checked = true;
-        resetCustomModal();
+    // open inject modal
+    if (e.target && e.target.id === 'button-inject') {
+        const injectModalCheckbox = document.getElementById('inject');
+        injectModalCheckbox.checked = true;
+        resetInjectModal();
     }
 
     // enter edit mode for cell
@@ -118,7 +118,7 @@ document.addEventListener('change', function(e) {
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
-        attachCustomModalListeners();
+        attachInjectModalListeners();
 
         const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
