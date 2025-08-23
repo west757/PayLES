@@ -145,10 +145,10 @@ def calculate_bah(budget, next_month):
     mha_row = next((row for row in budget if row['header'] == "Military Housing Area"), None)
     dependents_row = next((row for row in budget if row['header'] == "Dependents"), None)
 
-    grade = grade_row.get(next_month) if grade_row else "Not Found"
-    military_housing_area = mha_row.get(next_month) if mha_row else "Not Found"
-    dependents = dependents_row.get(next_month) if dependents_row else 0
-
+    grade = grade_row[next_month]
+    military_housing_area = mha_row[next_month]
+    dependents = dependents_row[next_month]
+    
     if military_housing_area == "Not Found":
         return 0.00
 

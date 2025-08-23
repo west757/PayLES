@@ -14,7 +14,6 @@ add more resources
 add drill pay
 account for specific pays
 update readme
-refactor javascript
 check what all is saved if in combat zone (are state taxes paid?)
 total tsp deduction per year and contribution limits, max tsp percentage
 add modals
@@ -24,6 +23,7 @@ rework drag and drop functionality
 add in charity contributions as a row
 go through other les variables and see if they apply
 get combat zone from les
+click on row to bold it
 
 possible:
 create unit tests

@@ -297,14 +297,7 @@ def update_variables(all_rows, budget, prev_month, next_month, row_header, col_m
 
             if not all_rows:
                 if row_header and (row['header'] == row_header):
-                    print("row_header is ", row_header, " and col_month is ", col_month, " next month is ", next_month, " and repeat is ", repeat)
-                    print(f"Comparing next_month='{next_month}' to col_month='{col_month}'")
-                    print(f"repeat={repeat}")
-                    print(f"Month result: {next_month == col_month}")
-                    print(f"Condition result: {next_month == col_month or repeat}")
-                    print("repeat dtype: ", type(repeat))
                     if next_month == col_month or repeat:
-                        print("Setting row[", next_month, "] to ", value)
                         row[next_month] = value
                 continue
 

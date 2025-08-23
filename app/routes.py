@@ -86,9 +86,9 @@ def update_budget():
 
     row = next((r for r in budget if r.get('header') == row_header), None)
     dtype = row.get('dtype')
-    if dtype == int:
+    if dtype in ('int', int):
         value = int(value)
-    elif dtype == float:
+    elif dtype in ('float', float):
         value = float(value)
     repeat = str(repeat).lower() == "true"
 

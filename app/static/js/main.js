@@ -88,57 +88,23 @@ document.addEventListener('change', function(e) {
 
     if (e.target && e.target.id === 'show-all-variables-checkbox') {
         show_all_variables();
+        syncSettingsContainerHeight();
     }
 
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
         show_tsp_options();
+        syncSettingsContainerHeight();
     }
 });
 
 
-
-// beforeinput event listeners
-document.addEventListener('beforeinput', function(e) {
-    // restricts float inpuit
-    if (e.target.classList.contains('input-float')) {
-        const input = e.target;
-        const value = input.value;
-        const selectionStart = input.selectionStart;
-        const selectionEnd = input.selectionEnd;
-        const newChar = e.data || '';
-        let newValue;
-
-        // simulate the new value if this input is allowed
-        if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
-            newValue = value.slice(0, selectionStart) + newChar + value.slice(selectionEnd);
-        } else if (e.inputType === 'deleteContentBackward') {
-            newValue = value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
-        } else if (e.inputType === 'deleteContentForward') {
-            newValue = value.slice(0, selectionStart) + value.slice(selectionEnd + 1);
-        } else {
-            newValue = value;
-        }
-
-        if (newValue.length > 7) {
-            e.preventDefault();
-            return;
-        }
-
-        if (!/^\d{0,4}(\.\d{0,2})?$/.test(newValue)) {
-            e.preventDefault();
-            return;
-        }
-    }
-});
-
-
-
-
+// htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         const budget = document.getElementById('budget');
         const settingsContainer = document.getElementById('settings-container');
         const settings = document.getElementById('settings');
+        syncSettingsContainerHeight();
 
         if (!budget || !settingsContainer || !settings) return;
 
