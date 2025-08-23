@@ -12,6 +12,13 @@ function initConfigVars() {
 }
 
 
+// beforeunload confirm alert
+function budgetUnloadPrompt(e) {
+    e.preventDefault();
+    e.returnValue = "Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.";
+}
+
+
 // show toast messages
 function showToast(message, duration = 6500) {
     const MAX_TOASTS = 3;
@@ -57,9 +64,10 @@ function hideTooltip() {
 
 
 // disable all inputs except those in exceptions array
-function disableInputsExcept(exceptions=[]) {
+function disableInputs(exceptions=[]) {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         if (!exceptions.includes(el)) {
+            console.log("Disabling element:", el);
             el.disabled = true;
         }
     });
@@ -67,7 +75,7 @@ function disableInputsExcept(exceptions=[]) {
 
 
 // enable all inputs
-function enableAllInputs() {
+function enableInputs() {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         el.disabled = false;
     });

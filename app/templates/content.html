@@ -73,38 +73,29 @@
                             </td>
                         </tr>
 
+                        <!-- LES recommendations -->
+                        <tr>
+                            <td>
+                                <div class="settings-row">
+                                    <button id="button-view-recs" class="button-solo">View Budget Recommendations</button>
+                                </div>
+                            </td>
+                        </tr>
 
                         <!-- export-->
                         <tr>
                             <td>
                                 <div class="settings-row" style="display: flex; align-items: center; gap: 8px;">
-                                    <span>Export:</span>
+                                    <span>Export as:</span>
                                     <select id="export-dropdown" class="dropdown">
                                         <option value="xlsx" selected>Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
-                                    <button id="export-button" class="independent-button button-standard" title="Download">↯</button>
+                                    <button id="button-export" class="button-solo" title="Download">↯</button>
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- LES recommendations -->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <button id="recommendation-button" class="independent-button button-standard">Recommendations</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- submit new les-->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <button id="return-home-button" class="independent-button button-standard">Upload New LES</button>
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -185,5 +176,3 @@
     {% endfor %}
 
 </div>
-
-
