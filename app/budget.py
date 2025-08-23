@@ -309,6 +309,17 @@ def update_variables(all_rows, budget, prev_month, next_month, row_header, col_m
             else:
                 row[next_month] = prev_value
 
+    for base_header, specialty_headers in [
+        ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
+        ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
+    ]:
+        base_row = next((r for r in budget if r['header'] == base_header), None)
+        if base_row and base_row.get(next_month, 0) == 0:
+            for header in specialty_headers:
+                rate_row = next((r for r in budget if r['header'] == header), None)
+                if rate_row:
+                    rate_row[next_month] = 0
+
 
 def update_ent_rows(all_rows, budget, prev_month, next_month, row_header, col_month, value, repeat):
     special_calculations = {

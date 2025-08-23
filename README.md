@@ -24,6 +24,7 @@ add in charity contributions as a row
 go through other les variables and see if they apply
 get combat zone from les
 click on row to bold it
+sticky month header of budget
 
 possible:
 create unit tests

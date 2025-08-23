@@ -9,7 +9,6 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     isEditing = true;
     currentEdit = {cellButton, rowHeader, colMonth, value, fieldType};
 
-    //showOverlay();
     disableInputsExcept([]);
 
     let input, inputWrapper;
@@ -132,7 +131,6 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             numValue = Math.abs(value).toString();
         }
 
-        // Dollar and negative sign
         let signSpan = document.createElement('span');
         signSpan.textContent = (isNegative ? '-$' : '$');
 
@@ -143,20 +141,16 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.placeholder = numValue;
         input.value = '';
 
-        // Float input validation
         input.addEventListener('input', function(e) {
             let val = input.value;
 
-            // Remove invalid characters
             val = val.replace(/[^0-9.]/g, '');
 
-            // Only one decimal point
             let parts = val.split('.');
             if (parts.length > 2) {
                 val = parts[0] + '.' + parts.slice(1).join('');
             }
 
-            // Limit digits before and after decimal
             if (parts[0].length > 4) {
                 parts[0] = parts[0].slice(0, 4);
             }
@@ -165,14 +159,12 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             }
             val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
 
-            // Trim leading zeros except for "0" or "0.xx"
             if (val.startsWith('00')) {
                 val = val.replace(/^0+/, '0');
             } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {
                 val = val.replace(/^0+/, '');
             }
 
-            // Limit total length to 7
             if (val.length > 7) {
                 val = val.slice(0, 7);
             }
@@ -184,6 +176,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         inputWrapper.appendChild(input);
     }
 
+    // cell edit buttons
     cellButton.style.display = 'none';
     let cell = cellButton.parentElement;
     cell.classList.add('editing-cell');
@@ -233,10 +226,9 @@ function updateBudget(repeat) {
         value = parseInt(value, 10);
     } else if (fieldType === 'float') {
         value = parseFloat(value);
-        value = round(value, 2);
     }
 
-    if (!validateInput(fieldType, rowHeader, value)) return;
+    if (!validateInput(fieldType, rowHeader, value, repeat)) return;
 
     exitEditMode();
 
@@ -255,7 +247,7 @@ function updateBudget(repeat) {
 }
 
 
-function validateInput(fieldType, rowHeader, value) {
+function validateInput(fieldType, rowHeader, value, repeat = false) {
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
         return false;
@@ -361,6 +353,23 @@ function validateInput(fieldType, rowHeader, value) {
         }
     }
 
+    if (
+        repeat &&
+        (rowHeader.includes('Specialty Rate') ||
+         rowHeader.includes('Incentive Rate') ||
+         rowHeader.includes('Bonus Rate'))
+    ) {
+        const months = extractMonthHeaders();
+        const startIdx = months.indexOf(currentEdit.colMonth);
+        const baseRow = rowHeader.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
+        for (let i = startIdx; i < months.length; i++) {
+            const baseRate = getBudgetValue(baseRow, months[i]);
+            if (parseInt(baseRate, 10) === 0) {
+                showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0 (${months[i]}).`);
+                return false;
+            }
+        }
+    }
 
     return true;
 }
@@ -378,7 +387,6 @@ function exitEditMode() {
     });
 
     cellButton.style.display = '';
-    //hideOverlay();
     enableAllInputs();
     disableTSPRateButtons();
     isEditing = false;
