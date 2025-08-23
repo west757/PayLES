@@ -77,14 +77,22 @@
                         <!-- export-->
                         <tr>
                             <td>
-                                <div class="settings-row">
+                                <div class="settings-row" style="display: flex; align-items: center; gap: 8px;">
+                                    <span>Export:</span>
                                     <select id="export-dropdown" class="dropdown">
                                         <option value="xlsx" selected>Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
+                                    <button id="export-button" class="independent-button button-standard" title="Download">↯</button>
                                 </div>
+                            </td>
+                        </tr>
+
+                        <!-- LES recommendations -->
+                        <tr>
+                            <td>
                                 <div class="settings-row">
-                                    <button id="export-button" class="independent-button button-standard">Export</button>
+                                    <button id="recommendation-button" class="independent-button button-standard">Recommendations</button>
                                 </div>
                             </td>
                         </tr>
@@ -93,7 +101,7 @@
                         <tr>
                             <td>
                                 <div class="settings-row">
-                                    <button id="return-home-button" class="independent-button button-standard" onclick="window.location.href='/'">Upload New LES</button>
+                                    <button id="return-home-button" class="independent-button button-standard">Upload New LES</button>
                                 </div>
                             </td>
                         </tr>
