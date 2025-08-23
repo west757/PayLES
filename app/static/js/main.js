@@ -77,6 +77,14 @@ document.addEventListener('click', function(e) {
         e.preventDefault();
         exportbudget();
     }
+
+
+    if (e.target && e.target.id === 'return-home-button') {
+        e.preventDefault();
+        if (confirm("Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.")) {
+            window.location.href = '/';
+        }
+    }
 });
 
 

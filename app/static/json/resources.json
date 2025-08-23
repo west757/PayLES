@@ -22,6 +22,86 @@
                 "name": "OPM - Military Leave",
                 "url": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/",
                 "desc": "official Office of Personnel Management site for military leave policies and information"
+            },
+            {
+                "name": "Advana Gamechanger",
+                "url": "https://gamechanger.advana.data.mil/#/gamechanger",
+                "desc": "search over 50,000 DoD policy documents"
+            },
+            {
+                "name": "DLA ASSIST QuickSearch",
+                "url": "https://quicksearch.dla.mil/qsSearch.aspx",
+                "desc": "search DLA repository"
+            },
+            {
+                "name": "milConnect",
+                "url": "https://milconnect.dmdc.osd.mil/milconnect/",
+                "desc": "official site for military members and families to access benefits and services"
+            },
+            {
+                "name": "DoD SAFE",
+                "url": "https://safe.apps.mil/",
+                "desc": "official site for the DoD Secure Access File Exchange, providing a secure way to share files"
+            },
+            {
+                "name": "DOTS Web Transfer Portal",
+                "url": "https://dots.dodiis.mil/webtransfer/#/",
+                "desc": "official site for securely transferring files to higher classification domains (NIPR -> SIPR)"
+            },
+            {
+                "name": "LeaveWeb",
+                "url": "https://leave.af.mil/profile/%23%7BtabId%7D",
+                "desc": "official site for managing leave requests and balances"
+            },
+            {
+                "name": "Defense.gov",
+                "url": "https://www.defense.gov/",
+                "desc": "official site for the U.S. Department of Defense"
+            },
+            {
+                "name": "Executive Services Directory (ESD)",
+                "url": "https://www.esd.whs.mil/",
+                "desc": "official site for the Executive Services Directorate"
+            },
+            {
+                "name": "Intelink",
+                "url": "https://www.intelink.gov/",
+                "desc": "official site for the Intelink collaboration platform"
+            },
+            {
+                "name": "Transition Assistance Program (TAP)",
+                "url": "https://www.dodtap.mil/dodtap/app/home",
+                "desc": "official site for the Transition Assistance Program, providing resources for transitioning service members"
+            },
+            {
+                "name": "GigEagle",
+                "url": "https://gigeagle.mil/",
+                "desc": "official site for the GigEagle program, providing resources for military families"
+            },
+            {
+                "name": "ID Card Office Online",
+                "url": "https://idco.dmdc.osd.mil/idco/",
+                "desc": "official site for the ID Card Office, providing information on ID cards and related services"
+            },
+            {
+                "name": "U.S. Armed Forces Legal Assistance",
+                "url": "https://legalassistance.law.af.mil/",
+                "desc": "official site for the U.S. Armed Forces Legal Assistance, providing legal resources for service members"
+            },
+            {
+                "name": "Outlook Webmail",
+                "url": "https://webmail.apps.mil/mail/",
+                "desc": "official site for Outlook Webmail, providing access to military email accounts"
+            },
+            {
+                "name": "NIPRGPT",
+                "url": "https://niprgpt.mil/storefront",
+                "desc": "official site for the DoD AI chat platform"
+            },
+            {
+                "name": "Defense Travel System (DTS)",
+                "url": "https://www.defensetravel.dod.mil/",
+                "desc": "official site for the Defense Travel System, providing information on travel policies and procedures"
             }
         ]
     },
@@ -65,6 +145,11 @@
                 "desc": "official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services"
             },
             {
+                "name": "CitiManager",
+                "url": "https://home.cards.citidirect.com/CommercialCard/login",
+                "desc": "official site for CitiManager DoD GTC cards, providing resources for managing Citi accounts and services"
+            },
+            {
                 "name": "H&R Block Military Tax Services",
                 "url": "https://www.hrblock.com/tax-center/lifestyle/military/",
                 "desc": "official site for H&R Block's military tax services, providing resources and support for military members"
@@ -79,6 +164,16 @@
                 "name": "Defense Travel Management Office (DTMO)",
                 "url": "https://www.defensetravel.dod.mil/",
                 "desc": "official site for military travel information, including travel allowances and benefits"
+            },
+            {
+                "name": "Homes.mil",
+                "url": "https://www.homes.mil/",
+                "desc": "official site for military housing information, including resources for finding and securing housing"
+            },
+            {
+                "name": "Defense Personal Property System (DPPS)",
+                "url": "https://dps.move.mil/cust/standard/user/home.xhtml",
+                "desc": "official site for military personal property relocation information, including moving allowances and benefits"
             }
         ]
     },
@@ -90,17 +185,57 @@
                 "name": "VA Education Benefits",
                 "url": "https://www.va.gov/education/",
                 "desc": "official site for military education information, including GI Bill benefits and resources"
+            },
+            {
+                "name": "DAF E-Learning",
+                "url": "https://usaf.percipio.com/login?state=%2F#/",
+                "desc": "official site for DAF E-Learning, providing online training and education resources"
+            },
+            {
+                "name": "Joint Knowledge Online (JKO)",
+                "url": "https://www.jcs.mil/JKO/",
+                "desc": "official site for training and educational resources for the joint force"
+            },
+            {
+                "name": "Digital University",
+                "url": "https://digitalu.af.mil/app",
+                "desc": "official site for Digital University, providing online training and education resources for Air Force members"
+            },
+            {
+                "name": "O'Reilly Textbooks",
+                "url": "https://www.oreilly.com/",
+                "desc": "official site for O'Reilly Media, providing a wide range of textbooks and online resources for military members"
+            },
+            {
+                "name": "Defense Acquisition University (DAU)",
+                "url": "https://www.dau.edu",
+                "desc": "official site for DAU, providing training and resources for defense acquisition professionals"
             }
         ]
     },
     {
-        "category": "Mental Health Resources",
+        "category": "Medical & Mental Health Resources",
         "id": "mental-health-resources",
         "items": [
             {
                 "name": "Health.mil Psychological Health Resource Center",
                 "url": "https://www.health.mil/Military-Health-Topics/Centers-of-Excellence/Psychological-Health-Center-of-Excellence/Psychological-Health-Resource-Center",
                 "desc": "official site for military mental health and psychological health information"
+            },
+            {
+                "name": "MHS Genesis",
+                "url": "https://my.mhsgenesis.health.mil/pages/home",
+                "desc": "official site for MHS Genesis, providing a wide range of health care resources for military members"
+            },
+            {
+                "name": "Human Performance Resources",
+                "url": "https://www.hprc-online.org/",
+                "desc": "official site for Human Performance Resources, providing a wide range of resources for military members"
+            },
+            {
+                "name": "TRICARE",
+                "url": "https://www.tricare.mil/",
+                "desc": "official site for TRICARE, providing health care resources for military members"
             }
         ]
     }

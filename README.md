@@ -10,13 +10,13 @@ create levdf (leave calculator)
 add in rows from budget template into budget from settings
 instructions page and overlay on example les
 update pay active and drill pay in config
-add more resources
+rework resources, maybe include tags and search
 add drill pay
 account for specific pays
 update readme
 check what all is saved if in combat zone (are state taxes paid?)
 total tsp deduction per year and contribution limits, max tsp percentage
-add modals
+add more modals
 joint spouse with two LES's
 recommendations tab (like if not adding to tsp, put in money)
 rework drag and drop functionality
@@ -25,6 +25,9 @@ go through other les variables and see if they apply
 get combat zone from les
 click on row to bold it
 sticky month header of budget
+cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
+YTD rows (tsp, gross, entitlements, deductions)
+pdf export option
 
 possible:
 create unit tests
