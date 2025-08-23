@@ -109,6 +109,7 @@ function resetInjectModal(scope = 'all') {
 }
 
 
+// get inject modal elements
 function getInjectModalElements() {
     return {
         injectModalCheckbox: document.getElementById('inject'),
@@ -120,21 +121,21 @@ function getInjectModalElements() {
         templateSection: document.getElementById('inject-template'),
         templateSelect: document.getElementById('inject-template-select'),
         templateValue: document.getElementById('inject-template-value'),
-        templateButton: document.getElementById('inject-template-button-add'),
+        templateButton: document.getElementById('inject-template-button'),
         customSection: document.getElementById('inject-custom'),
         customHeader: document.getElementById('inject-custom-header'),
         customTax: document.getElementById('inject-custom-tax'),
         customValue: document.getElementById('inject-custom-value'),
-        customButton: document.getElementById('inject-custom-button-add'),
+        customButton: document.getElementById('inject-custom-button'),
     };
 }
 
 
-
+// validate inject inputs
 function validateInject({ mode, header, value }) {
     if (mode === 'template') {
         if (!header || header === '' || header === 'select-header') {
-            showToast('Please select a template row.');
+            showToast('Please select a template row from the dropdown.');
             return false;
         }
     }
@@ -143,12 +144,12 @@ function validateInject({ mode, header, value }) {
         getReservedHeaders();
 
         if (!header || header.trim().length === 0) {
-            showToast('Enter a row header.');
+            showToast('Please enter a row header.');
             return false;
         }
 
         if (reservedHeaders.includes(header.trim().toLowerCase())) {
-            showToast('Row header is reserved or already used.');
+            showToast('Row header is reserved or already in use.');
             return false;
         }
 
@@ -158,9 +159,8 @@ function validateInject({ mode, header, value }) {
         }
     }
 
-
     if (!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '') {
-        showToast('Enter a valid initial value (up to 4 digits before and 2 after decimal).');
+        showToast('Please enter a valid initial value (up to 4 digits before and 2 after decimal).');
         return false;
     }
 
@@ -168,7 +168,7 @@ function validateInject({ mode, header, value }) {
 }
 
 
-
+// populate the template dropdown based on the selected row type
 function populateTemplateDropdown(rowType) {
     const el = getInjectModalElements();
     const templateDropdown = el.templateSelect;
