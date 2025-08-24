@@ -96,11 +96,13 @@ function resetInjectModal(scope = 'all') {
         el.methodCustom.checked = false;
     } 
     else if (scope === 'template') {
+        el.methodSection.style.display = 'flex';
         el.templateSection.style.display = 'flex';
         el.templateSelect.innerHTML = '';
         el.templateValue.value = '';
     } 
     else if (scope === 'custom') {
+        el.methodSection.style.display = 'flex';
         el.customSection.style.display = 'flex';
         el.customHeader.value = '';
         el.customTax.checked = false;

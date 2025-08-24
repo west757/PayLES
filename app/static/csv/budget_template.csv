@@ -88,10 +88,9 @@ CSP-P,e,float,False,True,navy,False,False,CSP-P,Career Sea Pay - Premium
 SDIP,e,float,False,True,navy,False,False,SDIP,Submarine Duty Incentive Pay
 Sea Pay,e,float,False,True,navy,False,False,SP,Sea Pay
 Split Payment Option,e,float,False,True,navy,False,False,SPO,Split Payment Option
-VBSS,e,float,False,True,navy,False,False,VBSS,"Duty Maritime Visit, Board, Search & Seizure Duty (VBSS)"
 Federal Taxes,d,float,True,False,federaltaxes,True,False,FEDERAL TAXES,Federal Taxes
-FICA - Social Security,d,float,True,False,fica,True,False,FICA-SOC SECURITY,Federal Insurance Contributions Act - Social Security
-FICA - Medicare,d,float,True,False,fica,True,False,FICA-MEDICARE,Federal Insurance Contributions Act - Medicare
+FICA - Social Security,d,float,True,False,fica,True,False,FICA-SOC SECURITY,FICA - Social Security
+FICA - Medicare,d,float,True,False,fica,True,False,FICA-MEDICARE,FICA - Medicare
 SGLI Rate,d,float,False,False,sgli,True,False,SGLI,SGLI Premium
 Family SGLI,d,float,False,True,sgli,False,False,SGLI FAM/SPOUSE,SGLI Premium for Spouses/Children
 TSGLI,d,float,False,True,sgli,False,False,TSGLI,SGLI Premium for Traumatic Brain Injury
@@ -107,8 +106,7 @@ GPLD,d,float,False,False,debt,False,True,GPLD,Government Property Lost or Damage
 Meal Deduction,d,float,False,True,bas,False,False,MEAL DEDUCT,Meal Deduction
 Partial Pay,d,float,False,False,none,False,True,PARTIAL PAY,Partial Pay
 Pay Released,d,float,False,False,none,False,True,PAY RELEASED,Pay Released
-SUPP/COM,d,float,False,True,suppcom,False,False,SUPP/COM DEBT,Spousal Support/Court-Ordered Child Support
-Prior SUPP/COM,d,float,False,True,suppcom,False,False,PRIOR SUPP/COM,Prior Spousal Support/Court-Ordered Child Support
+SUPP/COM,d,float,False,True,suppcom,False,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
 Repay Advance,d,float,False,False,none,False,True,REPAY ADVANCE,Repayment of Advance Pay
 Split Pay,d,float,False,True,navy,False,False,SPLIT PAY,Split Pay Option
 Split Pay Option,d,float,False,True,navy,False,False,SPO PAYMENT,Split Pay Option Payment for Accounting
