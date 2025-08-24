@@ -25,7 +25,18 @@ from app.forms import (
 @flask_app.route('/')
 def index():
     home_form = HomeForm()
-    return render_template('home.html', home_form=home_form)
+
+    config_js = {
+        "dependentsMax": flask_app.config['DEPENDENTS_MAX'],
+        "tradTspRateMax": flask_app.config['TRAD_TSP_RATE_MAX'],
+        "rothTspRateMax": flask_app.config['ROTH_TSP_RATE_MAX'],
+        "homeOfRecords": flask_app.config['HOME_OF_RECORDS'],
+        "grades": flask_app.config['GRADES'],
+        "sgliCoverages": flask_app.config['SGLI_COVERAGES'],
+        "budgetHeaderList": flask_app.config['BUDGET_HEADER_LIST']
+    }
+
+    return render_template('home.html', home_form=home_form, config_js=config_js)
 
 
 @flask_app.route('/submit_les', methods=['POST'])

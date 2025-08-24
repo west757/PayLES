@@ -1,6 +1,3 @@
-{% set BUDGET_TEMPLATE = config.BUDGET_TEMPLATE %}
-{% set VARIABLE_TEMPLATE = config.VARIABLE_TEMPLATE %}
-
 {% macro format_cell(row, col) %}
     {% set cell_val = row[col] %}
     {% if row.field != 'float' and row.field is defined %}

@@ -1,7 +1,6 @@
-// page load event listener
-document.addEventListener('DOMContentLoaded', function() {
-    initConfigVars();
-});
+//initialize config variables
+const configData = JSON.parse(document.getElementById('config-data').textContent);
+window.CONFIG = configData;
 
 
 // attach home form listener
@@ -166,6 +165,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (budgetDataScript) {
         window.BUDGET_DATA = JSON.parse(budgetDataScript.textContent);
     }
+    
     highlightChanges();
     showAllVariables();
     showTSPOptions();

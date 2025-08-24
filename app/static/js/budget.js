@@ -19,11 +19,11 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         let options = [];
 
         if (rowHeader === 'Grade') {
-            options = window.GRADES;
+            options = window.CONFIG.GRADES;
             input.classList.add('input-short');
         }
         else if (rowHeader === 'Home of Record') {
-            options = window.HOME_OF_RECORDS;
+            options = window.CONFIG.HOME_OF_RECORDS;
             input.classList.add('input-short');
         }
         else if (rowHeader === 'Federal Filing Status') {
@@ -35,7 +35,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             input.classList.add('input-mid');
         }
         else if (rowHeader === 'SGLI Coverage') {
-            options = window.SGLI_COVERAGES;
+            options = window.CONFIG.SGLI_COVERAGES;
             input.classList.add('input-mid');
         }
         else if (rowHeader === 'Combat Zone') {
@@ -290,8 +290,8 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
 
     // TSP base rate validation
     if (rowHeader === 'Trad TSP Base Rate') {
-        if (value > window.TRAD_TSP_RATE_MAX) {
-            showToast(`Trad TSP Base Rate cannot be more than ${window.TRAD_TSP_RATE_MAX}.`);
+        if (value > window.CONFIG.TRAD_TSP_RATE_MAX) {
+            showToast(`Trad TSP Base Rate cannot be more than ${window.CONFIG.TRAD_TSP_RATE_MAX}.`);
             return false;
         }
 
@@ -312,8 +312,8 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
     }
 
     if (rowHeader === 'Roth TSP Base Rate') {
-        if (value > window.ROTH_TSP_RATE_MAX) {
-            showToast(`Roth TSP Base Rate cannot be more than ${window.ROTH_TSP_RATE_MAX}.`);
+        if (value > window.CONFIG.ROTH_TSP_RATE_MAX) {
+            showToast(`Roth TSP Base Rate cannot be more than ${window.CONFIG.ROTH_TSP_RATE_MAX}.`);
             return false;
         }
 

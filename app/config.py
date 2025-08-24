@@ -76,9 +76,11 @@ class Config:
     BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv",
         dtype=dtype_bah
     )
+
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv",
         dtype=dtype_bah
     )
+
     BUDGET_TEMPLATE = pd.read_csv(CSV_FOLDER / "budget_template.csv",
         dtype={
             'header': str,
@@ -93,6 +95,8 @@ class Config:
             'tooltip': str,
         }
     )
+    BUDGET_HEADER_LIST = BUDGET_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
+
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
         dtype={
             'status': str, 
@@ -100,6 +104,7 @@ class Config:
             'rate': float,
         },
     )
+
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
         dtype={
             'index': int,
@@ -112,6 +117,7 @@ class Config:
             'tooltip': str,
         }
     )
+
     MHA_ZIP_CODES = pd.read_csv(CSV_FOLDER / "mha_zip_codes.csv",
         dtype={
             'mha': str, 
@@ -119,8 +125,10 @@ class Config:
             'zip_code': str,
         }
     )
+
     PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
     PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
+
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={
             'coverage': str,
@@ -130,6 +138,7 @@ class Config:
         },
     )
     SGLI_COVERAGES = SGLI_RATES['coverage'].tolist()
+
     STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
         dtype={
             'state': str,
@@ -139,6 +148,7 @@ class Config:
             'married_rate': float,
         }
     )
+
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
         dtype={
             'header': str,
