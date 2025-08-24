@@ -97,7 +97,7 @@ def calculate_difference(budget, month_headers, month_idx):
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
     difference_row = next((r for r in budget if r['header'] == "Difference"), None)
 
-    difference_row[next_month] = net_pay_row[next_month] - net_pay_row[prev_month]
+    difference_row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
 
 
 
