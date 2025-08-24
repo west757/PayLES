@@ -214,7 +214,7 @@ def update_injects():
             elif meta == 'editable':
                 row['editable'] = True
             elif meta == 'modal':
-                row['modal'] = 'none'
+                row['modal'] = 'inject'
 
         for idx, m in enumerate(month_headers):
             row[m] = 0.0 if idx == 0 else value
@@ -224,7 +224,7 @@ def update_injects():
             header_data.append({
                 'header': header,
                 'type': 'c',
-                'tooltip': '',
+                'tooltip': 'Edit Custom Row',
             })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
@@ -246,6 +246,39 @@ def update_injects():
         'header_data': header_data,
     }
     return render_template('budget.html', **context)
+
+
+
+
+@csrf.exempt
+@flask_app.route('/remove_row', methods=['POST'])
+def remove_row():
+    header = request.form.get('header', '').strip()
+    budget = session.get('budget', [])
+    month_headers = get_month_headers(budget)
+    header_data = session.get('header_data', [])
+
+    budget = [row for row in budget if row.get('header') != header]
+    header_data = [h for h in header_data if h.get('header').lower() != header.lower()]
+
+    budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
+                                         row_header="", col_month="", value=0, repeat=True)
+
+    session['budget'] = budget
+    session['header_data'] = header_data
+
+    config_js = {
+        'budget': convert_numpy_types(budget),
+        'headerData': header_data,
+    }
+    context = {
+        'config_js': config_js,
+        'budget': convert_numpy_types(budget),
+        'month_headers': month_headers,
+        'header_data': header_data,
+    }
+    return render_template('budget.html', **context)
+
 
 
 @flask_app.route('/about')
