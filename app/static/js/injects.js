@@ -178,7 +178,7 @@ function populateTemplateDropdown(rowType) {
     const templateSubmit = el.templateButton;
     templateDropdown.innerHTML = '';
 
-    // Add "Select a header" option
+    // add "Select a header" as first option
     let firstOpt = document.createElement('option');
     firstOpt.value = 'select-header';
     firstOpt.textContent = 'Select a Header';
