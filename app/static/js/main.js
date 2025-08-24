@@ -168,7 +168,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         // inject custom header event listener
         const customHeaderInput = document.getElementById('inject-custom-header');
         if (customHeaderInput) {
-            customHeaderInput.addEventListener('input', getInputRestrictionHandler('text', 20));
+            customHeaderInput.addEventListener('input', setInputRestriction('text', 20));
         }
 
 
@@ -176,7 +176,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         ['inject-template-value', 'inject-custom-value'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
-                input.addEventListener('input', getInputRestrictionHandler('money'));
+                input.addEventListener('input', setInputRestriction('money'));
             }
         });
     }

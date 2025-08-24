@@ -246,10 +246,9 @@ function disableTSPRateButtons() {
 
 
 
-
-function getInputRestrictionHandler(fieldType, maxLength = null) {
+// set input restriction
+function setInputRestriction(fieldType, maxLength = null) {
     if (fieldType === 'money') {
-        // Float: up to 4 digits before, 2 after decimal, max 7 chars
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
             let parts = val.split('.');
@@ -274,8 +273,8 @@ function getInputRestrictionHandler(fieldType, maxLength = null) {
             e.target.value = val;
         };
     }
+
     if (fieldType === 'number') {
-        // Only digits, maxLength digits
         return function(e) {
             let val = e.target.value.replace(/\D/g, '');
             if (maxLength && val.length > maxLength) {
@@ -284,8 +283,8 @@ function getInputRestrictionHandler(fieldType, maxLength = null) {
             e.target.value = val;
         };
     }
+
     if (fieldType === 'text') {
-        // Letters, numbers, dash, underscore, space, maxLength chars
         return function(e) {
             let val = e.target.value.replace(/[^A-Za-z0-9_\- ]/g, '');
             if (maxLength && val.length > maxLength) {
@@ -294,6 +293,6 @@ function getInputRestrictionHandler(fieldType, maxLength = null) {
             e.target.value = val;
         };
     }
-    // Default: no restriction
+
     return function(e) {};
 }

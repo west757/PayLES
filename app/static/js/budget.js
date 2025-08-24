@@ -61,7 +61,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.maxLength = 1;
         input.placeholder = "0-9";
         input.value = '';
-        input.addEventListener('input', getInputRestrictionHandler('number', 1));
+        input.addEventListener('input', setInputRestriction('number', 1));
         inputWrapper = input;
     }
 
@@ -79,7 +79,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         let numValue = String(value).replace('%', '').trim();
         input.placeholder = numValue;
         input.value = '';
-        input.addEventListener('input', getInputRestrictionHandler('number', 3));
+        input.addEventListener('input', setInputRestriction('number', 3));
 
         let percentSpan = document.createElement('span');
         percentSpan.textContent = '%';
@@ -98,12 +98,12 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             input.maxLength = 5;
             input.placeholder = value;
             input.value = '';
-            input.addEventListener('input', getInputRestrictionHandler('number', 5));
+            input.addEventListener('input', setInputRestriction('number', 5));
         } else {
             input.maxLength = 20;
             input.placeholder = value;
             input.value = '';
-            input.addEventListener('input', getInputRestrictionHandler('text', 20));
+            input.addEventListener('input', setInputRestriction('text', 20));
         }
 
         inputWrapper = input;
@@ -136,7 +136,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.placeholder = numValue;
         input.value = '';
 
-        input.addEventListener('input', getInputRestrictionHandler('money'));
+        input.addEventListener('input', setInputRestriction('money'));
 
         inputWrapper.appendChild(signSpan);
         inputWrapper.appendChild(input);

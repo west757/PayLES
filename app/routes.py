@@ -14,6 +14,7 @@ from app.les import (
 )
 from app.budget import (
     build_budget,
+    add_row,
     remove_month,
     build_months,
 )
@@ -114,7 +115,6 @@ def update_budget():
 
     session['budget'] = budget
 
-
     config_js = {
         'budget': convert_numpy_types(budget),
     }
@@ -158,75 +158,70 @@ def update_months():
     return render_template('budget.html', **context)
 
 
-
 @csrf.exempt
 @flask_app.route('/update_injects', methods=['POST'])
 def update_injects():
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+    ROW_METADATA = flask_app.config['ROW_METADATA']
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
+    header_data = session.get('header_data', [])
     method = request.form.get('method', '')
     row_type = request.form.get('row_type', '')
     header = request.form.get('header', '').strip()
     value = request.form.get('value', '0').strip()
     tax = request.form.get('tax', 'false').lower() == 'true'
-    header_data = session.get('header_data', [])
+    initial_month = month_headers[0]
 
-    # Validate header
-    reserved_headers = set()
-    # Add all template headers
-    if hasattr(flask_app.config, 'BUDGET_TEMPLATE'):
-        reserved_headers.update([str(h).lower() for h in flask_app.config.BUDGET_TEMPLATE['header'].tolist()])
-    if hasattr(flask_app.config, 'VARIABLE_TEMPLATE'):
-        reserved_headers.update([str(h).lower() for h in flask_app.config.VARIABLE_TEMPLATE['header'].tolist()])
-    # Add inject row headers already in budget
-    reserved_headers.update([str(r['header']).lower() for r in budget if r.get('custom')])
+    insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
 
-    if header.lower() in reserved_headers and method == 'custom':
-        return jsonify({'message': 'Row header is reserved or already used.'}), 400
-
-    # Validate value
-    try:
-        value = float(value)
-    except Exception:
-        value = 0.0
-
-    # Only allow up to MAX_INJECT_ROWS
-    custom_rows = [r for r in budget if r.get('custom')]
-    if method == 'custom' and len(custom_rows) >= flask_app.config['MAX_INJECT_ROWS']:
-        return jsonify({'message': f'Maximum custom rows ({flask_app.config["MAX_INJECT_ROWS"]}) reached.'}), 400
-
-    # Add row
     if method == 'template':
-        # Find template row
-        template_df = flask_app.config.BUDGET_TEMPLATE
-        row_df = template_df[template_df['header'] == header]
-        if row_df.empty:
-            return jsonify({'message': 'Template row not found.'}), 400
-        row = row_df.iloc[0].to_dict()
-        row['custom'] = True
-        row['editable'] = True
-        for m in month_headers:
-            row[m] = value
-        budget.append(row)
+        row = add_row(BUDGET_TEMPLATE, header, value, initial_month)
+        for idx, m in enumerate(month_headers):
+            row[m] = 0.00 if idx == 0 else float(value)
+        budget.insert(insert_idx, row)
+
     elif method == 'custom':
-        # ...existing code...
-        budget.append(row)
-        # Add to header_data if not present
+        row = {'header': header}
+        for meta in ROW_METADATA:
+            if meta == 'type':
+                row['type'] = row_type
+            elif meta == 'field':
+                row['field'] = 'float'
+            elif meta == 'tax':
+                row['tax'] = tax
+            elif meta == 'editable':
+                row['editable'] = True
+            elif meta == 'modal':
+                row['modal'] = 'none'
+
+        # Set first month to 0, future months to value
+        for idx, m in enumerate(month_headers):
+            row[m] = 0.0 if idx == 0 else float(value)
+        budget.insert(insert_idx, row)
+
         if not any(h['header'].lower() == header.lower() for h in header_data):
             header_data.append({
                 'header': header,
-                'type': row_type,
+                'type': 'c',
                 'tooltip': '',
             })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
 
+    budget, month_headers = build_months(
+        all_rows=True,
+        budget=budget,
+        prev_month=month_headers[-1],
+        months_num=0  # 0 means just update calculations, no new months
+    )
 
     session['budget'] = budget
+    session['header_data'] = header_data
 
     config_js = {
         'budget': convert_numpy_types(budget),
-        'reserved_headers': reserved_headers,
+        'headerData': header_data,
     }
     context = {
         'config_js': config_js,
@@ -234,9 +229,6 @@ def update_injects():
         'month_headers': month_headers,
     }
     return render_template('budget.html', **context)
-
-
-
 
 
 @flask_app.route('/about')
