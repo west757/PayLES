@@ -47,6 +47,13 @@ document.addEventListener('mousemove', function(e) {
             showTooltip(e, tooltipText);
         }
     }
+
+    if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
 });
 
 
@@ -57,6 +64,10 @@ document.addEventListener('mouseleave', function(e) {
     }
 
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+        hideTooltip();
+    }
+
+    if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
         hideTooltip();
     }
 }, true);

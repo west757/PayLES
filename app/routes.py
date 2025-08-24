@@ -66,14 +66,14 @@ def submit_les():
 
         config_js = {
             'budget': convert_numpy_types(budget),
-            'maxInjectRows': flask_app.config['MAX_INJECT_ROWS'],
-            'dependentsMax': flask_app.config['DEPENDENTS_MAX'],
-            'tradTspRateMax': flask_app.config['TRAD_TSP_RATE_MAX'],
-            'rothTspRateMax': flask_app.config['ROTH_TSP_RATE_MAX'],
-            'homeOfRecords': flask_app.config['HOME_OF_RECORDS'],
-            'grades': flask_app.config['GRADES'],
-            'sgliCoverages': flask_app.config['SGLI_COVERAGES'],
             'headerData': header_data,
+            'MAX_INJECT_ROWS': flask_app.config['MAX_INJECT_ROWS'],
+            'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
+            'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
+            'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+            'GRADES': flask_app.config['GRADES'],
+            'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'],
+            'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
         }
         context = {
             'config_js': config_js,

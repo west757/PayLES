@@ -154,6 +154,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     let onetimeButton = document.createElement('button');
     onetimeButton.textContent = '▼';
     onetimeButton.classList.add('editing-button', 'onetime-button');
+    onetimeButton.setAttribute('data-tooltip', 'One-Time Change');
     onetimeButton.onclick = function() {
         updateBudget(false);
     };
@@ -161,6 +162,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     let repeatButton = document.createElement('button');
     repeatButton.textContent = '▶';
     repeatButton.classList.add('editing-button', 'repeat-button');
+    repeatButton.setAttribute('data-tooltip', 'Repeat Change');
     repeatButton.onclick = function() {
         updateBudget(true);
     };
@@ -168,6 +170,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
     let cancelButton = document.createElement('button');
     cancelButton.textContent = '✖';
     cancelButton.classList.add('editing-button', 'cancel-button');
+    cancelButton.setAttribute('data-tooltip', 'Cancel');
     cancelButton.onclick = function() {
         exitEditMode();
     };

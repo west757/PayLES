@@ -7,7 +7,6 @@ run: python -m app.main
 
 
 short-term:
-- add in rows from budget template into budget from settings
 - update pay active and drill pay in config
 - account for specific pays
 - total tsp deduction per year and contribution limits, max tsp percentage
@@ -33,7 +32,7 @@ mid-term:
 - YTD rows (tsp, gross, entitlements, deductions)
 - add comments
 - alphabetize resources and add stars for top ones
-- recommendations like paying state income tax, not being fully vested in tsp
+- recommendations like paying state income tax, not being fully vested in tsp, if year change notice that rates may change
 
 long-term:
 - create leave calculator
