@@ -18,6 +18,8 @@ short-term:
 - disable inputs when changing months
 - set initial value for template rows
 - add in check for max inject rows
+- validate export
+- tooltips over edit buttons
 
 mid-term:
 - instructions page and overlay on example les
@@ -30,6 +32,8 @@ mid-term:
 - go through other les variables and see if they apply
 - YTD rows (tsp, gross, entitlements, deductions)
 - add comments
+- alphabetize resources and add stars for top ones
+- recommendations like paying state income tax, not being fully vested in tsp
 
 long-term:
 - create leave calculator
