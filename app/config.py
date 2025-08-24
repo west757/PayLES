@@ -159,6 +159,7 @@ class Config:
             'modal': str,
         }
     )
+    VARIABLE_HEADER_LIST = VARIABLE_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
     LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"

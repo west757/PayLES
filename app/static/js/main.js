@@ -34,7 +34,13 @@ document.addEventListener('keydown', function(e) {
 
 // mouse move event listener
 document.addEventListener('mousemove', function(e) {
-    // show tooltips on mouse move over
+    if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
@@ -46,7 +52,10 @@ document.addEventListener('mousemove', function(e) {
 
 // mouse leave event listener
 document.addEventListener('mouseleave', function(e) {
-    // hide tooltips on mouse leave
+    if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
+        hideTooltip();
+    }
+
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         hideTooltip();
     }
