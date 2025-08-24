@@ -151,7 +151,13 @@ function validateInject({ mode, header, value }) {
     }
 
     if (mode === 'custom') {
+        const customRows = (window.CONFIG.budget || []).filter(r => r.modal === 'inject');
         const reservedHeaders = (window.CONFIG.headerData || []).map(h => h.header.toLowerCase());
+
+        if (customRows.length >= window.CONFIG.MAX_CUSTOM_ROWS) {
+            showToast('Maximum number of custom rows reached. Cannot have more than ' + window.CONFIG.MAX_CUSTOM_ROWS + ' custom rows.');
+            return;
+        }
 
         if (!header || header.trim().length === 0) {
             showToast('Please enter a row header.');

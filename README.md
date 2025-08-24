@@ -14,11 +14,9 @@ short-term:
 - sticky month header of budget
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - get combat zone from les
-- disable inputs when changing months
 - set initial value for template rows
 - add in check for max inject rows
 - validate export
-- tooltips over edit buttons
 
 mid-term:
 - instructions page and overlay on example les

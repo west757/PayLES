@@ -67,8 +67,7 @@ def submit_les():
         config_js = {
             'budget': convert_numpy_types(budget),
             'headerData': header_data,
-            'MAX_INJECT_ROWS': flask_app.config['MAX_INJECT_ROWS'],
-            'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
+            'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
             'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
             'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
             'GRADES': flask_app.config['GRADES'],
@@ -174,8 +173,6 @@ def update_months():
 @csrf.exempt
 @flask_app.route('/update_injects', methods=['POST'])
 def update_injects():
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-    ROW_METADATA = flask_app.config['ROW_METADATA']
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
     header_data = session.get('header_data', [])
@@ -197,14 +194,18 @@ def update_injects():
     insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
 
     if method == 'template':
-        row = add_row(BUDGET_TEMPLATE, header, 0.00, initial_month)
+        row = add_row(flask_app.config['BUDGET_TEMPLATE'], header, 0.00, initial_month)
         for idx, m in enumerate(month_headers[1:]):
             row[m] = value
         budget.insert(insert_idx, row)
 
     elif method == 'custom':
+        custom_rows = [r for r in budget if r.get('modal') == 'inject']
+        if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
+            return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
+
         row = {'header': header}
-        for meta in ROW_METADATA:
+        for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
                 row['type'] = row_type
             elif meta == 'field':
@@ -224,7 +225,7 @@ def update_injects():
             header_data.append({
                 'header': header,
                 'type': 'c',
-                'tooltip': 'Edit Custom Row',
+                'tooltip': '',
             })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
