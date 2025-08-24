@@ -106,6 +106,7 @@ document.addEventListener('click', function(e) {
     }
 
     
+    // remove row
     if (e.target.classList.contains('remove-row-button')) {
         let header = e.target.getAttribute('data-row');
 

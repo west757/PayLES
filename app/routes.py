@@ -258,8 +258,10 @@ def remove_row():
     month_headers = get_month_headers(budget)
     header_data = session.get('header_data', [])
 
-    budget = [row for row in budget if row.get('header') != header]
-    header_data = [h for h in header_data if h.get('header').lower() != header.lower()]
+    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
+    budget = [r for r in budget if r.get('header').lower() != header.lower()]
+    if row and row.get('type') == 'c':
+        header_data = [h for h in header_data if h.get('header').lower() != header.lower()]
 
     budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
                                          row_header="", col_month="", value=0, repeat=True)
