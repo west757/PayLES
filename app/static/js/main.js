@@ -105,7 +105,6 @@ document.addEventListener('click', function(e) {
         });
     }
 
-    
     // remove row
     if (e.target.classList.contains('remove-row-button')) {
         let header = e.target.getAttribute('data-row');
@@ -130,7 +129,6 @@ document.addEventListener('click', function(e) {
         }
         e.stopPropagation();
     }
-
 
     // open inject modal
     if (e.target && e.target.id === 'button-inject') {
@@ -158,6 +156,10 @@ document.addEventListener('click', function(e) {
 
 // change event listeners
 document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'months-num-dropdown') {
+        disableInputs();
+    }
+
     if (e.target && e.target.id === 'highlight-changes-checkbox') {
         highlightChanges();
     }
@@ -238,5 +240,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     highlightChanges();
     showAllVariables();
     showTSPOptions();
+    enableInputs();
     disableTSPRateButtons();
 });
