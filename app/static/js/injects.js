@@ -211,14 +211,14 @@ function populateTemplateDropdown(rowType) {
 // --- Utility: Get reserved headers and template rows from window ---
 function getReservedHeaders() {
     let reserved = [];
-    if (window.CONFIG.BUDGET_TEMPLATE) {
-        reserved = reserved.concat(window.CONFIG.BUDGET_TEMPLATE.map(r => r.header));
+    if (window.CONFIG.budget_TEMPLATE) {
+        reserved = reserved.concat(window.CONFIG.budget_TEMPLATE.map(r => r.header));
     }
     if (window.CONFIG.VARIABLE_TEMPLATE) {
         reserved = reserved.concat(window.CONFIG.VARIABLE_TEMPLATE.map(r => r.header));
     }
-    if (window.CONFIG.BUDGET_DATA) {
-        window.CONFIG.BUDGET_DATA.forEach(r => {
+    if (window.CONFIG.budget) {
+        window.CONFIG.budget.forEach(r => {
             if (r.inject) reserved.push(r.header);
         });
     }
@@ -226,10 +226,10 @@ function getReservedHeaders() {
 }
 
 function getTemplateRows(rowType) {
-    let inBudget = window.CONFIG.BUDGET_DATA ? window.CONFIG.BUDGET_DATA.map(r => r.header) : [];
+    let inBudget = window.CONFIG.budget ? window.CONFIG.budget.map(r => r.header) : [];
     let templateRows = [];
-    if (window.CONFIG.BUDGET_TEMPLATE) {
-        templateRows = window.CONFIG.BUDGET_TEMPLATE.filter(row => {
+    if (window.CONFIG.budget_TEMPLATE) {
+        templateRows = window.CONFIG.budget_TEMPLATE.filter(row => {
             if (rowType === 'e') {
                 return row.type === 'e' && !inBudget.includes(row.header);
             } else if (rowType === 'd') {

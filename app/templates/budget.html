@@ -18,8 +18,8 @@
     {% endif %}
 {% endmacro %}
 
-<script id="budget-data" type="application/json">
-    {{ budget|tojson|safe }}
+<script id="config-data" type="application/json">
+    {{ config_js|tojson }}
 </script>
 
 <table id="budget-table" class="styled-table">

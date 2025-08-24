@@ -197,9 +197,9 @@ function syncSettingsContainerHeight() {
 
 // get budget value for a specific cell
 function getBudgetValue(rowHeader, colMonth) {
-    if (!window.BUDGET_DATA) return '';
-    
-    const row = window.BUDGET_DATA.find(r => r.header === rowHeader);
+    if (!window.CONFIG.budget) return '';
+
+    const row = window.CONFIG.budget.find(r => r.header === rowHeader);
 
     if (row && row.hasOwnProperty(colMonth)) {
         return row[colMonth];
@@ -210,7 +210,7 @@ function getBudgetValue(rowHeader, colMonth) {
 
 // extract month headers from the budget data
 function extractMonthHeaders() {
-    const differenceRow = window.BUDGET_DATA.find(r => r.header === "Difference");
+    const differenceRow = window.CONFIG.budget.find(r => r.header === "Difference");
     return Object.keys(differenceRow).filter(k => k !== "header");
 }
 
