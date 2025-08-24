@@ -102,6 +102,7 @@ def update_budget():
 
     row = next((r for r in budget if r.get('header') == row_header), None)
     field = row.get('field')
+
     if field in ('int', int):
         value = int(value)
     elif field in ('float', float):
@@ -111,7 +112,8 @@ def update_budget():
     if col_month in month_headers:
         idx = month_headers.index(col_month)
         months_num = len(month_headers) - idx
-        budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=col_month, months_num=months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+        budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=col_month, months_num=months_num, 
+                                             row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
     session['budget'] = budget
 
@@ -169,16 +171,20 @@ def update_injects():
     method = request.form.get('method', '')
     row_type = request.form.get('row_type', '')
     header = request.form.get('header', '').strip()
-    value = request.form.get('value', '0').strip()
+    value = round(float(request.form.get('value', '0').strip()), 2)
     tax = request.form.get('tax', 'false').lower() == 'true'
     initial_month = month_headers[0]
+
+    print("header:", header, "type:", row_type, "value:", value, "tax:", tax)
+    print("initial_month:", initial_month, "method:", method)
+    print("")
 
     insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
 
     if method == 'template':
-        row = add_row(BUDGET_TEMPLATE, header, value, initial_month)
-        for idx, m in enumerate(month_headers):
-            row[m] = 0.00 if idx == 0 else float(value)
+        row = add_row(BUDGET_TEMPLATE, header, 0.00, initial_month)
+        for idx, m in enumerate(month_headers[1:]):
+            row[m] = value
         budget.insert(insert_idx, row)
 
     elif method == 'custom':
@@ -195,9 +201,8 @@ def update_injects():
             elif meta == 'modal':
                 row['modal'] = 'none'
 
-        # Set first month to 0, future months to value
         for idx, m in enumerate(month_headers):
-            row[m] = 0.0 if idx == 0 else float(value)
+            row[m] = 0.0 if idx == 0 else value
         budget.insert(insert_idx, row)
 
         if not any(h['header'].lower() == header.lower() for h in header_data):
@@ -209,12 +214,11 @@ def update_injects():
     else:
         return jsonify({'message': 'Invalid method.'}), 400
 
-    budget, month_headers = build_months(
-        all_rows=True,
-        budget=budget,
-        prev_month=month_headers[-1],
-        months_num=0  # 0 means just update calculations, no new months
-    )
+    budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
+                                         row_header=header, col_month=month_headers[1], value=value, repeat=True)
+
+    for row in budget:
+        print(row)
 
     session['budget'] = budget
     session['header_data'] = header_data
