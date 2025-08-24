@@ -246,7 +246,7 @@ def add_row(TEMPLATE, header, value, month):
 
 
 # =========================
-# add and remove months
+# update budget months and values
 # =========================
 
 def remove_month(budget, month):

@@ -16,6 +16,8 @@ short-term:
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - get combat zone from les
 - disable inputs when changing months
+- set initial value for template rows
+- add in check for max inject rows
 
 mid-term:
 - instructions page and overlay on example les

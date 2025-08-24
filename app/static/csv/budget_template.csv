@@ -57,24 +57,24 @@ TLE CONUS,e,float,False,True,pcs,False,False,TLE CONUS,Temporary Lodging Expense
 TLA,e,float,False,True,pcs,False,False,TLA,Temporary Living Allowance
 TLA OCONUS,e,float,False,True,pcs,False,False,TLA OCONUS,Temporary Lodging Allowance OCONUS
 TQSA,e,float,False,True,pcs,False,False,TQSA,Temporary Quarters Subsistence Allowance
-CCA,e,float,False,False,clothingallowance,False,True,CCA,Civilian Clothing Allowance
-CCCA,e,float,False,False,clothingallowance,False,True,CCCA,Continuing Civilian Clothing Allowance
-CCRA,e,float,False,False,clothingallowance,False,True,CCRA,Cash Clothing Replacement Allowance
-CMA,e,float,False,False,clothingallowance,False,True,CMA,Clothing Maintenance Allowance
-CRA,e,float,False,False,clothingallowance,False,True,CRA,Clothing Replacement Allowance
-ICCA,e,float,False,False,clothingallowance,False,True,ICCA,Initial Civilian Clothing Allowance
-MCA,e,float,False,False,clothingallowance,False,True,MCA,Maternity Clothing Allowance
-PCCA,e,float,False,False,clothingallowance,False,True,PCCA,Partial Civilian Clothing Allowance
-RBMA,e,float,False,False,clothingallowance,False,True,RBMA,Reserve Basic Maintenance Allowance
-SMA,e,float,False,False,clothingallowance,False,True,SMA,Standard Maintenance Allowance
-SRA,e,float,False,False,clothingallowance,False,True,SRA,Standard Replacement Allowance
-SICA,e,float,False,False,clothingallowance,False,True,SICA,Standard Initial Clothing Allowance
-SUPP CMA,e,float,False,False,clothingallowance,False,True,SUPP CMA,Enlisted Supplemental Clothing Allowance
-TDY CCA,e,float,False,False,clothingallowance,False,True,TDY CCA,Temporary Duty Civilian Clothing Allowance
-UEA Initial,e,float,False,False,clothingallowance,False,True,UEA INITIAL,Initial Clothing Allowance
+CCA,e,float,False,True,clothingallowance,False,True,CCA,Civilian Clothing Allowance
+CCCA,e,float,False,True,clothingallowance,False,True,CCCA,Continuing Civilian Clothing Allowance
+CCRA,e,float,False,True,clothingallowance,False,True,CCRA,Cash Clothing Replacement Allowance
+CMA,e,float,False,True,clothingallowance,False,True,CMA,Clothing Maintenance Allowance
+CRA,e,float,False,True,clothingallowance,False,True,CRA,Clothing Replacement Allowance
+ICCA,e,float,False,True,clothingallowance,False,True,ICCA,Initial Civilian Clothing Allowance
+MCA,e,float,False,True,clothingallowance,False,True,MCA,Maternity Clothing Allowance
+PCCA,e,float,False,True,clothingallowance,False,True,PCCA,Partial Civilian Clothing Allowance
+RBMA,e,float,False,True,clothingallowance,False,True,RBMA,Reserve Basic Maintenance Allowance
+SMA,e,float,False,True,clothingallowance,False,True,SMA,Standard Maintenance Allowance
+SRA,e,float,False,True,clothingallowance,False,True,SRA,Standard Replacement Allowance
+SICA,e,float,False,True,clothingallowance,False,True,SICA,Standard Initial Clothing Allowance
+SUPP CMA,e,float,False,True,clothingallowance,False,True,SUPP CMA,Enlisted Supplemental Clothing Allowance
+TDY CCA,e,float,False,True,clothingallowance,False,True,TDY CCA,Temporary Duty Civilian Clothing Allowance
+UEA Initial,e,float,False,True,clothingallowance,False,True,UEA INITIAL,Initial Clothing Allowance
 SBP,e,float,False,True,sbp,False,False,SBP,Military Survivor Benefits Plan
 CIP,e,float,False,True,cip,False,False,CIP,Combat-Related Injury and Rehabilitation
-Advance Debt,e,float,False,False,debt,False,True,ADVANCE DEBT,Advance Debt Payment
+Advance Debt,e,float,False,True,debt,False,True,ADVANCE DEBT,Advance Debt Payment
 BRA,e,float,False,True,none,False,False,BRA,Basic Replacement Allowance
 CVI,e,float,False,True,none,False,False,CVI,Conditional Voluntary Indefinite Status
 FSA,e,float,False,True,none,False,False,FSA,Family Separation Allowance
@@ -98,16 +98,16 @@ State Taxes,d,float,True,False,statetaxes,True,False,STATE TAXES,State Taxes
 Traditional TSP,d,float,False,False,tsp,True,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
 Roth TSP,d,float,False,False,tsp,True,False,ROTH TSP,Roth Thrift Savings Plan
 MGIB,d,float,False,True,mgib,False,False,MGIB,Montgomery G.I. Bill Program
-Debt,d,float,False,False,debt,False,True,DEBT,Government Debt
-Fine,d,float,False,False,debt,False,True,FINE,Military Fines
-Garnishment,d,float,False,False,debt,False,True,GARNISHMENT,Garnished Income
-AAFES Debt,d,float,False,False,debt,False,True,AAFES,AAFES Debt
-GPLD,d,float,False,False,debt,False,True,GPLD,Government Property Lost or Damaged
+Debt,d,float,False,True,debt,False,True,DEBT,Government Debt
+Fine,d,float,False,True,debt,False,True,FINE,Military Fines
+Garnishment,d,float,False,True,debt,False,True,GARNISHMENT,Garnished Income
+AAFES Debt,d,float,False,True,debt,False,True,AAFES,AAFES Debt
+GPLD,d,float,False,True,debt,False,True,GPLD,Government Property Lost or Damaged
 Meal Deduction,d,float,False,True,bas,False,False,MEAL DEDUCT,Meal Deduction
-Partial Pay,d,float,False,False,none,False,True,PARTIAL PAY,Partial Pay
-Pay Released,d,float,False,False,none,False,True,PAY RELEASED,Pay Released
+Partial Pay,d,float,False,True,none,False,True,PARTIAL PAY,Partial Pay
+Pay Released,d,float,False,True,none,False,True,PAY RELEASED,Pay Released
 SUPP/COM,d,float,False,True,suppcom,False,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
-Repay Advance,d,float,False,False,none,False,True,REPAY ADVANCE,Repayment of Advance Pay
+Repay Advance,d,float,False,True,none,False,True,REPAY ADVANCE,Repayment of Advance Pay
 Split Pay,d,float,False,True,navy,False,False,SPLIT PAY,Split Pay Option
 Split Pay Option,d,float,False,True,navy,False,False,SPO PAYMENT,Split Pay Option Payment for Accounting
 AFRH,d,float,False,True,afrh,False,False,AFRH,Armed Forces Retirement Home
