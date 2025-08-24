@@ -1,8 +1,3 @@
-//initialize config variables
-const configData = JSON.parse(document.getElementById('config-data').textContent);
-window.CONFIG = configData;
-
-
 // attach home form listener
 window.attachHomeFormListener = function() {
     const homeForm = document.getElementById('home-form');
@@ -161,11 +156,10 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         });
     }
 
-    const budgetDataScript = document.getElementById('budget-data');
-    if (budgetDataScript) {
-        window.BUDGET_DATA = JSON.parse(budgetDataScript.textContent);
-    }
-    
+    // capture and parse config data
+    const configData = JSON.parse(document.getElementById('config-data').textContent);
+    window.CONFIG = configData;
+
     highlightChanges();
     showAllVariables();
     showTSPOptions();

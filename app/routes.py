@@ -25,18 +25,7 @@ from app.forms import (
 @flask_app.route('/')
 def index():
     home_form = HomeForm()
-
-    config_js = {
-        "dependentsMax": flask_app.config['DEPENDENTS_MAX'],
-        "tradTspRateMax": flask_app.config['TRAD_TSP_RATE_MAX'],
-        "rothTspRateMax": flask_app.config['ROTH_TSP_RATE_MAX'],
-        "homeOfRecords": flask_app.config['HOME_OF_RECORDS'],
-        "grades": flask_app.config['GRADES'],
-        "sgliCoverages": flask_app.config['SGLI_COVERAGES'],
-        "budgetHeaderList": flask_app.config['BUDGET_HEADER_LIST']
-    }
-
-    return render_template('home.html', home_form=home_form, config_js=config_js)
+    return render_template('home.html', home_form=home_form)
 
 
 @flask_app.route('/submit_les', methods=['POST'])
@@ -72,7 +61,19 @@ def submit_les():
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
 
+        config_js = {
+            'budget': convert_numpy_types(budget),
+            "maxInjectRows": flask_app.config['MAX_INJECT_ROWS'],
+            "dependentsMax": flask_app.config['DEPENDENTS_MAX'],
+            "tradTspRateMax": flask_app.config['TRAD_TSP_RATE_MAX'],
+            "rothTspRateMax": flask_app.config['ROTH_TSP_RATE_MAX'],
+            "homeOfRecords": flask_app.config['HOME_OF_RECORDS'],
+            "grades": flask_app.config['GRADES'],
+            "sgliCoverages": flask_app.config['SGLI_COVERAGES'],
+            "budgetHeaderList": flask_app.config['BUDGET_HEADER_LIST']
+        }
         context = {
+            'config_js': config_js,
             'les_image': les_image,
             'rect_overlay': rect_overlay,
             'budget': convert_numpy_types(budget),
@@ -110,7 +111,12 @@ def update_budget():
 
     session['budget'] = budget
 
+
+    config_js = {
+        'budget': convert_numpy_types(budget),
+    }
     context = {
+        'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
     }
@@ -138,7 +144,11 @@ def update_months():
 
     session['budget'] = budget
 
+    config_js = {
+        'budget': convert_numpy_types(budget),
+    }
     context = {
+        'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
     }
@@ -147,8 +157,8 @@ def update_months():
 
 
 @csrf.exempt
-@flask_app.route('/update_custom', methods=['POST'])
-def update_custom():
+@flask_app.route('/update_injects', methods=['POST'])
+def update_injects():
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
     method = request.form.get('method', '')
@@ -164,7 +174,7 @@ def update_custom():
         reserved_headers.update([str(h).lower() for h in flask_app.config.BUDGET_TEMPLATE['header'].tolist()])
     if hasattr(flask_app.config, 'VARIABLE_TEMPLATE'):
         reserved_headers.update([str(h).lower() for h in flask_app.config.VARIABLE_TEMPLATE['header'].tolist()])
-    # Add custom row headers already in budget
+    # Add inject row headers already in budget
     reserved_headers.update([str(r['header']).lower() for r in budget if r.get('custom')])
 
     if header.lower() in reserved_headers and method == 'custom':
@@ -176,10 +186,10 @@ def update_custom():
     except Exception:
         value = 0.0
 
-    # Only allow up to MAX_CUSTOM_ROWS
+    # Only allow up to MAX_INJECT_ROWS
     custom_rows = [r for r in budget if r.get('custom')]
-    if method == 'custom' and len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
-        return jsonify({'message': f'Maximum custom rows ({flask_app.config["MAX_CUSTOM_ROWS"]}) reached.'}), 400
+    if method == 'custom' and len(custom_rows) >= flask_app.config['MAX_INJECT_ROWS']:
+        return jsonify({'message': f'Maximum custom rows ({flask_app.config["MAX_INJECT_ROWS"]}) reached.'}), 400
 
     # Add row
     if method == 'template':
@@ -203,7 +213,6 @@ def update_custom():
             'tax': tax,
             'editable': True,
             'modal': None,
-            'custom': True,
         }
         for m in month_headers:
             row[m] = value
@@ -213,7 +222,12 @@ def update_custom():
 
     session['budget'] = budget
 
+    config_js = {
+        'budget': convert_numpy_types(budget),
+        'reserved_headers': reserved_headers,
+    }
     context = {
+        'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
     }
