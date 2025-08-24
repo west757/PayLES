@@ -95,6 +95,7 @@ def submit_les():
 def update_budget():
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
+    header_data = session.get('header_data', [])
     row_header = request.form.get('row_header', '')
     col_month = request.form.get('col_month', '')
     value = request.form.get('value', 0)
@@ -106,7 +107,14 @@ def update_budget():
     if field in ('int', int):
         value = int(value)
     elif field in ('float', float):
-        value = float(value)
+        try:
+            value = float(value)
+        except ValueError:
+            value = 0.0
+        value = round(value, 2)
+        row_type = row.get('type', '')
+        if row_type in ('d', 'a') and value > 0:
+            value = -value
     repeat = str(repeat).lower() == "true"
 
     if col_month in month_headers:
@@ -124,6 +132,7 @@ def update_budget():
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
+        'header_data': header_data,
     }
     return render_template('budget.html', **context)
 
@@ -133,6 +142,7 @@ def update_budget():
 def update_months():
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
+    header_data = session.get('header_data', [])
     next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     prev_months_num = len(month_headers)
 
@@ -156,6 +166,7 @@ def update_months():
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
+        'header_data': header_data,
     }
     return render_template('budget.html', **context)
 
@@ -171,13 +182,17 @@ def update_injects():
     method = request.form.get('method', '')
     row_type = request.form.get('row_type', '')
     header = request.form.get('header', '').strip()
-    value = round(float(request.form.get('value', '0').strip()), 2)
+    value = request.form.get('value', '0').strip()
     tax = request.form.get('tax', 'false').lower() == 'true'
     initial_month = month_headers[0]
 
-    print("header:", header, "type:", row_type, "value:", value, "tax:", tax)
-    print("initial_month:", initial_month, "method:", method)
-    print("")
+    try:
+        value = float(value)
+    except ValueError:
+        value = 0
+    value = round(value, 2)
+    if row_type == 'd' and value > 0:
+        value = -value
 
     insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
 
@@ -217,9 +232,6 @@ def update_injects():
     budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
                                          row_header=header, col_month=month_headers[1], value=value, repeat=True)
 
-    for row in budget:
-        print(row)
-
     session['budget'] = budget
     session['header_data'] = header_data
 
@@ -231,6 +243,7 @@ def update_injects():
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'month_headers': month_headers,
+        'header_data': header_data,
     }
     return render_template('budget.html', **context)
 

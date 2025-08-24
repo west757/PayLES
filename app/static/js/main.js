@@ -183,7 +183,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
     // capture and parse config data
     const configData = JSON.parse(document.getElementById('config-data').textContent);
-    window.CONFIG = configData;
+    window.CONFIG = Object.assign(window.CONFIG || {}, configData);
 
     highlightChanges();
     showAllVariables();
