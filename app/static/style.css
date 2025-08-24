@@ -14,8 +14,8 @@
     --highlight_green_color: #4fd1a2;
     --highlight-green-color-rgb: 79, 209, 162;
     --highlight_yellow_color: #baf35f;
-    --highlight_blue_color: #3c94f1;
-    --highlight_red_color: #f06f65;
+    --primary_red_color: #f06f65;
+    --secondary_red_color: #f5574b;
 }
 
 html {
@@ -188,7 +188,7 @@ footer {
 .toast {
     align-items: center;
     animation: fadein 0.3s, fadeout 0.5s 6s;
-    background-color: var(--highlight_red_color);
+    background-color: var(--primary_red_color);
     border-radius: 0.5rem;
     color: var(--light_text_color);
     display: flex;
@@ -292,50 +292,13 @@ input[type=file]::file-selector-button {
     background-color: var(--highlight_green_color);
 }
 
-
-
-.remove-row-button {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    color: var(--light_text_color);
-    background: var(--highlight_red_color);
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1em;
-    cursor: pointer;
-    width: 1.5rem;
-    height: 1.5rem;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9050;
-    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
-    transition: background 0.2s;
-}
-
-.remove-row-button:hover {
-    background: #d32f2f; /* Slightly darker red for hover */
-}
-
-.row-header-cell {
-    position: relative;
-}
-
-.row-header-cell:hover .remove-row-button {
-    display: flex;
-}
-
-
-
 .editing-button {
     align-items: center;
     border: none;
     border-radius: 0.5rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
-    color: white;
+    color: var(--light_text_color);
     cursor: pointer;
-    display: flex;
     font-size: 1rem;
     height: 1.5rem;
     justify-content: center;
@@ -344,16 +307,31 @@ input[type=file]::file-selector-button {
     width: 1.5rem;
 }
 
-.editing-button.onetime-button {
+.editing-button.onetime-button, .editing-button.repeat-button {
     background: var(--primary_green_accent_color);
+    display: flex;
 }
 
-.editing-button.repeat-button {
-    background: var(--primary_green_accent_color);
+.editing-button.onetime-button:hover, .editing-button.repeat-button:hover {
+    background: var(--secondary_green_accent_color);
 }
 
 .editing-button.cancel-button {
-    background: var(--highlight_red_color);
+    background: var(--primary_red_color);
+    display: flex;
+}
+
+.remove-row-button {
+    background: var(--primary_red_color);
+    display: none;
+    left: 0.25rem;
+    position: absolute;
+    top: 0.25rem;
+    z-index: 9050;
+}
+
+.editing-button.cancel-button:hover, .remove-row-button:hover {
+    background: var(--secondary_red_color);
 }
 
 .editing-button:disabled {
@@ -382,7 +360,7 @@ input[type=file]::file-selector-button {
 }
 
 .modal-close:hover {
-    color: var(--highlight_red_color);
+    color: var(--primary_red_color);
 }
 
 button:disabled,
@@ -576,23 +554,6 @@ input[type=file] {
 
 
 /* =========================
-   button and budget table
-   ========================= */
-
-.tax-tooltip-icon {
-    font-size: 13px;
-    cursor: pointer;
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: white;
-    border-radius: 50%;
-    padding: 0 2px;
-    line-height: 1;
-}
-
-
-/* =========================
    styled table
    ========================= */
 
@@ -656,6 +617,14 @@ input[type=file] {
 
 .tsp-row {
     display: none;
+}
+
+.row-header-cell {
+    position: relative;
+}
+
+.row-header-cell:hover .remove-row-button {
+    display: flex;
 }
 
 #budget-table.highlight-mode .budget-highlight {
