@@ -163,6 +163,22 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
                 settings.style.top = '2rem';
             }
         });
+
+
+        // inject custom header event listener
+        const customHeaderInput = document.getElementById('inject-custom-header');
+        if (customHeaderInput) {
+            customHeaderInput.addEventListener('input', getInputRestrictionHandler('text', 20));
+        }
+
+
+        // inject template and custom value event listeners
+        ['inject-template-value', 'inject-custom-value'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', getInputRestrictionHandler('money'));
+            }
+        });
     }
 
     // capture and parse config data

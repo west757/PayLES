@@ -72,7 +72,7 @@ def submit_les():
             'homeOfRecords': flask_app.config['HOME_OF_RECORDS'],
             'grades': flask_app.config['GRADES'],
             'sgliCoverages': flask_app.config['SGLI_COVERAGES'],
-            'header_data': header_data,
+            'headerData': header_data,
         }
         context = {
             'config_js': config_js,

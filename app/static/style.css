@@ -377,7 +377,7 @@ input[type="text"], select {
 }
 
 .input-long {
-    width: 15rem;
+    width: 12rem;
 }
 
 .input-mid {
@@ -766,7 +766,7 @@ input[type=file] {
 #inject-grid {
     align-items: flex-start;
     display: grid;
-    grid-template-columns: 20rem 22rem;
+    grid-template-columns: 1fr 1.25fr 1fr;
     grid-template-rows: auto;
     min-height: 9rem;
 }
@@ -812,7 +812,7 @@ input[type=file] {
 
 #inject-template-custom label {
     font-weight: bold;
-    margin: 0 0.25rem 0 0;
+    margin: 0 0.5rem 0 0;
     min-width: 7rem;
     text-align: right;
 }
@@ -821,7 +821,6 @@ input[type=file] {
     align-items: center;
     display: flex;
     flex-direction: row;
-    vertical-align: top;
     width: 100%;
 }
 
@@ -836,6 +835,19 @@ input[type=file] {
     height: 2.5rem;
     margin: 0 0 -0.75rem auto;
     width: 7rem;
+}
+
+#inject-info-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    word-break: break-word;
+}
+
+#inject-template-info,
+#inject-custom-info {
+
 }
 
 

@@ -85,6 +85,8 @@ function resetInjectModal(scope = 'all') {
     el.methodSection.style.display = 'none';
     el.templateSection.style.display = 'none';
     el.customSection.style.display = 'none';
+    el.templateInfo.style.display = 'none';
+    el.customInfo.style.display = 'none';
 
     if (scope === 'all') {
         el.typeEntitlement.checked = false;
@@ -100,6 +102,8 @@ function resetInjectModal(scope = 'all') {
         el.templateSection.style.display = 'flex';
         el.templateSelect.innerHTML = '';
         el.templateValue.value = '';
+        el.templateInfo.style.display = 'block';
+        el.customInfo.style.display = 'none';
     } 
     else if (scope === 'custom') {
         el.methodSection.style.display = 'flex';
@@ -107,6 +111,8 @@ function resetInjectModal(scope = 'all') {
         el.customHeader.value = '';
         el.customTax.checked = false;
         el.customValue.value = '';
+        el.templateInfo.style.display = 'none';
+        el.customInfo.style.display = 'block';
     }
 }
 
@@ -129,6 +135,8 @@ function getInjectModalElements() {
         customTax: document.getElementById('inject-custom-tax'),
         customValue: document.getElementById('inject-custom-value'),
         customButton: document.getElementById('inject-custom-button'),
+        templateInfo: document.getElementById('inject-template-info'),
+        customInfo: document.getElementById('inject-custom-info'),
     };
 }
 
@@ -143,7 +151,7 @@ function validateInject({ mode, header, value }) {
     }
 
     if (mode === 'custom') {
-        getReservedHeaders();
+        const reservedHeaders = (window.CONFIG.headerData || []).map(h => h.header.toLowerCase());
 
         if (!header || header.trim().length === 0) {
             showToast('Please enter a row header.');
@@ -151,12 +159,12 @@ function validateInject({ mode, header, value }) {
         }
 
         if (reservedHeaders.includes(header.trim().toLowerCase())) {
-            showToast('Row header is reserved or already in use.');
+            showToast('Row header ' + header + ' is reserved or already in use. If you are trying to create an LES-specific row, try choosing from the template options where it may already be defined.');
             return false;
         }
 
-        if (!/^[A-Za-z0-9 _\-]{2,32}$/.test(header.trim())) {
-            showToast('Row header must be 2-32 characters, letters/numbers/spaces/-/_ only.');
+        if (!/^[A-Za-z0-9 _\-]{1,20}$/.test(header.trim())) {
+            showToast('Row header cannot be longer than 20 characters and no special characters.');
             return false;
         }
     }
@@ -170,21 +178,22 @@ function validateInject({ mode, header, value }) {
 }
 
 
-// populate the template dropdown based on the selected row type
 function populateTemplateDropdown(rowType) {
     const el = getInjectModalElements();
     const templateDropdown = el.templateSelect;
     const templateValue = el.templateValue;
     const templateSubmit = el.templateButton;
+    const infoDiv = document.getElementById('inject-template-info');
     templateDropdown.innerHTML = '';
 
-    // add "Select a header" as first option
+    // add "Select header" as first option
     let firstOpt = document.createElement('option');
     firstOpt.value = 'select-header';
-    firstOpt.textContent = 'Select a Header';
+    firstOpt.textContent = 'Select Header';
     templateDropdown.appendChild(firstOpt);
 
     let rows = getTemplateRows(rowType);
+
     if (rows.length === 0) {
         let opt = document.createElement('option');
         opt.value = '';
@@ -193,50 +202,50 @@ function populateTemplateDropdown(rowType) {
         templateDropdown.disabled = true;
         templateValue.disabled = true;
         templateSubmit.disabled = true;
+        if (infoDiv) infoDiv.textContent = '';
         return;
     }
+
     rows.forEach(row => {
         let opt = document.createElement('option');
         opt.value = row.header;
-        opt.textContent = row.longname || row.header;
+        opt.textContent = row.header;
+        opt.dataset.tooltip = row.tooltip || '';
         templateDropdown.appendChild(opt);
     });
+
     templateDropdown.disabled = false;
     templateValue.disabled = false;
     templateSubmit.disabled = false;
+
+    // Show tooltip for selected header in info div
+    templateDropdown.addEventListener('change', function() {
+        const selected = templateDropdown.selectedOptions[0];
+        if (infoDiv) {
+            infoDiv.textContent = selected && selected.dataset.tooltip ? selected.dataset.tooltip : '';
+        }
+    });
+
+    // Set initial info div to blank
+    if (infoDiv) infoDiv.textContent = '';
 }
 
-
-
-// --- Utility: Get reserved headers and template rows from window ---
-function getReservedHeaders() {
-    let reserved = [];
-    if (window.CONFIG.budget_TEMPLATE) {
-        reserved = reserved.concat(window.CONFIG.budget_TEMPLATE.map(r => r.header));
-    }
-    if (window.CONFIG.VARIABLE_TEMPLATE) {
-        reserved = reserved.concat(window.CONFIG.VARIABLE_TEMPLATE.map(r => r.header));
-    }
-    if (window.CONFIG.budget) {
-        window.CONFIG.budget.forEach(r => {
-            if (r.inject) reserved.push(r.header);
-        });
-    }
-    return reserved.map(h => h.toLowerCase());
-}
 
 function getTemplateRows(rowType) {
-    let inBudget = window.CONFIG.budget ? window.CONFIG.budget.map(r => r.header) : [];
-    let templateRows = [];
-    if (window.CONFIG.budget_TEMPLATE) {
-        templateRows = window.CONFIG.budget_TEMPLATE.filter(row => {
-            if (rowType === 'e') {
-                return row.type === 'e' && !inBudget.includes(row.header);
-            } else if (rowType === 'd') {
-                return (row.type === 'd' || row.type === 'a') && !inBudget.includes(row.header);
-            }
-            return false;
-        });
-    }
-    return templateRows;
+    const headerData = window.CONFIG.headerData || [];
+    const inBudget = window.CONFIG.budget ? window.CONFIG.budget.map(r => r.header) : [];
+
+    let subset = headerData.filter(row => {
+        if (rowType === 'e') {
+            return row.type === 'e';
+        } else if (rowType === 'd') {
+            return row.type === 'd' || row.type === 'a';
+        }
+        return false;
+    });
+
+    subset = subset.filter(row => !inBudget.includes(row.header));
+    subset.sort((a, b) => a.header.localeCompare(b.header));
+
+    return subset;
 }

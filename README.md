@@ -15,8 +15,7 @@ short-term:
 - sticky month header of budget
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - get combat zone from les
-- refactor css, remove independent-button class
-- disable inputs when submitting form
+- disable inputs when changing months
 
 mid-term:
 - instructions page and overlay on example les
