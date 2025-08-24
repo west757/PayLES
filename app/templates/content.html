@@ -190,6 +190,7 @@
 
             <div id="inject-grid">
                 <div id="inject-type-method">
+                    <!-- row type radio buttons -->
                     <div id="inject-type">
                         <span>Row Type:</span>
                         <div class="inject-radio-group">
@@ -204,6 +205,7 @@
                         </div>
                     </div>
 
+                    <!-- row method radio buttons -->
                     <div id="inject-method">
                         <span>Method:</span>
                         <div class="inject-radio-group">
@@ -220,6 +222,7 @@
                 </div>
 
                 <div id="inject-template-custom">
+                    <!-- add template row inputs -->
                     <div id="inject-template">
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-template-select">Row Header:</label>
@@ -227,6 +230,7 @@
                         </div>
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-template-value">Initial Value:</label>
+                            $&nbsp;
                             <input id="inject-template-value" class="input-mid2" type="text" placeholder="0.00">
                         </div>
                         <div class="inject-template-custom-row">
@@ -234,6 +238,7 @@
                         </div>
                     </div>
 
+                    <!-- add custom row inputs -->
                     <div id="inject-custom">
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-custom-header">Row Header:</label>
@@ -241,6 +246,7 @@
                         </div>
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-custom-value">Initial Value:</label>
+                            $&nbsp;
                             <input id="inject-custom-value" class="input-mid2" type="text" placeholder="0.00">
                         </div>
                         <div class="inject-template-custom-row">
@@ -248,6 +254,15 @@
                             <input id="inject-custom-tax" class="input-checkbox" type="checkbox">
                             <button id="inject-custom-button" class="button-solo">Add Row</button>
                         </div>
+                    </div>
+                </div>
+
+                <div id="inject-info-column">
+                    <div id="inject-template-info"></div>
+                    <div id="inject-custom-info">
+                        The Tax Purpose checkbox is used to indicate if the row is used for tax purposes.
+                        If an entitlement, sets whether the row is taxable income or non-taxable income.
+                        If a deduction, sets the row as a tax to be added to total taxes.
                     </div>
                 </div>
             </div>

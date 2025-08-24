@@ -61,9 +61,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.maxLength = 1;
         input.placeholder = "0-9";
         input.value = '';
-        input.addEventListener('input', function(e) {
-            input.value = input.value.replace(/\D/g, '').slice(0, 1);
-        });
+        input.addEventListener('input', getInputRestrictionHandler('number', 1));
         inputWrapper = input;
     }
 
@@ -81,9 +79,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         let numValue = String(value).replace('%', '').trim();
         input.placeholder = numValue;
         input.value = '';
-        input.addEventListener('input', function(e) {
-            input.value = input.value.replace(/\D/g, '').slice(0, 3);
-        });
+        input.addEventListener('input', getInputRestrictionHandler('number', 3));
 
         let percentSpan = document.createElement('span');
         percentSpan.textContent = '%';
@@ -102,13 +98,12 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
             input.maxLength = 5;
             input.placeholder = value;
             input.value = '';
-            input.addEventListener('input', function(e) {
-                input.value = input.value.replace(/\D/g, '').slice(0, 5);
-            });
+            input.addEventListener('input', getInputRestrictionHandler('number', 5));
         } else {
-            input.maxLength = 5;
+            input.maxLength = 20;
             input.placeholder = value;
             input.value = '';
+            input.addEventListener('input', getInputRestrictionHandler('text', 20));
         }
 
         inputWrapper = input;
@@ -141,36 +136,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
         input.placeholder = numValue;
         input.value = '';
 
-        input.addEventListener('input', function(e) {
-            let val = input.value;
-
-            val = val.replace(/[^0-9.]/g, '');
-
-            let parts = val.split('.');
-            if (parts.length > 2) {
-                val = parts[0] + '.' + parts.slice(1).join('');
-            }
-
-            if (parts[0].length > 4) {
-                parts[0] = parts[0].slice(0, 4);
-            }
-            if (parts.length > 1 && parts[1].length > 2) {
-                parts[1] = parts[1].slice(0, 2);
-            }
-            val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
-
-            if (val.startsWith('00')) {
-                val = val.replace(/^0+/, '0');
-            } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {
-                val = val.replace(/^0+/, '');
-            }
-
-            if (val.length > 7) {
-                val = val.slice(0, 7);
-            }
-
-            input.value = val;
-        });
+        input.addEventListener('input', getInputRestrictionHandler('money'));
 
         inputWrapper.appendChild(signSpan);
         inputWrapper.appendChild(input);

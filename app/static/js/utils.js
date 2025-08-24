@@ -244,3 +244,56 @@ function disableTSPRateButtons() {
     });
 }
 
+
+
+
+function getInputRestrictionHandler(fieldType, maxLength = null) {
+    if (fieldType === 'money') {
+        // Float: up to 4 digits before, 2 after decimal, max 7 chars
+        return function(e) {
+            let val = e.target.value.replace(/[^0-9.]/g, '');
+            let parts = val.split('.');
+            if (parts.length > 2) {
+                val = parts[0] + '.' + parts.slice(1).join('');
+            }
+            if (parts[0].length > 4) {
+                parts[0] = parts[0].slice(0, 4);
+            }
+            if (parts.length > 1 && parts[1].length > 2) {
+                parts[1] = parts[1].slice(0, 2);
+            }
+            val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+            if (val.startsWith('00')) {
+                val = val.replace(/^0+/, '0');
+            } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {
+                val = val.replace(/^0+/, '');
+            }
+            if (val.length > 7) {
+                val = val.slice(0, 7);
+            }
+            e.target.value = val;
+        };
+    }
+    if (fieldType === 'number') {
+        // Only digits, maxLength digits
+        return function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (maxLength && val.length > maxLength) {
+                val = val.slice(0, maxLength);
+            }
+            e.target.value = val;
+        };
+    }
+    if (fieldType === 'text') {
+        // Letters, numbers, dash, underscore, space, maxLength chars
+        return function(e) {
+            let val = e.target.value.replace(/[^A-Za-z0-9_\- ]/g, '');
+            if (maxLength && val.length > maxLength) {
+                val = val.slice(0, maxLength);
+            }
+            e.target.value = val;
+        };
+    }
+    // Default: no restriction
+    return function(e) {};
+}
