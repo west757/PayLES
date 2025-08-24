@@ -55,22 +55,24 @@ def submit_les():
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, initial_month = build_budget(les_text)
         budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=initial_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
+        header_data = flask_app.config['BUDGET_HEADER_LIST'] + flask_app.config['VARIABLE_HEADER_LIST']
 
         session['budget'] = budget
+        session['header_data'] = header_data
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
 
         config_js = {
             'budget': convert_numpy_types(budget),
-            "maxInjectRows": flask_app.config['MAX_INJECT_ROWS'],
-            "dependentsMax": flask_app.config['DEPENDENTS_MAX'],
-            "tradTspRateMax": flask_app.config['TRAD_TSP_RATE_MAX'],
-            "rothTspRateMax": flask_app.config['ROTH_TSP_RATE_MAX'],
-            "homeOfRecords": flask_app.config['HOME_OF_RECORDS'],
-            "grades": flask_app.config['GRADES'],
-            "sgliCoverages": flask_app.config['SGLI_COVERAGES'],
-            "budgetHeaderList": flask_app.config['BUDGET_HEADER_LIST']
+            'maxInjectRows': flask_app.config['MAX_INJECT_ROWS'],
+            'dependentsMax': flask_app.config['DEPENDENTS_MAX'],
+            'tradTspRateMax': flask_app.config['TRAD_TSP_RATE_MAX'],
+            'rothTspRateMax': flask_app.config['ROTH_TSP_RATE_MAX'],
+            'homeOfRecords': flask_app.config['HOME_OF_RECORDS'],
+            'grades': flask_app.config['GRADES'],
+            'sgliCoverages': flask_app.config['SGLI_COVERAGES'],
+            'header_data': header_data,
         }
         context = {
             'config_js': config_js,
@@ -78,6 +80,7 @@ def submit_les():
             'rect_overlay': rect_overlay,
             'budget': convert_numpy_types(budget),
             'month_headers': month_headers,
+            'header_data': header_data,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
         }
@@ -166,6 +169,7 @@ def update_injects():
     header = request.form.get('header', '').strip()
     value = request.form.get('value', '0').strip()
     tax = request.form.get('tax', 'false').lower() == 'true'
+    header_data = session.get('header_data', [])
 
     # Validate header
     reserved_headers = set()
@@ -205,20 +209,18 @@ def update_injects():
             row[m] = value
         budget.append(row)
     elif method == 'custom':
-        # Create custom row
-        row = {
-            'header': header,
-            'type': row_type,
-            'field': 'float',
-            'tax': tax,
-            'editable': True,
-            'modal': None,
-        }
-        for m in month_headers:
-            row[m] = value
+        # ...existing code...
         budget.append(row)
+        # Add to header_data if not present
+        if not any(h['header'].lower() == header.lower() for h in header_data):
+            header_data.append({
+                'header': header,
+                'type': row_type,
+                'tooltip': '',
+            })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
+
 
     session['budget'] = budget
 

@@ -103,6 +103,7 @@
     </div>
 
 
+    <!-- render LES image and tooltips -->
     <div id="les-image">
         <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
 
@@ -127,6 +128,8 @@
 
     <div class="tooltip" id="tooltip"></div>
 
+
+    <!-- LES remarks -->
     <h2 class="h2-center">Common LES Remarks</h2>
     <div id="remarks" class="shadow">
         {% for remark in LES_REMARKS %}
@@ -137,6 +140,7 @@
     </div>
 
 
+    <!-- modals -->
     {% for modal in MODALS %}
         <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
         <div class="modal">
@@ -176,6 +180,7 @@
     {% endfor %}
 
 
+    <!-- inject modal-->
     <input id="inject" class="modal-state" type="checkbox" />
     <div class="modal">
         <label class="modal-background" for="inject"></label>
