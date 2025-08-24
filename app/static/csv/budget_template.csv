@@ -1,4 +1,4 @@
-﻿header,type,field,tax,editable,modal,required,onetime,lesname,longname
+﻿header,type,field,tax,editable,modal,required,onetime,lesname,tooltip
 Base Pay,e,float,True,False,basepay,True,False,BASE PAY,Base Pay
 BAS,e,float,False,False,bas,True,False,BAS,Basic Allowance for Subsistence
 Meal Discount,e,float,False,True,bas,False,False,DSCT,Meal Discount

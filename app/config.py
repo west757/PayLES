@@ -82,15 +82,15 @@ class Config:
     BUDGET_TEMPLATE = pd.read_csv(CSV_FOLDER / "budget_template.csv",
         dtype={
             'header': str,
-            'shortname': str,
-            'longname': str,
-            'sign': int,
+            'type': str,
+            'field': str,
+            'tax': bool,
+            'editable': bool,
+            'modal': str,
             'required': bool,
             'onetime': bool,
-            'tax': bool,
-            'option': bool,
-            'custom': bool,
-            'modal': str,
+            'lesname': str,
+            'tooltip': str,
         }
     )
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
@@ -143,7 +143,9 @@ class Config:
         dtype={
             'header': str,
             'type': str,
-            'option': bool,
+            'field': str,
+            'tax': bool,
+            'editable': bool,
             'modal': str,
         }
     )
