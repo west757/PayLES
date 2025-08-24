@@ -1,17 +1,3 @@
-// initialize config variables
-function initConfigVars() {
-    const configDiv = document.getElementById('config-data');
-    if (configDiv) {
-        window.DEPENDENTS_MAX = parseInt(configDiv.dataset.dependentsMax);
-        window.TRAD_TSP_RATE_MAX = parseInt(configDiv.dataset.tradTspRateMax);
-        window.ROTH_TSP_RATE_MAX = parseInt(configDiv.dataset.rothTspRateMax);
-        window.HOME_OF_RECORDS = JSON.parse(configDiv.dataset.homeOfRecords);
-        window.GRADES = JSON.parse(configDiv.dataset.grades);
-        window.SGLI_COVERAGES = JSON.parse(configDiv.dataset.sgliCoverages);
-    }
-}
-
-
 // beforeunload confirm alert
 function budgetUnloadPrompt(e) {
     e.preventDefault();
