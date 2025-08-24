@@ -292,6 +292,42 @@ input[type=file]::file-selector-button {
     background-color: var(--highlight_green_color);
 }
 
+
+
+.remove-row-button {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    color: var(--light_text_color);
+    background: var(--highlight_red_color);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1em;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9050;
+    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
+    transition: background 0.2s;
+}
+
+.remove-row-button:hover {
+    background: #d32f2f; /* Slightly darker red for hover */
+}
+
+.row-header-cell {
+    position: relative;
+}
+
+.row-header-cell:hover .remove-row-button {
+    display: flex;
+}
+
+
+
 .editing-button {
     align-items: center;
     border: none;

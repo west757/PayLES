@@ -41,6 +41,13 @@ document.addEventListener('mousemove', function(e) {
         }
     }
 
+    if (e.target && e.target.classList && e.target.classList.contains('remove-row-button')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
@@ -63,6 +70,10 @@ document.addEventListener('mouseleave', function(e) {
         hideTooltip();
     }
 
+    if (e.target && e.target.classList && e.target.classList.contains('remove-row-button')) {
+        hideTooltip();
+    }
+
     if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         hideTooltip();
     }
@@ -73,6 +84,7 @@ document.addEventListener('mouseleave', function(e) {
 }, true);
 
 
+let removeRowConfirm = {};
 // click event listeners
 document.addEventListener('click', function(e) {
     // open modals
@@ -92,6 +104,32 @@ document.addEventListener('click', function(e) {
             input.checked = false;
         });
     }
+
+    
+    if (e.target.classList.contains('remove-row-button')) {
+        let header = e.target.getAttribute('data-row');
+
+        if (!removeRowConfirm[header]) {
+            e.target.setAttribute('data-tooltip', 'Please click again to remove row');
+            showTooltip(e, 'Please click again to remove row');
+            removeRowConfirm[header] = true;
+            setTimeout(() => {
+                removeRowConfirm[header] = false;
+                e.target.setAttribute('data-tooltip', 'Remove Row');
+            }, 2500); // Reset after 2.5s
+        } else {
+            removeRowConfirm[header] = false;
+            hideTooltip();
+            htmx.ajax('POST', '/remove_row', {
+                target: '#budget',
+                swap: 'innerHTML',
+                values: { header: header }
+            });
+            showToast("Row " + header + " removed");
+        }
+        e.stopPropagation();
+    }
+
 
     // open inject modal
     if (e.target && e.target.id === 'button-inject') {
