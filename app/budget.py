@@ -115,8 +115,6 @@ def add_variables(budget, les_text, month):
         state_filing_status = "Not Found"
     budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', state_filing_status, month))
 
-
-    #POSSIBLY SIMPLIFY AND UPDATE AFTER CAPTURING SGLI
     try:
         sgli_coverage = ""
         remarks = les_text[96]
@@ -167,19 +165,20 @@ def add_ent_ded_alt_rows(budget, les_text, month):
     deds = parse_pay_section(les_text[10])
     alts = parse_pay_section(les_text[11])
 
-    #combine ents, deds, and alts into a single dictionary and apply sign
+    # combine all ents/deds/alts into a single dictionary
     ent_ded_alt_dict = {}
-    for section, sign in zip([ents, deds, alts], [1, -1, -1]):
-        for item in section:
-            ent_ded_alt_dict[item['header'].upper()] = sign * item['value']
+    for item in ents + deds + alts:
+        ent_ded_alt_dict[item['header'].upper()] = item['value']
 
     for _, row in BUDGET_TEMPLATE.iterrows():
         header = row['header']
+        sign = row['sign']
         required = row['required']
         lesname = row['lesname']
 
         if lesname in ent_ded_alt_dict:
-            value = ent_ded_alt_dict[lesname]
+            value = sign * ent_ded_alt_dict[lesname]
+            value = round(value, 2)
         elif required:
             value = 0.00
         else:
@@ -306,6 +305,7 @@ def update_variables(all_rows, budget, prev_month, next_month, row_header, col_m
             else:
                 row[next_month] = prev_value
 
+    # ensures specialty/incentive/bonus rates are zeroed out if base rate is zero
     for base_header, specialty_headers in [
         ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
         ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
@@ -325,7 +325,7 @@ def update_ent_rows(all_rows, budget, prev_month, next_month, row_header, col_mo
         'BAH': calculate_bah,
     }
     for row in budget:
-        if row.get('type') == 'e':
+        if row.get('sign') == 1:
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)
                 continue
@@ -352,7 +352,7 @@ def update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header, co
     }
 
     for row in budget:
-        if row.get('type') in ('d', 'a'):
+        if row.get('sign') == -1:
 
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)

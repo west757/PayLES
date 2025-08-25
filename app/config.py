@@ -54,18 +54,22 @@ class Config:
     
     ROW_METADATA = [
     'type',
+    'sign',
     'field',
     'tax',
     'editable',
     'modal',
     ]
     
-    #row types:
-    # a = allotment row
-    # d = deduction row
+    #row types in budget order:
+    # v = variable
+    # t = tsp
     # e = entitlement
-    # t = tsp row
-    # v = variable row
+    # d = deduction
+    # a = allotment
+    # c = custom
+    # y = ytd
+    # (calculations)
 
     #load static files
     dtype_bah = {'mha': str}
@@ -84,6 +88,7 @@ class Config:
         dtype={
             'header': str,
             'type': str,
+            'sign': int,
             'field': str,
             'tax': bool,
             'editable': bool,
@@ -152,6 +157,7 @@ class Config:
         dtype={
             'header': str,
             'type': str,
+            'sign': int,
             'field': str,
             'tax': bool,
             'editable': bool,

@@ -15,6 +15,8 @@ short-term:
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - get combat zone from les
 - set initial value for template rows
+- simplify capturing sgli rate
+- update trad and roth calculation
 
 mid-term:
 - instructions page and overlay on example les
