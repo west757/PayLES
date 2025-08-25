@@ -366,7 +366,7 @@ input[type="submit"]:disabled {
 }
 
 .styled-table-button:disabled {
-    background: var(--input_background_color) !important; 
+    background: var(--input_border_color) !important; 
     border: none !important;
 }
 
@@ -613,6 +613,14 @@ input[type=file] {
 
 .styled-table td.styled-table-header:only-child {
     border-radius: 1.5rem 1.5rem 0 0;
+}
+
+.sticky-header-row td {
+    background: var(--primary_dark_accent_color);
+    color: var(--light_text_color);
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
 
 .var-row {

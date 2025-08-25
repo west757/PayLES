@@ -249,7 +249,6 @@ function disableTSPRateButtons() {
 }
 
 
-
 // set input restriction
 function setInputRestriction(fieldType, maxLength = null) {
     if (fieldType === 'money') {
