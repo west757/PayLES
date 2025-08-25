@@ -231,7 +231,7 @@ def update_injects():
         row = {'header': header}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
-                row['type'] = row_type
+                row['type'] = 'c'
             elif meta == 'sign':
                 row['sign'] = sign
             elif meta == 'field':
