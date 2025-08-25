@@ -1,20 +1,20 @@
-﻿header,type,field,tax,editable,modal,tooltip
-Year,v,none,False,False,basepay,Year
-Months in Service,v,none,False,False,basepay,Months in Service
-Grade,v,select,False,True,basepay,Grade
-Zip Code,v,string,False,True,bah,Zip Code
-Military Housing Area,v,none,False,False,bah,Military Housing Area
-Home of Record,v,select,False,True,bah,Home of Record
-Dependents,v,int,False,True,bah,Dependents
-Federal Filing Status,v,select,False,True,federaltaxes,Federal Filing Status
-State Filing Status,v,select,False,True,statetaxes,State Filing Status
-SGLI Coverage,v,select,False,True,sgli,SGLI Coverage
-Combat Zone,v,select,False,True,combatzone,Combat Zone
-Trad TSP Base Rate,t,int,False,True,basepay,Trad TSP Base Rate
-Trad TSP Specialty Rate,t,int,False,True,specialty,Trad TSP Specialty Rate
-Trad TSP Incentive Rate,t,int,False,True,incentive,Trad TSP Incentive Rate
-Trad TSP Bonus Rate,t,int,False,True,bonus,Trad TSP Bonus Rate
-Roth TSP Base Rate,t,int,False,True,basepay,Roth TSP Base Rate
-Roth TSP Specialty Rate,t,int,False,True,specialty,Roth TSP Specialty Rate
-Roth TSP Incentive Rate,t,int,False,True,incentive,Roth TSP Incentive Rate
-Roth TSP Bonus Rate,t,int,False,True,bonus,Roth TSP Bonus Rate
+﻿header,type,sign,field,tax,editable,modal,tooltip
+Year,v,0,none,False,False,basepay,Year
+Months in Service,v,0,none,False,False,basepay,Months in Service
+Grade,v,0,select,False,True,basepay,Grade
+Zip Code,v,0,string,False,True,bah,Zip Code
+Military Housing Area,v,0,none,False,False,bah,Military Housing Area
+Home of Record,v,0,select,False,True,bah,Home of Record
+Dependents,v,0,int,False,True,bah,Dependents
+Federal Filing Status,v,0,select,False,True,federaltaxes,Federal Filing Status
+State Filing Status,v,0,select,False,True,statetaxes,State Filing Status
+SGLI Coverage,v,0,select,False,True,sgli,SGLI Coverage
+Combat Zone,v,0,select,False,True,combatzone,Combat Zone
+Trad TSP Base Rate,t,0,int,False,True,basepay,Trad TSP Base Rate
+Trad TSP Specialty Rate,t,0,int,False,True,specialty,Trad TSP Specialty Rate
+Trad TSP Incentive Rate,t,0,int,False,True,incentive,Trad TSP Incentive Rate
+Trad TSP Bonus Rate,t,0,int,False,True,bonus,Trad TSP Bonus Rate
+Roth TSP Base Rate,t,0,int,False,True,basepay,Roth TSP Base Rate
+Roth TSP Specialty Rate,t,0,int,False,True,specialty,Roth TSP Specialty Rate
+Roth TSP Incentive Rate,t,0,int,False,True,incentive,Roth TSP Incentive Rate
+Roth TSP Bonus Rate,t,0,int,False,True,bonus,Roth TSP Bonus Rate

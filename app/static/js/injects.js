@@ -9,7 +9,7 @@ function attachInjectModalListeners() {
     resetInjectModal('all');
 
     // attach type radio button event listeners
-    [el.typeEntitlement, el.typeDeduction].forEach(radio => {
+    [el.typeEntitlement, el.typeDeduction, el.typeAllotment].forEach(radio => {
         radio.addEventListener('change', function() {
             resetInjectModal('method');
             selectedRowType = this.value;
@@ -91,6 +91,7 @@ function resetInjectModal(scope = 'all') {
     if (scope === 'all') {
         el.typeEntitlement.checked = false;
         el.typeDeduction.checked = false;
+        el.typeAllotment.checked = false;
     } 
     else if (scope === 'method') {
         el.methodSection.style.display = 'flex';
@@ -123,6 +124,7 @@ function getInjectModalElements() {
         injectModalCheckbox: document.getElementById('inject'),
         typeEntitlement: document.getElementById('inject-type-entitlement'),
         typeDeduction: document.getElementById('inject-type-deduction'),
+        typeAllotment: document.getElementById('inject-type-allotment'),
         methodSection: document.getElementById('inject-method'),
         methodTemplate: document.getElementById('inject-method-template'),
         methodCustom: document.getElementById('inject-method-custom'),
@@ -195,7 +197,7 @@ function populateTemplateDropdown(rowType) {
     // add "Select header" as first option
     let firstOpt = document.createElement('option');
     firstOpt.value = 'select-header';
-    firstOpt.textContent = 'Select Header';
+    firstOpt.textContent = 'Please select a header';
     templateDropdown.appendChild(firstOpt);
 
     let rows = getTemplateRows(rowType);
@@ -224,7 +226,7 @@ function populateTemplateDropdown(rowType) {
     templateValue.disabled = false;
     templateSubmit.disabled = false;
 
-    // Show tooltip for selected header in info div
+    // show tooltip for selected header in info div
     templateDropdown.addEventListener('change', function() {
         const selected = templateDropdown.selectedOptions[0];
         if (infoDiv) {
@@ -232,7 +234,6 @@ function populateTemplateDropdown(rowType) {
         }
     });
 
-    // Set initial info div to blank
     if (infoDiv) infoDiv.textContent = '';
 }
 
@@ -245,7 +246,9 @@ function getTemplateRows(rowType) {
         if (rowType === 'e') {
             return row.type === 'e';
         } else if (rowType === 'd') {
-            return row.type === 'd' || row.type === 'a';
+            return row.type === 'd';
+        } else if (rowType === 'a') {
+            return row.type === 'a';
         }
         return false;
     });

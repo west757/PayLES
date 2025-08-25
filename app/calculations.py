@@ -16,7 +16,7 @@ def calculate_taxable_income(budget, month, init=False):
     combat_zone = combat_zone_row[month] if combat_zone_row and month in combat_zone_row else "No"
 
     for row in budget:
-        if row.get('type') == 'e' and month in row:
+        if row.get('sign') == 1 and month in row:
             value = row[month]
             tax = row.get('tax', False)
 
@@ -48,7 +48,7 @@ def calculate_total_taxes(budget, month, init=False):
     total_taxes = 0.00
 
     for row in budget:
-        if row.get('type') in ('d', 'a') and row.get('tax', False) and month in row:
+        if row.get('sign') == -1 and row.get('tax', False) and month in row:
             total_taxes += row[month]
 
     total_taxes = round(total_taxes, 2)
@@ -66,12 +66,12 @@ def calculate_total_taxes(budget, month, init=False):
 def calculate_gross_net_pay(budget, month, init=False):
     gross_pay = 0.00
     for row in budget:
-        if row.get('type') == 'e' and month in row:
+        if row.get('sign') == 1 and month in row:
             gross_pay += row[month]
 
     net_pay = gross_pay
     for row in budget:
-        if row.get('type') in ('d', 'a') and month in row:
+        if row.get('sign') == -1 and month in row:
             net_pay += row[month]
 
     gross_pay = round(gross_pay, 2)

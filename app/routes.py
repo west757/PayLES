@@ -110,10 +110,8 @@ def update_budget():
             value = float(value)
         except ValueError:
             value = 0.0
+        value *= row.get('sign')
         value = round(value, 2)
-        row_type = row.get('type', '')
-        if row_type in ('d', 'a') and value > 0:
-            value = -value
     repeat = str(repeat).lower() == "true"
 
     if col_month in month_headers:
@@ -183,19 +181,32 @@ def update_injects():
     tax = request.form.get('tax', 'false').lower() == 'true'
     initial_month = month_headers[0]
 
+    if row_type == 'd' or row_type == 'a':
+        sign = -1
+    else:
+        sign = 1
+
     try:
         value = float(value)
     except ValueError:
         value = 0
     value = round(value, 2)
-    if row_type == 'd' and value > 0:
-        value = -value
+    value *= sign
+
+    insert_idx = len(budget)  # Default to end
 
     if method == 'template':
         if row_type == 'e':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
         elif row_type == 'd':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
+        elif row_type == 'a':
+            a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
+            if a_indices:
+                insert_idx = max(a_indices) + 1
+            else:
+                d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
+                insert_idx = max(d_indices, default=-1) + 1
 
         row = add_row(flask_app.config['BUDGET_TEMPLATE'], header, 0.00, initial_month)
         for idx, m in enumerate(month_headers[1:]):
@@ -203,7 +214,16 @@ def update_injects():
         budget.insert(insert_idx, row)
 
     elif method == 'custom':
-        insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
+        c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
+        a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
+        d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
+        if c_indices:
+            insert_idx = max(c_indices) + 1
+        elif a_indices:
+            insert_idx = max(a_indices) + 1
+        elif d_indices:
+            insert_idx = max(d_indices) + 1
+
         custom_rows = [r for r in budget if r.get('modal') == 'inject']
         if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
             return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
@@ -212,6 +232,8 @@ def update_injects():
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
                 row['type'] = row_type
+            elif meta == 'sign':
+                row['sign'] = sign
             elif meta == 'field':
                 row['field'] = 'float'
             elif meta == 'tax':
@@ -229,13 +251,21 @@ def update_injects():
             header_data.append({
                 'header': header,
                 'type': 'c',
-                'tooltip': '',
+                'tooltip': 'Custom row added by user',
             })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
 
-    budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
-                                         row_header=header, col_month=month_headers[1], value=value, repeat=True)
+    budget, month_headers = build_months(
+        all_rows=False,
+        budget=budget,
+        prev_month=month_headers[1],
+        months_num=len(month_headers),
+        row_header=header,
+        col_month=month_headers[1],
+        value=value,
+        repeat=True
+    )
 
     session['budget'] = budget
     session['header_data'] = header_data
