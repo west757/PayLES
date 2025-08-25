@@ -29,11 +29,9 @@ from app.calculations import (
 # =========================
 
 def build_budget(les_text):
-    MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-
     try:
         initial_month = les_text[8][3]
-        if initial_month not in MONTHS_SHORT:
+        if initial_month not in flask_app.config['MONTHS_SHORT']:
             raise ValueError(f"Error: les_text[8][3], '{initial_month}', is not in MONTHS_SHORT")
     except Exception as e:
         raise Exception(f"Error determining initial month: {e}")
@@ -230,11 +228,10 @@ def parse_pay_section(les_text):
 
 
 def add_row(TEMPLATE, header, value, month):
-    ROW_METADATA = flask_app.config['ROW_METADATA']
     row_data = TEMPLATE[TEMPLATE['header'] == header]
     metadata = {}
     
-    for col in ROW_METADATA:
+    for col in flask_app.config['ROW_METADATA']:
         if col in row_data.columns:
             metadata[col] = row_data.iloc[0][col]
 

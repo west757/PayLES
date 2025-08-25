@@ -174,9 +174,13 @@ function showTSPOptions() {
 function exportBudget() {
     var table = document.getElementById('budget-table');
     var filetype = document.getElementById('export-dropdown').value;
-    var filename = filetype === 'csv' ? 'payles.csv' : 'payles.xlsx';
+    var filename = filetype === 'csv' ? 'PayLES_Budget.csv' : 'PayLES_Budget.xlsx';
 
-    var workbook = XLSX.utils.table_to_book(table, {sheet: "Budget", raw: true});
+    var clone = table.cloneNode(true);
+
+    clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
+
+    var workbook = XLSX.utils.table_to_book(clone, {sheet: "Budget", raw: true});
     if (filetype === 'csv') {
         XLSX.writeFile(workbook, filename, {bookType: 'csv'});
     } else {

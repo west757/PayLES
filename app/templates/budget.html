@@ -37,18 +37,37 @@
         </tr>
 
         {% for row in budget %}
+            {% set row_meta = header_data | selectattr('header', 'equalto', row.header) | list | first %}
+            {% set next_row = budget[loop.index] if not loop.last else None %}
+            {% set section_break = false %}
+
             {% set row_class = "" %}
             {% if row.type == 'v' %}
                 {% set row_class = "var-row" %}
             {% elif row.type == 't' %}
                 {% set row_class = "tsp-row" %}
             {% endif %}
-            {% set row_meta = header_data | selectattr('header', 'equalto', row.header) | list | first %}
 
-            <tr class="{{ row_class }}">
+            {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
+                {% set section_break = true %}
+            {% endif %}
+            {% if row.type == 't' and (not next_row or next_row.type != 't') %}
+                {% set section_break = true %}
+            {% endif %}
+            {% if row.type == 'e' and row.modal != 'inject' and (not next_row or next_row.type != 'e' or next_row.modal == 'inject') %}
+                {% set section_break = true %}
+            {% endif %}
+            {% if row.type in ['d', 'a'] and row.modal != 'inject' and (not next_row or next_row.type not in ['d', 'a'] or next_row.modal == 'inject') %}
+                {% set section_break = true %}
+            {% endif %}
+            {% if row.modal == 'inject' and (not next_row or next_row.modal != 'inject') %}
+                {% set section_break = true %}
+            {% endif %}
+
+            <tr class="{{ row_class }}{% if section_break %} section-break{% endif %}">
                 {% if row.type %}
                     <td class="cell row-header-cell">
-                        {% if row.editable and row.type in ['e', 'd', 'a', 'c'] %}
+                        {% if row.editable and row.type in ['e', 'd', 'a'] %}
                             <button class="editing-button remove-row-button" data-row="{{ row.header }}" data-tooltip="Remove Row">✖</button>
                         {% endif %}
                         <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta else '' }}">

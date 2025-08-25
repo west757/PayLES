@@ -163,7 +163,6 @@ def calculate_bah(budget, next_month):
 
 
 def calculate_federal_taxes(budget, next_month):
-    TAX_FILING_TYPES_DEDUCTIONS = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS']
     FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
     filing_status_row = next((row for row in budget if row['header'] == "Federal Filing Status"), None)
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
@@ -176,7 +175,7 @@ def calculate_federal_taxes(budget, next_month):
     if filing_status == "Not Found":
         return 0.00
 
-    deduction = TAX_FILING_TYPES_DEDUCTIONS[filing_status]
+    deduction = flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'][filing_status]
     taxable_income -= deduction
     taxable_income = max(taxable_income, 0)
 
@@ -201,16 +200,14 @@ def calculate_federal_taxes(budget, next_month):
 
 
 def calculate_fica_social_security(budget, next_month):
-    FICA_SOCIALSECURITY_TAX_RATE = flask_app.config['FICA_SOCIALSECURITY_TAX_RATE']
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
-    return round(-taxable_income * FICA_SOCIALSECURITY_TAX_RATE, 2)
+    return round(-taxable_income * flask_app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
 
 def calculate_fica_medicare(budget, next_month):
-    FICA_MEDICARE_TAX_RATE = flask_app.config['FICA_MEDICARE_TAX_RATE']
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(next_month, 0.00) if taxable_income_row else 0.00
-    return round(-taxable_income * FICA_MEDICARE_TAX_RATE, 2)
+    return round(-taxable_income * flask_app.config['FICA_MEDICARE_TAX_RATE'], 2)
 
 
 def calculate_sgli(budget, next_month):

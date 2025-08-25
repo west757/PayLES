@@ -273,7 +273,7 @@ input[type=file]::file-selector-button {
 
 .styled-table-button {
     align-items: center;
-    background: rgb(197, 224, 233);
+    background: none;
     border: none;
     box-sizing: border-box;
     cursor: pointer;
@@ -592,6 +592,14 @@ input[type=file] {
     padding: 0;
     vertical-align: top;
     white-space: nowrap;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: var(--secondary_light_accent_color);
+}
+
+.section-break td {
+    border-bottom: 0.35rem solid var(--table_border_color) !important;
 }
 
 .styled-table td:first-child,

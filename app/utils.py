@@ -31,11 +31,9 @@ def convert_numpy_types(obj):
 
 
 def validate_file(file):
-    ALLOWED_EXTENSIONS = flask_app.config['ALLOWED_EXTENSIONS']
-
     if file.filename == '':
         return False, "No file submitted"
-    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in flask_app.config['ALLOWED_EXTENSIONS']):
         return False, "Invalid file type, only PDFs are accepted"
     return True, ""
 
@@ -62,8 +60,7 @@ def validate_calculate_zip_mha(zip_code):
     
 
 def validate_home_of_record(home_of_record):
-    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
-    if home_of_record in HOME_OF_RECORDS:
+    if home_of_record in flask_app.config['HOME_OF_RECORDS']:
         return home_of_record
     return "Not Found"
 
