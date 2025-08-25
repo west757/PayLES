@@ -191,15 +191,19 @@ def update_injects():
     if row_type == 'd' and value > 0:
         value = -value
 
-    insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
-
     if method == 'template':
+        if row_type == 'e':
+            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
+        elif row_type == 'd':
+            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
+
         row = add_row(flask_app.config['BUDGET_TEMPLATE'], header, 0.00, initial_month)
         for idx, m in enumerate(month_headers[1:]):
             row[m] = value
         budget.insert(insert_idx, row)
 
     elif method == 'custom':
+        insert_idx = next((i for i, r in enumerate(budget) if r.get('header') == 'Taxable Income'), len(budget))
         custom_rows = [r for r in budget if r.get('modal') == 'inject']
         if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
             return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
