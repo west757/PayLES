@@ -169,8 +169,8 @@ def update_months():
 
 
 @csrf.exempt
-@flask_app.route('/update_injects', methods=['POST'])
-def update_injects():
+@flask_app.route('/add_injects', methods=['POST'])
+def add_injects():
     budget = session.get('budget', [])
     month_headers = get_month_headers(budget)
     header_data = session.get('header_data', [])
@@ -193,7 +193,7 @@ def update_injects():
     value = round(value, 2)
     value *= sign
 
-    insert_idx = len(budget)  # Default to end
+    insert_idx = len(budget)
 
     if method == 'template':
         if row_type == 'e':
@@ -283,8 +283,6 @@ def update_injects():
     return render_template('budget.html', **context)
 
 
-
-
 @csrf.exempt
 @flask_app.route('/remove_row', methods=['POST'])
 def remove_row():
@@ -315,7 +313,6 @@ def remove_row():
         'header_data': header_data,
     }
     return render_template('budget.html', **context)
-
 
 
 @flask_app.route('/about')

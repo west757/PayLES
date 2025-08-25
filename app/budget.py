@@ -119,9 +119,9 @@ def add_variables(budget, les_text, month):
         sgli_coverage = ""
         remarks = les_text[96]
 
-        #join all remark strings into one string
+        # join all remark strings into one string
         remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
-        #uses regex to find the SGLI coverage amount
+        # uses regex to find the SGLI coverage amount
         match = re.search(r"SGLI COVERAGE AMOUNT IS\s*(\$\d{1,3}(?:,\d{3})*)", remarks_str, re.IGNORECASE)
 
         if match:

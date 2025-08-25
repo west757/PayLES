@@ -38,7 +38,7 @@ function attachInjectModalListeners() {
 
             if (!validateInject({ mode: 'template', header, value })) return;
 
-            htmx.ajax('POST', '/update_injects', {
+            htmx.ajax('POST', '/add_injects', {
                 target: '#budget',
                 swap: 'innerHTML',
                 values: {
@@ -61,7 +61,7 @@ function attachInjectModalListeners() {
 
             if (!validateInject({ mode: 'custom', header, value })) return;
 
-            htmx.ajax('POST', '/update_injects', {
+            htmx.ajax('POST', '/add_injects', {
                 target: '#budget',
                 swap: 'innerHTML',
                 values: {

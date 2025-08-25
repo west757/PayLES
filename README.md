@@ -12,11 +12,8 @@ short-term:
 - total tsp deduction per year and contribution limits, max tsp percentage
 - recommendations tab (like if not adding to tsp, put in money)
 - sticky month header of budget
-- cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - get combat zone from les
 - set initial value for template rows
-- simplify capturing sgli rate
-- update trad and roth calculation
 
 mid-term:
 - instructions page and overlay on example les
@@ -31,12 +28,14 @@ mid-term:
 - add comments
 - alphabetize resources and add stars for top ones
 - recommendations like paying state income tax, not being fully vested in tsp, if year change notice that rates may change
+- cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 
 long-term:
 - create leave calculator
 - rework resources, maybe include tags and search
 - pdf export option
 - joint spouse with two LES's
+- simplify capturing sgli rate
 - create unit tests
 - check mobile use
 - minify style.css and script.js when pushed into a production environment
