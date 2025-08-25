@@ -66,9 +66,11 @@
                 {% if row.type %}
                     <td class="cell row-header-cell">
                         {% if row.editable and row.type in ['e', 'd', 'a', 'c'] %}
-                            <button class="editing-button remove-row-button" data-row="{{ row.header }}" data-tooltip="Remove Row">✖</button>
+                            <button class="editing-button remove-row-button" data-row="{{ row.header }}" data-tooltip="Remove Row">
+                                ✖
+                            </button>
                         {% endif %}
-                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta else '' }}">
+                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip }}">
                             {{ row.header }}
                         </button>
                     </td>

@@ -146,7 +146,7 @@ function getInjectModalElements() {
 // validate inject inputs
 function validateInject({ mode, header, value }) {
     if (mode === 'template') {
-        if (!header || header === '' || header === 'select-header') {
+        if (!header || header === '' || header === 'choose-header') {
             showToast('Please select a template row from the dropdown.');
             return false;
         }
@@ -196,8 +196,8 @@ function populateTemplateDropdown(rowType) {
 
     // add "Select header" as first option
     let firstOpt = document.createElement('option');
-    firstOpt.value = 'select-header';
-    firstOpt.textContent = 'Please select a header';
+    firstOpt.value = 'choose-header';
+    firstOpt.textContent = 'Choose header';
     templateDropdown.appendChild(firstOpt);
 
     let rows = getTemplateRows(rowType);
