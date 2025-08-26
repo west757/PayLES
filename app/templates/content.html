@@ -8,97 +8,95 @@
             {% include 'budget.html' %}
         </div>
 
-        <div id="settings-container">
-            <div id="settings">
-                <table class="styled-table">
-                    <tbody>
-                        <tr>
-                            <td class="styled-table-header">Settings</td>
-                        </tr>
+        <div id="settings">
+            <table id="settings-table" class="styled-table">
+                <tbody>
+                    <tr>
+                        <td class="styled-table-header">Settings</td>
+                    </tr>
 
-                        <!-- months display-->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <label for="months-num-dropdown">Months Displayed:</label>
-                                    <select id="months-num-dropdown" name="months_num" hx-post="/update_months" hx-target="#budget" hx-swap="innerHTML">
-                                        {% for x in range(2, 13) %}
-                                            <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                        <!-- highlight changes -->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <label for="highlight-changes-checkbox">Highlight Changes:</label>
-                                    <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
-                                </div>
-                            </td>
-                        </tr>
-
-                        
-                        <!-- show all variables -->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <label for="show-all-variables-checkbox">Show All Variables:</label>
-                                    <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
-                                </div>
-                            </td>
-                        </tr>
+                    <!-- months display-->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <label for="months-num-dropdown">Months Displayed:</label>
+                                <select id="months-num-dropdown" name="months_num" hx-post="/update_months" hx-target="#budget" hx-swap="innerHTML">
+                                    {% for x in range(2, 13) %}
+                                        <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
 
 
-                        <!-- show TSP options -->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <label for="show-tsp-options-checkbox">Show TSP Options:</label>
-                                    <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
-                                </div>
-                            </td>
-                        </tr>
+                    <!-- highlight changes -->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <label for="highlight-changes-checkbox">Highlight Changes:</label>
+                                <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
+                            </div>
+                        </td>
+                    </tr>
+
+                    
+                    <!-- show all variables -->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <label for="show-all-variables-checkbox">Show All Variables:</label>
+                                <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
+                            </div>
+                        </td>
+                    </tr>
 
 
-                        <!-- add inject row-->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <button id="button-inject" class="button-solo">Add Custom Row</button>
-                                </div>
-                            </td>
-                        </tr>
+                    <!-- show TSP options -->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <label for="show-tsp-options-checkbox">Show TSP Options:</label>
+                                <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
+                            </div>
+                        </td>
+                    </tr>
 
-                        <!-- LES recommendations -->
-                        <tr>
-                            <td>
-                                <div class="settings-row">
-                                    <button id="button-view-recs" class="button-solo">View Budget Recommendations</button>
-                                </div>
-                            </td>
-                        </tr>
 
-                        <!-- export-->
-                        <tr>
-                            <td>
-                                <div class="settings-row" style="display: flex; align-items: center; gap: 8px;">
-                                    <span>Export as:</span>
-                                    <select id="export-dropdown" class="dropdown">
-                                        <option value="xlsx" selected>Excel</option>
-                                        <option value="csv">CSV</option>
-                                    </select>
-                                    <button id="button-export" class="button-solo" title="Download">↯</button>
-                                </div>
-                            </td>
-                        </tr>
+                    <!-- add inject row-->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <button id="button-inject" class="button-solo">Add Custom Row</button>
+                            </div>
+                        </td>
+                    </tr>
 
-                    </tbody>
-                </table>
-            </div>
+                    <!-- LES recommendations -->
+                    <tr>
+                        <td>
+                            <div class="settings-row">
+                                <button id="button-view-recs" class="button-solo">View Budget Recommendations</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- export-->
+                    <tr>
+                        <td>
+                            <div class="settings-row" style="display: flex; align-items: center; gap: 8px;">
+                                <span>Export as:</span>
+                                <select id="export-dropdown" class="dropdown">
+                                    <option value="xlsx" selected>Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                                <button id="button-export" class="button-solo" title="Download">↯</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
         </div>
     </div>
 

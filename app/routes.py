@@ -152,6 +152,7 @@ def update_months():
     elif next_months_num > prev_months_num:
         months_num = next_months_num - prev_months_num
         prev_month = month_headers[-1]
+
         budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=prev_month, months_num=months_num)
 
     session['budget'] = budget
