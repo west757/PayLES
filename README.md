@@ -21,17 +21,18 @@ mid-term:
 - update readme
 - check what all is saved if in combat zone (are state taxes paid?)
 - add more modals
-- rework drag and drop functionality
 - add in charity contributions as a row
 - go through other les variables and see if they apply
-- YTD rows (tsp, gross, entitlements, deductions)
-- add comments
+- YTD rows (tsp, gross, entitlements, deductions, charity)
+- add comments to code
 - alphabetize resources and add stars for top ones
 - recommendations like paying state income tax, not being fully vested in tsp, if year change notice that rates may change
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
+- different browser checks
 
 long-term:
 - create leave calculator
+- minimize/maximize month columns
 - rework resources, maybe include tags and search
 - pdf export option
 - joint spouse with two LES's

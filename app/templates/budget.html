@@ -27,73 +27,86 @@
 
 
 <!-- budget table-->
-<table id="budget-table" class="styled-table">
+<table id="budget-header-overlay" class="styled-table">
     <tbody>
-        <tr class="sticky-header-row">
+        <tr>
             <td class="styled-table-header"></td>
             {% for col in month_headers %}
                 <td class="styled-table-header">{{ col }}</td>
             {% endfor %}
         </tr>
+    </tbody>
+</table>
 
-        {% for row in budget %}
-            {% set row_meta = header_data | selectattr('header', 'equalto', row.header) | list | first %}
-            {% set next_row = budget[loop.index] if not loop.last else None %}
-            {% set section_break = false %}
-
-            {% set row_class = "" %}
-            {% if row.type == 'v' %}
-                {% set row_class = "var-row" %}
-            {% elif row.type == 't' %}
-                {% set row_class = "tsp-row" %}
-            {% endif %}
-
-            {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
-                {% set section_break = true %}
-            {% elif row.type == 't' and (not next_row or next_row.type != 't') %}
-                {% set section_break = true %}
-            {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
-                {% set section_break = true %}
-            {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
-                {% set section_break = true %}
-            {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
-                {% set section_break = true %}
-            {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
-                {% set section_break = true %}
-            {% endif %}
-
-            <tr class="{{ row_class }}{% if section_break %} section-break{% endif %}">
-                {% if row.type %}
-                    <td class="cell row-header-cell">
-                        {% if row.editable and row.type in ['e', 'd', 'a', 'c'] %}
-                            <button class="editing-button remove-row-button" data-row="{{ row.header }}" data-tooltip="Remove Row">
-                                ✖
-                            </button>
-                        {% endif %}
-                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip }}">
-                            {{ row.header }}
-                        </button>
-                    </td>
-                {% else %}
-                    <td>
-                        {{ row.header }}
-                    </td>
-                {% endif %}
-                
+ <div id="budget-scroll">
+    <table id="budget-table" class="styled-table">
+        <tbody>
+            <tr id="hidden-header">
+                <td class="styled-table-header"></td>
                 {% for col in month_headers %}
-                    {% if row.editable and not loop.first %}
-                        <td class="cell">
-                            <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}" data-field="{{ row.field }}">
-                                {{ format_cell(row, col) }}
+                    <td class="styled-table-header">{{ col }}</td>
+                {% endfor %}
+            </tr>
+
+            {% for row in budget %}
+                {% set row_meta = header_data | selectattr('header', 'equalto', row.header) | list | first %}
+                {% set next_row = budget[loop.index] if not loop.last else None %}
+                {% set section_break = false %}
+
+                {% set row_class = "" %}
+                {% if row.type == 'v' %}
+                    {% set row_class = "var-row" %}
+                {% elif row.type == 't' %}
+                    {% set row_class = "tsp-row" %}
+                {% endif %}
+
+                {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
+                    {% set section_break = true %}
+                {% elif row.type == 't' and (not next_row or next_row.type != 't') %}
+                    {% set section_break = true %}
+                {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
+                    {% set section_break = true %}
+                {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
+                    {% set section_break = true %}
+                {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
+                    {% set section_break = true %}
+                {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
+                    {% set section_break = true %}
+                {% endif %}
+
+                <tr class="{{ row_class }}{% if section_break %} section-break{% endif %}">
+                    {% if row.type %}
+                        <td class="cell row-header-cell">
+                            {% if row.editable and row.type in ['e', 'd', 'a', 'c'] %}
+                                <button class="editing-button remove-row-button" data-row="{{ row.header }}" data-tooltip="Remove Row">
+                                    ✖
+                                </button>
+                            {% endif %}
+                            <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip }}">
+                                {{ row.header }}
                             </button>
                         </td>
                     {% else %}
                         <td>
-                            {{ format_cell(row, col) }}
+                            {{ row.header }}
                         </td>
                     {% endif %}
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                    
+                    {% for col in month_headers %}
+                        {% if row.editable and not loop.first %}
+                            <td class="cell">
+                                <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-col="{{ col }}" data-field="{{ row.field }}">
+                                    {{ format_cell(row, col) }}
+                                </button>
+                            </td>
+                        {% else %}
+                            <td>
+                                {{ format_cell(row, col) }}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
