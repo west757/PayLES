@@ -181,7 +181,7 @@ footer {
     pointer-events: none;
     position: fixed;
     transform: translateX(-50%);
-    top: 6.25rem;
+    top: 2rem;
     z-index: 9999;
 }
 
@@ -266,6 +266,7 @@ input[type=file]::file-selector-button {
     font-size: 1.5rem;
     justify-content: center;
     line-height: 2rem;
+    margin: 0 0 0 0.5rem;
     padding: 0;
     vertical-align: middle;
     width: 2rem;
@@ -436,17 +437,6 @@ input[type="radio"] {
 
 
 /* =========================
-   content div
-   ========================= */
-
-#home, #remarks, #about, #faq, #resources {
-    margin: 0 auto 3rem auto;
-    max-width: 60%;
-    min-width: 70rem;
-}
-
-
-/* =========================
    home
    ========================= */
 
@@ -506,24 +496,30 @@ input[type=file] {
    content
    ========================= */
 
-#budget-settings {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+#home, #remarks, #about, #faq, #resources {
+    margin: 0 auto 3rem auto;
+    max-width: 60%;
+    min-width: 70rem;
+}
 
-    margin: 2rem;
+#budget-settings {
+    align-items: flex-start;
+    display: flex;
     gap: 2rem;
+    justify-content: center;
+    margin: 2rem;
 }
 
 #budget-container {
     border: 1px solid var(--table_border_color);
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-    overflow-x: auto;
-    overflow-y: auto; 
-    height: 44rem;
-    max-width: calc(100vw - 14rem - 7rem);
+    height: 52rem;
     flex: 1 1 auto;
     margin: 0;
+    max-width: calc(100vw - 14rem - 7rem);
+    overflow-x: auto;
+    overflow-y: auto; 
+    border-radius: 1.5rem;
 }
 
 #budget-table {
@@ -537,14 +533,38 @@ input[type=file] {
 }
 
 #budget-table td:first-child, #budget-table th:first-child {
-    position: sticky;
     left: 0;
+    position: sticky;
     z-index: 5;
 }
 
 #budget-table th:nth-child(1) {
     z-index: 6;
 }
+
+#settings {
+    border-radius: 1.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+#les-image {
+    border: 1px solid var(--table_border_color);
+    line-height: 0;
+    margin: 1rem auto 1rem auto;
+    position: relative;
+    width: fit-content;
+}
+
+.h2-center {
+    text-align: center;
+}
+
+
+/* =========================
+   styled table
+   ========================= */
 
 .styled-table {
     background: var(--primary_light_accent_color); 
@@ -553,11 +573,11 @@ input[type=file] {
 }
 
 .styled-table th, .styled-table td {
-    text-align: center;
-    border-right: 1px solid var(--table_border_color);
     border-bottom: 1px solid var(--table_border_color);
     border-left: none;
+    border-right: 1px solid var(--table_border_color);
     border-top: none;
+    text-align: center;
 }
 
 .styled-table th:last-child, .styled-table td:last-child {
@@ -580,21 +600,21 @@ input[type=file] {
 }
 
 .styled-table th:first-child, .styled-table td:first-child {
-    width: 14rem;
-    min-width: 14rem;
     max-width: 14rem;
+    min-width: 14rem;
+    width: 14rem;
 }
 
 .styled-table th:not(:first-child), .styled-table td:not(:first-child) {
-    width: 7.25rem;
-    min-width: 7.25rem;
     max-width: 7.25rem;
+    min-width: 7.25rem;
+    width: 7.25rem;
 }
 
 .styled-table tr {
     height: 4rem;
-    min-height: 4rem;
     max-height: 4rem;
+    min-height: 4rem;
 }
 
 .styled-table tr:nth-child(even) {
@@ -608,77 +628,6 @@ input[type=file] {
 #budget-table tr:nth-child(even) td:first-child {
     background-color: var(--secondary_light_accent_color);
 }
-
-
-#settings {
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-    flex-shrink: 0;
-}
-
-/*
-#settings {
-    background: var(--primary_light_accent_color);
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-    width: 14rem;
-    min-width: 14rem;
-    max-width: 14rem;
-    padding: 0;
-    display: block;
-    border-radius: 2rem;
-    overflow: hidden;
-}
-
-#settings-table {
-    border-radius: 2rem;
-    overflow: hidden;
-}
-*/
-
-
-
-#les-image {
-    border: 1px solid var(--table_border_color);
-    line-height: 0;
-    margin: 1rem auto 1rem auto;
-    position: relative;
-    width: fit-content;
-}
-
-.h2-center {
-    text-align: center;
-}
-
-
-/* =========================
-   styled table
-   ========================= */
-
-
-   /*
-.styled-table {
-    background: var(--primary_light_accent_color); 
-    border: 1px solid var(--table_border_color);
-    border-collapse: separate;
-    border-spacing: 0px;
-}
-
-.styled-table tr {
-    border-left: 1px solid var(--table_border_color);
-    height: 4rem;
-    max-height: 4rem;
-    text-align: center;
-}
-
-.styled-table td {
-    border-left: 1px solid var(--table_border_color);
-    border-top: 1px solid var(--table_border_color);
-    min-width: 7.25rem;
-    text-align: center;
-    padding: 0 1rem 0 1rem;
-    vertical-align: middle;
-}
-
-*/
 
 .styled-table td.cell {
     height: 4rem;
@@ -724,6 +673,12 @@ input[type=file] {
     align-items: center;
 }
 
+#export-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
 
 /* =========================
    les image

@@ -162,7 +162,6 @@ class Config:
             'tax': bool,
             'editable': bool,
             'modal': str,
-            'tooltip': str,
         }
     )
     VARIABLE_HEADER_LIST = VARIABLE_TEMPLATE[['header', 'type']].to_dict(orient='records')

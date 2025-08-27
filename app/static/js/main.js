@@ -168,12 +168,10 @@ document.addEventListener('change', function(e) {
 
     if (e.target && e.target.id === 'show-all-variables-checkbox') {
         showAllVariables();
-        syncSettingsContainerHeight();
     }
 
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
         showTSPOptions();
-        syncSettingsContainerHeight();
     }
 });
 
