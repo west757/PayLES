@@ -181,6 +181,7 @@ document.addEventListener('change', function(e) {
 // htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
+        //new DataTable("data-budget-container", columns, data, onRowClick);
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
 

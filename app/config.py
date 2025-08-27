@@ -26,7 +26,7 @@ class Config:
     
 
     #constants   
-    DEFAULT_MONTHS_NUM = 6
+    DEFAULT_MONTHS_NUM = 12
     MAX_CUSTOM_ROWS = 9
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
