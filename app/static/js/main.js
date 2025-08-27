@@ -132,13 +132,6 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
     }
 
-    // open inject modal
-    if (e.target && e.target.id === 'button-inject') {
-        const injectModalCheckbox = document.getElementById('inject');
-        injectModalCheckbox.checked = true;
-        resetInjectModal();
-    }
-
     // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
@@ -146,6 +139,19 @@ document.addEventListener('click', function(e) {
         let fieldType = e.target.getAttribute('data-field');
         let value = getBudgetValue(rowHeader, month);
         enterEditMode(e.target, rowHeader, month, value, fieldType);
+    }
+
+    // open inject modal
+    if (e.target && e.target.id === 'button-inject') {
+        const injectModalCheckbox = document.getElementById('inject');
+        injectModalCheckbox.checked = true;
+        resetInjectModal();
+    }
+
+    // open recs modal
+    if (e.target && e.target.id === 'button-recs') {
+        const recsModalCheckbox = document.getElementById('recs');
+        recsModalCheckbox.checked = true;
     }
 
     // export button
@@ -181,21 +187,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
-
-        // inject custom header event listener
-        const customHeaderInput = document.getElementById('inject-custom-header');
-        if (customHeaderInput) {
-            customHeaderInput.addEventListener('input', setInputRestriction('text', 20));
-        }
-
-
-        // inject template and custom value event listeners
-        ['inject-template-value', 'inject-custom-value'].forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('input', setInputRestriction('money'));
-            }
-        });
     }
 
     // capture and parse config data

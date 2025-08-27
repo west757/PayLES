@@ -13,6 +13,7 @@ short-term:
 - recommendations tab (like if not adding to tsp, put in money)
 - get combat zone from les
 - set initial value for template rows
+- start without uploading les
 
 mid-term:
 - instructions page and overlay on example les
@@ -22,12 +23,17 @@ mid-term:
 - add more modals
 - add in charity contributions as a row
 - go through other les variables and see if they apply
-- YTD rows (tsp, gross, entitlements, deductions, charity)
+- YTD rows (tsp, gross, entitlements, deductions, charity) and add as a setting
 - add comments to code
 - alphabetize resources and add stars for top ones
 - recommendations like paying state income tax, not being fully vested in tsp, if year change notice that rates may change
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - different browser checks
+- add accounts (tsp, bank debt)
+- add pro-rated calculations for cells
+- interest feature for accounts
+- import/export for custom rows
+- example custom entitlement/deductions (second job, haircuts, etc)
 
 long-term:
 - create leave calculator
