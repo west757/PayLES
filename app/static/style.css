@@ -510,24 +510,24 @@ input[type=file] {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+
+    margin: 2rem;
+    gap: 2rem;
 }
 
-#budget, #settings {
-    margin: 1rem;
+#budget-container {
+    border: 1px solid var(--table_border_color);
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-}
-
-#budget {
-  border: 1px solid var(--table_border_color);
-  overflow: auto;
-  height: 44rem;
-  width: fit-content;
+    overflow-x: auto;
+    overflow-y: auto; 
+    height: 44rem;
+    max-width: calc(100vw - 14rem - 7rem);
+    flex: 1 1 auto;
+    margin: 0;
 }
 
 #budget-table {
-    width: auto;
     table-layout: fixed;
-    min-width: max-content;
 }
 
 #budget-table th {
@@ -609,6 +609,11 @@ input[type=file] {
     background-color: var(--secondary_light_accent_color);
 }
 
+
+#settings {
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
+    flex-shrink: 0;
+}
 
 /*
 #settings {
