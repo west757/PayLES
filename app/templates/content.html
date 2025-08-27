@@ -19,14 +19,12 @@
                     <!-- months display-->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <label for="months-num-dropdown">Months Displayed:</label>
-                                <select id="months-num-dropdown" name="months_num" hx-post="/update_months" hx-target="#budget" hx-swap="innerHTML">
-                                    {% for x in range(2, 13) %}
-                                        <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            <label for="months-num-dropdown">Months Displayed:</label>
+                            <select id="months-num-dropdown" name="months_num" hx-post="/update_months" hx-target="#budget" hx-swap="innerHTML">
+                                {% for x in range(2, 13) %}
+                                    <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
+                                {% endfor %}
+                            </select>
                         </td>
                     </tr>
 
@@ -34,10 +32,8 @@
                     <!-- highlight changes -->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <label for="highlight-changes-checkbox">Highlight Changes:</label>
-                                <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
-                            </div>
+                            <label for="highlight-changes-checkbox">Highlight Changes:</label>
+                            <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
                         </td>
                     </tr>
 
@@ -45,10 +41,8 @@
                     <!-- show all variables -->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <label for="show-all-variables-checkbox">Show All Variables:</label>
-                                <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
-                            </div>
+                            <label for="show-all-variables-checkbox">Show All Variables:</label>
+                            <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
                         </td>
                     </tr>
 
@@ -56,10 +50,8 @@
                     <!-- show TSP options -->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <label for="show-tsp-options-checkbox">Show TSP Options:</label>
-                                <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
-                            </div>
+                            <label for="show-tsp-options-checkbox">Show TSP Options:</label>
+                            <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
                         </td>
                     </tr>
 
@@ -67,25 +59,21 @@
                     <!-- add inject row-->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <button id="button-inject" class="button-solo">Add Custom Row</button>
-                            </div>
+                            <button id="button-inject" class="button-solo">Add Custom Row</button>
                         </td>
                     </tr>
 
                     <!-- LES recommendations -->
                     <tr>
                         <td>
-                            <div class="settings-row">
-                                <button id="button-view-recs" class="button-solo">View Budget Recommendations</button>
-                            </div>
+                            <button id="button-view-recs" class="button-solo">View Budget Recommendations</button>
                         </td>
                     </tr>
 
                     <!-- export-->
                     <tr>
                         <td>
-                            <div class="settings-row" style="display: flex; align-items: center; gap: 8px;">
+                            <div id="export-row">
                                 <span>Export as:</span>
                                 <select id="export-dropdown" class="dropdown">
                                     <option value="xlsx" selected>Excel</option>
@@ -95,7 +83,6 @@
                             </div>
                         </td>
                     </tr>
-
                 </tbody>
             </table>
         </div>

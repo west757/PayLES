@@ -35,6 +35,7 @@ function showToast(message, duration = 6500) {
 // show tooltip
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');
+    if (!tooltip) return;
     tooltip.innerText = text;
     tooltip.style.left = (evt.pageX + 16) + 'px';
     tooltip.style.top = (evt.pageY - 16) + 'px';
@@ -45,6 +46,7 @@ function showTooltip(evt, text) {
 // hide tooltip
 function hideTooltip() {
     const tooltip = document.getElementById('tooltip');
+    if (!tooltip) return;
     tooltip.style.display = 'none';
 }
 

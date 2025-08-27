@@ -6,15 +6,11 @@ navigate to: \Documents\Github\Payles
 run: python -m app.main
 
 
-https://dev.to/lalitkhu/creating-a-scrollable-table-with-a-sticky-header-and-frozen-column-using-html-and-css-1d2a
-https://codepen.io/khulalit/pen/wBwoRwY
-
 short-term:
 - update pay active and drill pay in config
 - account for specific pays
 - total tsp deduction per year and contribution limits, max tsp percentage
 - recommendations tab (like if not adding to tsp, put in money)
-- sticky month header of budget
 - get combat zone from les
 - set initial value for template rows
 
