@@ -3,45 +3,17 @@
 {% set show_all_options = session.get('show_all_options', False) %}
 
 <div id="content" hx-swap-oob="true">
-    <!-- <div id="data-budget-container"></div> -->
-
-
-    <div class="table-container">
-        <table class="table">
-            <thead>
-            <tr>
-                <th></th>
-                {% for month in month_headers %}
-                <th>{{ month }}</th>
-                {% endfor %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for row in budget %}
-                <tr>
-                <td>{{ row.header }}</td>
-                {% for month in month_headers %}
-                    <td>{{ row[month] }}</td>
-                {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-
     <div id="budget-settings">
-        <div id="budget">
-            {% include 'budget.html' %}
-        </div>
+        {% include 'budget.html' %}
 
         <div id="settings">
             <table id="settings-table" class="styled-table">
-                <tbody>
+                <thead>
                     <tr>
-                        <td class="styled-table-header">Settings</td>
+                        <th class="styled-table-header">Settings</th>
                     </tr>
-
+                </thead>
+                <tbody>
                     <!-- months display-->
                     <tr>
                         <td>
