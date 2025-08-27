@@ -30,51 +30,55 @@ function attachInjectModalListeners() {
         });
     });
 
+    //attach custom header event listener
+    el.customHeader.addEventListener('input', setInputRestriction('text', 20));
+
+    // attach template and custom value event listeners
+    [el.templateValue, el.customValue].forEach(input => {
+        input.addEventListener('input', setInputRestriction('money'));
+    });
+
     // attach template button event listener
-    if (el.templateButton) {
-        el.templateButton.addEventListener('click', function() {
-            let header = el.templateSelect.value;
-            let value = el.templateValue.value.trim();
+    el.templateButton.addEventListener('click', function() {
+        let header = el.templateSelect.value;
+        let value = el.templateValue.value.trim();
 
-            if (!validateInject({ mode: 'template', header, value })) return;
+        if (!validateInject({ mode: 'template', header, value })) return;
 
-            htmx.ajax('POST', '/add_injects', {
-                target: '#budget',
-                swap: 'innerHTML',
-                values: {
-                    method: 'template',
-                    row_type: selectedRowType,
-                    header: header,
-                    value: value
-                }
-            });
-            el.injectModalCheckbox.checked = false;
+        htmx.ajax('POST', '/add_injects', {
+            target: '#budget',
+            swap: 'innerHTML',
+            values: {
+                method: 'template',
+                row_type: selectedRowType,
+                header: header,
+                value: value
+            }
         });
-    }
+        el.injectModalCheckbox.checked = false;
+    });
 
     // attach custom button event listener
-    if (el.customButton) {
-        el.customButton.addEventListener('click', function() {
-            let header = el.customHeader.value;
-            let tax = el.customTax.checked ? 'true' : 'false';
-            let value = el.customValue.value.trim();
+    el.customButton.addEventListener('click', function() {
+        let header = el.customHeader.value;
+        let tax = el.customTax.checked ? 'true' : 'false';
+        let value = el.customValue.value.trim();
 
-            if (!validateInject({ mode: 'custom', header, value })) return;
+        if (!validateInject({ mode: 'custom', header, value })) return;
 
-            htmx.ajax('POST', '/add_injects', {
-                target: '#budget',
-                swap: 'innerHTML',
-                values: {
-                    method: 'custom',
-                    row_type: selectedRowType,
-                    header: header,
-                    value: value,
-                    tax: tax
-                }
-            });
-            el.injectModalCheckbox.checked = false;
+        htmx.ajax('POST', '/add_injects', {
+            target: '#budget',
+            swap: 'innerHTML',
+            values: {
+                method: 'custom',
+                row_type: selectedRowType,
+                header: header,
+                value: value,
+                tax: tax
+            }
         });
-    }
+        el.injectModalCheckbox.checked = false;
+    });
 }
 
 

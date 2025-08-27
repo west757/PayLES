@@ -225,7 +225,7 @@ def add_injects():
         elif d_indices:
             insert_idx = max(d_indices) + 1
 
-        custom_rows = [r for r in budget if r.get('modal') == 'inject']
+        custom_rows = [r for r in budget if r.get('type') == 'c']
         if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
             return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
 
@@ -242,7 +242,7 @@ def add_injects():
             elif meta == 'editable':
                 row['editable'] = True
             elif meta == 'modal':
-                row['modal'] = 'inject'
+                row['modal'] = ''
 
         for idx, m in enumerate(month_headers):
             row[m] = 0.0 if idx == 0 else value
