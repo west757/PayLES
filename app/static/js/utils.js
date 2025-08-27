@@ -124,7 +124,7 @@ function highlightChanges() {
         // get row header (first cell)
         var rowHeader = cells[0].textContent.trim();
         
-        //start from col 3 (index 2), skip row header and first month
+        //start from month 3 (index 2), skip row header and first month
         for (var j = 2; j < cells.length; j++) {
             var cell = cells[j];
             var prevCell = cells[j - 1];
@@ -188,25 +188,14 @@ function exportBudget() {
     }
 }
 
-
-// sync settings container height with budget table
-function syncSettingsContainerHeight() {
-    const budget = document.getElementById('budget');
-    const settingsContainer = document.getElementById('settings-container');
-    if (budget && settingsContainer) {
-        settingsContainer.style.height = budget.offsetHeight + 'px';
-    }
-}
-
-
 // get budget value for a specific cell
-function getBudgetValue(rowHeader, colMonth) {
+function getBudgetValue(rowHeader, month) {
     if (!window.CONFIG.budget) return '';
 
     const row = window.CONFIG.budget.find(r => r.header === rowHeader);
 
-    if (row && row.hasOwnProperty(colMonth)) {
-        return row[colMonth];
+    if (row && row.hasOwnProperty(month)) {
+        return row[month];
     }
     return '';
 }
@@ -238,11 +227,11 @@ function disableTSPRateButtons() {
         ];
 
         tradRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-col="${month}"]`);
+            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
             if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
         });
         rothRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-col="${month}"]`);
+            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
             if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
         });
     });

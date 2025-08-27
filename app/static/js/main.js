@@ -142,10 +142,10 @@ document.addEventListener('click', function(e) {
     // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
         let rowHeader = e.target.getAttribute('data-row');
-        let colMonth = e.target.getAttribute('data-col');
+        let month = e.target.getAttribute('data-month');
         let fieldType = e.target.getAttribute('data-field');
-        let value = getBudgetValue(rowHeader, colMonth);
-        enterEditMode(e.target, rowHeader, colMonth, value, fieldType);
+        let value = getBudgetValue(rowHeader, month);
+        enterEditMode(e.target, rowHeader, month, value, fieldType);
     }
 
     // export button
@@ -181,44 +181,8 @@ document.addEventListener('change', function(e) {
 // htmx after swap event listener
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
-        //new DataTable("data-budget-container", columns, data, onRowClick);
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
-
-        const budget = document.getElementById('budget');
-        const settingsContainer = document.getElementById('settings-container');
-        const settings = document.getElementById('settings');
-        syncSettingsContainerHeight();
-
-        if (!budget || !settingsContainer || !settings) return;
-
-        // Set settings-container height to match budget
-        function syncHeight() {
-            settingsContainer.style.height = budget.offsetHeight + 'px';
-        }
-        syncHeight();
-        window.addEventListener('resize', syncHeight);
-
-        // Smart sticky logic
-        window.addEventListener('scroll', function() {
-            const containerRect = settingsContainer.getBoundingClientRect();
-            const settingsHeight = settings.offsetHeight;
-
-            if (containerRect.top > 2 * 16) { // 2rem = 32px
-                // At the top: stick to top of container
-                settings.style.position = 'absolute';
-                settings.style.top = '0px';
-            } else if (containerRect.bottom < settingsHeight + 2 * 16) {
-                // At the bottom: stick to bottom of container
-                settings.style.position = 'absolute';
-                settings.style.top = (containerRect.height - settingsHeight) + 'px';
-            } else {
-                // In between: fixed to top of viewport with 2rem buffer
-                settings.style.position = 'fixed';
-                settings.style.top = '2rem';
-            }
-        });
-
 
         // inject custom header event listener
         const customHeaderInput = document.getElementById('inject-custom-header');
