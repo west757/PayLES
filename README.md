@@ -6,6 +6,9 @@ navigate to: \Documents\Github\Payles
 run: python -m app.main
 
 
+https://dev.to/lalitkhu/creating-a-scrollable-table-with-a-sticky-header-and-frozen-column-using-html-and-css-1d2a
+https://codepen.io/khulalit/pen/wBwoRwY
+
 short-term:
 - update pay active and drill pay in config
 - account for specific pays
