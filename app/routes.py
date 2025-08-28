@@ -7,6 +7,7 @@ from app.utils import (
     convert_numpy_types,
     validate_file,
     get_month_headers,
+    add_recommendations,
 )
 from app.les import (
     validate_les, 
@@ -57,6 +58,7 @@ def submit_les():
         budget, initial_month = build_budget(les_text)
         budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=initial_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
         header_data = flask_app.config['BUDGET_HEADER_LIST'] + flask_app.config['VARIABLE_HEADER_LIST']
+        recommendations = add_recommendations(budget, initial_month)
 
         session['budget'] = budget
         session['header_data'] = header_data
@@ -71,7 +73,6 @@ def submit_les():
             'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
             'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
             'GRADES': flask_app.config['GRADES'],
-            'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'],
             'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
             'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
         }
@@ -82,6 +83,7 @@ def submit_les():
             'budget': convert_numpy_types(budget),
             'month_headers': month_headers,
             'header_data': header_data,
+            'recommendations': recommendations,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
         }

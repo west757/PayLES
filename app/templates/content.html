@@ -271,6 +271,13 @@
             <h2>Budget Recommendations</h2>
 
             <div id="rec-content">
+                {% if recommendations %}
+                    {% for rec in recommendations %}
+                        <div class="rec-item">{{ rec|safe }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>No recommendations at this time.</p>
+                {% endif %}
             </div>
         </div>
     </div>
