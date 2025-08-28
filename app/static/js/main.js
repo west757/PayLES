@@ -200,6 +200,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     highlightChanges();
     showAllVariables();
     showTSPOptions();
+    showYTDRows();
     enableInputs();
     disableTSPRateButtons();
 });

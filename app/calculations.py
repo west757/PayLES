@@ -94,34 +94,39 @@ def calculate_gross_net_pay(VARIABLE_TEMPLATE=None, budget=None, month=None, ini
     return budget
 
 
-def calculate_difference(VARIABLE_TEMPLATE=None, budget=None, prev_month=None, next_month=None):
+def calculate_difference(VARIABLE_TEMPLATE=None, budget=None, next_month=None, init=False, prev_month=None):
+    difference = 0.00
+
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
-    difference_row = next((r for r in budget if r['header'] == "Difference"), None)
-    difference_row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
+
+    if init:
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Difference', difference, next_month))
+    else:
+        for row in budget:
+            if row['header'] == 'Difference':
+                if net_pay_row and prev_month in net_pay_row and next_month in net_pay_row:
+                    row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
+                else:
+                    row[next_month] = 0.00
+
+    return budget
 
 
-
-
-def calculate_ytd_rows(budget, prev_month, next_month):
-    # Find YTD rows
+def calculate_ytd_rows(budget, next_month, prev_month):
     ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Entitlements'), None)
     ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Deductions'), None)
-    ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP'), None)
+    ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP Contribution'), None)
     ytd_charity_row = next((r for r in budget if r['header'] == 'YTD Charity'), None)
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
 
-    # Gross Pay for this month
     gross_pay_row = next((r for r in budget if r['header'] == 'Gross Pay'), None)
     gross_pay = gross_pay_row[prev_month]
 
-    # Net Pay for this month
     net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
     net_pay = net_pay_row[prev_month]
 
-    # Deductions for this month (sum of all sign -1)
     deductions = sum(r[prev_month] for r in budget if r.get('sign') == -1)
 
-    # TSP for this month
     trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
     roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
     trad_tsp = abs(trad_tsp_row[prev_month])
@@ -144,8 +149,6 @@ def calculate_ytd_rows(budget, prev_month, next_month):
         ytd_net_row[next_month] = round(ytd_net_row[prev_month] + net_pay, 2)
 
     return budget
-
-
 
 
 
