@@ -38,6 +38,20 @@ def validate_file(file):
     return True, ""
 
 
+def add_row(template, header, value, month):
+    row_data = template[template['header'] == header]
+    metadata = {}
+    
+    for col in flask_app.config['ROW_METADATA']:
+        if col in row_data.columns:
+            metadata[col] = row_data.iloc[0][col]
+
+    row = {'header': header}
+    row.update(metadata)
+    row[month] = value
+    return row
+
+
 def validate_calculate_zip_mha(zip_code):
     MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
 
