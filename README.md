@@ -21,7 +21,6 @@ mid-term:
 - check what all is saved if in combat zone (are state taxes paid?)
 - add more modals
 - add in charity contributions as a row
-- YTD rows (tsp, gross, entitlements, deductions, charity) and add as a setting
 - add comments to code
 - alphabetize resources and add stars for top ones
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)

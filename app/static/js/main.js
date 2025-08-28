@@ -179,6 +179,10 @@ document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'show-tsp-options-checkbox') {
         showTSPOptions();
     }
+
+    if (e.target && e.target.id === 'show-ytd-rows-checkbox') {
+        showYTDRows();
+    }
 });
 
 

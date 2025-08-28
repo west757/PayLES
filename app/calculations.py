@@ -33,8 +33,8 @@ def calculate_taxable_income(budget, month, init=False):
     nontaxable = round(nontaxable, 2)
 
     if init:
-        budget.append({'header': 'Taxable Income', month: taxable})
-        budget.append({'header': 'Non-Taxable Income', month: nontaxable})
+        budget.append({'header': 'Taxable Income', 'type': 'x', month: taxable})
+        budget.append({'header': 'Non-Taxable Income', 'type': 'x', month: nontaxable})
     else:
         for row in budget:
             if row['header'] == 'Taxable Income':
@@ -55,7 +55,7 @@ def calculate_total_taxes(budget, month, init=False):
     total_taxes = round(total_taxes, 2)
 
     if init:
-        budget.append({'header': 'Total Taxes', month: total_taxes})
+        budget.append({'header': 'Total Taxes', 'type': 'x', month: total_taxes})
     else:
         for row in budget:
             if row['header'] == 'Total Taxes':
@@ -79,8 +79,8 @@ def calculate_gross_net_pay(budget, month, init=False):
     net_pay = round(net_pay, 2)
 
     if init:
-        budget.append({'header': 'Gross Pay', month: gross_pay})
-        budget.append({'header': 'Net Pay', month: net_pay})
+        budget.append({'header': 'Gross Pay', 'type': 'x', month: gross_pay})
+        budget.append({'header': 'Net Pay', 'type': 'x', month: net_pay})
     else:
         for row in budget:
             if row['header'] == 'Gross Pay':

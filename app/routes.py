@@ -65,7 +65,7 @@ def submit_les():
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
-
+        print(header_data)
         config_js = {
             'budget': convert_numpy_types(budget),
             'headerData': header_data,

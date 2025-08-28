@@ -43,7 +43,7 @@ def build_budget(les_text):
     budget = calculate_taxable_income(budget, initial_month, init=True)
     budget = calculate_total_taxes(budget, initial_month, init=True)
     budget = calculate_gross_net_pay(budget, initial_month, init=True)
-    budget.append({'header': 'Difference', initial_month: 0.00})
+    budget.append({'header': 'Difference', 'type': 'x', initial_month: 0.00})
     budget = add_ytd_rows(budget, les_text, initial_month)
     
     return budget, initial_month
@@ -247,26 +247,27 @@ def add_ytd_rows(budget, les_text, initial_month):
 
     ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
     ytd_entitlement = float(ent_match.group(1)) if ent_match else 0.00
-    budget.append({'header': 'YTD Entitlements', initial_month: ytd_entitlement})
+    budget.append({'header': 'YTD Entitlements', 'type': 'y', initial_month: ytd_entitlement})
 
     ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
     ytd_deduction = float(ded_match.group(1)) if ded_match else 0.00
-    budget.append({'header': 'YTD Deductions', initial_month: -ytd_deduction})
+    budget.append({'header': 'YTD Deductions', 'type': 'y', initial_month: -ytd_deduction})
 
     try:
         ytd_tsp = float(les_text[78][2])
     except Exception:
         ytd_tsp = 0.00
-    budget.append({'header': 'YTD TSP', initial_month: ytd_tsp})
+    budget.append({'header': 'YTD TSP', 'type': 'y', initial_month: ytd_tsp})
 
     try:
         ytd_charity = float(les_text[56][2])
     except Exception:
         ytd_charity = 0.00
-    budget.append({'header': 'YTD Charity', initial_month: ytd_charity})
+    budget.append({'header': 'YTD Charity', 'type': 'y', initial_month: ytd_charity})
 
     ytd_net_pay = ytd_entitlement + (-ytd_deduction)
-    budget.append({'header': 'YTD Net Pay', initial_month: ytd_net_pay})
+    budget.append({'header': 'YTD Net Pay', 'type': 'y', initial_month: ytd_net_pay})
+
 
     return budget
 

@@ -254,7 +254,7 @@ input[type=file]::file-selector-button {
     width: 25%;
 }
 
-#button-inject, #button-recs {
+#button-inject, #button-account, #button-recs {
     height: 3rem;
     width: 11rem;
 }
@@ -640,11 +640,7 @@ input[type=file] {
     border-bottom: 0.35rem solid var(--table_border_color) !important;
 }
 
-.var-row {
-    display: none;
-}
-
-.tsp-row {
+.var-row, .tsp-row, .ytd-row {
     display: none;
 }
 

@@ -150,8 +150,13 @@ function showAllVariables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
     var rows = document.getElementsByClassName('var-row');
-    for (var i = 0; i < rows.length; i++) {
-        rows[i].style.display = checked ? 'table-row' : 'none';
+    
+    for (var row of rows) {
+        if (checked) {
+            row.style.display = 'table-row';
+        } else {
+            row.style.display = 'none';
+        }
     }
 }
 
@@ -161,6 +166,22 @@ function showTSPOptions() {
     var checkbox = document.getElementById('show-tsp-options-checkbox');
     var checked = checkbox.checked;
     var rows = document.getElementsByClassName('tsp-row');
+
+    for (var row of rows) {
+        if (checked) {
+            row.style.display = 'table-row';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+}
+
+
+// show ytd rows
+function showYTDRows() {
+    var checkbox = document.getElementById('show-ytd-rows-checkbox');
+    var checked = checkbox.checked;
+    var rows = document.getElementsByClassName('ytd-row');
 
     for (var row of rows) {
         if (checked) {
