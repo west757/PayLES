@@ -104,8 +104,8 @@ class Config:
             'retirement': str,
             'tooltip': str,
         },
-    )
-    HOME_OF_RECORDS_ABBR = HOME_OF_RECORDS['abbr'].tolist()
+    ).to_dict(orient='records')
+    HOME_OF_RECORDS_ABBR = [r['abbr'] for r in HOME_OF_RECORDS]
 
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
         dtype={

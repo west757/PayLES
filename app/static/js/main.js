@@ -187,7 +187,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
-        addRecommendations();
     }
 
     // capture and parse config data

@@ -70,3 +70,66 @@ def get_month_headers(budget):
     if difference_row:
         return [key for key in difference_row.keys() if key != 'header']
     return []
+
+
+
+
+def add_recommendations(budget, month):
+    recs = []
+
+    # SGLI recommendation
+    sgli_rate = next((row[month] for row in budget if row.get('header', '') == 'SGLI Rate'), 0)
+    if float(sgli_rate) == 0:
+        recs.append(
+            '<div class="rec-item"><b>SGLI Coverage:</b> You currently have no SGLI coverage. It is recommended to have at ' \
+            'least the minimum amount of SGLI coverage, which is a $3.50 monthly premium for $50,000. This is due to also ' \
+            'providing you with Traumatic Injury Protection Coverage (TSGLI).</div>'
+        )
+
+    # TSP recommendation
+    months_in_service = next((row[month] for row in budget if row.get('header', '') == 'Months in Service'), 0)
+    trad_tsp = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
+    roth_tsp = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
+    if int(months_in_service) >= 24 and (int(trad_tsp) + int(roth_tsp)) < 5:
+        recs.append(
+            '<div class="rec-item"><b>TSP Base Rate:</b> You are fully vested in the Thrift Savings Plan, however are not ' \
+            'currently taking advantage of the service agency automatic matching up to 5%. It is recommended to increase ' \
+            'the Traditional TSP or Roth TSP Base Rate contribution percentages to at least 5% to receive the full matching ' \
+            'contributions.</div>'
+        )
+
+    # State income tax recommendation
+    home_of_record = next((row[month] for row in budget if row.get('header', '') == 'Home of Record'), '')
+    mha = next((row[month] for row in budget if row.get('header', '') == 'MHA'), '')
+    hor_row = None
+
+    for r in flask_app.config['HOME_OF_RECORDS']:
+        if r['abbr'] == home_of_record:
+            hor_row = r
+            break
+
+    if hor_row:
+        income_type = hor_row.get('income', '').lower()
+        tooltip = hor_row.get('tooltip', '')
+        show_state_tax_msg = False
+
+        if income_type in ['partial', 'full']:
+            show_state_tax_msg = True
+        elif income_type == 'outside' and mha != "Not Found":
+            mha_state = mha[:2]
+            if mha_state == home_of_record:
+                show_state_tax_msg = True
+
+        if show_state_tax_msg:
+            msg = (
+                '<div class="rec-item"><b>State Income Tax:</b> You are currently paying state income tax. It is '
+                'recommended to investigate options and requirements relating to your home of record, as you may '
+                'be eligible to avoid paying state income tax. This may include changing your home of record to a '
+                'state which does not tax military income, or meeting certain exemptions for your current home of record.'
+            )
+            if tooltip:
+                msg += f'<br>{tooltip}'
+            msg += '</div>'
+            recs.append(msg)
+
+    return recs
