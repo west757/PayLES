@@ -54,8 +54,11 @@ def submit_les():
         return jsonify({'message': "Unknown action, no LES or example submitted"}), 400
 
     if valid:
+        BUDGET_HEADER = flask_app.config['BUDGET_HEADER']
+        VARIABLE_HEADER = flask_app.config['VARIABLE_HEADER']
+
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, initial_month = build_budget(les_text)
+        budget, initial_month = build_budget(BUDGET_HEADER, VARIABLE_HEADER, les_text)
         budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=initial_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
         header_data = flask_app.config['BUDGET_HEADER_LIST'] + flask_app.config['VARIABLE_HEADER_LIST']
         recommendations = add_recommendations(budget, initial_month)
@@ -65,7 +68,7 @@ def submit_les():
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
-        print(header_data)
+
         config_js = {
             'budget': convert_numpy_types(budget),
             'headerData': header_data,

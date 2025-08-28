@@ -2,13 +2,16 @@ from bisect import bisect_right
 from calendar import month
 
 from app import flask_app
+from app.utils import (
+    add_row,
+)
 
 
 # =========================
 # calculation functions
 # =========================
 
-def calculate_taxable_income(budget, month, init=False):
+def calculate_taxable_income(VARIABLE_TEMPLATE=None, budget=None, month=None, init=False):
     taxable = 0.00
     nontaxable = 0.00
 
@@ -33,8 +36,8 @@ def calculate_taxable_income(budget, month, init=False):
     nontaxable = round(nontaxable, 2)
 
     if init:
-        budget.append({'header': 'Taxable Income', 'type': 'x', month: taxable})
-        budget.append({'header': 'Non-Taxable Income', 'type': 'x', month: nontaxable})
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxable Income', taxable, month))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Non-Taxable Income', nontaxable, month))
     else:
         for row in budget:
             if row['header'] == 'Taxable Income':
@@ -45,7 +48,7 @@ def calculate_taxable_income(budget, month, init=False):
     return budget
 
 
-def calculate_total_taxes(budget, month, init=False):
+def calculate_total_taxes(VARIABLE_TEMPLATE=None, budget=None, month=None, init=False):
     total_taxes = 0.00
 
     for row in budget:
@@ -55,7 +58,7 @@ def calculate_total_taxes(budget, month, init=False):
     total_taxes = round(total_taxes, 2)
 
     if init:
-        budget.append({'header': 'Total Taxes', 'type': 'x', month: total_taxes})
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Taxes', total_taxes, month))
     else:
         for row in budget:
             if row['header'] == 'Total Taxes':
@@ -64,7 +67,7 @@ def calculate_total_taxes(budget, month, init=False):
     return budget
 
 
-def calculate_gross_net_pay(budget, month, init=False):
+def calculate_gross_net_pay(VARIABLE_TEMPLATE=None, budget=None, month=None, init=False):
     gross_pay = 0.00
     for row in budget:
         if row.get('sign') == 1 and month in row:
@@ -79,8 +82,8 @@ def calculate_gross_net_pay(budget, month, init=False):
     net_pay = round(net_pay, 2)
 
     if init:
-        budget.append({'header': 'Gross Pay', 'type': 'x', month: gross_pay})
-        budget.append({'header': 'Net Pay', 'type': 'x', month: net_pay})
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Gross Pay', gross_pay, month))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Net Pay', net_pay, month))
     else:
         for row in budget:
             if row['header'] == 'Gross Pay':
@@ -91,7 +94,7 @@ def calculate_gross_net_pay(budget, month, init=False):
     return budget
 
 
-def calculate_difference(budget, prev_month, next_month):
+def calculate_difference(VARIABLE_TEMPLATE=None, budget=None, prev_month=None, next_month=None):
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
     difference_row = next((r for r in budget if r['header'] == "Difference"), None)
     difference_row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)

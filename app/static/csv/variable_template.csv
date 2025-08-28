@@ -1,20 +1,31 @@
-﻿header,type,sign,field,tax,editable,modal
-Year,v,0,none,False,False,basepay
-Months in Service,v,0,none,False,False,basepay
-Grade,v,0,select,False,True,basepay
-Zip Code,v,0,string,False,True,bah
-Military Housing Area,v,0,none,False,False,bah
-Home of Record,v,0,select,False,True,bah
-Dependents,v,0,int,False,True,bah
-Federal Filing Status,v,0,select,False,True,federaltaxes
-State Filing Status,v,0,select,False,True,statetaxes
-SGLI Coverage,v,0,select,False,True,sgli
-Combat Zone,v,0,select,False,True,combatzone
-Trad TSP Base Rate,t,0,int,False,True,basepay
-Trad TSP Specialty Rate,t,0,int,False,True,specialty
-Trad TSP Incentive Rate,t,0,int,False,True,incentive
-Trad TSP Bonus Rate,t,0,int,False,True,bonus
-Roth TSP Base Rate,t,0,int,False,True,basepay
-Roth TSP Specialty Rate,t,0,int,False,True,specialty
-Roth TSP Incentive Rate,t,0,int,False,True,incentive
-Roth TSP Bonus Rate,t,0,int,False,True,bonus
+﻿header,type,sign,field,tax,editable,modal,tooltip
+Year,v,0,none,False,False,basepay,none
+Months in Service,v,0,none,False,False,basepay,none
+Grade,v,0,select,False,True,basepay,none
+Zip Code,v,0,string,False,True,bah,none
+Military Housing Area,v,0,none,False,False,bah,none
+Home of Record,v,0,select,False,True,bah,none
+Dependents,v,0,int,False,True,bah,none
+Federal Filing Status,v,0,select,False,True,federaltaxes,none
+State Filing Status,v,0,select,False,True,statetaxes,none
+SGLI Coverage,v,0,select,False,True,sgli,none
+Combat Zone,v,0,select,False,True,combatzone,none
+Trad TSP Base Rate,t,0,int,False,True,basepay,none
+Trad TSP Specialty Rate,t,0,int,False,True,specialty,none
+Trad TSP Incentive Rate,t,0,int,False,True,incentive,none
+Trad TSP Bonus Rate,t,0,int,False,True,bonus,none
+Roth TSP Base Rate,t,0,int,False,True,basepay,none
+Roth TSP Specialty Rate,t,0,int,False,True,specialty,none
+Roth TSP Incentive Rate,t,0,int,False,True,incentive,none
+Roth TSP Bonus Rate,t,0,int,False,True,bonus,none
+Taxable Income,x,1,none,False,False,none,none
+Non-Taxable Income,x,1,none,False,False,none,none
+Total Taxes,x,-1,none,False,False,none,none
+Gross Pay,x,1,none,False,False,none,none
+Net Pay,x,0,none,False,False,none,none
+Difference,x,0,none,False,False,none,none
+YTD Entitlements,y,1,none,False,False,none,Year-To-Date Entitlements
+YTD Deductions,y,-1,none,False,False,none,Year-To-Date Deductions
+YTD TSP Contribution,y,1,none,False,False,none,Year-To-Date TSP Contribution
+YTD Charity,y,1,none,False,False,none,Year-To-Date Charitable Contributions
+YTD Net Pay,y,0,none,False,False,none,Year-To-Date Net Pay

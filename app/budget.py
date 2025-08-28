@@ -4,6 +4,7 @@ import re
 
 from app import flask_app
 from app.utils import (
+    add_row,
     validate_calculate_zip_mha,
     validate_home_of_record,
     get_month_headers,
@@ -29,7 +30,7 @@ from app.calculations import (
 # build budget
 # =========================
 
-def build_budget(les_text):
+def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     try:
         initial_month = les_text[8][3]
         if initial_month not in flask_app.config['MONTHS_SHORT']:
@@ -38,20 +39,18 @@ def build_budget(les_text):
         raise Exception(f"Error determining initial month: {e}")
 
     budget = []
-    budget = add_variables(budget, les_text, initial_month)
-    budget = add_ent_ded_alt_rows(budget, les_text, initial_month)
-    budget = calculate_taxable_income(budget, initial_month, init=True)
-    budget = calculate_total_taxes(budget, initial_month, init=True)
-    budget = calculate_gross_net_pay(budget, initial_month, init=True)
-    budget.append({'header': 'Difference', 'type': 'x', initial_month: 0.00})
-    budget = add_ytd_rows(budget, les_text, initial_month)
-    
+    budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, initial_month)
+    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, initial_month)
+    budget = calculate_taxable_income(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
+    budget = calculate_total_taxes(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
+    budget = calculate_gross_net_pay(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
+    budget = calculate_difference(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
+    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month)
+
     return budget, initial_month
 
 
-def add_variables(budget, les_text, month):
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-
+def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
     try:
         year = int('20' + les_text[8][4])
     except Exception:
@@ -159,9 +158,7 @@ def add_variables(budget, les_text, month):
     return budget
 
 
-def add_ent_ded_alt_rows(budget, les_text, month):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-
+def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, month):
     ents = parse_pay_section(les_text[9])
     deds = parse_pay_section(les_text[10])
     alts = parse_pay_section(les_text[11])
@@ -227,47 +224,32 @@ def parse_pay_section(les_text):
     return results
 
 
-def add_row(TEMPLATE, header, value, month):
-    row_data = TEMPLATE[TEMPLATE['header'] == header]
-    metadata = {}
-    
-    for col in flask_app.config['ROW_METADATA']:
-        if col in row_data.columns:
-            metadata[col] = row_data.iloc[0][col]
-
-    row = {'header': header}
-    row.update(metadata)
-    row[month] = value
-    return row
-
-
-def add_ytd_rows(budget, les_text, initial_month):
+def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
     remarks = les_text[96]
     remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
 
     ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
     ytd_entitlement = float(ent_match.group(1)) if ent_match else 0.00
-    budget.append({'header': 'YTD Entitlements', 'type': 'y', initial_month: ytd_entitlement})
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Entitlements', ytd_entitlement, initial_month))
 
     ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
     ytd_deduction = float(ded_match.group(1)) if ded_match else 0.00
-    budget.append({'header': 'YTD Deductions', 'type': 'y', initial_month: -ytd_deduction})
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', -ytd_deduction, initial_month))
 
     try:
         ytd_tsp = float(les_text[78][2])
     except Exception:
         ytd_tsp = 0.00
-    budget.append({'header': 'YTD TSP', 'type': 'y', initial_month: ytd_tsp})
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP', ytd_tsp, initial_month))
 
     try:
         ytd_charity = float(les_text[56][2])
     except Exception:
         ytd_charity = 0.00
-    budget.append({'header': 'YTD Charity', 'type': 'y', initial_month: ytd_charity})
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', ytd_charity, initial_month))
 
     ytd_net_pay = ytd_entitlement + (-ytd_deduction)
-    budget.append({'header': 'YTD Net Pay', 'type': 'y', initial_month: ytd_net_pay})
-
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', ytd_net_pay, initial_month))
 
     return budget
 
