@@ -10,44 +10,44 @@ LQA,e,1,float,False,True,bah,False,False,LQA,Living Quarters Allowance
 CONUS COLA,e,1,float,False,True,cola,False,False,CONUS COLA,CONUS Cost of Living Allowance
 OCONUS COLA,e,1,float,False,True,cola,False,False,OCONUS COLA,OCONUS Cost of Living Allowance
 OHA,e,1,float,False,True,bah,False,False,OHA,Overseas Housing Allowance
-FLPB,e,1,float,True,True,flpb,False,False,FLPB,Foreign Language Profiency Bonus
-Foreign Duty Pay,e,1,float,False,True,fdp,False,False,FDP,Foreign Duty Pay
-ASP,e,1,float,False,True,specialty,False,False,ASP,Additional Special Pay
-Fly Pay,e,1,float,False,True,specialty,False,False,FLY PAY,Fly Pay
-Dive Pay,e,1,float,False,True,specialty,False,False,DP,Dive Pay
-Jump Pay,e,1,float,False,True,specialty,False,False,JP,Jump Pay
-HALO,e,1,float,False,True,specialty,False,False,HALO,High Altitude/Low Altitude Pay
-MSP,e,1,float,False,True,specialty,False,False,MSP,Multiyear Special Pay
-SDAP,e,1,float,False,True,specialty,False,False,SDAP,Special Duty Assignment Pay
-Special Duty Pay,e,1,float,False,True,specialty,False,False,SDP,Special Duty Pay
-Specialty Pay,e,1,float,False,True,specialty,False,False,SP,Specialty Pay
-Variable Special Pay,e,1,float,False,True,specialty,False,False,VSP,Variable Special Pay
-BCP,e,1,float,False,True,specialty,False,False,BCP,Board Certified Pay
+FLPB,e,1,float,True,True,specialty,False,False,FLPB,Foreign Language Profiency Bonus
+Foreign Duty Pay,e,1,float,True,True,specialty,False,False,FDP,Foreign Duty Pay
+ASP,e,1,float,True,True,specialty,False,False,ASP,Additional Special Pay
+Fly Pay,e,1,float,True,True,specialty,False,False,FLY PAY,Fly Pay
+Dive Pay,e,1,float,True,True,specialty,False,False,DP,Dive Pay
+Jump Pay,e,1,float,True,True,specialty,False,False,JP,Jump Pay
+MSP,e,1,float,True,True,specialty,False,False,MSP,Multiyear Special Pay
+SDAP,e,1,float,True,True,specialty,False,False,SDAP,Special Duty Assignment Pay
+Special Duty Pay,e,1,float,True,True,specialty,False,False,SDP,Special Duty Pay
+Specialty Pay,e,1,float,True,True,specialty,False,False,SP,Specialty Pay
+Variable Special Pay,e,1,float,True,True,specialty,False,False,VSP,Variable Special Pay
+Board Certified Pay,e,1,float,True,True,specialty,False,False,BCP,Board Certified Pay
+AIP,e,1,float,True,True,incentive,False,False,AIP,Assignment Incentive Pay
+ACIP,e,1,float,True,True,incentive,False,False,ACIP,Aviation Career Incentive Pay
+CEFIP,e,1,float,True,True,incentive,False,False,CEFIP,Career Enlisted Flyer Incentive Pay
+Flight Pay,e,1,float,True,True,incentive,False,False,FP,Flight Pay
+HALO,e,1,float,True,True,incentive,False,False,HALO,High Altitude/Low Altitude Pay
+HDIP,e,1,float,True,True,incentive,False,False,HDIP,Hazardous Duty Incentive Pay
+Hazardous Duty Pay,e,1,float,True,True,incentive,False,False,HZD,Hazardous Duty Pay
+Incentive Special Pay,e,1,float,True,True,incentive,False,False,ISP,Incentive Special Pay
+Accession Bonus,e,1,float,True,True,bonus,False,False,ACCESSION BONUS,Accession Bonus
+ACP,e,1,float,True,True,bonus,False,False,ACP,Aviation Continuation Pay
+CSRB,e,1,float,True,True,bonus,False,False,CSRB,Critical Skills Retention Bonus
+MRB,e,1,float,True,True,bonus,False,False,MRB,Multiyear Retention Bonus
+NIB,e,1,float,True,True,bonus,False,False,NIB,Nuclear Career Annual Incentive Bonus
+NPAB,e,1,float,True,True,bonus,False,False,NPAB,Nuclear Power Accession Bonus
+SEB,e,1,float,True,True,bonus,False,False,SEB,Selective Enlistment Bonus
+SRB,e,1,float,True,True,bonus,False,False,SRB,Selective Reenlistment Bonus
+CONT PAY,e,1,float,True,True,bonus,False,False,CONT PAY,Continuation Pay
+NUCLEAR,e,1,float,True,True,bonus,False,False,NUCLEAR,Nuclear Continuation Pay
 Combat Duty,e,1,float,False,True,combat,False,False,CD,Combat Duty
 Combat Zone Pay,e,1,float,False,True,combat,False,False,CZP,Combat Zone Pay
 HFP/IDP,e,1,float,False,True,combat,False,False,HFP/IDP,Hostile Fire/Imminent Danger Pay
 HFP-L,e,1,float,False,True,combat,False,False,HFP-L,Hostile Fire Pay - Location
-Hazardous Duty Pay,e,1,float,True,True,combat,False,False,HZD,Hazardous Duty Pay
 Imminent Danger Pay,e,1,float,True,True,combat,False,False,IDP,Imminent Danger Pay
-AIP,e,1,float,False,True,incentive,False,False,AIP,Assignment Incentive Pay
-ACIP,e,1,float,False,True,incentive,False,False,ACIP,Aviation Career Incentive Pay
-CEFIP,e,1,float,False,True,incentive,False,False,CEFIP,Career Enlisted Flyer Incentive Pay
-Flight Pay,e,1,float,False,True,incentive,False,False,FP,Flight Pay
-HDIP,e,1,float,False,True,incentive,False,False,HDIP,Hazardous Duty Incentive Pay
-Incentive Special Pay,e,1,float,False,True,incentive,False,False,ISP,Incentive Special Pay
 HDP-IE,e,1,float,False,True,hardship,False,False,HDP-IE,Hardship Duty Pay - Involuntary Extension
 HDP-L,e,1,float,False,True,hardship,False,False,HDP-L,Hardship Duty Pay - Location
 HDP-M,e,1,float,False,True,hardship,False,False,HDP-M,Hardship Duty Pay - Mission
-ACP,e,1,float,False,True,continuation,False,False,ACP,Aviation Continuation Pay
-CONT PAY,e,1,float,False,True,continuation,False,False,CONT PAY,Continuation Pay
-NUCLEAR,e,1,float,False,True,continuation,False,False,NUCLEAR,Nuclear Continuation Pay
-Accession Bonus,e,1,float,False,True,bonus,False,False,ACCESSION BONUS,Accession Bonus
-CSRB,e,1,float,False,True,bonus,False,False,CSRB,Critical Skills Retention Bonus
-MRB,e,1,float,False,True,bonus,False,False,MRB,Multiyear Retention Bonus
-NIB,e,1,float,False,True,bonus,False,False,NIB,Nuclear Career Annual Incentive Bonus
-NPAB,e,1,float,False,True,bonus,False,False,NPAB,Nuclear Power Accession Bonus
-SEB,e,1,float,False,True,bonus,False,False,SEB,Selective Enlistment Bonus
-SRB,e,1,float,False,True,bonus,False,False,SRB,Selective Reenlistment Bonus
 PCS Member,e,1,float,False,True,pcs,False,True,PCS MEMBER,Permanent Change of Station Payment
 Dislocation Allowance,e,1,float,False,True,pcs,False,False,DLA,Dislocation Allowance
 MIHA-M,e,1,float,False,True,pcs,False,False,MIHA-M,Moving Housing Allowance - Miscellaneous

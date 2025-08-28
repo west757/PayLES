@@ -1,4 +1,5 @@
 from bisect import bisect_right
+from calendar import month
 
 from app import flask_app
 
@@ -90,14 +91,58 @@ def calculate_gross_net_pay(budget, month, init=False):
     return budget
 
 
-def calculate_difference(budget, month_headers, month_idx):
-    prev_month = month_headers[month_idx - 1]
-    next_month = month_headers[month_idx]
-
+def calculate_difference(budget, prev_month, next_month):
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
     difference_row = next((r for r in budget if r['header'] == "Difference"), None)
-
     difference_row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
+
+
+
+
+def calculate_ytd_rows(budget, prev_month, next_month):
+    # Find YTD rows
+    ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Entitlements'), None)
+    ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Deductions'), None)
+    ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP'), None)
+    ytd_charity_row = next((r for r in budget if r['header'] == 'YTD Charity'), None)
+    ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
+
+    # Gross Pay for this month
+    gross_pay_row = next((r for r in budget if r['header'] == 'Gross Pay'), None)
+    gross_pay = gross_pay_row[prev_month]
+
+    # Net Pay for this month
+    net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
+    net_pay = net_pay_row[prev_month]
+
+    # Deductions for this month (sum of all sign -1)
+    deductions = sum(r[prev_month] for r in budget if r.get('sign') == -1)
+
+    # TSP for this month
+    trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
+    roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
+    trad_tsp = abs(trad_tsp_row[prev_month])
+    roth_tsp = abs(roth_tsp_row[prev_month])
+    tsp_total = trad_tsp + roth_tsp
+
+    charity_add = 0.00
+
+    if next_month == "JAN":
+        ytd_ent_row[next_month] = gross_pay
+        ytd_ded_row[next_month] = deductions
+        ytd_tsp_row[next_month] = tsp_total
+        ytd_charity_row[next_month] = charity_add
+        ytd_net_row[next_month] = net_pay
+    else:
+        ytd_ent_row[next_month] = round(ytd_ent_row[prev_month] + gross_pay, 2)
+        ytd_ded_row[next_month] = round(ytd_ded_row[prev_month] + deductions, 2)
+        ytd_tsp_row[next_month] = round(ytd_tsp_row[prev_month] + tsp_total, 2)
+        ytd_charity_row[next_month] = round(ytd_charity_row[prev_month] + charity_add, 2)
+        ytd_net_row[next_month] = round(ytd_net_row[prev_month] + net_pay, 2)
+
+    return budget
+
+
 
 
 
