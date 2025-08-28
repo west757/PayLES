@@ -158,8 +158,8 @@ class Config:
     # d = deduction
     # a = allotment
     # c = custom
+    # x = calculations
     # y = ytd
-    # (calculations)
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
         dtype={
             'header': str,
