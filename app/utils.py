@@ -82,7 +82,7 @@ def validate_home_of_record(home_of_record):
 def get_month_headers(budget):
     difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
     if difference_row:
-        return [key for key in difference_row.keys() if key not in ('header', 'type')]
+        return [key for key in difference_row.keys() if key not in ('header', 'type', 'sign', 'field', 'tax', 'editable', 'modal')]
     return []
 
 

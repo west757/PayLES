@@ -1,7 +1,7 @@
 <!-- cell formatting macro -->
 {% macro format_cell(row, col) %}
     {% set cell_val = row[col] %}
-    {% if row.field != 'float' and row.field is defined %}
+    {% if row.field != 'float' %}
         {% if row.type == 't' %}
             {{ cell_val }}%
         {% else %}
@@ -76,7 +76,7 @@
                                 ✖
                             </button>
                         {% endif %}
-                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta is not none else '' }}">
+                        <button class="styled-table-button modal-button" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
                             {{ row.header }}
                         </button>
                     </td>

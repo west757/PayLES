@@ -86,7 +86,6 @@ class Config:
             'tooltip': str,
         }
     )
-    BUDGET_HEADER_LIST = BUDGET_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
         dtype={
@@ -172,7 +171,6 @@ class Config:
             'tooltip': str,
         }
     )
-    VARIABLE_HEADER_LIST = VARIABLE_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
     LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"

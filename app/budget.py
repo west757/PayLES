@@ -44,7 +44,7 @@ def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     budget = calculate_taxable_income(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
     budget = calculate_total_taxes(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
     budget = calculate_gross_net_pay(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
-    budget = calculate_difference(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
+    budget = calculate_difference(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, next_month=initial_month, init=True)
     budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month)
 
     return budget, initial_month
@@ -233,14 +233,14 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Entitlements', ytd_entitlement, initial_month))
 
     ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
-    ytd_deduction = float(ded_match.group(1)) if ded_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', -ytd_deduction, initial_month))
+    ytd_deduction = -float(ded_match.group(1)) if ded_match else 0.00
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', ytd_deduction, initial_month))
 
     try:
         ytd_tsp = float(les_text[78][2])
     except Exception:
         ytd_tsp = 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP', ytd_tsp, initial_month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP Contribution', ytd_tsp, initial_month))
 
     try:
         ytd_charity = float(les_text[56][2])
@@ -248,7 +248,7 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
         ytd_charity = 0.00
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', ytd_charity, initial_month))
 
-    ytd_net_pay = ytd_entitlement + (-ytd_deduction)
+    ytd_net_pay = ytd_entitlement + ytd_deduction
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', ytd_net_pay, initial_month))
 
     return budget
@@ -283,12 +283,12 @@ def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_
 
         update_variables(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
         update_ent_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
-        calculate_taxable_income(budget, next_month)
+        calculate_taxable_income(budget=budget, month=next_month)
         update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
-        calculate_total_taxes(budget, next_month)
-        calculate_gross_net_pay(budget, next_month)
-        calculate_difference(budget, prev_month, next_month)
-        calculate_ytd_rows(budget, prev_month, next_month)
+        calculate_total_taxes(budget=budget, month=next_month)
+        calculate_gross_net_pay(budget=budget, month=next_month)
+        calculate_difference(budget=budget, next_month=next_month, prev_month=prev_month)
+        calculate_ytd_rows(budget=budget, next_month=next_month, prev_month=prev_month)
 
         prev_month = next_month
 
