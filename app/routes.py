@@ -71,7 +71,7 @@ def submit_les():
             'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
             'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
             'GRADES': flask_app.config['GRADES'],
-            'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'],
+            'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
             'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
         }
         context = {

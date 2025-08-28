@@ -60,7 +60,7 @@ def validate_calculate_zip_mha(zip_code):
     
 
 def validate_home_of_record(home_of_record):
-    if home_of_record in flask_app.config['HOME_OF_RECORDS']:
+    if home_of_record in flask_app.config['HOME_OF_RECORDS_ABBR']:
         return home_of_record
     return "Not Found"
 

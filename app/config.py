@@ -60,16 +60,7 @@ class Config:
     'editable',
     'modal',
     ]
-    
-    #row types in budget order:
-    # v = variable
-    # t = tsp
-    # e = entitlement
-    # d = deduction
-    # a = allotment
-    # c = custom
-    # y = ytd
-    # (calculations)
+
 
     #load static files
     dtype_bah = {'mha': str}
@@ -108,6 +99,17 @@ class Config:
             'rate': float,
         },
     )
+
+    HOME_OF_RECORDS = pd.read_csv(CSV_FOLDER / "home_of_records.csv",
+        dtype={
+            'home_of_record': str,
+            'abbr': str,
+            'income': str,
+            'retirement': str,
+            'tooltip': str,
+        },
+    )
+    HOME_OF_RECORDS_ABBR = HOME_OF_RECORDS.set_index('home_of_record')['abbr'].to_dict()
 
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
         dtype={
@@ -153,6 +155,15 @@ class Config:
         }
     )
 
+    #row types in budget order:
+    # v = variable
+    # t = tsp
+    # e = entitlement
+    # d = deduction
+    # a = allotment
+    # c = custom
+    # y = ytd
+    # (calculations)
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
         dtype={
             'header': str,
