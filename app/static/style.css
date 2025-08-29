@@ -16,6 +16,12 @@
     --highlight_yellow_color: #baf35f;
     --primary_red_color: #f06f65;
     --secondary_red_color: #f5574b;
+
+    --z-base: 1;
+    --z-table-button: 1000;
+    --z-table-sticky: 1100;
+    --z-modal: 2000;
+    --z-top: 3000;
 }
 
 html {
@@ -182,7 +188,7 @@ footer {
     position: fixed;
     transform: translateX(-50%);
     top: 2rem;
-    z-index: 9999;
+    z-index: var(--z-top);
 }
 
 .toast {
@@ -222,7 +228,7 @@ footer {
     max-width: 28rem;
     position: absolute;
     padding: 0.25rem 0.5rem;
-    z-index: 3000;
+    z-index: var(--z-top);
 }
 
 /* =========================
@@ -338,7 +344,7 @@ input[type=file]::file-selector-button {
     left: 0.25rem;
     position: absolute;
     top: 0.25rem;
-    z-index: 9050;
+    z-index: var(--z-table-button);
 }
 
 .editing-button.cancel-button:hover, .remove-row-button:hover {
@@ -361,7 +367,7 @@ input[type=file]::file-selector-button {
     transition: color 0.2s;
     top: 1.25rem;
     width: 1.5rem;
-    z-index: 2003;
+    z-index: 2002;
 }
 
 .modal-close:hover {
@@ -540,17 +546,17 @@ input[type=file] {
 #budget-table th {
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 1101;
 }
 
 #budget-table td:first-child, #budget-table th:first-child {
     left: 0;
     position: sticky;
-    z-index: 5;
+    z-index: 1102;
 }
 
 #budget-table th:nth-child(1) {
-    z-index: 6;
+    z-index: 1103;
 }
 
 #settings {

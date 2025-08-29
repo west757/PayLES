@@ -28,7 +28,6 @@ mid-term:
 - add pro-rated calculations for cells
 - interest feature for accounts
 - import/export for custom rows
-- example custom entitlement/deductions (second job, haircuts, etc)
 
 long-term:
 - create leave calculator

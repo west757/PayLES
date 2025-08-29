@@ -118,6 +118,40 @@ function resetInjectModal(scope = 'all') {
         el.customValue.value = '';
         el.templateInfo.style.display = 'none';
         el.customInfo.style.display = 'block';
+
+        // Set custom info based on selectedRowType
+        let infoHtml = '';
+        if (selectedRowType === 'e') {
+            infoHtml = `<strong>Example Entitlements:</strong>
+                <ul>
+                    <li>Second Job</li>
+                    <li>Tips</li>
+                    <li>Gift Money</li>
+                    <li>Rental Income</li>
+                    <li>Capital Gains</li>
+                    <li>Royalties</li>
+                </ul>`;
+        } else if (selectedRowType === 'd') {
+            infoHtml = `<strong>Example Deductions:</strong>
+                <ul>
+                    <li>Rent</li>
+                    <li>Haircuts</li>
+                    <li>Groceries</li>
+                    <li>Pet Expenses</li>
+                    <li>Vehicle Maintenance</li>
+                    <li>Insurance</li>
+                    <li>Phone Plan</li>
+                </ul>`;
+        } else if (selectedRowType === 'a') {
+            infoHtml = `<strong>Example Allotments:</strong>
+                <ul>
+                    <li>Child Support Payments</li>
+                    <li>Alimony</li>
+                </ul>`;
+        } else {
+            infoHtml = '';
+        }
+        el.customInfo.innerHTML = infoHtml;
     }
 }
 
