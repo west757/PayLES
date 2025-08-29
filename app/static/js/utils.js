@@ -211,10 +211,9 @@ function exportBudget() {
     }
 }
 
+
 // get budget value for a specific cell
 function getBudgetValue(rowHeader, month) {
-    if (!window.CONFIG.budget) return '';
-
     const row = window.CONFIG.budget.find(r => r.header === rowHeader);
 
     if (row && row.hasOwnProperty(month)) {
@@ -251,11 +250,11 @@ function disableTSPRateButtons() {
 
         tradRows.forEach(row => {
             const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
+            btn.disabled = (parseInt(tradBase, 10) === 0);
         });
         rothRows.forEach(row => {
             const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
+            btn.disabled = (parseInt(rothBase, 10) === 0);
         });
     });
 }
