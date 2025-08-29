@@ -256,7 +256,7 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
 
 
 # =========================
-# update budget months and values
+# update budget months and variables
 # =========================
 
 def remove_month(budget, month):
@@ -266,6 +266,7 @@ def remove_month(budget, month):
 
 
 def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_month=None, value=None, repeat=False):
+    print("previous month: ", prev_month)
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     month_headers = get_month_headers(budget)
     month_idx_headers = month_headers.index(prev_month)
@@ -283,6 +284,7 @@ def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_
 
         update_variables(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
         update_ent_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+        calculate_trad_roth_tsp(budget, next_month)
         calculate_taxable_income(budget=budget, month=next_month)
         update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
         calculate_total_taxes(budget=budget, month=next_month)
@@ -362,12 +364,13 @@ def update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header, co
         'FICA - Medicare': calculate_fica_medicare,
         'SGLI Rate': calculate_sgli,
         'State Taxes': calculate_state_taxes,
-        'Traditional TSP': lambda b, m: calculate_trad_roth_tsp(b, m)[0],
-        'Roth TSP': lambda b, m: calculate_trad_roth_tsp(b, m)[1],
     }
 
     for row in budget:
         if row.get('sign') == -1:
+
+            if row['header'] in ['Traditional TSP', 'Roth TSP']:
+                continue
 
             if row['header'] in special_calculations:
                 row[next_month] = special_calculations[row['header']](budget, next_month)

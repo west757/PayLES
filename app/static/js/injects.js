@@ -192,7 +192,7 @@ function validateInject({ mode, header, value }) {
 
     if (mode === 'custom') {
         const customRows = (window.CONFIG.budget || []).filter(r => r.modal === 'inject');
-        const reservedHeaders = (window.CONFIG.headerData || []).map(h => h.header.toLowerCase());
+        const reservedHeaders = (window.CONFIG.headers || []).map(h => h.header.toLowerCase());
 
         if (customRows.length >= window.CONFIG.MAX_CUSTOM_ROWS) {
             showToast('Maximum number of custom rows reached. Cannot have more than ' + window.CONFIG.MAX_CUSTOM_ROWS + ' custom rows.');
@@ -277,10 +277,10 @@ function populateTemplateDropdown(rowType) {
 
 
 function getTemplateRows(rowType) {
-    const headerData = window.CONFIG.headerData || [];
+    const headers = window.CONFIG.headers || [];
     const inBudget = window.CONFIG.budget ? window.CONFIG.budget.map(r => r.header) : [];
 
-    let subset = headerData.filter(row => {
+    let subset = headers.filter(row => {
         if (rowType === 'e') {
             return row.type === 'e';
         } else if (rowType === 'd') {

@@ -11,11 +11,57 @@ from app.utils import (
 # calculation functions
 # =========================
 
+def calculate_trad_roth_tsp(budget, next_month):
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+    tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
+    trad_total = 0.00
+    roth_total = 0.00
+
+    specialty_rows = [row['header'] for row in budget if row.get('modal') == 'specialty' and row.get('sign') == 1]
+    incentive_rows = [row['header'] for row in budget if row.get('modal') == 'incentive' and row.get('sign') == 1]
+    bonus_rows = [row['header'] for row in budget if row.get('modal') == 'bonus' and row.get('sign') == 1]
+
+    # Helper to get value from budget for a header
+    def get_value(header):
+        row = next((r for r in budget if r['header'] == header), None)
+        return row.get(next_month, 0) if row and next_month in row else 0.00
+
+    for _, tsp_row in tsp_rows.iterrows():
+        tsp_var = tsp_row['header']
+        rate = get_value(tsp_var)
+
+        if rate > 0:
+            if 'Base' in tsp_var:
+                total = get_value('Base Pay')
+            elif 'Specialty' in tsp_var:
+                total = sum(get_value(h) for h in specialty_rows)
+            elif 'Incentive' in tsp_var:
+                total = sum(get_value(h) for h in incentive_rows)
+            elif 'Bonus' in tsp_var:
+                total = sum(get_value(h) for h in bonus_rows)
+            else:
+                total = 0.00
+
+            value = total * rate / 100
+
+            if tsp_var.startswith("Trad"):
+                trad_total += value
+            elif tsp_var.startswith("Roth"):
+                roth_total += value
+
+    for row in budget:
+        if row['header'] == 'Traditional TSP':
+            row[next_month] = -round(trad_total, 2)
+        elif row['header'] == 'Roth TSP':
+            row[next_month] = -round(roth_total, 2)
+    
+    return budget
+
+
 def calculate_taxable_income(VARIABLE_TEMPLATE=None, budget=None, month=None, init=False):
     taxable = 0.00
     nontaxable = 0.00
 
-    # Find Combat Zone value
     combat_zone_row = next((row for row in budget if row['header'] == "Combat Zone"), None)
     combat_zone = combat_zone_row[month] if combat_zone_row and month in combat_zone_row else "No"
 
@@ -31,6 +77,10 @@ def calculate_taxable_income(VARIABLE_TEMPLATE=None, budget=None, month=None, in
                     taxable += value
                 else:
                     nontaxable += value
+
+    trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
+    roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
+    taxable += (trad_tsp_row[month] + roth_tsp_row[month])
 
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
@@ -104,10 +154,9 @@ def calculate_difference(VARIABLE_TEMPLATE=None, budget=None, next_month=None, i
     else:
         for row in budget:
             if row['header'] == 'Difference':
-                if net_pay_row and prev_month in net_pay_row and next_month in net_pay_row:
-                    row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
-                else:
-                    row[next_month] = 0.00
+                print("month ", prev_month, " net pay: ", net_pay_row[prev_month])
+                print("current month net pay: ", next_month, " net pay: ", net_pay_row[next_month])
+                row[next_month] = round(net_pay_row[next_month] - net_pay_row[prev_month], 2)
 
     return budget
 
@@ -164,17 +213,16 @@ def calculate_base_pay(budget, next_month):
     months_in_service = int(months_row[next_month])
 
     pay_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
+    month_cols = [int(col) * 12 for col in pay_row.columns[1:]]
 
-    month_cols = []
-    for col in pay_row.columns:
-        if col != "grade":
-            month_cols.append(int(col) * 12)
-    month_cols.sort()
+    idx = 0
+    for i, m in enumerate(month_cols):
+        if months_in_service < m:
+            idx = i - 1 if i > 0 else 0
+            break
 
-    idx = bisect_right(month_cols, months_in_service) - 1
-    selected_month_num = str(month_cols[idx])
-
-    base_pay = pay_row[selected_month_num].iloc[0]
+    selected_col = pay_row.columns[idx + 1]
+    base_pay = pay_row[selected_col].iloc[0]
     return round(base_pay, 2)
 
 
@@ -309,43 +357,3 @@ def calculate_state_taxes(budget, next_month):
     tax = tax / 12
     return -round(tax, 2)
 
-
-def calculate_trad_roth_tsp(budget, next_month):
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-    tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
-    trad_total = 0.00
-    roth_total = 0.00
-
-    specialty_rows = [row['header'] for row in budget if row.get('modal') == 'specialty' and row.get('sign') == 1]
-    incentive_rows = [row['header'] for row in budget if row.get('modal') == 'incentive' and row.get('sign') == 1]
-    bonus_rows = [row['header'] for row in budget if row.get('modal') == 'bonus' and row.get('sign') == 1]
-
-    # Helper to get value from budget for a header
-    def get_value(header):
-        row = next((r for r in budget if r['header'] == header), None)
-        return row.get(next_month, 0) if row and next_month in row else 0.00
-
-    for _, tsp_row in tsp_rows.iterrows():
-        tsp_var = tsp_row['header']
-        rate = get_value(tsp_var)
-
-        if rate > 0:
-            if 'Base' in tsp_var:
-                total = get_value('Base Pay')
-            elif 'Specialty' in tsp_var:
-                total = sum(get_value(h) for h in specialty_rows)
-            elif 'Incentive' in tsp_var:
-                total = sum(get_value(h) for h in incentive_rows)
-            elif 'Bonus' in tsp_var:
-                total = sum(get_value(h) for h in bonus_rows)
-            else:
-                total = 0.00
-
-            value = total * rate / 100
-
-            if tsp_var.startswith("Trad"):
-                trad_total += value
-            elif tsp_var.startswith("Roth"):
-                roth_total += value
-
-    return -round(trad_total, 2), -round(roth_total, 2)

@@ -79,11 +79,9 @@ def validate_home_of_record(home_of_record):
     return "Not Found"
 
 
-def get_month_headers(budget):
-    difference_row = next((row for row in budget if row.get('header') == 'Difference'), None)
-    if difference_row:
-        return [key for key in difference_row.keys() if key not in ('header', 'type', 'sign', 'field', 'tax', 'editable', 'modal')]
-    return []
+def get_months(budget):
+    metadata_keys = set(['header']) | set(flask_app.config['ROW_METADATA'])
+    return [key for key in budget[0].keys() if key not in metadata_keys]
 
 
 def add_recommendations(budget, month):
