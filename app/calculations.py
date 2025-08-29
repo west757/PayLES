@@ -161,14 +161,14 @@ def calculate_base_pay(budget, next_month):
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     months_row = next((row for row in budget if row['header'] == "Months in Service"), None)
     grade = grade_row.get(next_month) if grade_row else "Not Found"
-    months_in_service = int(months_row.get(next_month, 0)) if months_row else 0
+    months_in_service = int(months_row[next_month])
 
     pay_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
 
     month_cols = []
     for col in pay_row.columns:
         if col != "grade":
-            month_cols.append(int(col))
+            month_cols.append(int(col) * 12)
     month_cols.sort()
 
     idx = bisect_right(month_cols, months_in_service) - 1

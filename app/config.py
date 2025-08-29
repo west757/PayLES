@@ -34,14 +34,11 @@ class Config:
     FICA_MEDICARE_TAX_RATE = 0.0145
     TRAD_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
-    TSP_CONTRIBUTION_LIMIT = 23500
+    TSP_CONTRIBUTION_LIMIT = 23500.00
     BAS_AMOUNT = [465.77, 320.78]
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-    GRADES = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 
-              'W1', 'W2', 'W3', 'W4', 'W5', 'O1E', 'O2E', 'O3E',
-              'O1', 'O2', 'O3', 'O4', 'O5', 'O6', 'O7', 'O8', 'O9']
     TAX_FILING_TYPES_DEDUCTIONS = {
         "Single": 15000,
         "Married": 30000,
@@ -59,14 +56,21 @@ class Config:
 
 
     #load static files
+    dtype_pay_active = {'grade': str}
+    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
+        dtype_pay_active[str(i)] = float
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
+        dtype=dtype_pay_active
+    )
+    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
+    GRADES = list(reversed(PAY_ACTIVE['grade'].tolist()))
+
     dtype_bah = {'mha': str}
     for grade in GRADES:
         dtype_bah[grade] = int
-
     BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv",
         dtype=dtype_bah
     )
-
     BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv",
         dtype=dtype_bah
     )
@@ -126,9 +130,6 @@ class Config:
             'zip_code': str,
         }
     )
-
-    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv")
-    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
 
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={

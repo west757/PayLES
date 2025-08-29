@@ -110,7 +110,7 @@ def add_recommendations(budget, month):
             'contributions.</div>'
         )
 
-    # State income tax recommendation
+    # state income tax recommendation
     home_of_record = next((row[month] for row in budget if row.get('header', '') == 'Home of Record'), '')
     mha = next((row[month] for row in budget if row.get('header', '') == 'MHA'), '')
     hor_row = None
