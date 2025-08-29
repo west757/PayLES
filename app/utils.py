@@ -38,11 +38,12 @@ def validate_file(file):
     return True, ""
 
 
-def add_row(template, header, value, month):
+def add_row(template, header, month, value):
+    ROW_METADATA = flask_app.config['ROW_METADATA']
     row_data = template[template['header'] == header]
     metadata = {}
-    
-    for col in flask_app.config['ROW_METADATA']:
+
+    for col in ROW_METADATA:
         if col in row_data.columns:
             metadata[col] = row_data.iloc[0][col]
 
@@ -89,7 +90,7 @@ def add_recommendations(budget, month):
 
     # SGLI recommendation
     sgli_rate = next((row[month] for row in budget if row.get('header', '') == 'SGLI Rate'), 0)
-    if float(sgli_rate) == 0:
+    if sgli_rate == 0:
         recs.append(
             '<div class="rec-item"><b>SGLI Coverage:</b> You currently have no SGLI coverage. It is recommended to have at ' \
             'least the minimum amount of SGLI coverage, which is a $3.50 monthly premium for $50,000. This is due to also ' \
@@ -100,7 +101,7 @@ def add_recommendations(budget, month):
     months_in_service = next((row[month] for row in budget if row.get('header', '') == 'Months in Service'), 0)
     trad_tsp = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
     roth_tsp = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
-    if int(months_in_service) >= 24 and (int(trad_tsp) + int(roth_tsp)) < 5:
+    if months_in_service >= 24 and (trad_tsp + roth_tsp) < 5:
         recs.append(
             '<div class="rec-item"><b>TSP Base Rate:</b> You are fully vested in the Thrift Savings Plan, however are not ' \
             'currently taking advantage of the service agency automatic matching up to 5%. It is recommended to increase ' \

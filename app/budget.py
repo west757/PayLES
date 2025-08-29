@@ -7,7 +7,7 @@ from app.utils import (
     add_row,
     validate_calculate_zip_mha,
     validate_home_of_record,
-    get_month_headers,
+    get_months,
 )
 from app.calculations import (
     calculate_taxable_income,
@@ -32,22 +32,22 @@ from app.calculations import (
 
 def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     try:
-        initial_month = les_text[8][3]
-        if initial_month not in flask_app.config['MONTHS_SHORT']:
-            raise ValueError(f"Error: les_text[8][3], '{initial_month}', is not in MONTHS_SHORT")
+        init_month = les_text[8][3]
+        if init_month not in flask_app.config['MONTHS_SHORT']:
+            raise ValueError(f"Error: les_text[8][3], '{init_month}', is not in MONTHS_SHORT")
     except Exception as e:
         raise Exception(f"Error determining initial month: {e}")
 
     budget = []
-    budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, initial_month)
-    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, initial_month)
-    budget = calculate_taxable_income(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
-    budget = calculate_total_taxes(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
-    budget = calculate_gross_net_pay(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, month=initial_month, init=True)
-    budget = calculate_difference(VARIABLE_TEMPLATE=VARIABLE_TEMPLATE, budget=budget, next_month=initial_month, init=True)
-    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month)
+    budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, init_month)
+    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, init_month)
+    budget = calculate_taxable_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_total_taxes(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_gross_net_pay(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, init_month)
 
-    return budget, initial_month
+    return budget, init_month
 
 
 def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
@@ -55,7 +55,7 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
         year = int('20' + les_text[8][4])
     except Exception:
         year = 0
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Year', year, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Year', month, year))
 
     try:
         pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
@@ -63,32 +63,32 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
         months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
     except Exception:
         months_in_service = 0
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', months_in_service, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', month, months_in_service))
 
     try:
         grade = les_text[2][1]
     except Exception:
         grade = "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Grade', grade, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Grade', month, grade))
 
     try:
         zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
     except Exception:
         zip_code, military_housing_area = "Not Found", "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', zip_code, month))
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', military_housing_area, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', month, zip_code))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', month, military_housing_area))
 
     try:
         home_of_record = validate_home_of_record(les_text[39][1])
     except Exception:
         home_of_record = "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', home_of_record, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', month, home_of_record))
 
     try:
         dependents = int(les_text[53][1])
     except Exception:
         dependents = 0
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Dependents', dependents, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Dependents', month, dependents))
 
     try:
         status = les_text[24][1]
@@ -102,7 +102,7 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
             federal_filing_status = "Not Found"
     except Exception:
         federal_filing_status = "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', federal_filing_status, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', month, federal_filing_status))
 
     try:
         status = les_text[42][1]
@@ -114,7 +114,7 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
             state_filing_status = "Not Found"
     except Exception:
         state_filing_status = "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', state_filing_status, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', month, state_filing_status))
 
     try:
         sgli_coverage = ""
@@ -132,28 +132,28 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
             
     except Exception:
         sgli_coverage = "Not Found"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', sgli_coverage, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', month, sgli_coverage))
 
     combat_zone = "No"
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', combat_zone, month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', month, combat_zone))
 
-    tsp_rows = [
-        ("Trad TSP Base Rate", 60, 3),
-        ("Trad TSP Specialty Rate", 62, 3),
-        ("Trad TSP Incentive Rate", 64, 3),
-        ("Trad TSP Bonus Rate", 66, 3),
-        ("Roth TSP Base Rate", 69, 3),
-        ("Roth TSP Specialty Rate", 71, 3),
-        ("Roth TSP Incentive Rate", 73, 3),
-        ("Roth TSP Bonus Rate", 75, 3),
+    tsp_rate_rows = [
+        ("Trad TSP Base Rate", 60),
+        ("Trad TSP Specialty Rate", 62),
+        ("Trad TSP Incentive Rate", 64),
+        ("Trad TSP Bonus Rate", 66),
+        ("Roth TSP Base Rate", 69),
+        ("Roth TSP Specialty Rate", 71),
+        ("Roth TSP Incentive Rate", 73),
+        ("Roth TSP Bonus Rate", 75),
     ]
 
-    for header, idx, idx2 in tsp_rows:
+    for header, idx in tsp_rate_rows:
         try:
-            value = int(les_text[idx][idx2])
+            value = int(les_text[idx][3])
         except Exception:
             value = 0
-        budget.append(add_row(VARIABLE_TEMPLATE, header, value, month))
+        budget.append(add_row(VARIABLE_TEMPLATE, header, month, value))
 
     return budget
 
@@ -175,14 +175,13 @@ def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, month):
         lesname = row['lesname']
 
         if lesname in ent_ded_alt_dict:
-            value = sign * ent_ded_alt_dict[lesname]
-            value = round(value, 2)
+            value = round(sign * ent_ded_alt_dict[lesname], 2)
         elif required:
             value = 0.00
         else:
             continue
 
-        budget.append(add_row(BUDGET_TEMPLATE, header, value, month))
+        budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
 
     return budget
 
@@ -224,32 +223,32 @@ def parse_pay_section(les_text):
     return results
 
 
-def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
+def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, month):
     remarks = les_text[96]
     remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
 
     ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
     ytd_entitlement = float(ent_match.group(1)) if ent_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Entitlements', ytd_entitlement, initial_month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Entitlements', month, ytd_entitlement))
 
     ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
     ytd_deduction = -float(ded_match.group(1)) if ded_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', ytd_deduction, initial_month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', month, ytd_deduction))
 
     try:
         ytd_tsp = float(les_text[78][2])
     except Exception:
         ytd_tsp = 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP Contribution', ytd_tsp, initial_month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP Contribution', month, ytd_tsp))
 
     try:
         ytd_charity = float(les_text[56][2])
     except Exception:
         ytd_charity = 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', ytd_charity, initial_month))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', month, ytd_charity))
 
-    ytd_net_pay = ytd_entitlement + ytd_deduction
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', ytd_net_pay, initial_month))
+    ytd_net_pay = round(ytd_entitlement + ytd_deduction, 2)
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', month, ytd_net_pay))
 
     return budget
 
@@ -259,105 +258,118 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, initial_month):
 # update budget months and variables
 # =========================
 
-def remove_month(budget, month):
+def remove_months(budget, months_num):
+    months = get_months(budget)
+    months_to_remove = months[months_num:]
+
     for row in budget:
-        if month in row:
-            del row[month]
+        for month in months_to_remove:
+            if month in row:
+                del row[month]
+    months = months[:months_num]
+
+    return budget, months
 
 
-def build_months(all_rows, budget, prev_month, months_num, row_header=None, col_month=None, value=None, repeat=False):
-    print("previous month: ", prev_month)
+def add_months(budget, latest_month, months_num):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    month_headers = get_month_headers(budget)
-    month_idx_headers = month_headers.index(prev_month)
-    month_idx_short = MONTHS_SHORT.index(prev_month)
+    months = get_months(budget)
+    current_num = len(months)
+    months_to_add = months_num - current_num
+    latest_month_idx = MONTHS_SHORT.index(latest_month)
 
-    for i in range(months_num):
-        if all_rows:
-            month_idx_short = (month_idx_short + 1) % 12
-            next_month = MONTHS_SHORT[month_idx_short]
-            month_headers.append(next_month)
-        else:
-            if month_idx_headers + i >= len(month_headers):
-                break
-            next_month = month_headers[month_idx_headers + i]
+    for i in range(months_to_add):
+        working_month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
+        months.append(working_month)
+        budget = build_month(budget, months[-2], working_month)  # months[-2] is previous month
 
-        update_variables(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
-        update_ent_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
-        calculate_trad_roth_tsp(budget, next_month)
-        calculate_taxable_income(budget=budget, month=next_month)
-        update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
-        calculate_total_taxes(budget=budget, month=next_month)
-        calculate_gross_net_pay(budget=budget, month=next_month)
-        calculate_difference(budget=budget, next_month=next_month, prev_month=prev_month)
-        calculate_ytd_rows(budget=budget, next_month=next_month, prev_month=prev_month)
-
-        prev_month = next_month
-
-    return budget, month_headers
+    return budget, months
 
 
-def update_variables(all_rows, budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_months(budget, months, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
+    start_idx = months.index(cell_month)
+
+    for i in range(start_idx, len(months)):
+        prev_month = months[i - 1]
+        working_month = months[i]
+        budget = build_month(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+
+    return budget
+
+
+def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
+    update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    calculate_trad_roth_tsp(budget, working_month)
+    calculate_taxable_income(budget, working_month)
+    update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    calculate_total_taxes(budget, working_month)
+    calculate_gross_net_pay(budget, working_month)
+    calculate_difference(budget, prev_month, working_month)
+    calculate_ytd_rows(budget, prev_month, working_month)
+    return budget
+
+
+def update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
     for row in budget:
-        if row.get('type') in ('v', 't'):
+        if row.get('type') not in ('v', 't'):
+            continue
 
-            if row['header'] == "Military Housing Area":
-                zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
-                zip_code = zip_row.get(next_month)
-                _, military_housing_area = validate_calculate_zip_mha(zip_code)
-                row[next_month] = military_housing_area
-                continue
+        prev_value = row.get(prev_month)
 
-            if not all_rows:
-                if row_header and (row['header'] == row_header):
-                    if next_month == col_month or repeat:
-                        row[next_month] = value
-                continue
+        if row['header'] == "Year":
+            row[working_month] = prev_value + 1 if working_month == "JAN" else prev_value
 
-            prev_value = row.get(prev_month)
-            if row['header'] == "Year":
-                row[next_month] = prev_value + 1 if next_month == "JAN" else prev_value
-            elif row['header'] == "Months in Service":
-                row[next_month] = prev_value + 1
+        elif row['header'] == "Months in Service":
+            row[working_month] = prev_value + 1
+
+        elif row['header'] == "Military Housing Area":
+            zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
+            zip_code = zip_row.get(working_month)
+            _, military_housing_area = validate_calculate_zip_mha(zip_code)
+            row[working_month] = military_housing_area
+
+        elif (
+            (row['header'].startswith("Trad TSP") or row['header'].startswith("Roth TSP")) and
+            any(x in row['header'] for x in ["Specialty Rate", "Incentive Rate", "Bonus Rate"])
+        ):
+            base_header = "Trad TSP Base Rate" if row['header'].startswith("Trad TSP") else "Roth TSP Base Rate"
+            base_row = next((r for r in budget if r['header'] == base_header), None)
+            if base_row[working_month] == 0:
+                row[working_month] = 0
             else:
-                row[next_month] = prev_value
+                row[working_month] = prev_value
 
-    # ensures specialty/incentive/bonus rates are zeroed out if base rate is zero
-    for base_header, specialty_headers in [
-        ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
-        ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
-    ]:
-        base_row = next((r for r in budget if r['header'] == base_header), None)
-        if base_row and base_row.get(next_month, 0) == 0:
-            for header in specialty_headers:
-                rate_row = next((r for r in budget if r['header'] == header), None)
-                if rate_row:
-                    rate_row[next_month] = 0
+        elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
+            row[working_month] = cell_value
+
+        else:
+            row[working_month] = prev_value
 
 
-def update_ent_rows(all_rows, budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
     special_calculations = {
         'Base Pay': calculate_base_pay,
         'BAS': calculate_bas,
         'BAH': calculate_bah,
     }
+    
     for row in budget:
         if row.get('sign') == 1:
             if row['header'] in special_calculations:
-                row[next_month] = special_calculations[row['header']](budget, next_month)
+                row[working_month] = special_calculations[row['header']](budget, working_month)
                 continue
 
-            if not all_rows:
-                if row_header and (row['header'] == row_header):
-                    if next_month == col_month or repeat:
-                        row[next_month] = value
+            elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
+                row[working_month] = cell_value
                 continue
 
-            prev_value = row.get(prev_month)
-            row[next_month] = prev_value
+            else:
+                prev_value = row.get(prev_month)
+                row[working_month] = prev_value
 
 
-def update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header, col_month, value, repeat):
+def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
         'FICA - Social Security': calculate_fica_social_security,
@@ -368,19 +380,17 @@ def update_ded_alt_rows(all_rows, budget, prev_month, next_month, row_header, co
 
     for row in budget:
         if row.get('sign') == -1:
-
-            if row['header'] in ['Traditional TSP', 'Roth TSP']:
-                continue
-
             if row['header'] in special_calculations:
-                row[next_month] = special_calculations[row['header']](budget, next_month)
+                row[working_month] = special_calculations[row['header']](budget, working_month)
                 continue
 
-            if not all_rows:
-                if row_header and (row['header'] == row_header):
-                    if next_month == col_month or repeat:
-                        row[next_month] = value
+            elif row['header'] in ['Traditional TSP', 'Roth TSP']:
                 continue
 
-            prev_value = row.get(prev_month)
-            row[next_month] = prev_value
+            elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
+                row[working_month] = cell_value
+                continue
+
+            else:
+                prev_value = row.get(prev_month)
+                row[working_month] = prev_value

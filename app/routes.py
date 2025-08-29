@@ -16,8 +16,9 @@ from app.les import (
 from app.budget import (
     build_budget,
     add_row,
-    remove_month,
-    build_months,
+    remove_months,
+    add_months,
+    update_months,
 )
 from app.forms import (
     HomeForm,
@@ -56,14 +57,14 @@ def submit_les():
     if valid:
         BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
         VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-        budget_headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-        variable_headers = flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-        headers = budget_headers + variable_headers
+        headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
 
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, initial_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=initial_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'] - 1)
-        recommendations = add_recommendations(budget, initial_month)
+        budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
+        
+        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+
+        recommendations = add_recommendations(budget, init_month)
 
         session['budget'] = budget
         session['headers'] = headers
@@ -86,7 +87,7 @@ def submit_les():
             'les_image': les_image,
             'rect_overlay': rect_overlay,
             'budget': convert_numpy_types(budget),
-            'month_headers': month_headers,
+            'months': months,
             'headers': headers,
             'recommendations': recommendations,
             'LES_REMARKS': LES_REMARKS,
@@ -101,14 +102,15 @@ def submit_les():
 @flask_app.route('/update_budget', methods=['POST'])
 def update_budget():
     budget = session.get('budget', [])
+    headers = session.get('headers', [])
     months = get_months(budget)
-    header_data = session.get('header_data', [])
-    row_header = request.form.get('row_header', '')
-    col_month = request.form.get('col_month', '')
-    value = request.form.get('value', 0)
-    repeat = request.form.get('repeat', False)
+    
+    cell_header = request.form.get('row_header', '')
+    cell_month = request.form.get('col_month', '')
+    cell_value = request.form.get('value', 0)
+    cell_repeat = request.form.get('repeat', False)
 
-    row = next((r for r in budget if r.get('header') == row_header), None)
+    row = next((r for r in budget if r.get('header') == cell_header), None)
     field = row.get('field')
 
     if field in ('int', int):
@@ -122,14 +124,7 @@ def update_budget():
         value = round(value, 2)
     repeat = str(repeat).lower() == "true"
 
-    print("col_month: ", col_month)
-    print("months: ", months)
-
-    idx = months.index(col_month)
-    print("idx: ", idx)
-    prev_month = months[idx - 1]
-    months_num = len(months) - idx
-    budget, months = build_months(all_rows=False, budget=budget, prev_month=prev_month, months_num=months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+    budget, months = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
 
     session['budget'] = budget
 
@@ -139,32 +134,26 @@ def update_budget():
     context = {
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
-        'month_headers': months,
-        'header_data': header_data,
+        'months': months,
+        'headers': headers,
     }
     return render_template('budget.html', **context)
 
 
 @csrf.exempt
-@flask_app.route('/update_months', methods=['POST'])
-def update_months():
+@flask_app.route('/change_months', methods=['POST'])
+def change_months():
     budget = session.get('budget', [])
+    headers = session.get('headers', [])
     months = get_months(budget)
-    header_data = session.get('header_data', [])
-    next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
-    prev_months_num = len(month_headers)
 
-    if next_months_num < prev_months_num:
-        months_to_remove = month_headers[next_months_num:]
-        for month in months_to_remove:
-            remove_month(budget, month)
-        month_headers = month_headers[:next_months_num]
+    new_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
+    old_months_num = len(months)
 
-    elif next_months_num > prev_months_num:
-        months_num = next_months_num - prev_months_num
-        prev_month = month_headers[-1]
-
-        budget, month_headers = build_months(all_rows=True, budget=budget, prev_month=prev_month, months_num=months_num)
+    if new_months_num < old_months_num:
+        budget, months = remove_months(budget, new_months_num)
+    elif new_months_num > old_months_num:
+        budget, months = add_months(budget, latest_month=months[-1], months_num=new_months_num)
 
     session['budget'] = budget
 
@@ -174,8 +163,8 @@ def update_months():
     context = {
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
-        'month_headers': month_headers,
-        'header_data': header_data,
+        'months': months,
+        'headers': headers,
     }
     return render_template('budget.html', **context)
 
@@ -184,35 +173,35 @@ def update_months():
 @flask_app.route('/add_injects', methods=['POST'])
 def add_injects():
     budget = session.get('budget', [])
+    headers = session.get('headers', [])
     months = get_months(budget)
-    header_data = session.get('header_data', [])
-    method = request.form.get('method', '')
-    row_type = request.form.get('row_type', '')
-    header = request.form.get('header', '').strip()
-    value = request.form.get('value', '0').strip()
-    tax = request.form.get('tax', 'false').lower() == 'true'
-    initial_month = months[0]
 
-    if row_type == 'd' or row_type == 'a':
+    inject_method = request.form.get('method', '')
+    inject_type = request.form.get('type', '')
+    inject_header = request.form.get('header', '').strip()
+    inject_value = request.form.get('value', '0').strip()
+    inject_tax = request.form.get('tax', 'false').lower() == 'true'
+    init_month = months[0]
+
+    if inject_type == 'd' or inject_type == 'a':
         sign = -1
     else:
         sign = 1
 
     try:
-        value = float(value)
+        inject_value = float(inject_value)
     except ValueError:
-        value = 0
-    value = round(value, 2)
-    value *= sign
+        inject_value = 0
+    inject_value = round(sign * inject_value, 2)
 
     insert_idx = len(budget)
 
-    if method == 'template':
-        if row_type == 'e':
+    if inject_method == 'template':
+        if inject_type == 'e':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
-        elif row_type == 'd':
+        elif inject_type == 'd':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
-        elif row_type == 'a':
+        elif inject_type == 'a':
             a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
             if a_indices:
                 insert_idx = max(a_indices) + 1
@@ -220,12 +209,12 @@ def add_injects():
                 d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
                 insert_idx = max(d_indices, default=-1) + 1
 
-        row = add_row(flask_app.config['BUDGET_TEMPLATE'], header, 0.00, initial_month)
-        for idx, m in enumerate(month_headers[1:]):
-            row[m] = value
-        budget.insert(insert_idx, row)
+        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, 0.00, init_month)
+        for idx, m in enumerate(months[1:]):
+            inject_row[m] = inject_value
+        budget.insert(insert_idx, inject_row)
 
-    elif method == 'custom':
+    elif inject_method == 'custom':
         c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
         a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
         d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
@@ -240,44 +229,35 @@ def add_injects():
         if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
             return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
 
-        row = {'header': header}
+        inject_row = {'header': inject_header}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
-                row['type'] = 'c'
+                inject_row['type'] = 'c'
             elif meta == 'sign':
-                row['sign'] = sign
+                inject_row['sign'] = sign
             elif meta == 'field':
-                row['field'] = 'float'
+                inject_row['field'] = 'float'
             elif meta == 'tax':
-                row['tax'] = tax
+                inject_row['tax'] = inject_tax
             elif meta == 'editable':
-                row['editable'] = True
+                inject_row['editable'] = True
             elif meta == 'modal':
-                row['modal'] = ''
+                inject_row['modal'] = ''
 
-        for idx, m in enumerate(month_headers):
-            row[m] = 0.0 if idx == 0 else value
-        budget.insert(insert_idx, row)
+        for idx, m in enumerate(months):
+            inject_row[m] = 0.00 if idx == 0 else inject_value
+        budget.insert(insert_idx, inject_row)
 
-        if not any(h['header'].lower() == header.lower() for h in header_data):
-            header_data.append({
-                'header': header,
+        if not any(h['header'].lower() == inject_header.lower() for h in headers):
+            headers.append({
+                'header': inject_header,
                 'type': 'c',
                 'tooltip': 'Custom row added by user',
             })
     else:
         return jsonify({'message': 'Invalid method.'}), 400
 
-    budget, month_headers = build_months(
-        all_rows=False,
-        budget=budget,
-        prev_month=month_headers[1],
-        months_num=len(month_headers),
-        row_header=header,
-        col_month=month_headers[1],
-        value=value,
-        repeat=True
-    )
+    budget = update_months(budget, months)
 
     session['budget'] = budget
     session['headers'] = headers
@@ -290,7 +270,7 @@ def add_injects():
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'months': months,
-        'header_data': header_data,
+        'headers': headers,
     }
     return render_template('budget.html', **context)
 
@@ -298,18 +278,18 @@ def add_injects():
 @csrf.exempt
 @flask_app.route('/remove_row', methods=['POST'])
 def remove_row():
-    header = request.form.get('header', '').strip()
     budget = session.get('budget', [])
+    headers = session.get('headers', [])
     months = get_months(budget)
-    header_data = session.get('header_data', [])
+
+    header = request.form.get('header', '')
 
     row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
     budget = [r for r in budget if r.get('header').lower() != header.lower()]
-    if row and row.get('type') == 'c':
-        header_data = [h for h in header_data if h.get('header').lower() != header.lower()]
+    if row.get('type') == 'c':
+        headers = [h for h in headers if h.get('header').lower() != header.lower()]
 
-    budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=month_headers[1], months_num=len(month_headers), 
-                                         row_header="", col_month="", value=0, repeat=True)
+    budget = update_months(budget, months)
 
     session['budget'] = budget
     session['headers'] = headers

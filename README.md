@@ -44,6 +44,7 @@ long-term:
 - normalize css: https://necolas.github.io/normalize.css/
 - use python cProfile or line_profiler to find bottlenecks
 - instructions for self-host
+- definitions/terms/abbreviations table
 
 
 
