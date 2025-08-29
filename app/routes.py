@@ -6,7 +6,7 @@ from app.utils import (
     load_json,
     convert_numpy_types,
     validate_file,
-    get_month_headers,
+    get_months,
     add_recommendations,
 )
 from app.les import (
@@ -56,9 +56,9 @@ def submit_les():
     if valid:
         BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
         VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-        budget_header_list = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-        variable_header_list = flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-        header_data = budget_header_list + variable_header_list
+        budget_headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+        variable_headers = flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+        headers = budget_headers + variable_headers
 
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, initial_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
@@ -66,14 +66,14 @@ def submit_les():
         recommendations = add_recommendations(budget, initial_month)
 
         session['budget'] = budget
-        session['header_data'] = header_data
+        session['headers'] = headers
 
         LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
         MODALS = load_json(flask_app.config['MODALS_JSON'])
 
         config_js = {
             'budget': convert_numpy_types(budget),
-            'headerData': header_data,
+            'headers': headers,
             'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
             'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
             'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
@@ -87,7 +87,7 @@ def submit_les():
             'rect_overlay': rect_overlay,
             'budget': convert_numpy_types(budget),
             'month_headers': month_headers,
-            'header_data': header_data,
+            'headers': headers,
             'recommendations': recommendations,
             'LES_REMARKS': LES_REMARKS,
             'MODALS': MODALS,
@@ -101,7 +101,7 @@ def submit_les():
 @flask_app.route('/update_budget', methods=['POST'])
 def update_budget():
     budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
+    months = get_months(budget)
     header_data = session.get('header_data', [])
     row_header = request.form.get('row_header', '')
     col_month = request.form.get('col_month', '')
@@ -122,11 +122,14 @@ def update_budget():
         value = round(value, 2)
     repeat = str(repeat).lower() == "true"
 
-    if col_month in month_headers:
-        idx = month_headers.index(col_month)
-        months_num = len(month_headers) - idx
-        budget, month_headers = build_months(all_rows=False, budget=budget, prev_month=col_month, months_num=months_num, 
-                                             row_header=row_header, col_month=col_month, value=value, repeat=repeat)
+    print("col_month: ", col_month)
+    print("months: ", months)
+
+    idx = months.index(col_month)
+    print("idx: ", idx)
+    prev_month = months[idx - 1]
+    months_num = len(months) - idx
+    budget, months = build_months(all_rows=False, budget=budget, prev_month=prev_month, months_num=months_num, row_header=row_header, col_month=col_month, value=value, repeat=repeat)
 
     session['budget'] = budget
 
@@ -136,7 +139,7 @@ def update_budget():
     context = {
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
-        'month_headers': month_headers,
+        'month_headers': months,
         'header_data': header_data,
     }
     return render_template('budget.html', **context)
@@ -146,7 +149,7 @@ def update_budget():
 @flask_app.route('/update_months', methods=['POST'])
 def update_months():
     budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
+    months = get_months(budget)
     header_data = session.get('header_data', [])
     next_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
     prev_months_num = len(month_headers)
@@ -181,14 +184,14 @@ def update_months():
 @flask_app.route('/add_injects', methods=['POST'])
 def add_injects():
     budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
+    months = get_months(budget)
     header_data = session.get('header_data', [])
     method = request.form.get('method', '')
     row_type = request.form.get('row_type', '')
     header = request.form.get('header', '').strip()
     value = request.form.get('value', '0').strip()
     tax = request.form.get('tax', 'false').lower() == 'true'
-    initial_month = month_headers[0]
+    initial_month = months[0]
 
     if row_type == 'd' or row_type == 'a':
         sign = -1
@@ -277,16 +280,16 @@ def add_injects():
     )
 
     session['budget'] = budget
-    session['header_data'] = header_data
+    session['headers'] = headers
 
     config_js = {
         'budget': convert_numpy_types(budget),
-        'headerData': header_data,
+        'headers': headers,
     }
     context = {
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
-        'month_headers': month_headers,
+        'months': months,
         'header_data': header_data,
     }
     return render_template('budget.html', **context)
@@ -297,7 +300,7 @@ def add_injects():
 def remove_row():
     header = request.form.get('header', '').strip()
     budget = session.get('budget', [])
-    month_headers = get_month_headers(budget)
+    months = get_months(budget)
     header_data = session.get('header_data', [])
 
     row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
@@ -309,17 +312,17 @@ def remove_row():
                                          row_header="", col_month="", value=0, repeat=True)
 
     session['budget'] = budget
-    session['header_data'] = header_data
+    session['headers'] = headers
 
     config_js = {
         'budget': convert_numpy_types(budget),
-        'headerData': header_data,
+        'headers': headers,
     }
     context = {
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
-        'month_headers': month_headers,
-        'header_data': header_data,
+        'months': months,
+        'headers': headers,
     }
     return render_template('budget.html', **context)
 
