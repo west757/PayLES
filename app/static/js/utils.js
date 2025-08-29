@@ -250,11 +250,11 @@ function disableTSPRateButtons() {
 
         tradRows.forEach(row => {
             const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            btn.disabled = (parseInt(tradBase, 10) === 0);
+            if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
         });
         rothRows.forEach(row => {
             const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            btn.disabled = (parseInt(rothBase, 10) === 0);
+            if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
         });
     });
 }

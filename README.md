@@ -11,6 +11,8 @@ short-term:
 - get combat zone from les
 - start without uploading les
 - add charity to custom row
+- deduct tsp before calculating taxes
+- tsp rate maxes change depending on other rows
 
 mid-term:
 - instructions page and overlay on example les
@@ -36,7 +38,7 @@ long-term:
 - rework resources, maybe include tags and search
 - pdf export option
 - joint spouse with two LES's
-- simplify capturing sgli rate
+- simplify capturing sgli rate and remarks
 - create unit tests
 - check mobile use
 - minify style.css and script.js when pushed into a production environment
