@@ -32,14 +32,14 @@
         <thead>
         <tr>
             <th></th>
-            {% for month in month_headers %}
+            {% for month in months %}
             <th>{{ month }}</th>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
         {% for row in budget %}
-            {% set row_meta = header_data | selectattr('header', 'equalto', row.header) | list | first %}
+            {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
             {% set next_row = budget[loop.index] if not loop.last else None %}
             {% set section_break = false %}
 
@@ -86,7 +86,7 @@
                     </td>
                 {% endif %}
                 
-                {% for month in month_headers %}
+                {% for month in months %}
                     {% if row.editable and not loop.first %}
                         <td class="cell">
                             <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}">

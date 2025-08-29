@@ -50,7 +50,7 @@ function attachInjectModalListeners() {
             swap: 'innerHTML',
             values: {
                 method: 'template',
-                row_type: selectedRowType,
+                type: selectedRowType,
                 header: header,
                 value: value
             }
@@ -71,7 +71,7 @@ function attachInjectModalListeners() {
             swap: 'innerHTML',
             values: {
                 method: 'custom',
-                row_type: selectedRowType,
+                type: selectedRowType,
                 header: header,
                 value: value,
                 tax: tax

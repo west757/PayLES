@@ -1,7 +1,3 @@
-{% set show_all_variables = session.get('show_all_variables', False) %}
-{% set highlight_changes = session.get('highlight_changes', False) %}
-{% set show_all_options = session.get('show_all_options', False) %}
-
 <div id="content" hx-swap-oob="true">
     <div id="budget-settings">
         <div id="budget">
@@ -20,9 +16,9 @@
                     <tr>
                         <td>
                             <label for="months-num-dropdown">Months Displayed:</label>
-                            <select id="months-num-dropdown" name="months_num" hx-post="/update_months" hx-target="#budget" hx-swap="innerHTML">
+                            <select id="months-num-dropdown" name="months_num" hx-post="/change_months" hx-target="#budget" hx-swap="innerHTML">
                                 {% for x in range(2, 13) %}
-                                    <option value="{{x}}" {% if x==month_headers|length %} selected {% endif %}>{{x}}</option>
+                                    <option value="{{x}}" {% if x==months|length %} selected {% endif %}>{{x}}</option>
                                 {% endfor %}
                             </select>
                         </td>
