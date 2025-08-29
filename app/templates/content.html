@@ -197,7 +197,7 @@
                 <div id="inject-type-method">
                     <!-- row type radio buttons -->
                     <div id="inject-type">
-                        <span>Row Type:</span>
+                        <span class="inject-span">Row Type:</span>
                         <div class="inject-radio-group">
                             <label>
                                 <input id="inject-type-entitlement" type="radio" name="row-type" value="e" >
@@ -216,7 +216,7 @@
 
                     <!-- row method radio buttons -->
                     <div id="inject-method">
-                        <span>Method:</span>
+                        <span class="inject-span">Method:</span>
                         <div class="inject-radio-group">
                             <label>
                                 <input id="inject-method-template" type="radio" name="row-method" value="template">
@@ -261,6 +261,8 @@
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-custom-tax">Tax Purposes:</label>
                             <input id="inject-custom-tax" class="input-checkbox" type="checkbox">
+                            <span class="tax-tooltip" data-tooltip=
+                            "Indicates how the row is used for tax calculations. If an entitlement, sets whether the row is taxable or non-taxable income. If a deduction, sets the row as a tax added to total taxes.">?</span>
                         </div>
                         <div class="inject-template-custom-row">
                             <button id="inject-custom-button" class="button-solo">Add Row</button>

@@ -61,6 +61,13 @@ document.addEventListener('mousemove', function(e) {
             showTooltip(e, tooltipText);
         }
     }
+
+    if (e.target && e.target.classList && e.target.classList.contains('tax-tooltip')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
 });
 
 
@@ -79,6 +86,10 @@ document.addEventListener('mouseleave', function(e) {
     }
 
     if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
+        hideTooltip();
+    }
+
+    if (e.target && e.target.classList && e.target.classList.contains('tax-tooltip')) {
         hideTooltip();
     }
 }, true);

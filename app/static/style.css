@@ -169,7 +169,7 @@ footer {
 
 
 /* =========================
-   toasts
+   toasts and tooltips
    ========================= */
 
 #toast-container {
@@ -213,6 +213,17 @@ footer {
     to { opacity: 0; }
 }
 
+.tooltip {
+    background-color: var(--primary_dark_accent_color);
+    border-radius: 0.5rem;
+    color: var(--light_text_color);
+    display: none;
+    font-size: 0.85rem;
+    max-width: 28rem;
+    position: absolute;
+    padding: 0.25rem 0.5rem;
+    z-index: 3000;
+}
 
 /* =========================
    buttons
@@ -677,7 +688,7 @@ input[type=file] {
 }
 
 /* =========================
-   les image
+   les image and remarks
    ========================= */
 
 .rect-highlight {
@@ -690,18 +701,6 @@ input[type=file] {
 
 .rect-highlight:hover {
     background-color: rgba(var(--highlight-green-color-rgb), 0.5);
-}
-
-.tooltip {
-    background-color: var(--primary_dark_accent_color);
-    border-radius: 0.5rem;
-    color: var(--light_text_color);
-    display: none;
-    font-size: 0.85rem;
-    max-width: 28rem;
-    position: absolute;
-    padding: 0.25rem 0.5rem;
-    z-index: 1001;
 }
 
 #remarks {
@@ -815,7 +814,7 @@ input[type=file] {
     flex-direction: row;
 }
 
-#inject-grid span {
+.inject-span {
     text-align: right;
     display: inline-block;
     font-weight: bold;
@@ -875,6 +874,15 @@ input[type=file] {
     align-items: flex-start;
     justify-content: flex-start;
     word-break: break-word;
+}
+
+.tax-tooltip {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-size: 0.85rem;
+    margin: -0.35rem 0 0 0.25rem;
+    font-weight: bold;
 }
 
 
