@@ -173,8 +173,8 @@ def change_months():
 
 
 @csrf.exempt
-@flask_app.route('/add_injects', methods=['POST'])
-def add_injects():
+@flask_app.route('/add_inject', methods=['POST'])
+def add_inject():
     budget = session.get('budget', [])
     headers = session.get('headers', [])
     months = get_months(budget)

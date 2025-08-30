@@ -189,12 +189,25 @@
             <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Entitlement/Deduction/Allotment Row</h2>
 
-            <div id="inject-grid">
-                <div id="inject-type-method">
-                    <!-- row type radio buttons -->
-                    <div id="inject-type">
-                        <span class="inject-span">Row Type:</span>
-                        <div class="inject-radio-group">
+            <div class="modal-grid">
+                <div id="inject-method-type" class="modal-grid-column">
+                    <div class="modal-grid-column-section">
+                        <span class="modal-grid-span">Method:</span>
+                        <div class="modal-radio-group">
+                            <label>
+                                <input id="inject-method-template" type="radio" name="row-method" value="template">
+                                Choose From Template
+                            </label>
+                            <label>
+                                <input id="inject-method-custom" type="radio" name="row-method" value="custom">
+                                Create Custom Row
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="inject-template-types" class="modal-grid-column-section">
+                        <span class="modal-grid-span">Row Type:</span>
+                        <div class="modal-radio-group">
                             <label>
                                 <input id="inject-type-entitlement" type="radio" name="row-type" value="e" >
                                 Entitlement (+$)
@@ -210,17 +223,16 @@
                         </div>
                     </div>
 
-                    <!-- row method radio buttons -->
-                    <div id="inject-method">
-                        <span class="inject-span">Method:</span>
-                        <div class="inject-radio-group">
+                    <div id="inject-custom-types" class="modal-grid-column-section">
+                        <span class="modal-grid-span">Row Type:</span>
+                        <div class="modal-radio-group">
                             <label>
-                                <input id="inject-method-template" type="radio" name="row-method" value="template">
-                                Choose From Template
+                                <input id="inject-type-income" type="radio" name="row-type" value="e" >
+                                Income (+$)
                             </label>
                             <label>
-                                <input id="inject-method-custom" type="radio" name="row-method" value="custom">
-                                Create Custom Row
+                                <input id="inject-type-expense" type="radio" name="row-type" value="d">
+                                Expense (-$)
                             </label>
                         </div>
                     </div>

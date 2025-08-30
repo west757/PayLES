@@ -800,7 +800,9 @@ input[type=file] {
     border: 1px solid black;
 }
 
-#inject-grid {
+
+
+.modal-grid {
     align-items: flex-start;
     display: grid;
     grid-template-columns: 1fr 1.25fr 1fr;
@@ -808,26 +810,26 @@ input[type=file] {
     min-height: 10.75rem;
 }
 
-#inject-type-method {
+.modal-grid-column {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-#inject-type, #inject-method {
+.modal-grid-column-section {
     align-items: flex-start;
     display: flex;
     flex-direction: row;
 }
 
-.inject-span {
+.modal-grid-span {
     text-align: right;
     display: inline-block;
     font-weight: bold;
     min-width: 5rem;
 }
 
-.inject-radio-group {
+.modal-radio-group {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
