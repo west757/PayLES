@@ -340,6 +340,35 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
         }
     }
 
+    if (
+        rowHeader.includes('TSP Base Rate') ||
+        rowHeader.includes('Specialty Rate') ||
+        rowHeader.includes('Incentive Rate') ||
+        rowHeader.includes('Bonus Rate')
+    ) {
+        const month = currentEdit.colMonth;
+        let tradValue = 0, rothValue = 0;
+
+        if (rowHeader.startsWith('Trad')) {
+            tradValue = parseInt(value, 10);
+            if (rowHeader.includes('Base Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Base Rate', month), 10);
+            if (rowHeader.includes('Specialty Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Specialty Rate', month), 10);
+            if (rowHeader.includes('Incentive Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Incentive Rate', month), 10);
+            if (rowHeader.includes('Bonus Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Bonus Rate', month), 10);
+        } else if (rowHeader.startsWith('Roth')) {
+            rothValue = parseInt(value, 10);
+            if (rowHeader.includes('Base Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Base Rate', month), 10);
+            if (rowHeader.includes('Specialty Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Specialty Rate', month), 10);
+            if (rowHeader.includes('Incentive Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Incentive Rate', month), 10);
+            if (rowHeader.includes('Bonus Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Bonus Rate', month), 10);
+        }
+
+        if ((tradValue + rothValue) > 100) {
+            showToast('Combined Traditional and Roth TSP rates for this type cannot exceed 100%.');
+            return false;
+        }
+    }
+
     return true;
 }
 
