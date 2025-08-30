@@ -190,7 +190,7 @@
             <h2>Add Custom Entitlement/Deduction/Allotment Row</h2>
 
             <div class="modal-grid">
-                <div id="inject-method-type" class="modal-grid-column">
+                <div class="modal-grid-column">
                     <div class="modal-grid-column-section">
                         <span class="modal-grid-span">Method:</span>
                         <div class="modal-radio-group">
@@ -238,53 +238,50 @@
                     </div>
                 </div>
 
-                <div id="inject-template-custom">
+                <div id="inject-template-custom" class="modal-grid-column">
                     <!-- add template row inputs -->
-                    <div id="inject-template">
-                        <div class="inject-template-custom-row">
-                            <label class="inject-label" for="inject-template-select">Row Header:</label>
+                    <div id="inject-template" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="inject-template-select">Row Header:</label>
                             <select id="inject-template-select" class="input-long"></select>
                         </div>
-                        <div class="inject-template-custom-row">
-                            <label class="inject-label" for="inject-template-value">Initial Value:</label>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="inject-template-value">Initial Value:</label>
                             $&nbsp;
                             <input id="inject-template-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
-                        <div class="inject-template-custom-row">
+                        <div class="modal-grid-column-row">
                             <button id="inject-template-button" class="button-solo">Add Row</button>
                         </div>
                     </div>
 
                     <!-- add custom row inputs -->
-                    <div id="inject-custom">
-                        <div class="inject-template-custom-row">
-                            <label class="inject-label" for="inject-custom-header">Row Header:</label>
+                    <div id="inject-custom" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="inject-custom-header">Row Header:</label>
                             <input id="inject-custom-header" class="input-long" type="text" placeholder="Unique Row Header">
                         </div>
-                        <div class="inject-template-custom-row">
-                            <label class="inject-label" for="inject-custom-value">Initial Value:</label>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="inject-custom-value">Initial Value:</label>
                             $&nbsp;
                             <input id="inject-custom-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
-                        <div class="inject-template-custom-row">
-                            <label class="inject-label" for="inject-custom-tax">Tax Purposes:</label>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="inject-custom-tax">Tax:</label>
                             <input id="inject-custom-tax" class="input-checkbox" type="checkbox">
-                            <span class="tax-tooltip" data-tooltip=
-                            "Indicates how the row is used for tax calculations. 
+                            <span class="question-tooltip" data-tooltip=
+                            "Indicates if the row is used for tax purposes. 
                             If an entitlement, sets whether taxable or non-taxable income. 
                             If a deduction, sets as a tax added to total taxes.">
                             ?</span>
                         </div>
-                        <div class="inject-template-custom-row">
+                        <div class="modal-grid-column-row">
                             <button id="inject-custom-button" class="button-solo">Add Row</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="inject-info-column">
-                    <div id="inject-template-info"></div>
-                    <div id="inject-custom-info"></div>
-                </div>
+                <div id="inject-info" class="modal-grid-column"></div>
             </div>
         </div>
     </div>
@@ -298,104 +295,98 @@
             <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Account Row</h2>
 
-            <div id="account-grid">
-                <div id="account-type-method">
-                    <!-- row type radio buttons -->
-                    <div id="account-type">
-                        <span class="account-span">Account Type:</span>
-                        <div class="account-radio-group">
+            <div class="modal-grid">
+                <div class="modal-grid-column">
+                    <div class="modal-grid-column-section">
+                        <span class="modal-grid-span">Type:</span>
+                        <div class="modal-radio-group">
                             <label>
-                                <input id="account-type-entitlement" type="radio" name="row-type" value="tsp" >
+                                <input id="account-type-tsp" type="radio" name="row-type" value="tsp" >
                                 TSP Account
                             </label>
                             <label>
-                                <input id="account-type-deduction" type="radio" name="row-type" value="bank">
+                                <input id="account-type-bank" type="radio" name="row-type" value="bank">
                                 Bank Account
                             </label>
                             <label>
-                                <input id="account-type-allotment" type="radio" name="row-type" value="custom">
+                                <input id="account-type-custom" type="radio" name="row-type" value="custom">
                                 Custom
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <div id="account-tsp-bank-custom">
-                    <!-- add tsp account -->
-                    <div id="account-tsp">
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-tsp-header">Row Header:</label>
+                <div class="modal-grid-column">
+                    <div id="account-tsp" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-tsp-header">Row Header:</label>
                             <input id="account-tsp-header" class="input-long" type="text" placeholder="Unique Account Header">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-tsp-value">Initial Value:</label>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-tsp-value">Initial Value:</label>
                             $&nbsp;
                             <input id="account-tsp-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-tsp-interest">Interest Rate:</label>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
                             <input id="account-tsp-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="interest-tooltip" data-tooltip=
-                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
+                            <span class="question-tooltip" data-tooltip=
+                            "Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">
                             ?</span>
                         </div>
-                        <div class="account-tsp-bank-custom-row">
+                        <div class="modal-grid-column-row">
                             <button id="account-tsp-button" class="button-solo">Add Account</button>
                         </div>
                     </div>
 
-                    <!-- add bank account -->
-                    <div id="account-bank">
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-bank-header">Row Header:</label>
+                    <!--
+                    <div id="account-bank" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label for="account-bank-header">Row Header:</label>
                             <input id="account-bank-header" class="input-long" type="text" placeholder="Unique Account Header">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-bank-value">Initial Value:</label>
+                        <div class="modal-grid-column-row">
+                            <label for="account-bank-value">Initial Value:</label>
                             $&nbsp;
                             <input id="account-bank-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-bank-interest">Interest Rate:</label>
+                        <div class="modal-grid-column-row">
+                            <label for="account-bank-interest">Interest Rate:</label>
                             <input id="account-bank-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="interest-tooltip" data-tooltip=
+                            <span class="question-tooltip" data-tooltip=
                             "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
                             ?</span>
                         </div>
-                        <div class="account-tsp-bank-custom-row">
+                        <div class="modal-grid-column-row">
                             <button id="account-bank-button" class="button-solo">Add Account</button>
                         </div>
                     </div>
 
-                    <!-- add custom account -->
-                    <div id="account-custom">
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-custom-header">Row Header:</label>
+                    <div id="account-custom" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label for="account-custom-header">Row Header:</label>
                             <input id="account-custom-header" class="input-long" type="text" placeholder="Unique Account Header">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-custom-value">Initial Value:</label>
+                        <div class="modal-grid-column-row">
+                            <label for="account-custom-value">Initial Value:</label>
                             $&nbsp;
                             <input id="account-custom-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
-                        <div class="account-tsp-bank-custom-row">
-                            <label class="account-label" for="account-custom-interest">Interest Rate:</label>
+                        <div class="modal-grid-column-row">
+                            <label for="account-custom-interest">Interest Rate:</label>
                             <input id="account-custom-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="interest-tooltip" data-tooltip=
+                            <span class="question-tooltip" data-tooltip=
                             "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
                             ?</span>
                         </div>
-                        <div class="account-tsp-bank-custom-row">
+                        <div class="modal-grid-column-row">
                             <button id="account-custom-button" class="button-solo">Add Account</button>
                         </div>
                     </div>
+                -->
                 </div>
 
-                <div id="account-info-column">
-                    <div id="account-tsp-info"></div>
-                    <div id="account-bank-info"></div>
-                    <div id="account-custom-info"></div>
-                </div>
+                <div id="account-info" class="modal-grid-column"><p>filler</p></div>
             </div>
         </div>
     </div>
@@ -410,13 +401,9 @@
             <h2>Budget Recommendations</h2>
 
             <div id="rec-content">
-                {% if recommendations %}
-                    {% for rec in recommendations %}
-                        <div class="rec-item">{{ rec|safe }}</div>
-                    {% endfor %}
-                {% else %}
-                    <p>No recommendations currently for the budget.</p>
-                {% endif %}
+                {% for rec in recommendations %}
+                    <div class="rec-item">{{ rec|safe }}</div>
+                {% endfor %}
             </div>
         </div>
     </div>

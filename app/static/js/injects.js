@@ -15,24 +15,19 @@ function attachInjectModalListeners() {
 
             if (this.value === 'template') {
                 el.templateTypes.style.display = 'flex';
-                el.typeEntitlement.checked = false;
-                el.typeDeduction.checked = false;
-                el.typeAllotment.checked = false;
                 el.customTypes.style.display = 'none';
-                el.templateSection.style.display = 'none';
-                el.customSection.style.display = 'none';
-                el.templateInfo.style.display = 'none';
-                el.customInfo.style.display = 'none';
             } else if (this.value === 'custom') {
                 el.templateTypes.style.display = 'none';
                 el.customTypes.style.display = 'flex';
-                el.typeIncome.checked = false;
-                el.typeExpense.checked = false;
-                el.templateSection.style.display = 'none';
-                el.customSection.style.display = 'none';
-                el.templateInfo.style.display = 'none';
-                el.customInfo.style.display = 'none';
             }
+            el.typeEntitlement.checked = false;
+            el.typeDeduction.checked = false;
+            el.typeAllotment.checked = false;
+            el.typeIncome.checked = false;
+            el.typeExpense.checked = false;
+            el.templateSection.style.display = 'none';
+            el.customSection.style.display = 'none';
+            el.info.innerHTML = '';
         });
     });
 
@@ -42,8 +37,6 @@ function attachInjectModalListeners() {
             selectedRowType = this.value;
             el.templateSection.style.display = 'flex';
             el.customSection.style.display = 'none';
-            el.templateInfo.style.display = 'flex';
-            el.customInfo.style.display = 'none';
             populateTemplateDropdown(selectedRowType);
         });
     });
@@ -54,9 +47,7 @@ function attachInjectModalListeners() {
             selectedRowType = this.value;
             el.templateSection.style.display = 'none';
             el.customSection.style.display = 'flex';
-            el.templateInfo.style.display = 'none';
-            el.customInfo.style.display = 'flex';
-            setCustomInfo(selectedRowType, el.customInfo);
+            setCustomInfo(selectedRowType, el.info);
         });
     });
 
@@ -129,16 +120,16 @@ function resetInjectModal() {
     el.customHeader.value = '';
     el.customTax.checked = false;
     el.customValue.value = '';
-    el.templateInfo.style.display = 'none';
-    el.customInfo.style.display = 'none';
+
+    el.info.innerHTML = '';
 }
 
 
 // set custom info
-function setCustomInfo(rowType, infoElem) {
-    let infoHtml = '';
+function setCustomInfo(rowType, infoDiv) {
+    let text = '';
     if (rowType === 'e') {
-        infoHtml = `<strong>Example Income:</strong>
+        text = `<strong>Example Income:</strong>
             <div class="inject-list-grid">
                 <ul>
                     <li>Second Job</li>
@@ -157,7 +148,7 @@ function setCustomInfo(rowType, infoElem) {
                 </ul>
             </div>`;
     } else if (rowType === 'd') {
-        infoHtml = `<strong>Example Expenses:</strong>
+        text = `<strong>Example Expenses:</strong>
             <div class="inject-list-grid">
                 <ul>
                     <li>Rent</li>
@@ -179,8 +170,8 @@ function setCustomInfo(rowType, infoElem) {
                 </ul>
             </div>`;
     }
-    infoElem.innerHTML = infoHtml;
-    infoElem.style.display = infoHtml ? 'block' : 'none';
+    infoDiv.innerHTML = text;
+    infoDiv.style.display = text ? 'flex' : 'none';
 }
 
 
@@ -204,14 +195,14 @@ function getInjectModalElements() {
         templateSelect: document.getElementById('inject-template-select'),
         templateValue: document.getElementById('inject-template-value'),
         templateButton: document.getElementById('inject-template-button'),
-        templateInfo: document.getElementById('inject-template-info'),
 
         customSection: document.getElementById('inject-custom'),
         customHeader: document.getElementById('inject-custom-header'),
         customTax: document.getElementById('inject-custom-tax'),
         customValue: document.getElementById('inject-custom-value'),
         customButton: document.getElementById('inject-custom-button'),
-        customInfo: document.getElementById('inject-custom-info'),
+
+        info: document.getElementById('inject-info')
     };
 }
 
@@ -264,7 +255,7 @@ function populateTemplateDropdown(rowType) {
     const templateDropdown = el.templateSelect;
     const templateValue = el.templateValue;
     const templateSubmit = el.templateButton;
-    const infoDiv = document.getElementById('inject-template-info');
+    const infoDiv = document.getElementById('inject-info');
     templateDropdown.innerHTML = '';
 
     // add "Select header" as first option
