@@ -654,7 +654,7 @@ input[type=file] {
 }
 
 .section-break td {
-    border-bottom: 0.35rem solid var(--table_border_color) !important;
+    border-bottom: 0.4rem solid var(--table_border_color) !important;
 }
 
 .var-row, .tsp-row, .ytd-row {
@@ -889,6 +889,16 @@ input[type=file] {
     font-size: 0.85rem;
     margin: -0.35rem 0 0 0.25rem;
     font-weight: bold;
+}
+
+.inject-list-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 0.5rem 1rem;
+}
+.inject-list-grid ul {
+    margin: 0;
+    padding-left: 1.25rem;
 }
 
 

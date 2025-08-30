@@ -1,23 +1,27 @@
 [
     {
-        "id": "basepay",
-        "title": "Base Pay",
-        "content": "<p>Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay. A member's grade (usually the same as rank) and years of service determines the amount of basic pay received.</p>",
+        "id": "afrh",
+        "title": "Armed Forces Retirement Home",
+        "content": "<p>The Armed Forces Retirement Home (AFRH) is a facility for retired members of the U.S. military, providing residences and services at two campuses located in Gulfport, Mississippi, and Washington, D.C. It offers a supportive environment with amenities like meals, medical care, and recreational activities for eligible veterans.</p>",
         "resources": [
             {
-                "link": "https://militarypay.defense.gov/Pay/Basic-Pay/", 
-                "title": "DoD Base Pay Rates"
+                "link": "https://www.afrh.gov/", 
+                "title": "Armed Forces Retirement Home"
             }
         ]
     },
     {
-        "id": "bas",
-        "title": "Basic Allowance for Subsistence (BAS)",
-        "content": "<p>BAS is meant to offset the cost of food for service members. This allowance is based on the historic origins of the military in which the military provided room and board (or rations) as part of a member's pay. This allowance is not intended to offset the costs of meals for family members. Beginning on January 1, 2002, all enlisted members get full BAS, but pay for their meals (including those provided by the government). This is the culmination of the BAS Reform transition period. Since BAS is intended to defray a portion of the cost of food for the service member, its level is linked to the USDA's food cost index. Therefore, each year the BAS rate is adjusted based upon the percentage increase of the price of food as identified by the USDA. This is why the increase to BAS will not necessarily be the same percentage as that applied to the increase in the pay table, as annual pay raises are linked to the increase of private sector wages.</p><table class=\"modal-table\"><tr><td>Officers</td><td>Enlisted</td><td>Enlisted II*</td></tr><tr><td>$320.78</td><td>$465.77</td><td>$931.54</td></tr></table><p class=\"text-small\">*BAS II is the monthly rate that may be payable to enlisted members on duty at a permanent station and assigned to single (unaccompanied) Government quarters, which do not have adequate food storage or preparation facilities, and where a Government mess is not available, and the Government  cannot otherwise make meals available. The BAS II rate is twice the rate of standard enlisted BAS.</p>",
+        "id": "allotments",
+        "title": "Allotments",
+        "content": "<p>Allotments are a way for military members to send a portion of their pay directly to a bank account, credit union, or other financial institution. This can be a useful tool for budgeting and saving, as it allows service members to set aside money for specific purposes, such as paying bills or saving for a future goal.</p>",
         "resources": [
             {
-                "link": "https://militarypay.defense.gov/pay/allowances/bas.aspx", 
-                "title": "DoD BAS Rates"
+                "link": "https://www.dfas.mil/RetiredMilitary/manage/allotments/", 
+                "title": "DFAS Allotments Overview"
+            },
+            {
+                "link": "https://www.military.com/benefits/military-pay/military-pay-allotments.html", 
+                "title": "Military Allotments"
             }
         ]
     },
@@ -41,6 +45,39 @@
         ]
     },
     {
+        "id": "bas",
+        "title": "Basic Allowance for Subsistence (BAS)",
+        "content": "<p>BAS is meant to offset the cost of food for service members. This allowance is based on the historic origins of the military in which the military provided room and board (or rations) as part of a member's pay. This allowance is not intended to offset the costs of meals for family members. Beginning on January 1, 2002, all enlisted members get full BAS, but pay for their meals (including those provided by the government). This is the culmination of the BAS Reform transition period. Since BAS is intended to defray a portion of the cost of food for the service member, its level is linked to the USDA's food cost index. Therefore, each year the BAS rate is adjusted based upon the percentage increase of the price of food as identified by the USDA. This is why the increase to BAS will not necessarily be the same percentage as that applied to the increase in the pay table, as annual pay raises are linked to the increase of private sector wages.</p><table class=\"modal-table\"><tr><td>Officers</td><td>Enlisted</td><td>Enlisted II*</td></tr><tr><td>$320.78</td><td>$465.77</td><td>$931.54</td></tr></table><p class=\"text-small\">*BAS II is the monthly rate that may be payable to enlisted members on duty at a permanent station and assigned to single (unaccompanied) Government quarters, which do not have adequate food storage or preparation facilities, and where a Government mess is not available, and the Government  cannot otherwise make meals available. The BAS II rate is twice the rate of standard enlisted BAS.</p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/pay/allowances/bas.aspx", 
+                "title": "DoD BAS Rates"
+            }
+        ]
+    },
+    {
+        "id": "basepay",
+        "title": "Base Pay",
+        "content": "<p>Base Pay is the fundamental component of military pay. All members receive it and typically is the largest component of a member's pay. A member's grade (usually the same as rank) and years of service determines the amount of basic pay received.</p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/Pay/Basic-Pay/", 
+                "title": "DoD Base Pay Rates"
+            }
+        ]
+    },
+    {
+        "id": "bonus",
+        "title": "Bonus Pay",
+        "content": "<p>Military bonuses are specific payments incentivize members to start and/or stay in the service. These bonuses include the enlistment and the reenlistment military bonuses.</p>",
+        "resources": [
+            {
+                "link": "https://www.military.com/benefits/military-pay/bonus", 
+                "title": "Bonus Pay"
+            }
+        ]
+    },
+    {
         "id": "clothingallowance",
         "title": "Clothing Allowance",
         "content": "<p>Clothing allowances may be issued to help members pay for their uniforms. There are four main types of clothing allowance: Initial, Replacement, Maintenance, and Extra.</p><p>Both officers and enlisted members of the U.S. Armed Forces are entitled to an initial clothing allowance. This allowance is provided to enlisted members upon initial enlistment or upon special qualification. Officers, however, are only entitled to the allowance once except in the situation noted below:</p><ul><li>Upon first reporting for active duty (other than for training) for a period of more than 90 days.</li><li>Upon completing at least 14 days of active duty or active duty for training as a member of a Reserve Component</li><li>Upon completing 14 periods of inactive-duty training as a member of the Ready Reserve (Each period must be of at least 2 hours duration)</li><li>Upon reporting for the first period of active duty required of a member of the Armed Forces Health Professions Scholarship Program.</li></ul><p>Cash Clothing Replacement Allowance is payable only to enlisted members annually following initial clothing allowance on the anniversary month. This is for the replacement of uniforms based on normal wear and tear.</p><p>Extra Clothing Allowance are additional to the other two and do not affect them. These allowances are for situations in which a member may need additional uniforms or is required to have civilian clothing to perform their duties.</p><p>Military Clothing Maintenance Allowance is for replacement and maintenance of military items during and after three years of active duty. If a member has a break in military service, he/she will start over with the initial clothing allowance upon returning to the service. They will then receive Cash Clothing Replacement Allowance and Military Clothing Maintenance Allowance as applicable.</p>",
@@ -48,6 +85,39 @@
             {
                 "link": "https://militarypay.defense.gov/PAY/Allowances/clothing.aspx", 
                 "title": "DoD Clothing Allowance Rates"
+            }
+        ]
+    },
+    {
+        "id": "cola",
+        "title": "Cost of Living Allowance (COLA)",
+        "content": "<p>Service members serving outside of the continental United States (OCONUS) where the cost of living is higher than CONUS receive an Overseas Cost-of-Living Allowance (COLA). Overseas COLA is a non-taxable allowance designed to offset higher prices of non-housing goods and services OCONUS and equalize purchasing power with members stationed in CONUS. It does not reimburse expenses, compensate for remoteness, hardship, loss of spousal income, or non-availabilityof goods and services.</p><p>OCONUS COLA is not a fixed amount and should not be considered in household budgeting. Fixed expenses, such as car payments, should be based on what a Service member can afford without the allowance. Overseas COLA can fluctuate based on the exchange rate, as COLA is paid in U.S dollars, but some expenses are typically paid in foreign currency.</p>",
+        "resources": [
+            {
+                "link": "https://www.travel.dod.mil/Allowances/Overseas-Cost-of-Living-Allowance/Overseas-COLA-Rate-Lookup/", 
+                "title": "DoD COLA Rates"
+            }
+        ]
+    },
+        {
+        "id": "combat",
+        "title": "Combat Pay",
+        "content": "<p>A member of a uniformed service may be paid special pay at the rate of $225 per month for any month in which he/she was entitled to basic pay. A member is entitled to IDP when assigned to a designated IDP area. To see which areas are designated as IDP areas, view figure 10-1 in the DOD Financial Management Regulation. </p><p> The commander determines HFP based on whether a member is: <li>Subject to hostile fire or mine explosions</li><li>In an area near hostile fire or mine explosions which endanger the member</li><li>Killed, injured, or wounded by hostile fire, mines, or any hostile action</li></p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/Pay/Special-and-Incentive-Pays/HFP_IDP/", 
+                "title": "HFP/IDP Information"
+            }
+        ]
+    },
+    {
+        "id": "debt",
+        "title": "Debt and Advance Debt",
+        "content": "<p>Typically, a debt is caused by an exchange in entitlements; for example the difference in BAH rates from the old PDS and new PDS, and also members receiving table rate BAH when they've been assigned a dorm. The size of the debt is determined by the arrival date on station and the in-processing date with Finance. The wider the gap between those dates, the more time the debt has to accrue.</p><p>Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed package must be turned in within 30 days from notification in order to suspend the debt from collection.</p><p>Advance debt notifies the member that they've been overpaid. This usually occurs during a PCS or a deployment, and the overpayment occurred in a previous months pay cycle. Members have 30 days to contact your finance office to inquire about possible repayment options. If no action is taken the debt will be recouped in full the following pay period*.</p><p class=\"text-small\">*Debt has not been satisfied until it shows up in the deductions column of your LES if paid by payroll deduction.</p>",
+        "resources": [
+            {
+                "link": "", 
+                "title": ""
             }
         ]
     },
@@ -82,6 +152,76 @@
         ]
     },
     {
+        "id": "hardship",
+        "title": "Hardship Duty Pay",
+        "content": "<p>Hardship Duty Pay (HDP) is a special pay authorized for members assigned to duty in locations where living conditions are significantly below those in the continental United States. HDP is intended to compensate for the difficult living conditions and to encourage members to serve in these locations.</p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/Pay/Special-and-Incentive-Pays/HDP/", 
+                "title": "HDP Information"
+            }
+        ]
+    },
+    {
+        "id": "incentive",
+        "title": "Incentive Pay",
+        "content": "<p>Special and Incentive (S&I) pays provide the Services with flexible additional pays that can be used to address specific manning needs and other force management issues that cannot be efficiently addressed through basic pay increases. Sorry for the inconvenience, but this page is currently under re-construction, and updated information on S&I pays is forthcoming. Unlike basic pay and allowances, which vary by pay grade and years of service, S&I pays can be used to improve recruiting and retention by increasing compensation in key occupation specialties or critical skill areas. These pays are also used to compensate for onerous or hazardous duty assignments or conditions. In addition, S&I pays can be used to provide incentives for service members to develop certain skills that are important to national security objectives. </p><p> Currently, there are over 60 S&I pays authorized in law. For many of these pays, detailed eligibility requirements and precise payment amounts were set in law and could only be changed by Congressional action. When needs or conditions changed, force managers sometimes could not adjust S&I pay eligibility criteria or payment levels fast enough in response to those changing circumstances. So in the 2008, Congress provided for a 10-year phased-in consolidation of S&I pays to eight broad categories allowing more flexibility and opportunity to adjust payment levels and eligibility criteria.</p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/Pay/Special-and-Incentive-Pays/", 
+                "title": "Incentive Pays"
+            }
+        ]
+    },
+    {
+        "id": "leave",
+        "title": "Leave",
+        "content": "<p>As part of the military pay and benefits package, military service members earn 30 days of paid leave per year. Service members start at zero and for every month of military service, 2.5 days of leave get added to your leave account. It doesn't stop, but the most members can carry over from one fiscal year to the next fiscal year is 60 days, except in certain, very limited situations where you can carry over more.</p><p>Reserve component members, including National Guard, also accrue leave at the rate of 2.5 days for each month that they are on active-duty orders. Reserve components have some special rules for how and when they can use their leave.</p><p>Service members are expected to use leave for any workday that they will not be available for work, as required by their command. They are also expected touse leave for any day that they leave the vicinity of their duty station, as defined by their command.</p>",
+        "resources": [
+            {
+                "link": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/", 
+                "title": "OPM Leave Information"
+            },
+            {
+                "link": "https://www.militaryonesource.mil/military-basics/new-to-the-military/military-leave-and-how-it-works/", 
+                "title": "Military OneSource Leave Explained"
+            }
+        ]
+    },
+    {
+        "id": "mgib",
+        "title": "Montgomery GI Bill",
+        "content": "<p>The Montgomery GI Bill (MGIB) is an education benefit program that provides financial assistance to service members and veterans who wish to pursue higher education, vocational training, or certain certification programs. To be eligible, service members must have paid into the program and meet specific service requirements.</p>",
+        "resources": [
+            {
+                "link": "https://www.va.gov/education/about-gi-bill-benefits/montgomery-active-duty/", 
+                "title": "Montgomery GI Bill Overview"
+            }
+        ]
+    },
+    {
+        "id": "partialpay",
+        "title": "Partial Pay",
+        "content": "<p>Partial pay is entitled to a member to account for late or missed payments.</p>",
+        "resources": [
+            {
+                "link": "", 
+                "title": ""
+            }
+        ]
+    },
+    {
+        "id": "pcs",
+        "title": "Permanent Change of Station (PCS)",
+        "content": "<p>Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used for all other PCS travel expenses. For additional information, please see this memo.</p>",
+        "resources": [
+            {
+                "link": "https://www.dfas.mil/militarymembers/travelpay/information/", 
+                "title": "DoD PCS Rates"
+            }
+        ]
+    },
+    {
         "id": "sgli",
         "title": "Servicemembers' Group Life Insurance",
         "content": "<p>SGLI provides low-cost term life insurance coverage to eligible service members such as active duty Service members, Ready Reserve, or National Guard members. If members qualify for SGLI they are automatically enrolled and issued the maximum SGLI coverage.</p>",
@@ -108,6 +248,17 @@
         ]
     },
     {
+        "id": "specialty",
+        "title": "Specialty Pay",
+        "content": "<p>Special and Incentive (S&I) pays provide the Services with flexible additional pays that can be used to address specific manning needs and other force management issues that cannot be efficiently addressed through basic pay increases. Sorry for the inconvenience, but this page is currently under re-construction, and updated information on S&I pays is forthcoming. Unlike basic pay and allowances, which vary by pay grade and years of service, S&I pays can be used to improve recruiting and retention by increasing compensation in key occupation specialties or critical skill areas. These pays are also used to compensate for onerous or hazardous duty assignments or conditions. In addition, S&I pays can be used to provide incentives for service members to develop certain skills that are important to national security objectives. </p><p> Currently, there are over 60 S&I pays authorized in law. For many of these pays, detailed eligibility requirements and precise payment amounts were set in law and could only be changed by Congressional action. When needs or conditions changed, force managers sometimes could not adjust S&I pay eligibility criteria or payment levels fast enough in response to those changing circumstances. So in the 2008, Congress provided for a 10-year phased-in consolidation of S&I pays to eight broad categories allowing more flexibility and opportunity to adjust payment levels and eligibility criteria.</p>",
+        "resources": [
+            {
+                "link": "https://militarypay.defense.gov/Pay/Special-and-Incentive-Pays/", 
+                "title": "Specialty Pays"
+            }
+        ]
+    },
+    {
         "id": "tsp",
         "title": "Thrift Savings Plan (TSP)",
         "content": "<p>Your decision about Roth and traditional TSP is a choice of when you pay income tax on your TSP contributions and earnings. You can pay taxes either when you earn and contribute the money or when you take it out. There isn't a set formula to determine which choice is best for everyone, and your decision may change as your income and needs change over time. Here are a few questions you'll want to ask yourself to get started:</p><ul><li>Do I expect a higher or lower income tax rate in retirement?</li><li>How much money do I need in my paycheck right now?</li><li>Will my choice of tax treatment affect how much income tax I need to pay?</li></ul></p><p>With Roth TSP, your contributions go into the TSP after tax withholding. That means you pay taxes on your contributions at your current income tax rate. The advantage of the Roth TSP is that you won't pay taxes later when you take out your contributions and any qualified earnings. Earnings are considered qualified after both of these Internal Revenue Code (IRC) requirements are met: 5 years have passed since January 1 of the calendar year when you made your first Roth TSP contribution and you are at least age 59½, permanently disabled, or deceased. Also, your Roth balance isn't subject to IRS required minimum distributions (RMDs), which means you can keep your Roth contributions and earnings in your TSP account as long as you want.</p><p>With traditional TSP, your contributions go into the TSP before tax withholding, which can potentially lower your current income tax rate. But when you take money from your traditional TSP, you'll pay taxes on both your contributions and earnings at the income tax rate of the year you make the withdrawal.</p><p>You may consider splitting your contributions between Roth and traditional. You can change your contribution type through your agency or service payroll system. Note that if you receive automatic or matching contributions from your agency or service, those contributions will always go into your traditional TSP balance and cannot be converted to Roth within your TSP account.</p><p>The TSP elective deferral limit is $23,500. This limit applies to the combined total of traditional and Roth contributions. For uniformed services members, this does not apply to traditional contributions from combat-zone pay. The annual additions limit is $70,000. The annual additions limit is the total amount of all the contributions you make in a calendar year. This limit is per employer and includes money from all sources: employee contributions (tax-deferred, after-tax, and tax-exempt), Agency/Service Automatic (1%) Contributions, and Agency/Service Matching Contributions. It does not include catch-up contributions. The annual additions limit affects mostly members of the uniformed services who can exceed the annual elective deferral limit. The excess contributions go into the traditional portion of your account from tax-exempt pay earned in a combat zone.</p>",
@@ -119,98 +270,6 @@
             {
                 "link": "https://www.tsp.gov/making-contributions/contribution-limits/", 
                 "title": "TSP Contribution Limits"
-            }
-        ]
-    },
-    {
-        "id": "partialpay",
-        "title": "Partial Pay",
-        "content": "<p>Partial pay is entitled to a member to account for late or missed payments.</p>",
-        "resources": [
-            {
-                "link": "", 
-                "title": ""
-            }
-        ]
-    },
-    {
-        "id": "pcspay",
-        "title": "Permanent Change of Station (PCS)",
-        "content": "<p>Advance travel payments may be authorized for the below entitlements if the Member is not a Government Travel Charge Card (GTCC) holder or an advance is not specifically prohibited in the orders. If an Army member is a card holder, an advance travel payment may only be authorized for DLA. The GTCC must be used for all other PCS travel expenses. For additional information, please see this memo.</p>",
-        "resources": [
-            {
-                "link": "https://www.dfas.mil/militarymembers/travelpay/information/", 
-                "title": "DoD PCS Rates"
-            }
-        ]
-    },
-    {
-        "id": "debt",
-        "title": "Debt and Advance Debt",
-        "content": "<p>Typically, a debt is caused by an exchange in entitlements; for example the difference in BAH rates from the old PDS and new PDS, and also members receiving table rate BAH when they've been assigned a dorm. The size of the debt is determined by the arrival date on station and the in-processing date with Finance. The wider the gap between those dates, the more time the debt has to accrue.</p><p>Options for a debt repayment include a check paid to DFAS, payroll deduction, or filing a waiver or a remission. If filing a remission, a completed package must be turned in within 30 days from notification in order to suspend the debt from collection.</p><p>Advance debt notifies the member that they've been overpaid. This usually occurs during a PCS or a deployment, and the overpayment occurred in a previous months pay cycle. Members have 30 days to contact your finance office to inquire about possible repayment options. If no action is taken the debt will be recouped in full the following pay period*.</p><p class=\"text-small\">*Debt has not been satisfied until it shows up in the deductions column of your LES if paid by payroll deduction.</p>",
-        "resources": [
-            {
-                "link": "", 
-                "title": ""
-            }
-        ]
-    },
-    {
-        "id": "cola",
-        "title": "Cost of Living Allowance (COLA)",
-        "content": "<p>Service members serving outside of the continental United States (OCONUS) where the cost of living is higher than CONUS receive an Overseas Cost-of-Living Allowance (COLA). Overseas COLA is a non-taxable allowance designed to offset higher prices of non-housing goods and services OCONUS and equalize purchasing power with members stationed in CONUS. It does not reimburse expenses, compensate for remoteness, hardship, loss of spousal income, or non-availabilityof goods and services.</p><p>OCONUS COLA is not a fixed amount and should not be considered in household budgeting. Fixed expenses, such as car payments, should be based on what a Service member can afford without the allowance. Overseas COLA can fluctuate based on the exchange rate, as COLA is paid in U.S dollars, but some expenses are typically paid in foreign currency.</p>",
-        "resources": [
-            {
-                "link": "https://www.travel.dod.mil/Allowances/Overseas-Cost-of-Living-Allowance/Overseas-COLA-Rate-Lookup/", 
-                "title": "DoD COLA Rates"
-            }
-        ]
-    },
-    {
-        "id": "leave",
-        "title": "Leave",
-        "content": "<p>As part of the military pay and benefits package, military service members earn 30 days of paid leave per year. Service members start at zero and for every month of military service, 2.5 days of leave get added to your leave account. It doesn't stop, but the most members can carry over from one fiscal year to the next fiscal year is 60 days, except in certain, very limited situations where you can carry over more.</p><p>Reserve component members, including National Guard, also accrue leave at the rate of 2.5 days for each month that they are on active-duty orders. Reserve components have some special rules for how and when they can use their leave.</p><p>Service members are expected to use leave for any workday that they will not be available for work, as required by their command. They are also expected touse leave for any day that they leave the vicinity of their duty station, as defined by their command.</p>",
-        "resources": [
-            {
-                "link": "https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/", 
-                "title": "OPM Leave Information"
-            },
-            {
-                "link": "https://www.militaryonesource.mil/military-basics/new-to-the-military/military-leave-and-how-it-works/", 
-                "title": "Military OneSource Leave Explained"
-            }
-        ]
-    },
-    {
-        "id": "taxedincome",
-        "title": "Taxable and Non-Taxable Pay",
-        "content": "<p></p>",
-        "resources": [
-            {
-                "link": "https://militarypay.defense.gov/Pay/Basic-Pay/", 
-                "title": "DoD Base Pay Rates"
-            }
-        ]
-    },
-    {
-        "id": "grossnetpay",
-        "title": "Gross and Net Pay",
-        "content": "<p>Gross pay is the amount an employee earns before all deductions, including taxes, benefits, wage attachments and any other payroll deductions.</p><p>Net pay, or take-home pay, is the amount of an employee's paycheck after deductions are taken out of their gross pay. Deductions include things, such as payroll taxes, income tax, health insurance premiums, retirement account contributions, wage attachments (garnishments) and other voluntary or obligatory deductions.</p>",
-        "resources": [
-            {
-                "link": "https://www.forbes.com/advisor/business/gross-pay-vs-net-pay/", 
-                "title": "Gross Pay and Net Pay Explained"
-            }
-        ]
-    },
-    {
-        "id": "combat",
-        "title": "Combat Pay",
-        "content": "<p></p>",
-        "resources": [
-            {
-                "link": "", 
-                "title": ""
             }
         ]
     }

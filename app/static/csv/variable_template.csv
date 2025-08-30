@@ -9,7 +9,7 @@ Dependents,v,0,int,False,True,bah,none
 Federal Filing Status,v,0,select,False,True,federaltaxes,"Identifies if single, married, or head of household for federal tax filing purposes"
 State Filing Status,v,0,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
 SGLI Coverage,v,0,select,False,True,sgli,none
-Combat Zone,v,0,select,False,True,combatzone,Identifies if in a combat zone during the majority of the month
+Combat Zone,v,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
 Trad TSP Base Rate,t,0,int,False,True,basepay,none
 Trad TSP Specialty Rate,t,0,int,False,True,specialty,none
 Trad TSP Incentive Rate,t,0,int,False,True,incentive,none
@@ -20,8 +20,8 @@ Roth TSP Incentive Rate,t,0,int,False,True,incentive,none
 Roth TSP Bonus Rate,t,0,int,False,True,bonus,none
 Taxable Income,x,0,float,False,False,none,none
 Non-Taxable Income,x,0,float,False,False,none,none
-Taxes,x,0,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
 Total Income,x,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
+Taxes,x,0,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
 Total Expenses,x,0,float,False,False,none,"Sum of all negative pay including deductions, allotments, and expenditures"
 Net Pay,x,0,float,False,False,none,Sum of income and expenses
 Difference,x,0,float,False,False,none,Difference in net pay from current month to previous month

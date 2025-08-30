@@ -123,31 +123,52 @@ function resetInjectModal(scope = 'all') {
         let infoHtml = '';
         if (selectedRowType === 'e') {
             infoHtml = `<strong>Example Entitlements:</strong>
-                <ul>
-                    <li>Second Job</li>
-                    <li>Tips</li>
-                    <li>Gift Money</li>
-                    <li>Rental Income</li>
-                    <li>Capital Gains</li>
-                    <li>Royalties</li>
-                </ul>`;
+                <div class="inject-list-grid">
+                    <ul>
+                        <li>Second Job</li>
+                        <li>Tips</li>
+                        <li>Cash Gifts</li>
+                        <li>Prize Money</li>
+                        <li>Interest</li>
+                        <li>Sold Assets</li>
+                    </ul>
+                    <ul>
+                        <li>Rental Income</li>
+                        <li>Capital Gains</li>
+                        <li>Royalties</li>
+                        <li>Commissions</li>
+                        <li>Compensation</li>
+                    </ul>
+                </div>`;
         } else if (selectedRowType === 'd') {
-            infoHtml = `<strong>Example Deductions:</strong>
-                <ul>
-                    <li>Rent</li>
-                    <li>Haircuts</li>
-                    <li>Groceries</li>
-                    <li>Pet Expenses</li>
-                    <li>Vehicle Maintenance</li>
-                    <li>Insurance</li>
-                    <li>Phone Plan</li>
-                </ul>`;
+            infoHtml = `<strong>Example Entitlements:</strong>
+                <div class="inject-list-grid">
+                    <ul>
+                        <li>Rent</li>
+                        <li>Utilities</li>
+                        <li>Insurance</li>
+                        <li>Tuition</li>
+                    </ul>
+                    <ul>
+                        <li>Vehicle Maintenance</li>
+                        <li>Pet Expenses</li>
+                        <li>Phone Plan</li>
+                    </ul>
+                </div>`;
         } else if (selectedRowType === 'a') {
-            infoHtml = `<strong>Example Allotments:</strong>
-                <ul>
-                    <li>Child Support Payments</li>
-                    <li>Alimony</li>
-                </ul>`;
+            infoHtml = `<strong>Example Entitlements:</strong>
+                <div class="inject-list-grid">
+                    <ul>
+                        <li>Alimony</li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                    <ul>
+                        <li>Child Support</li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>`;
         } else {
             infoHtml = '';
         }
