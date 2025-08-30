@@ -148,7 +148,7 @@ def calculate_difference(budget, prev_month, working_month, init=False, VARIABLE
     difference = 0.00
 
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
-    
+
     if init:
         budget.append(add_row(VARIABLE_TEMPLATE, 'Difference', working_month, difference))
     else:
@@ -167,18 +167,16 @@ def calculate_ytd_rows(budget, prev_month, working_month):
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
 
     gross_pay_row = next((r for r in budget if r['header'] == 'Gross Pay'), None)
-    gross_pay = gross_pay_row[prev_month]
+    gross_pay = gross_pay_row[working_month]
 
     net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
-    net_pay = net_pay_row[prev_month]
+    net_pay = net_pay_row[working_month]
 
-    deductions = sum(r[prev_month] for r in budget if r.get('sign') == -1)
+    deductions = sum(r[working_month] for r in budget if r.get('sign') == -1)
 
     trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
     roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
-    trad_tsp = abs(trad_tsp_row[prev_month])
-    roth_tsp = abs(roth_tsp_row[prev_month])
-    tsp_total = trad_tsp + roth_tsp
+    tsp_total = abs(trad_tsp_row[working_month]) + abs(roth_tsp_row[working_month])
 
     charity_add = 0.00
 
@@ -203,12 +201,12 @@ def calculate_ytd_rows(budget, prev_month, working_month):
 # calculate special rows
 # =========================
 
-def calculate_base_pay(budget, add_month):
+def calculate_base_pay(budget, month):
     PAY_ACTIVE = flask_app.config['PAY_ACTIVE']
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     months_row = next((row for row in budget if row['header'] == "Months in Service"), None)
-    grade = grade_row.get(add_month) if grade_row else "Not Found"
-    months_in_service = int(months_row[add_month])
+    grade = grade_row.get(month) if grade_row else "Not Found"
+    months_in_service = int(months_row[month])
 
     pay_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
     month_cols = [int(col) * 12 for col in pay_row.columns[1:]]
@@ -220,14 +218,15 @@ def calculate_base_pay(budget, add_month):
             break
 
     selected_col = pay_row.columns[idx + 1]
+
     base_pay = pay_row[selected_col].iloc[0]
     return round(base_pay, 2)
 
 
-def calculate_bas(budget, add_month):
+def calculate_bas(budget, month):
     BAS_AMOUNT = flask_app.config['BAS_AMOUNT']
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
-    grade = grade_row.get(add_month) if grade_row else "Not Found"
+    grade = grade_row.get(month) if grade_row else "Not Found"
 
     if str(grade).startswith("E"):
         bas = BAS_AMOUNT[0]
@@ -237,14 +236,14 @@ def calculate_bas(budget, add_month):
     return round(bas, 2)
 
 
-def calculate_bah(budget, add_month):
+def calculate_bah(budget, month):
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     mha_row = next((row for row in budget if row['header'] == "Military Housing Area"), None)
     dependents_row = next((row for row in budget if row['header'] == "Dependents"), None)
 
-    grade = grade_row[add_month]
-    military_housing_area = mha_row[add_month]
-    dependents = dependents_row[add_month]
+    grade = grade_row[month]
+    military_housing_area = mha_row[month]
+    dependents = dependents_row[month]
     
     if military_housing_area == "Not Found":
         return 0.00
@@ -259,13 +258,13 @@ def calculate_bah(budget, add_month):
     return round(bah, 2)
 
 
-def calculate_federal_taxes(budget, add_month):
+def calculate_federal_taxes(budget, month):
     FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
     filing_status_row = next((row for row in budget if row['header'] == "Federal Filing Status"), None)
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
 
-    filing_status = filing_status_row.get(add_month) if filing_status_row else "Not Found"
-    taxable_income = taxable_income_row.get(add_month, 0.00) if taxable_income_row else 0.00
+    filing_status = filing_status_row.get(month) if filing_status_row else "Not Found"
+    taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     taxable_income = taxable_income * 12
     tax = 0.00
 
@@ -296,35 +295,36 @@ def calculate_federal_taxes(budget, add_month):
     return -round(tax, 2)
 
 
-def calculate_fica_social_security(budget, add_month):
+def calculate_fica_social_security(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
-    taxable_income = taxable_income_row.get(add_month, 0.00) if taxable_income_row else 0.00
+    taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     return round(-taxable_income * flask_app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
 
-def calculate_fica_medicare(budget, add_month):
+
+def calculate_fica_medicare(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
-    taxable_income = taxable_income_row.get(add_month, 0.00) if taxable_income_row else 0.00
+    taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     return round(-taxable_income * flask_app.config['FICA_MEDICARE_TAX_RATE'], 2)
 
 
-def calculate_sgli(budget, add_month):
+def calculate_sgli(budget, month):
     SGLI_RATES = flask_app.config['SGLI_RATES']
     coverage_row = next((row for row in budget if row['header'] == "SGLI Coverage"), None)
-    coverage = str(coverage_row.get(add_month)) if coverage_row and add_month in coverage_row else "0"
+    coverage = str(coverage_row.get(month)) if coverage_row and month in coverage_row else "0"
     row = SGLI_RATES[SGLI_RATES['coverage'] == coverage]
     total = row.iloc[0]['total'] if not row.empty else 0
     return -abs(total)
 
 
-def calculate_state_taxes(budget, add_month):
+def calculate_state_taxes(budget, month):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
     home_of_record_row = next((row for row in budget if row['header'] == "Home of Record"), None)
     filing_status_row = next((row for row in budget if row['header'] == "State Filing Status"), None)
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
 
-    home_of_record = home_of_record_row.get(add_month) if home_of_record_row else "Not Found"
-    filing_status = filing_status_row.get(add_month) if filing_status_row else "Single"
-    taxable_income = taxable_income_row.get(add_month, 0.00) if taxable_income_row else 0.00
+    home_of_record = home_of_record_row.get(month) if home_of_record_row else "Not Found"
+    filing_status = filing_status_row.get(month) if filing_status_row else "Single"
+    taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     taxable_income = taxable_income * 12
     tax = 0.00
 

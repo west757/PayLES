@@ -6,6 +6,7 @@ from app.utils import (
     load_json,
     convert_numpy_types,
     validate_file,
+    add_row,
     get_months,
     add_recommendations,
 )
@@ -15,7 +16,7 @@ from app.les import (
 )
 from app.budget import (
     build_budget,
-    add_row,
+    init_onetime_rows,
     remove_months,
     add_months,
     update_months,
@@ -61,9 +62,8 @@ def submit_les():
 
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
-
+        budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
         recommendations = add_recommendations(budget, init_month)
 
         session['budget'] = budget
@@ -110,21 +110,21 @@ def update_budget():
     cell_value = request.form.get('value', 0)
     cell_repeat = request.form.get('repeat', False)
 
-    row = next((r for r in budget if r.get('header') == cell_header), None)
-    field = row.get('field')
+    cell_row = next((r for r in budget if r.get('header') == cell_header), None)
+    cell_field = cell_row.get('field')
 
-    if field in ('int', int):
-        value = int(value)
-    elif field in ('float', float):
+    if cell_field in ('int', int):
+        cell_value = int(cell_value)
+    elif cell_field in ('float', float):
         try:
-            value = float(value)
+            cell_value = float(cell_value)
         except ValueError:
-            value = 0.0
-        value *= row.get('sign')
-        value = round(value, 2)
-    repeat = str(repeat).lower() == "true"
+            cell_value = 0.0
+        cell_value *= cell_row.get('sign')
+        cell_value = round(cell_value, 2)
+    cell_repeat = str(cell_repeat).lower() == "true"
 
-    budget, months = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
+    budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
 
     session['budget'] = budget
 

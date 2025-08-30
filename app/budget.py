@@ -253,6 +253,16 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, month):
     return budget
 
 
+def init_onetime_rows(BUDGET_TEMPLATE, budget, months):
+    for row in budget:
+        if row.get('type') in ('e', 'd', 'a'):
+            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
+            if template_row.iloc[0]['onetime']:
+                for m in months[1:]:
+                    row[m] = 0.00
+    return budget
+
+
 
 # =========================
 # update budget months and variables
@@ -287,7 +297,11 @@ def add_months(budget, latest_month, months_num):
 
 
 def update_months(budget, months, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
-    start_idx = months.index(cell_month)
+    if cell_header is None:
+        start_idx = 1
+    else:
+        start_idx = months.index(cell_month)
+
 
     for i in range(start_idx, len(months)):
         prev_month = months[i - 1]
@@ -329,22 +343,24 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
             _, military_housing_area = validate_calculate_zip_mha(zip_code)
             row[working_month] = military_housing_area
 
-        elif (
-            (row['header'].startswith("Trad TSP") or row['header'].startswith("Roth TSP")) and
-            any(x in row['header'] for x in ["Specialty Rate", "Incentive Rate", "Bonus Rate"])
-        ):
-            base_header = "Trad TSP Base Rate" if row['header'].startswith("Trad TSP") else "Roth TSP Base Rate"
-            base_row = next((r for r in budget if r['header'] == base_header), None)
-            if base_row[working_month] == 0:
-                row[working_month] = 0
-            else:
-                row[working_month] = prev_value
-
         elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
             row[working_month] = cell_value
 
-        else:
-            row[working_month] = prev_value
+        elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
+            row[working_month] = row[prev_month]
+
+    # TSP specialty/incentive/bonus zeroing
+    tsp_types = [
+        ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
+        ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
+    ]
+    for base_header, specialty_headers in tsp_types:
+        base_row = next((r for r in budget if r['header'] == base_header), None)
+        if base_row and base_row.get(working_month, 0) == 0:
+            for header in specialty_headers:
+                rate_row = next((r for r in budget if r['header'] == header), None)
+                if rate_row:
+                    rate_row[working_month] = 0
 
 
 def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
@@ -358,15 +374,10 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
         if row.get('sign') == 1:
             if row['header'] in special_calculations:
                 row[working_month] = special_calculations[row['header']](budget, working_month)
-                continue
-
             elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
                 row[working_month] = cell_value
-                continue
-
-            else:
-                prev_value = row.get(prev_month)
-                row[working_month] = prev_value
+            elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
+                row[working_month] = row[prev_month]
 
 
 def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
@@ -382,15 +393,9 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
         if row.get('sign') == -1:
             if row['header'] in special_calculations:
                 row[working_month] = special_calculations[row['header']](budget, working_month)
-                continue
-
             elif row['header'] in ['Traditional TSP', 'Roth TSP']:
                 continue
-
             elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
                 row[working_month] = cell_value
-                continue
-
-            else:
-                prev_value = row.get(prev_month)
-                row[working_month] = prev_value
+            elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
+                row[working_month] = row[prev_month]

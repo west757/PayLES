@@ -23,7 +23,7 @@ Non-Taxable Income,x,0,float,False,False,none,none
 Total Taxes,x,0,float,False,False,none,Sum of all taxes
 Gross Pay,x,0,float,False,False,none,Sum of all positive income
 Net Pay,x,0,float,False,False,none,Sum of all positive and negative income
-Difference,x,0,float,False,False,none,Difference from last month net pay to this month net pay
+Difference,x,0,float,False,False,none,Difference in net pay from current month to previous month
 YTD Entitlements,y,0,float,False,False,none,Year-To-Date Entitlements
 YTD Deductions,y,0,float,False,False,none,Year-To-Date Deductions
 YTD TSP Contribution,y,0,float,False,False,none,Year-To-Date TSP Contribution
