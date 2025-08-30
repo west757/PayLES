@@ -274,7 +274,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
         for (let r of rows) {
             const v = getBudgetValue(r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0.');
+                showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;
             }
         }
@@ -296,7 +296,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
         for (let r of rows) {
             const v = getBudgetValue(r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0.');
+                showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;
             }
         }
@@ -309,43 +309,35 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
         rowHeader.includes('Bonus Rate')
     ) {
         if (value > 100) {
-            showToast('Specialty/Incentive/Bonus Rate cannot be more than 100.');
+            showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
             return false;
         }
         if (rowHeader.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.colMonth) === 0) {
-            showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0.');
+            showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
         if (rowHeader.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.colMonth) === 0) {
-            showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0.');
+            showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
     }
 
-    if (
-        repeat &&
-        (rowHeader.includes('Specialty Rate') ||
-         rowHeader.includes('Incentive Rate') ||
-         rowHeader.includes('Bonus Rate'))
-    ) {
-        const months = extractMonthHeaders();
+    
+    if (repeat && (rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate'))) {
+        const months = window.CONFIG.months;
         const startIdx = months.indexOf(currentEdit.colMonth);
         const baseRow = rowHeader.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
-        for (let i = startIdx; i < months.length; i++) {
+        console.log('Repeat validation:', months.slice(startIdx), baseRow);
+        for (let i = startIdx; i < months.length; i++) { // Only future months
             const baseRate = getBudgetValue(baseRow, months[i]);
             if (parseInt(baseRate, 10) === 0) {
-                showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0 (${months[i]}).`);
+                showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0% (${months[i]}).`);
                 return false;
             }
         }
     }
 
-    if (
-        rowHeader.includes('TSP Base Rate') ||
-        rowHeader.includes('Specialty Rate') ||
-        rowHeader.includes('Incentive Rate') ||
-        rowHeader.includes('Bonus Rate')
-    ) {
+    if (rowHeader.includes('TSP Base Rate') || rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate')) {
         const month = currentEdit.colMonth;
         let tradValue = 0, rothValue = 0;
 

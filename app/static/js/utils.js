@@ -223,16 +223,9 @@ function getBudgetValue(rowHeader, month) {
 }
 
 
-// extract month headers from the budget data
-function extractMonthHeaders() {
-    const differenceRow = window.CONFIG.budget.find(r => r.header === "Difference");
-    return Object.keys(differenceRow).filter(k => k !== "header");
-}
-
-
 // disable TSP rate buttons
 function disableTSPRateButtons() {
-    const months = extractMonthHeaders();
+    const months = window.CONFIG.months;
     months.forEach(month => {
         const tradBase = getBudgetValue('Trad TSP Base Rate', month);
         const rothBase = getBudgetValue('Roth TSP Base Rate', month);
