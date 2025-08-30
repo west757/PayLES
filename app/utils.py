@@ -88,7 +88,7 @@ def get_months(budget):
 def add_recommendations(budget, month):
     recs = []
 
-    # SGLI recommendation
+    # SGLI minimum coverage recommendation
     sgli_rate = next((row[month] for row in budget if row.get('header', '') == 'SGLI Rate'), 0)
     if sgli_rate == 0:
         recs.append(
@@ -97,7 +97,7 @@ def add_recommendations(budget, month):
             'providing you with Traumatic Injury Protection Coverage (TSGLI).</div>'
         )
 
-    # TSP recommendation
+    # TSP matching recommendation
     months_in_service = next((row[month] for row in budget if row.get('header', '') == 'Months in Service'), 0)
     trad_tsp = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
     roth_tsp = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
@@ -107,6 +107,14 @@ def add_recommendations(budget, month):
             'currently taking advantage of the service agency automatic matching up to 5%. It is recommended to increase ' \
             'the Traditional TSP or Roth TSP Base Rate contribution percentages to at least 5% to receive the full matching ' \
             'contributions.</div>'
+        )
+
+    tsp_ytd = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Contribution'), 0)
+    tsp_limit = flask_app.config['TSP_CONTRIBUTION_LIMIT']
+    if tsp_ytd > tsp_limit:
+        recs.append(
+            f'<div class="rec-item"><b>TSP Contribution Limit:</b> You are currently anticipating reaching the limit of TSP contributions for the year, which is ${tsp_limit:,.2f}. '
+            'It is recommended to reduce your TSP contribution percentages to ensure you do not invest over this limit to avoid penalties.</div>'
         )
 
     # state income tax recommendation

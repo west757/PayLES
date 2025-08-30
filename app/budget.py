@@ -11,8 +11,8 @@ from app.utils import (
 )
 from app.calculations import (
     calculate_taxable_income,
-    calculate_total_taxes,
-    calculate_gross_net_pay,
+    calculate_taxes,
+    calculate_inc_exp_net,
     calculate_difference,
     calculate_ytd_rows,
     calculate_base_pay,
@@ -42,8 +42,8 @@ def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, init_month)
     budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, init_month)
     budget = calculate_taxable_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = calculate_total_taxes(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = calculate_gross_net_pay(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_taxes(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_inc_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, init_month)
 
@@ -229,11 +229,11 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, month):
 
     ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
     ytd_entitlement = float(ent_match.group(1)) if ent_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Entitlements', month, ytd_entitlement))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Income', month, ytd_entitlement))
 
     ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
     ytd_deduction = -float(ded_match.group(1)) if ded_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Deductions', month, ytd_deduction))
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Expenses', month, ytd_deduction))
 
     try:
         ytd_tsp = float(les_text[78][2])
@@ -317,8 +317,8 @@ def build_month(budget, prev_month, working_month, cell_header=None, cell_month=
     calculate_trad_roth_tsp(budget, working_month)
     calculate_taxable_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
-    calculate_total_taxes(budget, working_month)
-    calculate_gross_net_pay(budget, working_month)
+    calculate_taxes(budget, working_month)
+    calculate_inc_exp_net(budget, working_month)
     calculate_difference(budget, prev_month, working_month)
     calculate_ytd_rows(budget, prev_month, working_month)
     return budget

@@ -98,46 +98,51 @@ def calculate_taxable_income(budget, working_month, init=False, VARIABLE_TEMPLAT
     return budget
 
 
-def calculate_total_taxes(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
-    total_taxes = 0.00
+def calculate_taxes(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+    taxes = 0.00
 
     for row in budget:
         if row.get('sign') == -1 and row.get('tax', False) and working_month in row:
-            total_taxes += row[working_month]
+            taxes += row[working_month]
 
-    total_taxes = round(total_taxes, 2)
+    taxes = round(taxes, 2)
 
     if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Taxes', working_month, total_taxes))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxes', working_month, taxes))
     else:
         for row in budget:
-            if row['header'] == 'Total Taxes':
-                row[working_month] = total_taxes
+            if row['header'] == 'Taxes':
+                row[working_month] = taxes
 
     return budget
 
 
-def calculate_gross_net_pay(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
-    gross_pay = 0.00
-    for row in budget:
-        if row.get('sign') == 1 and working_month in row:
-            gross_pay += row[working_month]
+def calculate_inc_exp_net(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+    income = 0.00
+    expenses = 0.00
 
-    net_pay = gross_pay
     for row in budget:
-        if row.get('sign') == -1 and working_month in row:
-            net_pay += row[working_month]
+        if working_month in row:
+            if row.get('sign') == 1:
+                income += row[working_month]
+            elif row.get('sign') == -1:
+                expenses += row[working_month]
 
-    gross_pay = round(gross_pay, 2)
+    net_pay = income + expenses
+    income = round(income, 2)
+    expenses = round(expenses, 2)
     net_pay = round(net_pay, 2)
 
     if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Gross Pay', working_month, gross_pay))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Income', working_month, income))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Expenses', working_month, expenses))
         budget.append(add_row(VARIABLE_TEMPLATE, 'Net Pay', working_month, net_pay))
     else:
         for row in budget:
-            if row['header'] == 'Gross Pay':
-                row[working_month] = gross_pay
+            if row['header'] == 'Total Income':
+                row[working_month] = income
+            elif row['header'] == 'Total Expenses':
+                row[working_month] = expenses
             elif row['header'] == 'Net Pay':
                 row[working_month] = net_pay
 
@@ -160,37 +165,38 @@ def calculate_difference(budget, prev_month, working_month, init=False, VARIABLE
 
 
 def calculate_ytd_rows(budget, prev_month, working_month):
-    ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Entitlements'), None)
-    ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Deductions'), None)
+    ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Income'), None)
+    ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Expenses'), None)
     ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP Contribution'), None)
     ytd_charity_row = next((r for r in budget if r['header'] == 'YTD Charity'), None)
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
 
-    gross_pay_row = next((r for r in budget if r['header'] == 'Gross Pay'), None)
-    gross_pay = gross_pay_row[working_month]
+    income_row = next((r for r in budget if r['header'] == 'Total Income'), None)
+    income = income_row[working_month]
 
-    net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
-    net_pay = net_pay_row[working_month]
-
-    deductions = sum(r[working_month] for r in budget if r.get('sign') == -1)
+    expenses_row = next((r for r in budget if r['header'] == 'Total Expenses'), None)
+    expenses = expenses_row[working_month]
 
     trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
     roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
     tsp_total = abs(trad_tsp_row[working_month]) + abs(roth_tsp_row[working_month])
 
-    charity_add = 0.00
+    charity = 0.00
+
+    net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
+    net_pay = net_pay_row[working_month]
 
     if working_month == "JAN":
-        ytd_ent_row[working_month] = gross_pay
-        ytd_ded_row[working_month] = deductions
+        ytd_ent_row[working_month] = income
+        ytd_ded_row[working_month] = expenses
         ytd_tsp_row[working_month] = tsp_total
-        ytd_charity_row[working_month] = charity_add
+        ytd_charity_row[working_month] = charity
         ytd_net_row[working_month] = net_pay
     else:
-        ytd_ent_row[working_month] = round(ytd_ent_row[prev_month] + gross_pay, 2)
-        ytd_ded_row[working_month] = round(ytd_ded_row[prev_month] + deductions, 2)
+        ytd_ent_row[working_month] = round(ytd_ent_row[prev_month] + income, 2)
+        ytd_ded_row[working_month] = round(ytd_ded_row[prev_month] + expenses, 2)
         ytd_tsp_row[working_month] = round(ytd_tsp_row[prev_month] + tsp_total, 2)
-        ytd_charity_row[working_month] = round(ytd_charity_row[prev_month] + charity_add, 2)
+        ytd_charity_row[working_month] = round(ytd_charity_row[prev_month] + charity, 2)
         ytd_net_row[working_month] = round(ytd_net_row[prev_month] + net_pay, 2)
 
     return budget

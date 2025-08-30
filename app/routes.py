@@ -212,7 +212,7 @@ def add_injects():
                 d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
                 insert_idx = max(d_indices, default=-1) + 1
 
-        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, 0.00, init_month)
+        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, init_month, 0.00)
         for idx, m in enumerate(months[1:]):
             inject_row[m] = inject_value
         budget.insert(insert_idx, inject_row)
