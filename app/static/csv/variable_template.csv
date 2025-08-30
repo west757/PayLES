@@ -20,12 +20,13 @@ Roth TSP Incentive Rate,t,0,int,False,True,incentive,none
 Roth TSP Bonus Rate,t,0,int,False,True,bonus,none
 Taxable Income,x,0,float,False,False,none,none
 Non-Taxable Income,x,0,float,False,False,none,none
-Total Taxes,x,0,float,False,False,none,Sum of all taxes
-Gross Pay,x,0,float,False,False,none,Sum of all positive income
-Net Pay,x,0,float,False,False,none,Sum of all positive and negative income
+Taxes,x,0,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
+Total Income,x,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
+Total Expenses,x,0,float,False,False,none,"Sum of all negative pay including deductions, allotments, and expenditures"
+Net Pay,x,0,float,False,False,none,Sum of income and expenses
 Difference,x,0,float,False,False,none,Difference in net pay from current month to previous month
-YTD Entitlements,y,0,float,False,False,none,Year-To-Date Entitlements
-YTD Deductions,y,0,float,False,False,none,Year-To-Date Deductions
-YTD TSP Contribution,y,0,float,False,False,none,Year-To-Date TSP Contribution
-YTD Charity,y,0,float,False,False,none,Year-To-Date Charitable Contributions
-YTD Net Pay,y,0,float,False,False,none,Year-To-Date Net Pay
+YTD Income,y,0,float,False,False,none,Total income from the beginning of the year
+YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the year
+YTD TSP Contribution,y,0,float,False,False,none,Total TSP contributions from the beginning of the year
+YTD Charity,y,0,float,False,False,none,Total charitable contributions from the beginning of the year
+YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year

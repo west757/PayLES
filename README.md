@@ -7,12 +7,8 @@ run: python -m app.main
 
 
 short-term:
-- total tsp deduction per year and contribution limits, max tsp percentage
 - get combat zone from les
 - start without uploading les
-- add charity to custom row
-- deduct tsp before calculating taxes
-- tsp rate maxes change depending on other rows
 
 mid-term:
 - instructions page and overlay on example les
@@ -29,6 +25,7 @@ mid-term:
 - interest feature for accounts
 - import/export for custom rows
 - custom scroll bars
+- update max tsp percentage recommendation
 
 long-term:
 - create leave calculator
@@ -37,6 +34,7 @@ long-term:
 - account for specific pays
 - rework resources, maybe include tags and search
 - pdf export option
+- add charity to custom row
 - joint spouse with two LES's
 - simplify capturing sgli rate and remarks
 - create unit tests
