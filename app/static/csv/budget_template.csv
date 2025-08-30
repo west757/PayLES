@@ -72,9 +72,9 @@ SICA,e,1,float,False,True,clothingallowance,False,True,SICA,Standard Initial Clo
 SUPP CMA,e,1,float,False,True,clothingallowance,False,True,SUPP CMA,Enlisted Supplemental Clothing Allowance
 TDY CCA,e,1,float,False,True,clothingallowance,False,True,TDY CCA,Temporary Duty Civilian Clothing Allowance
 UEA Initial,e,1,float,False,True,clothingallowance,False,True,UEA INITIAL,Initial Clothing Allowance
-SBP,e,1,float,False,True,sbp,False,False,SBP,Military Survivor Benefits Plan
-CIP,e,1,float,False,True,cip,False,False,CIP,Combat-Related Injury and Rehabilitation
-Advance Debt,e,1,float,False,True,debt,False,True,ADVANCE DEBT,Advance Debt Payment
+SBP,e,1,float,False,True,none,False,False,SBP,Military Survivor Benefits Plan
+CIP,e,1,float,False,True,none,False,False,CIP,Combat-Related Injury and Rehabilitation
+Advance Debt,e,1,float,False,True,none,False,True,ADVANCE DEBT,Advance Debt Payment
 BRA,e,1,float,False,True,none,False,False,BRA,Basic Replacement Allowance
 CVI,e,1,float,False,True,none,False,False,CVI,Conditional Voluntary Indefinite Status
 FSA,e,1,float,False,True,none,False,False,FSA,Family Separation Allowance
@@ -83,11 +83,11 @@ FSSA,e,1,float,False,True,none,False,False,FSSA,Family Subsistence Supplemental 
 OEP,e,1,float,False,True,none,False,False,OEP,Overseas Extension Pay
 Ref Social Security,e,1,float,False,False,none,False,True,REF SOC SECURITY,Refund Social Security
 VI,e,1,float,False,True,none,False,False,VI,Voluntary Indefinite Status
-Career Sea Pay,e,1,float,False,True,navy,False,False,CSP,Career Sea Pay
-CSP-P,e,1,float,False,True,navy,False,False,CSP-P,Career Sea Pay - Premium
-SDIP,e,1,float,False,True,navy,False,False,SDIP,Submarine Duty Incentive Pay
-Sea Pay,e,1,float,False,True,navy,False,False,SP,Sea Pay
-Split Payment Option,e,1,float,False,True,navy,False,False,SPO,Split Payment Option
+Career Sea Pay,e,1,float,False,True,none,False,False,CSP,Career Sea Pay
+CSP-P,e,1,float,False,True,none,False,False,CSP-P,Career Sea Pay - Premium
+SDIP,e,1,float,False,True,none,False,False,SDIP,Submarine Duty Incentive Pay
+Sea Pay,e,1,float,False,True,none,False,False,SP,Sea Pay
+Split Payment Option,e,1,float,False,True,none,False,False,SPO,Split Payment Option
 Federal Taxes,d,-1,float,True,False,federaltaxes,True,False,FEDERAL TAXES,Federal Taxes
 FICA - Social Security,d,-1,float,True,False,fica,True,False,FICA-SOC SECURITY,FICA - Social Security
 FICA - Medicare,d,-1,float,True,False,fica,True,False,FICA-MEDICARE,FICA - Medicare
@@ -106,10 +106,10 @@ GPLD,d,-1,float,False,True,debt,False,True,GPLD,Government Property Lost or Dama
 Meal Deduction,d,-1,float,False,True,bas,False,False,MEAL DEDUCT,Meal Deduction
 Partial Pay,d,-1,float,False,True,none,False,True,PARTIAL PAY,Partial Pay
 Pay Released,d,-1,float,False,True,none,False,True,PAY RELEASED,Pay Released
-SUPP/COM,d,-1,float,False,True,suppcom,False,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
+SUPP/COM,d,-1,float,False,True,none,False,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
 Repay Advance,d,-1,float,False,True,none,False,True,REPAY ADVANCE,Repayment of Advance Pay
-Split Pay,d,-1,float,False,True,navy,False,False,SPLIT PAY,Split Pay Option
-Split Pay Option,d,-1,float,False,True,navy,False,False,SPO PAYMENT,Split Pay Option Payment for Accounting
+Split Pay,d,-1,float,False,True,none,False,False,SPLIT PAY,Split Pay Option
+Split Pay Option,d,-1,float,False,True,none,False,False,SPO PAYMENT,Split Pay Option Payment for Accounting
 AFRH,d,-1,float,False,True,afrh,False,False,AFRH,Armed Forces Retirement Home
 USN/MC AFRH,d,-1,float,False,True,afrh,False,False,USN/MC RET HOME,Armed Forces Retirement Home
 USSH AFRH,d,-1,float,False,True,afrh,False,False,USSH,Armed Forces Retirement Home

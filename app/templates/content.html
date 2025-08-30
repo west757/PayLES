@@ -53,7 +53,7 @@
 
 
                     <!-- show Year-To-Date Rows -->
-                    <tr>
+                    <tr class="section-break">
                         <td>
                             <label for="show-ytd-rows-checkbox">Show YTD Rows:</label>
                             <input class="input-checkbox" type="checkbox" id="show-ytd-rows-checkbox">
@@ -78,7 +78,7 @@
 
 
                     <!-- LES recommendations -->
-                    <tr>
+                    <tr class="section-break">
                         <td>
                             <button id="button-recs" class="button-solo">Recommendations</button>
                         </td>
@@ -247,7 +247,7 @@
                     <div id="inject-custom">
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-custom-header">Row Header:</label>
-                            <input id="inject-custom-header" class="input-long" type="text" placeholder="unique row header">
+                            <input id="inject-custom-header" class="input-long" type="text" placeholder="Unique Row Header">
                         </div>
                         <div class="inject-template-custom-row">
                             <label class="inject-label" for="inject-custom-value">Initial Value:</label>
@@ -272,6 +272,117 @@
                 <div id="inject-info-column">
                     <div id="inject-template-info"></div>
                     <div id="inject-custom-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- account modal-->
+    <input id="account" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="account"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Add Custom Account Row</h2>
+
+            <div id="account-grid">
+                <div id="account-type-method">
+                    <!-- row type radio buttons -->
+                    <div id="account-type">
+                        <span class="account-span">Account Type:</span>
+                        <div class="account-radio-group">
+                            <label>
+                                <input id="account-type-entitlement" type="radio" name="row-type" value="tsp" >
+                                TSP Account
+                            </label>
+                            <label>
+                                <input id="account-type-deduction" type="radio" name="row-type" value="bank">
+                                Bank Account
+                            </label>
+                            <label>
+                                <input id="account-type-allotment" type="radio" name="row-type" value="custom">
+                                Custom
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="account-tsp-bank-custom">
+                    <!-- add tsp account -->
+                    <div id="account-tsp">
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-tsp-header">Row Header:</label>
+                            <input id="account-tsp-header" class="input-long" type="text" placeholder="Unique Account Header">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-tsp-value">Initial Value:</label>
+                            $&nbsp;
+                            <input id="account-tsp-value" class="input-mid2" type="text" placeholder="1234.56">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-tsp-interest">Interest Rate:</label>
+                            <input id="account-tsp-interest" class="input-short" type="text" placeholder="0.00%">
+                            <span class="interest-tooltip" data-tooltip=
+                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
+                            ?</span>
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <button id="account-tsp-button" class="button-solo">Add Account</button>
+                        </div>
+                    </div>
+
+                    <!-- add bank account -->
+                    <div id="account-bank">
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-bank-header">Row Header:</label>
+                            <input id="account-bank-header" class="input-long" type="text" placeholder="Unique Account Header">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-bank-value">Initial Value:</label>
+                            $&nbsp;
+                            <input id="account-bank-value" class="input-mid2" type="text" placeholder="1234.56">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-bank-interest">Interest Rate:</label>
+                            <input id="account-bank-interest" class="input-short" type="text" placeholder="0.00%">
+                            <span class="interest-tooltip" data-tooltip=
+                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
+                            ?</span>
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <button id="account-bank-button" class="button-solo">Add Account</button>
+                        </div>
+                    </div>
+
+                    <!-- add custom account -->
+                    <div id="account-custom">
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-custom-header">Row Header:</label>
+                            <input id="account-custom-header" class="input-long" type="text" placeholder="Unique Account Header">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-custom-value">Initial Value:</label>
+                            $&nbsp;
+                            <input id="account-custom-value" class="input-mid2" type="text" placeholder="1234.56">
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <label class="account-label" for="account-custom-interest">Interest Rate:</label>
+                            <input id="account-custom-interest" class="input-short" type="text" placeholder="0.00%">
+                            <span class="interest-tooltip" data-tooltip=
+                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
+                            ?</span>
+                        </div>
+                        <div class="account-tsp-bank-custom-row">
+                            <button id="account-custom-button" class="button-solo">Add Account</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="account-info-column">
+                    <div id="account-tsp-info"></div>
+                    <div id="account-bank-info"></div>
+                    <div id="account-custom-info"></div>
                 </div>
             </div>
         </div>

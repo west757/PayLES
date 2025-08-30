@@ -10,9 +10,8 @@ from app.utils import (
     get_months,
 )
 from app.calculations import (
-    calculate_taxable_income,
-    calculate_taxes,
-    calculate_inc_exp_net,
+    calculate_income,
+    calculate_tax_exp_net,
     calculate_difference,
     calculate_ytd_rows,
     calculate_base_pay,
@@ -41,9 +40,8 @@ def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     budget = []
     budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, init_month)
     budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, init_month)
-    budget = calculate_taxable_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = calculate_taxes(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = calculate_inc_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, init_month)
 
@@ -315,10 +313,9 @@ def build_month(budget, prev_month, working_month, cell_header=None, cell_month=
     update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     calculate_trad_roth_tsp(budget, working_month)
-    calculate_taxable_income(budget, working_month)
+    calculate_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
-    calculate_taxes(budget, working_month)
-    calculate_inc_exp_net(budget, working_month)
+    calculate_tax_exp_net(budget, working_month)
     calculate_difference(budget, prev_month, working_month)
     calculate_ytd_rows(budget, prev_month, working_month)
     return budget

@@ -58,7 +58,7 @@ def calculate_trad_roth_tsp(budget, working_month):
     return budget
 
 
-def calculate_taxable_income(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+def calculate_income(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
     taxable = 0.00
     nontaxable = 0.00
 
@@ -84,63 +84,51 @@ def calculate_taxable_income(budget, working_month, init=False, VARIABLE_TEMPLAT
 
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
+    income = round(taxable + nontaxable, 2)
 
     if init:
         budget.append(add_row(VARIABLE_TEMPLATE, 'Taxable Income', working_month, taxable))
         budget.append(add_row(VARIABLE_TEMPLATE, 'Non-Taxable Income', working_month, nontaxable))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Income', working_month, income))
     else:
         for row in budget:
             if row['header'] == 'Taxable Income':
                 row[working_month] = taxable
             elif row['header'] == 'Non-Taxable Income':
                 row[working_month] = nontaxable
+            elif row['header'] == 'Total Income':
+                row[working_month] = income
 
     return budget
 
 
-def calculate_taxes(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+def calculate_tax_exp_net(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
     taxes = 0.00
-
-    for row in budget:
-        if row.get('sign') == -1 and row.get('tax', False) and working_month in row:
-            taxes += row[working_month]
-
-    taxes = round(taxes, 2)
-
-    if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxes', working_month, taxes))
-    else:
-        for row in budget:
-            if row['header'] == 'Taxes':
-                row[working_month] = taxes
-
-    return budget
-
-
-def calculate_inc_exp_net(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
-    income = 0.00
     expenses = 0.00
 
     for row in budget:
         if working_month in row:
-            if row.get('sign') == 1:
-                income += row[working_month]
-            elif row.get('sign') == -1:
+            if row.get('sign') == -1:
                 expenses += row[working_month]
+                if row.get('tax', False):
+                    taxes += row[working_month]
+
+    income_row = next((r for r in budget if r.get('header') == 'Total Income'), None)
+    income = income_row[working_month]
 
     net_pay = income + expenses
-    income = round(income, 2)
     expenses = round(expenses, 2)
+    taxes = round(taxes, 2)
     net_pay = round(net_pay, 2)
 
     if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Income', working_month, income))
+        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxes', working_month, taxes))
         budget.append(add_row(VARIABLE_TEMPLATE, 'Total Expenses', working_month, expenses))
         budget.append(add_row(VARIABLE_TEMPLATE, 'Net Pay', working_month, net_pay))
     else:
         for row in budget:
-            if row['header'] == 'Total Income':
-                row[working_month] = income
+            if row['header'] == 'Taxes':
+                row[working_month] = taxes
             elif row['header'] == 'Total Expenses':
                 row[working_month] = expenses
             elif row['header'] == 'Net Pay':
