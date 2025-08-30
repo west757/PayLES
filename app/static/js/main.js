@@ -62,7 +62,7 @@ document.addEventListener('mousemove', function(e) {
         }
     }
 
-    if (e.target && e.target.classList && e.target.classList.contains('tax-tooltip')) {
+    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
@@ -89,7 +89,7 @@ document.addEventListener('mouseleave', function(e) {
         hideTooltip();
     }
 
-    if (e.target && e.target.classList && e.target.classList.contains('tax-tooltip')) {
+    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
         hideTooltip();
     }
 }, true);
@@ -157,6 +157,12 @@ document.addEventListener('click', function(e) {
         const injectModalCheckbox = document.getElementById('inject');
         injectModalCheckbox.checked = true;
         resetInjectModal();
+    }
+
+    // open account modal
+    if (e.target && e.target.id === 'button-account') {
+        const accountModalCheckbox = document.getElementById('account');
+        accountModalCheckbox.checked = true;
     }
 
     // open recs modal
