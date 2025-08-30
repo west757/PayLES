@@ -1,51 +1,77 @@
 // states
-let selectedRowType = null;
 let selectedMethod = null;
+let selectedRowType = null;
 
 
 // attach inject modal event listeners
 function attachInjectModalListeners() {
     const el = getInjectModalElements();
-    resetInjectModal('all');
+    resetInjectModal();
 
-    // attach type radio button event listeners
-    [el.typeEntitlement, el.typeDeduction, el.typeAllotment].forEach(radio => {
-        radio.addEventListener('change', function() {
-            resetInjectModal('method');
-            selectedRowType = this.value;
-        });
-    });
-
-    // attach method radio button event listeners
+    // method radio buttons (template/custom)
     [el.methodTemplate, el.methodCustom].forEach(radio => {
         radio.addEventListener('change', function() {
+            selectedMethod = this.value;
+
             if (this.value === 'template') {
-                resetInjectModal('template');
-                selectedMethod = 'template';
-                populateTemplateDropdown(selectedRowType);
+                el.templateTypes.style.display = 'flex';
+                el.typeEntitlement.checked = false;
+                el.typeDeduction.checked = false;
+                el.typeAllotment.checked = false;
+                el.customTypes.style.display = 'none';
+                el.templateSection.style.display = 'none';
+                el.customSection.style.display = 'none';
+                el.templateInfo.style.display = 'none';
+                el.customInfo.style.display = 'none';
             } else if (this.value === 'custom') {
-                resetInjectModal('custom');
-                selectedMethod = 'custom';
+                el.templateTypes.style.display = 'none';
+                el.customTypes.style.display = 'flex';
+                el.typeIncome.checked = false;
+                el.typeExpense.checked = false;
+                el.templateSection.style.display = 'none';
+                el.customSection.style.display = 'none';
+                el.templateInfo.style.display = 'none';
+                el.customInfo.style.display = 'none';
             }
         });
     });
 
-    //attach custom header event listener
-    el.customHeader.addEventListener('input', setInputRestriction('text', 20));
+    // template row type radio buttons (entitlement/deduction/allotment)
+    [el.typeEntitlement, el.typeDeduction, el.typeAllotment].forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedRowType = this.value;
+            el.templateSection.style.display = 'flex';
+            el.customSection.style.display = 'none';
+            el.templateInfo.style.display = 'flex';
+            el.customInfo.style.display = 'none';
+            populateTemplateDropdown(selectedRowType);
+        });
+    });
 
-    // attach template and custom value event listeners
+    // custom row type radio buttons (income/expense)
+    [el.typeIncome, el.typeExpense].forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedRowType = this.value;
+            el.templateSection.style.display = 'none';
+            el.customSection.style.display = 'flex';
+            el.templateInfo.style.display = 'none';
+            el.customInfo.style.display = 'flex';
+            setCustomInfo(selectedRowType, el.customInfo);
+        });
+    });
+
+    // attach input restrictions and button listeners
+    el.customHeader.addEventListener('input', setInputRestriction('text', 20));
     [el.templateValue, el.customValue].forEach(input => {
         input.addEventListener('input', setInputRestriction('money'));
     });
 
-    // attach template button event listener
     el.templateButton.addEventListener('click', function() {
         let header = el.templateSelect.value;
         let value = el.templateValue.value.trim();
-
         if (!validateInject({ mode: 'template', header, value })) return;
 
-        htmx.ajax('POST', '/add_injects', {
+        htmx.ajax('POST', '/add_inject', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -58,15 +84,13 @@ function attachInjectModalListeners() {
         el.injectModalCheckbox.checked = false;
     });
 
-    // attach custom button event listener
     el.customButton.addEventListener('click', function() {
         let header = el.customHeader.value;
         let tax = el.customTax.checked ? 'true' : 'false';
         let value = el.customValue.value.trim();
-
         if (!validateInject({ mode: 'custom', header, value })) return;
 
-        htmx.ajax('POST', '/add_injects', {
+        htmx.ajax('POST', '/add_inject', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -82,98 +106,81 @@ function attachInjectModalListeners() {
 }
 
 
-// reset inject modal according to scope
-function resetInjectModal(scope = 'all') {
+// reset inject modal
+function resetInjectModal() {
     const el = getInjectModalElements();
 
-    el.methodSection.style.display = 'none';
+    el.methodTemplate.checked = false;
+    el.methodCustom.checked = false;
+
+    el.templateTypes.style.display = 'none';
+    el.typeEntitlement.checked = false;
+    el.typeDeduction.checked = false;
+    el.typeAllotment.checked = false;
+
+    el.customTypes.style.display = 'none';
+    el.typeIncome.checked = false;
+    el.typeExpense.checked = false;
+
     el.templateSection.style.display = 'none';
+    el.templateSelect.innerHTML = '';
+    el.templateValue.value = '';
     el.customSection.style.display = 'none';
+    el.customHeader.value = '';
+    el.customTax.checked = false;
+    el.customValue.value = '';
     el.templateInfo.style.display = 'none';
     el.customInfo.style.display = 'none';
+}
 
-    if (scope === 'all') {
-        el.typeEntitlement.checked = false;
-        el.typeDeduction.checked = false;
-        el.typeAllotment.checked = false;
-    } 
-    else if (scope === 'method') {
-        el.methodSection.style.display = 'flex';
-        el.methodTemplate.checked = false;
-        el.methodCustom.checked = false;
-    } 
-    else if (scope === 'template') {
-        el.methodSection.style.display = 'flex';
-        el.templateSection.style.display = 'flex';
-        el.templateSelect.innerHTML = '';
-        el.templateValue.value = '';
-        el.templateInfo.style.display = 'block';
-        el.customInfo.style.display = 'none';
-    } 
-    else if (scope === 'custom') {
-        el.methodSection.style.display = 'flex';
-        el.customSection.style.display = 'flex';
-        el.customHeader.value = '';
-        el.customTax.checked = false;
-        el.customValue.value = '';
-        el.templateInfo.style.display = 'none';
-        el.customInfo.style.display = 'block';
 
-        // Set custom info based on selectedRowType
-        let infoHtml = '';
-        if (selectedRowType === 'e') {
-            infoHtml = `<strong>Example Entitlements:</strong>
-                <div class="inject-list-grid">
-                    <ul>
-                        <li>Second Job</li>
-                        <li>Tips</li>
-                        <li>Cash Gifts</li>
-                        <li>Prize Money</li>
-                        <li>Interest</li>
-                        <li>Sold Assets</li>
-                    </ul>
-                    <ul>
-                        <li>Rental Income</li>
-                        <li>Capital Gains</li>
-                        <li>Royalties</li>
-                        <li>Commissions</li>
-                        <li>Compensation</li>
-                    </ul>
-                </div>`;
-        } else if (selectedRowType === 'd') {
-            infoHtml = `<strong>Example Entitlements:</strong>
-                <div class="inject-list-grid">
-                    <ul>
-                        <li>Rent</li>
-                        <li>Utilities</li>
-                        <li>Insurance</li>
-                        <li>Tuition</li>
-                    </ul>
-                    <ul>
-                        <li>Vehicle Maintenance</li>
-                        <li>Pet Expenses</li>
-                        <li>Phone Plan</li>
-                    </ul>
-                </div>`;
-        } else if (selectedRowType === 'a') {
-            infoHtml = `<strong>Example Entitlements:</strong>
-                <div class="inject-list-grid">
-                    <ul>
-                        <li>Alimony</li>
-                        <li></li>
-                        <li></li>
-                    </ul>
-                    <ul>
-                        <li>Child Support</li>
-                        <li></li>
-                        <li></li>
-                    </ul>
-                </div>`;
-        } else {
-            infoHtml = '';
-        }
-        el.customInfo.innerHTML = infoHtml;
+// set custom info
+function setCustomInfo(rowType, infoElem) {
+    let infoHtml = '';
+    if (rowType === 'e') {
+        infoHtml = `<strong>Example Income:</strong>
+            <div class="inject-list-grid">
+                <ul>
+                    <li>Second Job</li>
+                    <li>Tips</li>
+                    <li>Cash Gifts</li>
+                    <li>Prize Money</li>
+                    <li>Interest</li>
+                    <li>Sold Assets</li>
+                </ul>
+                <ul>
+                    <li>Rental Income</li>
+                    <li>Capital Gains</li>
+                    <li>Royalties</li>
+                    <li>Commissions</li>
+                    <li>Compensation</li>
+                </ul>
+            </div>`;
+    } else if (rowType === 'd') {
+        infoHtml = `<strong>Example Expenses:</strong>
+            <div class="inject-list-grid">
+                <ul>
+                    <li>Rent</li>
+                    <li>Utilities</li>
+                    <li>Groceries</li>
+                    <li>Eating Out</li>
+                    <li>Gas</li>
+                    <li>Clothing</li>
+                    <li>Tuition</li>
+                </ul>
+                <ul>
+                    <li>Auto Maintenance</li>
+                    <li>Entertainment</li>
+                    <li>Subscriptions</li>
+                    <li>Travel</li>
+                    <li>Insurance</li>
+                    <li>Cleaning Supplies</li>
+                    <li>Pet Expenses</li>
+                </ul>
+            </div>`;
     }
+    infoElem.innerHTML = infoHtml;
+    infoElem.style.display = infoHtml ? 'block' : 'none';
 }
 
 
@@ -181,22 +188,29 @@ function resetInjectModal(scope = 'all') {
 function getInjectModalElements() {
     return {
         injectModalCheckbox: document.getElementById('inject'),
+        methodTemplate: document.getElementById('inject-method-template'),
+        methodCustom: document.getElementById('inject-method-custom'),
+
+        templateTypes: document.getElementById('inject-template-types'),
         typeEntitlement: document.getElementById('inject-type-entitlement'),
         typeDeduction: document.getElementById('inject-type-deduction'),
         typeAllotment: document.getElementById('inject-type-allotment'),
-        methodSection: document.getElementById('inject-method'),
-        methodTemplate: document.getElementById('inject-method-template'),
-        methodCustom: document.getElementById('inject-method-custom'),
+
+        customTypes: document.getElementById('inject-custom-types'),
+        typeIncome: document.getElementById('inject-type-income'),
+        typeExpense: document.getElementById('inject-type-expense'),
+
         templateSection: document.getElementById('inject-template'),
         templateSelect: document.getElementById('inject-template-select'),
         templateValue: document.getElementById('inject-template-value'),
         templateButton: document.getElementById('inject-template-button'),
+        templateInfo: document.getElementById('inject-template-info'),
+
         customSection: document.getElementById('inject-custom'),
         customHeader: document.getElementById('inject-custom-header'),
         customTax: document.getElementById('inject-custom-tax'),
         customValue: document.getElementById('inject-custom-value'),
         customButton: document.getElementById('inject-custom-button'),
-        templateInfo: document.getElementById('inject-template-info'),
         customInfo: document.getElementById('inject-custom-info'),
     };
 }
