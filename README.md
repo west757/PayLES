@@ -28,6 +28,7 @@ mid-term:
 - add pro-rated calculations for cells
 - interest feature for accounts
 - import/export for custom rows
+- custom scroll bars
 
 long-term:
 - create leave calculator

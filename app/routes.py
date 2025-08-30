@@ -74,6 +74,7 @@ def submit_les():
 
         config_js = {
             'budget': convert_numpy_types(budget),
+            'months': months,
             'headers': headers,
             'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
             'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
@@ -130,6 +131,7 @@ def update_budget():
 
     config_js = {
         'budget': convert_numpy_types(budget),
+        'months': months,
     }
     context = {
         'config_js': config_js,
@@ -159,6 +161,7 @@ def change_months():
 
     config_js = {
         'budget': convert_numpy_types(budget),
+        'months': months,
     }
     context = {
         'config_js': config_js,
@@ -264,6 +267,7 @@ def add_injects():
 
     config_js = {
         'budget': convert_numpy_types(budget),
+        'months': months,
         'headers': headers,
     }
     context = {
@@ -296,6 +300,7 @@ def remove_row():
 
     config_js = {
         'budget': convert_numpy_types(budget),
+        'months': months,
         'headers': headers,
     }
     context = {
