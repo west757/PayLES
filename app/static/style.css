@@ -261,9 +261,9 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-submit-les {
+#button-single {
     height: 3.5rem;
-    width: 73%;
+    width: 16rem;
 }
 
 #button-submit-example {
@@ -431,7 +431,7 @@ input[type="text"], select {
 
 
 /* =========================
-   checkboxes and radio buttons
+   checkboxes, radio buttons, and file input
    ========================= */
 
 input.input-checkbox {
@@ -452,6 +452,13 @@ input[type="radio"] {
     width: 1rem;
 }
 
+input[type=file] {
+    border: 1px solid var(--primary_dark_accent_color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
 
 /* =========================
    home
@@ -461,12 +468,47 @@ input[type="radio"] {
     text-align: center;
 }
 
-#home-form-container {
-    margin: auto;
-    width: 36rem;
+#tab-container {
+    margin: 2rem auto 0 auto;
+    width: 55rem;
+    border-radius: 1rem;
 }
 
-#home-drop {
+#tab-buttons {
+    display: flex;
+    justify-content: stretch;
+    align-items: flex-end;
+    position: relative;
+}
+
+.tab-button {
+    flex: 1;
+    background: var(--secondary_light_accent_color);
+    border: none;
+    border-radius: 1rem 1rem 0 0;
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.tab-button.active {
+    background: var(--highlight_green_color);
+}
+
+#tab-joint-les, #tab-without-les, #tab-example-les {
+    display: none;
+}
+
+.tab-content {
+    background-color: var(--primary_light_accent_color);
+    display: block;
+    border-radius: 0 0 1rem 1rem;
+    padding: 2rem 2rem 1rem 2rem;
+    position: relative;
+}
+
+#single-drop {
     align-items: center;
     border: 2px dashed var(--primary_dark_accent_color);
     border-radius: 1rem;
@@ -476,37 +518,35 @@ input[type="radio"] {
     gap: 0.75rem;
     height: 14rem;
     justify-content: center;
+    margin: 0 auto 2rem auto;
     padding: 1rem;
     transition: background .2s ease-in-out;
-    width: 100%;
+    width: 80%;
 }
 
-#home-drop:hover, #home-drop.drag-active {
-    background-color: var(--light_text_color);
+#single-drop:hover, #single-drop.drag-active {
+    background-color: var(--input_background_color);
 }
 
 #home_input {
     width: 28rem;
 }
 
-input[type=file] {
-    border: 1px solid var(--primary_dark_accent_color);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
+.joint-les-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
 }
 
-#home-buttons-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 1.5rem 0;
-    width: 100%;
-}
 
 #disclaimer {
     margin-top: 2rem;
     text-align: left;
 }
+
+
+
 
 
 /* =========================
@@ -800,8 +840,6 @@ input[type=file] {
     border: 1px solid black;
 }
 
-
-
 .modal-grid {
     align-items: flex-start;
     display: grid;
@@ -986,4 +1024,7 @@ input[type=file] {
 .resource:hover {
     background-color: var(--highlight_green_color);
 }
+
+
+
 

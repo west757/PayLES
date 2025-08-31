@@ -6,25 +6,69 @@
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
     </p>
     <p class="text-mid">
-        Upload your most recent LES as a pdf below to get started. <br>
-        If you do not have a LES, visit <a href="https://mypay.dfas.mil/#/" target="_blank">MyPay.mil</a> to download your own. <br>
-        Or, use the example LES provided to see how PayLES works.
+        Please select the appropriate option below to get started.
     </p>
 
-    <div id="home-form-container">
-        <form id="home-form" hx-post="/submit_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-            {{ home_form.hidden_tag() }}
-            <label id="home-drop" for="{{ home_form.home_input.id }}">
-                <span class="text-mid">Drop LES here</span>
-                or
-                {{ home_form.home_input(id="home_input", class="form-control", accept=".pdf") }}
-            </label>
+    <div id="tab-container" class="shadow">
+        <div id="tab-buttons">
+            <button class="tab-button active" data-tab="single-les">Upload Single LES</button>
+            <button class="tab-button" data-tab="joint-les">Upload Joint Spouse</button>
+            <button class="tab-button" data-tab="without-les">Begin Without LES</button>
+            <button class="tab-button" data-tab="example-les">Instructions & Example</button>
+        </div>
 
-            <div id="home-buttons-row">
-                {{ home_form.submit_les(id="button-submit-les", class="button-solo") }}
-                {{ home_form.submit_example(id="button-submit-example", class="button-solo") }}
+        <div id="tab-single-les" class="tab-content">
+            <form id="form-single-les" hx-post="/submit_single_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ home_form.hidden_tag() }}
+                <label id="single-drop" for="{{ home_form.home_input.id }}">
+                    <span class="text-mid">Drop LES here</span>
+                    or
+                    {{ home_form.home_input(id="home_input", class="form-control", accept=".pdf") }}
+                </label>
+                {{ home_form.submit_les(id="button-single", class="button-solo") }}
+            </form>
+        </div>
+
+        <div id="tab-joint-les" class="tab-content">
+            <form id="form-joint-les" hx-post="/submit_joint_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ home_form.hidden_tag() }}
+                <div class="joint-les-row">
+                    <label for="joint_les_1">
+                        <span>Drop Member 1 LES</span>
+                        <input type="file" id="joint_les_1" name="joint_les_1" class="form-control" accept=".pdf">
+                    </label>
+                    <label for="joint_les_2">
+                        <span>Drop Member 2 LES</span>
+                        <input type="file" id="joint_les_2" name="joint_les_2" class="form-control" accept=".pdf">
+                    </label>
+                </div>
+                <button type="submit" id="button-submit-joint-les" class="button-solo">Submit Both LES</button>
+            </form>
+        </div>
+
+        <div id="tab-without-les" class="tab-content">
+            <form id="form-without-les" hx-post="/submit_without_les" hx-swap="innerHTML" method="POST">
+                <div id="variables-inputs">
+                    <label for="grade">Grade:</label>
+                    <select id="grade" name="grade">
+                        <option value="E1">E1</option>
+                        <option value="E2">E2</option>
+                    </select>
+                </div>
+                <button type="submit" id="button-submit-without-les" class="button-solo">Submit Without LES</button>
+            </form>
+        </div>
+
+        <div id="tab-example-les" class="tab-content">
+            <div id="example-content">
+                <h3>Instructions</h3>
+                <p>Upload your most recent LES as a PDF to get started. If you do not have a LES, visit <a href="https://mypay.dfas.mil/#/" target="_blank">MyPay.mil</a> to download your own. Or, use the example LES provided to see how PayLES works.</p>
+                <form id="form-example-les" hx-post="/submit_example_les" hx-swap="innerHTML" method="POST">
+                    {{ home_form.hidden_tag() }}
+                    {{ home_form.submit_example(id="button-submit-example", class="button-solo") }}
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <div id="disclaimer">
@@ -38,6 +82,7 @@
     </div>
 </div>
 
+<!--
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.attachHomeFormListener) {
@@ -45,5 +90,6 @@
         }
     });
 </script>
+-->
 
 {% endblock %}
