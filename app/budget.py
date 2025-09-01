@@ -40,8 +40,10 @@ def init_budget(les_pdf=None, initials=None):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+    context = {}
+    les_text = None
 
-    if les_pdf is not None:
+    if les_pdf:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         context['les_image'] = les_image
         context['rect_overlay'] = rect_overlay
@@ -62,127 +64,157 @@ def init_budget(les_pdf=None, initials=None):
         'months': months,
         'headers': headers,
     }
-    context = {
+    context.update({
         'config_js': config_js,
         'budget': convert_numpy_types(budget),
         'months': months,
         'headers': headers,
         'recommendations': recommendations,
         'MODALS': MODALS,
-    }
-
+    })
     return context
 
 
 
 def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
-    if les_text is not None:
+    if les_text:
         try:
             init_month = les_text[8][3]
         except Exception as e:
             raise Exception(f"Error determining initial month: {e}")
-    elif initials is not None:
-        init_month = initials.get('current_month', '')
+    elif initials:
+        init_month = initials['current_month']
 
     if init_month not in flask_app.config['MONTHS_SHORT']:
         raise ValueError(f"Error: '{init_month}', is not in MONTHS_SHORT")
 
     budget = []
-    budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, init_month)
-    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, init_month)
+    budget = add_variables(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
+    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text, initials)
     budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, init_month)
+    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
 
     return budget, init_month
 
 
-def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
-    try:
-        year = int('20' + les_text[8][4])
-    except Exception:
-        year = 0
+def add_variables(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
+    if les_text:
+        try:
+            year = int('20' + les_text[8][4])
+        except Exception:
+            year = 0
+    elif initials:
+        year = initials['current_year']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Year', month, year))
 
-    try:
-        pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
-        les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
-        months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
-    except Exception:
-        months_in_service = 0
+    if les_text:
+        try:
+            pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
+            les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
+            months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
+        except Exception:
+            months_in_service = 0
+    elif initials:
+        months_in_service = initials['months_in_service']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', month, months_in_service))
 
-    try:
-        grade = les_text[2][1]
-    except Exception:
-        grade = "Not Found"
+    if les_text:
+        try:
+            grade = les_text[2][1]
+        except Exception:
+            grade = "Not Found"
+    elif initials:
+        grade = initials['grade']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Grade', month, grade))
 
-    try:
-        zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
-    except Exception:
-        zip_code, military_housing_area = "Not Found", "Not Found"
+    if les_text:
+        try:
+            zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
+        except Exception:
+            zip_code, military_housing_area = "Not Found", "Not Found"
+    elif initials:
+        zip_code = initials['zip_code']
+        _, military_housing_area = validate_calculate_zip_mha(zip_code)
     budget.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', month, zip_code))
     budget.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', month, military_housing_area))
 
-    try:
-        home_of_record = validate_home_of_record(les_text[39][1])
-    except Exception:
-        home_of_record = "Not Found"
+    if les_text:
+        try:
+            home_of_record = validate_home_of_record(les_text[39][1])
+        except Exception:
+            home_of_record = "Not Found"
+    elif initials:
+        home_of_record = initials['home_of_record']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', month, home_of_record))
 
-    try:
-        dependents = int(les_text[53][1])
-    except Exception:
-        dependents = 0
+    if les_text:
+        try:
+            dependents = int(les_text[53][1])
+        except Exception:
+            dependents = 0
+    elif initials:
+        dependents = initials['dependents']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Dependents', month, dependents))
 
-    try:
-        status = les_text[24][1]
-        if status == "S":
-            federal_filing_status = "Single"
-        elif status == "M":
-            federal_filing_status = "Married"
-        elif status == "H":
-            federal_filing_status = "Head of Household"
-        else:
+    if les_text:
+        try:
+            status = les_text[24][1]
+            if status == "S":
+                federal_filing_status = "Single"
+            elif status == "M":
+                federal_filing_status = "Married"
+            elif status == "H":
+                federal_filing_status = "Head of Household"
+            else:
+                federal_filing_status = "Not Found"
+        except Exception:
             federal_filing_status = "Not Found"
-    except Exception:
-        federal_filing_status = "Not Found"
+    elif initials:
+        federal_filing_status = initials['federal_filing_status']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', month, federal_filing_status))
 
-    try:
-        status = les_text[42][1]
-        if status == "S":
-            state_filing_status = "Single"
-        elif status == "M":
-            state_filing_status = "Married"
-        else:
+    if les_text:
+        try:
+            status = les_text[42][1]
+            if status == "S":
+                state_filing_status = "Single"
+            elif status == "M":
+                state_filing_status = "Married"
+            else:
+                state_filing_status = "Not Found"
+        except Exception:
             state_filing_status = "Not Found"
-    except Exception:
-        state_filing_status = "Not Found"
+    elif initials:
+        state_filing_status = initials['state_filing_status']
     budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', month, state_filing_status))
 
-    try:
-        sgli_coverage = ""
-        remarks = les_text[96]
+    if les_text:
+        try:
+            sgli_coverage = ""
+            remarks = les_text[96]
 
-        # join all remark strings into one string
-        remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
-        # uses regex to find the SGLI coverage amount
-        match = re.search(r"SGLI COVERAGE AMOUNT IS\s*(\$\d{1,3}(?:,\d{3})*)", remarks_str, re.IGNORECASE)
+            # join all remark strings into one string
+            remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
+            # uses regex to find the SGLI coverage amount
+            match = re.search(r"SGLI COVERAGE AMOUNT IS\s*(\$\d{1,3}(?:,\d{3})*)", remarks_str, re.IGNORECASE)
 
-        if match:
-            sgli_coverage = match.group(1)
-        else:
+            if match:
+                sgli_coverage = match.group(1)
+            else:
+                sgli_coverage = "Not Found"
+                
+        except Exception:
             sgli_coverage = "Not Found"
-            
-    except Exception:
-        sgli_coverage = "Not Found"
+    elif initials:
+        sgli_coverage = initials['sgli_coverage']
     budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', month, sgli_coverage))
 
-    combat_zone = "No"
+    if les_text:
+        combat_zone = les_text[97][1]
+    elif initials:
+        combat_zone = initials['combat_zone']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', month, combat_zone))
 
     tsp_rate_rows = [
@@ -197,24 +229,28 @@ def add_variables(VARIABLE_TEMPLATE, budget, les_text, month):
     ]
 
     for header, idx in tsp_rate_rows:
-        try:
-            value = int(les_text[idx][3])
-        except Exception:
+        if les_text:
+            try:
+                value = int(les_text[idx][3])
+            except Exception:
+                value = 0
+        elif initials:
             value = 0
         budget.append(add_row(VARIABLE_TEMPLATE, header, month, value))
 
     return budget
 
 
-def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, les_text, month):
-    ents = parse_pay_section(les_text[9])
-    deds = parse_pay_section(les_text[10])
-    alts = parse_pay_section(les_text[11])
-
-    # combine all ents/deds/alts into a single dictionary
+def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
     ent_ded_alt_dict = {}
-    for item in ents + deds + alts:
-        ent_ded_alt_dict[item['header'].upper()] = item['value']
+    
+    if les_text:
+        ents = parse_pay_section(les_text[9])
+        deds = parse_pay_section(les_text[10])
+        alts = parse_pay_section(les_text[11])
+
+        for item in ents + deds + alts:
+            ent_ded_alt_dict[item['header'].upper()] = item['value']
 
     for _, row in BUDGET_TEMPLATE.iterrows():
         header = row['header']
@@ -271,7 +307,7 @@ def parse_pay_section(les_text):
     return results
 
 
-def add_ytd_rows(VARIABLE_TEMPLATE, budget, les_text, month):
+def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
     remarks = les_text[96]
     remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
 
