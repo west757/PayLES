@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request, render_template, session, jsonify
 from app import csrf
 
@@ -8,15 +9,12 @@ from app.utils import (
     validate_file,
     add_row,
     get_months,
-    add_recommendations,
 )
 from app.les import (
     validate_les, 
-    process_les,
 )
 from app.budget import (
-    build_budget,
-    init_onetime_rows,
+    init_budget,
     remove_months,
     add_months,
     update_months,
@@ -30,10 +28,38 @@ from app.forms import (
 
 @flask_app.route('/')
 def index():
+    # Get current month and year
+    now = datetime.now()
+    current_month_name = now.strftime('%b').upper()  # e.g., 'JAN'
+    current_year = now.year
+
+    # Get dynamic choices from config
+    grades = flask_app.config['GRADES']
+    home_of_records = flask_app.config['HOME_OF_RECORDS']
+    sgli_coverages = flask_app.config['SGLI_COVERAGES']
+
+    # Prepare choices for WTForms
+    grade_choices = [(g, g) for g in grades]
+    home_of_record_choices = [(r['home_of_record'], r['home_of_record']) for r in home_of_records]
+    sgli_coverage_choices = [(c, c) for c in sgli_coverages]
+
+    # Create form with dynamic choices and defaults
+    form_without_les = FormWithoutLES()
+    form_without_les.grade.choices = grade_choices
+    form_without_les.home_of_record.choices = home_of_record_choices
+    form_without_les.sgli_coverage.choices = sgli_coverage_choices
+
     form_single_les = FormSingleLES()
     form_joint_les = FormJointLES()
-    form_without_les = FormWithoutLES()
-    return render_template( 'home.html', form_single_les=form_single_les, form_joint_les=form_joint_les, form_without_les=form_without_les)
+
+    return render_template(
+        'home.html',
+        form_single_les=form_single_les,
+        form_joint_les=form_joint_les,
+        form_without_les=form_without_les,
+        current_month_name=current_month_name,
+        current_year=current_year
+    )
 
 
 @flask_app.route('/submit_single_les', methods=['POST'])
@@ -43,7 +69,7 @@ def submit_single_les():
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
     
-    les_file = form.les_input.data
+    les_file = form.single_les_input.data
     if not les_file:
         return jsonify({'message': "No file submitted"}), 400
     
@@ -54,44 +80,7 @@ def submit_single_les():
     valid, message, les_pdf = validate_les(les_file)
 
     if valid:
-        BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-        VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-        headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-
-        les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
-        budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
-        recommendations = add_recommendations(budget, init_month)
-
-        session['budget'] = budget
-        session['headers'] = headers
-
-        LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
-        MODALS = load_json(flask_app.config['MODALS_JSON'])
-
-        config_js = {
-            'budget': convert_numpy_types(budget),
-            'months': months,
-            'headers': headers,
-            'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
-            'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
-            'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
-            'GRADES': flask_app.config['GRADES'],
-            'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
-            'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
-        }
-        context = {
-            'config_js': config_js,
-            'les_image': les_image,
-            'rect_overlay': rect_overlay,
-            'budget': convert_numpy_types(budget),
-            'months': months,
-            'headers': headers,
-            'recommendations': recommendations,
-            'LES_REMARKS': LES_REMARKS,
-            'MODALS': MODALS,
-        }
+        context = init_budget(les_pdf)
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
@@ -122,85 +111,27 @@ def submit_without_les():
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
     
+    now = datetime.now()
+    month = now.strftime('%b').upper()
+    year = now.year
     grade = form.grade.data
 
     return render_template('home.html')
 
 
+@csrf.exempt
 @flask_app.route('/submit_example_les', methods=['POST'])
 def submit_example_les():
-    return render_template('home.html')
-
-
-
-
-
-
-@flask_app.route('/submit_les', methods=['POST'])
-def submit_les():
-    home_form = HomeForm()
-    if not home_form.validate_on_submit():
-            return jsonify({'message': "Invalid submission"}), 400
-
-    if home_form.submit_les.data:
-        les_file = home_form.home_input.data
-
-        if not les_file:
-            return jsonify({'message': "No file submitted"}), 400
-        
-        valid, message = validate_file(les_file)
-        if not valid:
-            return jsonify({'message': message}), 400
-        
-        valid, message, les_pdf = validate_les(les_file)
-
-    elif home_form.submit_example.data:
-        valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
-    else:
-        return jsonify({'message': "Unknown action, no LES or example submitted"}), 400
+    valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:
-        BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-        VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-        headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-
-        les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
-        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
-        budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
-        recommendations = add_recommendations(budget, init_month)
-
-        session['budget'] = budget
-        session['headers'] = headers
-
-        LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
-        MODALS = load_json(flask_app.config['MODALS_JSON'])
-
-        config_js = {
-            'budget': convert_numpy_types(budget),
-            'months': months,
-            'headers': headers,
-            'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
-            'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
-            'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
-            'GRADES': flask_app.config['GRADES'],
-            'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
-            'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
-        }
-        context = {
-            'config_js': config_js,
-            'les_image': les_image,
-            'rect_overlay': rect_overlay,
-            'budget': convert_numpy_types(budget),
-            'months': months,
-            'headers': headers,
-            'recommendations': recommendations,
-            'LES_REMARKS': LES_REMARKS,
-            'MODALS': MODALS,
-        }
+        context = init_budget(les_pdf)
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
+
+
+
     
 
 @csrf.exempt

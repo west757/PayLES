@@ -47,14 +47,32 @@
         </div>
 
         <div id="tab-without-les" class="tab-content">
+            <div class="budget-date-header">
+                Building budget for {{ current_month_name }} {{ current_year }}
+            </div>
             <form id="form-without-les" hx-post="/submit_without_les" hx-swap="innerHTML" method="POST">
                 {{ form_without_les.hidden_tag() }}
                 <div id="variables-inputs">
                     <label for="grade">Grade:</label>
-                    <select id="grade" name="grade">
-                        <option value="E1">E1</option>
-                        <option value="E2">E2</option>
-                    </select>
+                    {{ form_without_les.grade(class="form-control") }}
+
+                    <label for="zip_code">Zip Code:</label>
+                    {{ form_without_les.zip_code(class="form-control", maxlength="5", pattern="\d{5}") }}
+
+                    <label for="home_of_record">Home of Record:</label>
+                    {{ form_without_les.home_of_record(class="form-control") }}
+
+                    <label for="dependents">Dependents:</label>
+                    {{ form_without_les.dependents(class="form-control", maxlength="1", pattern="\d") }}
+
+                    <label for="federal_filing_status">Federal Filing Status:</label>
+                    {{ form_without_les.federal_filing_status(class="form-control") }}
+
+                    <label for="state_filing_status">State Filing Status:</label>
+                    {{ form_without_les.state_filing_status(class="form-control") }}
+
+                    <label for="sgli_coverage">SGLI Coverage:</label>
+                    {{ form_without_les.sgli_coverage(class="form-control") }}
                 </div>
                 {{ form_without_les.submit_without_les(id="button-without", class="button-solo") }}
             </form>

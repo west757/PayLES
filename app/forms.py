@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, FileField, SelectField
+from wtforms import SubmitField, FileField, SelectField, StringField
 
 class FormSingleLES(FlaskForm):
     single_les_input = FileField('Drop LES here')
@@ -11,6 +11,21 @@ class FormJointLES(FlaskForm):
     submit_joint_les = SubmitField('Submit')
 
 class FormWithoutLES(FlaskForm):
-    grade = SelectField('Grade', choices=[('E1', 'E1'), ('E2', 'E2')])
+    month = SelectField('Month', choices=[])
+    year = SelectField('Year', choices=[])
+    grade = SelectField('Grade', choices=[])
+    zip_code = StringField('Zip Code')
+    home_of_record = SelectField('Home of Record', choices=[])
+    dependents = StringField('Dependents')
+    federal_filing_status = SelectField('Federal Filing Status', choices=[
+        ('Single', 'Single'),
+        ('Married', 'Married'),
+        ('Head of Household', 'Head of Household')
+    ])
+    state_filing_status = SelectField('State Filing Status', choices=[
+        ('Single', 'Single'),
+        ('Married', 'Married')
+    ])
+    sgli_coverage = SelectField('SGLI Coverage', choices=[])
     submit_without_les = SubmitField('Submit')
 

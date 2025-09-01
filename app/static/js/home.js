@@ -29,4 +29,20 @@ document.addEventListener('DOMContentLoaded', function() {
             tabContent.classList.add('active');
         }
     }
+
+    // Zip code validation
+    const zipInput = document.getElementById('form-without-les').querySelector('input[name="zip_code"]');
+    if (zipInput) {
+        zipInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
+        });
+    }
+
+    // Dependents validation
+    const depInput = document.getElementById('form-without-les').querySelector('input[name="dependents"]');
+    if (depInput) {
+        depInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
+        });
+    }
 });

@@ -1,13 +1,20 @@
 from datetime import datetime
+from flask import session
 import pandas as pd
 import re
 
 from app import flask_app
 from app.utils import (
+    load_json,
+    convert_numpy_types,
     add_row,
     validate_calculate_zip_mha,
     validate_home_of_record,
     get_months,
+    add_recommendations,
+)
+from app.les import (
+    process_les,
 )
 from app.calculations import (
     calculate_income,
@@ -26,8 +33,52 @@ from app.calculations import (
 )
 
 # =========================
-# build budget
+# init and build budget
 # =========================
+
+def init_budget(les_pdf):
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+    headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+
+    les_image, rect_overlay, les_text = process_les(les_pdf)
+    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
+    budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+    budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
+    recommendations = add_recommendations(budget, init_month)
+
+    session['budget'] = budget
+    session['headers'] = headers
+
+    LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
+    MODALS = load_json(flask_app.config['MODALS_JSON'])
+
+    config_js = {
+        'budget': convert_numpy_types(budget),
+        'months': months,
+        'headers': headers,
+        'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
+        'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
+        'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+        'GRADES': flask_app.config['GRADES'],
+        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
+        'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
+    }
+    context = {
+        'config_js': config_js,
+        'les_image': les_image,
+        'rect_overlay': rect_overlay,
+        'budget': convert_numpy_types(budget),
+        'months': months,
+        'headers': headers,
+        'recommendations': recommendations,
+        'LES_REMARKS': LES_REMARKS,
+        'MODALS': MODALS,
+    }
+
+    return context
+
+
 
 def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
     try:
