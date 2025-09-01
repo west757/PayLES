@@ -90,11 +90,11 @@ def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=Non
 
     budget = []
     budget = add_variables(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
-    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text, initials)
+    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text)
     budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
+    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text)
 
     return budget, init_month
 
@@ -212,7 +212,7 @@ def add_variables(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None
     budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', month, sgli_coverage))
 
     if les_text:
-        combat_zone = les_text[97][1]
+        combat_zone = "No"
     elif initials:
         combat_zone = initials['combat_zone']
     budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', month, combat_zone))
