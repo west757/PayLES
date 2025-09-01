@@ -54,45 +54,47 @@
             <div>
                 Building budget for {{ current_month }} {{ current_year }}
             </div>
-            <div class="submit-custom-grid">
-                <div class="submit-custom-column">
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_zip_code">Zip Code:</label>
-                        <div id="submit-custom-zip-code"></div>
+            <form id="form-submit-custom">
+                <div class="submit-custom-grid">
+                    <div class="submit-custom-column">
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_zip_code">Zip Code:</label>
+                            <div id="submit-custom-zip-code"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_grade">Grade:</label>
+                            <div id="submit-custom-grade"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_dependents">Dependents:</label>
+                            <div id="submit-custom-dependents"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_combat_zone">Combat Zone:</label>
+                            <div id="submit-custom-combat-zone"></div>
+                        </div>
                     </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_grade">Grade:</label>
-                        <div id="submit-custom-grade"></div>
-                    </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_dependents">Dependents:</label>
-                        <div id="submit-custom-dependents"></div>
-                    </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_combat_zone">Combat Zone:</label>
-                        <div id="submit-custom-combat-zone"></div>
+                    <div class="submit-custom-column">
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_home_of_record">Home of Record:</label>
+                            <div id="submit-custom-home-of-record"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_federal_filing_status">Federal Filing Status:</label>
+                            <div id="submit-custom-federal-filing-status"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_state_filing_status">State Filing Status:</label>
+                            <div id="submit-custom-state-filing-status"></div>
+                        </div>
+                        <div class="submit-custom-row">
+                            <label class="submit-custom-label" for="custom_sgli_coverage">SGLI Coverage:</label>
+                            <div id="submit-custom-sgli-coverage"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="submit-custom-column">
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_home_of_record">Home of Record:</label>
-                        <div id="submit-custom-home-of-record"></div>
-                    </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_federal_filing_status">Federal Filing Status:</label>
-                        <div id="submit-custom-federal-filing-status"></div>
-                    </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_state_filing_status">State Filing Status:</label>
-                        <div id="submit-custom-state-filing-status"></div>
-                    </div>
-                    <div class="submit-custom-row">
-                        <label class="submit-custom-label" for="custom_sgli_coverage">SGLI Coverage:</label>
-                        <div id="submit-custom-sgli-coverage"></div>
-                    </div>
-                </div>
-            </div>
-            <button id="submit-custom-button" class="button-solo">Submit</button>
+                <button id="submit-custom-button" class="button-solo">Submit</button>
+            </form>
         </div>
 
         <div id="tab-submit-example" class="tab-content">
