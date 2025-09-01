@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<!-- send config data to scripts -->
+<script id="config-data" type="application/json">
+    {{ config_js | tojson }}
+</script>
+
+
 <div id="home">
     <p class="text-large">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
@@ -9,8 +16,8 @@
     <div id="tab-container" class="shadow">
         <div id="tab-buttons">
             <button class="tab-button active" data-tab="submit-single">Single LES Upload</button>
-            <button class="tab-button" data-tab="submit-joint">Joint Spouse Upload</button>
-            <button class="tab-button" data-tab="submit-custom">Custom Start Budget</button>
+            <button class="tab-button" data-tab="submit-joint">Joint Spouse</button>
+            <button class="tab-button" data-tab="submit-custom">Custom Budget</button>
             <button class="tab-button" data-tab="submit-example">Instructions & Example</button>
         </div>
 
@@ -47,7 +54,7 @@
             <div>
                 Building budget for {{ current_month }} {{ current_year }}
             </div>
-            <form id="form-submit-custom" hx-post="/route_submit_custom" hx-swap="innerHTML" method="POST">
+            <form id="form-submit-custom" method="POST">
                 {{ form_submit_custom.hidden_tag() }}
                 <div class="custom-form-grid">
                     <div class="custom-form-column">
