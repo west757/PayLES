@@ -6,6 +6,7 @@ function buildSubmitCustom() {
         input.type = 'text';
         input.id = 'custom_zip_code';
         input.className = 'input-mid';
+        input.name = 'zip_code';
         input.maxLength = 5;
         input.placeholder = '12345';
         input.addEventListener('input', function(e) {
@@ -21,6 +22,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_grade';
         select.className = 'input-short';
+        select.name = 'grade';
         window.CONFIG.GRADES.forEach(grade => {
             const option = document.createElement('option');
             option.value = grade;
@@ -38,6 +40,7 @@ function buildSubmitCustom() {
         input.type = 'text';
         input.id = 'custom_dependents';
         input.className = 'input-short';
+        input.name = 'dependents';
         input.maxLength = 1;
         input.placeholder = '0-9';
         input.addEventListener('input', function(e) {
@@ -53,6 +56,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_combat_zone';
         select.className = 'input-short';
+        select.name = 'combat_zone';
         window.CONFIG.COMBAT_ZONES.forEach(zone => {
             const option = document.createElement('option');
             option.value = zone;
@@ -69,6 +73,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_home_of_record';
         select.className = 'input-long';
+        select.name = 'home_of_record';
         window.CONFIG.HOME_OF_RECORDS.forEach(hor => {
             const option = document.createElement('option');
             option.value = hor;
@@ -85,6 +90,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_federal_filing_status';
         select.className = 'input-mid';
+        select.name = 'federal_filing_status';
         window.CONFIG.FEDERAL_FILING_STATUSES.forEach(status => {
             const option = document.createElement('option');
             option.value = status;
@@ -101,6 +107,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_state_filing_status';
         select.className = 'input-mid';
+        select.name = 'state_filing_status';
         window.CONFIG.STATE_FILING_STATUSES.forEach(status => {
             const option = document.createElement('option');
             option.value = status;
@@ -117,6 +124,7 @@ function buildSubmitCustom() {
         const select = document.createElement('select');
         select.id = 'custom_sgli_coverage';
         select.className = 'input-mid';
+        select.name = 'sgli_coverage';
         window.CONFIG.SGLI_COVERAGES.forEach(sgli => {
             const option = document.createElement('option');
             option.value = sgli;
@@ -216,9 +224,9 @@ function customBudgetSubmit(e) {
 
 
 function validateCustomBudgetForm() {
-    const zipInput = document.getElementById('submit-custom-zip-code');
-    const dependentsInput = document.getElementById('submit-custom-dependents');
-    const homeOfRecordSelect = document.getElementById('submit-custom-home-of-record');
+    const zipInput = document.getElementById('custom_zip_code');
+    const dependentsInput = document.getElementById('custom_dependents');
+    const homeOfRecordSelect = document.getElementById('custom_home_of_record');
 
     if (!zipInput.value.match(/^\d{5}$/)) {
         showToast('Zip code must be exactly 5 digits.');
