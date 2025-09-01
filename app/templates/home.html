@@ -15,99 +15,98 @@
 
     <div id="tab-container" class="shadow">
         <div id="tab-buttons">
-            <button class="tab-button active" data-tab="submit-single">Single LES Upload</button>
-            <button class="tab-button" data-tab="submit-joint">Joint Spouse</button>
-            <button class="tab-button" data-tab="submit-custom">Build Without LES</button>
-            <button class="tab-button" data-tab="submit-example">Instructions & Example</button>
+            <button class="tab-button active" data-tab="tab-single">Single LES Upload</button>
+            <button class="tab-button" data-tab="tab-joint">Joint Spouse</button>
+            <button class="tab-button" data-tab="tab-initials">Build Without LES</button>
+            <button class="tab-button" data-tab="tab-example">Instructions & Example</button>
         </div>
 
-        <div id="tab-submit-single" class="tab-content active">
-            <form id="form-submit-single" hx-post="/route_submit_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-                {{ form_submit_single.hidden_tag() }}
-                <label id="submit-single-drop" for="submit-single-input">
+        <div id="tab-single" class="tab-content active">
+            <form id="form-single" hx-post="/route_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ form_single.hidden_tag() }}
+                <label id="input-filedrop-single" for="input-file-single">
                     <span class="text-mid">Drop LES here</span>
                     or
-                    {{ form_submit_single.submit_single_input(id="submit-single-input", class="file-input-box", accept=".pdf") }}
+                    {{ form_single.input_file_single(id="input-file-single", accept=".pdf") }}
                 </label>
-                {{ form_submit_single.submit_single_button(id="submit-single-button", class="button-solo") }}
+                {{ form_single.button_single(id="button-single", class="button-solo") }}
             </form>
         </div>
 
-        <div id="tab-submit-joint" class="tab-content">
-            <form id="form-submit-joint" hx-post="/route_submit_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-                {{ form_submit_joint.hidden_tag() }}
-                <div id="submit-joint-row">
+        <div id="tab-joint" class="tab-content">
+            <form id="form-joint" hx-post="/route_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ form_joint.hidden_tag() }}
+                <div id="tab-joint-row">
                     <div>
                         <span>Upload Member 1 LES</span>
-                        {{ form_submit_joint.submit_joint_input_1(id="submit-joint-input-1", class="file-input-box", accept=".pdf") }}
+                        {{ form_joint.input_file_joint_1(id="input-file-joint-1", accept=".pdf") }}
                     </div>
                     <div>
                         <span>Upload Member 2 LES</span>
-                        {{ form_submit_joint.submit_joint_input_2(id="submit-joint-input-2", class="file-input-box", accept=".pdf") }}
+                        {{ form_joint.input_file_joint_2(id="input-file-joint-2", accept=".pdf") }}
                     </div>
                 </div>
-                {{ form_submit_joint.submit_joint_button(id="submit-joint-button", class="button-solo") }}
+                {{ form_joint.button_joint(id="button-joint", class="button-solo") }}
             </form>
         </div>
 
-        <div id="tab-submit-custom" class="tab-content">
+        <div id="tab-initials" class="tab-content">
             <div>
                 Building budget for {{ current_month }} {{ current_year }}
             </div>
-            <form id="form-submit-custom">
-                <div class="submit-custom-grid">
-                    <div class="submit-custom-column">
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_zip_code">Zip Code:</label>
-                            <div id="submit-custom-zip-code"></div>
+            <form id="form-initials">
+                <div class="initials-grid">
+                    <div class="initials-column">
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-zc">Zip Code:</label>
+                            <div id="initials-zc"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_grade">Grade:</label>
-                            <div id="submit-custom-grade"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-grade">Grade:</label>
+                            <div id="initials-grade"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_dependents">Dependents:</label>
-                            <div id="submit-custom-dependents"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-deps">Dependents:</label>
+                            <div id="initials-deps"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_combat_zone">Combat Zone:</label>
-                            <div id="submit-custom-combat-zone"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-cz">Combat Zone:</label>
+                            <div id="initials-cz"></div>
                         </div>
                     </div>
-                    <div class="submit-custom-column">
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_home_of_record">Home of Record:</label>
-                            <div id="submit-custom-home-of-record"></div>
+                    <div class="initials-column">
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-hor">Home of Record:</label>
+                            <div id="initials-hor"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_federal_filing_status">Federal Filing Status:</label>
-                            <div id="submit-custom-federal-filing-status"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-ffs">Federal Filing Status:</label>
+                            <div id="initials-ffs"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_state_filing_status">State Filing Status:</label>
-                            <div id="submit-custom-state-filing-status"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-sfs">State Filing Status:</label>
+                            <div id="initials-sfs"></div>
                         </div>
-                        <div class="submit-custom-row">
-                            <label class="submit-custom-label" for="custom_sgli_coverage">SGLI Coverage:</label>
-                            <div id="submit-custom-sgli-coverage"></div>
+                        <div class="initials-row">
+                            <label class="initials-label" for="initials-sc">SGLI Coverage:</label>
+                            <div id="initials-sc"></div>
                         </div>
                     </div>
                 </div>
-                <button id="submit-custom-button" class="button-solo">Submit</button>
+                <button id="button-initials" class="button-solo">Submit</button>
             </form>
         </div>
 
-        <div id="tab-submit-example" class="tab-content">
-            <div id="example-content">
-                PayLES is designed to build a personalized budget directly from your latest LES. For the best experience, please go to <a href="https://mypay.dfas.mil" target="_blank">MyPay.mil</a> to download your LES as a pdf, then upload it here. If you do not have access to an LES or would just like to view an example LES and budget, then click the button below.
-                <br /><br />
-                The instructions overlay will also be presented, however this can be toggled off.
-                <br /><br />
-                For more information, please check out the <a href="/about">About</a> and <a href="/faq">FAQ</a> pages.
-                <form id="form-submit-example" hx-post="/route_submit_example" hx-swap="innerHTML" method="POST">
-                    <button id="submit-example-button" class="button-solo" type="submit">View Example</button>
-                </form>
-            </div>
+        <div id="tab-example" class="tab-content">
+            PayLES is designed to build a personalized budget directly from your latest LES. For the best experience, please go to <a href="https://mypay.dfas.mil" target="_blank">MyPay.mil</a> to download your LES as a pdf, then upload it here. If you do not have access to an LES or would just like to view an example LES and budget, then click the button below.
+            <br /><br />
+            The instructions overlay will also be presented, however this can be toggled off.
+            <br /><br />
+            For more information, please check out the <a href="/about">About</a> and <a href="/faq">FAQ</a> pages.
+            
+            <form id="form-example" hx-post="/route_example" hx-swap="innerHTML" method="POST">
+                <button id="button-example" class="button-solo" type="submit">View Example</button>
+            </form>
         </div>
     </div>
 

@@ -36,7 +36,7 @@ from app.calculations import (
 # init and build budget
 # =========================
 
-def init_budget(les_pdf=None, form=None):
+def init_budget(les_pdf=None, initials=None):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
@@ -47,7 +47,7 @@ def init_budget(les_pdf=None, form=None):
         context['rect_overlay'] = rect_overlay
         context['LES_REMARKS'] = load_json(flask_app.config['LES_REMARKS_JSON'])
 
-    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, form)
+    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
     recommendations = add_recommendations(budget, init_month)
@@ -55,19 +55,12 @@ def init_budget(les_pdf=None, form=None):
     session['budget'] = budget
     session['headers'] = headers
 
-    
     MODALS = load_json(flask_app.config['MODALS_JSON'])
 
     config_js = {
         'budget': convert_numpy_types(budget),
         'months': months,
         'headers': headers,
-        'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
-        'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
-        'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
-        'GRADES': flask_app.config['GRADES'],
-        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
-        'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
     }
     context = {
         'config_js': config_js,
@@ -82,13 +75,17 @@ def init_budget(les_pdf=None, form=None):
 
 
 
-def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, form=None):
-    try:
-        init_month = les_text[8][3]
-        if init_month not in flask_app.config['MONTHS_SHORT']:
-            raise ValueError(f"Error: les_text[8][3], '{init_month}', is not in MONTHS_SHORT")
-    except Exception as e:
-        raise Exception(f"Error determining initial month: {e}")
+def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
+    if les_text is not None:
+        try:
+            init_month = les_text[8][3]
+        except Exception as e:
+            raise Exception(f"Error determining initial month: {e}")
+    elif initials is not None:
+        init_month = initials.get('current_month', '')
+
+    if init_month not in flask_app.config['MONTHS_SHORT']:
+        raise ValueError(f"Error: '{init_month}', is not in MONTHS_SHORT")
 
     budget = []
     budget = add_variables(VARIABLE_TEMPLATE, budget, les_text, init_month)

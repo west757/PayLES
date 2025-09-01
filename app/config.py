@@ -44,7 +44,8 @@ class Config:
         "Married": 30000,
         "Head of Household": 22500
     }
-    
+    COMBAT_ZONE = ["No", "Yes"]
+
     ROW_METADATA = [
     'type',
     'sign',
