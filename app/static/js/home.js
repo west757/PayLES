@@ -1,21 +1,4 @@
 function buildInitialsInputs() {
-    const initialsGrade = document.getElementById('initials-grade');
-    if (initialsGrade && window.CONFIG && window.CONFIG.GRADES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-grade';
-        select.className = 'input-short';
-        select.name = 'input-select-initials-grade';
-        window.CONFIG.GRADES.forEach(grade => {
-            const option = document.createElement('option');
-            option.value = grade;
-            option.textContent = grade;
-            select.appendChild(option);
-        });
-        initialsGrade.innerHTML = '';
-        initialsGrade.appendChild(select);
-    }
-
-
     const initialsYM = document.getElementById('initials-ym');
     if (initialsYM && window.CONFIG && window.CONFIG.MONTHS_SHORT) {
         const now = new Date();
@@ -62,12 +45,31 @@ function buildInitialsInputs() {
         input.className = 'input-short';
         input.name = 'input-int-initials-mis';
         input.maxLength = 3;
+        input.value = 0;
         input.addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
         });
         initialsMonthsInService.innerHTML = '';
         initialsMonthsInService.appendChild(input);
     }
+
+
+    const initialsGrade = document.getElementById('initials-grade');
+    if (initialsGrade && window.CONFIG && window.CONFIG.GRADES) {
+        const select = document.createElement('select');
+        select.id = 'input-select-initials-grade';
+        select.className = 'input-short';
+        select.name = 'input-select-initials-grade';
+        window.CONFIG.GRADES.forEach(grade => {
+            const option = document.createElement('option');
+            option.value = grade;
+            option.textContent = grade;
+            select.appendChild(option);
+        });
+        initialsGrade.innerHTML = '';
+        initialsGrade.appendChild(select);
+    }
+
 
     // Dependents
     const initialsDependents = document.getElementById('initials-deps');

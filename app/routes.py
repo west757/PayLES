@@ -77,7 +77,7 @@ def route_single():
     valid, message, les_pdf = validate_les(file)
 
     if valid:
-        context = init_budget(les_pdf)
+        context = init_budget(les_pdf=les_pdf)
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
@@ -119,7 +119,7 @@ def route_initials():
         'combat_zone': request.form.get('input_select_initials_cz', ''),
     }
 
-    context = init_budget(initials)
+    context = init_budget(initials=initials)
     return render_template('home.html', **context)
 
 
@@ -129,7 +129,7 @@ def route_example():
     valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:
-        context = init_budget(les_pdf)
+        context = init_budget(les_pdf=les_pdf)
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
