@@ -189,6 +189,79 @@ function buildInitialsInputs() {
         initialsSgliCoverage.innerHTML = '';
         initialsSgliCoverage.appendChild(select);
     }
+
+
+
+    const tspInitials = [
+        'tradbase', 'tradspecialty', 'tradincentive', 'tradbonus',
+        'rothbase', 'rothspecialty', 'rothincentive', 'rothbonus'
+    ];
+
+    tspInitials.forEach(id => {
+        const el = document.getElementById(`initials-${id}`);
+        if (el) {
+            // Create input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `input-int-initials-${id}`;
+            input.className = 'input-short';
+            input.name = `input-int-initials-${id}`;
+            input.maxLength = 3;
+            input.placeholder = '0';
+            input.value = 0;
+            input.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+            });
+
+            // Percent sign
+            const percentSpan = document.createElement('span');
+            percentSpan.textContent = ' %';
+            percentSpan.style.marginLeft = '0.5rem';
+
+            el.innerHTML = '';
+            el.appendChild(input);
+            el.appendChild(percentSpan);
+        }
+    });
+
+
+
+    const ytdInitials = [
+        'ytd-income', 'ytd-expenses', 'ytd-tsp-contribution', 'ytd-charity'
+    ];
+
+    ytdInitials.forEach(id => {
+        const el = document.getElementById(`initials-${id}`);
+        if (el) {
+            // Dollar sign
+            const dollarSpan = document.createElement('span');
+            dollarSpan.textContent = '$';
+            dollarSpan.style.marginRight = '0.5rem';
+
+            // Create input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `input-float-initials-${id}`;
+            input.className = 'input-mid2';
+            input.name = `input-float-initials-${id}`;
+            input.maxLength = 7;
+            input.placeholder = '0.00';
+            input.value = '0.00';
+            input.addEventListener('input', function(e) {
+                // Allow only numbers and up to one decimal point, max 2 decimals
+                let val = e.target.value.replace(/[^0-9.]/g, '');
+                const parts = val.split('.');
+                if (parts.length > 2) val = parts[0] + '.' + parts[1];
+                if (parts[1]) val = parts[0] + '.' + parts[1].slice(0,2);
+                e.target.value = val.slice(0, 7);
+            });
+
+            el.innerHTML = '';
+            el.appendChild(dollarSpan);
+            el.appendChild(input);
+        }
+    });
+
 }
 
 
