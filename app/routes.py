@@ -96,7 +96,7 @@ def route_joint():
     if not file1 or not file2:
         return jsonify({'message': "Both LES files required"}), 400
 
-    return render_template('home.html')
+    return render_template('content.html')
 
 
 @csrf.exempt
@@ -108,19 +108,31 @@ def route_initials():
     initials = {
         'current_year': current_year,
         'current_month': current_month,
-        'grade': request.form.get('input_int_initials_grade', ''),
-        'months_in_service': request.form.get('input_int_initials_mis', ''),
-        'zip_code': request.form.get('input_int_initials_zc', ''),
-        'home_of_record': request.form.get('input_select_initials_hor', ''),
-        'dependents': request.form.get('input_int_initials_deps', ''),
-        'federal_filing_status': request.form.get('input_select_initials_ffs', ''),
-        'state_filing_status': request.form.get('input_select_initials_sfs', ''),
-        'sgli_coverage': request.form.get('input_select_initials_sc', ''),
-        'combat_zone': request.form.get('input_select_initials_cz', ''),
+        'grade': request.form.get('input-select-initials-grade', ''),
+        'months_in_service': int(request.form.get('input-int-initials-mis', 0)),
+        'zip_code': request.form.get('input-int-initials-zc', ''),
+        'home_of_record': request.form.get('input-select-initials-hor', ''),
+        'dependents': int(request.form.get('input-int-initials-deps', 0)),
+        'federal_filing_status': request.form.get('input-select-initials-ffs', ''),
+        'state_filing_status': request.form.get('input-select-initials-sfs', ''),
+        'sgli_coverage': request.form.get('input-select-initials-sc', ''),
+        'combat_zone': request.form.get('input-select-initials-cz', ''),
+        'trad_tsp_base_rate': int(request.form.get('input-int-initials-tradbase', 0)),
+        'trad_tsp_specialty_rate': int(request.form.get('input-int-initials-tradspecialty', 0)),
+        'trad_tsp_incentive_rate': int(request.form.get('input-int-initials-tradincentive', 0)),
+        'trad_tsp_bonus_rate': int(request.form.get('input-int-initials-tradbonus', 0)),
+        'roth_tsp_base_rate': int(request.form.get('input-int-initials-rothbase', 0)),
+        'roth_tsp_specialty_rate': int(request.form.get('input-int-initials-rothspecialty', 0)),
+        'roth_tsp_incentive_rate': int(request.form.get('input-int-initials-rothincentive', 0)),
+        'roth_tsp_bonus_rate': int(request.form.get('input-int-initials-rothbonus', 0)),
+        'ytd_income': float(request.form.get('input-float-initials-ytd-income', 0.00)),
+        'ytd_expenses': float(request.form.get('input-float-initials-ytd-expenses', 0.00)),
+        'ytd_tsp': float(request.form.get('input-float-initials-ytd-tsp', 0.00)),
+        'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
     }
 
     context = init_budget(initials=initials)
-    return render_template('home.html', **context)
+    return render_template('content.html', **context)
 
 
 @csrf.exempt

@@ -94,7 +94,7 @@ def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=Non
     budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text)
+    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
 
     return budget, init_month
 
@@ -235,7 +235,7 @@ def add_variables(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None
             except Exception:
                 value = 0
         elif initials:
-            value = 0
+            value = initials[header.lower().replace(" ", "_")]
         budget.append(add_row(VARIABLE_TEMPLATE, header, month, value))
 
     return budget
@@ -308,30 +308,43 @@ def parse_pay_section(les_text):
 
 
 def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
-    remarks = les_text[96]
-    remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
+    if les_text:
+        remarks = les_text[96]
+        remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
 
-    ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
-    ytd_entitlement = float(ent_match.group(1)) if ent_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Income', month, ytd_entitlement))
+    if les_text:
+        ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
+        ytd_income = float(ent_match.group(1)) if ent_match else 0.00
+    elif initials:
+        ytd_income = initials['ytd_income']
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Income', month, ytd_income))
 
-    ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
-    ytd_deduction = -float(ded_match.group(1)) if ded_match else 0.00
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Expenses', month, ytd_deduction))
+    if les_text:
+        ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
+        ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
+    elif initials:
+        ytd_expenses = initials['ytd_expenses']
+    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Expenses', month, ytd_expenses))
 
-    try:
-        ytd_tsp = float(les_text[78][2])
-    except Exception:
-        ytd_tsp = 0.00
+    if les_text:
+        try:
+            ytd_tsp = float(les_text[78][2])
+        except Exception:
+            ytd_tsp = 0.00
+    elif initials:
+        ytd_tsp = initials['ytd_tsp']
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP Contribution', month, ytd_tsp))
 
-    try:
-        ytd_charity = float(les_text[56][2])
-    except Exception:
-        ytd_charity = 0.00
+    if les_text:
+        try:
+            ytd_charity = float(les_text[56][2])
+        except Exception:
+            ytd_charity = 0.00
+    elif initials:
+        ytd_charity = initials['ytd_charity']
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', month, ytd_charity))
 
-    ytd_net_pay = round(ytd_entitlement + ytd_deduction, 2)
+    ytd_net_pay = round(ytd_income + ytd_expenses, 2)
     budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', month, ytd_net_pay))
 
     return budget
