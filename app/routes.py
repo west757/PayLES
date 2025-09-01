@@ -20,64 +20,57 @@ from app.budget import (
     update_months,
 )
 from app.forms import (
-    FormSingleLES,
-    FormJointLES,
-    FormWithoutLES,
+    FormSubmitSingle,
+    FormSubmitJoint,
+    FormSubmitCustom,
 )
 
 
 @flask_app.route('/')
 def index():
-    # Get current month and year
     now = datetime.now()
-    current_month_name = now.strftime('%b').upper()  # e.g., 'JAN'
+    current_month_name = now.strftime('%b').upper()
     current_year = now.year
 
-    # Get dynamic choices from config
-    grades = flask_app.config['GRADES']
-    home_of_records = flask_app.config['HOME_OF_RECORDS']
-    sgli_coverages = flask_app.config['SGLI_COVERAGES']
+    form_submit_single = FormSubmitSingle()
+    form_submit_joint = FormSubmitJoint()
+    form_submit_custom = FormSubmitCustom()
 
-    # Prepare choices for WTForms
-    grade_choices = [(g, g) for g in grades]
-    home_of_record_choices = [(r['home_of_record'], r['home_of_record']) for r in home_of_records]
-    sgli_coverage_choices = [(c, c) for c in sgli_coverages]
+    grade_choices = [(g, g) for g in flask_app.config['GRADES']]
+    form_submit_custom.custom_grade.choices = grade_choices
 
-    # Create form with dynamic choices and defaults
-    form_without_les = FormWithoutLES()
-    form_without_les.grade.choices = grade_choices
-    form_without_les.home_of_record.choices = home_of_record_choices
-    form_without_les.sgli_coverage.choices = sgli_coverage_choices
+    home_of_record_choices = [(r['home_of_record'], r['home_of_record']) for r in flask_app.config['HOME_OF_RECORDS']]
+    form_submit_custom.custom_home_of_record.choices = home_of_record_choices
 
-    form_single_les = FormSingleLES()
-    form_joint_les = FormJointLES()
+    sgli_coverage_choices = [(c, c) for c in flask_app.config['SGLI_COVERAGES']]
+    form_submit_custom.custom_sgli_coverage.choices = sgli_coverage_choices
 
-    return render_template(
-        'home.html',
-        form_single_les=form_single_les,
-        form_joint_les=form_joint_les,
-        form_without_les=form_without_les,
-        current_month_name=current_month_name,
-        current_year=current_year
-    )
+    context = {
+        'form_submit_single': form_submit_single,
+        'form_submit_joint': form_submit_joint,
+        'form_submit_custom': form_submit_custom,
+        'current_month_name': current_month_name,
+        'current_year': current_year
+    }
+    return render_template('home.html', **context)
 
 
-@flask_app.route('/submit_single_les', methods=['POST'])
-def submit_single_les():
-    form = FormSingleLES()
+@flask_app.route('/route_submit_single', methods=['POST'])
+def route_submit_single():
+    form = FormSubmitSingle()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
-    
-    les_file = form.single_les_input.data
-    if not les_file:
+
+    file = form.submit_single_input.data
+    if not file:
         return jsonify({'message': "No file submitted"}), 400
     
-    valid, message = validate_file(les_file)
+    valid, message = validate_file(file)
     if not valid:
         return jsonify({'message': message}), 400
     
-    valid, message, les_pdf = validate_les(les_file)
+    valid, message, les_pdf = validate_les(file)
 
     if valid:
         context = init_budget(les_pdf)
@@ -86,27 +79,25 @@ def submit_single_les():
         return jsonify({'message': message}), 400
 
 
-
-
-@flask_app.route('/submit_joint_les', methods=['POST'])
-def submit_joint_les():
-    form = FormJointLES()
+@flask_app.route('/route_submit_joint', methods=['POST'])
+def route_submit_joint():
+    form = FormSubmitJoint()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
-    
-    les1 = form.joint_les_1.data
-    les2 = form.joint_les_2.data
 
-    if not les1 or not les2:
+    file1 = form.submit_joint_input_1.data
+    file2 = form.submit_joint_input_2.data
+
+    if not file1 or not file2:
         return jsonify({'message': "Both LES files required"}), 400
 
     return render_template('home.html')
 
 
-@flask_app.route('/submit_without_les', methods=['POST'])
-def submit_without_les():
-    form = FormWithoutLES()
+@flask_app.route('/route_submit_custom', methods=['POST'])
+def route_submit_custom():
+    form = FormSubmitCustom()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
@@ -120,8 +111,8 @@ def submit_without_les():
 
 
 @csrf.exempt
-@flask_app.route('/submit_example_les', methods=['POST'])
-def submit_example_les():
+@flask_app.route('/route_submit_example', methods=['POST'])
+def route_submit_example():
     valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:

@@ -5,97 +5,99 @@
     <p class="text-large">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
     </p>
-    <p class="text-mid">
-        Please select the appropriate option below to get started.
-    </p>
 
     <div id="tab-container" class="shadow">
         <div id="tab-buttons">
-            <button class="tab-button active" data-tab="single-les">Upload Single LES</button>
-            <button class="tab-button" data-tab="joint-les">Upload Joint Spouse</button>
-            <button class="tab-button" data-tab="without-les">Begin Without LES</button>
-            <button class="tab-button" data-tab="example-les">Instructions & Example</button>
+            <button class="tab-button active" data-tab="submit-single">Single LES Upload</button>
+            <button class="tab-button" data-tab="submit-joint">Joint Spouse Upload</button>
+            <button class="tab-button" data-tab="submit-custom">Custom Start Budget</button>
+            <button class="tab-button" data-tab="submit-example">Instructions & Example</button>
         </div>
 
-        <div id="tab-single-les" class="tab-content">
-            <form id="form-single-les" hx-post="/submit_single_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-                {{ form_single_les.hidden_tag() }}
-                <label id="single-drop" for="{{ form_single_les.single_les_input.id }}">
+        <div id="tab-submit-single" class="tab-content">
+            <form id="form-submit-single" hx-post="/route_submit_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ form_submit_single.hidden_tag() }}
+                <label id="single-drop" for="{{ form_submit_single.submit_single_input.id }}">
                     <span class="text-mid">Drop LES here</span>
                     or
-                    {{ form_single_les.single_les_input(id="single_les_input", class="form-control", accept=".pdf") }}
+                    {{ form_submit_single.submit_single_input(id="submit-single_input", class="file-input-box", accept=".pdf") }}
                 </label>
-                {{ form_single_les.submit_single_les(id="button-single", class="button-solo") }}
+                {{ form_submit_single.submit_single_button(id="submit-single-button", class="button-solo") }}
             </form>
         </div>
 
-        <div id="tab-joint-les" class="tab-content">
-            <form id="form-joint-les" hx-post="/submit_joint_les" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-                {{ form_joint_les.hidden_tag() }}
-                <div class="joint-les-row">
+        <div id="tab-submit-joint" class="tab-content">
+            <form id="form-submit-joint" hx-post="/route_submit_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ form_submit_joint.hidden_tag() }}
+                <div id="submit-joint-row">
                     <div>
                         <span>Upload Member 1 LES</span>
-                        {{ form_joint_les.joint_les_input_1(id="joint_les_input_1", class="form-control", accept=".pdf") }}
+                        {{ form_submit_joint.submit_joint_input_1(id="submit_joint_input_1", class="file-input-box", accept=".pdf") }}
                     </div>
                     <div>
                         <span>Upload Member 2 LES</span>
-                        {{ form_joint_les.joint_les_input_2(id="joint_les_input_2", class="form-control", accept=".pdf") }}
+                        {{ form_submit_joint.submit_joint_input_2(id="submit_joint_input_2", class="file-input-box", accept=".pdf") }}
                     </div>
                 </div>
-                {{ form_joint_les.submit_joint_les(id="button-joint", class="button-solo") }}
+                {{ form_submit_joint.submit_joint_button(id="submit-joint-button", class="button-solo") }}
             </form>
         </div>
 
-        <div id="tab-without-les" class="tab-content">
-            <div class="budget-date-header">
+        <div id="tab-submit-custom" class="tab-content">
+            <div>
                 Building budget for {{ current_month_name }} {{ current_year }}
             </div>
-            <form id="form-without-les" hx-post="/submit_without_les" hx-swap="innerHTML" method="POST">
-                {{ form_without_les.hidden_tag() }}
+            <form id="form-submit-custom" hx-post="/route_submit_custom" hx-swap="innerHTML" method="POST">
+                {{ form_submit_custom.hidden_tag() }}
                 <div id="variables-inputs">
-                    <label for="grade">Grade:</label>
-                    {{ form_without_les.grade(class="form-control") }}
+                    <label for="custom_grade">Grade:</label>
+                    {{ form_submit_custom.custom_grade(class="input-short") }}
 
-                    <label for="zip_code">Zip Code:</label>
-                    {{ form_without_les.zip_code(class="form-control", maxlength="5", pattern="\d{5}") }}
+                    <label for="custom_zip_code">Zip Code:</label>
+                    {{ form_submit_custom.custom_zip_code(class="input-mid", maxlength="5", pattern="\d{5}") }}
 
-                    <label for="home_of_record">Home of Record:</label>
-                    {{ form_without_les.home_of_record(class="form-control") }}
+                    <label for="custom_home_of_record">Home of Record:</label>
+                    {{ form_submit_custom.custom_home_of_record(class="input-long") }}
 
-                    <label for="dependents">Dependents:</label>
-                    {{ form_without_les.dependents(class="form-control", maxlength="1", pattern="\d") }}
+                    <label for="custom_dependents">Dependents:</label>
+                    {{ form_submit_custom.custom_dependents(class="input-short", maxlength="1", pattern="\d") }}
 
-                    <label for="federal_filing_status">Federal Filing Status:</label>
-                    {{ form_without_les.federal_filing_status(class="form-control") }}
+                    <label for="custom_federal_filing_status">Federal Filing Status:</label>
+                    {{ form_submit_custom.custom_federal_filing_status(class="input-mid") }}
 
-                    <label for="state_filing_status">State Filing Status:</label>
-                    {{ form_without_les.state_filing_status(class="form-control") }}
+                    <label for="custom_state_filing_status">State Filing Status:</label>
+                    {{ form_submit_custom.custom_state_filing_status(class="input-mid") }}
 
-                    <label for="sgli_coverage">SGLI Coverage:</label>
-                    {{ form_without_les.sgli_coverage(class="form-control") }}
+                    <label for="custom_sgli_coverage">SGLI Coverage:</label>
+                    {{ form_submit_custom.custom_sgli_coverage(class="input-mid") }}
+
+                    <label for="custom_combat_zone">Combat Zone:</label>
+                    {{ form_submit_custom.custom_combat_zone(class="input-short") }}
                 </div>
-                {{ form_without_les.submit_without_les(id="button-without", class="button-solo") }}
+                {{ form_submit_custom.submit_custom_button(id="submit-custom-button", class="button-solo") }}
             </form>
         </div>
 
-        <div id="tab-example-les" class="tab-content">
+        <div id="tab-submit-example" class="tab-content">
             <div id="example-content">
-                <p>Click 'submit' to see the example LES. The instructions overlay will also be presented, however this can be toggled on or off.</p>
-                <form id="form-example-les" hx-post="/submit_example_les" hx-swap="innerHTML" method="POST">
-                    <button type="submit" class="button-solo">Submit</button>
+                PayLES is designed to build a personalized budget directly from your latest LES. For the best experience, please go to <a href="https://mypay.dfas.mil" target="_blank">MyPay.mil</a> to download your LES as a pdf, then upload it here. If you do not have access to an LES or would just like to view an example LES and budget, then click the button below.
+                <br /><br />
+                The instructions overlay will also be presented, however this can be toggled off.
+                <br /><br />
+                For more information, please check out the <a href="/about">About</a> and <a href="/faq">FAQ</a> pages.
+                <form id="form-submit-example" hx-post="/route_submit_example" hx-swap="innerHTML" method="POST">
+                    <button id="submit-example-button" class="button-solo" type="submit">View Example</button>
                 </form>
             </div>
         </div>
     </div>
 
     <div id="disclaimer">
-        <p>
-            <strong>Disclaimer:</strong> PayLES is not an official Department of Defense (DoD) or U.S. military service 
-            application. It is a personal project developed by an active duty service member for educational and budgetary 
-            awareness. The information provided by PayLES is for informational purposes only and should not be considered 
-            official financial advice. Always consult with your finance office or a qualified financial advisor for 
-            official guidance regarding your military pay and benefits.
-        </p>
+        <strong>Disclaimer:</strong> PayLES is not an official Department of Defense (DoD) or U.S. military service 
+        application. It is a personal project developed by an active duty service member for educational and budgetary 
+        awareness. The information provided by PayLES is for informational purposes only and should not be considered 
+        official financial advice. Always consult with your finance office or a qualified financial advisor for 
+        official guidance regarding your military pay and benefits.
     </div>
 </div>
 

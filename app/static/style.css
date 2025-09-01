@@ -262,10 +262,6 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-single {
-    width: 16rem;
-}
-
 #button-inject, #button-account, #button-recs {
     width: 11rem;
 }
@@ -396,7 +392,7 @@ input[type="text"], select {
     font-size: 0.92rem;
     height: 1.75rem;
     padding: 0.25rem;
-    text-align: center;
+    text-align: left;
 }
 
 .input-long {
@@ -494,7 +490,7 @@ input[type=file] {
     background-color: var(--primary_light_accent_color);
     display: none;
     border-radius: 0 0 1rem 1rem;
-    padding: 1rem 2rem 1rem 2rem;
+    padding: 2rem;
     position: relative;
 }
 
@@ -512,7 +508,7 @@ input[type=file] {
     gap: 0.75rem;
     height: 14rem;
     justify-content: center;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 0 auto;
     padding: 1rem;
     transition: background .2s ease-in-out;
     width: 80%;
@@ -522,16 +518,15 @@ input[type=file] {
     background-color: var(--input_background_color);
 }
 
-#home_input {
-    width: 28rem;
+.file-input-box {
+    width: 24rem;
 }
 
-.joint-les-row {
+#submit-joint-row {
     display: flex;
     gap: 2rem;
     justify-content: center;
 }
-
 
 #disclaimer {
     margin: 2rem auto 0 auto;
@@ -539,6 +534,10 @@ input[type=file] {
     width: 55rem;
 }
 
+#submit-single-button, #submit-joint-button, #submit-custom-button, #submit-example-button {
+    margin: 2rem 0 0 0;
+    width: 14rem;
+}
 
 
 

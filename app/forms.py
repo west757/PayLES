@@ -1,31 +1,33 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, FileField, SelectField, StringField
 
-class FormSingleLES(FlaskForm):
-    single_les_input = FileField('Drop LES here')
-    submit_single_les = SubmitField('Submit')
+class FormSubmitSingle(FlaskForm):
+    submit_single_input = FileField('Drop LES here')
+    submit_single_button = SubmitField('Submit')
 
-class FormJointLES(FlaskForm):
-    joint_les_input_1 = FileField('Upload Member 1 LES')
-    joint_les_input_2 = FileField('Upload Member 2 LES')
-    submit_joint_les = SubmitField('Submit')
+class FormSubmitJoint(FlaskForm):
+    submit_joint_input_1 = FileField('Upload Member 1 LES')
+    submit_joint_input_2 = FileField('Upload Member 2 LES')
+    submit_joint_button = SubmitField('Submit')
 
-class FormWithoutLES(FlaskForm):
-    month = SelectField('Month', choices=[])
-    year = SelectField('Year', choices=[])
-    grade = SelectField('Grade', choices=[])
-    zip_code = StringField('Zip Code')
-    home_of_record = SelectField('Home of Record', choices=[])
-    dependents = StringField('Dependents')
-    federal_filing_status = SelectField('Federal Filing Status', choices=[
+class FormSubmitCustom(FlaskForm):
+    custom_grade = SelectField('Grade', choices=[])
+    custom_zip_code = StringField('Zip Code')
+    custom_home_of_record = SelectField('Home of Record', choices=[])
+    custom_dependents = StringField('Dependents')
+    custom_federal_filing_status = SelectField('Federal Filing Status', choices=[
         ('Single', 'Single'),
         ('Married', 'Married'),
         ('Head of Household', 'Head of Household')
     ])
-    state_filing_status = SelectField('State Filing Status', choices=[
+    custom_state_filing_status = SelectField('State Filing Status', choices=[
         ('Single', 'Single'),
         ('Married', 'Married')
     ])
-    sgli_coverage = SelectField('SGLI Coverage', choices=[])
-    submit_without_les = SubmitField('Submit')
+    custom_sgli_coverage = SelectField('SGLI Coverage', choices=[])
+    custom_combat_zone = SelectField('Combat Zone', choices=[
+        ('No', 'No'),
+        ('Yes', 'Yes')
+    ])
+    submit_custom_button = SubmitField('Submit')
 

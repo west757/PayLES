@@ -71,8 +71,8 @@ function enableInputs() {
 
 // drag and drop file upload
 (function() {
-    const dropContainer = document.getElementById("home-drop");
-    const fileInput = document.getElementById("home_input");
+    const dropContainer = document.getElementById("single-drop");
+    const fileInput = document.getElementById("submit-single_input");
 
     if (!dropContainer || !fileInput) return;
 
