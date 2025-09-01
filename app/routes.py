@@ -27,47 +27,44 @@ from app.forms import (
 
 @flask_app.route('/')
 def index():
-    now = datetime.now()
-    current_month = now.strftime('%B')
-    current_year = now.year
+    form_single = FormSubmitSingle()
+    form_joint = FormSubmitJoint()
 
-    form_submit_single = FormSubmitSingle()
-    form_submit_joint = FormSubmitJoint()
+    current_year = datetime.now().year
+    current_month = datetime.now().strftime('%B')
 
-    GRADES = flask_app.config['GRADES']
-    HOME_OF_RECORDS = ["Select a Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']]
-    FEDERAL_FILING_STATUSES = ["Single", "Married", "Head of Household"]
-    STATE_FILING_STATUSES = ["Single", "Married"]
-    SGLI_COVERAGES = flask_app.config['SGLI_COVERAGES']
-    COMBAT_ZONES = ["No", "Yes"]
-
+    HOME_OF_RECORDS = ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']]
 
     config_js = {
-        'GRADES': GRADES,
+        'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
+        'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
+        'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+        'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': HOME_OF_RECORDS,
-        'FEDERAL_FILING_STATUSES': FEDERAL_FILING_STATUSES,
-        'STATE_FILING_STATUSES': STATE_FILING_STATUSES,
-        'SGLI_COVERAGES': SGLI_COVERAGES,
-        'COMBAT_ZONES': COMBAT_ZONES,
+        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
+        'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
+        'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
+        'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
+        'COMBAT_ZONES': flask_app.config['COMBAT_ZONES'],
     }
     context = {
         'config_js': config_js,
-        'form_submit_single': form_submit_single,
-        'form_submit_joint': form_submit_joint,
-        'current_month': current_month,
+        'form_single': form_single,
+        'form_joint': form_joint,
         'current_year': current_year,
+        'current_month': current_month,
     }
     return render_template('home.html', **context)
 
 
-@flask_app.route('/route_submit_single', methods=['POST'])
-def route_submit_single():
+@flask_app.route('/route_single', methods=['POST'])
+def route_single():
     form = FormSubmitSingle()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
 
-    file = form.submit_single_input.data
+    file = form.single_input.data
     if not file:
         return jsonify({'message': "No file submitted"}), 400
     
@@ -84,15 +81,15 @@ def route_submit_single():
         return jsonify({'message': message}), 400
 
 
-@flask_app.route('/route_submit_joint', methods=['POST'])
-def route_submit_joint():
+@flask_app.route('/route_joint', methods=['POST'])
+def route_joint():
     form = FormSubmitJoint()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
 
-    file1 = form.submit_joint_input_1.data
-    file2 = form.submit_joint_input_2.data
+    file1 = form.joint_input_1.data
+    file2 = form.joint_input_2.data
 
     if not file1 or not file2:
         return jsonify({'message': "Both LES files required"}), 400
@@ -101,32 +98,31 @@ def route_submit_joint():
 
 
 @csrf.exempt
-@flask_app.route('/route_submit_custom', methods=['POST'])
-def route_submit_custom():
-    now = datetime.now()
-    year = now.year
-    month = now.strftime('%b').upper()
+@flask_app.route('/route_initials', methods=['POST'])
+def route_initials():
+    current_year = datetime.now().year
+    current_month = datetime.now().strftime('%b').upper()
 
-    custom_data = {
-        'year': year,
-        'month': month,
-        'grade': request.form.get('grade', ''),
-        'zip_code': request.form.get('zip_code', ''),
-        'home_of_record': request.form.get('home_of_record', ''),
-        'dependents': request.form.get('dependents', ''),
-        'federal_filing_status': request.form.get('federal_filing_status', ''),
-        'state_filing_status': request.form.get('state_filing_status', ''),
-        'sgli_coverage': request.form.get('sgli_coverage', ''),
-        'combat_zone': request.form.get('combat_zone', ''),
+    initials = {
+        'current_year': current_year,
+        'current_month': current_month,
+        'grade': request.form.get('input_int_initials_grade', ''),
+        'zip_code': request.form.get('input_int_initials_zc', ''),
+        'home_of_record': request.form.get('input_select_initials_hor', ''),
+        'dependents': request.form.get('input_int_initials_deps', ''),
+        'federal_filing_status': request.form.get('input_select_initials_ffs', ''),
+        'state_filing_status': request.form.get('input_select_initials_sfs', ''),
+        'sgli_coverage': request.form.get('input_select_initials_sc', ''),
+        'combat_zone': request.form.get('input_select_initials_cz', ''),
     }
 
-    context = init_budget(custom_data)
+    context = init_budget(initials)
     return render_template('home.html', **context)
 
 
 @csrf.exempt
-@flask_app.route('/route_submit_example', methods=['POST'])
-def route_submit_example():
+@flask_app.route('/route_example', methods=['POST'])
+def route_example():
     valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:

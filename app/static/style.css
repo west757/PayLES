@@ -502,7 +502,7 @@ input[type=file] {
     display: block;
 }
 
-#submit-single-drop {
+#input-filedrop-single {
     align-items: center;
     border: 2px dashed var(--primary_dark_accent_color);
     border-radius: 1rem;
@@ -518,15 +518,15 @@ input[type=file] {
     width: 80%;
 }
 
-#submit-single-drop:hover, #submit-single-drop.drag-active {
+#input-filedrop-single:hover, #input-filedrop-single.drag-active {
     background-color: var(--input_background_color);
 }
 
-.file-input-box {
+#input-file-single, #input-file-joint-1, #input-file-joint-2 {
     width: 24rem;
 }
 
-.submit-custom-grid {
+.initials-grid {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     justify-content: center;
@@ -534,30 +534,30 @@ input[type=file] {
     width: 90%;
 }
 
-.submit-custom-column {
+.initials-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.submit-custom-row {
+.initials-row {
     display: flex;
     align-items: center;
 }
 
-.submit-custom-label {
+.initials-label {
     width: 10rem;
     text-align: right;
     margin-right: 0.75rem;
     flex-shrink: 0;
 }
 
-#submit-single-button, #submit-joint-button, #submit-custom-button, #submit-example-button {
+#button-single, #button-joint, #button-initials, #button-example {
     margin: 2rem 0 0 0;
     width: 14rem;
 }
 
-#submit-joint-row {
+#tab-joint-row {
     display: flex;
     gap: 2rem;
     justify-content: center;
