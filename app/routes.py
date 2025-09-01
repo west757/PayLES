@@ -29,7 +29,7 @@ from app.forms import (
 @flask_app.route('/')
 def index():
     now = datetime.now()
-    current_month_name = now.strftime('%b').upper()
+    current_month_name = now.strftime('%B')
     current_year = now.year
 
     form_submit_single = FormSubmitSingle()

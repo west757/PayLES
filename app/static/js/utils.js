@@ -1,11 +1,11 @@
-// beforeunload confirm alert
+// confirmation alert to user before changing off budget page
 function budgetUnloadPrompt(e) {
     e.preventDefault();
     e.returnValue = "Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.";
 }
 
 
-// show toast messages
+// show toast messages for 6 seconds and 0.5 second fade transition
 function showToast(message, duration = 6500) {
     const MAX_TOASTS = 3;
     const container = document.getElementById('toast-container');
@@ -32,7 +32,6 @@ function showToast(message, duration = 6500) {
 }
 
 
-// show tooltip
 function showTooltip(evt, text) {
     const tooltip = document.getElementById('tooltip');
     if (!tooltip) return;
@@ -43,7 +42,6 @@ function showTooltip(evt, text) {
 }
 
 
-// hide tooltip
 function hideTooltip() {
     const tooltip = document.getElementById('tooltip');
     if (!tooltip) return;
@@ -51,8 +49,8 @@ function hideTooltip() {
 }
 
 
-// disable all inputs except those in exceptions array
 function disableInputs(exceptions=[]) {
+    // disable all inputs except those in exceptions array
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         if (!exceptions.includes(el)) {
             el.disabled = true;
@@ -61,7 +59,6 @@ function disableInputs(exceptions=[]) {
 }
 
 
-// enable all inputs
 function enableInputs() {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         el.disabled = false;
@@ -69,47 +66,6 @@ function enableInputs() {
 }
 
 
-// drag and drop file upload
-(function() {
-    const dropContainer = document.getElementById("single-drop");
-    const fileInput = document.getElementById("submit-single_input");
-
-    if (!dropContainer || !fileInput) return;
-
-    // prevent default browser behavior for drag/drop
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropContainer.addEventListener(eventName, function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }, false);
-    });
-
-    // Highlight drop area on dragenter/dragover
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropContainer.addEventListener(eventName, function() {
-            dropContainer.classList.add('drag-active');
-        }, false);
-    });
-
-    // Remove highlight on dragleave/drop
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropContainer.addEventListener(eventName, function() {
-            dropContainer.classList.remove('drag-active');
-        }, false);
-    });
-
-    // Handle dropped files
-    dropContainer.addEventListener('drop', function(e) {
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            fileInput.files = e.dataTransfer.files;
-            // Optionally, trigger change event if needed
-            fileInput.dispatchEvent(new Event('change'));
-        }
-    });
-})();
-
-
-// highlight changes
 function highlightChanges() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     var checkbox = document.getElementById('highlight-changes-checkbox');
@@ -145,7 +101,6 @@ function highlightChanges() {
 }
 
 
-// show all variables
 function showAllVariables() {
     var checkbox = document.getElementById('show-all-variables-checkbox');
     var checked = checkbox.checked;
@@ -161,7 +116,6 @@ function showAllVariables() {
 }
 
 
-// show tsp options
 function showTSPOptions() {
     var checkbox = document.getElementById('show-tsp-options-checkbox');
     var checked = checkbox.checked;
@@ -177,7 +131,6 @@ function showTSPOptions() {
 }
 
 
-// show ytd rows
 function showYTDRows() {
     var checkbox = document.getElementById('show-ytd-rows-checkbox');
     var checked = checkbox.checked;
@@ -193,7 +146,6 @@ function showYTDRows() {
 }
 
 
-// export budget
 function exportBudget() {
     var table = document.getElementById('budget-table');
     var filetype = document.getElementById('export-dropdown').value;
@@ -201,6 +153,7 @@ function exportBudget() {
 
     var clone = table.cloneNode(true);
 
+    // remove row buttons from export
     clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
 
     var workbook = XLSX.utils.table_to_book(clone, {sheet: "Budget", raw: true});
@@ -212,7 +165,6 @@ function exportBudget() {
 }
 
 
-// get budget value for a specific cell
 function getBudgetValue(rowHeader, month) {
     const row = window.CONFIG.budget.find(r => r.header === rowHeader);
 
@@ -223,7 +175,6 @@ function getBudgetValue(rowHeader, month) {
 }
 
 
-// disable TSP rate buttons
 function disableTSPRateButtons() {
     const months = window.CONFIG.months;
     months.forEach(month => {
@@ -253,8 +204,8 @@ function disableTSPRateButtons() {
 }
 
 
-// set input restriction
 function setInputRestriction(fieldType, maxLength = null) {
+    // input restrictions for money inputs
     if (fieldType === 'money') {
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
@@ -281,6 +232,7 @@ function setInputRestriction(fieldType, maxLength = null) {
         };
     }
 
+    // input restrictions for only number inputs
     if (fieldType === 'number') {
         return function(e) {
             let val = e.target.value.replace(/\D/g, '');
@@ -291,6 +243,7 @@ function setInputRestriction(fieldType, maxLength = null) {
         };
     }
 
+    // input restrictions for text inputs
     if (fieldType === 'text') {
         return function(e) {
             let val = e.target.value.replace(/[^A-Za-z0-9_\- ]/g, '');

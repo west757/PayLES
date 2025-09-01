@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, FileField, SelectField, StringField
 
 class FormSubmitSingle(FlaskForm):
-    submit_single_input = FileField('Drop LES here')
+    submit_single_input = FileField('')
     submit_single_button = SubmitField('Submit')
 
 class FormSubmitJoint(FlaskForm):
