@@ -537,7 +537,7 @@ input[type=file] {
 .initials-column {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .initials-row {
@@ -546,7 +546,7 @@ input[type=file] {
 }
 
 .initials-label {
-    width: 10rem;
+    width: 10.5rem;
     text-align: right;
     margin-right: 0.75rem;
     flex-shrink: 0;
@@ -573,12 +573,20 @@ input[type=file] {
     width: 55rem;
 }
 
+hr {
+    border: none;
+    border-top: 1px solid var(--table_border_color);
+    margin: 16px 0;
+    width: 100%;
+    height: 0;
+    display: block;
+}
 
 /* =========================
    content
    ========================= */
 
-#home, #remarks, #about, #faq, #resources {
+#home, #remarks, #about, #faq-container, #resources {
     margin: 0 auto 3rem auto;
     max-width: 60%;
     min-width: 70rem;
@@ -1049,7 +1057,4 @@ input[type=file] {
 .resource:hover {
     background-color: var(--highlight_green_color);
 }
-
-
-
 
