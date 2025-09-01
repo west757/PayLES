@@ -30,6 +30,7 @@ class Config:
     MAX_CUSTOM_ROWS = 9
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
+    OLDEST_YEAR = 1975
     FICA_SOCIALSECURITY_TAX_RATE = 0.062
     FICA_MEDICARE_TAX_RATE = 0.0145
     TRAD_TSP_RATE_MAX = 84
@@ -44,7 +45,7 @@ class Config:
         "Married": 30000,
         "Head of Household": 22500
     }
-    COMBAT_ZONE = ["No", "Yes"]
+    COMBAT_ZONES = ["No", "Yes"]
 
     ROW_METADATA = [
     'type',

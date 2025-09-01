@@ -1,22 +1,4 @@
 function buildInitialsInputs() {
-    // Zip Code
-    const initialsZipCode = document.getElementById('initials-zc');
-    if (initialsZipCode) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'input-int-initials-zc';
-        input.className = 'input-mid';
-        input.name = 'input-int-initials-zc';
-        input.maxLength = 5;
-        input.placeholder = '12345';
-        input.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
-        });
-        initialsZipCode.innerHTML = '';
-        initialsZipCode.appendChild(input);
-    }
-
-    // Grade
     const initialsGrade = document.getElementById('initials-grade');
     if (initialsGrade && window.CONFIG && window.CONFIG.GRADES) {
         const select = document.createElement('select');
@@ -31,6 +13,60 @@ function buildInitialsInputs() {
         });
         initialsGrade.innerHTML = '';
         initialsGrade.appendChild(select);
+    }
+
+
+    const initialsYM = document.getElementById('initials-ym');
+    if (initialsYM && window.CONFIG && window.CONFIG.MONTHS_SHORT) {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonthIdx = now.getMonth(); // 0-based
+
+        // Year dropdown
+        const selectYear = document.createElement('select');
+        selectYear.id = 'input-select-initials-ym-year';
+        selectYear.className = 'input-short';
+        selectYear.name = 'input-select-initials-ym-year';
+        for (let y = window.CONFIG.OLDEST_YEAR; y <= currentYear; y++) {
+            const option = document.createElement('option');
+            option.value = y;
+            option.textContent = y;
+            if (y === currentYear) option.selected = true;
+            selectYear.appendChild(option);
+        }
+
+        // Month dropdown
+        const selectMonth = document.createElement('select');
+        selectMonth.id = 'input-select-initials-ym-month';
+        selectMonth.className = 'input-short';
+        selectMonth.name = 'input-select-initials-ym-month';
+        window.CONFIG.MONTHS_SHORT.forEach((m, idx) => {
+            const option = document.createElement('option');
+            option.value = m;
+            option.textContent = m;
+            if (idx === currentMonthIdx) option.selected = true;
+            selectMonth.appendChild(option);
+        });
+
+        initialsYM.innerHTML = '';
+        initialsYM.appendChild(selectYear);
+        initialsYM.appendChild(selectMonth);
+    }
+
+
+    const initialsMonthsInService = document.getElementById('initials-mis');
+    if (initialsMonthsInService) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'input-int-initials-mis';
+        input.className = 'input-short';
+        input.name = 'input-int-initials-mis';
+        input.maxLength = 3;
+        input.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+        initialsMonthsInService.innerHTML = '';
+        initialsMonthsInService.appendChild(input);
     }
 
     // Dependents
@@ -82,6 +118,23 @@ function buildInitialsInputs() {
         });
         initialsHomeOfRecord.innerHTML = '';
         initialsHomeOfRecord.appendChild(select);
+    }
+
+    // Zip Code
+    const initialsZipCode = document.getElementById('initials-zc');
+    if (initialsZipCode) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'input-int-initials-zc';
+        input.className = 'input-mid';
+        input.name = 'input-int-initials-zc';
+        input.maxLength = 5;
+        input.placeholder = '12345';
+        input.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
+        });
+        initialsZipCode.innerHTML = '';
+        initialsZipCode.appendChild(input);
     }
 
     // Federal Filing Status
@@ -155,6 +208,56 @@ function attachHomeListeners() {
     });
 
     buildInitialsInputs();
+
+
+
+    // After initialsYM and initialsMonthsInService are created
+    const selectYear = document.getElementById('input-select-initials-ym-year');
+    const selectMonth = document.getElementById('input-select-initials-ym-month');
+    const inputMIS = document.getElementById('input-int-initials-mis');
+
+    function calculateMonthsInService(year, monthShort) {
+        const now = new Date();
+        const startYear = parseInt(year, 10);
+        const startMonthIdx = window.CONFIG.MONTHS_SHORT.indexOf(monthShort);
+        const months = (now.getFullYear() - startYear) * 12 + (now.getMonth() - startMonthIdx);
+        return Math.max(months, 0);
+    }
+
+    function calculateYearMonthFromMIS(mis) {
+        const now = new Date();
+        let totalMonths = parseInt(mis, 10);
+        if (isNaN(totalMonths) || totalMonths < 0) totalMonths = 0;
+        let year = now.getFullYear();
+        let monthIdx = now.getMonth();
+        year -= Math.floor(totalMonths / 12);
+        monthIdx -= (totalMonths % 12);
+        if (monthIdx < 0) {
+            year -= 1;
+            monthIdx += 12;
+        }
+        return { year, monthShort: window.CONFIG.MONTHS_SHORT[monthIdx] };
+    }
+
+    // When year/month changes, update MIS
+    if (selectYear && selectMonth && inputMIS) {
+        selectYear.addEventListener('change', function() {
+            inputMIS.value = calculateMonthsInService(selectYear.value, selectMonth.value);
+        });
+        selectMonth.addEventListener('change', function() {
+            inputMIS.value = calculateMonthsInService(selectYear.value, selectMonth.value);
+        });
+
+        // When MIS changes, update year/month
+        inputMIS.addEventListener('input', function() {
+            const { year, monthShort } = calculateYearMonthFromMIS(inputMIS.value);
+            selectYear.value = year;
+            selectMonth.value = monthShort;
+        });
+    }
+
+
+
 
     const buttonInitials = document.getElementById('button-initials');
     buttonInitials.addEventListener('click', submitInitials);

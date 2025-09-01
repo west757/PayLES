@@ -36,6 +36,8 @@ def index():
     HOME_OF_RECORDS = ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']]
 
     config_js = {
+        'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
+        'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
         'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
@@ -64,7 +66,7 @@ def route_single():
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
 
-    file = form.single_input.data
+    file = form.input_file_single.data
     if not file:
         return jsonify({'message': "No file submitted"}), 400
     
@@ -88,8 +90,8 @@ def route_joint():
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
 
-    file1 = form.joint_input_1.data
-    file2 = form.joint_input_2.data
+    file1 = form.input_file_joint_1.data
+    file2 = form.input_file_joint_2.data
 
     if not file1 or not file2:
         return jsonify({'message': "Both LES files required"}), 400
@@ -107,6 +109,7 @@ def route_initials():
         'current_year': current_year,
         'current_month': current_month,
         'grade': request.form.get('input_int_initials_grade', ''),
+        'months_in_service': request.form.get('input_int_initials_mis', ''),
         'zip_code': request.form.get('input_int_initials_zc', ''),
         'home_of_record': request.form.get('input_select_initials_hor', ''),
         'dependents': request.form.get('input_int_initials_deps', ''),
