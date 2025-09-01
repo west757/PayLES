@@ -1,14 +1,30 @@
-// attach home form listener
-window.attachHomeFormListener = function() {
-    const homeForm = document.getElementById('home-form');
-    homeForm.addEventListener('submit', function(e) {
-        disableInputs();
-    });
-};
+//stores state of removing row, used for confirmation timeout
+let removeRowConfirm = {};
 
 
-// htmx response error event listener
+// htmx after swap event listener, runs every time the budget is loaded
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    //only runs the first time the budget is loaded
+    if (evt.target && evt.target.id === 'content') {
+        //window.addEventListener('beforeunload', budgetUnloadPrompt);
+        attachInjectModalListeners();
+    }
+
+    // capture and parse config data
+    const configData = JSON.parse(document.getElementById('config-data').textContent);
+    window.CONFIG = Object.assign(window.CONFIG || {}, configData);
+
+    highlightChanges();
+    showAllVariables();
+    showTSPOptions();
+    showYTDRows();
+    enableInputs();
+    disableTSPRateButtons();
+});
+
+
 document.body.addEventListener('htmx:responseError', function(evt) {
+    // show toasts on htmx swap errors
     try {
         const response = JSON.parse(evt.detail.xhr.responseText);
         if (response.message) {
@@ -21,19 +37,16 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 });
 
 
-// keydown event listener
-document.addEventListener('keydown', function(e) {
-    // close modals on escape key press
-    if (e.key === 'Escape' || e.key === 'Esc') {
-        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
-            input.checked = false;
-        });
-    }
-});
-
-
-// mouse move event listener
 document.addEventListener('mousemove', function(e) {
+    // show question mark tooltips
+    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
+        const tooltipText = e.target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            showTooltip(e, tooltipText);
+        }
+    }
+
+    //show row modal button tooltips
     if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
@@ -41,6 +54,7 @@ document.addEventListener('mousemove', function(e) {
         }
     }
 
+    // show remove row button tooltips
     if (e.target && e.target.classList && e.target.classList.contains('remove-row-button')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
@@ -48,13 +62,7 @@ document.addEventListener('mousemove', function(e) {
         }
     }
 
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-
+    // show editing button tooltips
     if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
@@ -62,7 +70,8 @@ document.addEventListener('mousemove', function(e) {
         }
     }
 
-    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
+    // show LES rectangle tooltips
+    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
@@ -71,8 +80,8 @@ document.addEventListener('mousemove', function(e) {
 });
 
 
-// mouse leave event listener
 document.addEventListener('mouseleave', function(e) {
+    // hide all tooltips on mouse leave
     if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
         hideTooltip();
     }
@@ -95,8 +104,6 @@ document.addEventListener('mouseleave', function(e) {
 }, true);
 
 
-let removeRowConfirm = {};
-// click event listeners
 document.addEventListener('click', function(e) {
     hideTooltip();
     
@@ -129,7 +136,7 @@ document.addEventListener('click', function(e) {
             setTimeout(() => {
                 removeRowConfirm[header] = false;
                 e.target.setAttribute('data-tooltip', 'Remove Row');
-            }, 2500); // Reset after 2.5s
+            }, 2500); // reset confirmation after 2.5s
         } else {
             removeRowConfirm[header] = false;
             hideTooltip();
@@ -165,7 +172,7 @@ document.addEventListener('click', function(e) {
         accountModalCheckbox.checked = true;
     }
 
-    // open recs modal
+    // open recommendation modal
     if (e.target && e.target.id === 'button-recs') {
         const recsModalCheckbox = document.getElementById('recs');
         recsModalCheckbox.checked = true;
@@ -179,8 +186,8 @@ document.addEventListener('click', function(e) {
 });
 
 
-// change event listeners
 document.addEventListener('change', function(e) {
+    // setting function calls on dropdown or checkbox change
     if (e.target && e.target.id === 'months-num-dropdown') {
         disableInputs();
     }
@@ -203,21 +210,11 @@ document.addEventListener('change', function(e) {
 });
 
 
-// htmx after swap event listener
-document.body.addEventListener('htmx:afterSwap', function(evt) {
-    if (evt.target && evt.target.id === 'content') {
-        //window.addEventListener('beforeunload', budgetUnloadPrompt);
-        attachInjectModalListeners();
+document.addEventListener('keydown', function(e) {
+    // close modals on escape key press
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        document.querySelectorAll('.modal-state:checked').forEach(function(input) {
+            input.checked = false;
+        });
     }
-
-    // capture and parse config data
-    const configData = JSON.parse(document.getElementById('config-data').textContent);
-    window.CONFIG = Object.assign(window.CONFIG || {}, configData);
-
-    highlightChanges();
-    showAllVariables();
-    showTSPOptions();
-    showYTDRows();
-    enableInputs();
-    disableTSPRateButtons();
 });

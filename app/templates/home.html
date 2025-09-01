@@ -17,10 +17,10 @@
         <div id="tab-submit-single" class="tab-content">
             <form id="form-submit-single" hx-post="/route_submit_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_submit_single.hidden_tag() }}
-                <label id="single-drop" for="{{ form_submit_single.submit_single_input.id }}">
+                <label id="submit-single-drop" for="submit-single-input">
                     <span class="text-mid">Drop LES here</span>
                     or
-                    {{ form_submit_single.submit_single_input(id="submit-single_input", class="file-input-box", accept=".pdf") }}
+                    {{ form_submit_single.submit_single_input(id="submit-single-input", class="file-input-box", accept=".pdf") }}
                 </label>
                 {{ form_submit_single.submit_single_button(id="submit-single-button", class="button-solo") }}
             </form>
@@ -32,11 +32,11 @@
                 <div id="submit-joint-row">
                     <div>
                         <span>Upload Member 1 LES</span>
-                        {{ form_submit_joint.submit_joint_input_1(id="submit_joint_input_1", class="file-input-box", accept=".pdf") }}
+                        {{ form_submit_joint.submit_joint_input_1(id="submit-joint-input-1", class="file-input-box", accept=".pdf") }}
                     </div>
                     <div>
                         <span>Upload Member 2 LES</span>
-                        {{ form_submit_joint.submit_joint_input_2(id="submit_joint_input_2", class="file-input-box", accept=".pdf") }}
+                        {{ form_submit_joint.submit_joint_input_2(id="submit-joint-input-2", class="file-input-box", accept=".pdf") }}
                     </div>
                 </div>
                 {{ form_submit_joint.submit_joint_button(id="submit-joint-button", class="button-solo") }}
@@ -49,30 +49,43 @@
             </div>
             <form id="form-submit-custom" hx-post="/route_submit_custom" hx-swap="innerHTML" method="POST">
                 {{ form_submit_custom.hidden_tag() }}
-                <div id="variables-inputs">
-                    <label for="custom_grade">Grade:</label>
-                    {{ form_submit_custom.custom_grade(class="input-short") }}
-
-                    <label for="custom_zip_code">Zip Code:</label>
-                    {{ form_submit_custom.custom_zip_code(class="input-mid", maxlength="5", pattern="\d{5}") }}
-
-                    <label for="custom_home_of_record">Home of Record:</label>
-                    {{ form_submit_custom.custom_home_of_record(class="input-long") }}
-
-                    <label for="custom_dependents">Dependents:</label>
-                    {{ form_submit_custom.custom_dependents(class="input-short", maxlength="1", pattern="\d") }}
-
-                    <label for="custom_federal_filing_status">Federal Filing Status:</label>
-                    {{ form_submit_custom.custom_federal_filing_status(class="input-mid") }}
-
-                    <label for="custom_state_filing_status">State Filing Status:</label>
-                    {{ form_submit_custom.custom_state_filing_status(class="input-mid") }}
-
-                    <label for="custom_sgli_coverage">SGLI Coverage:</label>
-                    {{ form_submit_custom.custom_sgli_coverage(class="input-mid") }}
-
-                    <label for="custom_combat_zone">Combat Zone:</label>
-                    {{ form_submit_custom.custom_combat_zone(class="input-short") }}
+                <div class="custom-form-grid">
+                    <div class="custom-form-column">
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_zip_code">Zip Code:</label>
+                            {{ form_submit_custom.custom_zip_code(class="input-mid", maxlength="5", pattern="\d{5}", placeholder="12345") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_grade">Grade:</label>
+                            {{ form_submit_custom.custom_grade(class="input-short") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_dependents">Dependents:</label>
+                            {{ form_submit_custom.custom_dependents(class="input-short", maxlength="1", pattern="\d", placeholder="0-9") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_combat_zone">Combat Zone:</label>
+                            {{ form_submit_custom.custom_combat_zone(class="input-short") }}
+                        </div>
+                    </div>
+                    <div class="custom-form-column">
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_home_of_record">Home of Record:</label>
+                            {{ form_submit_custom.custom_home_of_record(class="input-long") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_federal_filing_status">Federal Filing Status:</label>
+                            {{ form_submit_custom.custom_federal_filing_status(class="input-mid") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_state_filing_status">State Filing Status:</label>
+                            {{ form_submit_custom.custom_state_filing_status(class="input-mid") }}
+                        </div>
+                        <div class="custom-form-row">
+                            <label class="custom-label" for="custom_sgli_coverage">SGLI Coverage:</label>
+                            {{ form_submit_custom.custom_sgli_coverage(class="input-mid") }}
+                        </div>
+                    </div>
                 </div>
                 {{ form_submit_custom.submit_custom_button(id="submit-custom-button", class="button-solo") }}
             </form>
