@@ -14,7 +14,7 @@
             <button class="tab-button" data-tab="submit-example">Instructions & Example</button>
         </div>
 
-        <div id="tab-submit-single" class="tab-content">
+        <div id="tab-submit-single" class="tab-content active">
             <form id="form-submit-single" hx-post="/route_submit_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_submit_single.hidden_tag() }}
                 <label id="submit-single-drop" for="submit-single-input">
@@ -45,7 +45,7 @@
 
         <div id="tab-submit-custom" class="tab-content">
             <div>
-                Building budget for {{ current_month_name }} {{ current_year }}
+                Building budget for {{ current_month }} {{ current_year }}
             </div>
             <form id="form-submit-custom" hx-post="/route_submit_custom" hx-swap="innerHTML" method="POST">
                 {{ form_submit_custom.hidden_tag() }}
@@ -53,37 +53,37 @@
                     <div class="custom-form-column">
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_zip_code">Zip Code:</label>
-                            {{ form_submit_custom.custom_zip_code(class="input-mid", maxlength="5", pattern="\d{5}", placeholder="12345") }}
+                            {{ form_submit_custom.custom_zip_code(id="submit-custom-zip-code", class="input-mid", maxlength="5", pattern="\d{5}", placeholder="12345") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_grade">Grade:</label>
-                            {{ form_submit_custom.custom_grade(class="input-short") }}
+                            {{ form_submit_custom.custom_grade(id="submit-custom-grade", class="input-short") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_dependents">Dependents:</label>
-                            {{ form_submit_custom.custom_dependents(class="input-short", maxlength="1", pattern="\d", placeholder="0-9") }}
+                            {{ form_submit_custom.custom_dependents(id="submit-custom-dependents", class="input-short", maxlength="1", pattern="\d", placeholder="0-9") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_combat_zone">Combat Zone:</label>
-                            {{ form_submit_custom.custom_combat_zone(class="input-short") }}
+                            {{ form_submit_custom.custom_combat_zone(id="submit-custom-combat-zone", class="input-short") }}
                         </div>
                     </div>
                     <div class="custom-form-column">
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_home_of_record">Home of Record:</label>
-                            {{ form_submit_custom.custom_home_of_record(class="input-long") }}
+                            {{ form_submit_custom.custom_home_of_record(id="submit-custom-home-of-record", class="input-long") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_federal_filing_status">Federal Filing Status:</label>
-                            {{ form_submit_custom.custom_federal_filing_status(class="input-mid") }}
+                            {{ form_submit_custom.custom_federal_filing_status(id="submit-custom-federal-filing-status", class="input-mid") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_state_filing_status">State Filing Status:</label>
-                            {{ form_submit_custom.custom_state_filing_status(class="input-mid") }}
+                            {{ form_submit_custom.custom_state_filing_status(id="submit-custom-state-filing-status", class="input-mid") }}
                         </div>
                         <div class="custom-form-row">
                             <label class="custom-label" for="custom_sgli_coverage">SGLI Coverage:</label>
-                            {{ form_submit_custom.custom_sgli_coverage(class="input-mid") }}
+                            {{ form_submit_custom.custom_sgli_coverage(id="submit-custom-sgli-coverage", class="input-mid") }}
                         </div>
                     </div>
                 </div>
@@ -113,15 +113,5 @@
         official guidance regarding your military pay and benefits.
     </div>
 </div>
-
-<!--
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.attachHomeFormListener) {
-            window.attachHomeFormListener();
-        }
-    });
-</script>
--->
 
 {% endblock %}

@@ -15,33 +15,13 @@ function attachHomeListeners() {
         });
     });
 
-    // Show default tab on load
-    const defaultTab = document.querySelector('.tab-button.active');
-    if (defaultTab) {
-        const tabId = 'tab-' + defaultTab.getAttribute('data-tab');
-        const tabContent = document.getElementById(tabId);
-        if (tabContent) {
-            tabContent.classList.add('active');
-        }
-    }
+    const submitCustomZipCode = document.getElementById('submit-custom-zip-code');
+    submitCustomZipCode.addEventListener('input', setInputRestriction('number', 5));
 
-    // Zip code validation
-    const zipInput = document.getElementById('form-submit-custom')?.querySelector('input[name="zip_code"]');
-    if (zipInput) {
-        zipInput.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
-        });
-    }
+    const submitCustomDependents = document.getElementById('submit-custom-dependents');
+    submitCustomDependents.addEventListener('input', setInputRestriction('number', 1));
 
-    // Dependents validation
-    const depInput = document.getElementById('form-submit-custom')?.querySelector('input[name="dependents"]');
-    if (depInput) {
-        depInput.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
-        });
-    }
-
-    // Disable inputs on any home form submit
+    // disable inputs on any home form submit
     document.querySelectorAll('#form-submit-single, #form-submit-joint, #form-submit-custom, #form-submit-example').forEach(form => {
         form.addEventListener('submit', function(e) {
             disableInputs();
@@ -49,21 +29,12 @@ function attachHomeListeners() {
     });
 }
 
-// Initial load
-document.addEventListener('DOMContentLoaded', attachHomeListeners);
 
-// htmx swap: re-attach listeners when home.html is loaded/swapped in
-document.body.addEventListener('htmx:afterSwap', function(evt) {
-    // Check if the swap target contains the home content
-    if (document.getElementById('home')) {
-        attachHomeListeners();
-    }
-});
-
-
-(function() {
+function attachDragAndDropListeners() {
     const dropContainer = document.getElementById("submit-single-drop");
     const fileInput = document.getElementById("submit-single-input");
+
+    if (!dropContainer || !fileInput) return;
 
     // prevent default browser behavior for drag/drop
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -93,4 +64,4 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
             fileInput.files = e.dataTransfer.files;
         }
     });
-})();
+}

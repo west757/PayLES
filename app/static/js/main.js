@@ -2,6 +2,14 @@
 let removeRowConfirm = {};
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('home')) {
+        attachHomeListeners();
+        attachDragAndDropListeners();
+    }
+});
+
+
 // htmx after swap event listener, runs every time the budget is loaded
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     //only runs the first time the budget is loaded
