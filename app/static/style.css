@@ -496,16 +496,16 @@ input[type=file] {
     background: var(--highlight_green_color);
 }
 
-#tab-joint-les, #tab-without-les, #tab-example-les {
-    display: none;
-}
-
 .tab-content {
     background-color: var(--primary_light_accent_color);
-    display: block;
+    display: none;
     border-radius: 0 0 1rem 1rem;
     padding: 2rem 2rem 1rem 2rem;
     position: relative;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 #single-drop {
@@ -536,7 +536,6 @@ input[type=file] {
     display: flex;
     gap: 2rem;
     justify-content: center;
-    margin-bottom: 2rem;
 }
 
 
@@ -936,22 +935,22 @@ input[type=file] {
 
 
 /* =========================
-   tab accordion
+   faq accordion
    ========================= */
 
-.tabs {
+.faqs {
     border-radius: 0.5rem;
     flex: 1;
     overflow: hidden;
 }
 
-.tab {
+.faq {
     border-bottom: 1px solid var(--table_border_color);
     overflow: hidden;
     width: 100%;
 }
 
-.tab-label {
+.faq-label {
     background-color: var(--secondary_light_accent_color);
     cursor: pointer;
     display: flex;
@@ -959,11 +958,11 @@ input[type=file] {
     padding: 1.25rem;
 }
 
-.tab-label:hover {
+.faq-label:hover {
     background-color: var(--highlight_green_color);
 }
 
-.tab-label::after {
+.faq-label::after {
     content: "\276F";
     height: 1rem;
     text-align: center;
@@ -971,7 +970,7 @@ input[type=file] {
     width: 1rem;
 }
 
-.tab-content {
+.faq-content {
     background-color: var(--primary_light_accent_color);
     padding: 0 1rem;
     transition: all 0.35s;
@@ -984,15 +983,15 @@ input[type=file] {
     z-index: -1;
 }
 
-.faq-checkbox:checked + .tab-label {
+.faq-checkbox:checked + .faq-label {
    background-color: var(--highlight_green_color);
 }
 
-.faq-checkbox:checked + .tab-label::after {
+.faq-checkbox:checked + .faq-label::after {
     transform: rotate(90deg);
 }
 
-.faq-checkbox:checked ~ .tab-content {
+.faq-checkbox:checked ~ .faq-content {
     max-height: 100vh;
     padding: 1rem;
 }

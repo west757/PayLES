@@ -25,63 +25,111 @@ from app.forms import (
     FormSingleLES,
     FormJointLES,
     FormWithoutLES,
-    FormExampleLES,
 )
 
 
 @flask_app.route('/')
 def index():
-    single_form = FormSingleLES()
-    joint_form = FormJointLES()
-    without_form = FormWithoutLES()
-    example_form = FormExampleLES()
-    return render_template(
-        'home.html',
-        single_form=single_form,
-        joint_form=joint_form,
-        without_form=without_form,
-        example_form=example_form
-    )
+    form_single_les = FormSingleLES()
+    form_joint_les = FormJointLES()
+    form_without_les = FormWithoutLES()
+    return render_template( 'home.html', form_single_les=form_single_les, form_joint_les=form_joint_les, form_without_les=form_without_les)
+
 
 @flask_app.route('/submit_single_les', methods=['POST'])
 def submit_single_les():
     form = FormSingleLES()
+
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
+    
     les_file = form.les_input.data
     if not les_file:
         return jsonify({'message': "No file submitted"}), 400
-    # Add your LES validation and processing logic here
-    # Return appropriate response or render_template
+    
+    valid, message = validate_file(les_file)
+    if not valid:
+        return jsonify({'message': message}), 400
+    
+    valid, message, les_pdf = validate_les(les_file)
+
+    if valid:
+        BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+        VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
+        headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+
+        les_image, rect_overlay, les_text = process_les(les_pdf)
+        budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
+        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+        budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
+        recommendations = add_recommendations(budget, init_month)
+
+        session['budget'] = budget
+        session['headers'] = headers
+
+        LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
+        MODALS = load_json(flask_app.config['MODALS_JSON'])
+
+        config_js = {
+            'budget': convert_numpy_types(budget),
+            'months': months,
+            'headers': headers,
+            'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
+            'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
+            'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+            'GRADES': flask_app.config['GRADES'],
+            'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
+            'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
+        }
+        context = {
+            'config_js': config_js,
+            'les_image': les_image,
+            'rect_overlay': rect_overlay,
+            'budget': convert_numpy_types(budget),
+            'months': months,
+            'headers': headers,
+            'recommendations': recommendations,
+            'LES_REMARKS': LES_REMARKS,
+            'MODALS': MODALS,
+        }
+        return render_template('content.html', **context)
+    else:
+        return jsonify({'message': message}), 400
+
+
+
 
 @flask_app.route('/submit_joint_les', methods=['POST'])
 def submit_joint_les():
     form = FormJointLES()
+
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
+    
     les1 = form.joint_les_1.data
     les2 = form.joint_les_2.data
+
     if not les1 or not les2:
         return jsonify({'message': "Both LES files required"}), 400
-    # Add your joint LES validation and processing logic here
-    # Return appropriate response or render_template
+
+    return render_template('home.html')
+
 
 @flask_app.route('/submit_without_les', methods=['POST'])
 def submit_without_les():
     form = FormWithoutLES()
+
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
+    
     grade = form.grade.data
-    # Add logic to process manual variable entry
-    # Return appropriate response or render_template
+
+    return render_template('home.html')
+
 
 @flask_app.route('/submit_example_les', methods=['POST'])
 def submit_example_les():
-    form = FormExampleLES()
-    if not form.validate_on_submit():
-        return jsonify({'message': "Invalid submission"}), 400
-    # Add logic to process example LES
-    # Return appropriate response or render_template
+    return render_template('home.html')
 
 
 
