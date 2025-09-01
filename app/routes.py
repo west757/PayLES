@@ -22,7 +22,6 @@ from app.budget import (
 from app.forms import (
     FormSubmitSingle,
     FormSubmitJoint,
-    FormSubmitCustom,
 )
 
 
@@ -34,23 +33,29 @@ def index():
 
     form_submit_single = FormSubmitSingle()
     form_submit_joint = FormSubmitJoint()
-    form_submit_custom = FormSubmitCustom()
 
-    grade_choices = [(g, g) for g in flask_app.config['GRADES']]
-    form_submit_custom.custom_grade.choices = grade_choices
+    GRADES = flask_app.config['GRADES']
+    HOME_OF_RECORDS = ["Select a Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']]
+    FEDERAL_FILING_STATUSES = ["Single", "Married", "Head of Household"]
+    STATE_FILING_STATUSES = ["Single", "Married"]
+    SGLI_COVERAGES = flask_app.config['SGLI_COVERAGES']
+    COMBAT_ZONES = ["No", "Yes"]
 
-    home_of_record_choices = [(r['home_of_record'], r['home_of_record']) for r in flask_app.config['HOME_OF_RECORDS']]
-    form_submit_custom.custom_home_of_record.choices = home_of_record_choices
 
-    sgli_coverage_choices = [(c, c) for c in flask_app.config['SGLI_COVERAGES']]
-    form_submit_custom.custom_sgli_coverage.choices = sgli_coverage_choices
-
+    config_js = {
+        'GRADES': GRADES,
+        'HOME_OF_RECORDS': HOME_OF_RECORDS,
+        'FEDERAL_FILING_STATUSES': FEDERAL_FILING_STATUSES,
+        'STATE_FILING_STATUSES': STATE_FILING_STATUSES,
+        'SGLI_COVERAGES': SGLI_COVERAGES,
+        'COMBAT_ZONES': COMBAT_ZONES,
+    }
     context = {
+        'config_js': config_js,
         'form_submit_single': form_submit_single,
         'form_submit_joint': form_submit_joint,
-        'form_submit_custom': form_submit_custom,
-        'current_month_name': current_month,
-        'current_year': current_year
+        'current_month': current_month,
+        'current_year': current_year,
     }
     return render_template('home.html', **context)
 
@@ -95,17 +100,14 @@ def route_submit_joint():
     return render_template('home.html')
 
 
+@csrf.exempt
 @flask_app.route('/route_submit_custom', methods=['POST'])
 def route_submit_custom():
-    form = FormSubmitCustom()
-
-    if not form.validate_on_submit():
-        return jsonify({'message': "Invalid submission"}), 400
-    
     now = datetime.now()
     month = now.strftime('%b').upper()
     year = now.year
-    grade = form.grade.data
+
+    print(month, year)
 
     return render_template('home.html')
 
@@ -121,9 +123,6 @@ def route_submit_example():
     else:
         return jsonify({'message': message}), 400
 
-
-
-    
 
 @csrf.exempt
 @flask_app.route('/update_budget', methods=['POST'])
