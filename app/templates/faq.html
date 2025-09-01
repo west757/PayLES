@@ -3,12 +3,12 @@
 
 <div id="faq">
     <h2>Frequently Asked Questions</h2>
-    <div class="tabs shadow">
+    <div class="faqs shadow">
         {% for faq in FAQS %}
-        <div class="tab">
+        <div class="faq">
             <input class="faq-checkbox" id="faq{{ loop.index }}" type="checkbox">
-            <label class="tab-label" for="faq{{ loop.index }}">{{ faq.label|safe }}</label>
-            <div class="tab-content">
+            <label class="faq-label" for="faq{{ loop.index }}">{{ faq.label|safe }}</label>
+            <div class="faq-content">
                 {{ faq.content|safe }}
             </div>
         </div>
