@@ -4,6 +4,10 @@ let removeRowConfirm = {};
 
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('home')) {
+        // capture and parse config data
+        const configData = JSON.parse(document.getElementById('config-data').textContent);
+        window.CONFIG = Object.assign(window.CONFIG || {}, configData);
+
         attachHomeListeners();
         attachDragAndDropListeners();
     }
