@@ -103,32 +103,24 @@ def route_submit_joint():
 @csrf.exempt
 @flask_app.route('/route_submit_custom', methods=['POST'])
 def route_submit_custom():
-    zip_code = request.form.get('zip_code', '')
-    grade = request.form.get('grade', '')
-    dependents = request.form.get('dependents', '')
-    combat_zone = request.form.get('combat_zone', '')
-    home_of_record = request.form.get('home_of_record', '')
-    federal_filing_status = request.form.get('federal_filing_status', '')
-    state_filing_status = request.form.get('state_filing_status', '')
-    sgli_coverage = request.form.get('sgli_coverage', '')
-
-    # Print them out
-    print("Zip Code:", zip_code)
-    print("Grade:", grade)
-    print("Dependents:", dependents)
-    print("Combat Zone:", combat_zone)
-    print("Home of Record:", home_of_record)
-    print("Federal Filing Status:", federal_filing_status)
-    print("State Filing Status:", state_filing_status)
-    print("SGLI Coverage:", sgli_coverage)
-
     now = datetime.now()
-    month = now.strftime('%b').upper()
     year = now.year
+    month = now.strftime('%b').upper()
 
-    print(month, year)
+    custom_data = {
+        'year': year,
+        'month': month,
+        'grade': request.form.get('grade', ''),
+        'zip_code': request.form.get('zip_code', ''),
+        'home_of_record': request.form.get('home_of_record', ''),
+        'dependents': request.form.get('dependents', ''),
+        'federal_filing_status': request.form.get('federal_filing_status', ''),
+        'state_filing_status': request.form.get('state_filing_status', ''),
+        'sgli_coverage': request.form.get('sgli_coverage', ''),
+        'combat_zone': request.form.get('combat_zone', ''),
+    }
 
-    context = init_budget()
+    context = init_budget(custom_data)
     return render_template('home.html', **context)
 
 

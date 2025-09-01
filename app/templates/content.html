@@ -1,4 +1,6 @@
 <div id="content" hx-swap-oob="true">
+    <div class="tooltip" id="tooltip"></div>
+
     <div id="budget-settings">
         <div id="budget">
             {% include 'budget.html' %}
@@ -114,41 +116,43 @@
     </div>
 
 
-    <!-- render LES image and tooltips -->
-    <div id="les-image">
-        <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
+    <!-- render LES image -->
+    {% if les_image is defined and les_image %}
+        <div id="les-image">
+            <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
 
-        {% for rect in rect_overlay %}
-        <button
-            type="button"
-            {% if rect.modal != "none" %}
-                class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable{% endif %}"
-                data-modal="{{rect.modal}}"
-            {% else %}
-                class="rect-highlight"
-            {% endif %}
-            style="
-                left: {{rect.x1}}px;
-                top: {{rect.y1}}px;
-                width: {{rect.x2 - rect.x1}}px;
-                height: {{rect.y2 - rect.y1}}px;"
-            data-tooltip="{{rect.tooltip}}">
-        </button>
-        {% endfor %}
-    </div>
-
-    <div class="tooltip" id="tooltip"></div>
+            {% for rect in rect_overlay %}
+            <button
+                type="button"
+                {% if rect.modal != "none" %}
+                    class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable{% endif %}"
+                    data-modal="{{rect.modal}}"
+                {% else %}
+                    class="rect-highlight"
+                {% endif %}
+                style="
+                    left: {{rect.x1}}px;
+                    top: {{rect.y1}}px;
+                    width: {{rect.x2 - rect.x1}}px;
+                    height: {{rect.y2 - rect.y1}}px;"
+                data-tooltip="{{rect.tooltip}}">
+            </button>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 
     <!-- LES remarks -->
-    <h2 class="h2-center">Common LES Remarks</h2>
-    <div id="remarks" class="shadow">
-        {% for remark in LES_REMARKS %}
-            <div class="remark">
-                {{ remark.text|safe }}
-            </div>
-        {% endfor %}
-    </div>
+    {% if LES_REMARKS is defined and LES_REMARKS %}
+        <h2 class="h2-center">Common LES Remarks</h2>
+        <div id="remarks" class="shadow">
+            {% for remark in LES_REMARKS %}
+                <div class="remark">
+                    {{ remark.text|safe }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
 
     <!-- modals -->

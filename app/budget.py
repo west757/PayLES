@@ -36,13 +36,18 @@ from app.calculations import (
 # init and build budget
 # =========================
 
-def init_budget(les_pdf=None):
+def init_budget(les_pdf=None, form=None):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
 
-    les_image, rect_overlay, les_text = process_les(les_pdf)
-    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text)
+    if les_pdf is not None:
+        les_image, rect_overlay, les_text = process_les(les_pdf)
+        context['les_image'] = les_image
+        context['rect_overlay'] = rect_overlay
+        context['LES_REMARKS'] = load_json(flask_app.config['LES_REMARKS_JSON'])
+
+    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, form)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
     recommendations = add_recommendations(budget, init_month)
@@ -50,7 +55,7 @@ def init_budget(les_pdf=None):
     session['budget'] = budget
     session['headers'] = headers
 
-    LES_REMARKS = load_json(flask_app.config['LES_REMARKS_JSON'])
+    
     MODALS = load_json(flask_app.config['MODALS_JSON'])
 
     config_js = {
@@ -66,13 +71,10 @@ def init_budget(les_pdf=None):
     }
     context = {
         'config_js': config_js,
-        'les_image': les_image,
-        'rect_overlay': rect_overlay,
         'budget': convert_numpy_types(budget),
         'months': months,
         'headers': headers,
         'recommendations': recommendations,
-        'LES_REMARKS': LES_REMARKS,
         'MODALS': MODALS,
     }
 
@@ -80,7 +82,7 @@ def init_budget(les_pdf=None):
 
 
 
-def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text):
+def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, form=None):
     try:
         init_month = les_text[8][3]
         if init_month not in flask_app.config['MONTHS_SHORT']:
