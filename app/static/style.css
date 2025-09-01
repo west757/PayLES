@@ -526,7 +526,7 @@ input[type=file] {
     width: 24rem;
 }
 
-.custom-form-grid {
+.submit-custom-grid {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     justify-content: center;
@@ -534,18 +534,18 @@ input[type=file] {
     width: 90%;
 }
 
-.custom-form-column {
+.submit-custom-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.custom-form-row {
+.submit-custom-row {
     display: flex;
     align-items: center;
 }
 
-.custom-label {
+.submit-custom-label {
     width: 10rem;
     text-align: right;
     margin-right: 0.75rem;
