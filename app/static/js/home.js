@@ -276,9 +276,7 @@ function attachHomeListeners() {
             btn.classList.add('active');
             const tabId = btn.getAttribute('data-tab');
             const tabContent = document.getElementById(tabId);
-            if (tabContent) {
-                tabContent.classList.add('active');
-            }
+            tabContent.classList.add('active');
         });
     });
 

@@ -7,23 +7,30 @@ run: python -m app.main
 
 
 short-term:
-- get combat zone from les
-- check what all is saved if in combat zone (are state taxes paid?)
-- align checkboxes from 
+- align checkboxes in settings table
+- instructions page and overlay on example les
+- refactor html
+- refactor css
+- refactor javascript
+- refactor python
+- cell button tooltips on hover for mha full name
+- cell button tooltips on hover for tsp rate row disabled
+- add accounts (tsp, bank debt)
+- interest feature for accounts
+- update max tsp percentage recommendation
+- definitions/terms/abbreviations table
+- searchable definitions
+- bug with adding rows makes first row added have minus -$20?
 
 mid-term:
-- instructions page and overlay on example les
+- get combat zone from les
+- check what all is saved if in combat zone (are state taxes paid?)
 - add drill pay
 - update readme
 - add comments to code
 - alphabetize resources and add stars for top ones
-- cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)
 - different browser checks
-- add accounts (tsp, bank debt)
-- interest feature for accounts
-- import/export for custom rows
 - custom scroll bars
-- update max tsp percentage recommendation
 - ability to make any entitlement/deduction/allotment row a YTD
 
 long-term:
@@ -31,6 +38,7 @@ long-term:
 - add pro-rated calculations for cells
 - minimize/maximize month columns
 - set initial value for template rows
+- import/export for custom rows
 - account for specific pays
 - update modal content
 - rework resources, maybe include tags and search
@@ -44,7 +52,6 @@ long-term:
 - normalize css: https://necolas.github.io/normalize.css/
 - use python cProfile or line_profiler to find bottlenecks
 - instructions for self-host
-- definitions/terms/abbreviations table
 
 
 

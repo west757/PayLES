@@ -13,7 +13,7 @@
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
     </div>
 
-    <div id="tab-container" class="shadow">
+    <div id="tab-container">
         <div id="tab-buttons">
             <button class="tab-button active" data-tab="tab-single">Single LES Upload</button>
             <button class="tab-button" data-tab="tab-joint">Joint Spouse</button>
@@ -25,7 +25,7 @@
             <form id="form-single" hx-post="/route_single_example" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_single_example.hidden_tag() }}
                 <label id="input-filedrop-single" for="input-file-single">
-                    <span class="text-mid">Drop LES here</span>
+                    <span>Drop LES here</span>
                     or
                     {{ form_single_example.input_file_single(id="input-file-single", accept=".pdf") }}
                 </label>
@@ -51,30 +51,28 @@
         </div>
 
         <div id="tab-initials" class="tab-content">
-            <div>
-                Building budget for {{ current_month }} {{ current_year }}
-            </div>
+            Building budget for {{ current_month }} {{ current_year }}
             <form id="form-initials">
                 <div class="initials-grid">
                     <div class="initials-column">
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ym">Entered Active Duty:</label>
+                            <label for="initials-ym">Entered Active Duty:</label>
                             <div id="initials-ym"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-mis">Months in Service:</label>
+                            <label for="initials-mis">Months in Service:</label>
                             <div id="initials-mis"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-grade">Grade:</label>
+                            <label for="initials-grade">Grade:</label>
                             <div id="initials-grade"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-deps">Dependents:</label>
+                            <label for="initials-deps">Dependents:</label>
                             <div id="initials-deps"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-cz">Combat Zone:</label>
+                            <label for="initials-cz">Combat Zone:</label>
                             <div id="initials-cz"></div>
                         </div>
 
@@ -84,53 +82,53 @@
                             Traditional TSP Rates
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-tradbase">Base Rate:</label>
+                            <label for="initials-tradbase">Base Rate:</label>
                             <div id="initials-tradbase"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-tradspecialty">Specialty Rate:</label>
+                            <label for="initials-tradspecialty">Specialty Rate:</label>
                             <div id="initials-tradspecialty"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-tradincentive">Incentive Rate:</label>
+                            <label for="initials-tradincentive">Incentive Rate:</label>
                             <div id="initials-tradincentive"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-tradbonus">Bonus Rate:</label>
+                            <label for="initials-tradbonus">Bonus Rate:</label>
                             <div id="initials-tradbonus"></div>
                         </div>
 
                         <hr />
 
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ytd-income">YTD Income:</label>
+                            <label for="initials-ytd-income">YTD Income:</label>
                             <div id="initials-ytd-income"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ytd-expenses">YTD Expenses:</label>
+                            <label for="initials-ytd-expenses">YTD Expenses:</label>
                             <div id="initials-ytd-expenses"></div>
                         </div>
                     </div>
 
                     <div class="initials-column">
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-hor">Home of Record:</label>
+                            <label for="initials-hor">Home of Record:</label>
                             <div id="initials-hor"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-zc">Zip Code:</label>
+                            <label for="initials-zc">Zip Code:</label>
                             <div id="initials-zc"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ffs">Federal Filing Status:</label>
+                            <label for="initials-ffs">Federal Filing Status:</label>
                             <div id="initials-ffs"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-sfs">State Filing Status:</label>
+                            <label for="initials-sfs">State Filing Status:</label>
                             <div id="initials-sfs"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-sc">SGLI Coverage:</label>
+                            <label for="initials-sc">SGLI Coverage:</label>
                             <div id="initials-sc"></div>
                         </div>
 
@@ -140,30 +138,30 @@
                             Roth TSP Rates
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-rothbase">Base Rate:</label>
+                            <label for="initials-rothbase">Base Rate:</label>
                             <div id="initials-rothbase"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-rothspecialty">Specialty Rate:</label>
+                            <label for="initials-rothspecialty">Specialty Rate:</label>
                             <div id="initials-rothspecialty"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-rothincentive">Incentive Rate:</label>
+                            <label for="initials-rothincentive">Incentive Rate:</label>
                             <div id="initials-rothincentive"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-rothbonus">Bonus Rate:</label>
+                            <label for="initials-rothbonus">Bonus Rate:</label>
                             <div id="initials-rothbonus"></div>
                         </div>
 
                         <hr />
 
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ytd-tsp-contribution">YTD TSP Contribution:</label>
+                            <label for="initials-ytd-tsp-contribution">YTD TSP Contribution:</label>
                             <div id="initials-ytd-tsp-contribution"></div>
                         </div>
                         <div class="initials-row">
-                            <label class="initials-label" for="initials-ytd-charity">YTD Charity:</label>
+                            <label for="initials-ytd-charity">YTD Charity:</label>
                             <div id="initials-ytd-charity"></div>
                         </div>
                     </div>
