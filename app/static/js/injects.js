@@ -62,7 +62,7 @@ function attachInjectModalListeners() {
         let value = el.templateValue.value.trim();
         if (!validateInject({ mode: 'template', header, value })) return;
 
-        htmx.ajax('POST', '/add_inject', {
+        htmx.ajax('POST', '/route_injects', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -81,7 +81,7 @@ function attachInjectModalListeners() {
         let value = el.customValue.value.trim();
         if (!validateInject({ mode: 'custom', header, value })) return;
 
-        htmx.ajax('POST', '/add_inject', {
+        htmx.ajax('POST', '/route_injects', {
             target: '#budget',
             swap: 'innerHTML',
             values: {

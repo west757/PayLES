@@ -5,16 +5,11 @@ import re
 
 from app import flask_app
 from app.utils import (
-    load_json,
-    convert_numpy_types,
     add_row,
     validate_calculate_zip_mha,
     validate_home_of_record,
     get_months,
     add_recommendations,
-)
-from app.les import (
-    process_les,
 )
 from app.calculations import (
     calculate_income,
@@ -45,9 +40,8 @@ def init_budget(les_text=None, initials=None):
     budget, init_month = build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
-    recommendations = add_recommendations(budget, init_month)
 
-    return budget, months, headers, recommendations
+    return budget, months, headers
 
 
 def build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
@@ -339,29 +333,6 @@ def init_onetime_rows(BUDGET_TEMPLATE, budget, months):
 # update budget months and variables
 # =========================
 
-def remove_months(budget, months_num):
-    months = get_months(budget)
-    months_to_remove = months[months_num:]
-
-    for row in budget:
-        for month in months_to_remove:
-            if month in row:
-                del row[month]
-    months = months[:months_num]
-
-    return budget, months
-
-
-def remove_row(header, months_num):
-    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
-    budget = [r for r in budget if r.get('header').lower() != header.lower()]
-    if row.get('type') == 'c':
-        headers = [h for h in headers if h.get('header').lower() != header.lower()]
-
-    budget = update_months(budget, months_num)
-    return budget, headers
-
-
 def add_months(budget, latest_month, months_num):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
@@ -478,3 +449,26 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
                 row[working_month] = cell_value
             elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
                 row[working_month] = row[prev_month]
+
+
+def remove_months(budget, months_num):
+    months = get_months(budget)
+    months_to_remove = months[months_num:]
+
+    for row in budget:
+        for month in months_to_remove:
+            if month in row:
+                del row[month]
+    months = months[:months_num]
+
+    return budget, months
+
+
+def remove_row(budget, header):
+    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
+    budget = [r for r in budget if r.get('header').lower() != header.lower()]
+    
+    if row.get('type') == 'c':
+        headers = [h for h in headers if h.get('header').lower() != header.lower()]
+
+    return budget, headers
