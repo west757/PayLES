@@ -32,51 +32,25 @@ from app.calculations import (
     calculate_trad_roth_tsp,
 )
 
+
 # =========================
 # init and build budget
 # =========================
 
-def init_budget(les_pdf=None, initials=None):
+def init_budget(les_text=None, initials=None):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
-    context = {}
-    les_text = None
 
-    if les_pdf:
-        les_image, rect_overlay, les_text = process_les(les_pdf)
-        context['les_image'] = les_image
-        context['rect_overlay'] = rect_overlay
-        context['LES_REMARKS'] = load_json(flask_app.config['LES_REMARKS_JSON'])
-
-    budget, init_month = build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, initials)
+    budget, init_month = build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
     recommendations = add_recommendations(budget, init_month)
 
-    session['budget'] = budget
-    session['headers'] = headers
-
-    MODALS = load_json(flask_app.config['MODALS_JSON'])
-
-    config_js = {
-        'budget': convert_numpy_types(budget),
-        'months': months,
-        'headers': headers,
-    }
-    context.update({
-        'config_js': config_js,
-        'budget': convert_numpy_types(budget),
-        'months': months,
-        'headers': headers,
-        'recommendations': recommendations,
-        'MODALS': MODALS,
-    })
-    return context
+    return budget, months, headers, recommendations
 
 
-
-def build_budget(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
+def build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
     if les_text:
         try:
             init_month = les_text[8][3]
@@ -378,6 +352,16 @@ def remove_months(budget, months_num):
     return budget, months
 
 
+def remove_row(header, months_num):
+    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
+    budget = [r for r in budget if r.get('header').lower() != header.lower()]
+    if row.get('type') == 'c':
+        headers = [h for h in headers if h.get('header').lower() != header.lower()]
+
+    budget = update_months(budget, months_num)
+    return budget, headers
+
+
 def add_months(budget, latest_month, months_num):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
@@ -398,7 +382,6 @@ def update_months(budget, months, cell_header=None, cell_month=None, cell_value=
         start_idx = 1
     else:
         start_idx = months.index(cell_month)
-
 
     for i in range(start_idx, len(months)):
         prev_month = months[i - 1]

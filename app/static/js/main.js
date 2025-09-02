@@ -152,7 +152,7 @@ document.addEventListener('click', function(e) {
         } else {
             removeRowConfirm[header] = false;
             hideTooltip();
-            htmx.ajax('POST', '/remove_row', {
+            htmx.ajax('POST', '/route_remove_row', {
                 target: '#budget',
                 swap: 'innerHTML',
                 values: { header: header }

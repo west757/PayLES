@@ -29,7 +29,7 @@
     },
     {
         "label": "What is the future roadmap for PayLES?",
-        "content": "The current focus is on improving the user experience by ensuring high accuracy, expanding the amount of unique use cases captured, and maintaining up to date datasets. For the long-term, the developer would like to explore the possibility of having PayLES become an official DoD application. The goal of this would be to increase accessibility, availability, and accuracy of the program, especially if it was able to be integrated into MyPay and supported by DFAS. <br><br> There are currently no plans to incorporate mobile support, whether through mobile browsing or an app."
+        "content": "The current focus is on improving the user experience by ensuring high accuracy, expanding the amount of unique use cases captured, and maintaining up to date datasets. For the long-term, the developer would like to explore the possibility of having PayLES become an official DoD application. The goal of this would be to increase accessibility, availability, and accuracy of the program, especially if it was able to be integrated into MyPay and supported by DFAS. <br><br> There are currently no plans to incorporate mobile support, whether through mobile browsing or an app. Having user accounts that save the budget allowing for easier future access is also not being considered at this time, the export ability provides an adequate substitute. The scope is also going to remain focused on military pay, and not expand so far into personal budgeting such as tracking individual expenses over a monthly period."
     },
     {
         "label": "Who developed PayLES?",
