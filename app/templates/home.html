@@ -22,14 +22,14 @@
         </div>
 
         <div id="tab-single" class="tab-content active">
-            <form id="form-single" hx-post="/route_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
-                {{ form_single.hidden_tag() }}
+            <form id="form-single" hx-post="/route_single_example" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
+                {{ form_single_example.hidden_tag() }}
                 <label id="input-filedrop-single" for="input-file-single">
                     <span class="text-mid">Drop LES here</span>
                     or
-                    {{ form_single.input_file_single(id="input-file-single", accept=".pdf") }}
+                    {{ form_single_example.input_file_single(id="input-file-single", accept=".pdf") }}
                 </label>
-                {{ form_single.button_single(id="button-single", class="button-solo") }}
+                {{ form_single_example.button_single(id="button-single", class="button-solo") }}
             </form>
         </div>
 
@@ -180,8 +180,9 @@
             <br /><br />
             For more information, please check out the <a href="/about">About</a> and <a href="/faq">FAQ</a> pages.
             
-            <form id="form-example" hx-post="/route_example" hx-swap="innerHTML" method="POST">
-                <button id="button-example" class="button-solo" type="submit">View Example</button>
+            <form id="form-example" hx-post="/route_single_example" hx-swap="innerHTML" method="POST">
+                {{ form_single_example.hidden_tag() }}
+                {{ form_single_example.button_example(id="button-example", class="button-solo") }}
             </form>
         </div>
     </div>

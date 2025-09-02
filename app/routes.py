@@ -10,6 +10,7 @@ from app.utils import (
     validate_file,
     add_row,
     get_months,
+    add_recommendations,
 )
 from app.les import (
     validate_les, 
@@ -23,28 +24,28 @@ from app.budget import (
     update_months,
 )
 from app.forms import (
-    FormSingle,
+    FormSingleExample,
     FormJoint,
 )
 
 
 @flask_app.route('/')
 def index():
-    form_single = FormSingle()
+    form_single_example = FormSingleExample()
     form_joint = FormJoint()
 
     current_year = datetime.now().year
     current_month = datetime.now().strftime('%B')
 
     config_js = {
-        'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
-        'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
         'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
+        'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+        'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
         'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']],
-        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
+        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'], #MAYBE REMOVE HOME ABBR
         'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
         'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
@@ -52,7 +53,7 @@ def index():
     }
     context = {
         'config_js': config_js,
-        'form_single': form_single,
+        'form_single_example': form_single_example,
         'form_joint': form_joint,
         'current_year': current_year,
         'current_month': current_month,
@@ -60,26 +61,31 @@ def index():
     return render_template('home.html', **context)
 
 
-@flask_app.route('/route_single', methods=['POST'])
-def route_single():
-    form = FormSingle()
+@flask_app.route('/route_single_example', methods=['POST'])
+def route_single_example():
+    form = FormSingleExample()
 
-    if not form.validate_on_submit():
-        return jsonify({'message': "Invalid submission"}), 400
+    if 'button_single' in request.form:
+        if not form.validate_on_submit():
+            return jsonify({'message': "Invalid submission"}), 400
 
-    file = form.input_file_single.data
-    if not file:
-        return jsonify({'message': "No file submitted"}), 400
+        file = form.input_file_single.data
+        if not file:
+            return jsonify({'message': "No file submitted"}), 400
     
-    valid, message = validate_file(file)
-    if not valid:
-        return jsonify({'message': message}), 400
-    
-    valid, message, les_pdf = validate_les(file)
+        valid, message = validate_file(file)
+        if not valid:
+            return jsonify({'message': message}), 400
+        
+        valid, message, les_pdf = validate_les(file)
+
+    elif 'button_example' in request.form:
+        valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, months, headers, recommendations = init_budget(les_text=les_text)
+        budget, months, headers = init_budget(les_text=les_text)
+        recommendations = add_recommendations(budget, months[0])
 
         budget = convert_numpy_types(budget)
         session['budget'] = budget
@@ -154,7 +160,8 @@ def route_initials():
         'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
     }
 
-    budget, months, headers, recommendations = init_budget(initials=initials)
+    budget, months, headers = init_budget(initials=initials)
+    recommendations = add_recommendations(budget, months[0])
 
     budget = convert_numpy_types(budget)
     session['budget'] = budget
@@ -177,45 +184,11 @@ def route_initials():
 
 
 @csrf.exempt
-@flask_app.route('/route_example', methods=['POST'])
-def route_example():
-    valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
-
-    if valid:
-        les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, months, headers, recommendations = init_budget(les_text=les_text)
-
-        budget = convert_numpy_types(budget)
-        session['budget'] = budget
-        session['headers'] = headers
-
-        config_js = {
-            'budget': budget,
-            'months': months,
-            'headers': headers,
-        }
-        context = {
-            'config_js': config_js,
-            'budget': budget,
-            'months': months,
-            'headers': headers,
-            'les_image': les_image,
-            'rect_overlay': rect_overlay,
-            'recommendations': recommendations,
-            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
-            'MODALS': load_json(flask_app.config['MODALS_JSON']),
-        }
-        return render_template('content.html', **context)
-    else:
-        return jsonify({'message': message}), 400
-
-
-@csrf.exempt
 @flask_app.route('/update_budget', methods=['POST'])
 def update_budget():
     budget = session.get('budget', [])
-    headers = session.get('headers', [])
     months = get_months(budget)
+    headers = session.get('headers', [])
     
     cell_header = request.form.get('row_header', '')
     cell_month = request.form.get('col_month', '')
@@ -238,15 +211,15 @@ def update_budget():
 
     budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
 
+    budget = convert_numpy_types(budget)
     session['budget'] = budget
 
     config_js = {
-        'budget': convert_numpy_types(budget),
-        'months': months,
+        'budget': budget,
     }
     context = {
         'config_js': config_js,
-        'budget': convert_numpy_types(budget),
+        'budget': budget,
         'months': months,
         'headers': headers,
     }
@@ -268,15 +241,16 @@ def change_months():
     elif new_months_num > old_months_num:
         budget, months = add_months(budget, latest_month=months[-1], months_num=new_months_num)
 
+    budget = convert_numpy_types(budget)
     session['budget'] = budget
 
     config_js = {
-        'budget': convert_numpy_types(budget),
+        'budget': budget,
         'months': months,
     }
     context = {
         'config_js': config_js,
-        'budget': convert_numpy_types(budget),
+        'budget': budget,
         'months': months,
         'headers': headers,
     }
@@ -284,8 +258,8 @@ def change_months():
 
 
 @csrf.exempt
-@flask_app.route('/add_inject', methods=['POST'])
-def add_inject():
+@flask_app.route('/route_injects', methods=['POST'])
+def route_injects():
     budget = session.get('budget', [])
     headers = session.get('headers', [])
     months = get_months(budget)
@@ -368,22 +342,20 @@ def add_inject():
                 'type': 'c',
                 'tooltip': 'Custom row added by user',
             })
-    else:
-        return jsonify({'message': 'Invalid method.'}), 400
 
     budget = update_months(budget, months)
 
+    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['headers'] = headers
 
     config_js = {
-        'budget': convert_numpy_types(budget),
-        'months': months,
+        'budget': budget,
         'headers': headers,
     }
     context = {
         'config_js': config_js,
-        'budget': convert_numpy_types(budget),
+        'budget': budget,
         'months': months,
         'headers': headers,
     }
@@ -393,13 +365,15 @@ def add_inject():
 @csrf.exempt
 @flask_app.route('/route_remove_row', methods=['POST'])
 def route_remove_row():
-    budget = convert_numpy_types(session.get('budget', []))
+    budget = session.get('budget', [])
     months = get_months(budget)
     headers = session.get('headers', [])
     header = request.form.get('header', '')
 
-    budget, headers = remove_row(header, len(months))
+    budget, headers = remove_row(budget, header)
+    budget = update_months(budget, len(months))
 
+    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['headers'] = headers
 
@@ -423,14 +397,18 @@ def about():
 
 @flask_app.route('/faq')
 def faq():
-    FAQS = load_json(flask_app.config['FAQ_JSON'])
-    return render_template('faq.html', FAQS=FAQS)
+    context = {
+        'FAQS': load_json(flask_app.config['FAQ_JSON']),
+    }
+    return render_template('faq.html', **context)
 
 
 @flask_app.route('/resources')
 def resources():
-    RESOURCES = load_json(flask_app.config['RESOURCES_JSON'])
-    return render_template('resources.html', RESOURCES=RESOURCES)
+    context = {
+        'RESOURCES': load_json(flask_app.config['RESOURCES_JSON']),
+    }
+    return render_template('resources.html', **context)
 
 
 @flask_app.route('/levdf')
