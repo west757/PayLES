@@ -3,11 +3,11 @@ let isEditing = false;
 let currentEdit = null;
 
 
-function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
+function enterEditMode(cellButton, rowHeader, month, value, fieldType) {
     if (isEditing) return;
 
     isEditing = true;
-    currentEdit = {cellButton, rowHeader, colMonth, value, fieldType};
+    currentEdit = {cellButton, rowHeader, month, value, fieldType};
 
     disableInputs([]);
 
@@ -186,7 +186,7 @@ function enterEditMode(cellButton, rowHeader, colMonth, value, fieldType) {
 
 
 function updateBudget(repeat) {
-    let {rowHeader, colMonth, fieldType} = currentEdit;
+    let {rowHeader, month, fieldType} = currentEdit;
 
     let input = document.querySelector('.table-input, select');
     let value = input.value;
@@ -201,18 +201,16 @@ function updateBudget(repeat) {
 
     exitEditMode();
 
-    htmx.ajax('POST', '/update_budget', {
+    htmx.ajax('POST', '/route_update_cell', {
         target: '#budget',
         swap: 'innerHTML',
         values: {
             row_header: rowHeader,
-            col_month: colMonth,
+            month: month,
             value: value,
             repeat: repeat
         }
     });
-
-    /*showToast(`Updated ${rowHeader} for ${colMonth} to ${value} (${repeat ? 'repeat' : 'onetime'})`);*/
 }
 
 
@@ -264,7 +262,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
             return false;
         }
 
-        const month = currentEdit.colMonth;
+        const month = currentEdit.month;
         const rows = [
             'Trad TSP Specialty Rate',
             'Trad TSP Incentive Rate',
@@ -286,7 +284,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
             return false;
         }
 
-        const month = currentEdit.colMonth;
+        const month = currentEdit.month;
         const rows = [
             'Roth TSP Specialty Rate',
             'Roth TSP Incentive Rate',
@@ -312,11 +310,11 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
             showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
             return false;
         }
-        if (rowHeader.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.colMonth) === 0) {
+        if (rowHeader.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
-        if (rowHeader.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.colMonth) === 0) {
+        if (rowHeader.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
@@ -325,7 +323,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
     
     if (repeat && (rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate'))) {
         const months = window.CONFIG.months;
-        const startIdx = months.indexOf(currentEdit.colMonth);
+        const startIdx = months.indexOf(currentEdit.month);
         const baseRow = rowHeader.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
         console.log('Repeat validation:', months.slice(startIdx), baseRow);
         for (let i = startIdx; i < months.length; i++) { // Only future months
@@ -338,7 +336,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
     }
 
     if (rowHeader.includes('TSP Base Rate') || rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate')) {
-        const month = currentEdit.colMonth;
+        const month = currentEdit.month;
         let tradValue = 0, rothValue = 0;
 
         if (rowHeader.startsWith('Trad')) {
