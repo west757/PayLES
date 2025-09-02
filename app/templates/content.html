@@ -144,13 +144,15 @@
 
     <!-- LES remarks -->
     {% if LES_REMARKS is defined and LES_REMARKS %}
-        <h2 class="h2-center">Common LES Remarks</h2>
-        <div id="remarks" class="shadow">
-            {% for remark in LES_REMARKS %}
-                <div class="remark">
-                    {{ remark.text|safe }}
-                </div>
-            {% endfor %}
+        <div id="remarks-container">
+            <h2 class="h2-center">Common LES Remarks</h2>
+            <div id="remarks" class="shadow">
+                {% for remark in LES_REMARKS %}
+                    <div class="remark">
+                        {{ remark.text|safe }}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 

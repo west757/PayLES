@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div id="resources">
+<div id="resources-container">
     {% for category in RESOURCES %}
         <h2 id="{{ category.id }}">{{ category.category }}</h2>
-        <div class="resource-container shadow">
+        <div class="resources shadow">
             {% for item in category['items'] %}
                 <a href="{{ item.url }}" target="_blank">
                     <div class="resource">
-                        <strong>{{ item.name }}</strong>
-                        - {{ item.desc }}
+                        <strong>{{ item.name }}</strong> - {{ item.desc }}
                     </div>
                 </a>
             {% endfor %}

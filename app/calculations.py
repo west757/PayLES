@@ -1,6 +1,3 @@
-from bisect import bisect_right
-from calendar import month
-
 from app import flask_app
 from app.utils import (
     add_row,
