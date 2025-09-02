@@ -545,6 +545,10 @@ input[type=file] {
     align-items: center;
 }
 
+.initials-row-text {
+    justify-content: center;
+}
+
 .initials-label {
     width: 10.5rem;
     text-align: right;

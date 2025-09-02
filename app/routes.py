@@ -1,4 +1,5 @@
 from datetime import datetime
+from wsgiref import headers
 from flask import request, render_template, session, jsonify
 from app import csrf
 
@@ -12,28 +13,28 @@ from app.utils import (
 )
 from app.les import (
     validate_les, 
+    process_les,
 )
 from app.budget import (
     init_budget,
     remove_months,
+    remove_row,
     add_months,
     update_months,
 )
 from app.forms import (
-    FormSubmitSingle,
-    FormSubmitJoint,
+    FormSingle,
+    FormJoint,
 )
 
 
 @flask_app.route('/')
 def index():
-    form_single = FormSubmitSingle()
-    form_joint = FormSubmitJoint()
+    form_single = FormSingle()
+    form_joint = FormJoint()
 
     current_year = datetime.now().year
     current_month = datetime.now().strftime('%B')
-
-    HOME_OF_RECORDS = ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']]
 
     config_js = {
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
@@ -42,7 +43,7 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'GRADES': flask_app.config['GRADES'],
-        'HOME_OF_RECORDS': HOME_OF_RECORDS,
+        'HOME_OF_RECORDS': ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']],
         'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'],
         'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
@@ -61,7 +62,7 @@ def index():
 
 @flask_app.route('/route_single', methods=['POST'])
 def route_single():
-    form = FormSubmitSingle()
+    form = FormSingle()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
@@ -77,7 +78,29 @@ def route_single():
     valid, message, les_pdf = validate_les(file)
 
     if valid:
-        context = init_budget(les_pdf=les_pdf)
+        les_image, rect_overlay, les_text = process_les(les_pdf)
+        budget, months, headers, recommendations = init_budget(les_text=les_text)
+
+        budget = convert_numpy_types(budget)
+        session['budget'] = budget
+        session['headers'] = headers
+
+        config_js = {
+            'budget': budget,
+            'months': months,
+            'headers': headers,
+        }
+        context = {
+            'config_js': config_js,
+            'budget': budget,
+            'months': months,
+            'headers': headers,
+            'les_image': les_image,
+            'rect_overlay': rect_overlay,
+            'recommendations': recommendations,
+            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'MODALS': load_json(flask_app.config['MODALS_JSON']),
+        }
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
@@ -85,7 +108,7 @@ def route_single():
 
 @flask_app.route('/route_joint', methods=['POST'])
 def route_joint():
-    form = FormSubmitJoint()
+    form = FormJoint()
 
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
@@ -131,7 +154,25 @@ def route_initials():
         'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
     }
 
-    context = init_budget(initials=initials)
+    budget, months, headers, recommendations = init_budget(initials=initials)
+
+    budget = convert_numpy_types(budget)
+    session['budget'] = budget
+    session['headers'] = headers
+
+    config_js = {
+        'budget': budget,
+        'months': months,
+        'headers': headers,
+    }
+    context = {
+        'config_js': config_js,
+        'budget': budget,
+        'months': months,
+        'headers': headers,
+        'recommendations': recommendations,
+        'MODALS': load_json(flask_app.config['MODALS_JSON']),
+    }
     return render_template('content.html', **context)
 
 
@@ -141,7 +182,29 @@ def route_example():
     valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
 
     if valid:
-        context = init_budget(les_pdf=les_pdf)
+        les_image, rect_overlay, les_text = process_les(les_pdf)
+        budget, months, headers, recommendations = init_budget(les_text=les_text)
+
+        budget = convert_numpy_types(budget)
+        session['budget'] = budget
+        session['headers'] = headers
+
+        config_js = {
+            'budget': budget,
+            'months': months,
+            'headers': headers,
+        }
+        context = {
+            'config_js': config_js,
+            'budget': budget,
+            'months': months,
+            'headers': headers,
+            'les_image': les_image,
+            'rect_overlay': rect_overlay,
+            'recommendations': recommendations,
+            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'MODALS': load_json(flask_app.config['MODALS_JSON']),
+        }
         return render_template('content.html', **context)
     else:
         return jsonify({'message': message}), 400
@@ -328,32 +391,25 @@ def add_inject():
 
 
 @csrf.exempt
-@flask_app.route('/remove_row', methods=['POST'])
-def remove_row():
-    budget = session.get('budget', [])
-    headers = session.get('headers', [])
+@flask_app.route('/route_remove_row', methods=['POST'])
+def route_remove_row():
+    budget = convert_numpy_types(session.get('budget', []))
     months = get_months(budget)
-
+    headers = session.get('headers', [])
     header = request.form.get('header', '')
 
-    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
-    budget = [r for r in budget if r.get('header').lower() != header.lower()]
-    if row.get('type') == 'c':
-        headers = [h for h in headers if h.get('header').lower() != header.lower()]
-
-    budget = update_months(budget, months)
+    budget, headers = remove_row(header, len(months))
 
     session['budget'] = budget
     session['headers'] = headers
 
     config_js = {
-        'budget': convert_numpy_types(budget),
-        'months': months,
+        'budget': budget,
         'headers': headers,
     }
     context = {
         'config_js': config_js,
-        'budget': convert_numpy_types(budget),
+        'budget': budget,
         'months': months,
         'headers': headers,
     }
