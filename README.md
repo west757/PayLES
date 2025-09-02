@@ -8,8 +8,6 @@ run: python -m app.main
 
 short-term:
 - get combat zone from les
-- update route function names
-- move route code to other py files
 
 mid-term:
 - instructions page and overlay on example les

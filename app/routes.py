@@ -18,10 +18,12 @@ from app.les import (
 )
 from app.budget import (
     init_budget,
-    remove_months,
-    remove_row,
+    init_onetime_rows,
     add_months,
     update_months,
+    remove_months,
+    remove_row,
+    add_inject,
 )
 from app.forms import (
     FormSingleExample,
@@ -84,8 +86,10 @@ def route_single_example():
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
-        budget, months, headers = init_budget(les_text=les_text)
-        recommendations = add_recommendations(budget, months[0])
+        budget, init_month, headers = init_budget(les_text=les_text)
+        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+        budget = init_onetime_rows(budget, months)
+        recommendations = add_recommendations(budget, init_month)
 
         budget = convert_numpy_types(budget)
         session['budget'] = budget
@@ -160,8 +164,9 @@ def route_initials():
         'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
     }
 
-    budget, months, headers = init_budget(initials=initials)
-    recommendations = add_recommendations(budget, months[0])
+    budget, init_month, headers = init_budget(initials=initials)
+    budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+    recommendations = add_recommendations(budget, init_month)
 
     budget = convert_numpy_types(budget)
     session['budget'] = budget
@@ -184,16 +189,16 @@ def route_initials():
 
 
 @csrf.exempt
-@flask_app.route('/update_budget', methods=['POST'])
-def update_budget():
+@flask_app.route('/route_update_cell', methods=['POST'])
+def route_update_cell():
     budget = session.get('budget', [])
     months = get_months(budget)
     headers = session.get('headers', [])
     
     cell_header = request.form.get('row_header', '')
-    cell_month = request.form.get('col_month', '')
+    cell_month = request.form.get('month', '')
     cell_value = request.form.get('value', 0)
-    cell_repeat = request.form.get('repeat', False)
+    cell_repeat = request.form.get('repeat', False).lower() == "true"
 
     cell_row = next((r for r in budget if r.get('header') == cell_header), None)
     cell_field = cell_row.get('field')
@@ -201,13 +206,7 @@ def update_budget():
     if cell_field in ('int', int):
         cell_value = int(cell_value)
     elif cell_field in ('float', float):
-        try:
-            cell_value = float(cell_value)
-        except ValueError:
-            cell_value = 0.0
-        cell_value *= cell_row.get('sign')
-        cell_value = round(cell_value, 2)
-    cell_repeat = str(cell_repeat).lower() == "true"
+        cell_value = round(float(cell_value * cell_row.get('sign')), 2)
 
     budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
 
@@ -227,8 +226,8 @@ def update_budget():
 
 
 @csrf.exempt
-@flask_app.route('/change_months', methods=['POST'])
-def change_months():
+@flask_app.route('/route_change_months', methods=['POST'])
+def route_change_months():
     budget = session.get('budget', [])
     headers = session.get('headers', [])
     months = get_months(budget)
@@ -261,88 +260,16 @@ def change_months():
 @flask_app.route('/route_injects', methods=['POST'])
 def route_injects():
     budget = session.get('budget', [])
-    headers = session.get('headers', [])
     months = get_months(budget)
+    headers = session.get('headers', [])
 
     inject_method = request.form.get('method', '')
     inject_type = request.form.get('type', '')
     inject_header = request.form.get('header', '').strip()
     inject_value = request.form.get('value', '0').strip()
     inject_tax = request.form.get('tax', 'false').lower() == 'true'
-    init_month = months[0]
 
-    if inject_type == 'd' or inject_type == 'a':
-        sign = -1
-    else:
-        sign = 1
-
-    try:
-        inject_value = float(inject_value)
-    except ValueError:
-        inject_value = 0
-    inject_value = round(sign * inject_value, 2)
-
-    insert_idx = len(budget)
-
-    if inject_method == 'template':
-        if inject_type == 'e':
-            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
-        elif inject_type == 'd':
-            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
-        elif inject_type == 'a':
-            a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
-            if a_indices:
-                insert_idx = max(a_indices) + 1
-            else:
-                d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
-                insert_idx = max(d_indices, default=-1) + 1
-
-        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, init_month, 0.00)
-        for idx, m in enumerate(months[1:]):
-            inject_row[m] = inject_value
-        budget.insert(insert_idx, inject_row)
-
-    elif inject_method == 'custom':
-        c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
-        a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
-        d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
-        if c_indices:
-            insert_idx = max(c_indices) + 1
-        elif a_indices:
-            insert_idx = max(a_indices) + 1
-        elif d_indices:
-            insert_idx = max(d_indices) + 1
-
-        custom_rows = [r for r in budget if r.get('type') == 'c']
-        if len(custom_rows) >= flask_app.config['MAX_CUSTOM_ROWS']:
-            return jsonify({'message': 'Maximum number of custom rows reached. Cannot have more than ' + str(flask_app.config['MAX_CUSTOM_ROWS']) + ' custom rows.'}), 400
-
-        inject_row = {'header': inject_header}
-        for meta in flask_app.config['ROW_METADATA']:
-            if meta == 'type':
-                inject_row['type'] = 'c'
-            elif meta == 'sign':
-                inject_row['sign'] = sign
-            elif meta == 'field':
-                inject_row['field'] = 'float'
-            elif meta == 'tax':
-                inject_row['tax'] = inject_tax
-            elif meta == 'editable':
-                inject_row['editable'] = True
-            elif meta == 'modal':
-                inject_row['modal'] = ''
-
-        for idx, m in enumerate(months):
-            inject_row[m] = 0.00 if idx == 0 else inject_value
-        budget.insert(insert_idx, inject_row)
-
-        if not any(h['header'].lower() == inject_header.lower() for h in headers):
-            headers.append({
-                'header': inject_header,
-                'type': 'c',
-                'tooltip': 'Custom row added by user',
-            })
-
+    budget, headers = add_inject(budget, months, headers, inject_method, inject_type, inject_header, inject_value, inject_tax)
     budget = update_months(budget, months)
 
     budget = convert_numpy_types(budget)
@@ -368,10 +295,11 @@ def route_remove_row():
     budget = session.get('budget', [])
     months = get_months(budget)
     headers = session.get('headers', [])
+
     header = request.form.get('header', '')
 
-    budget, headers = remove_row(budget, header)
-    budget = update_months(budget, len(months))
+    budget, headers = remove_row(budget, headers, header)
+    budget = update_months(budget, months)
 
     budget = convert_numpy_types(budget)
     session['budget'] = budget

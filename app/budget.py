@@ -35,16 +35,8 @@ from app.calculations import (
 def init_budget(les_text=None, initials=None):
     BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-    headers = flask_app.config['BUDGET_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') + flask_app.config['VARIABLE_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records')
+    headers = BUDGET_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + VARIABLE_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
-    budget, init_month = build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text, initials)
-    budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
-    budget = init_onetime_rows(BUDGET_TEMPLATE, budget, months)
-
-    return budget, months, headers
-
-
-def build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initials=None):
     if les_text:
         try:
             init_month = les_text[8][3]
@@ -64,7 +56,7 @@ def build_budget_core(BUDGET_TEMPLATE, VARIABLE_TEMPLATE, les_text=None, initial
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
 
-    return budget, init_month
+    return budget, init_month, headers
 
 
 def add_variables(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
@@ -318,7 +310,9 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None)
     return budget
 
 
-def init_onetime_rows(BUDGET_TEMPLATE, budget, months):
+def init_onetime_rows(budget, months):
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+
     for row in budget:
         if row.get('type') in ('e', 'd', 'a'):
             template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
@@ -464,11 +458,78 @@ def remove_months(budget, months_num):
     return budget, months
 
 
-def remove_row(budget, header):
+def remove_row(budget, headers, header):
     row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
     budget = [r for r in budget if r.get('header').lower() != header.lower()]
     
     if row.get('type') == 'c':
         headers = [h for h in headers if h.get('header').lower() != header.lower()]
+
+    return budget, headers
+
+
+def add_inject(budget, months, headers, inject_method, inject_type, inject_header, inject_value, inject_tax):
+    if inject_type == 'd' or inject_type == 'a':
+        sign = -1
+    else:
+        sign = 1
+
+    inject_value = round(sign * float(inject_value), 2)
+    insert_idx = len(budget)
+
+    if inject_method == 'template':
+        if inject_type == 'e':
+            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
+        elif inject_type == 'd':
+            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
+        elif inject_type == 'a':
+            a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
+            if a_indices:
+                insert_idx = max(a_indices) + 1
+            else:
+                d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
+                insert_idx = max(d_indices, default=-1) + 1
+
+        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, months[0], 0.00)
+        for idx, m in enumerate(months[1:]):
+            inject_row[m] = inject_value
+        budget.insert(insert_idx, inject_row)
+
+    elif inject_method == 'custom':
+        c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
+        a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
+        d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
+        if c_indices:
+            insert_idx = max(c_indices) + 1
+        elif a_indices:
+            insert_idx = max(a_indices) + 1
+        elif d_indices:
+            insert_idx = max(d_indices) + 1
+
+        inject_row = {'header': inject_header}
+        for meta in flask_app.config['ROW_METADATA']:
+            if meta == 'type':
+                inject_row['type'] = 'c'
+            elif meta == 'sign':
+                inject_row['sign'] = sign
+            elif meta == 'field':
+                inject_row['field'] = 'float'
+            elif meta == 'tax':
+                inject_row['tax'] = inject_tax
+            elif meta == 'editable':
+                inject_row['editable'] = True
+            elif meta == 'modal':
+                inject_row['modal'] = ''
+
+        for idx, m in enumerate(months):
+            inject_row[m] = 0.00 if idx == 0 else inject_value
+        budget.insert(insert_idx, inject_row)
+
+        if not any(h['header'].lower() == inject_header.lower() for h in headers):
+            headers.append({
+                'header': inject_header,
+                'type': 'c',
+                'tooltip': 'Custom row added by user',
+            })
 
     return budget, headers
