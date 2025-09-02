@@ -16,8 +16,8 @@
             <div id="logo">
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='graphics/logo.png') }}" alt="PayLES Logo"></a>
             </div>
-            <div id="title" class="text-large">
-                <p>Program analyzing your LES</p>
+            <div id="title">
+                Program analyzing your LES
             </div>
         </header>
 
@@ -36,26 +36,26 @@
                         <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mental-health-resources') }}">Mental Health Resources</a></li>
                     </ul>
                 </li>
-                <li class="nav-top"><a href="{{ url_for('levdf') }}">Leave Calculator</a></li>
-                <li class="nav-top"><a href="https://github.com/PayLES/PayLES" target="_blank">GitHub</a></li>
+                <li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>
+                <li class="nav-top"><a href="https://github.com/west757/PayLES" target="_blank">GitHub</a></li>
             </ul>
         </nav>
     </div>
+
+    <div id="toast-container"></div>
 
     <div id="content" hx-swap-oob="true">
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="text-small">
+    <footer>
         <div id="footer-left">
-            <p>All Rights Reserved &#xA9; 2025 PayLES</p>
+            All Rights Reserved &#xA9; 2025 PayLES
         </div>
         <div id="footer-right">
-            <p>{{ config['VERSION'] }}</p>
+            {{ config['VERSION'] }}
         </div>
     </footer>
-
-    <div id="toast-container"></div>
 
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

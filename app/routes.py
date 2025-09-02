@@ -1,5 +1,4 @@
 from datetime import datetime
-from wsgiref import headers
 from flask import request, render_template, session, jsonify
 from app import csrf
 
@@ -8,7 +7,6 @@ from app.utils import (
     load_json,
     convert_numpy_types,
     validate_file,
-    add_row,
     get_months,
     add_recommendations,
 )
@@ -206,7 +204,7 @@ def route_update_cell():
     if cell_field in ('int', int):
         cell_value = int(cell_value)
     elif cell_field in ('float', float):
-        cell_value = round(float(cell_value * cell_row.get('sign')), 2)
+        cell_value = round((float(cell_value) * cell_row.get('sign')), 2)
 
     budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
 
@@ -339,6 +337,6 @@ def resources():
     return render_template('resources.html', **context)
 
 
-@flask_app.route('/levdf')
-def levdf():
-    return render_template('levdf.html')
+@flask_app.route('/leave')
+def leave():
+    return render_template('leave.html')

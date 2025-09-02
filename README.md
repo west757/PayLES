@@ -8,12 +8,13 @@ run: python -m app.main
 
 short-term:
 - get combat zone from les
+- check what all is saved if in combat zone (are state taxes paid?)
+- align checkboxes from 
 
 mid-term:
 - instructions page and overlay on example les
 - add drill pay
 - update readme
-- check what all is saved if in combat zone (are state taxes paid?)
 - add comments to code
 - alphabetize resources and add stars for top ones
 - cell button tooltips on hover (tsp rate rows disabled, mha full name, etc)

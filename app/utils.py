@@ -154,5 +154,4 @@ def add_recommendations(budget, month):
     if not recs:
         recs.append('<div class="rec-item">No current recommendations for your budget.</div>')
 
-
     return recs
