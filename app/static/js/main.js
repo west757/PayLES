@@ -67,8 +67,6 @@ document.addEventListener('mouseleave', function(e) {
 
 
 document.addEventListener('click', function(e) {
-    hideTooltip();
-    
     // open modals
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');

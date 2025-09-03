@@ -67,15 +67,11 @@ function enableInputs() {
 function highlightChanges() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     var checkbox = document.getElementById('checkbox-highlight');
-    var checked = checkbox.checked;
     var table = document.getElementById('budget-table');
     var rows = table.getElementsByTagName('tr');
 
     for (var i = 1; i < rows.length; i++) {
         var cells = rows[i].getElementsByTagName('td');
-
-        //skip spacer rows
-        if (cells.length < 2) continue;
 
         // get row header (first cell)
         var rowHeader = cells[0].textContent.trim();
@@ -86,7 +82,7 @@ function highlightChanges() {
             var prevCell = cells[j - 1];
 
             if (
-                checked &&
+                checkbox.checked &&
                 cell.textContent.trim() !== prevCell.textContent.trim() &&
                 !(rowHeader === "Difference" && cell.textContent.trim() === "$0.00")
             ) {
@@ -121,11 +117,11 @@ function toggleRows(type) {
 
 
 function exportBudget() {
-    var table = document.getElementById('budget-table');
+    var budgetTable = document.getElementById('budget-table');
     var filetype = document.getElementById('dropdown-export').value;
     var filename = filetype === 'xlsx' ? 'PayLES_Budget.xlsx' : 'PayLES_Budget.csv';
 
-    var clone = table.cloneNode(true);
+    var clone = budgetTable.cloneNode(true);
 
     // remove row buttons from export
     clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
@@ -206,7 +202,7 @@ function setInputRestriction(fieldType, maxLength = null) {
         };
     }
 
-    // input restrictions for only number inputs
+    // input restrictions for number inputs
     if (fieldType === 'number') {
         return function(e) {
             let val = e.target.value.replace(/\D/g, '');

@@ -258,7 +258,6 @@ function populateTemplateDropdown(rowType) {
     const infoDiv = document.getElementById('inject-info');
     templateDropdown.innerHTML = '';
 
-    // add "Select header" as first option
     let firstOpt = document.createElement('option');
     firstOpt.value = 'choose-header';
     firstOpt.textContent = 'Choose header';
