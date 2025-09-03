@@ -7,10 +7,7 @@ run: python -m app.main
 
 
 short-term:
-- align checkboxes in settings table
 - instructions page and overlay on example les
-- refactor javascript
-- refactor python
 - cell button tooltips on hover for mha full name
 - cell button tooltips on hover for tsp rate row disabled
 - add accounts (tsp, bank debt)

@@ -8,11 +8,11 @@
     --secondary_light_accent_color: #f1f1f1;
     --input_background_color: #eeeeee;
     --table_border_color: #dddddd;
-    --button_disabled_color: #a19a9a;
+    --button_disabled_color: #867f7f;
     --primary_green_accent_color: #0c9a65;
     --secondary_green_accent_color: #04a96d;
     --highlight_green_color: #4fd1a2;
-    --highlight-green-color-rgb: 79, 209, 162;
+    --highlight_green_color_rgb: 79, 209, 162;
     --highlight_yellow_color: #baf35f;
     --primary_red_color: #f06f65;
     --secondary_red_color: #f5574b;
@@ -215,6 +215,7 @@ footer {
     z-index: var(--z-top);
 }
 
+
 /* =========================
    buttons
    ========================= */
@@ -353,11 +354,12 @@ input[type="button"]:disabled,
 input[type="submit"]:disabled {
     background: var(--button_disabled_color) !important;
     border: 1px solid var(--button_disabled_color) !important;
+    color: var(--table_border_color) !important;
     cursor: not-allowed !important;
 }
 
 .styled-table-button:disabled {
-    background: var(--table_border_color) !important; 
+    background: var(--secondary_dark_accent_color) !important; 
     border: none !important;
 }
 
@@ -470,7 +472,9 @@ input[type=file] {
 
 .tab-button {
     background: var(--secondary_light_accent_color);
-    border: none;
+    border: 1px solid var(--table_border_color);
+    border-bottom: none;
+    border-right: none;
     border-radius: 1rem 1rem 0 0;
     cursor: pointer;
     flex: 1;
@@ -489,8 +493,14 @@ input[type=file] {
     height: 4.25rem;
 }
 
+.tab-button:last-child {
+    border-right: 1px solid var(--table_border_color);
+}
+
 .tab-content {
     background-color: var(--primary_light_accent_color);
+    border: 1px solid var(--table_border_color);
+    border-top: none;
     border-radius: 0 0 1rem 1rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
     display: none;
@@ -749,6 +759,19 @@ hr {
     align-items: center;
 }
 
+.checkbox-row {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem 0 0;
+}
+
+.checkbox-row label {
+    text-align: right;
+    min-width: 9rem;
+    margin-right: 0.25rem;
+}
+
 #export-row {
     display: flex;
     align-items: center;
@@ -777,7 +800,7 @@ hr {
 }
 
 .rect-highlight:hover {
-    background-color: rgba(var(--highlight-green-color-rgb), 0.5);
+    background-color: rgba(var(--highlight_green_color_rgb), 0.5);
 }
 
 #remarks-container {

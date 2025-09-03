@@ -13,14 +13,14 @@
                 </thead>
                 <tbody>
                     <!-- show instructions -->
-                    <!--
-                    <tr class="section-break">
-                        <td>
-                            <label for="show-instructions-checkbox">Show Instructions:</label>
-                            <input class="input-checkbox" type="checkbox" id="show-instructions-checkbox">
-                        </td>
-                    </tr>
-                -->
+                    {% if show_instructions %}
+                        <tr class="section-break">
+                            <td>
+                                <label for="checkbox-ins">Show Instructions:</label>
+                                <input id="checkbox-ins" class="checkbox-styled" type="checkbox">
+                            </td>
+                        </tr>
+                    {% endif %}
 
                     <!-- months display-->
                     <tr>
@@ -38,8 +38,10 @@
                     <!-- highlight changes -->
                     <tr>
                         <td>
-                            <label for="checkbox-highlight">Highlight Changes:</label>
-                            <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
+                            <div class="checkbox-row">
+                                <label for="checkbox-highlight">Highlight Changes:</label>
+                                <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
+                            </div>
                         </td>
                     </tr>
 
@@ -47,8 +49,10 @@
                     <!-- show all variables -->
                     <tr>
                         <td>
-                            <label for="checkbox-var">Show All Variables:</label>
-                            <input id="checkbox-var" class="checkbox-styled" type="checkbox">
+                            <div class="checkbox-row">
+                                <label for="checkbox-var">Show All Variables:</label>
+                                <input id="checkbox-var" class="checkbox-styled" type="checkbox">
+                            </div>
                         </td>
                     </tr>
 
@@ -56,8 +60,10 @@
                     <!-- show TSP options -->
                     <tr>
                         <td>
-                            <label for="checkbox-tsp">Show TSP Options:</label>
-                            <input id="checkbox-tsp" class="checkbox-styled" type="checkbox">
+                            <div class="checkbox-row">
+                                <label for="checkbox-tsp">Show TSP Options:</label>
+                                <input id="checkbox-tsp" class="checkbox-styled" type="checkbox">
+                            </div>
                         </td>
                     </tr>
 
@@ -65,8 +71,10 @@
                     <!-- show Year-To-Date Rows -->
                     <tr class="section-break">
                         <td>
-                            <label for="checkbox-ytd">Show YTD Rows:</label>
-                            <input id="checkbox-ytd" class="checkbox-styled" type="checkbox">
+                            <div class="checkbox-row">
+                                <label for="checkbox-ytd">Show YTD Rows:</label>
+                                <input id="checkbox-ytd" class="checkbox-styled" type="checkbox">
+                            </div>
                         </td>
                     </tr>
 

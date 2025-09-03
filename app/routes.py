@@ -78,9 +78,11 @@ def route_single_example():
             return jsonify({'message': message}), 400
         
         valid, message, les_pdf = validate_les(file)
+        show_instructions = False
 
     elif 'button_example' in request.form:
         valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
+        show_instructions = True
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
@@ -106,6 +108,7 @@ def route_single_example():
             'les_image': les_image,
             'rect_overlay': rect_overlay,
             'recommendations': recommendations,
+            'show_instructions': show_instructions,
             'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
