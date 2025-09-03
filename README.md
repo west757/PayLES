@@ -9,14 +9,9 @@ run: python -m app.main
 short-term:
 - instructions page and overlay on example les
 - cell button tooltips on hover for mha full name
-- cell button tooltips on hover for tsp rate row disabled
 - add accounts (tsp, bank debt)
 - interest feature for accounts
 - update max tsp percentage recommendation
-- definitions/terms/abbreviations table
-- searchable definitions
-- bug with adding rows makes first row added have minus -$20?
-- question marks next to initials
 
 mid-term:
 - get combat zone from les
@@ -48,6 +43,9 @@ long-term:
 - normalize css: https://necolas.github.io/normalize.css/
 - use python cProfile or line_profiler to find bottlenecks
 - instructions for self-host
+- definitions/terms/abbreviations table
+- searchable definitions
+- reddit account
 
 
 

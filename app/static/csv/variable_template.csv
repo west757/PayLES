@@ -1,8 +1,8 @@
 ﻿header,type,sign,field,tax,editable,modal,tooltip
 Year,v,0,none,False,False,basepay,none
 Months in Service,v,0,none,False,False,basepay,none
-Grade,v,0,select,False,True,basepay,none
-Zip Code,v,0,string,False,True,bah,none
+Grade,v,0,select,False,True,basepay,"Grades are the designations like E1, W2, O3E, O4, whereas rank is the full title of the grade"
+Zip Code,v,0,string,False,True,bah,Must be a valid U.S. zip code
 Military Housing Area,v,0,none,False,False,bah,Code corresponding to a grouping of zip codes used for determining BAH
 Home of Record,v,0,select,False,True,bah,State or U.S. territory used for computing state taxes
 Dependents,v,0,int,False,True,bah,none
@@ -10,14 +10,14 @@ Federal Filing Status,v,0,select,False,True,federaltaxes,"Identifies if single, 
 State Filing Status,v,0,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
 SGLI Coverage,v,0,select,False,True,sgli,none
 Combat Zone,v,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
-Trad TSP Base Rate,t,0,int,False,True,basepay,none
-Trad TSP Specialty Rate,t,0,int,False,True,specialty,none
-Trad TSP Incentive Rate,t,0,int,False,True,incentive,none
-Trad TSP Bonus Rate,t,0,int,False,True,bonus,none
-Roth TSP Base Rate,t,0,int,False,True,basepay,none
-Roth TSP Specialty Rate,t,0,int,False,True,specialty,none
-Roth TSP Incentive Rate,t,0,int,False,True,incentive,none
-Roth TSP Bonus Rate,t,0,int,False,True,bonus,none
+Trad TSP Base Rate,t,0,int,False,True,basepay,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
+Trad TSP Specialty Rate,t,0,int,False,True,specialty,Traditional TSP Base Rate must be at least 1% to set a specialty rate
+Trad TSP Incentive Rate,t,0,int,False,True,incentive,Traditional TSP Base Rate must be at least 1% to set an incentive rate
+Trad TSP Bonus Rate,t,0,int,False,True,bonus,Traditional TSP Base Rate must be at least 1% to set a bonus rate
+Roth TSP Base Rate,t,0,int,False,True,basepay,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 64%
+Roth TSP Specialty Rate,t,0,int,False,True,specialty,Roth TSP Base Rate must be at least 1% to set a specialty rate
+Roth TSP Incentive Rate,t,0,int,False,True,incentive,Roth TSP Base Rate must be at least 1% to set an incentive rate
+Roth TSP Bonus Rate,t,0,int,False,True,bonus,Roth TSP Base Rate must be at least 1% to set a bonus rate
 Taxable Income,x,0,float,False,False,none,none
 Non-Taxable Income,x,0,float,False,False,none,none
 Total Income,x,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""

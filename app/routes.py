@@ -87,7 +87,7 @@ def route_single_example():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
-        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
+        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
         budget = init_onetime_rows(budget, months)
         recommendations = add_recommendations(budget, init_month)
 

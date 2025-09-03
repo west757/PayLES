@@ -9,6 +9,7 @@
     --input_background_color: #eeeeee;
     --table_border_color: #dddddd;
     --button_disabled_color: #867f7f;
+    --cell_disabled_color: #cecdcd;
     --primary_green_accent_color: #0c9a65;
     --secondary_green_accent_color: #04a96d;
     --highlight_green_color: #4fd1a2;
@@ -359,8 +360,9 @@ input[type="submit"]:disabled {
 }
 
 .styled-table-button:disabled {
-    background: var(--secondary_dark_accent_color) !important; 
+    background: var(--cell_disabled_color) !important; 
     border: none !important;
+    color: var(--secondary_dark_accent_color) !important;
 }
 
 
@@ -972,7 +974,7 @@ hr {
     width: 7rem;
 }
 
-.question-tooltip {
+.question {
     display: inline-block;
     position: relative;
     text-align: center;
