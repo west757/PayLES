@@ -9,8 +9,6 @@ run: python -m app.main
 short-term:
 - align checkboxes in settings table
 - instructions page and overlay on example les
-- refactor html
-- refactor css
 - refactor javascript
 - refactor python
 - cell button tooltips on hover for mha full name
@@ -21,6 +19,7 @@ short-term:
 - definitions/terms/abbreviations table
 - searchable definitions
 - bug with adding rows makes first row added have minus -$20?
+- question marks next to initials
 
 mid-term:
 - get combat zone from les

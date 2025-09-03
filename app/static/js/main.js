@@ -50,40 +50,7 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 
 
 document.addEventListener('mousemove', function(e) {
-    // show question mark tooltips
-    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-
-    //show row modal button tooltips
-    if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-
-    // show remove row button tooltips
-    if (e.target && e.target.classList && e.target.classList.contains('remove-row-button')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-
-    // show editing button tooltips
-    if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
-        if (tooltipText) {
-            showTooltip(e, tooltipText);
-        }
-    }
-
-    // show LES rectangle tooltips
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
+    if (e.target && e.target.classList && e.target.classList.contains('tooltip')) {
         const tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
@@ -93,24 +60,7 @@ document.addEventListener('mousemove', function(e) {
 
 
 document.addEventListener('mouseleave', function(e) {
-    // hide all tooltips on mouse leave
-    if (e.target && e.target.classList && e.target.classList.contains('modal-button')) {
-        hideTooltip();
-    }
-
-    if (e.target && e.target.classList && e.target.classList.contains('remove-row-button')) {
-        hideTooltip();
-    }
-
-    if (e.target && e.target.classList && e.target.classList.contains('rect-highlight')) {
-        hideTooltip();
-    }
-
-    if (e.target && e.target.classList && e.target.classList.contains('editing-button')) {
-        hideTooltip();
-    }
-
-    if (e.target && e.target.classList && e.target.classList.contains('question-tooltip')) {
+    if (e.target && e.target.classList && e.target.classList.contains('tooltip')) {
         hideTooltip();
     }
 }, true);

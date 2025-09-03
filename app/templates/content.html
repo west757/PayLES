@@ -1,6 +1,4 @@
 <div id="content" hx-swap-oob="true">
-    <div class="tooltip" id="tooltip"></div>
-
     <div id="budget-settings">
         <div id="budget">
             {% include 'budget.html' %}
@@ -125,10 +123,10 @@
             <button
                 type="button"
                 {% if rect.modal != "none" %}
-                    class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable {% endif %}"
+                    class="rect-highlight tooltip modal-button{% if rect.modal != 'none' %} clickable {% endif %}"
                     data-modal="{{ rect.modal }}"
                 {% else %}
-                    class="rect-highlight"
+                    class="rect-highlight tooltip"
                 {% endif %}
                 style="
                     left: {{ rect.x1 }}px;
@@ -282,7 +280,7 @@
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="inject-custom-tax">Tax:</label>
                             <input id="inject-custom-tax" class="input-checkbox" type="checkbox">
-                            <span class="question-tooltip" data-tooltip=
+                            <span class="question-tooltip tooltip" data-tooltip=
                             "Indicates if the row is used for tax purposes. 
                             If an entitlement, sets whether taxable or non-taxable income. 
                             If a deduction, sets as a tax added to total taxes.">

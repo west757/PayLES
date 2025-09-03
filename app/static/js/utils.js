@@ -33,19 +33,17 @@ function showToast(message, duration = 6500) {
 
 
 function showTooltip(evt, text) {
-    const tooltip = document.getElementById('tooltip');
-    if (!tooltip) return;
-    tooltip.innerText = text;
-    tooltip.style.left = (evt.pageX + 16) + 'px';
-    tooltip.style.top = (evt.pageY - 16) + 'px';
-    tooltip.style.display = 'block';
+    const tooltipContainer = document.getElementById('tooltip-container');
+    tooltipContainer.innerText = text;
+    tooltipContainer.style.left = (evt.pageX + 16) + 'px';
+    tooltipContainer.style.top = (evt.pageY - 16) + 'px';
+    tooltipContainer.style.display = 'block';
 }
 
 
 function hideTooltip() {
-    const tooltip = document.getElementById('tooltip');
-    if (!tooltip) return;
-    tooltip.style.display = 'none';
+    const tooltipContainer = document.getElementById('tooltip-container');
+    tooltipContainer.style.display = 'none';
 }
 
 
