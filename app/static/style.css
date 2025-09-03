@@ -407,7 +407,7 @@ select {
    checkboxes, radio buttons, and file input
    ========================= */
 
-input.input-checkbox {
+.checkbox-styled {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -437,10 +437,10 @@ input[type=file] {
    general
    ========================= */
 
-#home, #remarks-container, #about, #faq-container, #resources-container {
+#home, #remarks-container, #about-container, #faq-container, #resources-container {
     margin: 0 auto 3rem auto;
     max-width: 60%;
-    min-width: 70rem;
+    min-width: 50rem;
 }
 
 .shadow {
@@ -584,6 +584,15 @@ input[type=file] {
     width: 55rem;
 }
 
+hr {
+    border: none;
+    border-top: 1px solid var(--table_border_color);
+    margin: 16px 0;
+    width: 100%;
+    height: 0;
+    display: block;
+}
+
 
 /* =========================
    budget and settings
@@ -634,14 +643,6 @@ input[type=file] {
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
     flex-shrink: 0;
     overflow: hidden;
-}
-
-#les-image {
-    border: 1px solid var(--table_border_color);
-    line-height: 0;
-    margin: 1rem auto 1rem auto;
-    position: relative;
-    width: fit-content;
 }
 
 
@@ -759,9 +760,18 @@ input[type=file] {
     gap: 0.25rem;
 }
 
+
 /* =========================
    les image and remarks
    ========================= */
+
+#les-image {
+    border: 1px solid var(--table_border_color);
+    line-height: 0;
+    margin: 1rem auto 1rem auto;
+    position: relative;
+    width: fit-content;
+}
 
 .rect-highlight {
     background: transparent;
@@ -776,10 +786,12 @@ input[type=file] {
 
 #remarks-container {
     text-align: center;
+    width: 67rem;
 }
 
 #remarks {
     border-radius: 0.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
     flex: 1;
     overflow: hidden;
 }

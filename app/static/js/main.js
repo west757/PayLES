@@ -27,9 +27,9 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     window.CONFIG = Object.assign(window.CONFIG || {}, configData);
 
     highlightChanges();
-    showAllVariables();
-    showTSPOptions();
-    showYTDRows();
+    toggleRows('var');
+    toggleRows('tsp');
+    toggleRows('ytd');
     enableInputs();
     disableTSPRateButtons();
 });
@@ -204,20 +204,20 @@ document.addEventListener('change', function(e) {
         disableInputs();
     }
 
-    if (e.target && e.target.id === 'highlight-changes-checkbox') {
+    if (e.target && e.target.id === 'checkbox-highlight') {
         highlightChanges();
     }
 
-    if (e.target && e.target.id === 'show-all-variables-checkbox') {
-        showAllVariables();
+    if (e.target && e.target.id === 'checkbox-var') {
+        toggleRows('var');
     }
 
-    if (e.target && e.target.id === 'show-tsp-options-checkbox') {
-        showTSPOptions();
+    if (e.target && e.target.id === 'checkbox-tsp') {
+        toggleRows('tsp');
     }
 
-    if (e.target && e.target.id === 'show-ytd-rows-checkbox') {
-        showYTDRows();
+    if (e.target && e.target.id === 'checkbox-ytd') {
+        toggleRows('ytd');
     }
 });
 

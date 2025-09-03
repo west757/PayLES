@@ -5,10 +5,10 @@
     {% for category in RESOURCES %}
         <h2 id="{{ category.id }}">{{ category.category }}</h2>
         <div class="resources shadow">
-            {% for item in category['items'] %}
-                <a href="{{ item.url }}" target="_blank">
+            {% for resource in category['items'] %}
+                <a href="{{ resource.url }}" target="_blank">
                     <div class="resource">
-                        <strong>{{ item.name }}</strong> - {{ item.desc }}
+                        <strong>{{ resource.name }}</strong> - {{ resource.desc }}
                     </div>
                 </a>
             {% endfor %}
