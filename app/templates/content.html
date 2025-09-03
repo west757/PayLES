@@ -7,10 +7,10 @@
         </div>
 
         <div id="settings">
-            <table id="settings-table" class="styled-table">
+            <table class="styled-table">
                 <thead>
                     <tr>
-                        <th class="styled-table-header">Settings</th>
+                        <th>Settings</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,8 +29,8 @@
                         <td>
                             <label for="months-num-dropdown">Months Displayed:</label>
                             <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
-                                {% for x in range(2, 13) %}
-                                    <option value="{{x}}" {% if x==months|length %} selected {% endif %}>{{x}}</option>
+                                {% for i in range(2, 13) %}
+                                    <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -40,8 +40,8 @@
                     <!-- highlight changes -->
                     <tr>
                         <td>
-                            <label for="highlight-changes-checkbox">Highlight Changes:</label>
-                            <input class="input-checkbox" type="checkbox" id="highlight-changes-checkbox">
+                            <label for="checkbox-highlight">Highlight Changes:</label>
+                            <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
                         </td>
                     </tr>
 
@@ -49,8 +49,8 @@
                     <!-- show all variables -->
                     <tr>
                         <td>
-                            <label for="show-all-variables-checkbox">Show All Variables:</label>
-                            <input class="input-checkbox" type="checkbox" id="show-all-variables-checkbox">
+                            <label for="checkbox-var">Show All Variables:</label>
+                            <input id="checkbox-var" class="checkbox-styled" type="checkbox">
                         </td>
                     </tr>
 
@@ -58,8 +58,8 @@
                     <!-- show TSP options -->
                     <tr>
                         <td>
-                            <label for="show-tsp-options-checkbox">Show TSP Options:</label>
-                            <input class="input-checkbox" type="checkbox" id="show-tsp-options-checkbox">
+                            <label for="checkbox-tsp">Show TSP Options:</label>
+                            <input id="checkbox-tsp" class="checkbox-styled" type="checkbox">
                         </td>
                     </tr>
 
@@ -67,8 +67,8 @@
                     <!-- show Year-To-Date Rows -->
                     <tr class="section-break">
                         <td>
-                            <label for="show-ytd-rows-checkbox">Show YTD Rows:</label>
-                            <input class="input-checkbox" type="checkbox" id="show-ytd-rows-checkbox">
+                            <label for="checkbox-ytd">Show YTD Rows:</label>
+                            <input id="checkbox-ytd" class="checkbox-styled" type="checkbox">
                         </td>
                     </tr>
 
@@ -102,8 +102,8 @@
                         <td>
                             <div id="export-row">
                                 <span>Export as:</span>
-                                <select id="export-dropdown" class="dropdown">
-                                    <option value="xlsx" selected>Excel</option>
+                                <select id="dropdown-export">
+                                    <option value="xlsx">Excel</option>
                                     <option value="csv">CSV</option>
                                 </select>
                                 <button id="button-export" class="button-solo" title="Download">↯</button>
@@ -125,28 +125,25 @@
             <button
                 type="button"
                 {% if rect.modal != "none" %}
-                    class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable{% endif %}"
-                    data-modal="{{rect.modal}}"
+                    class="rect-highlight modal-button{% if rect.modal != 'none' %} clickable {% endif %}"
+                    data-modal="{{ rect.modal }}"
                 {% else %}
                     class="rect-highlight"
                 {% endif %}
                 style="
-                    left: {{rect.x1}}px;
-                    top: {{rect.y1}}px;
-                    width: {{rect.x2 - rect.x1}}px;
-                    height: {{rect.y2 - rect.y1}}px;"
-                data-tooltip="{{rect.tooltip}}">
+                    left: {{ rect.x1 }}px;
+                    top: {{ rect.y1 }}px;
+                    width: {{ rect.x2 - rect.x1 }}px;
+                    height: {{ rect.y2 - rect.y1 }}px;"
+                data-tooltip="{{ rect.tooltip }}">
             </button>
             {% endfor %}
         </div>
-    {% endif %}
 
-
-    <!-- LES remarks -->
-    {% if LES_REMARKS is defined and LES_REMARKS %}
+        <!-- LES remarks -->
         <div id="remarks-container">
-            <h2 class="h2-center">Common LES Remarks</h2>
-            <div id="remarks" class="shadow">
+            <h2>Common LES Remarks</h2>
+            <div id="remarks">
                 {% for remark in LES_REMARKS %}
                     <div class="remark">
                         {{ remark.text|safe }}

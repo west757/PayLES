@@ -68,7 +68,7 @@ function enableInputs() {
 
 function highlightChanges() {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
-    var checkbox = document.getElementById('highlight-changes-checkbox');
+    var checkbox = document.getElementById('checkbox-highlight');
     var checked = checkbox.checked;
     var table = document.getElementById('budget-table');
     var rows = table.getElementsByTagName('tr');
@@ -101,55 +101,31 @@ function highlightChanges() {
 }
 
 
-function showAllVariables() {
-    var checkbox = document.getElementById('show-all-variables-checkbox');
-    var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('var-row');
-    
-    for (var row of rows) {
-        if (checked) {
-            row.style.display = 'table-row';
-        } else {
-            row.style.display = 'none';
-        }
+function toggleRows(type) {
+    let checkbox, rows;
+    if (type === 'var') {
+        checkbox = document.getElementById('checkbox-var');
+        rows = document.getElementsByClassName('var-row');
+    } else if (type === 'tsp') {
+        checkbox = document.getElementById('checkbox-tsp');
+        rows = document.getElementsByClassName('tsp-row');
+    } else if (type === 'ytd') {
+        checkbox = document.getElementById('checkbox-ytd');
+        rows = document.getElementsByClassName('ytd-row');
+    } else {
+        return;
     }
-}
 
-
-function showTSPOptions() {
-    var checkbox = document.getElementById('show-tsp-options-checkbox');
-    var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('tsp-row');
-
-    for (var row of rows) {
-        if (checked) {
-            row.style.display = 'table-row';
-        } else {
-            row.style.display = 'none';
-        }
-    }
-}
-
-
-function showYTDRows() {
-    var checkbox = document.getElementById('show-ytd-rows-checkbox');
-    var checked = checkbox.checked;
-    var rows = document.getElementsByClassName('ytd-row');
-
-    for (var row of rows) {
-        if (checked) {
-            row.style.display = 'table-row';
-        } else {
-            row.style.display = 'none';
-        }
+    for (let row of rows) {
+        row.style.display = checkbox.checked ? 'table-row' : 'none';
     }
 }
 
 
 function exportBudget() {
     var table = document.getElementById('budget-table');
-    var filetype = document.getElementById('export-dropdown').value;
-    var filename = filetype === 'csv' ? 'PayLES_Budget.csv' : 'PayLES_Budget.xlsx';
+    var filetype = document.getElementById('dropdown-export').value;
+    var filename = filetype === 'xlsx' ? 'PayLES_Budget.xlsx' : 'PayLES_Budget.csv';
 
     var clone = table.cloneNode(true);
 
@@ -157,10 +133,10 @@ function exportBudget() {
     clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
 
     var workbook = XLSX.utils.table_to_book(clone, {sheet: "Budget", raw: true});
-    if (filetype === 'csv') {
-        XLSX.writeFile(workbook, filename, {bookType: 'csv'});
-    } else {
+    if (filetype === 'xlsx') {
         XLSX.writeFile(workbook, filename);
+    } else {
+        XLSX.writeFile(workbook, filename, {bookType: 'csv'});
     }
 }
 
