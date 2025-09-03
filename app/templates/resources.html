@@ -4,7 +4,7 @@
 <div id="resources-container">
     {% for category in RESOURCES %}
         <h2 id="{{ category.id }}">{{ category.category }}</h2>
-        <div class="resources shadow">
+        <div class="resources">
             {% for resource in category['items'] %}
                 <a href="{{ resource.url }}" target="_blank">
                     <div class="resource">

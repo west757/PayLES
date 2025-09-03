@@ -203,7 +203,7 @@ footer {
     to { opacity: 0; }
 }
 
-.tooltip {
+#tooltip-container {
     background-color: var(--primary_dark_accent_color);
     border-radius: 0.5rem;
     color: var(--light_text_color);
@@ -443,10 +443,6 @@ input[type=file] {
     min-width: 50rem;
 }
 
-.shadow {
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
-}
-
 
 /* =========================
    home
@@ -608,6 +604,7 @@ hr {
 
 #budget-container {
     border: 1px solid var(--table_border_color);
+    border-radius: 1.5rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
     height: 52rem;
     flex: 1 1 auto;
@@ -615,7 +612,6 @@ hr {
     max-width: calc(100vw - 14rem - 7rem);
     overflow-x: auto;
     overflow-y: auto; 
-    border-radius: 1.5rem;
 }
 
 #budget-table {
@@ -974,11 +970,12 @@ hr {
 
 
 /* =========================
-   faq accordion
+   faqs
    ========================= */
 
 .faqs {
     border-radius: 0.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
     flex: 1;
     overflow: hidden;
 }
@@ -1042,6 +1039,7 @@ hr {
 
 .resources {
     border-radius: 0.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
     overflow: hidden;
     flex: 1;
 }
@@ -1053,10 +1051,10 @@ hr {
 
 .resource {
     background-color: var(--secondary_light_accent_color);
-    width: 100%;
-    overflow: hidden;
     border-bottom: 1px solid var(--table_border_color);
+    overflow: hidden;
     padding: 1rem;
+    width: 100%;
 }
 
 .resource:hover {
