@@ -81,6 +81,7 @@ function buildInitialsInputs() {
         input.name = 'input-int-initials-deps';
         input.maxLength = 1;
         input.placeholder = '0-9';
+        input.value = 0;
         input.addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
         });

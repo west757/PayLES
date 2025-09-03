@@ -326,7 +326,7 @@ def init_onetime_rows(budget, months):
 # update budget months and variables
 # =========================
 
-def add_months(budget, latest_month, months_num):
+def add_months(budget, latest_month, months_num, init=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
     current_num = len(months)
@@ -336,7 +336,7 @@ def add_months(budget, latest_month, months_num):
     for i in range(months_to_add):
         working_month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
         months.append(working_month)
-        budget = build_month(budget, months[-2], working_month)  # months[-2] is previous month
+        budget = build_month(budget, months[-2], working_month, init=init)  # months[-2] is previous month
 
     return budget, months
 
@@ -355,12 +355,12 @@ def update_months(budget, months, cell_header=None, cell_month=None, cell_value=
     return budget
 
 
-def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
+def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
     update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
-    update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_trad_roth_tsp(budget, working_month)
     calculate_income(budget, working_month)
-    update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_tax_exp_net(budget, working_month)
     calculate_difference(budget, prev_month, working_month)
     calculate_ytd_rows(budget, prev_month, working_month)
@@ -406,7 +406,9 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
                     rate_row[working_month] = 0
 
 
-def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
+def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+
     special_calculations = {
         'Base Pay': calculate_base_pay,
         'BAS': calculate_bas,
@@ -415,6 +417,10 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
     
     for row in budget:
         if row.get('sign') == 1:
+            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
+            is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
+            if init and is_onetime:
+                row[working_month] = 0.00
             if row['header'] in special_calculations:
                 row[working_month] = special_calculations[row['header']](budget, working_month)
             elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
@@ -423,7 +429,9 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
                 row[working_month] = row[prev_month]
 
 
-def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
+def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
+    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
         'FICA - Social Security': calculate_fica_social_security,
@@ -434,6 +442,10 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
 
     for row in budget:
         if row.get('sign') == -1:
+            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
+            is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
+            if init and is_onetime:
+                row[working_month] = 0.00
             if row['header'] in special_calculations:
                 row[working_month] = special_calculations[row['header']](budget, working_month)
             elif row['header'] in ['Traditional TSP', 'Roth TSP']:
