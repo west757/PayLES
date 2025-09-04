@@ -309,18 +309,6 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None)
     return budget
 
 
-def init_onetime_rows(budget, months):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-
-    for row in budget:
-        if row.get('type') in ('e', 'd', 'a'):
-            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
-            if template_row.iloc[0]['onetime']:
-                for m in months[1:]:
-                    row[m] = 0.00
-    return budget
-
-
 
 # =========================
 # update budget months and variables

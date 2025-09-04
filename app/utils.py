@@ -105,10 +105,11 @@ def add_recommendations(budget, month):
         recs.append(
             '<div class="rec-item"><b>TSP Base Rate:</b> You are fully vested in the Thrift Savings Plan, however are not ' \
             'currently taking advantage of the service agency automatic matching up to 5%. It is recommended to increase ' \
-            'the Traditional TSP or Roth TSP Base Rate contribution percentages to at least 5% to receive the full matching ' \
+            'the Traditional TSP or Roth TSP Base Rate combined contribution percentages to at least 5% to receive the full matching ' \
             'contributions.</div>'
         )
 
+    # reached TSP contribution limit
     tsp_ytd = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Contribution'), 0)
     tsp_limit = flask_app.config['TSP_CONTRIBUTION_LIMIT']
     if tsp_ytd > tsp_limit:
@@ -116,6 +117,10 @@ def add_recommendations(budget, month):
             f'<div class="rec-item"><b>TSP Contribution Limit:</b> You are currently anticipating reaching the limit of TSP contributions for the year, which is ${tsp_limit:,.2f}. '
             'It is recommended to reduce your TSP contribution percentages to ensure you do not invest over this limit to avoid penalties.</div>'
         )
+
+    #contributing to TSP while deployed
+
+    # type of bank
 
     # state income tax recommendation
     home_of_record = next((row[month] for row in budget if row.get('header', '') == 'Home of Record'), '')

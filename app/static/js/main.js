@@ -119,6 +119,12 @@ document.addEventListener('click', function(e) {
         enterEditMode(e.target, rowHeader, month, value, fieldType);
     }
 
+    // open instructions modal
+    if (e.target && e.target.id === 'button-instructions') {
+        const instructionsModalCheckbox = document.getElementById('instructions');
+        instructionsModalCheckbox.checked = true;
+    }
+
     // open inject modal
     if (e.target && e.target.id === 'button-inject') {
         const injectModalCheckbox = document.getElementById('inject');
