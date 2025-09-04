@@ -42,9 +42,10 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
+        'GRADES_RANKS': flask_app.config['GRADES_RANKS'].to_dict(orient='records'),
         'GRADES': flask_app.config['GRADES'],
-        'HOME_OF_RECORDS': ["Select Home of Record"] + [r['home_of_record'] for r in flask_app.config['HOME_OF_RECORDS']],
-        'HOME_OF_RECORDS_ABBR': flask_app.config['HOME_OF_RECORDS_ABBR'], #MAYBE REMOVE HOME ABBR
+        'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].to_dict(orient='records'),
+        'MHA_ZIP_CODES': flask_app.config['MHA_ZIP_CODES'][['mha', 'mha_name']].to_dict(orient='records'),
         'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
         'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],

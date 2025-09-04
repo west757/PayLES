@@ -113,12 +113,21 @@ function buildInitialsInputs() {
         select.id = 'input-select-initials-hor';
         select.className = 'input-long';
         select.name = 'input-select-initials-hor';
+
+        // Add the "Choose an option" first
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "Choose an option";
+        defaultOption.textContent = "Choose an option";
+        select.appendChild(defaultOption);
+
+        // Add the rest from the home_of_record column
         window.CONFIG.HOME_OF_RECORDS.forEach(hor => {
             const option = document.createElement('option');
-            option.value = hor;
-            option.textContent = hor;
+            option.value = hor.home_of_record;
+            option.textContent = hor.home_of_record;
             select.appendChild(option);
         });
+
         initialsHomeOfRecord.innerHTML = '';
         initialsHomeOfRecord.appendChild(select);
     }
@@ -415,7 +424,7 @@ function validateinitialsBudgetForm() {
         return false;
     }
 
-    if (inputSelectInitialsHor.value === "Select Home of Record") {
+    if (inputSelectInitialsHor.value === "Choose an option") {
         showToast('Please choose a home of record.');
         return false;
     }

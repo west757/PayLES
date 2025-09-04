@@ -58,14 +58,15 @@ class Config:
 
 
     #load static files
-    dtype_pay_active = {'grade': str}
-    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
-        dtype_pay_active[str(i)] = float
-    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
-        dtype=dtype_pay_active
-    )
-    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
-    GRADES = list(reversed(PAY_ACTIVE['grade'].tolist()))
+    GRADES_RANKS = pd.read_csv(CSV_FOLDER / "grades_ranks.csv", dtype={
+        'grade': str,
+        'army': str,
+        'navy': str,
+        'mc': str,
+        'af': str,
+        'sf': str,
+    })
+    GRADES = GRADES_RANKS['grade'].tolist()
 
     dtype_bah = {'mha': str}
     for grade in GRADES:
@@ -109,8 +110,7 @@ class Config:
             'retirement': str,
             'tooltip': str,
         },
-    ).to_dict(orient='records')
-    HOME_OF_RECORDS_ABBR = [r['abbr'] for r in HOME_OF_RECORDS]
+    )
 
     LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
         dtype={
@@ -129,9 +129,16 @@ class Config:
         dtype={
             'mha': str, 
             'mha_name': str, 
-            'zip_code': str,
         }
     )
+
+    dtype_pay_active = {'grade': str}
+    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
+        dtype_pay_active[str(i)] = float
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
+        dtype=dtype_pay_active
+    )
+    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
 
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={

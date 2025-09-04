@@ -23,7 +23,7 @@ function enterEditMode(cellButton, rowHeader, month, value, fieldType) {
             input.classList.add('input-short');
         }
         else if (rowHeader === 'Home of Record') {
-            options = window.CONFIG.HOME_OF_RECORDS_ABBR;
+            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.abbr);
             input.classList.add('input-short');
         }
         else if (rowHeader === 'Federal Filing Status') {
