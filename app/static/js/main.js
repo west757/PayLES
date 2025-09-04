@@ -51,9 +51,39 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 
 document.addEventListener('mousemove', function(e) {
     if (e.target && e.target.classList && e.target.classList.contains('tooltip')) {
-        const tooltipText = e.target.getAttribute('data-tooltip');
+        let tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
+        } else {
+            // Dynamic tooltips for budget cells
+            const row = e.target.getAttribute('data-row');
+            const value = e.target.getAttribute('data-value');
+            let tooltip = '';
+
+            if (row === 'Months in Service' && value) {
+                const months = parseInt(value, 10);
+                const years = Math.floor(months / 12);
+                const remMonths = months % 12;
+                tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
+            } 
+            //else if (row === 'Grade' && value) {
+            //    tooltip = window.CONFIG.GRADES_RANKS[value] || '';
+            //} 
+            else if (row === 'Home of Record' && value) {
+                const record = window.CONFIG.HOME_OF_RECORDS.find(hor => hor.abbr === value);
+                if (record) {
+                    tooltip = record.home_of_record;
+                }
+                console.log("home of record: ", tooltip);
+            } 
+            else if (row === 'Military Housing Area' && value) {
+                const record = window.CONFIG.MHA_ZIP_CODES.find(mhaObj => mhaObj.mha === value);
+                if (record) {
+                    tooltip = record.mha_name;
+                }
+            }
+
+            if (tooltip) showTooltip(e, tooltip);
         }
     }
 });

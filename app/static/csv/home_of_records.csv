@@ -1,58 +1,58 @@
 home_of_record,abbr,income,retirement,tooltip
 Alabama,AL,partial,exempt,"Pay received while serving in a designated combat zone is exempt; military allowances for quarters, subsistence, uniforms, and travel also exempt"
-Alaska,AK,none,none,
-American Samoa,AS,full,full,
-Arizona,AZ,exempt,exempt,
-Arkansas,AR,exempt,exempt,
+Alaska,AK,none,none,none
+American Samoa,AS,full,full,none
+Arizona,AZ,exempt,exempt,none
+Arkansas,AR,exempt,exempt,none
 California,CA,outside,full,All active-duty military pay exempt if not stationed in CA
 Colorado,CO,partial,partial,A service member who is a full-year Colorado resident who spends at least 305 days of the tax year outside of the 50-state boundary of the United States while stationed outside of the United States for active military duty may file as a nonresident on the Colorado income tax return
 Connecticut,CT,outside,exempt,"All military pay not taxable and considered a nonresident for tax purposes if all the following are true: do not maintain permanent residence in CT, maintain permanent residence outside CT, and spent < 30 days in CT"
-Delaware,DE,full,partial,
-District of Columbia,DC,full,full,
-Florida,FL,none,none,
-Georgia,GA,full,partial,
-Guam,GU,full,full,
+Delaware,DE,full,partial,none
+District of Columbia,DC,full,full,none
+Florida,FL,none,none,none
+Georgia,GA,full,partial,none
+Guam,GU,full,full,none
 Hawaii,HI,partial,exempt,"Residents may exclude up to $7,152 of HI National Guard or Reserve duty pay from income"
 Idaho,ID,outside,partial,Military pay earned while stationed outside Idaho for 120 days consecutive and uninterrupted is not taxed
 Illinois,IL,exempt,exempt,All pay included in federal adjusted gross income (AGI) is not taxed but income excluded from AGI is taxed
 Indiana,IN,partial,exempt,"May be eligible to deduct military pay from Active Duty, National Guard, and Reserve—either all or up to $5,000, whichever is less"
-Iowa,IA,exempt,exempt,
+Iowa,IA,exempt,exempt,none
 Kansas,KS,partial,exempt,Pay received while serving in a designated combat zone or while hospitalized due to an injury received in a combat zone; officer exclusion amount limited
-Kentucky,KY,exempt,partial,
+Kentucky,KY,exempt,partial,none
 Louisiana,LA,partial,exempt,"If stationed out of state on active duty for > 120 consecutive days, may be eligible to exempt up to $30,000 of military income"
 Maine,ME,outside,exempt,"Resident, active-duty military pay earned outside of Maine is not taxed"
 Maryland,MD,partial,partial,"If military pay is < $30,000, may subtract up to $15,000 earned outside U.S. States or possessions"
 Massachusetts,MA,partial,exempt,Pay received while serving in a designated combat zone may be exempt
-Michigan,MI,exempt,exempt,
-Minnesota,MN,exempt,exempt,
-Minor Outlying Islands,UM,full,full,
+Michigan,MI,exempt,exempt,none
+Minnesota,MN,exempt,exempt,none
+Minor Outlying Islands,UM,full,full,none
 Mississippi,MS,partial,exempt,"Pay received while serving in a designated combat zone is exempt; the first $15,000 of eligible compensation from National Guard or Reserve salary is exempt"
 Missouri,MO,exempt,exempt,"All Active-Duty military pay included in Federal AGI including pay on Title 10 or Title 32, Annual Training, and for Active Training or Schools are not taxed and are classified as a “Military Income Deduction”."
-Montana,MT,exempt,partial,
-Nebraska,NE,full,exempt,
-Nevada,NV,none,none,
-New Hampshire,NH,none,none,
+Montana,MT,exempt,partial,none
+Nebraska,NE,full,exempt,none
+Nevada,NV,none,none,none
+New Hampshire,NH,none,none,none
 New Jersey,NJ,partial,exempt,"Pay received while serving in a designated combat zone or while hospitalized due to an injury received in a combat zone, as well as mustering out, are exempt"
-New Mexico,NM,exempt,partial,
+New Mexico,NM,exempt,partial,none
 New York,NY,outside,exempt,All active-duty military pay is exempt if the service member meets conditions of nonresident eligibility
 North Carolina,NC,partial,exempt,"Military allowances for quarters, subsistence, uniforms, equipment, and most travel are exempt"
 North Dakota,ND,partial,exempt,"National Guard and Reserve called to federal active duty may deduct federal active-duty compensation from ND taxable income, except combat pay, pay for basic training, annual training, or professional military or development education, which are all taxable"
-Northern Mariana Islands,MP,full,full,
+Northern Mariana Islands,MP,full,full,none
 Ohio,OH,outside,exempt,"Resident not stationed in Ohio, military income deducted on schedule of adjustments"
 Oklahoma,OK,exempt,exempt,"All Active-Duty military pay exempt, including National Guard and Reserve pay, if included in Federal AGI"
 Oregon,OR,outside,partial,"Residents stationed in Oregon may qualify for a subtraction of up to $6,000"
-Pennsylvania,PA,outside,exempt,
-Puerto Rico,PR,full,full,
-Rhode Island,RI,full,exempt,
+Pennsylvania,PA,outside,exempt,none
+Puerto Rico,PR,full,full,none
+Rhode Island,RI,full,exempt,none
 South Carolina,SC,partial,exempt,"National Guard and Reserve members, salary for customary annual training, weekend drills, and other inactive duty training is generally exempt"
-South Dakota,SD,none,none,
-Tennessee,TN,none,none,
-Texas,TX,none,none,
-U.S. Virgin Islands,VI,full,full,
-Utah,UT,full,partial,
+South Dakota,SD,none,none,none
+Tennessee,TN,none,none,none
+Texas,TX,none,none,none
+U.S. Virgin Islands,VI,full,full,none
+Utah,UT,full,partial,none
 Vermont,VT,outside,partial,"National Guard and Reserve on drilling/training status, may be eligible for In-State Unit Training Exemption of up to $2,000"
 Virginia,VA,partial,partial,"If on active duty for ≥ 90 consecutive days and military pay totals < $30,000, may be eligible to subtract up to a max of $15,000; National Guard ranks of Captain and below, can subtract salaries for active and inactive service for up to 39 days of service or $3,000, whichever is less"
-Washington,WA,none,none,
+Washington,WA,none,none,none
 West Virginia,WV,partial,exempt,"Some deductions for active duty performed for domestic security duty and Operation Enduring Freedom, if income was included in federal AGI; National Guard must be on Title 10"
 Wisconsin,WI,partial,exempt,Deduction for National Guard and Reserve pay received for Title 10 or Title 32 active duty; all military pay excluded from federal AGI is also excluded for WI
-Wyoming,WY,none,none,
+Wyoming,WY,none,none,none

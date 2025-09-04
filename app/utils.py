@@ -75,7 +75,8 @@ def validate_calculate_zip_mha(zip_code):
     
 
 def validate_home_of_record(home_of_record):
-    if home_of_record in flask_app.config['HOME_OF_RECORDS_ABBR']:
+    abbrs = flask_app.config['HOME_OF_RECORDS']['abbr'].tolist()
+    if home_of_record in abbrs:
         return home_of_record
     return "Not Found"
 
@@ -127,12 +128,12 @@ def add_recommendations(budget, month):
     mha = next((row[month] for row in budget if row.get('header', '') == 'MHA'), '')
     hor_row = None
 
-    for r in flask_app.config['HOME_OF_RECORDS']:
+    for _, r in flask_app.config['HOME_OF_RECORDS'].iterrows():
         if r['abbr'] == home_of_record:
             hor_row = r
             break
 
-    if hor_row:
+    if hor_row is not None:
         income_type = hor_row.get('income', '').lower()
         tooltip = hor_row.get('tooltip', '')
         show_state_tax_msg = False

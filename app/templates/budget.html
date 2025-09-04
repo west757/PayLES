@@ -89,12 +89,12 @@
                     {% for month in months %}
                         {% if row.editable and not loop.first %}
                             <td class="cell">
-                                <button class="styled-table-button cell-button" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}">
+                                <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                     {{ format_cell(row, month) }}
                                 </button>
                             </td>
                         {% else %}
-                            <td>
+                            <td class="tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-value="{{ row[month] }}">
                                 {{ format_cell(row, month) }}
                             </td>
                         {% endif %}

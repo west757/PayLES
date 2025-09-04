@@ -14,7 +14,8 @@ short-term:
 - research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
-- add limitations (no persistent data, not taking TSP catch up into account)
+- maybe remove headers abbr
+- tooltips for cells grade (rank), months in service (years and months), home of record (full state name), military housing area (mha full)
 
 mid-term:
 - get combat zone from les
