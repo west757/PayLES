@@ -248,7 +248,7 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-inject, #button-account, #button-recs {
+#button-instructions, #button-inject, #button-account, #button-recs {
     width: 11rem;
 }
 
@@ -354,7 +354,7 @@ button:disabled,
 input[type="button"]:disabled,
 input[type="submit"]:disabled {
     background: var(--button_disabled_color) !important;
-    border: 1px solid var(--button_disabled_color) !important;
+    border: 1px solid var(--primary_dark_accent_color) !important;
     color: var(--table_border_color) !important;
     cursor: not-allowed !important;
 }

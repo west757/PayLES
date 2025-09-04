@@ -7,11 +7,14 @@ run: python -m app.main
 
 
 short-term:
-- instructions page and overlay on example les
 - cell button tooltips on hover for mha full name
 - add accounts (tsp, bank debt)
 - interest feature for accounts
 - update max tsp percentage recommendation
+- research and set tsp contributions
+- update other recommendations
+- remove old LES's from GitHub
+- add limitations (no persistent data, not taking TSP catch up into account)
 
 mid-term:
 - get combat zone from les
@@ -23,6 +26,7 @@ mid-term:
 - different browser checks
 - custom scroll bars
 - ability to make any entitlement/deduction/allotment row a YTD
+- instructions modal
 
 long-term:
 - create leave calculator
@@ -30,7 +34,7 @@ long-term:
 - minimize/maximize month columns
 - set initial value for template rows
 - import/export for custom rows
-- account for specific pays
+- account for specific pays (submarine, dive, jump, etc)
 - update modal content
 - rework resources, maybe include tags and search
 - pdf export option

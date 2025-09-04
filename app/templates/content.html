@@ -16,11 +16,11 @@
                     {% if show_instructions %}
                         <tr class="section-break">
                             <td>
-                                <label for="checkbox-ins">Show Instructions:</label>
-                                <input id="checkbox-ins" class="checkbox-styled" type="checkbox">
+                                <button id="button-instructions" class="button-solo">Instructions</button>
                             </td>
                         </tr>
                     {% endif %}
+
 
                     <!-- months display-->
                     <tr>
@@ -198,6 +198,19 @@
             </div>
         </div>
     {% endfor %}
+
+
+    <!-- instructions modal -->
+    <input id="instructions" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="instructions"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Instructions</h2>
+
+            
+        </div>
+    </div>
 
 
     <!-- inject modal-->
