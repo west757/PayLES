@@ -614,6 +614,9 @@ hr {
     margin: 2rem;
 }
 
+
+
+
 #budget-container {
     border: 1px solid var(--table_border_color);
     border-radius: 1.5rem;
@@ -622,9 +625,78 @@ hr {
     flex: 1 1 auto;
     margin: 0;
     max-width: calc(100vw - 14rem - 7rem);
+    /*
     overflow-x: auto;
-    overflow-y: auto; 
+    overflow-y: auto; */
+
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    background: var(--primary_light_accent_color); /* match table bg */
+    background-clip: padding-box;
 }
+
+
+/* Use overlay scrollbars in Chrome/Edge if supported */
+@supports (overflow: overlay) {
+    #budget-container {
+        overflow-y: overlay;
+    }
+}
+/* Hide the ::after pseudo-element */
+#budget-container::after {
+    display: none;
+}
+
+/* Custom Scrollbar Styles */
+#budget-container::-webkit-scrollbar {
+    width: 12px;
+    background: transparent;
+}
+
+#budget-container::-webkit-scrollbar-thumb {
+    background: rgba(60, 60, 60, 0.25);
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.5s;
+}
+
+#budget-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(60, 60, 60, 0.45);
+}
+
+#budget-container::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+#budget-container::-webkit-scrollbar-button,
+#budget-container::-webkit-scrollbar-button:single-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Fade out scrollbar after inactivity */
+#budget-container.hide-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(60, 60, 60, 0);
+}
+
+/* Firefox */
+#budget-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(60,60,60,0.25) transparent;
+    /* border-radius already set above */
+}
+#budget-container.hide-scrollbar {
+    scrollbar-color: transparent transparent;
+}
+
+
+
+
+
 
 #budget-table {
     table-layout: fixed;

@@ -71,7 +71,6 @@ document.addEventListener('mousemove', function(e) {
                 if (record) {
                     tooltip = record.home_of_record;
                 }
-                console.log("home of record: ", tooltip);
             } 
             else if (row === 'Military Housing Area' && value) {
                 const record = window.CONFIG.MHA_ZIP_CODES.find(mhaObj => mhaObj.mha === value);
