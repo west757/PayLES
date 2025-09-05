@@ -49,11 +49,18 @@ def init_budget(les_text=None, initials=None):
 
     budget = []
     budget = add_variables(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
-    budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text)
-    budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    if les_text:
+        budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text)
+        budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+    elif initials:
+        budget = add_ent_rows(BUDGET_TEMPLATE, budget, init_month)
+        budget = calculate_trad_roth_tsp(budget, init_month, init=True, BUDGET_TEMPLATE=BUDGET_TEMPLATE)
+        budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
+        budget = add_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month)
     budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
     budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
+
 
     return budget, init_month, headers
 
@@ -211,6 +218,18 @@ def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
         for item in ents + deds + alts:
             ent_ded_alt_dict[item['header'].upper()] = item['value']
 
+    # Define special calculation functions for ent/ded/alt rows
+    special_calculations = {
+        'Base Pay': calculate_base_pay,
+        'BAS': calculate_bas,
+        'BAH': calculate_bah,
+        'Federal Taxes': calculate_federal_taxes,
+        'FICA - Social Security': calculate_fica_social_security,
+        'FICA - Medicare': calculate_fica_medicare,
+        'SGLI Rate': calculate_sgli,
+        'State Taxes': calculate_state_taxes,
+    }
+
     for _, row in BUDGET_TEMPLATE.iterrows():
         header = row['header']
         sign = row['sign']
@@ -220,7 +239,10 @@ def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
         if lesname in ent_ded_alt_dict:
             value = round(sign * ent_ded_alt_dict[lesname], 2)
         elif required:
-            value = 0.00
+            if header in special_calculations:
+                value = special_calculations[header](budget, month)
+            else:
+                value = 0.00
         else:
             continue
 
@@ -264,6 +286,46 @@ def parse_pay_section(les_text):
         i += 1
 
     return results
+
+
+def add_ent_rows(BUDGET_TEMPLATE, budget, month):
+    special_calculations = {
+        'Base Pay': calculate_base_pay,
+        'BAS': calculate_bas,
+        'BAH': calculate_bah,
+    }
+    for _, row in BUDGET_TEMPLATE.iterrows():
+        header = row['header']
+        sign = row['sign']
+        required = row['required']
+        if sign == 1 and required:
+            if header in special_calculations:
+                value = special_calculations[header](budget, month)
+            else:
+                value = 0.00
+            budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
+    return budget
+
+
+def add_ded_alt_rows(BUDGET_TEMPLATE, budget, month):
+    special_calculations = {
+        'Federal Taxes': calculate_federal_taxes,
+        'FICA - Social Security': calculate_fica_social_security,
+        'FICA - Medicare': calculate_fica_medicare,
+        'SGLI Rate': calculate_sgli,
+        'State Taxes': calculate_state_taxes,
+    }
+    for _, row in BUDGET_TEMPLATE.iterrows():
+        header = row['header']
+        sign = row['sign']
+        required = row['required']
+        if sign == -1 and required:
+            if header in special_calculations:
+                value = special_calculations[header](budget, month)
+            else:
+                value = 0.00
+            budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
+    return budget
 
 
 def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):

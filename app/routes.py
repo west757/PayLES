@@ -42,7 +42,7 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
-        'GRADES_RANKS': flask_app.config['GRADES_RANKS'].to_dict(orient='records'),
+        #'GRADES_RANKS': flask_app.config['GRADES_RANKS'].to_dict(orient='records'),
         'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].to_dict(orient='records'),
         'MHA_ZIP_CODES': flask_app.config['MHA_ZIP_CODES'][['mha', 'mha_name']].to_dict(orient='records'),
@@ -163,6 +163,11 @@ def route_initials():
         'ytd_tsp': float(request.form.get('input-float-initials-ytd-tsp', 0.00)),
         'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
     }
+
+    home_of_record_long = initials['home_of_record']
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+    abbr_row = HOME_OF_RECORDS.loc[HOME_OF_RECORDS['home_of_record'] == home_of_record_long]
+    initials['home_of_record'] = abbr_row.iloc[0]['abbr']
 
     budget, init_month, headers = init_budget(initials=initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])

@@ -8,7 +8,7 @@ from app.utils import (
 # calculation functions
 # =========================
 
-def calculate_trad_roth_tsp(budget, working_month):
+def calculate_trad_roth_tsp(budget, working_month, init=False, BUDGET_TEMPLATE=None):
     VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
     tsp_rows = VARIABLE_TEMPLATE[VARIABLE_TEMPLATE['type'] == 't']
     trad_total = 0.00
@@ -46,11 +46,15 @@ def calculate_trad_roth_tsp(budget, working_month):
             elif tsp_var.startswith("Roth"):
                 roth_total += value
 
-    for row in budget:
-        if row['header'] == 'Traditional TSP':
-            row[working_month] = -round(trad_total, 2)
-        elif row['header'] == 'Roth TSP':
-            row[working_month] = -round(roth_total, 2)
+    if init:
+            budget.append(add_row(BUDGET_TEMPLATE, 'Traditional TSP', working_month, -round(trad_total, 2)))
+            budget.append(add_row(BUDGET_TEMPLATE, 'Roth TSP', working_month, -round(roth_total, 2)))
+    else:
+        for row in budget:
+            if row['header'] == 'Traditional TSP':
+                row[working_month] = -round(trad_total, 2)
+            elif row['header'] == 'Roth TSP':
+                row[working_month] = -round(roth_total, 2)
 
     return budget
 
