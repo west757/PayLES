@@ -7,15 +7,13 @@ run: python -m app.main
 
 
 short-term:
-- cell button tooltips on hover for mha full name
 - add accounts (tsp, bank debt)
 - interest feature for accounts
 - update max tsp percentage recommendation
 - research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
-- maybe remove headers abbr
-- tooltips for cells grade (rank), months in service (years and months), home of record (full state name), military housing area (mha full)
+- tooltips for cells grade (rank)
 
 mid-term:
 - get combat zone from les
