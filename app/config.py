@@ -58,16 +58,6 @@ class Config:
 
 
     #load static files
-    #GRADES_RANKS = pd.read_csv(CSV_FOLDER / "grades_ranks.csv", dtype={
-    #    'grade': str,
-    #    'army': str,
-    #    'navy': str,
-    #    'mc': str,
-    #    'af': str,
-    #    'sf': str,
-    #})
-    #GRADES = GRADES_RANKS['grade'].tolist()
-
     dtype_pay_active = {'grade': str}
     for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
         dtype_pay_active[str(i)] = float

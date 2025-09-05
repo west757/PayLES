@@ -329,96 +329,40 @@
 
             <div class="modal-grid">
                 <div class="modal-grid-column">
-                    <div class="modal-grid-column-section">
-                        <span class="modal-grid-span">Type:</span>
-                        <div class="modal-radio-group">
-                            <label>
-                                <input id="account-type-tsp" type="radio" name="row-type" value="tsp" >
-                                TSP Account
-                            </label>
-                            <label>
-                                <input id="account-type-bank" type="radio" name="row-type" value="bank">
-                                Bank Account
-                            </label>
-                            <label>
-                                <input id="account-type-custom" type="radio" name="row-type" value="custom">
-                                Custom
-                            </label>
-                        </div>
-                    </div>
+                    <span class="modal-grid-span">Select Rows to Track:</span>
+                    <div id="account-row-list" class="account-row-list"></div>
                 </div>
 
                 <div class="modal-grid-column">
-                    <div id="account-tsp" class="modal-grid-column-stack">
+                    <div class="modal-grid-column-stack">
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-header">Row Header:</label>
-                            <input id="account-tsp-header" class="input-long" type="text" placeholder="Unique Account Header">
+                            <label class="styled-label" for="account-header">Account Header:</label>
+                            <input id="account-header" class="input-long" type="text" placeholder="Unique Account Header">
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-value">Initial Value:</label>
-                            $&nbsp;
-                            <input id="account-tsp-value" class="input-mid2" type="text" placeholder="1234.56">
+                            <label class="styled-label" for="account-value">Initial Value:</label>
+                            $&nbsp;<input id="account-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
-                            <input id="account-tsp-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="question tooltip" data-tooltip=
-                            "Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">
-                            ?</span>
+                            <label class="styled-label" for="account-interest">Interest Rate:</label>
+                            <input id="account-interest" class="input-short" type="text" placeholder="0.00%">
+                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
                         </div>
                         <div class="modal-grid-column-row">
-                            <button id="account-tsp-button" class="button-solo">Add Account</button>
-                        </div>
-                    </div>
-
-                    <!--
-                    <div id="account-bank" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label for="account-bank-header">Row Header:</label>
-                            <input id="account-bank-header" class="input-long" type="text" placeholder="Unique Account Header">
+                            <span class="modal-grid-span">Calculation Type:</span>
+                            <div class="modal-radio-group">
+                                <label><input type="radio" name="account-calc-type" value="monthly" checked> Monthly Total</label>
+                                <label><input type="radio" name="account-calc-type" value="ytd"> YTD Total</label>
+                                <label><input type="radio" name="account-calc-type" value="running"> Running Total</label>
+                            </div>
                         </div>
                         <div class="modal-grid-column-row">
-                            <label for="account-bank-value">Initial Value:</label>
-                            $&nbsp;
-                            <input id="account-bank-value" class="input-mid2" type="text" placeholder="1234.56">
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label for="account-bank-interest">Interest Rate:</label>
-                            <input id="account-bank-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="question-tooltip" data-tooltip=
-                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
-                            ?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="account-bank-button" class="button-solo">Add Account</button>
+                            <button id="account-add-button" class="button-solo">Add Account</button>
                         </div>
                     </div>
-
-                    <div id="account-custom" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label for="account-custom-header">Row Header:</label>
-                            <input id="account-custom-header" class="input-long" type="text" placeholder="Unique Account Header">
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label for="account-custom-value">Initial Value:</label>
-                            $&nbsp;
-                            <input id="account-custom-value" class="input-mid2" type="text" placeholder="1234.56">
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label for="account-custom-interest">Interest Rate:</label>
-                            <input id="account-custom-interest" class="input-short" type="text" placeholder="0.00%">
-                            <span class="question-tooltip" data-tooltip=
-                            "Input a percentage value to apply an interest rate to the account to estimate more accurate budgeting results.">
-                            ?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="account-custom-button" class="button-solo">Add Account</button>
-                        </div>
-                    </div>
-                -->
                 </div>
 
-                <div id="account-info" class="modal-grid-column"><p>filler</p></div>
+                <div id="account-info" class="modal-grid-column">filler</div>
             </div>
         </div>
     </div>

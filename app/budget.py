@@ -594,3 +594,62 @@ def add_inject(budget, months, headers, inject_method, inject_type, inject_heade
             })
 
     return budget, headers
+
+
+
+
+def add_account(budget, months, headers, header, value, interest, calc_type, row_headers):
+    # Find index to insert at bottom
+    insert_idx = len(budget)
+    # Prepare account row
+    account_row = {
+        'header': header,
+        'type': 'acct',
+        'sign': 1,
+        'field': 'float',
+        'editable': True,
+        'modal': 'account',
+        'calc_type': calc_type,
+        'interest': float(interest) if interest else 0.0,
+        'rows': row_headers,
+    }
+    # Initial value for first month
+    try:
+        initial = float(value)
+    except Exception:
+        initial = 0.0
+
+    # Calculate values for each month
+    for idx, m in enumerate(months):
+        # Sum selected rows for this month
+        month_sum = sum(
+            next((r.get(m, 0.0) for r in budget if r['header'] == rh), 0.0)
+            for rh in row_headers
+        )
+        # Apply calculation type
+        if calc_type == 'monthly':
+            val = month_sum
+        elif calc_type == 'running':
+            val = (account_row.get(months[idx-1], initial) if idx > 0 else initial) + month_sum
+        elif calc_type == 'ytd':
+            if idx == 0 or (m == 'JAN' and idx > 0):
+                val = 0.0 + month_sum
+            else:
+                prev = account_row.get(months[idx-1], initial)
+                val = prev + month_sum if months[idx-1] != 'DEC' else month_sum
+        else:
+            val = month_sum
+        # Apply interest
+        if account_row['interest']:
+            val = val * (1 + account_row['interest']/100)
+        account_row[m] = round(val, 2)
+    # Insert at bottom
+    budget.insert(insert_idx, account_row)
+    # Add to headers if not present
+    if not any(h['header'].lower() == header.lower() for h in headers):
+        headers.append({
+            'header': header,
+            'type': 'acct',
+            'tooltip': 'Custom account row',
+        })
+    return budget, headers

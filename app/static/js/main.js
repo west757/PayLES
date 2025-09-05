@@ -66,9 +66,6 @@ document.addEventListener('mousemove', function(e) {
                 const remMonths = months % 12;
                 tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
             } 
-            //else if (row === 'Grade' && value) {
-            //    tooltip = window.CONFIG.GRADES_RANKS[value] || '';
-            //} 
             else if (row === 'Home of Record' && value) {
                 const record = window.CONFIG.HOME_OF_RECORDS.find(hor => hor.abbr === value);
                 if (record) {

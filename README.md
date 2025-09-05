@@ -7,13 +7,13 @@ run: python -m app.main
 
 
 short-term:
-- add accounts (tsp, bank debt)
+- add accounts (tsp, bank, debt, savings, emergency fund)
 - interest feature for accounts
 - update max tsp percentage recommendation
 - research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
-- tooltips for cells grade (rank)
+- order of initials rows in budget
 
 mid-term:
 - get combat zone from les
@@ -24,13 +24,11 @@ mid-term:
 - alphabetize resources and add stars for top ones
 - different browser checks
 - custom scroll bars
-- ability to make any entitlement/deduction/allotment row a YTD
 - instructions modal
 
 long-term:
 - create leave calculator
 - add pro-rated calculations for cells
-- minimize/maximize month columns
 - set initial value for template rows
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
@@ -49,6 +47,10 @@ long-term:
 - definitions/terms/abbreviations table
 - searchable definitions
 - reddit account
+- XML export
+- JSON export
+- charts and reports
+- export entire budget (all metadata)
 
 
 

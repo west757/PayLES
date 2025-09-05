@@ -21,6 +21,7 @@ from app.budget import (
     remove_months,
     remove_row,
     add_inject,
+    add_account,
 )
 from app.forms import (
     FormSingleExample,
@@ -42,7 +43,6 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
-        #'GRADES_RANKS': flask_app.config['GRADES_RANKS'].to_dict(orient='records'),
         'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].to_dict(orient='records'),
         'MHA_ZIP_CODES': flask_app.config['MHA_ZIP_CODES'][['mha', 'mha_name']].to_dict(orient='records'),
@@ -292,6 +292,42 @@ def route_injects():
         'headers': headers,
     }
     return render_template('budget.html', **context)
+
+
+@csrf.exempt
+@flask_app.route('/route_accounts', methods=['POST'])
+def route_accounts():
+    budget = session.get('budget', [])
+    months = get_months(budget)
+    headers = session.get('headers', [])
+
+    header = request.form.get('header', '').strip()
+    value = request.form.get('value', '0').strip()
+    interest = request.form.get('interest', '0').replace('%','').strip()
+    calc_type = request.form.get('calc_type', 'monthly')
+    rows = request.form.get('rows', '').split(',')
+
+    # Add account row logic
+    budget, headers = add_account(budget, months, headers, header, value, interest, calc_type, rows)
+    budget = update_months(budget, months)
+
+    budget = convert_numpy_types(budget)
+    session['budget'] = budget
+    session['headers'] = headers
+
+    config_js = {
+        'budget': budget,
+        'headers': headers,
+    }
+    context = {
+        'config_js': config_js,
+        'budget': budget,
+        'months': months,
+        'headers': headers,
+    }
+    return render_template('budget.html', **context)
+
+
 
 
 @csrf.exempt
