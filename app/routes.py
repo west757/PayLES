@@ -20,7 +20,7 @@ from app.budget import (
     update_months,
     remove_months,
     remove_row,
-    add_row,
+    insert_row,
 )
 from app.forms import (
     FormSingleExample,
@@ -261,8 +261,8 @@ def route_change_months():
 
 
 @csrf.exempt
-@flask_app.route('/route_add_row', methods=['POST'])
-def route_add_row():
+@flask_app.route('/route_insert_row', methods=['POST'])
+def route_insert_row():
     budget = session.get('budget', [])
     months = get_months(budget)
     headers = session.get('headers', [])
@@ -277,9 +277,10 @@ def route_add_row():
         'interest': request.form.get('interest', '0'),
         'rows': request.form.get('rows', '').split(','),
     }
-    
 
-    budget, headers = add_row(budget, months, headers, row_data)
+    print(row_data)
+
+    budget, headers = insert_row(budget, months, headers, row_data)
     budget = update_months(budget, months)
 
     budget = convert_numpy_types(budget)

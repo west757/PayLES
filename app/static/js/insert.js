@@ -20,7 +20,6 @@ function attachInjectModalListeners() {
                 el.methodCustom.checked = true;
                 el.customTypes.style.display = 'flex';
             }
-            console.log("test in method radio button change");
         });
     });
 
@@ -56,7 +55,7 @@ function attachInjectModalListeners() {
         let value = el.templateValue.value.trim();
         if (!validateAddRow({ method, header, value })) return;
 
-        htmx.ajax('POST', '/route_add_row', {
+        htmx.ajax('POST', '/route_insert_row', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -76,7 +75,7 @@ function attachInjectModalListeners() {
         let value = el.customValue.value.trim();
         if (!validateAddRow({ method, header, value })) return;
 
-        htmx.ajax('POST', '/route_add_row', {
+        htmx.ajax('POST', '/route_insert_row', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -110,11 +109,11 @@ function attachAccountModalListeners() {
         else if (el.TypeContinuous.checked) type = el.TypeContinuous.value;
         else if (el.TypeYTD.checked) type = el.TypeYTD.value;
 
-        const selectedRows = getSelectedAccountRows();
+        const selectedRows = Array.from(document.querySelectorAll('.account-row-selectable.selected')).map(div => div.dataset.header);
 
-        if (!validateAddRow({ method, header, value, selectedRows: selectedRows, interest: interest})) return;
+        if (!validateAddRow({ method, header, value, selectedRows: selectedRows, percent: percent, interest: interest })) return;
 
-        htmx.ajax('POST', '/route_add_row', {
+        htmx.ajax('POST', '/route_insert_row', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
@@ -166,8 +165,8 @@ function resetAccountModal() {
     el.accountRowSelectable.forEach(div => div.classList.remove('selected'));
     el.accountHeader.value = '';
     el.accountValue.value = '';
-    el.accountPercent.value = '';
-    el.accountInterest.value = '';
+    el.accountPercent.value = '100';
+    el.accountInterest.value = '0';
     el.TypeMonthly.checked = false;
     el.TypeContinuous.checked = false;
     el.TypeYTD.checked = false;
@@ -222,22 +221,25 @@ function getAccountModalElements() {
 }
 
 
-// validate inject and account inputs
-function validateAddRow({ method, header, value, selectedRows, interest }) {
-    if ((window.CONFIG.budget || []).length >= window.CONFIG.MAX_ROWS) {
+function validateAddRow({ method, header, value, selectedRows, percent, interest }) {
+    if (window.CONFIG.budget.length >= window.CONFIG.MAX_ROWS) {
         showToast('Maximum number of rows reached. Cannot have more than ' + window.CONFIG.MAX_ROWS + ' rows in the budget.');
         return false;
     }
 
+    if ((!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '')) {
+        showToast('Please enter a valid initial value (up to 4 digits before and 2 after decimal).');
+        return false;
+    }
 
     if (method === 'template') {
-        if (!header || header === '' || header === 'choose-header') {
+        if (header === 'choose-header') {
             showToast('Please select a template row from the dropdown.');
             return false;
         }
     }
 
-    if (method === 'custom') {
+    if(method === 'custom' || method === 'account') {
         const reservedHeaders = (window.CONFIG.headers || []).map(h => h.header.toLowerCase());
 
         if (!header || header.trim().length === 0) {
@@ -246,38 +248,31 @@ function validateAddRow({ method, header, value, selectedRows, interest }) {
         }
 
         if (reservedHeaders.includes(header.trim().toLowerCase())) {
-            showToast('Row header ' + header + ' is reserved or already in use. If you are trying to create an LES-specific row, try choosing from the template options where it may already be defined.');
+            showToast('Row header ' + header + ' is reserved or already in use.');
             return false;
         }
 
         if (!/^[A-Za-z0-9 _\-]{1,20}$/.test(header.trim())) {
-            showToast('Row header cannot be longer than 20 characters and no special characters.');
+            showToast('Row header cannot be longer than 20 characters with no special characters.');
             return false;
         }
-    }
 
-    if (method === 'account') {
-        if (!header || header.trim().length === 0) {
-            showToast('Please enter an account header.');
-            return false;
-        }
-        if (!selectedRows || selectedRows.length === 0) {
-            showToast('Please select at least one row to track.');
-            return false;
-        }
-        if (!/^\d{0,7}(\.\d{0,2})?$/.test(value)) {
-            showToast('Please enter a valid initial value.');
-            return false;
-        }
-        if (interest && !/^\d{0,2}(\.\d{0,2})?%?$/.test(interest)) {
-            showToast('Please enter a valid interest rate.');
-            return false;
-        }
-    }
+        if(method === 'account'){
+            if (!selectedRows || selectedRows.length === 0) {
+                showToast('Please select at least one row to track.');
+                return false;
+            }
 
-    if ((mode === 'template' || mode === 'custom') && (!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '')) {
-        showToast('Please enter a valid initial value (up to 4 digits before and 2 after decimal).');
-        return false;
+            if (percent == '') {
+                showToast('Please enter a valid percent rate.');
+                return false;
+            }
+
+            if (interest == '') {
+                showToast('Please enter a valid interest rate.');
+                return false;
+            }
+        }
     }
 
     return true;
@@ -433,9 +428,4 @@ function populateAccountRowList() {
         });
         listDiv.appendChild(item);
     });
-}
-
-
-function getSelectedAccountRows() {
-    return Array.from(document.querySelectorAll('.account-row-selectable.selected')).map(div => div.dataset.header);
 }

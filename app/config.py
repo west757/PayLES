@@ -27,7 +27,7 @@ class Config:
 
     #constants   
     DEFAULT_MONTHS_NUM = 6
-    MAX_ROWS = 25
+    MAX_ROWS = 99
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
     OLDEST_YEAR = 1975
@@ -160,6 +160,7 @@ class Config:
     # c = custom
     # x = calculations
     # y = ytd
+    # z = account
     VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
         dtype={
             'header': str,

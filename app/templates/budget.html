@@ -71,7 +71,7 @@
                 <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
                     {% if row.type %}
                         <td class="cell row-header-cell">
-                            {% if row.editable and row.type in ['e', 'd', 'a', 'c'] %}
+                            {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
                                 <button class="editing-button remove-row-button tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
                                     ✖
                                 </button>
