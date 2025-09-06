@@ -14,6 +14,8 @@ short-term:
 - update other recommendations
 - remove old LES's from GitHub
 - order of initials rows in budget
+- rename content.html
+- rename injects, custom, accounts
 
 mid-term:
 - get combat zone from les

@@ -1,42 +1,50 @@
+function populateAccountRowList() {
+    const listDiv = document.getElementById('account-row-list');
+    listDiv.innerHTML = '';
+    const budget = window.CONFIG.budget || [];
+    const selectable = budget.filter(r => ['e','d','a','c'].includes(r.type));
+    if (selectable.length === 0) {
+        listDiv.textContent = 'No eligible rows available.';
+        return;
+    }
+    selectable.forEach(row => {
+        const item = document.createElement('div');
+        item.className = 'account-row-selectable';
+        item.textContent = row.header;
+        item.dataset.header = row.header;
+        item.tabIndex = 0;
+        item.addEventListener('click', function() {
+            item.classList.toggle('selected');
+        });
+        item.addEventListener('keydown', function(e) {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                item.classList.toggle('selected');
+            }
+        });
+        listDiv.appendChild(item);
+    });
+}
+
+function getSelectedAccountRows() {
+    return Array.from(document.querySelectorAll('.account-row-selectable.selected')).map(div => div.dataset.header);
+}
+
 function resetAccountModal() {
     document.getElementById('account-header').value = '';
     document.getElementById('account-value').value = '';
     document.getElementById('account-interest').value = '';
     document.querySelectorAll('input[name="account-calc-type"]').forEach(r => r.checked = false);
     document.querySelector('input[name="account-calc-type"][value="monthly"]').checked = true;
-    // Uncheck all in row list
-    document.querySelectorAll('.account-row-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.account-row-selectable').forEach(div => div.classList.remove('selected'));
 }
 
-function populateAccountRowList() {
-    const listDiv = document.getElementById('account-row-list');
-    listDiv.innerHTML = '';
-    const budget = window.CONFIG.budget || [];
-    const selectable = budget.filter(r => ['e','d','a','c'].includes(r.type));
-    selectable.forEach(row => {
-        const label = document.createElement('label');
-        label.className = 'account-row-label';
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.className = 'account-row-checkbox';
-        cb.value = row.header;
-        label.appendChild(cb);
-        label.appendChild(document.createTextNode(' ' + row.header));
-        listDiv.appendChild(label);
-    });
-}
-
-function attachAccountModalListeners() {
-    // Reset and populate on open
-    document.getElementById('account').addEventListener('change', function() {
-        if (this.checked) {
-            resetAccountModal();
-            populateAccountRowList();
-        }
-    });
+function attachAccountModalListeners() {    
+    resetAccountModal();
+    populateAccountRowList();
 
     document.getElementById('account-add-button').addEventListener('click', function() {
-        const selectedRows = Array.from(document.querySelectorAll('.account-row-checkbox:checked')).map(cb => cb.value);
+        const selectedRows = getSelectedAccountRows();
         const header = document.getElementById('account-header').value.trim();
         const value = document.getElementById('account-value').value.trim();
         const interest = document.getElementById('account-interest').value.trim();
@@ -69,6 +77,3 @@ function attachAccountModalListeners() {
         document.getElementById('account').checked = false;
     });
 }
-
-// Call attachAccountModalListeners() on page load
-document.addEventListener('DOMContentLoaded', attachAccountModalListeners);
