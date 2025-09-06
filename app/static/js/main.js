@@ -20,6 +20,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
+        attachAccountModalListeners();
     }
 
     // capture and parse config data
@@ -162,6 +163,8 @@ document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'button-account') {
         const accountModalCheckbox = document.getElementById('account');
         accountModalCheckbox.checked = true;
+        resetAccountModal();
+        populateAccountRowList();
     }
 
     // open recommendation modal

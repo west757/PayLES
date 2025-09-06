@@ -329,14 +329,14 @@
 
             <div class="modal-grid">
                 <div class="modal-grid-column">
-                    <span class="modal-grid-span">Select Rows to Track:</span>
+                    <div style="font-weight: bold">Select Rows to Track:</div>
                     <div id="account-row-list" class="account-row-list"></div>
                 </div>
 
                 <div class="modal-grid-column">
                     <div class="modal-grid-column-stack">
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-header">Account Header:</label>
+                            <label class="styled-label" for="account-header">Row Header:</label>
                             <input id="account-header" class="input-long" type="text" placeholder="Unique Account Header">
                         </div>
                         <div class="modal-grid-column-row">
@@ -349,11 +349,11 @@
                             <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
                         </div>
                         <div class="modal-grid-column-row">
-                            <span class="modal-grid-span">Calculation Type:</span>
+                            <label class="styled-label">Total Type:</label>
                             <div class="modal-radio-group">
-                                <label><input type="radio" name="account-calc-type" value="monthly" checked> Monthly Total</label>
-                                <label><input type="radio" name="account-calc-type" value="ytd"> YTD Total</label>
-                                <label><input type="radio" name="account-calc-type" value="running"> Running Total</label>
+                                <label><input type="radio" name="account-calc-type" value="monthly" checked>Monthly</label>
+                                <label><input type="radio" name="account-calc-type" value="ytd">YTD</label>
+                                <label><input type="radio" name="account-calc-type" value="continuous">Continuous</label>
                             </div>
                         </div>
                         <div class="modal-grid-column-row">

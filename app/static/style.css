@@ -625,31 +625,35 @@ hr {
     flex: 1 1 auto;
     margin: 0;
     max-width: calc(100vw - 14rem - 7rem);
-    /*
     overflow-x: auto;
-    overflow-y: auto; */
+    overflow-y: auto; 
 
-
+    /*
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
-    background: var(--primary_light_accent_color); /* match table bg */
+    background: var(--primary_light_accent_color);
     background-clip: padding-box;
+    */
 }
 
 
-/* Use overlay scrollbars in Chrome/Edge if supported */
+#budget-container::-webkit-scrollbar {
+    width: 12px;
+    background: transparent;
+}
+
+/*
 @supports (overflow: overlay) {
     #budget-container {
         overflow-y: overlay;
     }
 }
-/* Hide the ::after pseudo-element */
+
 #budget-container::after {
     display: none;
 }
 
-/* Custom Scrollbar Styles */
 #budget-container::-webkit-scrollbar {
     width: 12px;
     background: transparent;
@@ -678,21 +682,19 @@ hr {
     height: 0;
 }
 
-/* Fade out scrollbar after inactivity */
 #budget-container.hide-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(60, 60, 60, 0);
 }
 
-/* Firefox */
+
 #budget-container {
     scrollbar-width: thin;
     scrollbar-color: rgba(60,60,60,0.25) transparent;
-    /* border-radius already set above */
 }
 #budget-container.hide-scrollbar {
     scrollbar-color: transparent transparent;
 }
-
+*/
 
 
 
@@ -955,7 +957,7 @@ hr {
     right: 0;
     top: -20%;
     transition: top .3s ease;
-    width: 60%;
+    width: 65rem;
     z-index: 2002;
 }
 
@@ -974,7 +976,7 @@ hr {
 .modal-grid {
     align-items: flex-start;
     display: grid;
-    grid-template-columns: 1fr 1.15fr 1.15fr;
+    grid-template-columns: 19rem 21rem 21rem;
     grid-template-rows: auto;
     min-height: 10.75rem;
 }
@@ -1053,6 +1055,10 @@ hr {
     font-size: 0.85rem;
     margin: -0.35rem 0 0 0.25rem;
     font-weight: bold;
+}
+
+#inject-info {
+    padding: 0 0 0 1rem;
 }
 
 .inject-list-grid {
@@ -1158,3 +1164,42 @@ hr {
     background-color: var(--highlight_green_color);
 }
 
+
+
+
+/* Account Row List Styles */
+.account-row-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 15rem;
+    overflow-y: auto;
+    border: 1px solid var(--table_border_color);
+    border-radius: 0.5rem;
+    background: var(--primary_light_accent_color);
+    padding: 0;
+    margin: 0.5rem auto 0 auto;
+    width: 14rem;
+}
+
+.account-row-selectable {
+    cursor: pointer;
+    padding: 0.25rem 1rem;
+    border-bottom: 1px solid var(--table_border_color);
+    background: transparent;
+    transition: background 0.15s;
+    outline: none;
+    user-select: none;
+}
+
+.account-row-selectable:last-child {
+    border-bottom: none;
+}
+
+.account-row-selectable:hover {
+    background: var(--highlight_green_color);
+}
+
+.account-row-selectable.selected {
+    background: var(--primary_green_accent_color);
+    color: var(--light_text_color);
+}
