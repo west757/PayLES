@@ -301,14 +301,22 @@ def route_accounts():
     months = get_months(budget)
     headers = session.get('headers', [])
 
-    header = request.form.get('header', '').strip()
-    value = request.form.get('value', '0').strip()
-    interest = request.form.get('interest', '0').replace('%','').strip()
+    header = request.form.get('header', '')
+    value = request.form.get('value', '0')
+    percent = request.form.get('percent', '0')
+    interest = request.form.get('interest', '0')
     calc_type = request.form.get('calc_type', 'monthly')
     rows = request.form.get('rows', '').split(',')
 
+    print("header: ", header)
+    print("value: ", value)
+    print("percent: ", percent)
+    print("interest: ", interest)
+    print("calc_type: ", calc_type)
+    print("rows: ", rows)
+
     # Add account row logic
-    budget, headers = add_account(budget, months, headers, header, value, interest, calc_type, rows)
+    budget, headers = add_account(budget, months, headers, header, value, percent, interest, calc_type, rows)
     budget = update_months(budget, months)
 
     budget = convert_numpy_types(budget)

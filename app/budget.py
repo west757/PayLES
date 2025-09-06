@@ -598,7 +598,7 @@ def add_inject(budget, months, headers, inject_method, inject_type, inject_heade
 
 
 
-def add_account(budget, months, headers, header, value, interest, calc_type, row_headers):
+def add_account(budget, months, headers, header, value, percent, interest, calc_type, row_headers):
     # Find index to insert at bottom
     insert_idx = len(budget)
     # Prepare account row
