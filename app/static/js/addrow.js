@@ -2,7 +2,6 @@
 let selectedMethod = null;
 let selectedRowType = null;
 
-
 // attach inject modal event listeners
 function attachInjectModalListeners() {
     const el = getInjectModalElements();
@@ -12,22 +11,16 @@ function attachInjectModalListeners() {
     [el.methodTemplate, el.methodCustom].forEach(radio => {
         radio.addEventListener('change', function() {
             selectedMethod = this.value;
+            resetInjectModal();
 
             if (this.value === 'template') {
+                el.methodTemplate.checked = true;
                 el.templateTypes.style.display = 'flex';
-                el.customTypes.style.display = 'none';
             } else if (this.value === 'custom') {
-                el.templateTypes.style.display = 'none';
+                el.methodCustom.checked = true;
                 el.customTypes.style.display = 'flex';
             }
-            el.typeEntitlement.checked = false;
-            el.typeDeduction.checked = false;
-            el.typeAllotment.checked = false;
-            el.typeIncome.checked = false;
-            el.typeExpense.checked = false;
-            el.templateSection.style.display = 'none';
-            el.customSection.style.display = 'none';
-            el.info.innerHTML = '';
+            console.log("test in method radio button change");
         });
     });
 
@@ -58,15 +51,16 @@ function attachInjectModalListeners() {
     });
 
     el.templateButton.addEventListener('click', function() {
+        let method = 'template';
         let header = el.templateSelect.value;
         let value = el.templateValue.value.trim();
-        if (!validateInject({ mode: 'template', header, value })) return;
+        if (!validateAddRow({ method, header, value })) return;
 
-        htmx.ajax('POST', '/route_injects', {
+        htmx.ajax('POST', '/route_add_row', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
-                method: 'template',
+                method: method,
                 type: selectedRowType,
                 header: header,
                 value: value
@@ -76,16 +70,17 @@ function attachInjectModalListeners() {
     });
 
     el.customButton.addEventListener('click', function() {
+        let method = 'custom';
         let header = el.customHeader.value;
         let tax = el.customTax.checked ? 'true' : 'false';
         let value = el.customValue.value.trim();
-        if (!validateInject({ mode: 'custom', header, value })) return;
+        if (!validateAddRow({ method, header, value })) return;
 
-        htmx.ajax('POST', '/route_injects', {
+        htmx.ajax('POST', '/route_add_row', {
             target: '#budget',
             swap: 'innerHTML',
             values: {
-                method: 'custom',
+                method: method,
                 type: selectedRowType,
                 header: header,
                 value: value,
@@ -93,6 +88,46 @@ function attachInjectModalListeners() {
             }
         });
         el.injectModalCheckbox.checked = false;
+    });
+}
+
+
+// attach account modal event listeners
+function attachAccountModalListeners() {
+    const el = getAccountModalElements();
+    resetAccountModal();
+    populateAccountRowList();
+
+    el.accountButton.addEventListener('click', function() {
+        let method = 'account';
+        const header = el.accountHeader.value.trim();
+        const value = el.accountValue.value.trim();
+        const percent = el.accountPercent.value.trim();
+        const interest = el.accountInterest.value.trim();
+
+        let type = null;
+        if (el.TypeMonthly.checked) type = el.TypeMonthly.value;
+        else if (el.TypeContinuous.checked) type = el.TypeContinuous.value;
+        else if (el.TypeYTD.checked) type = el.TypeYTD.value;
+
+        const selectedRows = getSelectedAccountRows();
+
+        if (!validateAddRow({ method, header, value, selectedRows: selectedRows, interest: interest})) return;
+
+        htmx.ajax('POST', '/route_add_row', {
+            target: '#budget',
+            swap: 'innerHTML',
+            values: {
+                method: method,
+                type: type,
+                header: header,
+                value: value,
+                percent: percent,
+                interest: interest,
+                rows: selectedRows.join(',')
+            }
+        });
+        document.getElementById('account').checked = false;
     });
 }
 
@@ -125,53 +160,17 @@ function resetInjectModal() {
 }
 
 
-// set custom info
-function setCustomInfo(rowType, infoDiv) {
-    let text = '';
-    if (rowType === 'e') {
-        text = `<strong>Example Income:</strong>
-            <div class="inject-list-grid">
-                <ul>
-                    <li>Second Job</li>
-                    <li>Tips</li>
-                    <li>Cash Gifts</li>
-                    <li>Prize Money</li>
-                    <li>Interest</li>
-                    <li>Sold Assets</li>
-                </ul>
-                <ul>
-                    <li>Rental Income</li>
-                    <li>Capital Gains</li>
-                    <li>Royalties</li>
-                    <li>Commissions</li>
-                    <li>Compensation</li>
-                </ul>
-            </div>`;
-    } else if (rowType === 'd') {
-        text = `<strong>Example Expenses:</strong>
-            <div class="inject-list-grid">
-                <ul>
-                    <li>Rent</li>
-                    <li>Utilities</li>
-                    <li>Groceries</li>
-                    <li>Eating Out</li>
-                    <li>Gas</li>
-                    <li>Clothing</li>
-                    <li>Tuition</li>
-                </ul>
-                <ul>
-                    <li>Auto Maintenance</li>
-                    <li>Entertainment</li>
-                    <li>Subscriptions</li>
-                    <li>Travel</li>
-                    <li>Insurance</li>
-                    <li>Cleaning Supplies</li>
-                    <li>Pet Expenses</li>
-                </ul>
-            </div>`;
-    }
-    infoDiv.innerHTML = text;
-    infoDiv.style.display = text ? 'flex' : 'none';
+function resetAccountModal() {
+    const el = getAccountModalElements();
+
+    el.accountRowSelectable.forEach(div => div.classList.remove('selected'));
+    el.accountHeader.value = '';
+    el.accountValue.value = '';
+    el.accountPercent.value = '';
+    el.accountInterest.value = '';
+    el.TypeMonthly.checked = false;
+    el.TypeContinuous.checked = false;
+    el.TypeYTD.checked = false;
 }
 
 
@@ -207,23 +206,39 @@ function getInjectModalElements() {
 }
 
 
-// validate inject inputs
-function validateInject({ mode, header, value }) {
-    if (mode === 'template') {
+// get account modal elements
+function getAccountModalElements() {
+    return {
+        accountRowSelectable: document.querySelectorAll('.account-row-selectable'),
+        accountHeader: document.getElementById('account-header'),
+        accountValue: document.getElementById('account-value'),
+        accountPercent: document.getElementById('account-percent'),
+        accountInterest: document.getElementById('account-interest'),
+        TypeMonthly: document.getElementById('account-type-monthly'),
+        TypeContinuous: document.getElementById('account-type-continuous'),
+        TypeYTD: document.getElementById('account-type-ytd'),
+        accountButton: document.getElementById('account-add-button')
+    };
+}
+
+
+// validate inject and account inputs
+function validateAddRow({ method, header, value, selectedRows, interest }) {
+    if ((window.CONFIG.budget || []).length >= window.CONFIG.MAX_ROWS) {
+        showToast('Maximum number of rows reached. Cannot have more than ' + window.CONFIG.MAX_ROWS + ' rows in the budget.');
+        return false;
+    }
+
+
+    if (method === 'template') {
         if (!header || header === '' || header === 'choose-header') {
             showToast('Please select a template row from the dropdown.');
             return false;
         }
     }
 
-    if (mode === 'custom') {
-        const customRows = (window.CONFIG.budget || []).filter(r => r.modal === 'inject');
+    if (method === 'custom') {
         const reservedHeaders = (window.CONFIG.headers || []).map(h => h.header.toLowerCase());
-
-        if (customRows.length >= window.CONFIG.MAX_CUSTOM_ROWS) {
-            showToast('Maximum number of custom rows reached. Cannot have more than ' + window.CONFIG.MAX_CUSTOM_ROWS + ' custom rows.');
-            return;
-        }
 
         if (!header || header.trim().length === 0) {
             showToast('Please enter a row header.');
@@ -241,7 +256,26 @@ function validateInject({ mode, header, value }) {
         }
     }
 
-    if (!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '') {
+    if (method === 'account') {
+        if (!header || header.trim().length === 0) {
+            showToast('Please enter an account header.');
+            return false;
+        }
+        if (!selectedRows || selectedRows.length === 0) {
+            showToast('Please select at least one row to track.');
+            return false;
+        }
+        if (!/^\d{0,7}(\.\d{0,2})?$/.test(value)) {
+            showToast('Please enter a valid initial value.');
+            return false;
+        }
+        if (interest && !/^\d{0,2}(\.\d{0,2})?%?$/.test(interest)) {
+            showToast('Please enter a valid interest rate.');
+            return false;
+        }
+    }
+
+    if ((mode === 'template' || mode === 'custom') && (!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '')) {
         showToast('Please enter a valid initial value (up to 4 digits before and 2 after decimal).');
         return false;
     }
@@ -320,4 +354,88 @@ function getTemplateRows(rowType) {
     subset.sort((a, b) => a.header.localeCompare(b.header));
 
     return subset;
+}
+
+
+// set custom info
+function setCustomInfo(rowType, infoDiv) {
+    let text = '';
+    if (rowType === 'e') {
+        text = `<strong>Example Income:</strong>
+            <div class="inject-list-grid">
+                <ul>
+                    <li>Second Job</li>
+                    <li>Tips</li>
+                    <li>Cash Gifts</li>
+                    <li>Prize Money</li>
+                    <li>Interest</li>
+                    <li>Sold Assets</li>
+                </ul>
+                <ul>
+                    <li>Rental Income</li>
+                    <li>Capital Gains</li>
+                    <li>Royalties</li>
+                    <li>Commissions</li>
+                    <li>Compensation</li>
+                </ul>
+            </div>`;
+    } else if (rowType === 'd') {
+        text = `<strong>Example Expenses:</strong>
+            <div class="inject-list-grid">
+                <ul>
+                    <li>Rent</li>
+                    <li>Utilities</li>
+                    <li>Groceries</li>
+                    <li>Eating Out</li>
+                    <li>Gas</li>
+                    <li>Clothing</li>
+                    <li>Tuition</li>
+                </ul>
+                <ul>
+                    <li>Auto Maintenance</li>
+                    <li>Entertainment</li>
+                    <li>Subscriptions</li>
+                    <li>Travel</li>
+                    <li>Insurance</li>
+                    <li>Cleaning Supplies</li>
+                    <li>Pet Expenses</li>
+                </ul>
+            </div>`;
+    }
+    infoDiv.innerHTML = text;
+    infoDiv.style.display = text ? 'flex' : 'none';
+}
+
+
+function populateAccountRowList() {
+    const listDiv = document.getElementById('account-row-list');
+    listDiv.innerHTML = '';
+    const budget = window.CONFIG.budget || [];
+    const selectable = budget.filter(r => ['e','d','a','c', 'x'].includes(r.type));
+    if (selectable.length === 0) {
+        listDiv.textContent = 'No eligible rows available.';
+        return;
+    }
+    selectable.forEach(row => {
+        const item = document.createElement('div');
+        item.className = 'account-row-selectable';
+        item.textContent = row.header;
+        item.dataset.header = row.header;
+        item.tabIndex = 0;
+        item.addEventListener('click', function() {
+            item.classList.toggle('selected');
+        });
+        item.addEventListener('keydown', function(e) {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                item.classList.toggle('selected');
+            }
+        });
+        listDiv.appendChild(item);
+    });
+}
+
+
+function getSelectedAccountRows() {
+    return Array.from(document.querySelectorAll('.account-row-selectable.selected')).map(div => div.dataset.header);
 }
