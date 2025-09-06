@@ -519,31 +519,21 @@ def remove_months(budget, months_num):
     return budget, months
 
 
-def remove_row(budget, headers, header):
-    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
-    budget = [r for r in budget if r.get('header').lower() != header.lower()]
-    
-    if row.get('type') == 'c':
-        headers = [h for h in headers if h.get('header').lower() != header.lower()]
-
-    return budget, headers
-
-
-def add_row(budget, months, headers, row_data):
-    if inject_type == 'd' or inject_type == 'a':
+def insert_row(budget, months, headers, row_data):
+    if row_data['type'] == 'd' or row_data['type'] == 'a':
         sign = -1
     else:
         sign = 1
 
-    inject_value = round(sign * float(inject_value), 2)
+    value = round(sign * float(row_data['value']), 2)
     insert_idx = len(budget)
 
-    if inject_method == 'template':
-        if inject_type == 'e':
+    if row_data['method'] == 'template':
+        if row_data['type'] == 'e':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
-        elif inject_type == 'd':
+        elif row_data['type'] == 'd':
             insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
-        elif inject_type == 'a':
+        elif row_data['type'] == 'a':
             a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
             if a_indices:
                 insert_idx = max(a_indices) + 1
@@ -551,12 +541,11 @@ def add_row(budget, months, headers, row_data):
                 d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
                 insert_idx = max(d_indices, default=-1) + 1
 
-        inject_row = add_row(flask_app.config['BUDGET_TEMPLATE'], inject_header, months[0], 0.00)
+        row = add_row(flask_app.config['BUDGET_TEMPLATE'], row_data['header'], months[0], 0.00)
         for idx, m in enumerate(months[1:]):
-            inject_row[m] = inject_value
-        budget.insert(insert_idx, inject_row)
+            row[m] = value
 
-    elif inject_method == 'custom':
+    elif row_data['method'] == 'custom':
         c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
         a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
         d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
@@ -567,89 +556,91 @@ def add_row(budget, months, headers, row_data):
         elif d_indices:
             insert_idx = max(d_indices) + 1
 
-        inject_row = {'header': inject_header}
+        row = {'header': row_data['header']}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
-                inject_row['type'] = 'c'
+                row['type'] = 'c'
             elif meta == 'sign':
-                inject_row['sign'] = sign
+                row['sign'] = sign
             elif meta == 'field':
-                inject_row['field'] = 'float'
+                row['field'] = 'float'
             elif meta == 'tax':
-                inject_row['tax'] = inject_tax
+                row['tax'] = row_data['tax']
             elif meta == 'editable':
-                inject_row['editable'] = True
+                row['editable'] = True
             elif meta == 'modal':
-                inject_row['modal'] = ''
+                row['modal'] = ''
 
         for idx, m in enumerate(months):
-            inject_row[m] = 0.00 if idx == 0 else inject_value
-        budget.insert(insert_idx, inject_row)
+            row[m] = 0.00 if idx == 0 else value
 
-        if not any(h['header'].lower() == inject_header.lower() for h in headers):
+        if not any(h['header'].lower() == row_data['header'].lower() for h in headers):
             headers.append({
-                'header': inject_header,
+                'header': row_data['header'],
                 'type': 'c',
                 'tooltip': 'Custom row added by user',
             })
 
+    elif row_data['method'] == 'account':
+        row = {'header': row_data['header']}
+        for meta in flask_app.config['ROW_METADATA']:
+            if meta == 'type':
+                row['type'] = 'z'
+            elif meta == 'sign':
+                row['sign'] = 0
+            elif meta == 'field':
+                row['field'] = 'float'
+            elif meta == 'tax':
+                row['tax'] = False
+            elif meta == 'editable':
+                row['editable'] = True
+            elif meta == 'modal':
+                row['modal'] = ''
+
+        percent = float(row_data['percent']) / 100
+        interest = float(row_data['interest']) / 100
+
+        for idx, m in enumerate(months):
+            month_sum = 0.0
+            for rh in row_data['rows']:
+                source_row = next((r for r in budget if r['header'] == rh), None)
+                if source_row:
+                    month_sum += (source_row[m] * percent)
+
+            if row_data['type'] == 'm':
+                val = month_sum
+            elif row_data['type'] == 'c':
+                prev_val = row.get(months[idx-1], value) if idx > 0 else value
+                val = prev_val + month_sum
+            elif row_data['type'] == 'y':
+                if idx == 0 or (m == 'JAN' and idx > 0):
+                    val = month_sum
+                else:
+                    prev = row.get(months[idx-1], value)
+                    val = prev + month_sum if months[idx-1] != 'DEC' else month_sum
+            else:
+                val = month_sum
+
+            val = val * (1 + interest)
+            row[m] = round(val, 2)
+        
+        if not any(h['header'].lower() == row_data['header'].lower() for h in headers):
+            headers.append({
+                'header': row_data['header'],
+                'type': 'z',
+                'tooltip': 'Custom account row added by user',
+            })
+
+    budget.insert(insert_idx, row)
+
     return budget, headers
 
 
+def remove_row(budget, headers, header):
+    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
+    budget = [r for r in budget if r.get('header').lower() != header.lower()]
+    
+    if row.get('type') == 'c':
+        headers = [h for h in headers if h.get('header').lower() != header.lower()]
 
-
-def add_account(budget, months, headers, header, value, percent, interest, calc_type, row_headers):
-    # Find index to insert at bottom
-    insert_idx = len(budget)
-    # Prepare account row
-    account_row = {
-        'header': header,
-        'type': 'acct',
-        'sign': 1,
-        'field': 'float',
-        'editable': True,
-        'modal': 'account',
-        'calc_type': calc_type,
-        'interest': float(interest) if interest else 0.0,
-        'rows': row_headers,
-    }
-    # Initial value for first month
-    try:
-        initial = float(value)
-    except Exception:
-        initial = 0.0
-
-    # Calculate values for each month
-    for idx, m in enumerate(months):
-        # Sum selected rows for this month
-        month_sum = sum(
-            next((r.get(m, 0.0) for r in budget if r['header'] == rh), 0.0)
-            for rh in row_headers
-        )
-        # Apply calculation type
-        if calc_type == 'monthly':
-            val = month_sum
-        elif calc_type == 'running':
-            val = (account_row.get(months[idx-1], initial) if idx > 0 else initial) + month_sum
-        elif calc_type == 'ytd':
-            if idx == 0 or (m == 'JAN' and idx > 0):
-                val = 0.0 + month_sum
-            else:
-                prev = account_row.get(months[idx-1], initial)
-                val = prev + month_sum if months[idx-1] != 'DEC' else month_sum
-        else:
-            val = month_sum
-        # Apply interest
-        if account_row['interest']:
-            val = val * (1 + account_row['interest']/100)
-        account_row[m] = round(val, 2)
-    # Insert at bottom
-    budget.insert(insert_idx, account_row)
-    # Add to headers if not present
-    if not any(h['header'].lower() == header.lower() for h in headers):
-        headers.append({
-            'header': header,
-            'type': 'acct',
-            'tooltip': 'Custom account row',
-        })
     return budget, headers
