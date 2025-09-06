@@ -20,8 +20,7 @@ from app.budget import (
     update_months,
     remove_months,
     remove_row,
-    add_inject,
-    add_account,
+    add_row,
 )
 from app.forms import (
     FormSingleExample,
@@ -38,7 +37,7 @@ def index():
     current_month = datetime.now().strftime('%B')
 
     config_js = {
-        'MAX_CUSTOM_ROWS': flask_app.config['MAX_CUSTOM_ROWS'],
+        'MAX_ROWS': flask_app.config['MAX_ROWS'],
         'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
@@ -262,61 +261,25 @@ def route_change_months():
 
 
 @csrf.exempt
-@flask_app.route('/route_injects', methods=['POST'])
-def route_injects():
+@flask_app.route('/route_add_row', methods=['POST'])
+def route_add_row():
     budget = session.get('budget', [])
     months = get_months(budget)
     headers = session.get('headers', [])
 
-    inject_method = request.form.get('method', '')
-    inject_type = request.form.get('type', '')
-    inject_header = request.form.get('header', '').strip()
-    inject_value = request.form.get('value', '0').strip()
-    inject_tax = request.form.get('tax', 'false').lower() == 'true'
-
-    budget, headers = add_inject(budget, months, headers, inject_method, inject_type, inject_header, inject_value, inject_tax)
-    budget = update_months(budget, months)
-
-    budget = convert_numpy_types(budget)
-    session['budget'] = budget
-    session['headers'] = headers
-
-    config_js = {
-        'budget': budget,
-        'headers': headers,
+    row_data = {
+        'method': request.form.get('method', ''),
+        'type': request.form.get('type', ''),
+        'header': request.form.get('header', '').strip(),
+        'value': request.form.get('value', '0').strip(),
+        'tax': request.form.get('tax', 'false').lower() == 'true',
+        'percent': request.form.get('percent', '0'),
+        'interest': request.form.get('interest', '0'),
+        'rows': request.form.get('rows', '').split(','),
     }
-    context = {
-        'config_js': config_js,
-        'budget': budget,
-        'months': months,
-        'headers': headers,
-    }
-    return render_template('budget.html', **context)
+    
 
-
-@csrf.exempt
-@flask_app.route('/route_accounts', methods=['POST'])
-def route_accounts():
-    budget = session.get('budget', [])
-    months = get_months(budget)
-    headers = session.get('headers', [])
-
-    header = request.form.get('header', '')
-    value = request.form.get('value', '0')
-    percent = request.form.get('percent', '0')
-    interest = request.form.get('interest', '0')
-    calc_type = request.form.get('calc_type', 'monthly')
-    rows = request.form.get('rows', '').split(',')
-
-    print("header: ", header)
-    print("value: ", value)
-    print("percent: ", percent)
-    print("interest: ", interest)
-    print("calc_type: ", calc_type)
-    print("rows: ", rows)
-
-    # Add account row logic
-    budget, headers = add_account(budget, months, headers, header, value, percent, interest, calc_type, rows)
+    budget, headers = add_row(budget, months, headers, row_data)
     budget = update_months(budget, months)
 
     budget = convert_numpy_types(budget)

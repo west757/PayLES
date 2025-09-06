@@ -529,7 +529,7 @@ def remove_row(budget, headers, header):
     return budget, headers
 
 
-def add_inject(budget, months, headers, inject_method, inject_type, inject_header, inject_value, inject_tax):
+def add_row(budget, months, headers, row_data):
     if inject_type == 'd' or inject_type == 'a':
         sign = -1
     else:
