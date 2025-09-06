@@ -2,7 +2,7 @@ function populateAccountRowList() {
     const listDiv = document.getElementById('account-row-list');
     listDiv.innerHTML = '';
     const budget = window.CONFIG.budget || [];
-    const selectable = budget.filter(r => ['e','d','a','c'].includes(r.type));
+    const selectable = budget.filter(r => ['e','d','a','c', 'x'].includes(r.type));
     if (selectable.length === 0) {
         listDiv.textContent = 'No eligible rows available.';
         return;
@@ -48,6 +48,7 @@ function attachAccountModalListeners() {
         const header = document.getElementById('account-header').value.trim();
         const value = document.getElementById('account-value').value.trim();
         const interest = document.getElementById('account-interest').value.trim();
+        const percent = document.getElementById('account-percent').value.trim();
         const calcType = document.querySelector('input[name="account-calc-type"]:checked').value;
 
         if (!header || selectedRows.length === 0) {
@@ -69,6 +70,7 @@ function attachAccountModalListeners() {
             values: {
                 header: header,
                 value: value,
+                percent: percent,
                 interest: interest,
                 calc_type: calcType,
                 rows: selectedRows.join(',')

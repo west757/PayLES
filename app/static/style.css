@@ -447,6 +447,15 @@ input[type=file] {
     min-width: 50rem;
 }
 
+.question {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-size: 0.85rem;
+    margin: -0.35rem 0 0 0.25rem;
+    font-weight: bold;
+}
+
 
 /* =========================
    home
@@ -620,83 +629,35 @@ hr {
 #budget-container {
     border: 1px solid var(--table_border_color);
     border-radius: 1.5rem;
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
+    /* box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10); */
     height: 52rem;
     flex: 1 1 auto;
     margin: 0;
     max-width: calc(100vw - 14rem - 7rem);
     overflow-x: auto;
     overflow-y: auto; 
-
-    /*
-    overflow-x: hidden;
-    overflow-y: auto;
-    position: relative;
-    background: var(--primary_light_accent_color);
-    background-clip: padding-box;
-    */
-}
-
-
-#budget-container::-webkit-scrollbar {
-    width: 12px;
-    background: transparent;
-}
-
-/*
-@supports (overflow: overlay) {
-    #budget-container {
-        overflow-y: overlay;
-    }
-}
-
-#budget-container::after {
-    display: none;
 }
 
 #budget-container::-webkit-scrollbar {
-    width: 12px;
-    background: transparent;
+    height: 0.25rem;
+    width: 0.25rem;
+}
+
+#budget-container::-webkit-scrollbar-track {
+    background-color: none;
 }
 
 #budget-container::-webkit-scrollbar-thumb {
-    background: rgba(60, 60, 60, 0.25);
-    border-radius: 1rem;
-    border: 3px solid transparent;
+    background: linear-gradient(
+        to bottom,
+        transparent 0 4rem,
+        rgba(60,60,60,0.25) 4rem calc(100% - 4rem),
+        transparent calc(100% - 4rem) 100%
+    );
+    border: none;
     background-clip: padding-box;
     transition: background 0.5s;
 }
-
-#budget-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(60, 60, 60, 0.45);
-}
-
-#budget-container::-webkit-scrollbar-corner {
-    background: transparent;
-}
-
-#budget-container::-webkit-scrollbar-button,
-#budget-container::-webkit-scrollbar-button:single-button {
-    display: none;
-    width: 0;
-    height: 0;
-}
-
-#budget-container.hide-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(60, 60, 60, 0);
-}
-
-
-#budget-container {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(60,60,60,0.25) transparent;
-}
-#budget-container.hide-scrollbar {
-    scrollbar-color: transparent transparent;
-}
-*/
-
-
 
 
 
@@ -1015,7 +976,7 @@ hr {
     margin: 2rem 0 0 0;
 }
 
-#inject-template-custom {
+#inject-template-custom, #account-inputs {
     align-items: flex-start;
     justify-content: flex-start;
     margin: -0.35rem 0 0 0;
@@ -1042,19 +1003,10 @@ hr {
     gap: 1.1rem;
 }
 
-#inject-template-button, #inject-custom-button, #account-tsp-button, #account-bank-button, #account-custom-button {
+#inject-template-button, #inject-custom-button, #account-add-button {
     height: 2.5rem;
     margin: 0 0 0 auto;
     width: 7rem;
-}
-
-.question {
-    display: inline-block;
-    position: relative;
-    text-align: center;
-    font-size: 0.85rem;
-    margin: -0.35rem 0 0 0.25rem;
-    font-weight: bold;
 }
 
 #inject-info {
@@ -1070,6 +1022,55 @@ hr {
     margin: 0;
     padding-left: 1.25rem;
 }
+
+/* Account Row List Styles */
+.account-row-list {
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    max-height: 17rem;
+    overflow-y: auto;
+    border: 1px solid var(--table_border_color);
+    border-radius: 0.5rem;
+    background: var(--primary_light_accent_color);
+    padding: 0;
+    margin: 0.5rem auto 0 auto;
+    width: 14rem;
+}
+
+.account-row-selectable {
+    cursor: pointer;
+    padding: 0.25rem 1rem;
+    border-bottom: 1px solid var(--table_border_color);
+    background: transparent;
+    transition: background 0.15s;
+    outline: none;
+    user-select: none;
+}
+
+.account-row-selectable:last-child {
+    border-bottom: none;
+}
+
+.account-row-list .account-row-selectable:nth-child(even) {
+    background-color: var(--secondary_light_accent_color);
+}
+.account-row-list .account-row-selectable:nth-child(odd) {
+    background-color: var(--primary_light_accent_color);
+}
+
+/* Keep hover and selected states on top */
+.account-row-list .account-row-selectable:hover, {
+    background: var(--highlight_green_color);
+}
+.account-row-list .account-row-selectable.selected {
+    background: var(--primary_green_accent_color);
+    color: var(--light_text_color);
+}
+
+
+
+
 
 
 /* =========================
@@ -1164,42 +1165,3 @@ hr {
     background-color: var(--highlight_green_color);
 }
 
-
-
-
-/* Account Row List Styles */
-.account-row-list {
-    display: flex;
-    flex-direction: column;
-    max-height: 15rem;
-    overflow-y: auto;
-    border: 1px solid var(--table_border_color);
-    border-radius: 0.5rem;
-    background: var(--primary_light_accent_color);
-    padding: 0;
-    margin: 0.5rem auto 0 auto;
-    width: 14rem;
-}
-
-.account-row-selectable {
-    cursor: pointer;
-    padding: 0.25rem 1rem;
-    border-bottom: 1px solid var(--table_border_color);
-    background: transparent;
-    transition: background 0.15s;
-    outline: none;
-    user-select: none;
-}
-
-.account-row-selectable:last-child {
-    border-bottom: none;
-}
-
-.account-row-selectable:hover {
-    background: var(--highlight_green_color);
-}
-
-.account-row-selectable.selected {
-    background: var(--primary_green_accent_color);
-    color: var(--light_text_color);
-}
