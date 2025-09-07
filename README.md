@@ -8,13 +8,10 @@ run: python -m app.main
 
 short-term:
 - add accounts (tsp, bank, debt, savings, emergency fund)
-- interest feature for accounts
 - update max tsp percentage recommendation
 - research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
-- order of initials rows in budget
-- rename content.html
 - rename injects, custom, accounts
 
 mid-term:
