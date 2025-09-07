@@ -58,11 +58,11 @@ def init_budget(les_text=None, initials=None):
         calculate_income(budget, init_month)
     elif initials:
         add_ent_rows(PAY_TEMPLATE, budget, init_month)
-        calculate_trad_roth_tsp(budget, init_month, init=True, PAY_TEMPLATE=PAY_TEMPLATE)
+        calculate_trad_roth_tsp(budget, init_month)
         calculate_income(budget, init_month)
         add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
     calculate_tax_exp_net(budget, init_month)
-    calculate_difference(budget, init_month)
+    add_mv_pair(budget, 'Difference', init_month, 0.00)
     add_ytd_rows(budget, init_month, les_text)
 
     return budget, init_month, headers
@@ -192,12 +192,12 @@ def add_var_tsp(budget, month, les_text, initials):
     years = months_in_service // 12
     months = months_in_service % 12
     if years > 0 and months > 0:
-        tis_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
+        time_in_service_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
     elif years > 0:
-        tis_long = f"{years} year{'s' if years != 1 else ''}"
+        time_in_service_long = f"{years} year{'s' if years != 1 else ''}"
     else:
-        tis_long = f"{months} month{'s' if months != 1 else ''}"
-    add_mv_pair(budget, 'Time in Service Long', month, tis_long)
+        time_in_service_long = f"{months} month{'s' if months != 1 else ''}"
+    add_mv_pair(budget, 'Time in Service Long', month, time_in_service_long)
 
     mha_code, mha_name = get_mha(values.get('Zip Code'))
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
@@ -221,37 +221,20 @@ def add_ent_ded_alt_rows(PAY_TEMPLATE, budget, month, les_text=None):
         for item in ents + deds + alts:
             ent_ded_alt_dict[item['header'].upper()] = item['value']
 
-    # Define special calculation functions for ent/ded/alt rows
-    special_calculations = {
-        'Base Pay': calculate_base_pay,
-        'BAS': calculate_bas,
-        'BAH': calculate_bah,
-        'Federal Taxes': calculate_federal_taxes,
-        'FICA - Social Security': calculate_fica_social_security,
-        'FICA - Medicare': calculate_fica_medicare,
-        'SGLI Rate': calculate_sgli,
-        'State Taxes': calculate_state_taxes,
-    }
-
     for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
         sign = row['sign']
         required = row['required']
         lesname = row['lesname']
 
-        # Only add if lesname in ent_ded_alt_dict or required
+        # only add if lesname in ent_ded_alt_dict or required
         if lesname in ent_ded_alt_dict or required:
             add_row(budget, header, template=PAY_TEMPLATE)
 
             if lesname in ent_ded_alt_dict:
                 value = round(sign * ent_ded_alt_dict[lesname], 2)
-            elif required:
-                if header in special_calculations:
-                    value = special_calculations[header](budget, month)
-                else:
-                    value = 0.00
             else:
-                continue
+                value = 0.00
 
             add_mv_pair(budget, header, month, value)
 
@@ -435,6 +418,7 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
         elif row['header'] == "Months in Service":
             row[working_month] = prev_value + 1
 
+
         elif row['header'] == "Military Housing Area":
             zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
             zip_code = zip_row.get(working_month)
@@ -449,6 +433,28 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
 
         elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
             row[working_month] = row[prev_month]
+
+
+
+        if row['header'] == "Months in Service":
+            years = row[working_month] // 12
+            months = row[working_month] % 12
+            if years > 0 and months > 0:
+                time_in_service_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
+            elif years > 0:
+                time_in_service_long = f"{years} year{'s' if years != 1 else ''}"
+            else:
+                time_in_service_long = f"{months} month{'s' if months != 1 else ''}"
+            time_in_service_long_row = next((r for r in budget if r['header'] == "Time in Service Long"), None)
+            time_in_service_long_row[working_month] = time_in_service_long
+
+        if row['header'] == "Home of Record":
+            longname, abbr = get_hor(row[working_month])
+            home_of_record_long = next((r for r in budget if r['header'] == "Home of Record Long"), None)
+            home_of_record_long[working_month] = longname
+
+
+
 
     # TSP specialty/incentive/bonus zeroing
     tsp_types = [

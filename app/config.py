@@ -60,7 +60,7 @@ class Config:
 
     # row types in budget order:
     # v = variable
-    # t = tsp
+    # t = tsp rate
     # e = entitlement
     # d = deduction
     # a = allotment
@@ -70,6 +70,17 @@ class Config:
     # z = account
     # m = metadata
     TYPE_ORDER = ['v', 't', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+
+    special_calculations = {
+        'Base Pay': 'calculate_base_pay',
+        'BAS': 'calculate_bas',
+        'BAH': 'calculate_bah',
+        'Federal Taxes': 'calculate_federal_taxes',
+        'FICA - Social Security': 'calculate_fica_social_security',
+        'FICA - Medicare': 'calculate_fica_medicare',
+        'SGLI Rate': 'calculate_sgli',
+        'State Taxes': 'calculate_state_taxes',
+    }
 
 
     #load static files

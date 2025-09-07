@@ -96,7 +96,19 @@ def get_mha(zip_code):
     try:
         for _, row in MHA_ZIP_CODES.iterrows():
             for zip_val in row[2:]:
-                if zip_val and zip_val == zip_code:
+
+                if pd.isna(zip_val):
+                    continue
+
+                zip_str = str(zip_val).strip()
+                if not zip_str:
+                    continue
+
+                if '.' in zip_str:
+                    zip_str = zip_str.split('.')[0]
+                    
+                zip_str = zip_str.zfill(5)
+                if zip_str == str(zip_code).strip().zfill(5):
                     return row['mha'], row['mha_name']
         return "Not Found", "Not Found"
     except Exception:
@@ -112,10 +124,10 @@ def get_hor(home_of_record):
     home_of_record = str(home_of_record).strip()
     if len(home_of_record) == 2:
         row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
-        return home_of_record, row.iloc[0]['longname']
+        return row.iloc[0]['longname'], home_of_record
     else:
         row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == home_of_record]
-        return row.iloc[0]['abbr'], home_of_record
+        return home_of_record, row.iloc[0]['abbr']
 
 
 def get_months(budget):
