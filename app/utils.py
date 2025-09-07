@@ -38,19 +38,47 @@ def validate_file(file):
     return True, ""
 
 
-def add_row(template, header, month, value):
+def add_row(budget, header, template=None, metadata=None):
     ROW_METADATA = flask_app.config['ROW_METADATA']
-    row_data = template[template['header'] == header]
-    metadata = {}
+    TYPE_ORDER = flask_app.config['TYPE_ORDER']
 
-    for col in ROW_METADATA:
-        if col in row_data.columns:
-            metadata[col] = row_data.iloc[0][col]
+    if template:
+        row_data = template[template['header'] == header]
+        row_metadata = {}
+        for col in ROW_METADATA:
+            if col in row_data.columns:
+                row_metadata[col] = row_data.iloc[0][col]
+    elif metadata:
+        row_metadata = metadata.copy()
+
+    row_type = row_metadata['type']
 
     row = {'header': header}
-    row.update(metadata)
-    row[month] = value
+    row.update(row_metadata)
+
+    # defaults insert index to end of budget
+    insert_idx = len(budget)
+    for i, t in enumerate(TYPE_ORDER):
+        if t == row_type:
+            # find the last row of the current row type
+            last_idx = max((idx for idx, r in enumerate(budget) if r.get('type') == t), default=None)
+            if last_idx is not None:
+                insert_idx = last_idx + 1
+            else:
+                # find the first row of any later type
+                later_types = TYPE_ORDER[i+1:]
+                next_idx = next((idx for idx, r in enumerate(budget) if r.get('type') in later_types), None)
+                if next_idx is not None:
+                    insert_idx = next_idx
+            break
+
+    budget.insert(insert_idx, row)
     return row
+
+
+def add_mv_pair(budget, header, month, value):
+    row = next((r for r in budget if r['header'] == header), None)
+    row[month] = value
 
 
 def validate_calculate_zip_mha(zip_code):

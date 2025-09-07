@@ -30,3 +30,6 @@ YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the
 YTD TSP Contribution,y,0,float,False,False,none,Total TSP contributions from the beginning of the year
 YTD Charity,y,0,float,False,False,none,Total charitable contributions from the beginning of the year
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
+Years in Service,m,0,none,False,False,none,none
+MHA Long,m,0,none,False,False,none,none
+Home of Record Long,m,0,none,False,False,none,none

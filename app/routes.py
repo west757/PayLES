@@ -33,9 +33,6 @@ def index():
     form_single_example = FormSingleExample()
     form_joint = FormJoint()
 
-    current_year = datetime.now().year
-    current_month = datetime.now().strftime('%B')
-
     config_js = {
         'MAX_ROWS': flask_app.config['MAX_ROWS'],
         'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
@@ -54,8 +51,8 @@ def index():
         'config_js': config_js,
         'form_single_example': form_single_example,
         'form_joint': form_joint,
-        'current_year': current_year,
-        'current_month': current_month,
+        'CURRENT_YEAR': flask_app.config['CURRENT_YEAR'],
+        'CURRENT_MONTH': flask_app.config['CURRENT_MONTH'],
     }
     return render_template('home.html', **context)
 
@@ -89,6 +86,9 @@ def route_single_example():
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
         recommendations = add_recommendations(budget, init_month)
 
+        for row in budget:
+            print(row)
+
         budget = convert_numpy_types(budget)
         session['budget'] = budget
         session['headers'] = headers
@@ -110,7 +110,7 @@ def route_single_example():
             'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
-        return render_template('content.html', **context)
+        return render_template('settings.html', **context)
     else:
         return jsonify({'message': message}), 400
 
@@ -128,7 +128,7 @@ def route_joint():
     if not file1 or not file2:
         return jsonify({'message': "Both LES files required"}), 400
 
-    return render_template('content.html')
+    return render_template('settings.html')
 
 
 @csrf.exempt
@@ -189,7 +189,7 @@ def route_initials():
         'recommendations': recommendations,
         'MODALS': load_json(flask_app.config['MODALS_JSON']),
     }
-    return render_template('content.html', **context)
+    return render_template('settings.html', **context)
 
 
 @csrf.exempt
@@ -298,8 +298,6 @@ def route_insert_row():
         'headers': headers,
     }
     return render_template('budget.html', **context)
-
-
 
 
 @csrf.exempt

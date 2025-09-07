@@ -6,6 +6,7 @@ import re
 from app import flask_app
 from app.utils import (
     add_row,
+    add_mv_pair,
     validate_calculate_zip_mha,
     validate_home_of_record,
     get_months,
@@ -32,10 +33,11 @@ from app.calculations import (
 # =========================
 
 def init_budget(les_text=None, initials=None):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
-    VARIABLE_TEMPLATE = flask_app.config['VARIABLE_TEMPLATE']
-    headers = BUDGET_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + VARIABLE_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
+    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
+    PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
+    headers = PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
+    # get initial month
     if les_text:
         try:
             init_month = les_text[8][3]
@@ -44,170 +46,188 @@ def init_budget(les_text=None, initials=None):
     elif initials:
         init_month = initials['current_month']
 
-    if init_month not in flask_app.config['MONTHS_SHORT']:
-        raise ValueError(f"Error: '{init_month}', is not in MONTHS_SHORT")
 
+    # initialize budget with all parameter rows
     budget = []
-    budget = add_variables(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
-    if les_text:
-        budget = add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month, les_text)
-        budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    elif initials:
-        budget = add_ent_rows(BUDGET_TEMPLATE, budget, init_month)
-        budget = calculate_trad_roth_tsp(budget, init_month, init=True, BUDGET_TEMPLATE=BUDGET_TEMPLATE)
-        budget = calculate_income(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-        budget = add_ded_alt_rows(BUDGET_TEMPLATE, budget, init_month)
-    budget = calculate_tax_exp_net(budget, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = calculate_difference(budget, init_month, init_month, init=True, VARIABLE_TEMPLATE=VARIABLE_TEMPLATE)
-    budget = add_ytd_rows(VARIABLE_TEMPLATE, budget, init_month, les_text, initials)
+    for _, row in PARAMS_TEMPLATE.iterrows():
+        add_row(budget, row['header'], template=PARAMS_TEMPLATE)
 
+    add_variables(budget, init_month, les_text, initials)
+    if les_text:
+        add_ent_ded_alt_rows(PAY_TEMPLATE, budget, init_month, les_text)
+        calculate_income(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+    elif initials:
+        add_ent_rows(PAY_TEMPLATE, budget, init_month)
+        calculate_trad_roth_tsp(budget, init_month, init=True, PAY_TEMPLATE=PAY_TEMPLATE)
+        calculate_income(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+        add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
+    calculate_tax_exp_net(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+    calculate_difference(budget, init_month, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+    add_ytd_rows(PARAMS_TEMPLATE, budget, init_month, les_text, initials)
 
     return budget, init_month, headers
 
 
-def add_variables(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
-    if les_text:
-        try:
-            year = int('20' + les_text[8][4])
-        except Exception:
-            year = 0
-    elif initials:
-        year = initials['current_year']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Year', month, year))
+def add_variables(budget, month, les_text, initials):
+    values = {}
 
     if les_text:
+        try:
+            values['Year'] = int('20' + les_text[8][4])
+        except Exception:
+            values['Year'] = 0
+
         try:
             pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
             les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
             months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
         except Exception:
             months_in_service = 0
-    elif initials:
-        months_in_service = initials['months_in_service']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Months in Service', month, months_in_service))
+        values['Months in Service'] = months_in_service
 
-    if les_text:
+        years = months_in_service // 12
+        months = months_in_service % 12
+        if years > 0 and months > 0:
+            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
+        elif years > 0:
+            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''}"
+        else:
+            values['Time in Service Long'] = f"{months} month{'s' if months != 1 else ''}"
+
         try:
-            grade = les_text[2][1]
+            values['Grade'] = les_text[2][1]
         except Exception:
-            grade = "Not Found"
-    elif initials:
-        grade = initials['grade']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Grade', month, grade))
+            values['Grade'] = "Not Found"
 
-    if les_text:
         try:
             zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
         except Exception:
             zip_code, military_housing_area = "Not Found", "Not Found"
-    elif initials:
-        zip_code = initials['zip_code']
-        _, military_housing_area = validate_calculate_zip_mha(zip_code)
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Zip Code', month, zip_code))
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Military Housing Area', month, military_housing_area))
+        values['Zip Code'] = zip_code
+        values['Military Housing Area'] = military_housing_area
 
-    if les_text:
         try:
-            home_of_record = validate_home_of_record(les_text[39][1])
+            values['Home of Record'] = validate_home_of_record(les_text[39][1])
         except Exception:
-            home_of_record = "Not Found"
-    elif initials:
-        home_of_record = initials['home_of_record']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Home of Record', month, home_of_record))
+            values['Home of Record'] = "Not Found"
 
-    if les_text:
         try:
-            dependents = int(les_text[53][1])
+            values['Dependents'] = int(les_text[53][1])
         except Exception:
-            dependents = 0
-    elif initials:
-        dependents = initials['dependents']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Dependents', month, dependents))
+            values['Dependents'] = 0
 
-    if les_text:
         try:
             status = les_text[24][1]
             if status == "S":
-                federal_filing_status = "Single"
+                values['Federal Filing Status'] = "Single"
             elif status == "M":
-                federal_filing_status = "Married"
+                values['Federal Filing Status'] = "Married"
             elif status == "H":
-                federal_filing_status = "Head of Household"
+                values['Federal Filing Status'] = "Head of Household"
             else:
-                federal_filing_status = "Not Found"
+                values['Federal Filing Status'] = "Not Found"
         except Exception:
-            federal_filing_status = "Not Found"
-    elif initials:
-        federal_filing_status = initials['federal_filing_status']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Federal Filing Status', month, federal_filing_status))
+            values['Federal Filing Status'] = "Not Found"
 
-    if les_text:
         try:
             status = les_text[42][1]
             if status == "S":
-                state_filing_status = "Single"
+                values['State Filing Status'] = "Single"
             elif status == "M":
-                state_filing_status = "Married"
+                values['State Filing Status'] = "Married"
             else:
-                state_filing_status = "Not Found"
+                values['State Filing Status'] = "Not Found"
         except Exception:
-            state_filing_status = "Not Found"
-    elif initials:
-        state_filing_status = initials['state_filing_status']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'State Filing Status', month, state_filing_status))
+            values['State Filing Status'] = "Not Found"
 
-    if les_text:
         try:
             sgli_coverage = ""
             remarks = les_text[96]
-
-            # join all remark strings into one string
             remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
-            # uses regex to find the SGLI coverage amount
             match = re.search(r"SGLI COVERAGE AMOUNT IS\s*(\$\d{1,3}(?:,\d{3})*)", remarks_str, re.IGNORECASE)
-
             if match:
                 sgli_coverage = match.group(1)
             else:
                 sgli_coverage = "Not Found"
-                
         except Exception:
             sgli_coverage = "Not Found"
-    elif initials:
-        sgli_coverage = initials['sgli_coverage']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'SGLI Coverage', month, sgli_coverage))
+        values['SGLI Coverage'] = sgli_coverage
 
-    if les_text:
-        combat_zone = "No"
-    elif initials:
-        combat_zone = initials['combat_zone']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'Combat Zone', month, combat_zone))
+        values['Combat Zone'] = "No"
 
-    tsp_rate_rows = [
-        ("Trad TSP Base Rate", 60),
-        ("Trad TSP Specialty Rate", 62),
-        ("Trad TSP Incentive Rate", 64),
-        ("Trad TSP Bonus Rate", 66),
-        ("Roth TSP Base Rate", 69),
-        ("Roth TSP Specialty Rate", 71),
-        ("Roth TSP Incentive Rate", 73),
-        ("Roth TSP Bonus Rate", 75),
-    ]
-
-    for header, idx in tsp_rate_rows:
-        if les_text:
+        tsp_rate_rows = [
+            ("Trad TSP Base Rate", 60),
+            ("Trad TSP Specialty Rate", 62),
+            ("Trad TSP Incentive Rate", 64),
+            ("Trad TSP Bonus Rate", 66),
+            ("Roth TSP Base Rate", 69),
+            ("Roth TSP Specialty Rate", 71),
+            ("Roth TSP Incentive Rate", 73),
+            ("Roth TSP Bonus Rate", 75),
+        ]
+        for header, idx in tsp_rate_rows:
             try:
-                value = int(les_text[idx][3])
+                values[header] = int(les_text[idx][3])
             except Exception:
-                value = 0
-        elif initials:
-            value = initials[header.lower().replace(" ", "_")]
-        budget.append(add_row(VARIABLE_TEMPLATE, header, month, value))
+                values[header] = 0
+
+    elif initials:
+        values['Year'] = initials['current_year']
+        months_in_service = initials['months_in_service']
+        values['Months in Service'] = months_in_service
+
+        years = months_in_service // 12
+        months = months_in_service % 12
+        if years > 0 and months > 0:
+            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
+        elif years > 0:
+            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''}"
+        else:
+            values['Time in Service Long'] = f"{months} month{'s' if months != 1 else ''}"
+
+        values['Grade'] = initials['grade']
+        zip_code = initials['zip_code']
+        values['Zip Code'] = zip_code
+        _, military_housing_area = validate_calculate_zip_mha(zip_code)
+        values['Military Housing Area'] = military_housing_area
+        values['Home of Record'] = initials['home_of_record']
+        values['Dependents'] = initials['dependents']
+        values['Federal Filing Status'] = initials['federal_filing_status']
+        values['State Filing Status'] = initials['state_filing_status']
+        values['SGLI Coverage'] = initials['sgli_coverage']
+        values['Combat Zone'] = initials['combat_zone']
+
+        tsp_rate_rows = [
+            "trad_tsp_base_rate",
+            "trad_tsp_specialty_rate",
+            "trad_tsp_incentive_rate",
+            "trad_tsp_bonus_rate",
+            "roth_tsp_base_rate",
+            "roth_tsp_specialty_rate",
+            "roth_tsp_incentive_rate",
+            "roth_tsp_bonus_rate",
+        ]
+        headers = [
+            "Trad TSP Base Rate",
+            "Trad TSP Specialty Rate",
+            "Trad TSP Incentive Rate",
+            "Trad TSP Bonus Rate",
+            "Roth TSP Base Rate",
+            "Roth TSP Specialty Rate",
+            "Roth TSP Incentive Rate",
+            "Roth TSP Bonus Rate",
+        ]
+        for key, header in zip(tsp_rate_rows, headers):
+            values[header] = initials[key]
+
+    # Now set all values in the budget
+    for header, value in values.items():
+        add_mv_pair(budget, header, month, value)
 
     return budget
 
 
-def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
+def add_ent_ded_alt_rows(PAY_TEMPLATE, budget, month, les_text=None):
     ent_ded_alt_dict = {}
     
     if les_text:
@@ -230,7 +250,7 @@ def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
         'State Taxes': calculate_state_taxes,
     }
 
-    for _, row in BUDGET_TEMPLATE.iterrows():
+    for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
         sign = row['sign']
         required = row['required']
@@ -246,7 +266,7 @@ def add_ent_ded_alt_rows(BUDGET_TEMPLATE, budget, month, les_text=None):
         else:
             continue
 
-        budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
+        budget.append(add_row(PAY_TEMPLATE, header, month, value))
 
     return budget
 
@@ -288,13 +308,13 @@ def parse_pay_section(les_text):
     return results
 
 
-def add_ent_rows(BUDGET_TEMPLATE, budget, month):
+def add_ent_rows(PAY_TEMPLATE, budget, month):
     special_calculations = {
         'Base Pay': calculate_base_pay,
         'BAS': calculate_bas,
         'BAH': calculate_bah,
     }
-    for _, row in BUDGET_TEMPLATE.iterrows():
+    for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
         sign = row['sign']
         required = row['required']
@@ -303,11 +323,11 @@ def add_ent_rows(BUDGET_TEMPLATE, budget, month):
                 value = special_calculations[header](budget, month)
             else:
                 value = 0.00
-            budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
+            budget.append(add_row(PAY_TEMPLATE, header, month, value))
     return budget
 
 
-def add_ded_alt_rows(BUDGET_TEMPLATE, budget, month):
+def add_ded_alt_rows(PAY_TEMPLATE, budget, month):
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
         'FICA - Social Security': calculate_fica_social_security,
@@ -315,7 +335,7 @@ def add_ded_alt_rows(BUDGET_TEMPLATE, budget, month):
         'SGLI Rate': calculate_sgli,
         'State Taxes': calculate_state_taxes,
     }
-    for _, row in BUDGET_TEMPLATE.iterrows():
+    for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
         sign = row['sign']
         required = row['required']
@@ -324,11 +344,11 @@ def add_ded_alt_rows(BUDGET_TEMPLATE, budget, month):
                 value = special_calculations[header](budget, month)
             else:
                 value = 0.00
-            budget.append(add_row(BUDGET_TEMPLATE, header, month, value))
+            budget.append(add_row(PAY_TEMPLATE, header, month, value))
     return budget
 
 
-def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None):
+def add_ytd_rows(PARAMS_TEMPLATE, budget, month, les_text=None, initials=None):
     if les_text:
         remarks = les_text[96]
         remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
@@ -338,14 +358,14 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None)
         ytd_income = float(ent_match.group(1)) if ent_match else 0.00
     elif initials:
         ytd_income = initials['ytd_income']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Income', month, ytd_income))
+    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Income', month, ytd_income))
 
     if les_text:
         ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
         ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
     elif initials:
         ytd_expenses = initials['ytd_expenses']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Expenses', month, ytd_expenses))
+    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Expenses', month, ytd_expenses))
 
     if les_text:
         try:
@@ -354,7 +374,7 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None)
             ytd_tsp = 0.00
     elif initials:
         ytd_tsp = initials['ytd_tsp']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD TSP Contribution', month, ytd_tsp))
+    budget.append(add_row(PARAMS_TEMPLATE, 'YTD TSP Contribution', month, ytd_tsp))
 
     if les_text:
         try:
@@ -363,10 +383,10 @@ def add_ytd_rows(VARIABLE_TEMPLATE, budget, month, les_text=None, initials=None)
             ytd_charity = 0.00
     elif initials:
         ytd_charity = initials['ytd_charity']
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Charity', month, ytd_charity))
+    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Charity', month, ytd_charity))
 
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
-    budget.append(add_row(VARIABLE_TEMPLATE, 'YTD Net Pay', month, ytd_net_pay))
+    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Net Pay', month, ytd_net_pay))
 
     return budget
 
@@ -457,7 +477,7 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
 
 
 def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
     special_calculations = {
         'Base Pay': calculate_base_pay,
@@ -467,7 +487,7 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
     
     for row in budget:
         if row.get('sign') == 1:
-            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
+            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == row['header']]
             is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
             if init and is_onetime:
                 row[working_month] = 0.00
@@ -480,7 +500,7 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
 
 
 def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
-    BUDGET_TEMPLATE = flask_app.config['BUDGET_TEMPLATE']
+    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
     special_calculations = {
         'Federal Taxes': calculate_federal_taxes,
@@ -492,7 +512,7 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
 
     for row in budget:
         if row.get('sign') == -1:
-            template_row = BUDGET_TEMPLATE[BUDGET_TEMPLATE['header'] == row['header']]
+            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == row['header']]
             is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
             if init and is_onetime:
                 row[working_month] = 0.00
@@ -541,7 +561,7 @@ def insert_row(budget, months, headers, row_data):
                 d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
                 insert_idx = max(d_indices, default=-1) + 1
 
-        row = add_row(flask_app.config['BUDGET_TEMPLATE'], row_data['header'], months[0], 0.00)
+        row = add_row(flask_app.config['PAY_TEMPLATE'], row_data['header'], months[0], 0.00)
         for idx, m in enumerate(months[1:]):
             row[m] = value
 

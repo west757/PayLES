@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 import pandas as pd
 import secrets
@@ -14,7 +14,9 @@ class Config:
     WTF_CSRD_ENABLED = True
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #16MB
     ALLOWED_EXTENSIONS = {'pdf'}
-    VERSION = "Version 0.1.0 2025-08-18"
+    CURRENT_YEAR = datetime.now().year
+    CURRENT_MONTH = datetime.now().strftime('%B')  
+    VERSION = "Version 0.1.0 2025-09-06"
 
 
     #folders
@@ -25,7 +27,7 @@ class Config:
     PDF_FOLDER = STATIC_FOLDER / "pdf"
     
 
-    #constants   
+    #constants 
     DEFAULT_MONTHS_NUM = 6
     MAX_ROWS = 99
     LES_IMAGE_SCALE = 0.42
@@ -56,6 +58,19 @@ class Config:
     'modal',
     ]
 
+    # row types in budget order:
+    # v = variable
+    # t = tsp
+    # e = entitlement
+    # d = deduction
+    # a = allotment
+    # c = custom
+    # x = calculations
+    # y = ytd
+    # z = account
+    # m = metadata
+    TYPE_ORDER = ['v', 't', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+
 
     #load static files
     dtype_pay_active = {'grade': str}
@@ -77,7 +92,7 @@ class Config:
         dtype=dtype_bah
     )
 
-    BUDGET_TEMPLATE = pd.read_csv(CSV_FOLDER / "budget_template.csv",
+    PAY_TEMPLATE = pd.read_csv(CSV_FOLDER / "pay_template.csv",
         dtype={
             'header': str,
             'type': str,
@@ -151,17 +166,7 @@ class Config:
         }
     )
 
-    #row types in budget order:
-    # v = variable
-    # t = tsp
-    # e = entitlement
-    # d = deduction
-    # a = allotment
-    # c = custom
-    # x = calculations
-    # y = ytd
-    # z = account
-    VARIABLE_TEMPLATE = pd.read_csv(CSV_FOLDER / "variable_template.csv",
+    PARAMS_TEMPLATE = pd.read_csv(CSV_FOLDER / "params_template.csv",
         dtype={
             'header': str,
             'type': str,
