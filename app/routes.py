@@ -83,11 +83,12 @@ def route_single_example():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
+        for row in budget:
+            print(row)
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
         recommendations = add_recommendations(budget, init_month)
 
-        for row in budget:
-            print(row)
+        
 
         budget = convert_numpy_types(budget)
         session['budget'] = budget

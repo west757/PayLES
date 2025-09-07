@@ -43,7 +43,7 @@ def add_row(budget, header, template=None, metadata=None):
     ROW_METADATA = flask_app.config['ROW_METADATA']
     TYPE_ORDER = flask_app.config['TYPE_ORDER']
 
-    if template:
+    if template is not None:
         row_data = template[template['header'] == header]
         row_metadata = {}
         for col in ROW_METADATA:
@@ -112,7 +112,7 @@ def get_hor(home_of_record):
     home_of_record = str(home_of_record).strip()
     if len(home_of_record) == 2:
         row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
-        return home_of_record, row.iloc[0]['home_of_record']
+        return home_of_record, row.iloc[0]['longname']
     else:
         row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == home_of_record]
         return row.iloc[0]['abbr'], home_of_record

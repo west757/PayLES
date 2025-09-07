@@ -1,3 +1,4 @@
+from calendar import month
 from datetime import datetime
 from flask import session
 import pandas as pd
@@ -40,6 +41,8 @@ def init_budget(les_text=None, initials=None):
     if les_text:
         try:
             init_month = les_text[8][3]
+            if not init_month:
+                raise ValueError()
         except Exception as e:
             raise Exception(f"Error determining initial month: {e}")
     else:
@@ -49,23 +52,23 @@ def init_budget(les_text=None, initials=None):
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row(budget, row['header'], template=PARAMS_TEMPLATE)
 
-    add_variables(budget, init_month, les_text, initials)
+    add_var_tsp(budget, init_month, les_text, initials)
     if les_text:
         add_ent_ded_alt_rows(PAY_TEMPLATE, budget, init_month, les_text)
-        calculate_income(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+        calculate_income(budget, init_month)
     elif initials:
         add_ent_rows(PAY_TEMPLATE, budget, init_month)
         calculate_trad_roth_tsp(budget, init_month, init=True, PAY_TEMPLATE=PAY_TEMPLATE)
-        calculate_income(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
+        calculate_income(budget, init_month)
         add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
-    calculate_tax_exp_net(budget, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
-    calculate_difference(budget, init_month, init_month, init=True, PARAMS_TEMPLATE=PARAMS_TEMPLATE)
-    add_ytd_rows(PARAMS_TEMPLATE, budget, init_month, les_text, initials)
+    calculate_tax_exp_net(budget, init_month)
+    calculate_difference(budget, init_month)
+    add_ytd_rows(budget, init_month, les_text)
 
     return budget, init_month, headers
 
 
-def add_variables(budget, month, les_text, initials):
+def add_var_tsp(budget, month, les_text, initials):
     values = {}
 
     if les_text:
@@ -153,7 +156,7 @@ def add_variables(budget, month, les_text, initials):
             if match:
                 sgli_coverage = match.group(1)
             else:
-                sgli_coverage = "Not Found"
+                raise ValueError()
         except Exception:
             sgli_coverage = "Not Found"
         values['SGLI Coverage'] = sgli_coverage
@@ -172,16 +175,18 @@ def add_variables(budget, month, les_text, initials):
         ]
         for header, idx in tsp_rate_rows:
             try:
-                values[header] = int(les_text[idx][3])
+                rate = int(les_text[idx][3])
+                if not rate:
+                    raise ValueError()
             except Exception:
-                values[header] = 0
+                rate = 0
+            values[header] = rate
 
     elif initials:
         values = initials
 
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
-
 
     months_in_service = int(values['Months in Service'])
     years = months_in_service // 12
@@ -234,17 +239,21 @@ def add_ent_ded_alt_rows(PAY_TEMPLATE, budget, month, les_text=None):
         required = row['required']
         lesname = row['lesname']
 
-        if lesname in ent_ded_alt_dict:
-            value = round(sign * ent_ded_alt_dict[lesname], 2)
-        elif required:
-            if header in special_calculations:
-                value = special_calculations[header](budget, month)
-            else:
-                value = 0.00
-        else:
-            continue
+        # Only add if lesname in ent_ded_alt_dict or required
+        if lesname in ent_ded_alt_dict or required:
+            add_row(budget, header, template=PAY_TEMPLATE)
 
-        budget.append(add_row(PAY_TEMPLATE, header, month, value))
+            if lesname in ent_ded_alt_dict:
+                value = round(sign * ent_ded_alt_dict[lesname], 2)
+            elif required:
+                if header in special_calculations:
+                    value = special_calculations[header](budget, month)
+                else:
+                    value = 0.00
+            else:
+                continue
+
+            add_mv_pair(budget, header, month, value)
 
     return budget
 
@@ -298,10 +307,11 @@ def add_ent_rows(PAY_TEMPLATE, budget, month):
         required = row['required']
         if sign == 1 and required:
             if header in special_calculations:
+                add_row(budget, header, template=PAY_TEMPLATE)
                 value = special_calculations[header](budget, month)
             else:
                 value = 0.00
-            budget.append(add_row(PAY_TEMPLATE, header, month, value))
+            add_mv_pair(budget, header, month, value)
     return budget
 
 
@@ -319,52 +329,49 @@ def add_ded_alt_rows(PAY_TEMPLATE, budget, month):
         required = row['required']
         if sign == -1 and required:
             if header in special_calculations:
+                add_row(budget, header, template=PAY_TEMPLATE)
                 value = special_calculations[header](budget, month)
             else:
                 value = 0.00
-            budget.append(add_row(PAY_TEMPLATE, header, month, value))
+            add_mv_pair(budget, header, month, value)
     return budget
 
 
-def add_ytd_rows(PARAMS_TEMPLATE, budget, month, les_text=None, initials=None):
-    if les_text:
-        remarks = les_text[96]
-        remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
+def add_ytd_rows(budget, month, les_text):
+    values = {}
 
-    if les_text:
-        ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
-        ytd_income = float(ent_match.group(1)) if ent_match else 0.00
-    elif initials:
-        ytd_income = initials['ytd_income']
-    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Income', month, ytd_income))
+    remarks = les_text[96]
+    remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
 
-    if les_text:
-        ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
-        ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
-    elif initials:
-        ytd_expenses = initials['ytd_expenses']
-    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Expenses', month, ytd_expenses))
+    ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
+    ytd_income = float(ent_match.group(1)) if ent_match else 0.00
+    values['YTD Income'] = ytd_income
 
-    if les_text:
-        try:
-            ytd_tsp = float(les_text[78][2])
-        except Exception:
-            ytd_tsp = 0.00
-    elif initials:
-        ytd_tsp = initials['ytd_tsp']
-    budget.append(add_row(PARAMS_TEMPLATE, 'YTD TSP Contribution', month, ytd_tsp))
+    ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
+    ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
+    values['YTD Expenses'] = ytd_expenses
 
-    if les_text:
-        try:
-            ytd_charity = float(les_text[56][2])
-        except Exception:
-            ytd_charity = 0.00
-    elif initials:
-        ytd_charity = initials['ytd_charity']
-    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Charity', month, ytd_charity))
+    try:
+        ytd_tsp = float(les_text[78][2])
+        if not ytd_tsp or ytd_tsp < 0:
+            raise ValueError()
+    except Exception:
+        ytd_tsp = 0.00
+    values['YTD TSP Contribution'] = ytd_tsp
+
+    try:
+        ytd_charity = float(les_text[56][2])
+        if not ytd_charity or ytd_charity < 0:
+            raise ValueError()
+    except Exception:
+        ytd_charity = 0.00
+    values['YTD Charity'] = ytd_charity
 
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
-    budget.append(add_row(PARAMS_TEMPLATE, 'YTD Net Pay', month, ytd_net_pay))
+    values['YTD Net Pay'] = ytd_net_pay
+
+    for header, value in values.items():
+        add_mv_pair(budget, header, month, value)
 
     return budget
 
@@ -431,8 +438,11 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
         elif row['header'] == "Military Housing Area":
             zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
             zip_code = zip_row.get(working_month)
-            _, military_housing_area = validate_calculate_zip_mha(zip_code)
-            row[working_month] = military_housing_area
+            mha_code, mha_name = get_mha(zip_code)
+            row[working_month] = mha_code
+
+            mha_long_row = next((r for r in budget if r['header'] == "MHA Long"), None)
+            mha_long_row[working_month] = mha_name
 
         elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
             row[working_month] = cell_value
