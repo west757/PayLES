@@ -59,7 +59,7 @@ def calculate_trad_roth_tsp(budget, working_month, init=False, BUDGET_TEMPLATE=N
     return budget
 
 
-def calculate_income(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+def calculate_income(budget, working_month):
     taxable = 0.00
     nontaxable = 0.00
 
@@ -87,23 +87,18 @@ def calculate_income(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
     nontaxable = round(nontaxable, 2)
     income = round(taxable + nontaxable, 2)
 
-    if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxable Income', working_month, taxable))
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Non-Taxable Income', working_month, nontaxable))
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Income', working_month, income))
-    else:
-        for row in budget:
-            if row['header'] == 'Taxable Income':
-                row[working_month] = taxable
-            elif row['header'] == 'Non-Taxable Income':
-                row[working_month] = nontaxable
-            elif row['header'] == 'Total Income':
-                row[working_month] = income
+    for row in budget:
+        if row['header'] == 'Taxable Income':
+            row[working_month] = taxable
+        elif row['header'] == 'Non-Taxable Income':
+            row[working_month] = nontaxable
+        elif row['header'] == 'Total Income':
+            row[working_month] = income
 
     return budget
 
 
-def calculate_tax_exp_net(budget, working_month, init=False, VARIABLE_TEMPLATE=None):
+def calculate_tax_exp_net(budget, working_month):
     taxes = 0.00
     expenses = 0.00
 
@@ -122,33 +117,23 @@ def calculate_tax_exp_net(budget, working_month, init=False, VARIABLE_TEMPLATE=N
     taxes = round(taxes, 2)
     net_pay = round(net_pay, 2)
 
-    if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Taxes', working_month, taxes))
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Total Expenses', working_month, expenses))
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Net Pay', working_month, net_pay))
-    else:
-        for row in budget:
-            if row['header'] == 'Taxes':
-                row[working_month] = taxes
-            elif row['header'] == 'Total Expenses':
-                row[working_month] = expenses
-            elif row['header'] == 'Net Pay':
-                row[working_month] = net_pay
+    for row in budget:
+        if row['header'] == 'Taxes':
+            row[working_month] = taxes
+        elif row['header'] == 'Total Expenses':
+            row[working_month] = expenses
+        elif row['header'] == 'Net Pay':
+            row[working_month] = net_pay
 
     return budget
 
 
-def calculate_difference(budget, prev_month, working_month, init=False, VARIABLE_TEMPLATE=None):
-    difference = 0.00
-
+def calculate_difference(budget, prev_month, working_month):
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
 
-    if init:
-        budget.append(add_row(VARIABLE_TEMPLATE, 'Difference', working_month, difference))
-    else:
-        for row in budget:
-            if row['header'] == 'Difference':
-                row[working_month] = round(net_pay_row[working_month] - net_pay_row[prev_month], 2)
+    for row in budget:
+        if row['header'] == 'Difference':
+            row[working_month] = round(net_pay_row[working_month] - net_pay_row[prev_month], 2)
 
     return budget
 
