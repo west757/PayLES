@@ -39,67 +39,70 @@
         </thead>
         <tbody>
             {% for row in budget %}
-                {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
-                {% set next_row = budget[loop.index] if not loop.last else None %}
-                {% set section_break = false %}
+                
 
-                {% set row_class = "" %}
-                {% if row.type == 'v' %}
-                    {% set row_class = "var-row" %}
-                {% elif row.type == 't' %}
-                    {% set row_class = "tsp-row" %}
-                {% elif row.type == 'y' %}
-                    {% set row_class = "ytd-row" %}
-                {% endif %}
+                    {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
+                    {% set next_row = budget[loop.index] if not loop.last else None %}
+                    {% set section_break = false %}
 
-                {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
-                    {% set section_break = true %}
-                {% elif row.type == 't' and (not next_row or next_row.type != 't') %}
-                    {% set section_break = true %}
-                {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
-                    {% set section_break = true %}
-                {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
-                    {% set section_break = true %}
-                {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
-                    {% set section_break = true %}
-                {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
-                    {% set section_break = true %}
-                {% elif row.type == 'x' and (not next_row or next_row.type != 'x') %}
-                    {% set section_break = true %}
-                {% endif %}
-
-                <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
-                    {% if row.type %}
-                        <td class="cell row-header-cell">
-                            {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
-                                <button class="editing-button remove-row-button tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
-                                    ✖
-                                </button>
-                            {% endif %}
-                            <button class="styled-table-button modal-button tooltip" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
-                                {{ row.header }}
-                            </button>
-                        </td>
-                    {% else %}
-                        <td>
-                            {{ row.header }}
-                        </td>
+                    {% set row_class = "" %}
+                    {% if row.type == 'v' %}
+                        {% set row_class = "var-row" %}
+                    {% elif row.type == 't' %}
+                        {% set row_class = "tsp-row" %}
+                    {% elif row.type == 'y' %}
+                        {% set row_class = "ytd-row" %}
                     {% endif %}
-                    
-                    {% for month in months %}
-                        {% if row.editable and not loop.first %}
-                            <td class="cell">
-                                <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
-                                    {{ format_cell(row, month) }}
+
+                    {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 't' and (not next_row or next_row.type != 't') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
+                        {% set section_break = true %}
+                    {% elif row.type == 'x' and (not next_row or next_row.type != 'x') %}
+                        {% set section_break = true %}
+                    {% endif %}
+
+                    <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
+                        {% if row.type %}
+                            <td class="cell row-header-cell">
+                                {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
+                                    <button class="editing-button remove-row-button tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
+                                        ✖
+                                    </button>
+                                {% endif %}
+                                <button class="styled-table-button modal-button tooltip" data-modal="{{ row.modal }}" data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
+                                    {{ row.header }}
                                 </button>
                             </td>
                         {% else %}
-                            <td class="tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-value="{{ row[month] }}">
-                                {{ format_cell(row, month) }}
+                            <td>
+                                {{ row.header }}
                             </td>
                         {% endif %}
-                    {% endfor %}
-                </tr>
+                        
+                        {% for month in months %}
+                            {% if row.editable and not loop.first %}
+                                <td class="cell">
+                                    <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                        {{ format_cell(row, month) }}
+                                    </button>
+                                </td>
+                            {% else %}
+                                <td class="tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-value="{{ row[month] }}">
+                                    {{ format_cell(row, month) }}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                
             {% endfor %}
         </tbody>
     </table>
