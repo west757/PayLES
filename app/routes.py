@@ -134,39 +134,7 @@ def route_joint():
 @csrf.exempt
 @flask_app.route('/route_initials', methods=['POST'])
 def route_initials():
-    current_year = datetime.now().year
-    current_month = datetime.now().strftime('%b').upper()
-
-    initials = {
-        'current_year': current_year,
-        'current_month': current_month,
-        'grade': request.form.get('input-select-initials-grade', ''),
-        'months_in_service': int(request.form.get('input-int-initials-mis', 0)),
-        'zip_code': request.form.get('input-int-initials-zc', ''),
-        'home_of_record': request.form.get('input-select-initials-hor', ''),
-        'dependents': int(request.form.get('input-int-initials-deps', 0)),
-        'federal_filing_status': request.form.get('input-select-initials-ffs', ''),
-        'state_filing_status': request.form.get('input-select-initials-sfs', ''),
-        'sgli_coverage': request.form.get('input-select-initials-sc', ''),
-        'combat_zone': request.form.get('input-select-initials-cz', ''),
-        'trad_tsp_base_rate': int(request.form.get('input-int-initials-tradbase', 0)),
-        'trad_tsp_specialty_rate': int(request.form.get('input-int-initials-tradspecialty', 0)),
-        'trad_tsp_incentive_rate': int(request.form.get('input-int-initials-tradincentive', 0)),
-        'trad_tsp_bonus_rate': int(request.form.get('input-int-initials-tradbonus', 0)),
-        'roth_tsp_base_rate': int(request.form.get('input-int-initials-rothbase', 0)),
-        'roth_tsp_specialty_rate': int(request.form.get('input-int-initials-rothspecialty', 0)),
-        'roth_tsp_incentive_rate': int(request.form.get('input-int-initials-rothincentive', 0)),
-        'roth_tsp_bonus_rate': int(request.form.get('input-int-initials-rothbonus', 0)),
-        'ytd_income': float(request.form.get('input-float-initials-ytd-income', 0.00)),
-        'ytd_expenses': float(request.form.get('input-float-initials-ytd-expenses', 0.00)),
-        'ytd_tsp': float(request.form.get('input-float-initials-ytd-tsp', 0.00)),
-        'ytd_charity': float(request.form.get('input-float-initials-ytd-charity', 0.00)),
-    }
-
-    home_of_record_long = initials['home_of_record']
-    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
-    abbr_row = HOME_OF_RECORDS.loc[HOME_OF_RECORDS['home_of_record'] == home_of_record_long]
-    initials['home_of_record'] = abbr_row.iloc[0]['abbr']
+    initials = request.form.to_dict()
 
     budget, init_month, headers = init_budget(initials=initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])

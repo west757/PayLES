@@ -7,8 +7,8 @@ from app import flask_app
 from app.utils import (
     add_row,
     add_mv_pair,
-    validate_calculate_zip_mha,
-    validate_home_of_record,
+    get_mha,
+    get_hor,
     get_months,
 )
 from app.calculations import (
@@ -37,17 +37,14 @@ def init_budget(les_text=None, initials=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
     headers = PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
-    # get initial month
     if les_text:
         try:
             init_month = les_text[8][3]
         except Exception as e:
             raise Exception(f"Error determining initial month: {e}")
-    elif initials:
-        init_month = initials['current_month']
+    else:
+        init_month = flask_app.config['CURRENT_MONTH']
 
-
-    # initialize budget with all parameter rows
     budget = []
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row(budget, row['header'], template=PARAMS_TEMPLATE)
@@ -73,72 +70,80 @@ def add_variables(budget, month, les_text, initials):
 
     if les_text:
         try:
-            values['Year'] = int('20' + les_text[8][4])
+            year = int('20' + les_text[8][4])
+            if not year or year < (flask_app.config['CURRENT_YEAR'] - 2):
+                raise ValueError()
         except Exception:
-            values['Year'] = 0
+            year = flask_app.config['CURRENT_YEAR']
+        values['Year'] = year
 
         try:
             pay_date = datetime.strptime(les_text[3][2], '%y%m%d')
             les_date = pd.to_datetime(datetime.strptime((les_text[8][4] + les_text[8][3] + "1"), '%y%b%d'))
             months_in_service = (les_date.year - pay_date.year) * 12 + les_date.month - pay_date.month
+            if months_in_service < 0:
+                raise ValueError()
         except Exception:
             months_in_service = 0
         values['Months in Service'] = months_in_service
 
-        years = months_in_service // 12
-        months = months_in_service % 12
-        if years > 0 and months > 0:
-            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
-        elif years > 0:
-            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''}"
-        else:
-            values['Time in Service Long'] = f"{months} month{'s' if months != 1 else ''}"
+        try:
+            grade = les_text[2][1]
+            if not grade:
+                raise ValueError()
+        except Exception:
+            grade = "Not Found"
+        values['Grade'] = grade
 
         try:
-            values['Grade'] = les_text[2][1]
+            zip_code = les_text[48][2]
+            if not zip_code or zip_code == "00000":
+                raise ValueError()
         except Exception:
-            values['Grade'] = "Not Found"
-
-        try:
-            zip_code, military_housing_area = validate_calculate_zip_mha(les_text[48][2])
-        except Exception:
-            zip_code, military_housing_area = "Not Found", "Not Found"
+            zip_code = "Not Found"
         values['Zip Code'] = zip_code
-        values['Military Housing Area'] = military_housing_area
 
         try:
-            values['Home of Record'] = validate_home_of_record(les_text[39][1])
+            home_of_record = les_text[39][1]
+            if not home_of_record or home_of_record == "98":
+                raise ValueError()
         except Exception:
-            values['Home of Record'] = "Not Found"
+            home_of_record = "Not Found"
+        values['Home of Record'] = home_of_record
 
         try:
-            values['Dependents'] = int(les_text[53][1])
+            dependents = int(les_text[53][1])
+            if not dependents or dependents not in range(0, 99):
+                raise ValueError()
         except Exception:
-            values['Dependents'] = 0
+            dependents = 0
+        values['Dependents'] = dependents
 
         try:
             status = les_text[24][1]
             if status == "S":
-                values['Federal Filing Status'] = "Single"
+                federal_filing_status = "Single"
             elif status == "M":
-                values['Federal Filing Status'] = "Married"
+                federal_filing_status = "Married"
             elif status == "H":
-                values['Federal Filing Status'] = "Head of Household"
+                federal_filing_status = "Head of Household"
             else:
-                values['Federal Filing Status'] = "Not Found"
+                raise ValueError()
         except Exception:
-            values['Federal Filing Status'] = "Not Found"
+            federal_filing_status = "Not Found"
+        values['Federal Filing Status'] = federal_filing_status
 
         try:
             status = les_text[42][1]
             if status == "S":
-                values['State Filing Status'] = "Single"
+                state_filing_status = "Single"
             elif status == "M":
-                values['State Filing Status'] = "Married"
+                state_filing_status = "Married"
             else:
-                values['State Filing Status'] = "Not Found"
+                raise ValueError()
         except Exception:
-            values['State Filing Status'] = "Not Found"
+            state_filing_status = "Not Found"
+        values['State Filing Status'] = state_filing_status
 
         try:
             sgli_coverage = ""
@@ -172,57 +177,30 @@ def add_variables(budget, month, les_text, initials):
                 values[header] = 0
 
     elif initials:
-        values['Year'] = initials['current_year']
-        months_in_service = initials['months_in_service']
-        values['Months in Service'] = months_in_service
+        values = initials
 
-        years = months_in_service // 12
-        months = months_in_service % 12
-        if years > 0 and months > 0:
-            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
-        elif years > 0:
-            values['Time in Service Long'] = f"{years} year{'s' if years != 1 else ''}"
-        else:
-            values['Time in Service Long'] = f"{months} month{'s' if months != 1 else ''}"
-
-        values['Grade'] = initials['grade']
-        zip_code = initials['zip_code']
-        values['Zip Code'] = zip_code
-        _, military_housing_area = validate_calculate_zip_mha(zip_code)
-        values['Military Housing Area'] = military_housing_area
-        values['Home of Record'] = initials['home_of_record']
-        values['Dependents'] = initials['dependents']
-        values['Federal Filing Status'] = initials['federal_filing_status']
-        values['State Filing Status'] = initials['state_filing_status']
-        values['SGLI Coverage'] = initials['sgli_coverage']
-        values['Combat Zone'] = initials['combat_zone']
-
-        tsp_rate_rows = [
-            "trad_tsp_base_rate",
-            "trad_tsp_specialty_rate",
-            "trad_tsp_incentive_rate",
-            "trad_tsp_bonus_rate",
-            "roth_tsp_base_rate",
-            "roth_tsp_specialty_rate",
-            "roth_tsp_incentive_rate",
-            "roth_tsp_bonus_rate",
-        ]
-        headers = [
-            "Trad TSP Base Rate",
-            "Trad TSP Specialty Rate",
-            "Trad TSP Incentive Rate",
-            "Trad TSP Bonus Rate",
-            "Roth TSP Base Rate",
-            "Roth TSP Specialty Rate",
-            "Roth TSP Incentive Rate",
-            "Roth TSP Bonus Rate",
-        ]
-        for key, header in zip(tsp_rate_rows, headers):
-            values[header] = initials[key]
-
-    # Now set all values in the budget
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
+
+
+    months_in_service = int(values['Months in Service'])
+    years = months_in_service // 12
+    months = months_in_service % 12
+    if years > 0 and months > 0:
+        tis_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
+    elif years > 0:
+        tis_long = f"{years} year{'s' if years != 1 else ''}"
+    else:
+        tis_long = f"{months} month{'s' if months != 1 else ''}"
+    add_mv_pair(budget, 'Time in Service Long', month, tis_long)
+
+    mha_code, mha_name = get_mha(values.get('Zip Code'))
+    add_mv_pair(budget, 'Military Housing Area', month, mha_code)
+    add_mv_pair(budget, 'MHA Long', month, mha_name)
+
+    longname, abbr = get_hor(values.get('Home of Record'))
+    add_mv_pair(budget, 'Home of Record', month, abbr)
+    add_mv_pair(budget, 'Home of Record Long', month, longname)
 
     return budget
 

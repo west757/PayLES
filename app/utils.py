@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import pandas as pd
 
 from app import flask_app
 
@@ -78,35 +79,43 @@ def add_row(budget, header, template=None, metadata=None):
 
 def add_mv_pair(budget, header, month, value):
     row = next((r for r in budget if r['header'] == header), None)
+    field = row['field']
+    if field == 'int':
+        value = int(value)
+    elif field == 'float':
+        value = float(value)
     row[month] = value
 
 
-def validate_calculate_zip_mha(zip_code):
+def get_mha(zip_code):
     MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
 
     if zip_code in ("00000", "", "Not Found"):
         return "Not Found", "Not Found"
 
     try:
-        zip_int = int(zip_code)
-        mha_search = MHA_ZIP_CODES[MHA_ZIP_CODES.isin([zip_int])].stack()
-
-        if not mha_search.empty:
-            mha_search_row = mha_search.index[0][0]
-            mha = str(MHA_ZIP_CODES.loc[mha_search_row, "mha"])
-            return str(zip_code), mha
-        else:
-            return "Not Found", "Not Found"
-        
+        for _, row in MHA_ZIP_CODES.iterrows():
+            for zip_val in row[2:]:
+                if zip_val and zip_val == zip_code:
+                    return row['mha'], row['mha_name']
+        return "Not Found", "Not Found"
     except Exception:
         return "Not Found", "Not Found"
     
 
-def validate_home_of_record(home_of_record):
-    abbrs = flask_app.config['HOME_OF_RECORDS']['abbr'].tolist()
-    if home_of_record in abbrs:
-        return home_of_record
-    return "Not Found"
+def get_hor(home_of_record):
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+
+    if not home_of_record or home_of_record == "Not Found":
+        return "Not Found", "Not Found"
+
+    home_of_record = str(home_of_record).strip()
+    if len(home_of_record) == 2:
+        row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
+        return home_of_record, row.iloc[0]['home_of_record']
+    else:
+        row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == home_of_record]
+        return row.iloc[0]['abbr'], home_of_record
 
 
 def get_months(budget):

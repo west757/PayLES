@@ -118,7 +118,7 @@ class Config:
 
     HOME_OF_RECORDS = pd.read_csv(CSV_FOLDER / "home_of_records.csv",
         dtype={
-            'home_of_record': str,
+            'longname': str,
             'abbr': str,
             'income': str,
             'retirement': str,
