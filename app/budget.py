@@ -1,4 +1,3 @@
-from calendar import month
 from datetime import datetime
 from flask import session
 import pandas as pd
@@ -187,17 +186,6 @@ def add_var_tsp(budget, month, les_text, initials):
 
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
-
-    months_in_service = int(values['Months in Service'])
-    years = months_in_service // 12
-    months = months_in_service % 12
-    if years > 0 and months > 0:
-        time_in_service_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
-    elif years > 0:
-        time_in_service_long = f"{years} year{'s' if years != 1 else ''}"
-    else:
-        time_in_service_long = f"{months} month{'s' if months != 1 else ''}"
-    add_mv_pair(budget, 'Time in Service Long', month, time_in_service_long)
 
     mha_code, mha_name = get_mha(values.get('Zip Code'))
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
@@ -435,19 +423,6 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
             row[working_month] = row[prev_month]
 
 
-
-        if row['header'] == "Months in Service":
-            years = row[working_month] // 12
-            months = row[working_month] % 12
-            if years > 0 and months > 0:
-                time_in_service_long = f"{years} year{'s' if years != 1 else ''} {months} month{'s' if months != 1 else ''}"
-            elif years > 0:
-                time_in_service_long = f"{years} year{'s' if years != 1 else ''}"
-            else:
-                time_in_service_long = f"{months} month{'s' if months != 1 else ''}"
-            time_in_service_long_row = next((r for r in budget if r['header'] == "Time in Service Long"), None)
-            time_in_service_long_row[working_month] = time_in_service_long
-
         if row['header'] == "Home of Record":
             longname, abbr = get_hor(row[working_month])
             home_of_record_long = next((r for r in budget if r['header'] == "Home of Record Long"), None)
@@ -540,50 +515,29 @@ def insert_row(budget, months, headers, row_data):
         sign = 1
 
     value = round(sign * float(row_data['value']), 2)
-    insert_idx = len(budget)
 
     if row_data['method'] == 'template':
-        if row_data['type'] == 'e':
-            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'e'], default=-1) + 1
-        elif row_data['type'] == 'd':
-            insert_idx = max([i for i, r in enumerate(budget) if r.get('type') == 'd'], default=-1) + 1
-        elif row_data['type'] == 'a':
-            a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
-            if a_indices:
-                insert_idx = max(a_indices) + 1
-            else:
-                d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
-                insert_idx = max(d_indices, default=-1) + 1
-
-        row = add_row(flask_app.config['PAY_TEMPLATE'], row_data['header'], months[0], 0.00)
-        for idx, m in enumerate(months[1:]):
+        row = add_row(budget, row_data['header'], flask_app.config['PAY_TEMPLATE'])
+        for idx, m in enumerate(months):
             row[m] = value
 
     elif row_data['method'] == 'custom':
-        c_indices = [i for i, r in enumerate(budget) if r.get('type') == 'c']
-        a_indices = [i for i, r in enumerate(budget) if r.get('type') == 'a']
-        d_indices = [i for i, r in enumerate(budget) if r.get('type') == 'd']
-        if c_indices:
-            insert_idx = max(c_indices) + 1
-        elif a_indices:
-            insert_idx = max(a_indices) + 1
-        elif d_indices:
-            insert_idx = max(d_indices) + 1
-
-        row = {'header': row_data['header']}
+        row_meta = {'header': row_data['header']}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
-                row['type'] = 'c'
+                row_meta['type'] = 'c'
             elif meta == 'sign':
-                row['sign'] = sign
+                row_meta['sign'] = sign
             elif meta == 'field':
-                row['field'] = 'float'
+                row_meta['field'] = 'float'
             elif meta == 'tax':
-                row['tax'] = row_data['tax']
+                row_meta['tax'] = row_data['tax']
             elif meta == 'editable':
-                row['editable'] = True
+                row_meta['editable'] = True
             elif meta == 'modal':
-                row['modal'] = ''
+                row_meta['modal'] = ''
+
+        row = add_row(budget, row_data['header'], metadata=row_meta)
 
         for idx, m in enumerate(months):
             row[m] = 0.00 if idx == 0 else value
@@ -596,20 +550,22 @@ def insert_row(budget, months, headers, row_data):
             })
 
     elif row_data['method'] == 'account':
-        row = {'header': row_data['header']}
+        row_meta = {'header': row_data['header']}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
-                row['type'] = 'z'
+                row_meta['type'] = 'z'
             elif meta == 'sign':
-                row['sign'] = 0
+                row_meta['sign'] = 0
             elif meta == 'field':
-                row['field'] = 'float'
+                row_meta['field'] = 'float'
             elif meta == 'tax':
-                row['tax'] = False
+                row_meta['tax'] = False
             elif meta == 'editable':
-                row['editable'] = True
+                row_meta['editable'] = True
             elif meta == 'modal':
-                row['modal'] = ''
+                row_meta['modal'] = ''
+
+        row = add_row(budget, row_data['header'], metadata=row_meta)
 
         percent = float(row_data['percent']) / 100
         interest = float(row_data['interest']) / 100
@@ -644,8 +600,6 @@ def insert_row(budget, months, headers, row_data):
                 'type': 'z',
                 'tooltip': 'Custom account row added by user',
             })
-
-    budget.insert(insert_idx, row)
 
     return budget, headers
 
