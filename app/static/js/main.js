@@ -68,16 +68,12 @@ document.addEventListener('mousemove', function(e) {
                 tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
             } 
             else if (row === 'Home of Record' && value) {
-                const record = window.CONFIG.HOME_OF_RECORDS.find(hor => hor.abbr === value);
-                if (record) {
-                    tooltip = record.home_of_record;
-                }
-            } 
+                const month = e.target.getAttribute('data-month');
+                tooltip = getBudgetValue('Home of Record Long', month);
+            }
             else if (row === 'Military Housing Area' && value) {
-                const record = window.CONFIG.MHA_ZIP_CODES.find(mhaObj => mhaObj.mha === value);
-                if (record) {
-                    tooltip = record.mha_name;
-                }
+                const month = e.target.getAttribute('data-month');
+                tooltip = getBudgetValue('MHA Long', month);
             }
 
             if (tooltip) showTooltip(e, tooltip);

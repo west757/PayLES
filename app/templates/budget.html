@@ -39,7 +39,7 @@
         </thead>
         <tbody>
             {% for row in budget %}
-                
+                {% if row.type != 'm' %}
 
                     {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
                     {% set next_row = budget[loop.index] if not loop.last else None %}
@@ -102,7 +102,7 @@
                             {% endif %}
                         {% endfor %}
                     </tr>
-                
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

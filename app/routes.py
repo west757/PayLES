@@ -245,8 +245,6 @@ def route_insert_row():
         'rows': request.form.get('rows', '').split(','),
     }
 
-    print(row_data)
-
     budget, headers = insert_row(budget, months, headers, row_data)
     budget = update_months(budget, months)
 
