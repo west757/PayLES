@@ -1,4 +1,3 @@
-from datetime import datetime
 from flask import request, render_template, session, jsonify
 from app import csrf
 
@@ -41,7 +40,6 @@ def index():
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
         'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].to_dict(orient='records'),
-        'MHA_ZIP_CODES': flask_app.config['MHA_ZIP_CODES'][['mha', 'mha_name']].to_dict(orient='records'),
         'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
         'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
@@ -85,8 +83,6 @@ def route_single_example():
         budget, init_month, headers = init_budget(les_text=les_text)
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
         recommendations = add_recommendations(budget, init_month)
-
-        
 
         budget = convert_numpy_types(budget)
         session['budget'] = budget

@@ -3,7 +3,7 @@ function buildInitialsInputs() {
     if (initialsYM && window.CONFIG && window.CONFIG.MONTHS_SHORT) {
         const now = new Date();
         const currentYear = now.getFullYear();
-        const currentMonthIdx = now.getMonth(); // 0-based
+        const currentMonthIdx = now.getMonth(); 
 
         // Year dropdown
         const selectYear = document.createElement('select');
@@ -43,7 +43,7 @@ function buildInitialsInputs() {
         input.type = 'text';
         input.id = 'input-int-initials-mis';
         input.className = 'input-short';
-        input.name = 'input-int-initials-mis';
+        input.name = 'Months in Service';
         input.maxLength = 3;
         input.value = 0;
         input.addEventListener('input', function(e) {
@@ -59,7 +59,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-grade';
         select.className = 'input-short';
-        select.name = 'input-select-initials-grade';
+        select.name = 'Grade';
         window.CONFIG.GRADES.forEach(grade => {
             const option = document.createElement('option');
             option.value = grade;
@@ -78,7 +78,7 @@ function buildInitialsInputs() {
         input.type = 'text';
         input.id = 'input-int-initials-deps';
         input.className = 'input-short';
-        input.name = 'input-int-initials-deps';
+        input.name = 'Dependents';
         input.maxLength = 1;
         input.placeholder = '0-9';
         input.value = 0;
@@ -95,7 +95,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-cz';
         select.className = 'input-short';
-        select.name = 'input-select-initials-cz';
+        select.name = 'Combat Zone';
         window.CONFIG.COMBAT_ZONES.forEach(zone => {
             const option = document.createElement('option');
             option.value = zone;
@@ -112,7 +112,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-hor';
         select.className = 'input-long';
-        select.name = 'input-select-initials-hor';
+        select.name = 'Home of Record';
 
         // Add the "Choose an option" first
         const defaultOption = document.createElement('option');
@@ -121,10 +121,10 @@ function buildInitialsInputs() {
         select.appendChild(defaultOption);
 
         // Add the rest from the home_of_record column
-        window.CONFIG.HOME_OF_RECORDS.forEach(hor => {
+        window.CONFIG.HOME_OF_RECORDS.forEach(record => {
             const option = document.createElement('option');
-            option.value = hor.home_of_record;
-            option.textContent = hor.home_of_record;
+            option.value = record.longname;
+            option.textContent = record.longname;
             select.appendChild(option);
         });
 
@@ -139,7 +139,7 @@ function buildInitialsInputs() {
         input.type = 'text';
         input.id = 'input-int-initials-zc';
         input.className = 'input-mid';
-        input.name = 'input-int-initials-zc';
+        input.name = 'Zip Code';
         input.maxLength = 5;
         input.placeholder = '12345';
         input.addEventListener('input', function(e) {
@@ -155,7 +155,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-ffs';
         select.className = 'input-mid';
-        select.name = 'input-select-initials-ffs';
+        select.name = 'Federal Filing Status';
         window.CONFIG.FEDERAL_FILING_STATUSES.forEach(status => {
             const option = document.createElement('option');
             option.value = status;
@@ -172,7 +172,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-sfs';
         select.className = 'input-mid';
-        select.name = 'input-select-initials-sfs';
+        select.name = 'State Filing Status';
         window.CONFIG.STATE_FILING_STATUSES.forEach(status => {
             const option = document.createElement('option');
             option.value = status;
@@ -189,7 +189,7 @@ function buildInitialsInputs() {
         const select = document.createElement('select');
         select.id = 'input-select-initials-sc';
         select.className = 'input-mid';
-        select.name = 'input-select-initials-sc';
+        select.name = 'SGLI Coverage';
         window.CONFIG.SGLI_COVERAGES.forEach(sgli => {
             const option = document.createElement('option');
             option.value = sgli;

@@ -79,6 +79,9 @@ def add_row(budget, header, template=None, metadata=None):
 
 def add_mv_pair(budget, header, month, value):
     row = next((r for r in budget if r['header'] == header), None)
+    if row is None:
+        return
+    
     field = row['field']
     if field == 'int':
         value = int(value)

@@ -1,5 +1,4 @@
 from datetime import datetime
-from flask import session
 import pandas as pd
 import re
 
@@ -182,6 +181,7 @@ def add_var_tsp(budget, month, les_text, initials):
             values[header] = rate
 
     elif initials:
+        print(initials)
         values = initials
 
     for header, value in values.items():
@@ -382,7 +382,7 @@ def update_months(budget, months, cell_header=None, cell_month=None, cell_value=
 
 
 def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
-    update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_trad_roth_tsp(budget, working_month)
     calculate_income(budget, working_month)
@@ -393,7 +393,7 @@ def build_month(budget, prev_month, working_month, cell_header=None, cell_month=
     return budget
 
 
-def update_variables(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
+def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
     for row in budget:
         if row.get('type') not in ('v', 't'):
             continue
@@ -422,14 +422,10 @@ def update_variables(budget, prev_month, working_month, cell_header, cell_month,
         elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
             row[working_month] = row[prev_month]
 
-
         if row['header'] == "Home of Record":
             longname, abbr = get_hor(row[working_month])
             home_of_record_long = next((r for r in budget if r['header'] == "Home of Record Long"), None)
             home_of_record_long[working_month] = longname
-
-
-
 
     # TSP specialty/incentive/bonus zeroing
     tsp_types = [
