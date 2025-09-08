@@ -43,10 +43,20 @@ function attachInjectModalListeners() {
         });
     });
 
-    // attach input restrictions and button listeners
-    el.customHeader.addEventListener('input', setInputRestriction('text', 20));
-    [el.templateValue, el.customValue].forEach(input => {
-        input.addEventListener('input', setInputRestriction('money'));
+    const injectInputs = [
+        { container: 'inject-custom-header', field: 'string', rowHeader: 'Custom Header' },
+        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' },
+        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' }
+    ];
+
+    injectInputs.forEach(item => {
+        const container = document.getElementById(item.container);
+        let inputWrapper = createStandardInput(item.rowHeader, item.field);
+        const input = inputWrapper.querySelector('input, select');
+        input.id = item.container + '-id';
+        input.name = item.rowHeader;
+        container.innerHTML = '';
+        container.appendChild(inputWrapper);
     });
 
     el.templateButton.addEventListener('click', function() {
@@ -149,11 +159,11 @@ function resetInjectModal() {
 
     el.templateSection.style.display = 'none';
     el.templateSelect.innerHTML = '';
-    el.templateValue.value = '';
+    //el.templateValue.value = '';
     el.customSection.style.display = 'none';
-    el.customHeader.value = '';
+    //el.customHeader.value = '';
+    //el.customValue.value = '';
     el.customTax.checked = false;
-    el.customValue.value = '';
 
     el.info.innerHTML = '';
 }
@@ -196,8 +206,8 @@ function getInjectModalElements() {
 
         customSection: document.getElementById('inject-custom'),
         customHeader: document.getElementById('inject-custom-header'),
-        customTax: document.getElementById('inject-custom-tax'),
         customValue: document.getElementById('inject-custom-value'),
+        customTax: document.getElementById('inject-custom-tax'),
         customButton: document.getElementById('inject-custom-button'),
 
         info: document.getElementById('inject-info')
