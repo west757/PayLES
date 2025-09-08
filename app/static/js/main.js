@@ -56,9 +56,9 @@ document.addEventListener('mousemove', function(e) {
         if (tooltipText) {
             showTooltip(e, tooltipText);
         } else {
-            // Dynamic tooltips for budget cells
             const row = e.target.getAttribute('data-row');
             const value = e.target.getAttribute('data-value');
+            const month = e.target.getAttribute('data-month');
             let tooltip = '';
 
             if (row === 'Months in Service' && value) {
@@ -68,11 +68,9 @@ document.addEventListener('mousemove', function(e) {
                 tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
             } 
             else if (row === 'Home of Record' && value) {
-                const month = e.target.getAttribute('data-month');
                 tooltip = getBudgetValue('Home of Record Long', month);
             }
             else if (row === 'Military Housing Area' && value) {
-                const month = e.target.getAttribute('data-month');
                 tooltip = getBudgetValue('MHA Long', month);
             }
 
