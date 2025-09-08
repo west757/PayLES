@@ -456,6 +456,14 @@ input[type=file] {
     font-weight: bold;
 }
 
+.input-adornment-left {
+    margin-right: 0.5em;
+}
+
+.input-adornment-right {
+    margin-left: 0.5em;
+}
+
 
 /* =========================
    home
@@ -586,8 +594,10 @@ input[type=file] {
     justify-content: center;
 }
 
-#input-select-initials-ym-month {
-    margin-left: 0.5rem;
+#initials-years-months {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
 }
 
 #button-single, #button-joint, #button-initials, #button-example {

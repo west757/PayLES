@@ -1,277 +1,36 @@
 function buildInitialsInputs() {
-    const initialsYM = document.getElementById('initials-ym');
-    if (initialsYM && window.CONFIG && window.CONFIG.MONTHS_SHORT) {
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonthIdx = now.getMonth(); 
-
-        // Year dropdown
-        const selectYear = document.createElement('select');
-        selectYear.id = 'input-select-initials-ym-year';
-        selectYear.className = 'input-short';
-        selectYear.name = 'input-select-initials-ym-year';
-        for (let y = window.CONFIG.OLDEST_YEAR; y <= currentYear; y++) {
-            const option = document.createElement('option');
-            option.value = y;
-            option.textContent = y;
-            if (y === currentYear) option.selected = true;
-            selectYear.appendChild(option);
-        }
-
-        // Month dropdown
-        const selectMonth = document.createElement('select');
-        selectMonth.id = 'input-select-initials-ym-month';
-        selectMonth.className = 'input-short';
-        selectMonth.name = 'input-select-initials-ym-month';
-        window.CONFIG.MONTHS_SHORT.forEach((m, idx) => {
-            const option = document.createElement('option');
-            option.value = m;
-            option.textContent = m;
-            if (idx === currentMonthIdx) option.selected = true;
-            selectMonth.appendChild(option);
-        });
-
-        initialsYM.innerHTML = '';
-        initialsYM.appendChild(selectYear);
-        initialsYM.appendChild(selectMonth);
-    }
-
-
-    const initialsMonthsInService = document.getElementById('initials-mis');
-    if (initialsMonthsInService) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'input-int-initials-mis';
-        input.className = 'input-short';
-        input.name = 'Months in Service';
-        input.maxLength = 3;
-        input.value = 0;
-        input.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
-        });
-        initialsMonthsInService.innerHTML = '';
-        initialsMonthsInService.appendChild(input);
-    }
-
-
-    const initialsGrade = document.getElementById('initials-grade');
-    if (initialsGrade && window.CONFIG && window.CONFIG.GRADES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-grade';
-        select.className = 'input-short';
-        select.name = 'Grade';
-        window.CONFIG.GRADES.forEach(grade => {
-            const option = document.createElement('option');
-            option.value = grade;
-            option.textContent = grade;
-            select.appendChild(option);
-        });
-        initialsGrade.innerHTML = '';
-        initialsGrade.appendChild(select);
-    }
-
-
-    // Dependents
-    const initialsDependents = document.getElementById('initials-deps');
-    if (initialsDependents) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'input-int-initials-deps';
-        input.className = 'input-short';
-        input.name = 'Dependents';
-        input.maxLength = 1;
-        input.placeholder = '0-9';
-        input.value = 0;
-        input.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
-        });
-        initialsDependents.innerHTML = '';
-        initialsDependents.appendChild(input);
-    }
-
-    // Combat Zone
-    const initialsCombatZone = document.getElementById('initials-cz');
-    if (initialsCombatZone && window.CONFIG && window.CONFIG.COMBAT_ZONES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-cz';
-        select.className = 'input-short';
-        select.name = 'Combat Zone';
-        window.CONFIG.COMBAT_ZONES.forEach(zone => {
-            const option = document.createElement('option');
-            option.value = zone;
-            option.textContent = zone;
-            select.appendChild(option);
-        });
-        initialsCombatZone.innerHTML = '';
-        initialsCombatZone.appendChild(select);
-    }
-
-    // Home of Record
-    const initialsHomeOfRecord = document.getElementById('initials-hor');
-    if (initialsHomeOfRecord && window.CONFIG && window.CONFIG.HOME_OF_RECORDS) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-hor';
-        select.className = 'input-long';
-        select.name = 'Home of Record';
-
-        // Add the "Choose an option" first
-        const defaultOption = document.createElement('option');
-        defaultOption.value = "Choose an option";
-        defaultOption.textContent = "Choose an option";
-        select.appendChild(defaultOption);
-
-        // Add the rest from the home_of_record column
-        window.CONFIG.HOME_OF_RECORDS.forEach(record => {
-            const option = document.createElement('option');
-            option.value = record.longname;
-            option.textContent = record.longname;
-            select.appendChild(option);
-        });
-
-        initialsHomeOfRecord.innerHTML = '';
-        initialsHomeOfRecord.appendChild(select);
-    }
-
-    // Zip Code
-    const initialsZipCode = document.getElementById('initials-zc');
-    if (initialsZipCode) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'input-int-initials-zc';
-        input.className = 'input-mid';
-        input.name = 'Zip Code';
-        input.maxLength = 5;
-        input.placeholder = '12345';
-        input.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
-        });
-        initialsZipCode.innerHTML = '';
-        initialsZipCode.appendChild(input);
-    }
-
-    // Federal Filing Status
-    const initialsFederalFilingStatus = document.getElementById('initials-ffs');
-    if (initialsFederalFilingStatus && window.CONFIG && window.CONFIG.FEDERAL_FILING_STATUSES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-ffs';
-        select.className = 'input-mid';
-        select.name = 'Federal Filing Status';
-        window.CONFIG.FEDERAL_FILING_STATUSES.forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            select.appendChild(option);
-        });
-        initialsFederalFilingStatus.innerHTML = '';
-        initialsFederalFilingStatus.appendChild(select);
-    }
-
-    // State Filing Status
-    const initialsStateFilingStatus = document.getElementById('initials-sfs');
-    if (initialsStateFilingStatus && window.CONFIG && window.CONFIG.STATE_FILING_STATUSES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-sfs';
-        select.className = 'input-mid';
-        select.name = 'State Filing Status';
-        window.CONFIG.STATE_FILING_STATUSES.forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            select.appendChild(option);
-        });
-        initialsStateFilingStatus.innerHTML = '';
-        initialsStateFilingStatus.appendChild(select);
-    }
-
-    // SGLI Coverage
-    const initialsSgliCoverage = document.getElementById('initials-sc');
-    if (initialsSgliCoverage && window.CONFIG && window.CONFIG.SGLI_COVERAGES) {
-        const select = document.createElement('select');
-        select.id = 'input-select-initials-sc';
-        select.className = 'input-mid';
-        select.name = 'SGLI Coverage';
-        window.CONFIG.SGLI_COVERAGES.forEach(sgli => {
-            const option = document.createElement('option');
-            option.value = sgli;
-            option.textContent = sgli;
-            select.appendChild(option);
-        });
-        initialsSgliCoverage.innerHTML = '';
-        initialsSgliCoverage.appendChild(select);
-    }
-
-
-
-    const tspInitials = [
-        'tradbase', 'tradspecialty', 'tradincentive', 'tradbonus',
-        'rothbase', 'rothspecialty', 'rothincentive', 'rothbonus'
+    const initials = [
+        { container: 'initials-years', fieldType: 'select', rowHeader: 'Year' },
+        { container: 'initials-months', fieldType: 'select', rowHeader: 'Months' },
+        { container: 'initials-months-in-service', fieldType: 'int', rowHeader: 'Months in Service' },
+        { container: 'initials-grade', fieldType: 'select', rowHeader: 'Grade' },
+        { container: 'initials-dependents', fieldType: 'int', rowHeader: 'Dependents' },
+        { container: 'initials-combat-zone', fieldType: 'select', rowHeader: 'Combat Zone' },
+        { container: 'initials-home-of-record', fieldType: 'select', rowHeader: 'Home of Record Long' },
+        { container: 'initials-zip-code', fieldType: 'int', rowHeader: 'Zip Code' },
+        { container: 'initials-federal-filing-status', fieldType: 'select', rowHeader: 'Federal Filing Status' },
+        { container: 'initials-state-filing-status', fieldType: 'select', rowHeader: 'State Filing Status' },
+        { container: 'initials-sgli-coverage', fieldType: 'select', rowHeader: 'SGLI Coverage' },
+        { container: 'initials-trad-tsp-base-rate', fieldType: 'int', rowHeader: 'Trad TSP Base Rate' },
+        { container: 'initials-trad-tsp-specialty-rate', fieldType: 'int', rowHeader: 'Trad TSP Specialty Rate' },
+        { container: 'initials-trad-tsp-incentive-rate', fieldType: 'int', rowHeader: 'Trad TSP Incentive Rate' },
+        { container: 'initials-trad-tsp-bonus-rate', fieldType: 'int', rowHeader: 'Trad TSP Bonus Rate' },
+        { container: 'initials-roth-tsp-base-rate', fieldType: 'int', rowHeader: 'Roth TSP Base Rate' },
+        { container: 'initials-roth-tsp-specialty-rate', fieldType: 'int', rowHeader: 'Roth TSP Specialty Rate' },
+        { container: 'initials-roth-tsp-incentive-rate', fieldType: 'int', rowHeader: 'Roth TSP Incentive Rate' },
+        { container: 'initials-roth-tsp-bonus-rate', fieldType: 'int', rowHeader: 'Roth TSP Bonus Rate' },
+        { container: 'initials-ytd-income', fieldType: 'float', rowHeader: 'YTD Income' },
+        { container: 'initials-ytd-expenses', fieldType: 'float', rowHeader: 'YTD Expenses' },
+        { container: 'initials-ytd-tsp-contribution', fieldType: 'float', rowHeader: 'YTD TSP Contribution' },
+        { container: 'initials-ytd-charity', fieldType: 'float', rowHeader: 'YTD Charity' }
     ];
 
-    tspInitials.forEach(id => {
-        const el = document.getElementById(`initials-${id}`);
-        if (el) {
-            // Create input
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `input-int-initials-${id}`;
-            input.className = 'input-short';
-            input.name = `input-int-initials-${id}`;
-            input.maxLength = 3;
-            input.placeholder = '0';
-            input.value = 0;
-            input.addEventListener('input', function(e) {
-                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
-            });
-
-            // Percent sign
-            const percentSpan = document.createElement('span');
-            percentSpan.textContent = ' %';
-            percentSpan.style.marginLeft = '0.5rem';
-
-            el.innerHTML = '';
-            el.appendChild(input);
-            el.appendChild(percentSpan);
-        }
+    initials.forEach(initial => {
+        const container = document.getElementById(initial.container);
+        let inputWrapper = createStandardInput(initial.fieldType, initial.rowHeader);
+        container.innerHTML = '';
+        container.appendChild(inputWrapper);
     });
-
-
-
-    const ytdInitials = [
-        'ytd-income', 'ytd-expenses', 'ytd-tsp-contribution', 'ytd-charity'
-    ];
-
-    ytdInitials.forEach(id => {
-        const el = document.getElementById(`initials-${id}`);
-        if (el) {
-            // Dollar sign
-            const dollarSpan = document.createElement('span');
-            dollarSpan.textContent = '$';
-            dollarSpan.style.marginRight = '0.5rem';
-
-            // Create input
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `input-float-initials-${id}`;
-            input.className = 'input-mid2';
-            input.name = `input-float-initials-${id}`;
-            input.maxLength = 7;
-            input.placeholder = '0.00';
-            input.value = '0.00';
-            input.addEventListener('input', function(e) {
-                // Allow only numbers and up to one decimal point, max 2 decimals
-                let val = e.target.value.replace(/[^0-9.]/g, '');
-                const parts = val.split('.');
-                if (parts.length > 2) val = parts[0] + '.' + parts[1];
-                if (parts[1]) val = parts[0] + '.' + parts[1].slice(0,2);
-                e.target.value = val.slice(0, 7);
-            });
-
-            el.innerHTML = '';
-            el.appendChild(dollarSpan);
-            el.appendChild(input);
-        }
-    });
-
 }
 
 
@@ -291,8 +50,6 @@ function attachHomeListeners() {
     });
 
     buildInitialsInputs();
-
-
 
     // After initialsYM and initialsMonthsInService are created
     const selectYear = document.getElementById('input-select-initials-ym-year');

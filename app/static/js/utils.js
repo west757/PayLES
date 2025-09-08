@@ -174,9 +174,169 @@ function disableTSPRateButtons() {
 }
 
 
+
+function createStandardInput(fieldType, rowHeader, value = '') {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'input-wrapper';
+
+    let input;
+    let adornment = null;
+
+    if (fieldType === 'select') {
+        input = document.createElement('select');
+        let options = [];
+
+        if (rowHeader === 'Year') {
+            const now = new Date();
+            const startYear = now.getFullYear();
+            const endYear = startYear - 50;
+            for (let y = startYear; y >= endYear; y--) {
+                options.push(y);
+            }
+            input.classList.add('input-short');
+        }
+
+        else if (rowHeader === 'Months') {
+            options = window.CONFIG.MONTHS_SHORT;
+            input.classList.add('input-short');
+        }
+
+        else if (rowHeader === 'Home of Record Long') {
+            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.longname);
+            input.classList.add('input-long');
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "Choose an option";
+            defaultOption.textContent = "Choose an option";
+            input.appendChild(defaultOption);
+        }
+
+        else if (rowHeader === 'Grade') {
+            options = window.CONFIG.GRADES;
+            input.classList.add('input-short');
+        }
+
+        else if (rowHeader === 'Home of Record') {
+            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.abbr);
+            input.classList.add('input-short');
+        }
+
+        else if (rowHeader === 'Federal Filing Status') {
+            options = window.CONFIG.FEDERAL_FILING_STATUSES;
+            input.classList.add('input-mid');
+        }
+
+        else if (rowHeader === 'State Filing Status') {
+            options = window.CONFIG.STATE_FILING_STATUSES;
+            input.classList.add('input-mid');
+        }
+
+        else if (rowHeader === 'SGLI Coverage') {
+            options = window.CONFIG.SGLI_COVERAGES;
+            input.classList.add('input-mid');
+        }
+
+        else if (rowHeader === 'Combat Zone') {
+            options = window.CONFIG.COMBAT_ZONES;
+            input.classList.add('input-short');
+        }
+
+        options.forEach(opt => {
+            let o = document.createElement('option');
+            o.value = opt;
+            o.textContent = opt;
+            if (opt === value) o.selected = true;
+            input.appendChild(o);
+        });
+    }
+
+    else if (fieldType === 'int') {
+        if (rowHeader === 'Zip Code') {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            input.classList.add('table-input', 'input-mid');
+            input.placeholder = '12345';
+            input.maxLength = 5;
+            input.addEventListener('input', setInputRestriction('int', 5));
+        }
+
+        else if (rowHeader === 'Dependents') {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            input.classList.add('table-input', 'input-short');
+            input.placeholder = '0-9';
+            input.maxLength = 1;
+            input.addEventListener('input', setInputRestriction('int', 1));
+        }
+
+        else if (rowHeader && rowHeader.toLowerCase().includes('tsp')) {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            input.classList.add('table-input', 'input-percent', 'input-short');
+            input.placeholder = '0-100';
+            input.maxLength = 3;
+            input.addEventListener('input', setInputRestriction('int', 3));
+            wrapper.appendChild(input);
+            adornment = document.createElement('span');
+            adornment.textContent = '%';
+            adornment.className = 'input-adornment input-adornment-right';
+            wrapper.appendChild(adornment);
+            return wrapper;
+        }
+
+        else {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            input.classList.add('table-input', 'input-int', 'input-short');
+            input.placeholder = '0';
+            input.maxLength = 3;
+            input.addEventListener('input', setInputRestriction('int', 3));
+        }
+    }
+
+    else if (fieldType === 'float') {
+        input = document.createElement('input');
+        input.type = 'text';
+
+        let isNegative = false;
+        let numValue = value;
+
+        if (value < 0) {
+            isNegative = true;
+            numValue = Math.abs(value);
+        }
+
+        input.value = numValue;
+        input.classList.add('table-input', 'input-float', 'input-mid');
+        input.placeholder = '0.00';
+        input.addEventListener('input', setInputRestriction('float', 7));
+
+        adornment = document.createElement('span');
+        adornment.textContent = isNegative ? '-$' : '$';
+        adornment.className = 'input-adornment input-adornment-left';
+        wrapper.appendChild(adornment);
+    }
+
+    else if (fieldType === 'string') {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.value = value;
+        input.classList.add('table-input', 'input-text');
+        input.addEventListener('input', setInputRestriction('text', 20));
+    }
+
+    if (input) wrapper.appendChild(input);
+    return wrapper;
+}
+
+
+
 function setInputRestriction(fieldType, maxLength = null) {
-    // input restrictions for money inputs
-    if (fieldType === 'money') {
+    // input restrictions for float inputs
+    if (fieldType === 'float') {
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
             let parts = val.split('.');
@@ -202,8 +362,8 @@ function setInputRestriction(fieldType, maxLength = null) {
         };
     }
 
-    // input restrictions for number inputs
-    if (fieldType === 'number') {
+    // input restrictions for int inputs
+    if (fieldType === 'int') {
         return function(e) {
             let val = e.target.value.replace(/\D/g, '');
             if (maxLength && val.length > maxLength) {
