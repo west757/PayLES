@@ -1,33 +1,36 @@
 function buildInitialsInputs() {
     const initials = [
-        { container: 'initials-years', fieldType: 'select', rowHeader: 'Year' },
-        { container: 'initials-months', fieldType: 'select', rowHeader: 'Months' },
-        { container: 'initials-months-in-service', fieldType: 'int', rowHeader: 'Months in Service' },
-        { container: 'initials-grade', fieldType: 'select', rowHeader: 'Grade' },
-        { container: 'initials-dependents', fieldType: 'int', rowHeader: 'Dependents' },
-        { container: 'initials-combat-zone', fieldType: 'select', rowHeader: 'Combat Zone' },
-        { container: 'initials-home-of-record', fieldType: 'select', rowHeader: 'Home of Record Long' },
-        { container: 'initials-zip-code', fieldType: 'int', rowHeader: 'Zip Code' },
-        { container: 'initials-federal-filing-status', fieldType: 'select', rowHeader: 'Federal Filing Status' },
-        { container: 'initials-state-filing-status', fieldType: 'select', rowHeader: 'State Filing Status' },
-        { container: 'initials-sgli-coverage', fieldType: 'select', rowHeader: 'SGLI Coverage' },
-        { container: 'initials-trad-tsp-base-rate', fieldType: 'int', rowHeader: 'Trad TSP Base Rate' },
-        { container: 'initials-trad-tsp-specialty-rate', fieldType: 'int', rowHeader: 'Trad TSP Specialty Rate' },
-        { container: 'initials-trad-tsp-incentive-rate', fieldType: 'int', rowHeader: 'Trad TSP Incentive Rate' },
-        { container: 'initials-trad-tsp-bonus-rate', fieldType: 'int', rowHeader: 'Trad TSP Bonus Rate' },
-        { container: 'initials-roth-tsp-base-rate', fieldType: 'int', rowHeader: 'Roth TSP Base Rate' },
-        { container: 'initials-roth-tsp-specialty-rate', fieldType: 'int', rowHeader: 'Roth TSP Specialty Rate' },
-        { container: 'initials-roth-tsp-incentive-rate', fieldType: 'int', rowHeader: 'Roth TSP Incentive Rate' },
-        { container: 'initials-roth-tsp-bonus-rate', fieldType: 'int', rowHeader: 'Roth TSP Bonus Rate' },
-        { container: 'initials-ytd-income', fieldType: 'float', rowHeader: 'YTD Income' },
-        { container: 'initials-ytd-expenses', fieldType: 'float', rowHeader: 'YTD Expenses' },
-        { container: 'initials-ytd-tsp-contribution', fieldType: 'float', rowHeader: 'YTD TSP Contribution' },
-        { container: 'initials-ytd-charity', fieldType: 'float', rowHeader: 'YTD Charity' }
+        { container: 'initials-years', field: 'select', rowHeader: 'Year' },
+        { container: 'initials-months', field: 'select', rowHeader: 'Months' },
+        { container: 'initials-months-in-service', field: 'int', rowHeader: 'Months in Service' },
+        { container: 'initials-grade', field: 'select', rowHeader: 'Grade' },
+        { container: 'initials-dependents', field: 'int', rowHeader: 'Dependents' },
+        { container: 'initials-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
+        { container: 'initials-home-of-record', field: 'select', rowHeader: 'Home of Record Long' },
+        { container: 'initials-zip-code', field: 'int', rowHeader: 'Zip Code' },
+        { container: 'initials-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
+        { container: 'initials-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
+        { container: 'initials-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
+        { container: 'initials-trad-tsp-base-rate', field: 'int', rowHeader: 'Trad TSP Base Rate' },
+        { container: 'initials-trad-tsp-specialty-rate', field: 'int', rowHeader: 'Trad TSP Specialty Rate' },
+        { container: 'initials-trad-tsp-incentive-rate', field: 'int', rowHeader: 'Trad TSP Incentive Rate' },
+        { container: 'initials-trad-tsp-bonus-rate', field: 'int', rowHeader: 'Trad TSP Bonus Rate' },
+        { container: 'initials-roth-tsp-base-rate', field: 'int', rowHeader: 'Roth TSP Base Rate' },
+        { container: 'initials-roth-tsp-specialty-rate', field: 'int', rowHeader: 'Roth TSP Specialty Rate' },
+        { container: 'initials-roth-tsp-incentive-rate', field: 'int', rowHeader: 'Roth TSP Incentive Rate' },
+        { container: 'initials-roth-tsp-bonus-rate', field: 'int', rowHeader: 'Roth TSP Bonus Rate' },
+        { container: 'initials-ytd-income', field: 'float', rowHeader: 'YTD Income' },
+        { container: 'initials-ytd-expenses', field: 'float', rowHeader: 'YTD Expenses' },
+        { container: 'initials-ytd-tsp-contribution', field: 'float', rowHeader: 'YTD TSP Contribution' },
+        { container: 'initials-ytd-charity', field: 'float', rowHeader: 'YTD Charity' }
     ];
 
     initials.forEach(initial => {
         const container = document.getElementById(initial.container);
-        let inputWrapper = createStandardInput(initial.fieldType, initial.rowHeader);
+        let inputWrapper = createStandardInput(initial.rowHeader, initial.field);
+        const input = inputWrapper.querySelector('input, select');
+        input.id = initial.container + '-id';
+        input.name = initial.rowHeader;
         container.innerHTML = '';
         container.appendChild(inputWrapper);
     });
@@ -52,9 +55,9 @@ function attachHomeListeners() {
     buildInitialsInputs();
 
     // After initialsYM and initialsMonthsInService are created
-    const selectYear = document.getElementById('input-select-initials-ym-year');
-    const selectMonth = document.getElementById('input-select-initials-ym-month');
-    const inputMIS = document.getElementById('input-int-initials-mis');
+    const selectYear = document.getElementById('initials-years-id');
+    const selectMonth = document.getElementById('initials-months-id');
+    const inputMIS = document.getElementById('initials-months-in-service-id');
 
     function calculateMonthsInService(year, monthShort) {
         const now = new Date();
@@ -167,9 +170,9 @@ function submitInitials(e) {
 
 
 function validateinitialsBudgetForm() {
-    const inputIntInitialsZC = document.getElementById('input-int-initials-zc');
-    const inputIntInitialsDeps = document.getElementById('input-int-initials-deps');
-    const inputSelectInitialsHor = document.getElementById('input-select-initials-hor');
+    const inputIntInitialsZC = document.getElementById('initials-zip-code-id');
+    const inputIntInitialsDeps = document.getElementById('initials-dependents-id');
+    const inputSelectInitialsHor = document.getElementById('initials-home-of-record-id');
 
     if (!inputIntInitialsZC.value.match(/^\d{5}$/)) {
         showToast('Zip code must be exactly 5 digits.');

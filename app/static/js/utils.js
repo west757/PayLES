@@ -175,14 +175,14 @@ function disableTSPRateButtons() {
 
 
 
-function createStandardInput(fieldType, rowHeader, value = '') {
+function createStandardInput(rowHeader, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
 
     let input;
     let adornment = null;
 
-    if (fieldType === 'select') {
+    if (field === 'select') {
         input = document.createElement('select');
         let options = [];
 
@@ -249,7 +249,7 @@ function createStandardInput(fieldType, rowHeader, value = '') {
         });
     }
 
-    else if (fieldType === 'int') {
+    else if (field === 'int') {
         if (rowHeader === 'Zip Code') {
             input = document.createElement('input');
             input.type = 'text';
@@ -297,7 +297,7 @@ function createStandardInput(fieldType, rowHeader, value = '') {
         }
     }
 
-    else if (fieldType === 'float') {
+    else if (field === 'float') {
         input = document.createElement('input');
         input.type = 'text';
 
@@ -320,7 +320,7 @@ function createStandardInput(fieldType, rowHeader, value = '') {
         wrapper.appendChild(adornment);
     }
 
-    else if (fieldType === 'string') {
+    else if (field === 'string') {
         input = document.createElement('input');
         input.type = 'text';
         input.value = value;
@@ -334,9 +334,9 @@ function createStandardInput(fieldType, rowHeader, value = '') {
 
 
 
-function setInputRestriction(fieldType, maxLength = null) {
+function setInputRestriction(field, maxLength = null) {
     // input restrictions for float inputs
-    if (fieldType === 'float') {
+    if (field === 'float') {
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
             let parts = val.split('.');
@@ -363,7 +363,7 @@ function setInputRestriction(fieldType, maxLength = null) {
     }
 
     // input restrictions for int inputs
-    if (fieldType === 'int') {
+    if (field === 'int') {
         return function(e) {
             let val = e.target.value.replace(/\D/g, '');
             if (maxLength && val.length > maxLength) {
@@ -374,7 +374,7 @@ function setInputRestriction(fieldType, maxLength = null) {
     }
 
     // input restrictions for text inputs
-    if (fieldType === 'text') {
+    if (field === 'text') {
         return function(e) {
             let val = e.target.value.replace(/[^A-Za-z0-9_\- ]/g, '');
             if (maxLength && val.length > maxLength) {

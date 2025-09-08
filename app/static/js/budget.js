@@ -3,16 +3,16 @@ let isEditing = false;
 let currentEdit = null;
 
 
-function enterEditMode(cellButton, rowHeader, month, value, fieldType) {
+function enterEditMode(cellButton, rowHeader, month, value, field) {
     if (isEditing) return;
 
     isEditing = true;
-    currentEdit = {cellButton, rowHeader, month, value, fieldType};
+    currentEdit = {cellButton, rowHeader, month, value, field};
 
     disableInputs([]);
 
     // Use standardized input creation
-    let inputWrapper = createStandardInput(fieldType, rowHeader, value);
+    let inputWrapper = createStandardInput(field, rowHeader, value);
 
     // Find the actual input/select inside the wrapper for enabling/disabling
     let input = inputWrapper.querySelector('input, select') || inputWrapper;
@@ -64,18 +64,18 @@ function enterEditMode(cellButton, rowHeader, month, value, fieldType) {
 
 
 function updateBudget(repeat) {
-    let {rowHeader, month, fieldType} = currentEdit;
+    let {rowHeader, month, field} = currentEdit;
 
     let input = document.querySelector('.table-input, select');
     let value = input.value;
 
-    if (fieldType === 'int') {
+    if (field === 'int') {
         value = parseInt(value, 10);
-    } else if (fieldType === 'float') {
+    } else if (field === 'float') {
         value = parseFloat(value);
     }
 
-    if (!validateInput(fieldType, rowHeader, value, repeat)) return;
+    if (!validateInput(field, rowHeader, value, repeat)) return;
 
     exitEditMode();
 
@@ -92,13 +92,13 @@ function updateBudget(repeat) {
 }
 
 
-function validateInput(fieldType, rowHeader, value, repeat = false) {
+function validateInput(field, rowHeader, value, repeat = false) {
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
         return false;
     }
 
-    if (fieldType === 'int') {
+    if (field === 'int') {
         let num = parseInt(value, 10);
         if (isNaN(num)) {
             showToast('Value must be a number.');
@@ -114,7 +114,7 @@ function validateInput(fieldType, rowHeader, value, repeat = false) {
         }
     }
 
-    if (fieldType === 'float') {
+    if (field === 'float') {
         if (!/^\d{0,4}(\.\d{0,2})?$/.test(value)) {
             showToast('Value must be a decimal with up to 4 digits before and 2 after the decimal.');
             return false;
