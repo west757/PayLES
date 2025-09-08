@@ -34,7 +34,6 @@ def index():
 
     config_js = {
         'MAX_ROWS': flask_app.config['MAX_ROWS'],
-        'OLDEST_YEAR': flask_app.config['OLDEST_YEAR'],
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],

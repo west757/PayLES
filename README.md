@@ -37,7 +37,7 @@ long-term:
 - add charity to custom row
 - joint spouse with two LES's
 - simplify capturing sgli rate and remarks
-- create unit tests
+- create unit tests 
 - check mobile use
 - minify style.css and script.js when pushed into a production environment
 - normalize css: https://necolas.github.io/normalize.css/

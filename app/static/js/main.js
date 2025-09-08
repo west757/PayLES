@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const configData = JSON.parse(document.getElementById('config-data').textContent);
         window.CONFIG = Object.assign(window.CONFIG || {}, configData);
 
-        attachHomeListeners();
         attachDragAndDropListeners();
+        attachHomeListeners();
     }
 });
 
