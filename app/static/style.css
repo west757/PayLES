@@ -391,8 +391,6 @@ select {
     -webkit-padding-start: 0rem;
 }
 
-
-
 select::-webkit-scrollbar {
     width: 0.5rem;
     background: transparent;
@@ -406,7 +404,6 @@ select::-webkit-scrollbar-track {
     background: transparent;
 }
 
-/* Hide scrollbar arrows (buttons) */
 select::-webkit-scrollbar-button {
     display: none;
     height: 0;
@@ -676,8 +673,8 @@ hr {
 }
 
 #budget-container::-webkit-scrollbar {
-    height: 0.25rem;
-    width: 0.25rem;
+    height: 0.5rem;
+    width: 0.5rem;
 }
 
 #budget-container::-webkit-scrollbar-track {
