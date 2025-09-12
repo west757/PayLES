@@ -174,7 +174,6 @@ function disableTSPRateButtons() {
 }
 
 
-
 function createStandardInput(rowHeader, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
@@ -275,9 +274,58 @@ function createStandardInput(rowHeader, field, value = '') {
             input.type = 'text';
             input.value = value;
             input.classList.add('table-input', 'input-percent', 'input-short');
-            input.placeholder = '0-100';
-            input.maxLength = 3;
-            input.addEventListener('input', setInputRestriction('int', 3));
+            
+            // Determine max value and maxLength
+            let maxVal = 100;
+            let maxLength = 3;
+            if (rowHeader.toLowerCase().includes('base')) {
+                if (rowHeader.toLowerCase().includes('trad')) {
+                    maxVal = window.CONFIG.TRAD_TSP_RATE_MAX;
+                } else if (rowHeader.toLowerCase().includes('roth')) {
+                    maxVal = window.CONFIG.ROTH_TSP_RATE_MAX;
+                }
+                maxLength = 2;
+            }
+            input.placeholder = '0-' + maxVal;
+            input.maxLength = maxLength;
+
+            // Add beforeinput restriction for TSP fields
+            input.addEventListener('beforeinput', function(e) {
+                if (e.inputType === 'insertText') {
+                    if (!/^[0-9]$/.test(e.data)) {
+                        e.preventDefault();
+                        return;
+                    }
+                    // Simulate the value after input
+                    let newValue = input.value;
+                    const start = input.selectionStart;
+                    const end = input.selectionEnd;
+                    newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
+
+                    // Prevent exceeding maxLength
+                    if (newValue.length > maxLength) {
+                        e.preventDefault();
+                        return;
+                    }
+                    // Prevent exceeding maxVal
+                    if (newValue && parseInt(newValue, 10) > maxVal) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            });
+
+            input.addEventListener('input', function(e) {
+                let val = e.target.value.replace(/\D/g, '');
+                if (maxLength && val.length > maxLength) {
+                    val = val.slice(0, maxLength);
+                }
+                if (val && parseInt(val, 10) > maxVal) {
+                    val = maxVal.toString();
+                }
+                e.target.value = val;
+            });
+
             wrapper.appendChild(input);
             adornment = document.createElement('span');
             adornment.textContent = '%';
