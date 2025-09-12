@@ -12,7 +12,7 @@ function enterEditMode(cellButton, rowHeader, month, value, field) {
     disableInputs([]);
 
     // Use standardized input creation
-    let inputWrapper = createStandardInput(field, rowHeader, value);
+    let inputWrapper = createStandardInput(rowHeader, field, value);
 
     // Find the actual input/select inside the wrapper for enabling/disabling
     let input = inputWrapper.querySelector('input, select') || inputWrapper;

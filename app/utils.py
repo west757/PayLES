@@ -171,7 +171,7 @@ def add_recommendations(budget, month):
             'It is recommended to reduce your TSP contribution percentages to ensure you do not invest over this limit to avoid penalties.</div>'
         )
 
-    #contributing to TSP while deployed
+    # contributing to TSP while deployed
 
     # type of bank
 
