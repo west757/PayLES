@@ -334,6 +334,50 @@ function createStandardInput(rowHeader, field, value = '') {
             return wrapper;
         }
 
+        else if (rowHeader === 'Months in Service') {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            input.classList.add('table-input', 'input-short');
+            input.placeholder = '0';
+            input.maxLength = 3;
+
+            // Prevent non-numeric and >600 on beforeinput
+            input.addEventListener('beforeinput', function(e) {
+                if (e.inputType === 'insertText') {
+                    if (!/^[0-9]$/.test(e.data)) {
+                        e.preventDefault();
+                        return;
+                    }
+                    let newValue = input.value;
+                    const start = input.selectionStart;
+                    const end = input.selectionEnd;
+                    newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
+
+                    if (newValue.length > 3) {
+                        e.preventDefault();
+                        return;
+                    }
+                    if (newValue && parseInt(newValue, 10) > 600) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            });
+
+            // Enforce max value and max length on input
+            input.addEventListener('input', function(e) {
+                let val = e.target.value.replace(/\D/g, '');
+                if (val.length > 3) {
+                    val = val.slice(0, 3);
+                }
+                if (val && parseInt(val, 10) > 600) {
+                    val = '600';
+                }
+                e.target.value = val;
+            });
+        }
+
         else {
             input = document.createElement('input');
             input.type = 'text';
