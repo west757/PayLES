@@ -360,7 +360,20 @@ function createStandardInput(rowHeader, field, value = '') {
         input.value = numValue;
         input.classList.add('table-input', 'input-float', 'input-mid');
         input.placeholder = '0.00';
-        input.addEventListener('input', setInputRestriction('float', 7));
+
+        // Determine max digits before decimal for YTD rows
+        let digitsBeforeDecimal = 4; // default: 4 before decimal, 1 for '.', 2 after = 7 total
+        const ytdRows = [
+            'YTD Income',
+            'YTD Expenses',
+            'YTD TSP Contribution',
+            'YTD Charity'
+        ];
+        if (ytdRows.includes(rowHeader)) {
+            digitsBeforeDecimal = 6; // 6 before decimal, 1 for '.', 2 after = 9 total
+        }
+
+        input.addEventListener('input', setInputRestriction('float', digitsBeforeDecimal));
 
         adornment = document.createElement('span');
         adornment.textContent = isNegative ? '-$' : '$';
@@ -388,23 +401,25 @@ function setInputRestriction(field, maxLength = null) {
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
             let parts = val.split('.');
+            // Only allow one decimal point
             if (parts.length > 2) {
                 val = parts[0] + '.' + parts.slice(1).join('');
+                parts = val.split('.');
             }
-            if (parts[0].length > 4) {
-                parts[0] = parts[0].slice(0, 4);
+            // Restrict digits before decimal
+            if (maxLength && parts[0].length > maxLength) {
+                parts[0] = parts[0].slice(0, maxLength);
             }
+            // Restrict to 2 digits after decimal
             if (parts.length > 1 && parts[1].length > 2) {
                 parts[1] = parts[1].slice(0, 2);
             }
             val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
+            // Prevent leading zeros unless immediately followed by a decimal
             if (val.startsWith('00')) {
                 val = val.replace(/^0+/, '0');
             } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {
                 val = val.replace(/^0+/, '');
-            }
-            if (val.length > 7) {
-                val = val.slice(0, 7);
             }
             e.target.value = val;
         };

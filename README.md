@@ -12,10 +12,7 @@ short-term:
 - research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
-- rename injects, custom, accounts
-- ytd inputs up to 99,999.99
-- validate home inputs work
-- validate inject inputs
+- styling of budget scroll bars
 
 mid-term:
 - get combat zone from les

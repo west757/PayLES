@@ -384,26 +384,53 @@ input[type="text"], select {
 
 select {
     text-align: left;
+    direction: ltr;
 }
+
+select {
+    -webkit-padding-start: 0rem;
+}
+
+
+
+select::-webkit-scrollbar {
+    width: 0.5rem;
+    background: transparent;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: var(--secondary_dark_accent_color);
+}
+
+select::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Hide scrollbar arrows (buttons) */
+select::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+}
+
 
 .input-long {
     width: 12rem;
 }
 
 .input-mid {
-    width: 5.5rem;
+    width: 5.75rem;
 }
 
 .input-mid2 {
-    width: 4.25rem;
+    width: 4.5rem;
 }
 
 .input-short {
-    width: 3.5rem;
+    width: 3.75rem;
 }
 
 #months-num-dropdown {
-    width: 2.5rem;
+    width: 2.75rem;
 }
 
 
