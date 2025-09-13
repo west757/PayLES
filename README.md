@@ -16,6 +16,7 @@ short-term:
 - tsp calculator for reaching certain tsp amount and providing rates
 - keep table in area where change occurs and not update scroll to top of page
 - take state income tax into account for deployments
+- still have taxable income if custom when in combat zone
 
 mid-term:
 - get combat zone from les

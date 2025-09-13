@@ -1,7 +1,4 @@
 from app import flask_app
-from app.utils import (
-    add_row,
-)
 
 
 # =========================
@@ -154,7 +151,7 @@ def calculate_income(budget, working_month):
     for row in budget:
         if row.get('sign') == 1 and working_month in row:
             value = row[working_month]
-            tax = row.get('tax', False)
+            tax = row.get('tax')
 
             if combat_zone == "Yes":
                 nontaxable += value
@@ -164,9 +161,9 @@ def calculate_income(budget, working_month):
                 else:
                     nontaxable += value
 
-    trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
-    roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
-    taxable += (trad_tsp_row[working_month] + roth_tsp_row[working_month])
+    #trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
+    #roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
+    #taxable += (trad_tsp_row[working_month] + roth_tsp_row[working_month])
 
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
