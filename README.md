@@ -13,6 +13,9 @@ short-term:
 - update other recommendations
 - remove old LES's from GitHub
 - styling of budget scroll bars
+- tsp calculator for reaching certain tsp amount and providing rates
+- keep table in area where change occurs and not update scroll to top of page
+- take state income tax into account for deployments
 
 mid-term:
 - get combat zone from les
@@ -22,8 +25,10 @@ mid-term:
 - add comments to code
 - alphabetize resources and add stars for top ones
 - different browser checks
-- custom scroll bars
 - instructions modal
+- branch of service variable?
+- make months in service editable?
+- drills variable?
 
 long-term:
 - create leave calculator
@@ -50,7 +55,7 @@ long-term:
 - JSON export
 - charts and reports
 - export entire budget (all metadata)
-
+- merch (patch)
 
 
 3. Security Headers
@@ -64,6 +69,5 @@ Strict-Transport-Security: enforces HTTPS.
 You can set these headers in Flask using an after_request handler.
 Why it matters:
 Helps prevent XSS, clickjacking, and other browser-based attacks.
-
 
 -->

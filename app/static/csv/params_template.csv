@@ -32,3 +32,8 @@ YTD Charity,y,0,float,False,False,none,Total charitable contributions from the b
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
 MHA Long,m,0,none,False,False,none,none
 Home of Record Long,m,0,none,False,False,none,none
+TSP Matching,m,0,none,False,False,none,none
+YTD Trad TSP,m,0,none,False,False,none,none
+YTD Trad TSP Exempt,m,0,none,False,False,none,none
+YTD Roth TSP,m,0,none,False,False,none,none
+YTD TSP Matching,m,0,none,False,False,none,none

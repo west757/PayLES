@@ -56,7 +56,7 @@ def init_budget(les_text=None, initials=None):
         calculate_income(budget, init_month)
     elif initials:
         add_ent_rows(PAY_TEMPLATE, budget, init_month)
-        calculate_trad_roth_tsp(budget, init_month)
+        calculate_trad_roth_tsp(budget, init_month, init_month)
         calculate_income(budget, init_month)
         add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
     calculate_tax_exp_net(budget, init_month)
@@ -179,6 +179,14 @@ def add_var_tsp(budget, month, les_text, initials):
             except Exception:
                 rate = 0
             values[header] = rate
+
+        try:
+            tsp_matching = int(les_text[85][1]) + int(les_text[86][1])
+            if not tsp_matching:
+                raise ValueError()
+        except Exception:
+            tsp_matching = 0
+        values['TSP Matching'] = tsp_matching
 
     elif initials:
         print(initials)
@@ -341,6 +349,41 @@ def add_ytd_rows(budget, month, les_text):
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
     values['YTD Net Pay'] = ytd_net_pay
 
+
+
+    try:
+        ytd_trad_tsp = float(les_text[79][3])
+        if not ytd_trad_tsp or ytd_trad_tsp < 0:
+            raise ValueError()
+    except Exception:
+        ytd_trad_tsp = 0.00
+    values['YTD Trad TSP'] = ytd_trad_tsp
+
+    try:
+        ytd_trad_tsp_exempt = float(les_text[80][3])
+        if not ytd_trad_tsp_exempt or ytd_trad_tsp_exempt < 0:
+            raise ValueError()
+    except Exception:
+        ytd_trad_tsp_exempt = 0.00
+    values['YTD Trad TSP Exempt'] = ytd_trad_tsp_exempt
+
+    try:
+        ytd_roth_tsp = float(les_text[81][2])
+        if not ytd_roth_tsp or ytd_roth_tsp < 0:
+            raise ValueError()
+    except Exception:
+        ytd_roth_tsp = 0.00
+    values['YTD Roth TSP'] = ytd_roth_tsp
+
+    try:
+        ytd_tsp_matching = float(les_text[83][3])
+        if not ytd_tsp_matching or ytd_tsp_matching < 0:
+            raise ValueError()
+    except Exception:
+        ytd_tsp_matching = 0.00
+    values['YTD TSP Matching'] = ytd_tsp_matching
+
+
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
 
@@ -384,7 +427,7 @@ def update_months(budget, months, cell_header=None, cell_month=None, cell_value=
 def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
     update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    calculate_trad_roth_tsp(budget, working_month)
+    calculate_trad_roth_tsp(budget, prev_month, working_month)
     calculate_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_tax_exp_net(budget, working_month)

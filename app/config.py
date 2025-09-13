@@ -37,6 +37,7 @@ class Config:
     TRAD_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
     TSP_CONTRIBUTION_LIMIT = 23500.00
+    TSP_ANNUAL_LIMIT = 70000.00
     BAS_AMOUNT = [465.77, 320.78]
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
