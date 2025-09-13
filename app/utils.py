@@ -171,9 +171,15 @@ def add_recommendations(budget, month):
             'It is recommended to reduce your TSP contribution percentages to ensure you do not invest over this limit to avoid penalties.</div>'
         )
 
+
+    # reached TSP annual limit
+
+
     # contributing to TSP while deployed
 
     # type of bank
+
+    # negative net pay
 
     # state income tax recommendation
     home_of_record = next((row[month] for row in budget if row.get('header', '') == 'Home of Record'), '')
