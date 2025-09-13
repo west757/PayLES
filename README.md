@@ -9,14 +9,11 @@ run: python -m app.main
 short-term:
 - add accounts (tsp, bank, debt, savings, emergency fund)
 - update max tsp percentage recommendation
-- research and set tsp contributions
 - update other recommendations
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - keep table in area where change occurs and not update scroll to top of page
-- take state income tax into account for deployments
-- still have taxable income if custom when in combat zone
 
 mid-term:
 - get combat zone from les

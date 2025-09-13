@@ -167,10 +167,6 @@ def calculate_income(budget, working_month):
                     else:
                         nontaxable += value
 
-    #trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
-    #roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
-    #taxable += (trad_tsp_row[working_month] + roth_tsp_row[working_month])
-
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
     income = round(taxable + nontaxable, 2)
@@ -415,15 +411,50 @@ def calculate_sgli(budget, month):
 
 def calculate_state_taxes(budget, month):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
     home_of_record_row = next((row for row in budget if row['header'] == "Home of Record"), None)
     filing_status_row = next((row for row in budget if row['header'] == "State Filing Status"), None)
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
+    mha_row = next((row for row in budget if row['header'] == "Military Housing Area"), None)
 
-    home_of_record = home_of_record_row.get(month) if home_of_record_row else "Not Found"
-    filing_status = filing_status_row.get(month) if filing_status_row else "Single"
-    taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
+    home_of_record = home_of_record_row.get(month)
+    filing_status = filing_status_row.get(month)
+    taxable_income = taxable_income_row.get(month, 0.00)
     taxable_income = taxable_income * 12
     tax = 0.00
+
+    # Get income_taxed policy for home of record
+    hor_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
+    income_taxed = hor_row['income_taxed'].values[0].lower() if not hor_row.empty else "full"
+
+    # Determine if member is living inside or outside their home state
+    mha_code = mha_row.get(month)
+    mha_state = mha_code[:2] if mha_code and len(mha_code) >= 2 else ""
+    living_in_state = (mha_state == home_of_record)
+
+    # Calculate taxable base according to policy
+    if income_taxed == "none":
+        taxable_base = 0.0
+    elif income_taxed == "exempt":
+        # Only custom income rows (type 'c', sign 1)
+        taxable_base = sum(
+            row.get(month, 0.0)
+            for row in budget
+            if row.get('type') == 'c' and row.get('sign') == 1 and isinstance(row.get(month, 0.0), (int, float))
+        )
+    elif income_taxed == "outside":
+        if living_in_state:
+            # Tax all taxable income
+            taxable_base = taxable_income
+        else:
+            # Only custom income rows (type 'c', sign 1)
+            taxable_base = sum(
+                row.get(month, 0.0)
+                for row in budget
+                if row.get('type') == 'c' and row.get('sign') == 1 and isinstance(row.get(month, 0.0), (int, float))
+            )
+    else:  # "full" or any other value
+        taxable_base = taxable_income
 
     state_brackets = STATE_TAX_RATES[STATE_TAX_RATES['state'] == home_of_record]
 
@@ -435,7 +466,7 @@ def calculate_state_taxes(budget, month):
         return 0.00
 
     brackets = brackets.sort_values(by='bracket').reset_index(drop=True)
-    
+
     for i in range(len(brackets)):
         lower_bracket = brackets.at[i, 'bracket']
         rate = brackets.at[i, 'rate']
@@ -445,8 +476,8 @@ def calculate_state_taxes(budget, month):
         else:
             upper_bracket = 10**7
 
-        if taxable_income > lower_bracket:
-            taxable_rate = min(taxable_income, upper_bracket) - lower_bracket
+        if taxable_base > lower_bracket:
+            taxable_rate = min(taxable_base, upper_bracket) - lower_bracket
             tax += taxable_rate * rate
 
     tax = tax / 12

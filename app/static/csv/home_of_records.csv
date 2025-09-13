@@ -1,4 +1,4 @@
-longname,abbr,income,retirement,tooltip
+longname,abbr,income_taxed,retirement_taxed,tooltip
 Alabama,AL,full,exempt,Pay received while serving in a designated combat zone is exempt
 Alaska,AK,none,none,No state income tax
 American Samoa,AS,full,full,none
