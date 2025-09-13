@@ -153,13 +153,19 @@ def calculate_income(budget, working_month):
             value = row[working_month]
             tax = row.get('tax')
 
-            if combat_zone == "Yes":
-                nontaxable += value
-            else:
+            if row.get('type') == 'c':
                 if tax:
                     taxable += value
                 else:
                     nontaxable += value
+            else:
+                if combat_zone == "Yes":
+                    nontaxable += value
+                else:
+                    if tax:
+                        taxable += value
+                    else:
+                        nontaxable += value
 
     #trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
     #roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)

@@ -131,8 +131,7 @@ class Config:
         dtype={
             'longname': str,
             'abbr': str,
-            'active_duty': str,
-            'guard_reserve': str,
+            'income': str,
             'retirement': str,
             'tooltip': str,
         },

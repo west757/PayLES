@@ -4,8 +4,25 @@ let selectedRowType = null;
 
 // attach inject modal event listeners
 function attachInjectModalListeners() {
-    const el = getInjectModalElements();
     resetInjectModal();
+
+    const injectInputs = [
+        { container: 'inject-custom-header', field: 'string', rowHeader: 'Custom Header' },
+        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' },
+        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' }
+    ];
+
+    injectInputs.forEach(item => {
+        const container = document.getElementById(item.container);
+        let inputWrapper = createStandardInput(item.rowHeader, item.field);
+        const input = inputWrapper.querySelector('input, select');
+        input.id = item.container + '-id';
+        input.name = item.rowHeader;
+        container.innerHTML = '';
+        container.appendChild(inputWrapper);
+    });
+
+    const el = getInjectModalElements();
 
     // method radio buttons (template/custom)
     [el.methodTemplate, el.methodCustom].forEach(radio => {
@@ -43,22 +60,6 @@ function attachInjectModalListeners() {
         });
     });
 
-    const injectInputs = [
-        { container: 'inject-custom-header', field: 'string', rowHeader: 'Custom Header' },
-        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' },
-        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' }
-    ];
-
-    injectInputs.forEach(item => {
-        const container = document.getElementById(item.container);
-        let inputWrapper = createStandardInput(item.rowHeader, item.field);
-        const input = inputWrapper.querySelector('input, select');
-        input.id = item.container + '-id';
-        input.name = item.rowHeader;
-        container.innerHTML = '';
-        container.appendChild(inputWrapper);
-    });
-
     el.templateButton.addEventListener('click', function() {
         let method = 'template';
         let header = el.templateSelect.value;
@@ -81,8 +82,8 @@ function attachInjectModalListeners() {
     el.customButton.addEventListener('click', function() {
         let method = 'custom';
         let header = el.customHeader.value;
-        let tax = el.customTax.checked ? 'true' : 'false';
         let value = el.customValue.value.trim();
+        let tax = el.customTax.checked ? 'true' : 'false';
         if (!validateAddRow({ method, header, value })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
@@ -201,12 +202,12 @@ function getInjectModalElements() {
 
         templateSection: document.getElementById('inject-template'),
         templateSelect: document.getElementById('inject-template-select'),
-        templateValue: document.getElementById('inject-template-value'),
+        templateValue: document.getElementById('inject-template-value-id'),
         templateButton: document.getElementById('inject-template-button'),
 
         customSection: document.getElementById('inject-custom'),
-        customHeader: document.getElementById('inject-custom-header'),
-        customValue: document.getElementById('inject-custom-value'),
+        customHeader: document.getElementById('inject-custom-header-id'),
+        customValue: document.getElementById('inject-custom-value-id'),
         customTax: document.getElementById('inject-custom-tax'),
         customButton: document.getElementById('inject-custom-button'),
 
