@@ -248,7 +248,7 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-instructions, #button-inject, #button-account, #button-recs {
+#button-instructions, #button-inject, #button-account, #button-recs, #button-tsp {
     width: 11rem;
 }
 
@@ -488,6 +488,27 @@ input[type=file] {
     margin-left: 0.5em;
 }
 
+#badge-recs {
+    align-items: center;
+    background: var(--primary_red_color);
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    font-size: 0.8rem;
+    font-weight: bold;
+    height: 1.25rem;
+    justify-content: center;
+    min-width: 1.25rem;
+    padding: 0.1rem 0.25rem;
+    pointer-events: none;
+    position: absolute;
+    right: -0.25rem;
+    top: -0.25rem;
+    z-index: 1104;
+}
+#button-recs {
+    position: relative;
+}
 
 /* =========================
    home

@@ -11,18 +11,15 @@ short-term:
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
-- keep table in area where change occurs and not update scroll to top of page
-- add in recommendation for type of bank
 - fix using MHA first 2 characters because of ZZ for cost county groups
 
 mid-term:
 - get combat zone from les
-- check what all is saved if in combat zone (are state taxes paid?)
+- incorporate oconus zip code tracking
 - add drill pay
 - update readme
 - add comments to code
 - alphabetize resources and add stars for top ones
-- different browser checks
 - instructions modal
 - branch of service variable?
 - make months in service editable?
@@ -54,7 +51,8 @@ long-term:
 - JSON export
 - charts and reports
 - export entire budget (all metadata)
-- merch (patch)
+- merch (patch, coin)
+- add in recommendation for type of bank
 
 
 3. Security Headers

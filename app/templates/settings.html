@@ -94,11 +94,21 @@
                         </td>
                     </tr>
 
+                    <!-- TSP calculator -->
+                    <tr>
+                        <td>
+                            <button id="button-tsp" class="button-solo">TSP Calculator</button>
+                        </td>
+                    </tr>
+
 
                     <!-- LES recommendations -->
                     <tr class="section-break">
                         <td>
-                            <button id="button-recs" class="button-solo">Recommendations</button>
+                            <button id="button-recs" class="button-solo">
+                                Recommendations
+                                <span id="badge-recs"></span>
+                            </button>
                         </td>
                     </tr>
 
@@ -207,8 +217,6 @@
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Instructions</h2>
-
-            
         </div>
     </div>
 
@@ -388,6 +396,17 @@
             <button class="modal-close" type="button">✖</button>
             <h2>Budget Recommendations</h2>
             <div id="rec-content"></div>
+        </div>
+    </div>
+
+
+    <!-- TSP calculator -->
+    <input id="tsp_calc" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="tsp_calc"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>TSP Calculator</h2>
         </div>
     </div>
 

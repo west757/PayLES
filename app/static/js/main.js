@@ -179,6 +179,12 @@ document.addEventListener('click', function(e) {
         populateAccountRowList();
     }
 
+    // open tsp calculator modal
+    if (e.target && e.target.id === 'button-tsp') {
+        const tspModalCheckbox = document.getElementById('tsp_calc');
+        tspModalCheckbox.checked = true;
+    }
+
     // open recommendation modal
     if (e.target && e.target.id === 'button-recs') {
         const recsModalCheckbox = document.getElementById('recs');

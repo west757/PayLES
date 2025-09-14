@@ -138,6 +138,15 @@ function exportBudget() {
 function updateRecommendations() {
     const recs = (window.CONFIG && window.CONFIG.recommendations) || [];
     const recContent = document.getElementById('rec-content');
+    const badge = document.getElementById('badge-recs');
+    if (badge) {
+        if (recs.length > 0) {
+            badge.textContent = recs.length;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
     if (recContent) {
         if (recs.length === 0) {
             recContent.innerHTML = '<div class="rec-item">No current recommendations for your budget.</div>';
