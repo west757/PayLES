@@ -1,3 +1,5 @@
+// stores scroll position of budget, used to restore after htmx swap
+let budgetScrollTop = 0;
 //stores state of removing row, used for confirmation timeout
 let removeRowConfirm = {};
 
@@ -10,6 +12,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         attachDragAndDropListeners();
         attachHomeListeners();
+    }
+});
+
+
+// save scroll position before any htmx request that will update the budget
+document.body.addEventListener('htmx:beforeRequest', function(evt) {
+    // only save if the budget is present
+    const budgetContainer = document.getElementById('budget-container');
+    if (budgetContainer) {
+        budgetScrollTop = budgetContainer.scrollTop;
     }
 });
 
@@ -34,6 +46,11 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     enableInputs();
     disableTSPRateButtons();
     updateRecommendations();
+
+    const budgetContainer = document.getElementById('budget-container');
+    if (budgetContainer && typeof budgetScrollTop === 'number') {
+        budgetContainer.scrollTop = budgetScrollTop;
+    }
 });
 
 
