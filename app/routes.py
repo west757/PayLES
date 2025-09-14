@@ -1,4 +1,4 @@
-from flask import request, render_template, session, jsonify
+from flask import request, render_template, session, jsonify, g
 from app import csrf
 
 from app import flask_app
@@ -81,8 +81,8 @@ def route_single_example():
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-        recommendations = add_recommendations(budget, init_month)
-
+        
+        recommendations = add_recommendations(budget, months)
         budget = convert_numpy_types(budget)
         session['budget'] = budget
         session['headers'] = headers
@@ -91,6 +91,7 @@ def route_single_example():
             'budget': budget,
             'months': months,
             'headers': headers,
+            'recommendations': recommendations,
         }
         context = {
             'config_js': config_js,
@@ -99,7 +100,6 @@ def route_single_example():
             'headers': headers,
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'recommendations': recommendations,
             'show_instructions': show_instructions,
             'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
@@ -132,8 +132,8 @@ def route_initials():
 
     budget, init_month, headers = init_budget(initials=initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
-    recommendations = add_recommendations(budget, init_month)
-
+    
+    recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['headers'] = headers
@@ -142,13 +142,13 @@ def route_initials():
         'budget': budget,
         'months': months,
         'headers': headers,
+        'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
         'budget': budget,
         'months': months,
         'headers': headers,
-        'recommendations': recommendations,
         'MODALS': load_json(flask_app.config['MODALS_JSON']),
     }
     return render_template('settings.html', **context)
@@ -175,12 +175,14 @@ def route_update_cell():
         cell_value = round((float(cell_value) * cell_row.get('sign')), 2)
 
     budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
-
+    
+    recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
 
     config_js = {
         'budget': budget,
+        'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
@@ -206,12 +208,14 @@ def route_change_months():
     elif new_months_num > old_months_num:
         budget, months = add_months(budget, latest_month=months[-1], months_num=new_months_num)
 
+    recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
 
     config_js = {
         'budget': budget,
         'months': months,
+        'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
@@ -243,6 +247,7 @@ def route_insert_row():
     budget, headers = insert_row(budget, months, headers, row_data)
     budget = update_months(budget, months)
 
+    recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['headers'] = headers
@@ -250,6 +255,7 @@ def route_insert_row():
     config_js = {
         'budget': budget,
         'headers': headers,
+        'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
@@ -272,6 +278,7 @@ def route_remove_row():
     budget, headers = remove_row(budget, headers, header)
     budget = update_months(budget, months)
 
+    recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['headers'] = headers
@@ -285,6 +292,7 @@ def route_remove_row():
         'budget': budget,
         'months': months,
         'headers': headers,
+        'recommendations': recommendations,
     }
     return render_template('budget.html', **context)
 

@@ -387,12 +387,7 @@
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Budget Recommendations</h2>
-
-            <div id="rec-content">
-                {% for rec in recommendations %}
-                    <div class="rec-item">{{ rec|safe }}</div>
-                {% endfor %}
-            </div>
+            <div id="rec-content"></div>
         </div>
     </div>
 

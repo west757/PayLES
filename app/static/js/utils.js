@@ -135,6 +135,19 @@ function exportBudget() {
 }
 
 
+function updateRecommendations() {
+    const recs = (window.CONFIG && window.CONFIG.recommendations) || [];
+    const recContent = document.getElementById('rec-content');
+    if (recContent) {
+        if (recs.length === 0) {
+            recContent.innerHTML = '<div class="rec-item">No current recommendations for your budget.</div>';
+        } else {
+            recContent.innerHTML = recs.map(r => `<div class="rec-item">${r}</div>`).join('');
+        }
+    }
+}
+
+
 function getBudgetValue(rowHeader, month) {
     const row = window.CONFIG.budget.find(r => r.header === rowHeader);
 

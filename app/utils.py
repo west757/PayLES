@@ -138,84 +138,142 @@ def get_months(budget):
     return [key for key in budget[0].keys() if key not in metadata_keys]
 
 
-def add_recommendations(budget, month):
-    recs = []
+def add_recommendations(budget, months):
+    recs = {}
 
     # SGLI minimum coverage recommendation
-    sgli_rate = next((row[month] for row in budget if row.get('header', '') == 'SGLI Rate'), 0)
-    if sgli_rate == 0:
-        recs.append(
-            '<div class="rec-item"><b>SGLI Coverage:</b> You currently have no SGLI coverage. It is recommended to have at ' \
-            'least the minimum amount of SGLI coverage, which is a $3.50 monthly premium for $50,000. This is due to also ' \
-            'providing you with Traumatic Injury Protection Coverage (TSGLI).</div>'
-        )
+    sgli_months = []
+    for month in months:
+        sgli_rate = next((row[month] for row in budget if row.get('header', '') == 'SGLI Rate'), 0)
+        if sgli_rate == 0:
+            sgli_months.append(month)
+    if sgli_months:
+        recs['sgli'] = {
+            'months': sgli_months,
+            'text': (
+                '<b>SGLI Coverage:</b> Budget has no SGLI coverage for month(s): 'f'{", ".join(sgli_months)}. PayLES recommends to have at least the minimum amount of SGLI coverage, which is a $3.50 monthly premium for $50,000. This also provides Traumatic Injury Protection Coverage (TSGLI). Learn more at <a href="https://www.insurance.va.gov/sgliSite/default.htm" target="_blank">VA SGLI</a>.'
+            )
+        }
+
+    # TSP contribution limit recommendation
+    tsp_contribution_limit = flask_app.config['TSP_CONTRIBUTION_LIMIT']
+    tsp_contrib_months = []
+    for month in months:
+        ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
+        ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
+        if (ytd_trad + ytd_roth) >= tsp_contribution_limit:
+            tsp_contrib_months.append(month)
+    if tsp_contrib_months:
+        recs['tsp_contribution_limit'] = {
+            'months': tsp_contrib_months,
+            'text': (
+                '<b>TSP Contribution Limit:</b> The TSP contribution limit of ${tsp_contribution_limit} has been reached for month(s): 'f'{", ".join(tsp_contrib_months)}. Any additional contributions will not be deducted. PayLES recommends adjusting TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
+            )
+        }
+
+    # TSP annual limit recommendation
+    tsp_annual_limit = flask_app.config['TSP_ANNUAL_LIMIT']
+    tsp_annual_months = []
+    for month in months:
+        ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
+        ytd_trad_exempt = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP Exempt'), 0)
+        ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
+        ytd_matching = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Matching'), 0)
+        if (ytd_trad + ytd_trad_exempt + ytd_roth + ytd_matching) >= tsp_annual_limit:
+            tsp_annual_months.append(month)
+    if tsp_annual_months:
+        recs['tsp_annual_limit'] = {
+            'months': tsp_annual_months,
+            'text': (
+                '<b>TSP Annual Limit:</b> The TSP annual limit of ${tsp_annual_limit} has been reached for month(s): 'f'{", ".join(tsp_annual_months)}. Any additional contributions will not be deducted. PayLES recommends adjusting TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
+            )
+        }
+
+    # Combat zone TSP recommendation
+    combat_zone_months = []
+    for month in months:
+        combat_zone = next((row[month] for row in budget if row.get('header', '') == 'Combat Zone'), "No")
+        if str(combat_zone).strip().lower() == "yes":
+            combat_zone_months.append(month)
+    if combat_zone_months:
+        recs['combat_zone_tsp'] = {
+            'months': combat_zone_months,
+            'text': (
+                '<b>Combat Zone:</b> Budget is tracking being in a combat zone for month(s): 'f'{", ".join(combat_zone_months)}. PayLES recommends to take full advantage of the TSP combat zone tax exclusion (CZTE) benefit by contributing as much as practical to the Traditional TSP. Learn more at <a href="https://themilitarywallet.com/maximizing-your-thrift-savings-plan-contributions-in-a-combat-zone/" target="_blank">How to Maximize TSP Contributions in a Combat Zone</a>.'
+            )
+        }
+
+    # Negative net pay recommendation
+    negative_net_pay_months = []
+    for month in months:
+        net_pay = next((row[month] for row in budget if row.get('header', '') == 'Net Pay'), 0)
+        if net_pay < 0:
+            negative_net_pay_months.append(month)
+    if negative_net_pay_months:
+        recs['negative_net_pay'] = {
+            'months': negative_net_pay_months,
+            'text': (
+                '<b>Negative Net Pay:</b> Budget is tracking a negative net pay for month(s): 'f'{", ".join(negative_net_pay_months)}. PayLES recommends recalculating parts of your budget to avoid a negative net pay as that can potentially incur debts and missed payments for deductions or allotments. Learn more about U.S. military debts at <a href="https://www.dfas.mil/debtandclaims/" target="_blank">DFAS Debts & Claims</a>.'
+            )
+        }
 
     # TSP matching recommendation
-    months_in_service = next((row[month] for row in budget if row.get('header', '') == 'Months in Service'), 0)
-    trad_tsp = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
-    roth_tsp = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
-    if months_in_service >= 24 and (trad_tsp + roth_tsp) < 5:
-        recs.append(
-            '<div class="rec-item"><b>TSP Base Rate:</b> You are fully vested in the Thrift Savings Plan, however are not ' \
-            'currently taking advantage of the service agency automatic matching up to 5%. It is recommended to increase ' \
-            'the Traditional TSP or Roth TSP Base Rate combined contribution percentages to at least 5% to receive the full matching ' \
-            'contributions.</div>'
-        )
-
-    # reached TSP contribution limit
-    tsp_ytd = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Contribution'), 0)
-    tsp_limit = flask_app.config['TSP_CONTRIBUTION_LIMIT']
-    if tsp_ytd > tsp_limit:
-        recs.append(
-            f'<div class="rec-item"><b>TSP Contribution Limit:</b> You are currently anticipating reaching the limit of TSP contributions for the year, which is ${tsp_limit:,.2f}. '
-            'It is recommended to reduce your TSP contribution percentages to ensure you do not invest over this limit to avoid penalties.</div>'
-        )
-
-
-    # reached TSP annual limit
-
-
-    # contributing to TSP while deployed
-
-    # type of bank
-
-    # negative net pay
-
-    # state income tax recommendation
-    home_of_record = next((row[month] for row in budget if row.get('header', '') == 'Home of Record'), '')
-    mha = next((row[month] for row in budget if row.get('header', '') == 'MHA'), '')
-    hor_row = None
-
-    for _, r in flask_app.config['HOME_OF_RECORDS'].iterrows():
-        if r['abbr'] == home_of_record:
-            hor_row = r
+    months_in_service = None
+    for row in budget:
+        if row.get('header', '') == 'Months in Service':
+            # Use the first month found (should be the same for all months)
+            months_in_service = next((row[m] for m in months if m in row), None)
             break
 
-    if hor_row is not None:
-        income_type = hor_row.get('income', '').lower()
-        tooltip = hor_row.get('tooltip', '')
-        show_state_tax_msg = False
-
-        if income_type in ['partial', 'full']:
-            show_state_tax_msg = True
-        elif income_type == 'outside' and mha != "Not Found":
-            mha_state = mha[:2]
-            if mha_state == home_of_record:
-                show_state_tax_msg = True
-
-        if show_state_tax_msg:
-            msg = (
-                '<div class="rec-item"><b>State Income Tax:</b> You are currently paying state income tax. It is '
-                'recommended to investigate options and requirements relating to your home of record, as you may '
-                'be eligible to avoid paying state income tax. This may include changing your home of record to a '
-                'state which does not tax military income, or meeting certain exemptions for your current home of record.'
+    tsp_matching_months = []
+    if months_in_service is not None and months_in_service >= 24:
+        for month in months:
+            trad_rate = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
+            roth_rate = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
+            if (trad_rate + roth_rate) < 5:
+                tsp_matching_months.append(month)
+    if tsp_matching_months:
+        recs['tsp_matching'] = {
+            'months': tsp_matching_months,
+            'text': (
+                '<b>TSP Matching:</b> Budget is tracking being fully vested in the TSP by having more than 24 months in service, however not taking full advantage of the 1%-4% agency matching for TSP contributions for months: 'f'{", ".join(tsp_matching_months)}. PayLES recommends to have the combined total of your Traditional TSP base rate and Roth TSP base rate to be at least 5% to get the highest agency matching rate. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-types/" target="_blank">TSP Contribution Types</a>.'
             )
-            if tooltip:
-                msg += f'<br>{tooltip}'
-            msg += '</div>'
-            recs.append(msg)
+        }
 
-    if not recs:
-        recs.append('<div class="rec-item">No current recommendations for your budget.</div>')
 
-    return recs
+    # State income tax recommendation
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+    home_of_record_row = next((row for row in budget if row.get('header', '') == "Home of Record"), None)
+    mha_row = next((row for row in budget if row.get('header', '') == "Military Housing Area"), None)
+    if home_of_record_row and mha_row:
+        # Map: home_of_record -> list of months taxed
+        taxed_states = {}
+        for month in months:
+            home_of_record = home_of_record_row.get(month)
+            if not home_of_record or home_of_record == "Not Found":
+                continue
+            hor_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
+            if hor_row.empty:
+                continue
+            income_taxed = hor_row['income_taxed'].values[0].lower()
+            if income_taxed in ("none", "exempt"):
+                continue
+            mha_code = mha_row.get(month)
+            mha_state = mha_code[:2] if mha_code and len(mha_code) >= 2 else ""
+            # For "outside", only tax if living in state
+            if income_taxed == "outside":
+                if mha_state == home_of_record:
+                    taxed_states.setdefault(home_of_record, []).append(month)
+            elif income_taxed == "full":
+                taxed_states.setdefault(home_of_record, []).append(month)
+        # Add a recommendation for each home_of_record that is taxing
+        for hor, taxed_months in taxed_states.items():
+            if taxed_months:
+                recs[f'state_tax_{hor}'] = {
+                    'months': taxed_months,
+                    'text': (
+                        f'<b>State Income Tax:</b> For month(s) {", ".join(taxed_months)}, your home of record {hor} is taxing your military pay. It is recommended to change your home of record to a state which either has no state income tax (like Texas or South Dakota) or fully exempts military income (like Oklahoma or Arizona). Learn more at <a href="https://www.military.com/money/personal-finance/state-tax-information.html" target="_blank">Military State Tax Info</a>.'
+                    )
+                }
+
+    return [rec['text'] for rec in recs.values()]
