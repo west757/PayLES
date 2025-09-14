@@ -12,6 +12,8 @@ short-term:
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - fix using MHA first 2 characters because of ZZ for cost county groups
+- change les button highlight to light gray opacity
+- confirm carrying over debt to/from months on les
 
 mid-term:
 - get combat zone from les
