@@ -33,6 +33,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     toggleRows('ytd');
     enableInputs();
     disableTSPRateButtons();
+    updateRecommendations();
 });
 
 

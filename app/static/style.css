@@ -1102,7 +1102,9 @@ hr {
     color: var(--light_text_color);
 }
 
-
+.rec-item {
+    margin-bottom: 0.5rem;
+}
 
 
 

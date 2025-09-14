@@ -10,10 +10,12 @@ short-term:
 - add accounts (tsp, bank, debt, savings, emergency fund)
 - update max tsp percentage recommendation
 - update other recommendations
+- rework how recommendations are calculated
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - keep table in area where change occurs and not update scroll to top of page
+- add in recommendation for type of bank
 
 mid-term:
 - get combat zone from les
@@ -40,6 +42,7 @@ long-term:
 - add charity to custom row
 - joint spouse with two LES's
 - simplify capturing sgli rate and remarks
+- see about simplifying recommendations to being inline and using flask g or session variable
 - create unit tests 
 - check mobile use
 - minify style.css and script.js when pushed into a production environment
