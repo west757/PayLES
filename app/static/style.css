@@ -21,8 +21,9 @@
     --z-base: 1;
     --z-table-button: 1000;
     --z-table-sticky: 1100;
-    --z-modal: 2000;
-    --z-top: 3000;
+    --z-nav-footer: 2000;
+    --z-modal: 3000;
+    --z-top: 4000;
 }
 
 html {
@@ -57,6 +58,7 @@ body {
     height: 6rem;
     justify-content: space-between;
     width: 100%;
+    z-index: var(--z-nav-footer);
 }
 
 header {
@@ -343,7 +345,7 @@ input[type=file]::file-selector-button {
     transition: color 0.2s;
     top: 1.25rem;
     width: 1.5rem;
-    z-index: 2002;
+    z-index: 3002;
 }
 
 .modal-close:hover {
@@ -492,7 +494,7 @@ input[type=file] {
     align-items: center;
     background: var(--primary_red_color);
     border-radius: 50%;
-    color: #fff;
+    color: var(--light_text_color);
     display: flex;
     font-size: 0.8rem;
     font-weight: bold;
@@ -504,7 +506,7 @@ input[type=file] {
     position: absolute;
     right: -0.25rem;
     top: -0.25rem;
-    z-index: 1104;
+    z-index: 1001;
 }
 #button-recs {
     position: relative;
@@ -933,7 +935,7 @@ hr {
     top: 0;
     transition: opacity 0.2s ease, visibility 0.2s ease;
     visibility: hidden;
-    z-index: 2000;
+    z-index: 3000;
 }
 
 .modal-background {
@@ -943,7 +945,7 @@ hr {
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 2001;
+    z-index: 3001;
 }
 
 .modal-state {
@@ -974,7 +976,7 @@ hr {
     top: -20%;
     transition: top .3s ease;
     width: 65rem;
-    z-index: 2002;
+    z-index: 3002;
 }
 
 .modal-table {

@@ -7,7 +7,7 @@ function buildInitialsInputs() {
         { container: 'initials-dependents', field: 'int', rowHeader: 'Dependents' },
         { container: 'initials-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
         { container: 'initials-home-of-record', field: 'select', rowHeader: 'Home of Record Long' },
-        { container: 'initials-zip-code', field: 'int', rowHeader: 'Zip Code' },
+        { container: 'initials-zip-code', field: 'string', rowHeader: 'Zip Code' },
         { container: 'initials-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
         { container: 'initials-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
         { container: 'initials-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
