@@ -8,14 +8,12 @@ run: python -m app.main
 
 short-term:
 - add accounts (tsp, bank, debt, savings, emergency fund)
-- update max tsp percentage recommendation
-- update other recommendations
-- rework how recommendations are calculated
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - keep table in area where change occurs and not update scroll to top of page
 - add in recommendation for type of bank
+- fix using MHA first 2 characters because of ZZ for cost county groups
 
 mid-term:
 - get combat zone from les

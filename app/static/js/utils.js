@@ -262,20 +262,11 @@ function createStandardInput(rowHeader, field, value = '') {
     }
 
     else if (field === 'int') {
-        if (rowHeader === 'Zip Code') {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.value = value;
-            input.classList.add('table-input', 'input-mid');
-            input.placeholder = '12345';
-            input.maxLength = 5;
-            input.addEventListener('input', setInputRestriction('int', 5));
-        }
+        input = document.createElement('input');
+        input.type = 'text';
+        input.value = value;
 
-        else if (rowHeader === 'Dependents') {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.value = value;
+        if (rowHeader === 'Dependents') {
             input.classList.add('table-input', 'input-short');
             input.placeholder = '0-9';
             input.maxLength = 1;
@@ -283,9 +274,6 @@ function createStandardInput(rowHeader, field, value = '') {
         }
 
         else if (rowHeader && rowHeader.toLowerCase().includes('tsp')) {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.value = value;
             input.classList.add('table-input', 'input-percent', 'input-short');
             
             // Determine max value and maxLength
@@ -348,9 +336,6 @@ function createStandardInput(rowHeader, field, value = '') {
         }
 
         else if (rowHeader === 'Months in Service') {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.value = value;
             input.classList.add('table-input', 'input-short');
             input.placeholder = '0';
             input.maxLength = 3;
@@ -392,9 +377,6 @@ function createStandardInput(rowHeader, field, value = '') {
         }
 
         else {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.value = value;
             input.classList.add('table-input', 'input-int', 'input-short');
             input.placeholder = '0';
             input.maxLength = 3;
@@ -442,8 +424,17 @@ function createStandardInput(rowHeader, field, value = '') {
         input = document.createElement('input');
         input.type = 'text';
         input.value = value;
-        input.classList.add('table-input', 'input-text');
-        input.addEventListener('input', setInputRestriction('text', 20));
+
+        if (rowHeader === 'Zip Code') {
+            input.classList.add('table-input', 'input-mid');
+            input.placeholder = '12345';
+            input.maxLength = 5;
+            input.addEventListener('input', setInputRestriction('text', 5));
+        }
+        else {
+            input.classList.add('table-input', 'input-text');
+            input.addEventListener('input', setInputRestriction('text', 20));
+        }
     }
 
     if (input) wrapper.appendChild(input);
