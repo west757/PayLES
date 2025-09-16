@@ -11,8 +11,6 @@ short-term:
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
-- fix using MHA first 2 characters because of ZZ for cost county groups
-- change les button highlight to light gray opacity
 - confirm carrying over debt to/from months on les
 
 mid-term:
@@ -36,6 +34,7 @@ long-term:
 - update modal content
 - rework resources, maybe include tags and search
 - pdf export option
+- update modals
 - add charity to custom row
 - joint spouse with two LES's
 - simplify capturing sgli rate and remarks
