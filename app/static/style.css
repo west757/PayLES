@@ -367,6 +367,14 @@ input[type="submit"]:disabled {
     color: var(--secondary_dark_accent_color) !important;
 }
 
+.rect-highlight:disabled {
+    background: var(--cell_disabled_color) !important;
+    border: none !important;
+    color: var(--secondary_dark_accent_color) !important;
+    cursor: not-allowed !important;
+    opacity: 0.75 !important;
+}
+
 
 /* =========================
    inputs and dropdowns
@@ -897,6 +905,10 @@ hr {
     background-color: rgba(var(--highlight_green_color_rgb), 0.5);
 }
 
+.rect-highlight:not(.clickable) {
+    cursor: default;
+}
+
 #remarks-container {
     text-align: center;
     width: 67rem;
@@ -960,6 +972,10 @@ hr {
 
 .modal-state:checked + .modal .modal-inner {
     top: 0;
+}
+
+.modal-button:not(.clickable) {
+    cursor: default;
 }
 
 .modal-inner {
