@@ -54,6 +54,7 @@ long-term:
 - export entire budget (all metadata)
 - merch (patch, coin)
 - add in recommendation for type of bank
+- uncomment prompt when leaving budget page
 
 
 3. Security Headers

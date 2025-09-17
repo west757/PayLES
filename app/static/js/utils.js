@@ -409,15 +409,18 @@ function createStandardInput(rowHeader, field, value = '') {
         input.classList.add('table-input', 'input-float', 'input-mid');
         input.placeholder = '0.00';
 
-        // Determine max digits before decimal for YTD rows
+        // Determine max digits before decimal for large number inputs
         let digitsBeforeDecimal = 4; // default: 4 before decimal, 1 for '.', 2 after = 7 total
-        const ytdRows = [
+        const largeNumInputs = [
             'YTD Income',
             'YTD Expenses',
             'YTD TSP Contribution',
-            'YTD Charity'
+            'YTD Charity',
+            'Account TSP Value',
+            'Account Bank Value',
+            'Account Special Value'
         ];
-        if (ytdRows.includes(rowHeader)) {
+        if (largeNumInputs.includes(rowHeader)) {
             digitsBeforeDecimal = 6; // 6 before decimal, 1 for '.', 2 after = 9 total
         }
 

@@ -1008,6 +1008,10 @@ hr {
     min-height: 10.75rem;
 }
 
+#account-modal-content {
+    min-height: 14rem;
+}
+
 .modal-grid-column {
     display: flex;
     flex-direction: column;
