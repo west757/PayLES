@@ -241,7 +241,6 @@ def route_insert_row():
         'tax': request.form.get('tax', 'false').lower() == 'true',
         'percent': request.form.get('percent', '0'),
         'interest': request.form.get('interest', '0'),
-        'rows': request.form.get('rows', '').split(','),
     }
 
     budget, headers = insert_row(budget, months, headers, row_data)

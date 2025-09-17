@@ -176,7 +176,6 @@ document.addEventListener('click', function(e) {
         const accountModalCheckbox = document.getElementById('account');
         accountModalCheckbox.checked = true;
         resetAccountModal();
-        populateAccountRowList();
     }
 
     // open tsp calculator modal
