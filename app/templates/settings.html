@@ -334,55 +334,94 @@
             <h2>Add Custom Account Row</h2>
 
             <div class="modal-grid">
-                <div class="modal-grid-column">
-                    <div style="font-weight: bold">Select Rows to Track:</div>
-                    <div id="account-row-list" class="account-row-list"></div>
+                <div class="modal-grid-column-section">
+                    <span class="modal-grid-span">Account:</span>
+                    <div class="modal-radio-group">
+                        <label>
+                            <input id="account-method-tsp" type="radio" name="row-method" value="tsp">
+                            TSP
+                        </label>
+                        <label>
+                            <input id="account-method-bank" type="radio" name="row-method" value="bank">
+                            Bank
+                        </label>
+                        <label>
+                            <input id="account-method-special" type="radio" name="row-method" value="special">
+                            Custom
+                        </label>
+                    </div>
                 </div>
 
-                <div class="modal-grid-column">
-                    <div id="account-inputs" class="modal-grid-column-stack">
+                <div id="account-tsp-bank-custom" class="modal-grid-column">
+                    <div id="account-tsp" class="modal-grid-column-stack">
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-header">Row Header:</label>
-                            <input id="account-header" class="input-long" type="text" placeholder="Unique Account Header">
+                            <label class="styled-label" for="account-tsp-header">Row Header:</label>
+                            <div id="account-tsp-header"></div>
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-value">Initial Value:</label>
-                            $&nbsp;<input id="account-value" class="input-mid2" type="text" placeholder="1234.56">
+                            <label class="styled-label" for="account-tsp-value">Initial Value:</label>
+                            $&nbsp;<input id="account-tsp-value" class="input-mid2" type="text" placeholder="1234.56">
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-percent">Percentage:</label>
-                            <input id="account-percent" class="input-short" type="text" placeholder="0.00">&nbsp;%
-                            <span class="question tooltip" data-tooltip="Only adds up to a certain percent of the totalled rows. Default is 100%.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-interest">Interest Rate:</label>
-                            <input id="account-interest" class="input-short" type="text" placeholder="0.00">&nbsp;%
+                            <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
+                            <div id="account-tsp-interest"></div>
                             <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label">Total Type:</label>
-                            <div class="modal-radio-group">
-                                <label>
-                                    <input id="account-type-monthly" type="radio" name="row-type" value="m">
-                                    Monthly
-                                </label>
-                                <label>
-                                    <input id="account-type-continuous" type="radio" name="row-type" value="c">
-                                    Continuous
-                                </label>
-                                <label>
-                                    <input id="account-type-ytd" type="radio" name="row-type" value="y">
-                                    YTD
-                                </label>
-                            </div>
+                            <button id="account-tsp-button" class="button-solo">Add Account</button>
+                        </div>
+                    </div>
+
+                    <div id="account-bank" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-bank-header">Row Header:</label>
+                            <div id="account-bank-header"></div>
                         </div>
                         <div class="modal-grid-column-row">
-                            <button id="account-add-button" class="button-solo">Add Account</button>
+                            <label class="styled-label" for="account-bank-value">Initial Value:</label>
+                            <div id="account-bank-value"></div>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-bank-percent">% of Net Pay:</label>
+                            <div id="account-bank-percent"></div>
+                            <span class="question tooltip" data-tooltip="Percent of Net Pay to allocate towards this bank account.">?</span>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-bank-interest">Interest Rate:</label>
+                            <div id="account-bank-interest"></div>
+                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <button id="account-bank-button" class="button-solo">Add Account</button>
+                        </div>
+                    </div>
+
+                    <div id="account-special" class="modal-grid-column-stack">
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-special-header">Row Header:</label>
+                            <div id="account-special-header"></div>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-special-value">Initial Value:</label>
+                            <div id="account-special-value"></div>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-special-percent">% of Net Pay:</label>
+                            <div id="account-special-percent"></div>
+                            <span class="question tooltip" data-tooltip="Percent of Net Pay to allocate towards this bank account.">?</span>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <label class="styled-label" for="account-special-interest">Interest Rate:</label>
+                            <div id="account-special-interest"></div>
+                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
+                        </div>
+                        <div class="modal-grid-column-row">
+                            <button id="account-special-button" class="button-solo">Add Account</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="account-example" class="modal-grid-column">filler</div>
+                <div id="account-info" class="modal-grid-column">filler</div>
             </div>
         </div>
     </div>

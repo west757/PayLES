@@ -574,7 +574,7 @@ def insert_row(budget, months, headers, row_data):
             elif meta == 'editable':
                 row_meta['editable'] = True
             elif meta == 'modal':
-                row_meta['modal'] = ''
+                row_meta['modal'] = 'none'
 
         row = add_row(budget, row_data['header'], metadata=row_meta)
 
@@ -588,7 +588,7 @@ def insert_row(budget, months, headers, row_data):
                 'tooltip': 'Custom row added by user',
             })
 
-    elif row_data['method'] == 'account':
+    elif row_data['method'] in ['tsp', 'bank', 'special']:
         row_meta = {'header': row_data['header']}
         for meta in flask_app.config['ROW_METADATA']:
             if meta == 'type':
@@ -602,42 +602,58 @@ def insert_row(budget, months, headers, row_data):
             elif meta == 'editable':
                 row_meta['editable'] = True
             elif meta == 'modal':
-                row_meta['modal'] = ''
+                row_meta['modal'] = 'none'
 
         row = add_row(budget, row_data['header'], metadata=row_meta)
 
-        percent = float(row_data['percent']) / 100
-        interest = float(row_data['interest']) / 100
+        percent = float(row_data.get('percent', 0)) / 100
+        interest = float(row_data.get('interest', 0)) / 100
 
-        for idx, m in enumerate(months):
-            month_sum = 0.0
-            for rh in row_data['rows']:
-                source_row = next((r for r in budget if r['header'] == rh), None)
-                if source_row:
-                    month_sum += (source_row[m] * percent)
+        if row_data['method'] == 'tsp':
+            trad_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
+            roth_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
+            prev_val = value
 
-            if row_data['type'] == 'm':
-                val = month_sum
-            elif row_data['type'] == 'c':
-                prev_val = row.get(months[idx-1], value) if idx > 0 else value
-                val = prev_val + month_sum
-            elif row_data['type'] == 'y':
-                if idx == 0 or (m == 'JAN' and idx > 0):
-                    val = month_sum
+            for idx, m in enumerate(months):
+                trad_val = abs(trad_row[m]) if trad_row and m in trad_row else 0.0
+                roth_val = abs(roth_row[m]) if roth_row and m in roth_row else 0.0
+                month_sum = trad_val + roth_val
+
+                if idx == 0:
+                    val = prev_val + month_sum
                 else:
-                    prev = row.get(months[idx-1], value)
-                    val = prev + month_sum if months[idx-1] != 'DEC' else month_sum
-            else:
-                val = month_sum
+                    val = prev_val + month_sum
 
-            val = val * (1 + interest)
-            row[m] = round(val, 2)
-        
+                val = val * (1 + interest)
+                row[m] = round(val, 2)
+                prev_val = val
+
+        elif row_data['method'] == 'bank':
+            net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
+            prev_val = value
+
+            for idx, m in enumerate(months):
+                net_pay = net_pay_row[m] if net_pay_row and m in net_pay_row else 0.0
+                month_sum = net_pay * percent
+
+                if idx == 0:
+                    val = prev_val + month_sum
+                else:
+                    val = prev_val + month_sum
+                    
+                val = val * (1 + interest)
+                row[m] = round(val, 2)
+                prev_val = val
+
+        elif row_data['method'] == 'special':
+            for idx, m in enumerate(months):
+                row[m] = value
+
         if not any(h['header'].lower() == row_data['header'].lower() for h in headers):
             headers.append({
                 'header': row_data['header'],
                 'type': 'z',
-                'tooltip': 'Custom account row added by user',
+                'tooltip': 'Custom account added by user',
             })
 
     return budget, headers

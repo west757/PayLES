@@ -1042,7 +1042,7 @@ hr {
     margin: 2rem 0 0 0;
 }
 
-#inject-template-custom, #account-inputs {
+#inject-template-custom, #account-tsp, #account-bank, #account-special {
     align-items: flex-start;
     justify-content: flex-start;
     margin: -0.35rem 0 0 0;
@@ -1069,7 +1069,7 @@ hr {
     gap: 1.1rem;
 }
 
-#inject-template-button, #inject-custom-button, #account-add-button {
+#inject-template-button, #inject-custom-button, #account-tsp-button, #account-bank-button, #account-special-button {
     height: 2.5rem;
     margin: 0 0 0 auto;
     width: 7rem;
@@ -1089,56 +1089,9 @@ hr {
     padding-left: 1.25rem;
 }
 
-/* Account Row List Styles */
-.account-row-list {
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
-    display: flex;
-    flex-direction: column;
-    max-height: 17rem;
-    overflow-y: auto;
-    border: 1px solid var(--table_border_color);
-    border-radius: 0.5rem;
-    background: var(--primary_light_accent_color);
-    padding: 0;
-    margin: 0.5rem auto 0 auto;
-    width: 14rem;
-}
-
-.account-row-selectable {
-    cursor: pointer;
-    padding: 0.25rem 1rem;
-    border-bottom: 1px solid var(--table_border_color);
-    background: transparent;
-    transition: background 0.15s;
-    outline: none;
-    user-select: none;
-}
-
-.account-row-selectable:last-child {
-    border-bottom: none;
-}
-
-.account-row-list .account-row-selectable:nth-child(even) {
-    background-color: var(--secondary_light_accent_color);
-}
-.account-row-list .account-row-selectable:nth-child(odd) {
-    background-color: var(--primary_light_accent_color);
-}
-
-/* Keep hover and selected states on top */
-.account-row-list .account-row-selectable:hover, {
-    background: var(--highlight_green_color);
-}
-.account-row-list .account-row-selectable.selected {
-    background: var(--primary_green_accent_color);
-    color: var(--light_text_color);
-}
-
 .rec-item {
     margin-bottom: 1rem;
 }
-
-
 
 
 /* =========================
