@@ -11,7 +11,6 @@ short-term:
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - incorporate oconus zip code tracking
-- make months in service editable
 - add pro-rated calculations for cells
 - drills variable if NG or reserves
 - branch of service variable

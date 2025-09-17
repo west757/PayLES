@@ -1,7 +1,7 @@
 index,x1,y1,x2,y2,title,modal,tooltip
 1,74,126,195,228,id,none,This field is unused
 2,990,126,1170,228,grade,basepay,Grade
-3,1170,126,1380,228,pay date,none,"Date entered active duty, same as Pay Entry Base Date (PEBD)"
+3,1170,126,1380,228,pay date,pebd,"Marks the point for calculating length of service, same as Pay Entry Base Date (PEBD)"
 4,1380,126,1590,228,years service,none,Years of creditable service
 5,1590,126,1740,228,ets,none,"Expiration Term of Service, same as Expiration of Active Obligated Service (EAOS)"
 6,1740,126,1920,228,branch,none,Branch

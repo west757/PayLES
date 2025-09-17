@@ -222,6 +222,17 @@
         ]
     },
     {
+        "id": "pebd",
+        "title": "Pay Entry Base Date (PEBD)",
+        "content": "<p>The Military Pay Entry Base Date (PEBD) is the date that determines when a service member's active or inactive service counts toward basic pay. It's the date that the military uses to calculate longevity pay, which is an increase in pay based on years of service. While often coinciding with your initial entry into military service, certain factors, like prior service, can adjust this date. A lower PEBD means more years of creditable service, leading to higher pay grades and increased benefits over time. </p>",
+        "resources": [
+            {
+                "link": "https://thegunzone.com/what-is-military-pay-entry-base-date/", 
+                "title": "Understanding Your Military Pay Entry Base Date"
+            }
+        ]
+    },
+    {
         "id": "sgli",
         "title": "Servicemembers' Group Life Insurance",
         "content": "<p>SGLI provides low-cost term life insurance coverage to eligible service members such as active duty Service members, Ready Reserve, or National Guard members. If members qualify for SGLI they are automatically enrolled and issued the maximum SGLI coverage.</p>",

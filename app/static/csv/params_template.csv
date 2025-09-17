@@ -1,6 +1,6 @@
 ﻿header,type,sign,field,tax,editable,modal,tooltip
-Year,v,0,none,False,False,basepay,none
-Months in Service,v,0,none,False,False,basepay,none
+Year,v,0,none,False,False,none,none
+Months in Service,v,0,none,False,False,pebd,none
 Grade,v,0,select,False,True,basepay,"Grades are the designations like E1, W2, O3E, O4, whereas rank is the full title of the grade"
 Zip Code,v,0,string,False,True,bah,Must be a valid U.S. zip code
 Military Housing Area,v,0,none,False,False,bah,Code corresponding to a grouping of zip codes used for determining BAH
