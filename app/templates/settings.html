@@ -333,7 +333,7 @@
             <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Account Row</h2>
 
-            <div class="modal-grid">
+            <div id="account-modal-content" class="modal-grid">
                 <div class="modal-grid-column-section">
                     <span class="modal-grid-span">Account:</span>
                     <div class="modal-radio-group">
@@ -360,7 +360,7 @@
                         </div>
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="account-tsp-value">Initial Value:</label>
-                            $&nbsp;<input id="account-tsp-value" class="input-mid2" type="text" placeholder="1234.56">
+                            <div id="account-tsp-value"></div>
                         </div>
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
@@ -406,9 +406,9 @@
                             <div id="account-special-value"></div>
                         </div>
                         <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-special-percent">% of Net Pay:</label>
+                            <label class="styled-label" for="account-special-percent">% of Row:</label>
                             <div id="account-special-percent"></div>
-                            <span class="question tooltip" data-tooltip="Percent of Net Pay to allocate towards this bank account.">?</span>
+                            <span class="question tooltip" data-tooltip="Percent of selected row to allocate towards this bank account.">?</span>
                         </div>
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="account-special-interest">Interest Rate:</label>
