@@ -275,7 +275,26 @@ function createStandardInput(rowHeader, field, value = '') {
         input.type = 'text';
         input.value = value;
 
-        if (rowHeader === 'Dependents') {
+        const percentHeaders = [
+            'Account Bank Percent',
+            'Account Bank Interest',
+            'Account Special Percent',
+            'Account Special Interest'
+        ];
+        if (percentHeaders.includes(rowHeader)) {
+            input.classList.add('table-input', 'input-percent', 'input-short');
+            input.placeholder = '0-100';
+            input.maxLength = 3;
+            input.addEventListener('input', setInputRestriction('int', 3));
+            wrapper.appendChild(input);
+            adornment = document.createElement('span');
+            adornment.textContent = '%';
+            adornment.className = 'input-adornment input-adornment-right';
+            wrapper.appendChild(adornment);
+            return wrapper;
+        }
+
+        else if (rowHeader === 'Dependents') {
             input.classList.add('table-input', 'input-short');
             input.placeholder = '0-9';
             input.maxLength = 1;
@@ -416,6 +435,8 @@ function createStandardInput(rowHeader, field, value = '') {
             'YTD Expenses',
             'YTD TSP Contribution',
             'YTD Charity',
+            'Template Value',
+            'Custom Value',
             'Account TSP Value',
             'Account Bank Value',
             'Account Special Value'

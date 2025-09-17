@@ -7,9 +7,9 @@ function attachInjectModalListeners() {
     resetInjectModal();
 
     const injectInputs = [
+        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' },
         { container: 'inject-custom-header', field: 'string', rowHeader: 'Custom Header' },
-        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' },
-        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' }
+        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' }
     ];
 
     injectInputs.forEach(item => {
@@ -342,8 +342,8 @@ function validateAddRow({ method, header, value, percent, interest }) {
         return false;
     }
 
-    if ((!/^\d{0,4}(\.\d{0,2})?$/.test(value) || value === '')) {
-        showToast('Please enter a valid initial value (up to 4 digits before and 2 after decimal).');
+    if ((!/^\d{0,6}(\.\d{0,2})?$/.test(value) || value === '')) {
+        showToast('Please enter a valid initial value (up to 6 digits before and 2 after decimal).');
         return false;
     }
 

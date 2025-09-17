@@ -7,37 +7,38 @@ run: python -m app.main
 
 
 short-term:
-- add accounts (tsp, bank, debt, savings, emergency fund)
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
-- confirm carrying over debt to/from months on les
+- incorporate oconus zip code tracking
+- make months in service editable
+- add pro-rated calculations for cells
+- drills variable if NG or reserves
+- branch of service variable
+- component variable (active, reserve, guard, IRR)
+- drill pay calculation (divide monthly total by 30)
+- remove charity
 
 mid-term:
 - get combat zone from les
-- incorporate oconus zip code tracking
-- add drill pay
-- update readme
-- add comments to code
-- alphabetize resources and add stars for top ones
 - instructions modal
-- branch of service variable?
-- make months in service editable?
-- drills variable?
+- rework resources 
+-   tags for category (general, financial, moving, education, mental health), branch, featured
+-   alphabetize, stars for featured ones
+-   search bar
 
 long-term:
 - create leave calculator
-- add pro-rated calculations for cells
 - set initial value for template rows
+- update readme
+- add comments to code
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
 - update modal content
-- rework resources, maybe include tags and search
-- pdf export option
-- update modals
+- pdf export option (borb)
 - add charity to custom row
+- confirm carrying over debt to/from months on les (amount forward, carry forward)
 - joint spouse with two LES's
-- simplify capturing sgli rate and remarks
 - see about simplifying recommendations to being inline and using flask g or session variable
 - create unit tests 
 - check mobile use
@@ -45,13 +46,7 @@ long-term:
 - normalize css: https://necolas.github.io/normalize.css/
 - use python cProfile or line_profiler to find bottlenecks
 - instructions for self-host
-- definitions/terms/abbreviations table
-- searchable definitions
 - reddit account
-- XML export
-- JSON export
-- charts and reports
-- export entire budget (all metadata)
 - merch (patch, coin)
 - add in recommendation for type of bank
 - uncomment prompt when leaving budget page
