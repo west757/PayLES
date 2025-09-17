@@ -72,7 +72,7 @@ def add_var_tsp(budget, month, les_text, initials):
     if les_text:
         try:
             year = int('20' + les_text[8][4])
-            if not year or year < (flask_app.config['CURRENT_YEAR'] - 2):
+            if not year:
                 raise ValueError()
         except Exception:
             year = flask_app.config['CURRENT_YEAR']
@@ -640,7 +640,7 @@ def insert_row(budget, months, headers, row_data):
                     val = prev_val + month_sum
                 else:
                     val = prev_val + month_sum
-                    
+
                 val = val * (1 + interest)
                 row[m] = round(val, 2)
                 prev_val = val
