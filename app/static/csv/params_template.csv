@@ -1,6 +1,7 @@
 ﻿header,type,sign,field,tax,editable,modal,tooltip
 Year,v,0,none,False,False,none,none
 Months in Service,v,0,none,False,False,pebd,none
+Component,v,0,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
 Grade,v,0,select,False,True,basepay,"Grades are the designations like E1, W2, O3E, O4, whereas rank is the full title of the grade"
 Zip Code,v,0,string,False,True,bah,Must be a valid U.S. zip code
 Military Housing Area,v,0,none,False,False,bah,Code corresponding to a grouping of zip codes used for determining BAH
@@ -10,6 +11,7 @@ Federal Filing Status,v,0,select,False,True,federaltaxes,"Identifies if single, 
 State Filing Status,v,0,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
 SGLI Coverage,v,0,select,False,True,sgli,none
 Combat Zone,v,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
+Drills,v,0,int,False,True,drillpay,Identifies number of drills participated in
 Trad TSP Base Rate,t,0,int,False,True,basepay,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
 Trad TSP Specialty Rate,t,0,int,False,True,specialty,Traditional TSP Base Rate must be at least 1% to set a specialty rate
 Trad TSP Incentive Rate,t,0,int,False,True,incentive,Traditional TSP Base Rate must be at least 1% to set an incentive rate
@@ -30,6 +32,7 @@ YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the
 YTD TSP Contribution,y,0,float,False,False,none,Total TSP contributions from the beginning of the year
 YTD Charity,y,0,float,False,False,none,Total charitable contributions from the beginning of the year
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
+Component Long,m,0,none,False,False,none,none
 MHA Long,m,0,none,False,False,none,none
 Home of Record Long,m,0,none,False,False,none,none
 TSP Matching,m,0,none,False,False,none,none

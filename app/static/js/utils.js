@@ -231,6 +231,11 @@ function createStandardInput(rowHeader, field, value = '') {
             input.appendChild(defaultOption);
         }
 
+        else if (rowHeader === 'Component') {
+            options = Object.keys(window.CONFIG.COMPONENTS);
+            input.classList.add('input-short');
+        }
+
         else if (rowHeader === 'Grade') {
             options = window.CONFIG.GRADES;
             input.classList.add('input-short');

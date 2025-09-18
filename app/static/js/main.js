@@ -85,6 +85,9 @@ document.addEventListener('mousemove', function(e) {
                 const remMonths = months % 12;
                 tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
             } 
+            else if (row === 'Component' && value) {
+                tooltip = getBudgetValue('Component Long', month);
+            }
             else if (row === 'Home of Record' && value) {
                 tooltip = getBudgetValue('Home of Record Long', month);
             }

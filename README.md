@@ -13,10 +13,10 @@ short-term:
 - incorporate oconus zip code tracking
 - add pro-rated calculations for cells
 - drills variable if NG or reserves
-- branch of service variable
 - component variable (active, reserve, guard, IRR)
 - drill pay calculation (divide monthly total by 30)
 - remove charity
+- add charity to custom row
 
 mid-term:
 - get combat zone from les
@@ -33,9 +33,9 @@ long-term:
 - add comments to code
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
+- get drills from les
 - update modal content
 - pdf export option (borb)
-- add charity to custom row
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
 - joint spouse with two LES's
 - see about simplifying recommendations to being inline and using flask g or session variable

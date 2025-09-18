@@ -42,6 +42,13 @@ class Config:
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    COMPONENTS = {
+        "AD": "Active Duty",
+        "AGR": "Active Guard Reserve",
+        "NG": "National Guard",
+        "TR": "Traditional Reservist",
+        "IRR": "Individual Ready Reserve",
+    }
     TAX_FILING_TYPES_DEDUCTIONS = {
         "Single": 15000,
         "Married": 30000,

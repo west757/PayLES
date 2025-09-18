@@ -88,6 +88,15 @@ def add_var_tsp(budget, month, les_text, initials):
             months_in_service = 0
         values['Months in Service'] = months_in_service
 
+        #try:
+        #    component = les_text[57][1]
+        #    if not component:
+        #        raise ValueError()
+        #except Exception:
+        #    component = "Not Found"
+        component = "AD"
+        values['Component'] = component
+
         try:
             grade = les_text[2][1]
             if not grade:
@@ -161,6 +170,8 @@ def add_var_tsp(budget, month, les_text, initials):
 
         values['Combat Zone'] = "No"
 
+        values['Drills'] = 0
+
         tsp_rate_rows = [
             ("Trad TSP Base Rate", 60),
             ("Trad TSP Specialty Rate", 62),
@@ -194,6 +205,9 @@ def add_var_tsp(budget, month, les_text, initials):
 
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
+
+
+    add_mv_pair(budget, 'Component Long', month, flask_app.config['COMPONENTS'][values.get('Component')])
 
     mha_code, mha_name = get_mha(values.get('Zip Code'))
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
@@ -349,8 +363,6 @@ def add_ytd_rows(budget, month, les_text):
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
     values['YTD Net Pay'] = ytd_net_pay
 
-
-
     try:
         ytd_trad_tsp = float(les_text[79][3])
         if not ytd_trad_tsp or ytd_trad_tsp < 0:
@@ -449,7 +461,6 @@ def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, c
         elif row['header'] == "Months in Service":
             row[working_month] = prev_value + 1
 
-
         elif row['header'] == "Military Housing Area":
             zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
             zip_code = zip_row.get(working_month)
@@ -464,6 +475,13 @@ def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, c
 
         elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
             row[working_month] = row[prev_month]
+
+
+        if row['header'] == "Component":
+            component_row = next((r for r in budget if r['header'] == "Component"), None)
+            component_val = component_row.get(working_month)
+            component_long_row = next((r for r in budget if r['header'] == "Component Long"), None)
+            component_long_row[working_month] = flask_app.config['COMPONENTS'][component_val]
 
         if row['header'] == "Home of Record":
             longname, abbr = get_hor(row[working_month])
