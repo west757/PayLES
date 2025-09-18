@@ -232,7 +232,7 @@ function createStandardInput(rowHeader, field, value = '') {
         }
 
         else if (rowHeader === 'Component') {
-            options = Object.keys(window.CONFIG.COMPONENTS);
+            options = window.CONFIG.COMPONENTS;
             input.classList.add('input-short');
         }
 

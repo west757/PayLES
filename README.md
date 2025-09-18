@@ -10,13 +10,14 @@ short-term:
 - remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
+- add agency matching to ytd tsp
 - incorporate oconus zip code tracking
 - add pro-rated calculations for cells
-- drills variable if NG or reserves
-- component variable (active, reserve, guard, IRR)
 - drill pay calculation (divide monthly total by 30)
 - remove charity
 - add charity to custom row
+- conditionally render drills row
+- tsp account add tsp matching
 
 mid-term:
 - get combat zone from les
@@ -33,7 +34,6 @@ long-term:
 - add comments to code
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
-- get drills from les
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
