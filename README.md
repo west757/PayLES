@@ -7,7 +7,6 @@ run: python -m app.main
 
 
 short-term:
-- remove old LES's from GitHub
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates
 - add agency matching to ytd tsp
