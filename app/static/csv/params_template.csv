@@ -30,7 +30,6 @@ Difference,x,0,float,False,False,none,Difference in net pay from current month t
 YTD Income,y,0,float,False,False,none,Total income from the beginning of the year
 YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the year
 YTD TSP Contribution,y,0,float,False,False,none,Total TSP contributions from the beginning of the year
-YTD Charity,y,0,float,False,False,none,Total charitable contributions from the beginning of the year
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
 Component Long,m,0,none,False,False,none,none
 MHA Long,m,0,none,False,False,none,none

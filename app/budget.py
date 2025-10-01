@@ -352,14 +352,6 @@ def add_ytd_rows(budget, month, les_text):
         ytd_tsp = 0.00
     values['YTD TSP Contribution'] = ytd_tsp
 
-    try:
-        ytd_charity = float(les_text[56][2])
-        if not ytd_charity or ytd_charity < 0:
-            raise ValueError()
-    except Exception:
-        ytd_charity = 0.00
-    values['YTD Charity'] = ytd_charity
-
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
     values['YTD Net Pay'] = ytd_net_pay
 

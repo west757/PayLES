@@ -226,7 +226,6 @@ def calculate_ytd_rows(budget, prev_month, working_month):
     ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Income'), None)
     ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Expenses'), None)
     ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP Contribution'), None)
-    ytd_charity_row = next((r for r in budget if r['header'] == 'YTD Charity'), None)
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
     ytd_trad_tsp_row = next((r for r in budget if r['header'] == 'YTD Trad TSP'), None)
     ytd_trad_tsp_exempt_row = next((r for r in budget if r['header'] == 'YTD Trad TSP Exempt'), None)
@@ -242,8 +241,6 @@ def calculate_ytd_rows(budget, prev_month, working_month):
     trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
     roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
     tsp_total = abs(trad_tsp_row[working_month]) + abs(roth_tsp_row[working_month])
-
-    charity = 0.00
 
     net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
     net_pay = net_pay_row[working_month]
@@ -269,7 +266,6 @@ def calculate_ytd_rows(budget, prev_month, working_month):
         ytd_ent_row[working_month] = income
         ytd_ded_row[working_month] = expenses
         ytd_tsp_row[working_month] = tsp_total
-        ytd_charity_row[working_month] = charity
         ytd_net_row[working_month] = net_pay
         ytd_trad_tsp_row[working_month] = trad_tsp
         ytd_trad_tsp_exempt_row[working_month] = trad_tsp_exempt
@@ -279,7 +275,6 @@ def calculate_ytd_rows(budget, prev_month, working_month):
         ytd_ent_row[working_month] = round(ytd_ent_row[prev_month] + income, 2)
         ytd_ded_row[working_month] = round(ytd_ded_row[prev_month] + expenses, 2)
         ytd_tsp_row[working_month] = round(ytd_tsp_row[prev_month] + tsp_total, 2)
-        ytd_charity_row[working_month] = round(ytd_charity_row[prev_month] + charity, 2)
         ytd_net_row[working_month] = round(ytd_net_row[prev_month] + net_pay, 2)
         ytd_trad_tsp_row[working_month] = round(ytd_trad_tsp_row[prev_month] + trad_tsp, 2)
         ytd_trad_tsp_exempt_row[working_month] = round(ytd_trad_tsp_exempt_row[prev_month] + trad_tsp_exempt, 2)

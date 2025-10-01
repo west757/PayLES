@@ -22,7 +22,6 @@ function buildInitialsInputs() {
         { container: 'initials-ytd-income', field: 'float', rowHeader: 'YTD Income' },
         { container: 'initials-ytd-expenses', field: 'float', rowHeader: 'YTD Expenses' },
         { container: 'initials-ytd-tsp-contribution', field: 'float', rowHeader: 'YTD TSP Contribution' },
-        { container: 'initials-ytd-charity', field: 'float', rowHeader: 'YTD Charity' }
     ];
 
     initials.forEach(initial => {

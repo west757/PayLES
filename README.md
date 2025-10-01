@@ -13,8 +13,6 @@ short-term:
 - incorporate oconus zip code tracking
 - add pro-rated calculations for cells
 - drill pay calculation (divide monthly total by 30)
-- remove charity
-- add charity to custom row
 - conditionally render drills row
 - tsp account add tsp matching
 

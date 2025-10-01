@@ -439,7 +439,6 @@ function createStandardInput(rowHeader, field, value = '') {
             'YTD Income',
             'YTD Expenses',
             'YTD TSP Contribution',
-            'YTD Charity',
             'Template Value',
             'Custom Value',
             'Account TSP Value',
