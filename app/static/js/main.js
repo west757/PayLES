@@ -42,7 +42,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     highlightChanges();
     toggleRows('var');
     toggleRows('tsp');
-    toggleRows('ytd');
     enableInputs();
     disableDrillsButtons();
     disableTSPRateButtons();
@@ -218,10 +217,6 @@ document.addEventListener('change', function(e) {
 
     if (e.target && e.target.id === 'checkbox-tsp') {
         toggleRows('tsp');
-    }
-
-    if (e.target && e.target.id === 'checkbox-ytd') {
-        toggleRows('ytd');
     }
 });
 

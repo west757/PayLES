@@ -703,6 +703,10 @@ hr {
 #budget-container {
     border: 1px solid var(--table_border_color);
     border-radius: 1.5rem;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 0.5rem;
     height: 52rem;
     flex: 1 1 auto;
     margin: 0;
@@ -712,8 +716,8 @@ hr {
 }
 
 #budget-container::-webkit-scrollbar {
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 0.5rem;
+    width: 0.5rem;
 }
 
 #budget-container::-webkit-scrollbar-track {
@@ -835,7 +839,7 @@ hr {
     border-bottom: 0.4rem solid var(--table_border_color) !important;
 }
 
-.var-row, .tsp-row, .ytd-row {
+.var-row, .tsp-row {
     display: none;
 }
 

@@ -50,8 +50,6 @@
                         {% set row_class = "var-row" %}
                     {% elif row.type == 't' %}
                         {% set row_class = "tsp-row" %}
-                    {% elif row.type == 'y' %}
-                        {% set row_class = "ytd-row" %}
                     {% endif %}
 
                     {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}

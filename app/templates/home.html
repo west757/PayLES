@@ -34,6 +34,7 @@
         </div>
 
         <div id="tab-joint" class="tab-content">
+            <!--
             <form id="form-joint" hx-post="/route_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_joint.hidden_tag() }}
                 <div id="tab-joint-row">
@@ -48,6 +49,8 @@
                 </div>
                 {{ form_joint.button_joint(id="button-joint", class="button-solo") }}
             </form>
+        -->
+            Joint Spouse LES upload coming soon. In the meantime, please use the Single LES Upload tab.
         </div>
 
         <div id="tab-initials" class="tab-content">
@@ -78,7 +81,7 @@
                             <label for="initials-combat-zone">Combat Zone:</label>
                             <div id="initials-combat-zone"></div>
                             <span class="question tooltip" data-tooltip=
-                            "Indicates whether the user is currently in a combat zone, affecting taxable pay amount.">
+                            "Indicates whether the user is currently in a combat zone, affecting if certain pays are taxed.">
                             ?</span>
                         </div>
 
@@ -188,7 +191,7 @@
     <div id="disclaimer">
         <strong>Disclaimer:</strong> PayLES is not an official Department of Defense (DoD) or U.S. military service 
         application. It is a personal project developed by an active duty service member for educational and budgetary 
-        awareness. The information provided by PayLES is for informational purposes only and should not be considered 
+        awareness. The data provided by PayLES is for informational purposes only and should not be considered 
         official financial advice. Always consult with your finance office or a qualified financial advisor for 
         official guidance regarding your military pay and benefits.
     </div>

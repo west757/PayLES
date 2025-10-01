@@ -278,7 +278,7 @@ def add_recommendations(budget, months):
                 recs[f'state_tax_{hor}'] = {
                     'months': taxed_months,
                     'text': (
-                        f'<b>State Income Tax:</b> For month(s): {", ".join(taxed_months)}, your home of record - {longname} - is taxing your military pay. PayLES recommends changing your home of record, if possible, to a state/territory which either has no state income tax, fully exempts military income, or does not tax military income when stationed outside of the home of record. Learn more at <a href="https://www.military.com/money/personal-finance/state-tax-information.html" target="_blank">Military State Tax Info</a>.'
+                        f'<b>State Income Tax:</b> For month(s): {", ".join(taxed_months)}, your home of record - {longname} - is taxing your military pay. PayLES recommends changing your home of record, if possible, to a state/territory which either has no state income tax, fully exempts military income, or does not tax military income when stationed outside of the home of record. View the <a href="/static/graphics/military_income_state_taxed_map.png" target="_blank">Military Income State Taxed Map</a>, and learn more at <a href="https://www.military.com/money/personal-finance/state-tax-information.html" target="_blank">Military State Tax Info</a>.'
                     )
                 }
 

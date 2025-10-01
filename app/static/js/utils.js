@@ -103,9 +103,6 @@ function toggleRows(type) {
     } else if (type === 'tsp') {
         checkbox = document.getElementById('checkbox-tsp');
         rows = document.getElementsByClassName('tsp-row');
-    } else if (type === 'ytd') {
-        checkbox = document.getElementById('checkbox-ytd');
-        rows = document.getElementsByClassName('ytd-row');
     } else {
         return;
     }

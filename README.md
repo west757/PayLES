@@ -7,12 +7,10 @@ run: python -m app.main
 
 
 short-term:
-- styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates (for current year and next year)
 - add agency matching to ytd tsp
 - tsp account add tsp matching
 - incorporate oconus zip code tracking
-- add pro-rated calculations for cells
 - drill pay calculation (divide monthly total by 30)
 
 mid-term:
@@ -22,6 +20,7 @@ mid-term:
 -   tags for category (general, financial, moving, education, mental health), branch, featured
 -   alphabetize, stars for featured ones
 -   search bar
+- add pro-rated calculations for cells
 
 long-term:
 - leave calculator
@@ -47,6 +46,7 @@ long-term:
 - merch (patch, coin)
 - add in recommendation for type of bank
 - uncomment prompt when leaving budget page
+- better css for border table scroll bar
 
 
 3. Security Headers
