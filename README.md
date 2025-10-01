@@ -8,7 +8,7 @@ run: python -m app.main
 
 short-term:
 - styling of budget scroll bars
-- tsp calculator for reaching certain tsp amount and providing rates
+- tsp calculator for reaching certain tsp amount and providing rates (for current year and next year)
 - add agency matching to ytd tsp
 - incorporate oconus zip code tracking
 - add pro-rated calculations for cells
@@ -31,6 +31,8 @@ long-term:
 - set initial value for template rows
 - update readme
 - add comments to code
+- add in ranks for each branch tooltip
+- add in branch row
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
 - update modal content

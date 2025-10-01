@@ -46,8 +46,16 @@ class Config:
         "AD": "Active Duty",
         "AGR": "Active Guard Reserve",
         "NG": "National Guard",
-        "TR": "Traditional Reservist",
+        "RES": "Traditional Reservist",
         "IRR": "Individual Ready Reserve",
+    }
+    BRANCHES = {
+        "USA": "United States Army",
+        "USAF": "United States Air Force",
+        "USSF": "United States Space Force",
+        "USN": "United States Navy",
+        "USMC": "United States Marine Corps",
+        "USCG": "United States Coast Guard",
     }
     TAX_FILING_TYPES_DEDUCTIONS = {
         "Single": 15000,
