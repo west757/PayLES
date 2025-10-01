@@ -254,6 +254,7 @@ function exitEditMode() {
 
     cellButton.style.display = '';
     enableInputs();
+    disableDrillsButtons();
     disableTSPRateButtons();
     isEditing = false;
     currentEdit = null;

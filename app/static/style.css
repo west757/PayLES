@@ -287,6 +287,16 @@ input[type=file]::file-selector-button {
     background-color: var(--highlight_green_color);
 }
 
+/*
+.styled-table-button.cell-button {
+    text-decoration: underline;
+    text-decoration-style: dotted; 
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--cell_disabled_color);
+}
+    */
+
 .editing-button {
     align-items: center;
     border: none;

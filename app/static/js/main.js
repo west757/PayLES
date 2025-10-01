@@ -44,6 +44,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     toggleRows('tsp');
     toggleRows('ytd');
     enableInputs();
+    disableDrillsButtons();
     disableTSPRateButtons();
     updateRecommendations();
 

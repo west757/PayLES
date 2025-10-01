@@ -84,7 +84,7 @@ class Config:
     # y = ytd
     # z = account
     # m = metadata
-    TYPE_ORDER = ['v', 't', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+    TYPE_ORDER = ['v', 'e', 'd', 'a', 't', 'c', 'x', 'y', 'z', 'm']
 
     special_calculations = {
         'Base Pay': 'calculate_base_pay',

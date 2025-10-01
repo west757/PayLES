@@ -196,6 +196,18 @@ function disableTSPRateButtons() {
 }
 
 
+function disableDrillsButtons() {
+    const months = window.CONFIG.months;
+    months.forEach(month => {
+        const component = getBudgetValue('Component', month);
+        const btn = document.querySelector(`.cell-button[data-row="Drills"][data-month="${month}"]`);
+        if (btn) {
+            btn.disabled = !(component === 'NG' || component === 'RES');
+        }
+    });
+}
+
+
 function createStandardInput(rowHeader, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';

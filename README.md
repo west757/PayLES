@@ -10,11 +10,10 @@ short-term:
 - styling of budget scroll bars
 - tsp calculator for reaching certain tsp amount and providing rates (for current year and next year)
 - add agency matching to ytd tsp
+- tsp account add tsp matching
 - incorporate oconus zip code tracking
 - add pro-rated calculations for cells
 - drill pay calculation (divide monthly total by 30)
-- conditionally render drills row
-- tsp account add tsp matching
 
 mid-term:
 - get combat zone from les
@@ -25,7 +24,7 @@ mid-term:
 -   search bar
 
 long-term:
-- create leave calculator
+- leave calculator
 - set initial value for template rows
 - update readme
 - add comments to code
