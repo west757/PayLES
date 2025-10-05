@@ -77,8 +77,8 @@ def add_row(budget, header, template=None, metadata=None):
     return row
 
 
-def add_mv_pair(budget, header, month, value):
-    row = next((r for r in budget if r['header'] == header), None)
+def add_mv_pair(table, header, month, value):
+    row = next((r for r in table if r['header'] == header), None)
     if row is None:
         return
     
@@ -117,6 +117,13 @@ def get_mha(zip_code):
     except Exception:
         return "Not Found", "Not Found"
     
+
+def get_table_val(table, header, month):
+    row = next((r for r in table if r['header'] == header), None)
+    if row is None:
+        return None
+    return row.get(month, None)
+
 
 def get_hor(home_of_record):
     HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']

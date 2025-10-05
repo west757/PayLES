@@ -1,4 +1,4 @@
-from flask import request, render_template, session, jsonify, g
+from flask import request, render_template, session, jsonify
 from app import csrf
 
 from app import flask_app
@@ -20,6 +20,9 @@ from app.budget import (
     remove_months,
     remove_row,
     insert_row,
+)
+from app.tsp import (
+    init_tsp,
 )
 from app.forms import (
     FormSingleExample,
@@ -82,6 +85,8 @@ def route_single_example():
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+        tsp = init_tsp(init_month, budget, les_text=les_text)
 
         recommendations = add_recommendations(budget, months)
         budget = convert_numpy_types(budget)

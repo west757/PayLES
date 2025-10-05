@@ -34,7 +34,8 @@ from app.calculations import (
 def init_budget(les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
-    headers = PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
+    TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
+    headers = PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + TSP_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
 
     if les_text:
         try:
@@ -200,7 +201,6 @@ def add_var_tsp(budget, month, les_text, initials):
         values['TSP Matching'] = tsp_matching
 
     elif initials:
-        print(initials)
         values = initials
 
     for header, value in values.items():

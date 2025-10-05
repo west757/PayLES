@@ -12,6 +12,9 @@ short-term:
 - tsp account add tsp matching
 - incorporate oconus zip code tracking
 - drill pay calculation (divide monthly total by 30)
+- make tsp account for tsp table
+- change account to just be bank account
+- build an index of headers instead of scanning entire table
 
 mid-term:
 - get combat zone from les

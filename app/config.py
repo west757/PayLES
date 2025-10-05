@@ -65,12 +65,20 @@ class Config:
     COMBAT_ZONES = ["No", "Yes"]
 
     ROW_METADATA = [
-    'type',
-    'sign',
-    'field',
-    'tax',
-    'editable',
-    'modal',
+        'type',
+        'sign',
+        'field',
+        'tax',
+        'editable',
+        'modal',
+    ]
+
+    TSP_METADATA = [
+        'header',
+        'type',
+        'field',
+        'editable',
+        'modal',
     ]
 
     # row types in budget order:
@@ -189,6 +197,17 @@ class Config:
             'single_rate': float,
             'married_bracket': int,
             'married_rate': float,
+        }
+    )
+
+    TSP_TEMPLATE = pd.read_csv(CSV_FOLDER / "tsp_template.csv",
+        dtype={
+            'header': str,
+            'type': str,
+            'field': str,
+            'editable': bool,
+            'modal': str,
+            'tooltip': str,
         }
     )
 
