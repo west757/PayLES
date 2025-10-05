@@ -2,11 +2,11 @@ from app import flask_app
 from app.utils import (
     add_mv_pair,
     get_table_val,
-    sum_rows_from_modal,
+    sum_rows_via_modal,
 )
 
 
-def init_tsp(init_month, budget, les_text=None, initials=None):
+def init_tsp(budget, init_month, les_text=None, initials=None):
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
     TSP_METADATA = flask_app.config['TSP_METADATA']
 
@@ -15,13 +15,12 @@ def init_tsp(init_month, budget, les_text=None, initials=None):
         tsp_row = {meta: row[meta] for meta in TSP_METADATA}
         tsp.append(tsp_row)
 
-
     values = {}
 
     values['Base Pay Total'] = get_table_val(budget, "Base Pay", init_month)
-    values['Specialty Pay Total'] = sum_rows_from_modal(budget, "specialty", init_month)
-    values['Incentive Pay Total'] = sum_rows_from_modal(budget, "incentive", init_month)
-    values['Bonus Pay Total'] = sum_rows_from_modal(budget, "bonus", init_month)
+    values['Specialty Pay Total'] = sum_rows_via_modal(budget, "specialty", init_month)
+    values['Incentive Pay Total'] = sum_rows_via_modal(budget, "incentive", init_month)
+    values['Bonus Pay Total'] = sum_rows_via_modal(budget, "bonus", init_month)
 
     combat_zone = get_table_val(budget, "Combat Zone", init_month)
     if combat_zone == "Yes":
@@ -142,7 +141,7 @@ def calc_tsp_contribution_total(tsp, month):
 
 
 def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
-    ytd_headers = flask_app.config['YTD_TSP_HEADERS']
+    ytd_headers = flask_app.config['TSP_YTD_HEADERS']
     total = 0.0
     for header in ytd_headers:
         row = next((r for r in tsp if r.get('header') == header), None)
@@ -168,7 +167,7 @@ def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
 
 def calc_elective_deferral_remaining(tsp, month):
     total = 0.0
-    for header in flask_app.config['YTD_ELECTIVE_HEADERS']:
+    for header in flask_app.config['TSP_YTD_ELECTIVE_HEADERS']:
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
@@ -180,7 +179,7 @@ def calc_elective_deferral_remaining(tsp, month):
 
 def calc_annual_deferral_remaining(tsp, month):
     total = 0.0
-    for header in flask_app.config['YTD_TSP_HEADERS']:
+    for header in flask_app.config['TSP_YTD_HEADERS']:
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
@@ -193,9 +192,9 @@ def calc_annual_deferral_remaining(tsp, month):
 
 def update_tsp(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
     base_pay_total = get_table_val(budget, "Base Pay", working_month)
-    specialty_pay_total = sum_rows_from_modal(budget, "specialty", working_month)
-    incentive_pay_total = sum_rows_from_modal(budget, "incentive", working_month)
-    bonus_pay_total = sum_rows_from_modal(budget, "bonus", working_month)
+    specialty_pay_total = sum_rows_via_modal(budget, "specialty", working_month)
+    incentive_pay_total = sum_rows_via_modal(budget, "incentive", working_month)
+    bonus_pay_total = sum_rows_via_modal(budget, "bonus", working_month)
 
     add_mv_pair(tsp, 'Base Pay Total', working_month, base_pay_total)
     add_mv_pair(tsp, 'Specialty Pay Total', working_month, specialty_pay_total)

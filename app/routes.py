@@ -2,17 +2,6 @@ from flask import request, render_template, session, jsonify
 from app import csrf
 
 from app import flask_app
-from app.utils import (
-    load_json,
-    convert_numpy_types,
-    validate_file,
-    get_months,
-    add_recommendations,
-)
-from app.les import (
-    validate_les, 
-    process_les,
-)
 from app.budget import (
     init_budget,
     add_months,
@@ -21,12 +10,23 @@ from app.budget import (
     remove_row,
     insert_row,
 )
-from app.tsp import (
-    init_tsp,
-)
 from app.forms import (
     FormSingleExample,
     FormJoint,
+)
+from app.les import (
+    validate_les, 
+    process_les,
+)
+from app.tsp import (
+    init_tsp,
+)
+from app.utils import (
+    load_json,
+    convert_numpy_types,
+    validate_file,
+    get_months,
+    add_recommendations,
 )
 
 
@@ -75,16 +75,19 @@ def route_single_example():
             return jsonify({'message': message}), 400
         
         valid, message, les_pdf = validate_les(file)
-        show_instructions = False
+        show_guide_buttons = False
 
     elif 'button_example' in request.form:
         valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
-        show_instructions = True
+        show_guide_buttons = True
+
+    else:
+        return jsonify({'message': "Invalid submission"}), 400
 
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
-        tsp = init_tsp(init_month, budget, les_text=les_text)
+        tsp = init_tsp(budget, init_month, les_text=les_text)
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         recommendations = add_recommendations(budget, months)
@@ -108,7 +111,7 @@ def route_single_example():
             'headers': headers,
             'les_image': les_image,
             'rect_overlay': rect_overlay,
-            'show_instructions': show_instructions,
+            'show_guide_buttons': show_guide_buttons,
             'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }

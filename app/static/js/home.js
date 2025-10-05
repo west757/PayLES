@@ -12,16 +12,9 @@ function buildInitialsInputs() {
         { container: 'initials-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
         { container: 'initials-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
         { container: 'initials-trad-tsp-base-rate', field: 'int', rowHeader: 'Trad TSP Base Rate' },
-        { container: 'initials-trad-tsp-specialty-rate', field: 'int', rowHeader: 'Trad TSP Specialty Rate' },
-        { container: 'initials-trad-tsp-incentive-rate', field: 'int', rowHeader: 'Trad TSP Incentive Rate' },
-        { container: 'initials-trad-tsp-bonus-rate', field: 'int', rowHeader: 'Trad TSP Bonus Rate' },
         { container: 'initials-roth-tsp-base-rate', field: 'int', rowHeader: 'Roth TSP Base Rate' },
-        { container: 'initials-roth-tsp-specialty-rate', field: 'int', rowHeader: 'Roth TSP Specialty Rate' },
-        { container: 'initials-roth-tsp-incentive-rate', field: 'int', rowHeader: 'Roth TSP Incentive Rate' },
-        { container: 'initials-roth-tsp-bonus-rate', field: 'int', rowHeader: 'Roth TSP Bonus Rate' },
         { container: 'initials-ytd-income', field: 'float', rowHeader: 'YTD Income' },
         { container: 'initials-ytd-expenses', field: 'float', rowHeader: 'YTD Expenses' },
-        { container: 'initials-ytd-tsp-contribution', field: 'float', rowHeader: 'YTD TSP Contribution' },
     ];
 
     initials.forEach(initial => {

@@ -250,7 +250,7 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-instructions, #button-inject, #button-account, #button-recs, #button-tsp, #button-account-tsp, #button-tsp-analysis {
+#button-instructions, #button-inject, #button-account-bank, #button-recs, #button-tsp, #button-account-tsp, #button-tsp-analysis {
     width: 11rem;
 }
 

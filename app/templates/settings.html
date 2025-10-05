@@ -9,15 +9,15 @@
                 <table class="styled-table">
                     <thead>
                         <tr>
-                            <th>Budget Settings</th>
+                            <th>Settings</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- show instructions -->
-                        {% if show_instructions %}
+                        <!-- show budget guide -->
+                        {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
-                                    <button id="button-instructions" class="button-solo">Instructions</button>
+                                    <button id="button-budget-guide" class="button-solo">Guide</button>
                                 </td>
                             </tr>
                         {% endif %}
@@ -69,7 +69,7 @@
                         <!-- add account row -->
                         <tr>
                             <td>
-                                <button id="button-account" class="button-solo">Add Bank Account</button>
+                                <button id="button-account-bank" class="button-solo">Add Bank Account</button>
                             </td>
                         </tr>
 
@@ -90,7 +90,7 @@
                             <td>
                                 <div class="export-row">
                                     <span>Export as:</span>
-                                    <select id="dropdown-export">
+                                    <select>
                                         <option value="xlsx">Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
@@ -107,15 +107,15 @@
                 <table class="styled-table">
                     <thead>
                         <tr>
-                            <th>TSP Settings</th>
+                            <th>Settings</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- show instructions -->
-                        {% if show_instructions %}
+                        <!-- show tsp guide -->
+                        {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
-                                    <button id="button-tsp-instructions" class="button-solo">TSP Instructions</button>
+                                    <button id="button-tsp-guide" class="button-solo">Guide</button>
                                 </td>
                             </tr>
                         {% endif %}
@@ -132,7 +132,7 @@
                         </tr>
 
                         
-                        <!-- show TSP Variables -->
+                        <!-- show TSP rates -->
                         <tr>
                             <td>
                                 <div class="checkbox-row">
@@ -163,7 +163,7 @@
                             <td>
                                 <div class="export-row">
                                     <span>Export as:</span>
-                                    <select id="dropdown-export">
+                                    <select>
                                         <option value="xlsx">Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
@@ -176,6 +176,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- render LES image -->
     {% if les_image is defined and les_image %}
@@ -200,6 +201,7 @@
             </button>
             {% endfor %}
         </div>
+
 
         <!-- LES remarks -->
         <div id="remarks-container">
@@ -255,21 +257,32 @@
     {% endfor %}
 
 
-    <!-- instructions modal -->
-    <input id="instructions" class="modal-state" type="checkbox" />
+    <!-- budget guide modal -->
+    <input id="modal-budget-guide" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="instructions"></label>
+        <label class="modal-background" for="modal-budget-guide"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
-            <h2>Instructions</h2>
+            <h2>Budget Guide</h2>
+        </div>
+    </div>
+
+
+    <!-- tsp guide modal -->
+    <input id="modal-tsp-guide" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="modal-tsp-guide"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Thrift Savings Plan (TSP) Calculator Guide</h2>
         </div>
     </div>
 
 
     <!-- inject modal-->
-    <input id="inject" class="modal-state" type="checkbox" />
+    <input id="modal-inject" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="inject"></label>
+        <label class="modal-background" for="modal-inject"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Entitlement/Deduction/Allotment Row</h2>
@@ -473,9 +486,9 @@
 
 
     <!-- recommendations modal -->
-    <input id="recs" class="modal-state" type="checkbox" />
+    <input id="modal-recs" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="recs"></label>
+        <label class="modal-background" for="modal-recs"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Budget Recommendations</h2>
@@ -484,13 +497,13 @@
     </div>
 
 
-    <!-- TSP calculator -->
-    <input id="tsp_calc" class="modal-state" type="checkbox" />
+    <!-- TSP analysis -->
+    <input id="modal-tsp-analysis" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="tsp_calc"></label>
+        <label class="modal-background" for="modal-tsp-analysis"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
-            <h2>TSP Calculator</h2>
+            <h2>TSP Analysis</h2>
         </div>
     </div>
 

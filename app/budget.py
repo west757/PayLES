@@ -37,7 +37,10 @@ def init_budget(les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
-    headers = PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') + TSP_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records')
+
+    headers = (PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') 
+               + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') 
+               + TSP_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records'))
 
     if les_text:
         try:

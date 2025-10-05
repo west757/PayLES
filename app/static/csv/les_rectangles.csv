@@ -6,7 +6,7 @@ index,x1,y1,x2,y2,title,modal,tooltip
 5,1590,126,1740,228,ets,none,"Expiration Term of Service, same as Expiration of Active Obligated Service (EAOS)"
 6,1740,126,1920,228,branch,none,Branch of U.S. Military
 7,1920,126,2145,228,adsn,none,"Disbursing Station Symbol Number, identifies each disbursing/finance office"
-8,2146,126,2474,228,period,none,Month LES is applicable for
+8,2146,126,2474,228,period,none,Pay period LES covers
 9,74,228,764,935,entitlements,none,"Entitlements and allowances being paid. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive entitlements/allowances will be added to like entitlements/allowances."
 10,764,228,1334,935,deductions,none,"Deductions being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. Any retroactive deductions will be added to like deductions."
 11,1334,228,1904,935,allotments,none,"Allotments being automatically taken. Space is allocated for fifteen line items, if more are present they will be printed in the remarks section. If a member has more than one of the same type of allotment, the only differentiation may be that of the dollar amount."

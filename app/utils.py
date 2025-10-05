@@ -91,7 +91,7 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
-def sum_rows_from_modal(budget, modal_str, month):
+def sum_rows_via_modal(budget, modal_str, month):
     total = 0.0
     for row in budget:
         if row.get('modal') == modal_str:
