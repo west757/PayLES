@@ -218,6 +218,14 @@ document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'checkbox-tsp') {
         toggleRows('tsp');
     }
+
+    if (e.target && e.target.id === 'checkbox-tsp-highlight') {
+        tspHighlightChanges();
+    }
+
+    if (e.target && e.target.id === 'checkbox-tsp-rates') {
+        toggleRows('tsp-rates');
+    }
 });
 
 

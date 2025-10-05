@@ -250,11 +250,11 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-instructions, #button-inject, #button-account, #button-recs, #button-tsp {
+#button-instructions, #button-inject, #button-account, #button-recs, #button-tsp, #button-account-tsp, #button-tsp-analysis {
     width: 11rem;
 }
 
-#button-export {
+#button-export, #button-tsp-export {
     align-items: center;
     display: flex;
     height: 2rem;
@@ -690,7 +690,7 @@ hr {
    budget and settings
    ========================= */
 
-#budget-settings {
+#tables-settings {
     align-items: flex-start;
     display: flex;
     gap: 2rem;
@@ -699,8 +699,7 @@ hr {
 }
 
 
-
-#budget-container {
+#budget-container, #tsp-container {
     border: 1px solid var(--table_border_color);
     border-radius: 1.5rem;
     border-top-left-radius: 1.5rem;
@@ -709,10 +708,13 @@ hr {
     border-bottom-right-radius: 0.5rem;
     height: 52rem;
     flex: 1 1 auto;
-    margin: 0;
     max-width: calc(100vw - 14rem - 7rem);
     overflow-x: auto;
     overflow-y: auto; 
+}
+
+#tsp-container {
+    margin-top: 2rem;
 }
 
 #budget-container::-webkit-scrollbar {
@@ -753,32 +755,6 @@ hr {
     z-index: 1103;
 }
 
-#settings {
-    border-radius: 1.5rem;
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-
-
-
-
-
-#tsp-container {
-    border: 1px solid var(--table_border_color);
-    border-radius: 1.5rem;
-    border-top-left-radius: 1.5rem;
-    border-top-right-radius: 0.5rem;
-    border-bottom-left-radius: 1.5rem;
-    border-bottom-right-radius: 0.5rem;
-    height: 52rem;
-    flex: 1 1 auto;
-    margin: 0;
-    max-width: calc(100vw - 14rem - 7rem);
-    overflow-x: auto;
-    overflow-y: auto; 
-}
 
 #tsp-container::-webkit-scrollbar {
     height: 0.5rem;
@@ -796,7 +772,6 @@ hr {
     background-clip: padding-box;
     transition: background 0.5s;
 }
-
 
 #tsp-table {
     table-layout: fixed;
@@ -819,6 +794,21 @@ hr {
 }
 
 
+
+
+#settings {
+    flex-shrink: 0;
+}
+
+#settings-budget, #settings-tsp {
+    border-radius: 1.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
+    overflow: hidden;
+}
+
+#settings-tsp {
+    margin-top: 10rem;
+}
 
 
 
@@ -900,7 +890,7 @@ hr {
     border-bottom: 0.4rem solid var(--table_border_color) !important;
 }
 
-.var-row, .tsp-row {
+.var-row, .tsp-row, .row-tsp-rate {
     display: none;
 }
 
@@ -942,7 +932,7 @@ hr {
     margin-right: 0.25rem;
 }
 
-#export-row {
+.export-row {
     display: flex;
     align-items: center;
     justify-content: center;

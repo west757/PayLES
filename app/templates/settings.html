@@ -1,125 +1,199 @@
 <div id="content" hx-swap-oob="true">
-    <div id="budget-settings">
+    <div id="tables-settings">
         <div id="budget">
             {% include 'budget.html' %}
         </div>
 
         <div id="settings">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Settings</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- show instructions -->
-                    {% if show_instructions %}
-                        <tr class="section-break">
+            <div id="settings-budget">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Budget Settings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- show instructions -->
+                        {% if show_instructions %}
+                            <tr class="section-break">
+                                <td>
+                                    <button id="button-instructions" class="button-solo">Instructions</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+
+
+                        <!-- months display-->
+                        <tr>
                             <td>
-                                <button id="button-instructions" class="button-solo">Instructions</button>
+                                <label for="months-num-dropdown">Months Displayed:</label>
+                                <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
+                                    {% for i in range(2, 13) %}
+                                        <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
+                                    {% endfor %}
+                                </select>
                             </td>
                         </tr>
-                    {% endif %}
 
 
-                    <!-- months display-->
-                    <tr>
-                        <td>
-                            <label for="months-num-dropdown">Months Displayed:</label>
-                            <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
-                                {% for i in range(2, 13) %}
-                                    <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
+                        <!-- highlight changes -->
+                        <tr>
+                            <td>
+                                <div class="checkbox-row">
+                                    <label for="checkbox-highlight">Highlight Changes:</label>
+                                    <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+                        
+                        <!-- show all variables -->
+                        <tr>
+                            <td>
+                                <div class="checkbox-row">
+                                    <label for="checkbox-var">Show All Variables:</label>
+                                    <input id="checkbox-var" class="checkbox-styled" type="checkbox">
+                                </div>
+                            </td>
+                        </tr>
 
 
-                    <!-- highlight changes -->
-                    <tr>
-                        <td>
-                            <div class="checkbox-row">
-                                <label for="checkbox-highlight">Highlight Changes:</label>
-                                <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
-                            </div>
-                        </td>
-                    </tr>
-
-                    
-                    <!-- show all variables -->
-                    <tr>
-                        <td>
-                            <div class="checkbox-row">
-                                <label for="checkbox-var">Show All Variables:</label>
-                                <input id="checkbox-var" class="checkbox-styled" type="checkbox">
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- show TSP options -->
+                        <tr>
+                            <td>
+                                <div class="checkbox-row">
+                                    <label for="checkbox-tsp">Show TSP Options:</label>
+                                    <input id="checkbox-tsp" class="checkbox-styled" type="checkbox">
+                                </div>
+                            </td>
+                        </tr>
 
 
-                    <!-- show TSP options -->
-                    <tr>
-                        <td>
-                            <div class="checkbox-row">
-                                <label for="checkbox-tsp">Show TSP Options:</label>
-                                <input id="checkbox-tsp" class="checkbox-styled" type="checkbox">
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- add inject row -->
+                        <tr>
+                            <td>
+                                <button id="button-inject" class="button-solo">Add Custom Row</button>
+                            </td>
+                        </tr>
 
 
-                    <!-- add inject row -->
-                    <tr>
-                        <td>
-                            <button id="button-inject" class="button-solo">Add Custom Row</button>
-                        </td>
-                    </tr>
+                        <!-- add account row -->
+                        <tr>
+                            <td>
+                                <button id="button-account" class="button-solo">Add Account Row</button>
+                            </td>
+                        </tr>
+
+                        <!-- TSP calculator -->
+                        <tr>
+                            <td>
+                                <button id="button-tsp" class="button-solo">TSP Calculator</button>
+                            </td>
+                        </tr>
 
 
-                    <!-- add account row -->
-                    <tr>
-                        <td>
-                            <button id="button-account" class="button-solo">Add Account Row</button>
-                        </td>
-                    </tr>
-
-                    <!-- TSP calculator -->
-                    <tr>
-                        <td>
-                            <button id="button-tsp" class="button-solo">TSP Calculator</button>
-                        </td>
-                    </tr>
+                        <!-- LES recommendations -->
+                        <tr class="section-break">
+                            <td>
+                                <button id="button-recs" class="button-solo">
+                                    Recommendations
+                                    <span id="badge-recs"></span>
+                                </button>
+                            </td>
+                        </tr>
 
 
-                    <!-- LES recommendations -->
-                    <tr class="section-break">
-                        <td>
-                            <button id="button-recs" class="button-solo">
-                                Recommendations
-                                <span id="badge-recs"></span>
-                            </button>
-                        </td>
-                    </tr>
+                        <!-- export-->
+                        <tr>
+                            <td>
+                                <div class="export-row">
+                                    <span>Export as:</span>
+                                    <select id="dropdown-export">
+                                        <option value="xlsx">Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                    <button id="button-export" class="button-solo" title="Download">↯</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
 
-                    <!-- export-->
-                    <tr>
-                        <td>
-                            <div id="export-row">
-                                <span>Export as:</span>
-                                <select id="dropdown-export">
-                                    <option value="xlsx">Excel</option>
-                                    <option value="csv">CSV</option>
-                                </select>
-                                <button id="button-export" class="button-solo" title="Download">↯</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="settings-tsp">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>TSP Settings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- show instructions -->
+                        {% if show_instructions %}
+                            <tr class="section-break">
+                                <td>
+                                    <button id="button-tsp-instructions" class="button-solo">TSP Instructions</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+
+
+                        <!-- highlight changes -->
+                        <tr>
+                            <td>
+                                <div class="checkbox-row">
+                                    <label for="checkbox-tsp-highlight">Highlight Changes:</label>
+                                    <input id="checkbox-tsp-highlight" class="checkbox-styled" type="checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+                        
+                        <!-- show TSP Variables -->
+                        <tr>
+                            <td>
+                                <div class="checkbox-row">
+                                    <label for="checkbox-tsp-rates">Show TSP Rates:</label>
+                                    <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <!-- add tsp account -->
+                        <tr>
+                            <td>
+                                <button id="button-account-tsp" class="button-solo">Add TSP Account</button>
+                            </td>
+                        </tr>
+
+                        <!-- TSP analysis -->
+                        <tr class="section-break">
+                            <td>
+                                <button id="button-tsp-analysis" class="button-solo">TSP Analysis</button>
+                            </td>
+                        </tr>
+
+
+                        <!-- export-->
+                        <tr>
+                            <td>
+                                <div class="export-row">
+                                    <span>Export as:</span>
+                                    <select id="dropdown-export">
+                                        <option value="xlsx">Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                    <button id="button-tsp-export" class="button-solo" title="Download">↯</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
 
     <!-- render LES image -->
     {% if les_image is defined and les_image %}

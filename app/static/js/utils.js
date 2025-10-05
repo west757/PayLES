@@ -103,6 +103,9 @@ function toggleRows(type) {
     } else if (type === 'tsp') {
         checkbox = document.getElementById('checkbox-tsp');
         rows = document.getElementsByClassName('tsp-row');
+    } else if (type === 'tsp-rates') {
+        checkbox = document.getElementById('checkbox-tsp-rates');
+        rows = document.getElementsByClassName('row-tsp-rate');
     } else {
         return;
     }

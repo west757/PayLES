@@ -7,9 +7,6 @@ run: python -m app.main
 
 
 short-term:
-- tsp calculator for reaching certain tsp amount and providing rates (for current year and next year)
-- add agency matching to ytd tsp
-- tsp account add tsp matching
 - incorporate oconus zip code tracking
 - drill pay calculation (divide monthly total by 30)
 - make tsp account for tsp table
