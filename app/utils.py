@@ -77,6 +77,7 @@ def add_row(budget, header, template=None, metadata=None):
     return row
 
 
+# add a month-value pair to a row identified by header
 def add_mv_pair(table, header, month, value):
     row = next((r for r in table if r['header'] == header), None)
     if row is None:

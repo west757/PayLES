@@ -25,6 +25,9 @@ from app.calculations import (
     calculate_state_taxes,
     calculate_trad_roth_tsp,
 )
+from app.tsp import (
+    update_tsp,
+)
 
 
 # =========================
@@ -399,22 +402,23 @@ def add_ytd_rows(budget, month, les_text):
 # update budget months and variables
 # =========================
 
-def add_months(budget, latest_month, months_num, init=False):
+def add_months(budget, tsp, latest_month, months_num, init=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
-    current_num = len(months)
-    months_to_add = months_num - current_num
+    
+    # calculates how many more months to add, starting from latest_month
+    months_num_to_add = months_num - len(months)
     latest_month_idx = MONTHS_SHORT.index(latest_month)
 
-    for i in range(months_to_add):
+    for i in range(months_num_to_add):
         working_month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
+        budget, tsp = build_month(budget, tsp, months[-1], working_month, init=init)
         months.append(working_month)
-        budget = build_month(budget, months[-2], working_month, init=init)  # months[-2] is previous month
 
-    return budget, months
+    return budget, tsp, months
 
 
-def update_months(budget, months, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
+def update_months(budget, tsp, months, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
     if cell_header is None:
         start_idx = 1
     else:
@@ -423,14 +427,15 @@ def update_months(budget, months, cell_header=None, cell_month=None, cell_value=
     for i in range(start_idx, len(months)):
         prev_month = months[i - 1]
         working_month = months[i]
-        budget = build_month(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+        budget, tsp = build_month(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
 
-    return budget
+    return budget, tsp
 
 
-def build_month(budget, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
+def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
     update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
+    update_tsp(budget, tsp, prev_month, working_month)
     calculate_trad_roth_tsp(budget, prev_month, working_month)
     calculate_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)

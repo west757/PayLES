@@ -84,19 +84,18 @@ def route_single_example():
     if valid:
         les_image, rect_overlay, les_text = process_les(les_pdf)
         budget, init_month, headers = init_budget(les_text=les_text)
-        budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-
         tsp = init_tsp(init_month, budget, les_text=les_text)
-        for row in tsp:
-            print(row)
+        budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         recommendations = add_recommendations(budget, months)
         budget = convert_numpy_types(budget)
         session['budget'] = budget
+        session['tsp'] = tsp
         session['headers'] = headers
 
         config_js = {
             'budget': budget,
+            'tsp': tsp,
             'months': months,
             'headers': headers,
             'recommendations': recommendations,
@@ -104,6 +103,7 @@ def route_single_example():
         context = {
             'config_js': config_js,
             'budget': budget,
+            'tsp': tsp,
             'months': months,
             'headers': headers,
             'les_image': les_image,
@@ -139,15 +139,18 @@ def route_initials():
     initials = request.form.to_dict()
 
     budget, init_month, headers = init_budget(initials=initials)
+    tsp = init_tsp(init_month, budget, initials=initials)
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     
     recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
+    session['tsp'] = tsp
     session['headers'] = headers
 
     config_js = {
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
         'recommendations': recommendations,
@@ -155,6 +158,7 @@ def route_initials():
     context = {
         'config_js': config_js,
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
         'MODALS': load_json(flask_app.config['MODALS_JSON']),
@@ -166,6 +170,7 @@ def route_initials():
 @flask_app.route('/route_update_cell', methods=['POST'])
 def route_update_cell():
     budget = session.get('budget', [])
+    tsp = session.get('tsp', [])
     months = get_months(budget)
     headers = session.get('headers', [])
     
@@ -182,19 +187,22 @@ def route_update_cell():
     elif cell_field in ('float', float):
         cell_value = round((float(cell_value) * cell_row.get('sign')), 2)
 
-    budget = update_months(budget, months, cell_header, cell_month, cell_value, cell_repeat)
+    budget, tsp = update_months(budget, tsp, months, cell_header, cell_month, cell_value, cell_repeat)
     
     recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
+    session['tsp'] = tsp
 
     config_js = {
         'budget': budget,
+        'tsp': tsp,
         'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
     }
@@ -205,6 +213,7 @@ def route_update_cell():
 @flask_app.route('/route_change_months', methods=['POST'])
 def route_change_months():
     budget = session.get('budget', [])
+    tsp = session.get('tsp', [])
     headers = session.get('headers', [])
     months = get_months(budget)
 
@@ -212,22 +221,25 @@ def route_change_months():
     old_months_num = len(months)
 
     if new_months_num < old_months_num:
-        budget, months = remove_months(budget, new_months_num)
+        budget, tsp, months = remove_months(budget, tsp, new_months_num)
     elif new_months_num > old_months_num:
-        budget, months = add_months(budget, latest_month=months[-1], months_num=new_months_num)
+        budget, tsp, months = add_months(budget, tsp, latest_month=months[-1], months_num=new_months_num)
 
     recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
+    session['tsp'] = tsp
 
     config_js = {
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
     }
@@ -238,6 +250,7 @@ def route_change_months():
 @flask_app.route('/route_insert_row', methods=['POST'])
 def route_insert_row():
     budget = session.get('budget', [])
+    tsp = session.get('tsp', [])
     months = get_months(budget)
     headers = session.get('headers', [])
 
@@ -252,21 +265,24 @@ def route_insert_row():
     }
 
     budget, headers = insert_row(budget, months, headers, row_data)
-    budget = update_months(budget, months)
+    budget, tsp = update_months(budget, tsp, months)
 
     recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
+    session['tsp'] = tsp
     session['headers'] = headers
 
     config_js = {
         'budget': budget,
+        'tsp': tsp,
         'headers': headers,
         'recommendations': recommendations,
     }
     context = {
         'config_js': config_js,
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
     }
@@ -277,26 +293,30 @@ def route_insert_row():
 @flask_app.route('/route_remove_row', methods=['POST'])
 def route_remove_row():
     budget = session.get('budget', [])
+    tsp = session.get('tsp', [])
     months = get_months(budget)
     headers = session.get('headers', [])
 
     header = request.form.get('header', '')
 
     budget, headers = remove_row(budget, headers, header)
-    budget = update_months(budget, months)
+    budget, tsp = update_months(budget, tsp, months)
 
     recommendations = add_recommendations(budget, months)
     budget = convert_numpy_types(budget)
     session['budget'] = budget
+    session['tsp'] = tsp
     session['headers'] = headers
 
     config_js = {
         'budget': budget,
+        'tsp': tsp,
         'headers': headers,
     }
     context = {
         'config_js': config_js,
         'budget': budget,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
         'recommendations': recommendations,

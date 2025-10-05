@@ -15,6 +15,7 @@ short-term:
 - make tsp account for tsp table
 - change account to just be bank account
 - build an index of headers instead of scanning entire table
+- change calculate to calc in function names
 
 mid-term:
 - get combat zone from les
@@ -25,6 +26,8 @@ mid-term:
 -   search bar
 - add pro-rated calculations for cells
 - add in exact value location from les_rectangle for index (like [87][2])
+- check for discrepancies between what PayLES would return versus what is actually on the LES for the first month
+- add loading screen after submitting LES
 
 long-term:
 - leave calculator

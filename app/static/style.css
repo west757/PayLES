@@ -761,6 +761,67 @@ hr {
 }
 
 
+
+
+
+
+#tsp-container {
+    border: 1px solid var(--table_border_color);
+    border-radius: 1.5rem;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 0.5rem;
+    height: 52rem;
+    flex: 1 1 auto;
+    margin: 0;
+    max-width: calc(100vw - 14rem - 7rem);
+    overflow-x: auto;
+    overflow-y: auto; 
+}
+
+#tsp-container::-webkit-scrollbar {
+    height: 0.5rem;
+    width: 0.5rem;
+}
+
+#tsp-container::-webkit-scrollbar-track {
+    background-color: none;
+}
+
+#tsp-container::-webkit-scrollbar-thumb {
+    background: var(--table_border_color);
+    border: none;
+    border-radius: 0.5rem;
+    background-clip: padding-box;
+    transition: background 0.5s;
+}
+
+
+#tsp-table {
+    table-layout: fixed;
+}
+
+#tsp-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1104;
+}
+
+#tsp-table td:first-child, #tsp-table th:first-child {
+    left: 0;
+    position: sticky;
+    z-index: 1105;
+}
+
+#tsp-table th:nth-child(1) {
+    z-index: 1106;
+}
+
+
+
+
+
 /* =========================
    styled table
    ========================= */

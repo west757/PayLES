@@ -105,6 +105,16 @@ class Config:
         'State Taxes': 'calculate_state_taxes',
     }
 
+    TSP_RATE_HEADERS = [
+        "Trad TSP Base Rate",
+        "Trad TSP Specialty Rate",
+        "Trad TSP Incentive Rate",
+        "Trad TSP Bonus Rate",
+        "Roth TSP Base Rate",
+        "Roth TSP Specialty Rate",
+        "Roth TSP Incentive Rate",
+        "Roth TSP Bonus Rate",
+    ]
     TSP_CONTRIBUTION_HEADERS = [
         "Trad TSP Contribution",
         "Trad TSP Exempt Contribution",
