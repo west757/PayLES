@@ -48,13 +48,9 @@
                     {% set row_class = "" %}
                     {% if row.type == 'v' %}
                         {% set row_class = "var-row" %}
-                    {% elif row.type == 't' %}
-                        {% set row_class = "tsp-row" %}
                     {% endif %}
 
                     {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
-                        {% set section_break = true %}
-                    {% elif row.type == 't' and (not next_row or next_row.type != 't') %}
                         {% set section_break = true %}
                     {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
                         {% set section_break = true %}

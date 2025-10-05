@@ -83,7 +83,6 @@ class Config:
 
     # row types in budget order:
     # v = variable
-    # t = tsp rate
     # e = entitlement
     # d = deduction
     # a = allotment
@@ -92,7 +91,7 @@ class Config:
     # y = ytd
     # z = account
     # m = metadata
-    TYPE_ORDER = ['v', 'e', 'd', 'a', 't', 'c', 'x', 'y', 'z', 'm']
+    TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
 
     special_calculations = {
         'Base Pay': 'calculate_base_pay',

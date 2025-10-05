@@ -176,52 +176,52 @@ def add_recommendations(budget, months):
         }
 
     # TSP contribution limit recommendation
-    tsp_contribution_limit = flask_app.config['TSP_ELECTIVE_LIMIT']
-    tsp_contrib_months = []
-    for month in months:
-        ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
-        ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
-        if (ytd_trad + ytd_roth) >= tsp_contribution_limit:
-            tsp_contrib_months.append(month)
-    if tsp_contrib_months:
-        recs['tsp_contribution_limit'] = {
-            'months': tsp_contrib_months,
-            'text': (
-                '<b>TSP Contribution Limit:</b> For month(s): 'f'{", ".join(tsp_contrib_months)}, the TSP contribution limit of ${tsp_contribution_limit} has been reached. Any additional contributions not made within a combat zone towards the Traditional TSP will not be deducted. PayLES recommends adjusting your TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
-            )
-        }
+    #tsp_contribution_limit = flask_app.config['TSP_ELECTIVE_LIMIT']
+    #tsp_contrib_months = []
+    #for month in months:
+    #    ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
+    #    ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
+    #    if (ytd_trad + ytd_roth) >= tsp_contribution_limit:
+    #        tsp_contrib_months.append(month)
+    #if tsp_contrib_months:
+    #    recs['tsp_contribution_limit'] = {
+    #        'months': tsp_contrib_months,
+    #        'text': (
+    #            '<b>TSP Contribution Limit:</b> For month(s): 'f'{", ".join(tsp_contrib_months)}, the TSP contribution limit of ${tsp_contribution_limit} has been reached. Any additional contributions not made within a combat zone towards the Traditional TSP will not be deducted. PayLES recommends adjusting your TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
+    #        )
+    #    }
 
     # TSP annual limit recommendation
-    tsp_annual_limit = flask_app.config['TSP_ANNUAL_LIMIT']
-    tsp_annual_months = []
-    for month in months:
-        ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
-        ytd_trad_exempt = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP Exempt'), 0)
-        ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
-        ytd_matching = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Matching'), 0)
-        if (ytd_trad + ytd_trad_exempt + ytd_roth + ytd_matching) >= tsp_annual_limit:
-            tsp_annual_months.append(month)
-    if tsp_annual_months:
-        recs['tsp_annual_limit'] = {
-            'months': tsp_annual_months,
-            'text': (
-                '<b>TSP Annual Limit:</b> For month(s): 'f'{", ".join(tsp_annual_months)}, the TSP annual limit of ${tsp_annual_limit} has been reached. Any additional contributions will not be deducted. PayLES recommends adjusting your TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
-            )
-        }
+    #tsp_annual_limit = flask_app.config['TSP_ANNUAL_LIMIT']
+    #tsp_annual_months = []
+    #for month in months:
+    #    ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)
+    #    ytd_trad_exempt = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP Exempt'), 0)
+    #    ytd_roth = next((row[month] for row in budget if row.get('header', '') == 'YTD Roth TSP'), 0)
+    #    ytd_matching = next((row[month] for row in budget if row.get('header', '') == 'YTD TSP Matching'), 0)
+    #    if (ytd_trad + ytd_trad_exempt + ytd_roth + ytd_matching) >= tsp_annual_limit:
+    #        tsp_annual_months.append(month)
+    #if tsp_annual_months:
+    #    recs['tsp_annual_limit'] = {
+    #        'months': tsp_annual_months,
+    #        'text': (
+    #            '<b>TSP Annual Limit:</b> For month(s): 'f'{", ".join(tsp_annual_months)}, the TSP annual limit of ${tsp_annual_limit} has been reached. Any additional contributions will not be deducted. PayLES recommends adjusting your TSP contribution rates to avoid reaching the contribution limit. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-limits/" target="_blank">TSP Contribution Limits</a>.'
+    #        )
+    #    }
 
     # Combat zone TSP recommendation
-    combat_zone_months = []
-    for month in months:
-        combat_zone = next((row[month] for row in budget if row.get('header', '') == 'Combat Zone'), "No")
-        if str(combat_zone).strip().lower() == "yes":
-            combat_zone_months.append(month)
-    if combat_zone_months:
-        recs['combat_zone_tsp'] = {
-            'months': combat_zone_months,
-            'text': (
-                '<b>Combat Zone:</b> For month(s): 'f'{", ".join(combat_zone_months)}, you are anticipating being in a combat zone. PayLES recommends taking full advantage of the TSP combat zone tax exclusion (CZTE) benefit by contributing as much as practical to the Traditional TSP. Learn more at <a href="https://themilitarywallet.com/maximizing-your-thrift-savings-plan-contributions-in-a-combat-zone/" target="_blank">How to Maximize TSP Contributions in a Combat Zone</a>.'
-            )
-        }
+    #combat_zone_months = []
+    #for month in months:
+    #    combat_zone = next((row[month] for row in budget if row.get('header', '') == 'Combat Zone'), "No")
+    #    if str(combat_zone).strip().lower() == "yes":
+    #        combat_zone_months.append(month)
+    #if combat_zone_months:
+    #    recs['combat_zone_tsp'] = {
+    #        'months': combat_zone_months,
+    #        'text': (
+    #            '<b>Combat Zone:</b> For month(s): 'f'{", ".join(combat_zone_months)}, you are anticipating being in a combat zone. PayLES recommends taking full advantage of the TSP combat zone tax exclusion (CZTE) benefit by contributing as much as practical to the Traditional TSP. Learn more at <a href="https://themilitarywallet.com/maximizing-your-thrift-savings-plan-contributions-in-a-combat-zone/" target="_blank">How to Maximize TSP Contributions in a Combat Zone</a>.'
+    #        )
+    #    }
 
     # negative net pay recommendation
     negative_net_pay_months = []
@@ -238,27 +238,27 @@ def add_recommendations(budget, months):
         }
 
     # TSP matching recommendation
-    months_in_service = None
-    for row in budget:
-        if row.get('header', '') == 'Months in Service':
-            # Use the first month found (should be the same for all months)
-            months_in_service = next((row[m] for m in months if m in row), None)
-            break
+    #months_in_service = None
+    #for row in budget:
+    #    if row.get('header', '') == 'Months in Service':
+    #        # Use the first month found (should be the same for all months)
+    #        months_in_service = next((row[m] for m in months if m in row), None)
+    #        break
 
-    tsp_matching_months = []
-    if months_in_service is not None and months_in_service >= 24:
-        for month in months:
-            trad_rate = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
-            roth_rate = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
-            if (trad_rate + roth_rate) < 5:
-                tsp_matching_months.append(month)
-    if tsp_matching_months:
-        recs['tsp_matching'] = {
-            'months': tsp_matching_months,
-            'text': (
-                '<b>TSP Matching:</b> For month(s): 'f'{", ".join(tsp_matching_months)}, you are fully vested in the TSP however are not taking full advantage of the 1%-4% agency matching for TSP contributions. PayLES recommends to have the combined total of your Traditional TSP base rate and Roth TSP base rate to be at least 5% to get the highest agency matching rate. Your current combined rate is {trad_rate + roth_rate}%. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-types/" target="_blank">TSP Contribution Types</a>.'
-            )
-        }
+    #tsp_matching_months = []
+    #if months_in_service is not None and months_in_service >= 24:
+    #    for month in months:
+    #        trad_rate = next((row[month] for row in budget if row.get('header', '') == 'Trad TSP Base Rate'), 0)
+    #        roth_rate = next((row[month] for row in budget if row.get('header', '') == 'Roth TSP Base Rate'), 0)
+    #        if (trad_rate + roth_rate) < 5:
+    #            tsp_matching_months.append(month)
+    #if tsp_matching_months:
+    #    recs['tsp_matching'] = {
+    #        'months': tsp_matching_months,
+    #        'text': (
+    #            '<b>TSP Matching:</b> For month(s): 'f'{", ".join(tsp_matching_months)}, you are fully vested in the TSP however are not taking full advantage of the 1%-4% agency matching for TSP contributions. PayLES recommends to have the combined total of your Traditional TSP base rate and Roth TSP base rate to be at least 5% to get the highest agency matching rate. Your current combined rate is {trad_rate + roth_rate}%. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-types/" target="_blank">TSP Contribution Types</a>.'
+    #        )
+    #    }
 
 
     # state income tax recommendation

@@ -12,14 +12,6 @@ State Filing Status,v,0,select,False,True,statetaxes,Identifies if single or mar
 SGLI Coverage,v,0,select,False,True,sgli,none
 Combat Zone,v,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
 Drills,v,0,int,False,True,drillpay,Identifies number of drills participated in
-Trad TSP Base Rate,t,0,int,False,True,basepay,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
-Trad TSP Specialty Rate,t,0,int,False,True,specialty,Traditional TSP Base Rate must be at least 1% to set a specialty rate
-Trad TSP Incentive Rate,t,0,int,False,True,incentive,Traditional TSP Base Rate must be at least 1% to set an incentive rate
-Trad TSP Bonus Rate,t,0,int,False,True,bonus,Traditional TSP Base Rate must be at least 1% to set a bonus rate
-Roth TSP Base Rate,t,0,int,False,True,basepay,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 64%
-Roth TSP Specialty Rate,t,0,int,False,True,specialty,Roth TSP Base Rate must be at least 1% to set a specialty rate
-Roth TSP Incentive Rate,t,0,int,False,True,incentive,Roth TSP Base Rate must be at least 1% to set an incentive rate
-Roth TSP Bonus Rate,t,0,int,False,True,bonus,Roth TSP Base Rate must be at least 1% to set a bonus rate
 Taxable Income,x,0,float,False,False,none,none
 Non-Taxable Income,x,0,float,False,False,none,none
 Total Income,x,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
@@ -29,13 +21,7 @@ Net Pay,x,0,float,False,False,none,Sum of income and expenses
 Difference,x,0,float,False,False,none,Difference in net pay from current month to previous month
 YTD Income,y,0,float,False,False,none,Total income from the beginning of the year
 YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the year
-YTD TSP Contribution,y,0,float,False,False,none,Total TSP contributions from the beginning of the year
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
 Component Long,m,0,none,False,False,none,none
 MHA Long,m,0,none,False,False,none,none
 Home of Record Long,m,0,none,False,False,none,none
-TSP Matching,m,0,none,False,False,none,none
-YTD Trad TSP,m,0,none,False,False,none,none
-YTD Trad TSP Exempt,m,0,none,False,False,none,none
-YTD Roth TSP,m,0,none,False,False,none,none
-YTD TSP Matching,m,0,none,False,False,none,none

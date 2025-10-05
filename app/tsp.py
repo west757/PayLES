@@ -4,7 +4,6 @@ from app.utils import (
     get_table_val,
     sum_rows_from_modal,
 )
-from app.calculations import calculate_trad_roth_tsp
 
 
 def init_tsp(init_month, budget, les_text=None, initials=None):

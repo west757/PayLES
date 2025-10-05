@@ -23,7 +23,6 @@ from app.calculations import (
     calculate_fica_medicare,
     calculate_sgli,
     calculate_state_taxes,
-    calculate_trad_roth_tsp,
 )
 from app.tsp import (
     update_tsp,
@@ -54,13 +53,12 @@ def init_budget(les_text=None, initials=None):
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row(budget, row['header'], template=PARAMS_TEMPLATE)
 
-    add_var_tsp(budget, init_month, les_text, initials)
+    add_var(budget, init_month, les_text, initials)
     if les_text:
         add_ent_ded_alt_rows(PAY_TEMPLATE, budget, init_month, les_text)
         calculate_income(budget, init_month)
     elif initials:
         add_ent_rows(PAY_TEMPLATE, budget, init_month)
-        calculate_trad_roth_tsp(budget, init_month, init_month)
         calculate_income(budget, init_month)
         add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
     calculate_tax_exp_net(budget, init_month)
@@ -70,7 +68,7 @@ def init_budget(les_text=None, initials=None):
     return budget, init_month, headers
 
 
-def add_var_tsp(budget, month, les_text, initials):
+def add_var(budget, month, les_text, initials):
     values = {}
 
     if les_text:
@@ -175,33 +173,6 @@ def add_var_tsp(budget, month, les_text, initials):
         values['Combat Zone'] = "No"
 
         values['Drills'] = 0
-
-        tsp_rate_rows = [
-            ("Trad TSP Base Rate", 60),
-            ("Trad TSP Specialty Rate", 62),
-            ("Trad TSP Incentive Rate", 64),
-            ("Trad TSP Bonus Rate", 66),
-            ("Roth TSP Base Rate", 69),
-            ("Roth TSP Specialty Rate", 71),
-            ("Roth TSP Incentive Rate", 73),
-            ("Roth TSP Bonus Rate", 75),
-        ]
-        for header, idx in tsp_rate_rows:
-            try:
-                rate = int(les_text[idx][3])
-                if not rate:
-                    raise ValueError()
-            except Exception:
-                rate = 0
-            values[header] = rate
-
-        try:
-            tsp_matching = int(les_text[85][1]) + int(les_text[86][1])
-            if not tsp_matching:
-                raise ValueError()
-        except Exception:
-            tsp_matching = 0
-        values['TSP Matching'] = tsp_matching
 
     elif initials:
         values = initials
@@ -347,49 +318,8 @@ def add_ytd_rows(budget, month, les_text):
     ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
     values['YTD Expenses'] = ytd_expenses
 
-    try:
-        ytd_tsp = float(les_text[78][2])
-        if not ytd_tsp or ytd_tsp < 0:
-            raise ValueError()
-    except Exception:
-        ytd_tsp = 0.00
-    values['YTD TSP Contribution'] = ytd_tsp
-
     ytd_net_pay = round(ytd_income + ytd_expenses, 2)
     values['YTD Net Pay'] = ytd_net_pay
-
-    try:
-        ytd_trad_tsp = float(les_text[79][3])
-        if not ytd_trad_tsp or ytd_trad_tsp < 0:
-            raise ValueError()
-    except Exception:
-        ytd_trad_tsp = 0.00
-    values['YTD Trad TSP'] = ytd_trad_tsp
-
-    try:
-        ytd_trad_tsp_exempt = float(les_text[80][3])
-        if not ytd_trad_tsp_exempt or ytd_trad_tsp_exempt < 0:
-            raise ValueError()
-    except Exception:
-        ytd_trad_tsp_exempt = 0.00
-    values['YTD Trad TSP Exempt'] = ytd_trad_tsp_exempt
-
-    try:
-        ytd_roth_tsp = float(les_text[81][2])
-        if not ytd_roth_tsp or ytd_roth_tsp < 0:
-            raise ValueError()
-    except Exception:
-        ytd_roth_tsp = 0.00
-    values['YTD Roth TSP'] = ytd_roth_tsp
-
-    try:
-        ytd_tsp_matching = float(les_text[83][3])
-        if not ytd_tsp_matching or ytd_tsp_matching < 0:
-            raise ValueError()
-    except Exception:
-        ytd_tsp_matching = 0.00
-    values['YTD TSP Matching'] = ytd_tsp_matching
-
 
     for header, value in values.items():
         add_mv_pair(budget, header, month, value)
@@ -433,10 +363,18 @@ def update_months(budget, tsp, months, cell_header=None, cell_month=None, cell_v
 
 
 def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
-    update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    update_var(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     update_tsp(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
-    calculate_trad_roth_tsp(budget, prev_month, working_month)
+
+    trad_tsp_row = next((r for r in budget if r.get('header') == 'Traditional TSP'), None)
+    trad_contrib_row = next((r for r in tsp if r.get('header') == 'Trad TSP Contribution'), None)
+    trad_exempt_row = next((r for r in tsp if r.get('header') == 'Trad TSP Exempt Contribution'), None)
+    roth_tsp_row = next((r for r in budget if r.get('header') == 'Roth TSP'), None)
+    roth_contrib_row = next((r for r in tsp if r.get('header') == 'Roth TSP Contribution'), None)
+    trad_tsp_row[working_month] = trad_contrib_row.get(working_month, 0) + trad_exempt_row.get(working_month, 0)
+    roth_tsp_row[working_month] = roth_contrib_row.get(working_month, 0)
+
     calculate_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_tax_exp_net(budget, working_month)
@@ -445,7 +383,7 @@ def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_m
     return budget, tsp
 
 
-def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
+def update_var(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
     for row in budget:
         if row.get('type') not in ('v', 't'):
             continue
@@ -486,17 +424,17 @@ def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, c
             home_of_record_long[working_month] = longname
 
     # TSP specialty/incentive/bonus zeroing
-    tsp_types = [
-        ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
-        ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
-    ]
-    for base_header, specialty_headers in tsp_types:
-        base_row = next((r for r in budget if r['header'] == base_header), None)
-        if base_row and base_row.get(working_month, 0) == 0:
-            for header in specialty_headers:
-                rate_row = next((r for r in budget if r['header'] == header), None)
-                if rate_row:
-                    rate_row[working_month] = 0
+    #tsp_types = [
+    #    ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
+    #    ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
+    #]
+    #for base_header, specialty_headers in tsp_types:
+    #    base_row = next((r for r in budget if r['header'] == base_header), None)
+    #    if base_row and base_row.get(working_month, 0) == 0:
+    #        for header in specialty_headers:
+    #            rate_row = next((r for r in budget if r['header'] == header), None)
+    #            if rate_row:
+    #                rate_row[working_month] = 0
 
 
 def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):

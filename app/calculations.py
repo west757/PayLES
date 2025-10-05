@@ -89,12 +89,7 @@ def calculate_difference(budget, prev_month, working_month):
 def calculate_ytd_rows(budget, prev_month, working_month):
     ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Income'), None)
     ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Expenses'), None)
-    ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP Contribution'), None)
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
-    ytd_trad_tsp_row = next((r for r in budget if r['header'] == 'YTD Trad TSP'), None)
-    ytd_trad_tsp_exempt_row = next((r for r in budget if r['header'] == 'YTD Trad TSP Exempt'), None)
-    ytd_roth_tsp_row = next((r for r in budget if r['header'] == 'YTD Roth TSP'), None)
-    ytd_tsp_matching_row = next((r for r in budget if r['header'] == 'YTD TSP Matching'), None)
 
     income_row = next((r for r in budget if r['header'] == 'Total Income'), None)
     income = income_row[working_month]
@@ -102,48 +97,18 @@ def calculate_ytd_rows(budget, prev_month, working_month):
     expenses_row = next((r for r in budget if r['header'] == 'Total Expenses'), None)
     expenses = expenses_row[working_month]
 
-    trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
-    roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
-    tsp_total = abs(trad_tsp_row[working_month]) + abs(roth_tsp_row[working_month])
-
     net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
     net_pay = net_pay_row[working_month]
 
 
-    combat_zone_row = next((r for r in budget if r['header'] == 'Combat Zone'), None)
-    combat_zone = combat_zone_row[working_month]
-    trad_tsp_row = next((r for r in budget if r['header'] == 'Traditional TSP'), None)
-    trad_tsp = 0.00
-    trad_tsp_exempt = 0.00
-    if combat_zone == "No":
-        trad_tsp = abs(trad_tsp_row[working_month])
-    elif combat_zone == "Yes":
-        trad_tsp_exempt = abs(trad_tsp_row[working_month])
-
-    roth_tsp_row = next((r for r in budget if r['header'] == 'Roth TSP'), None)
-    roth_tsp = abs(roth_tsp_row[working_month])
-
-    tsp_matching_row = next((r for r in budget if r['header'] == 'TSP Matching'), None)
-    tsp_matching = abs(tsp_matching_row[working_month])
-
     if working_month == "JAN":
         ytd_ent_row[working_month] = income
         ytd_ded_row[working_month] = expenses
-        ytd_tsp_row[working_month] = tsp_total
         ytd_net_row[working_month] = net_pay
-        ytd_trad_tsp_row[working_month] = trad_tsp
-        ytd_trad_tsp_exempt_row[working_month] = trad_tsp_exempt
-        ytd_roth_tsp_row[working_month] = roth_tsp
-        ytd_tsp_matching_row[working_month] = tsp_matching
     else:
         ytd_ent_row[working_month] = round(ytd_ent_row[prev_month] + income, 2)
         ytd_ded_row[working_month] = round(ytd_ded_row[prev_month] + expenses, 2)
-        ytd_tsp_row[working_month] = round(ytd_tsp_row[prev_month] + tsp_total, 2)
         ytd_net_row[working_month] = round(ytd_net_row[prev_month] + net_pay, 2)
-        ytd_trad_tsp_row[working_month] = round(ytd_trad_tsp_row[prev_month] + trad_tsp, 2)
-        ytd_trad_tsp_exempt_row[working_month] = round(ytd_trad_tsp_exempt_row[prev_month] + trad_tsp_exempt, 2)
-        ytd_roth_tsp_row[working_month] = round(ytd_roth_tsp_row[prev_month] + roth_tsp, 2)
-        ytd_tsp_matching_row[working_month] = round(ytd_tsp_matching_row[prev_month] + tsp_matching, 2)
 
     return budget
 
@@ -341,144 +306,3 @@ def calculate_state_taxes(budget, month):
 
     tax = tax / 12
     return -round(tax, 2)
-
-
-
-# =========================
-# TSP calculations
-# =========================
-
-def calculate_trad_roth_tsp(budget, prev_month, working_month):
-    PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
-    tsp_rows = PARAMS_TEMPLATE[PARAMS_TEMPLATE['type'] == 't']
-
-    base_pay_row = next((r for r in budget if r['header'] == 'Base Pay'), None)
-    trad_base_rate_row = next((r for r in budget if r['header'] == 'Trad TSP Base Rate'), None)
-    roth_base_rate_row = next((r for r in budget if r['header'] == 'Roth TSP Base Rate'), None)
-    combat_zone_row = next((r for r in budget if r['header'] == 'Combat Zone'), None)
-    ytd_tsp_row = next((r for r in budget if r['header'] == 'YTD TSP Contribution'), None)
-
-    base_pay = base_pay_row[working_month] if base_pay_row and working_month in base_pay_row else 0.0
-    trad_base_rate = trad_base_rate_row[working_month] if trad_base_rate_row and working_month in trad_base_rate_row else 0.0
-    roth_base_rate = roth_base_rate_row[working_month] if roth_base_rate_row and working_month in roth_base_rate_row else 0.0
-    combat_zone = combat_zone_row[working_month] if combat_zone_row and working_month in combat_zone_row else "No"
-    
-    if working_month == "JAN":
-        prev_ytd_tsp = 0.0
-    else:
-        prev_ytd_tsp = ytd_tsp_row[prev_month] if ytd_tsp_row and prev_month in ytd_tsp_row else 0.0
-
-    specialty_rows = [row['header'] for row in budget if row.get('modal') == 'specialty' and row.get('sign') == 1]
-    incentive_rows = [row['header'] for row in budget if row.get('modal') == 'incentive' and row.get('sign') == 1]
-    bonus_rows = [row['header'] for row in budget if row.get('modal') == 'bonus' and row.get('sign') == 1]
-
-    trad_total = 0.0
-    roth_total = 0.0
-
-    for _, tsp_row in tsp_rows.iterrows():
-        tsp_var = tsp_row['header']
-        rate_row = next((r for r in budget if r['header'] == tsp_var), None)
-        rate = rate_row[working_month] if rate_row and working_month in rate_row else 0.0
-
-        if rate > 0:
-            if 'Base' in tsp_var:
-                total = base_pay
-            elif 'Specialty' in tsp_var:
-                total = sum(
-                    r[working_month] if working_month in r else 0.0
-                    for r in budget if r['header'] in specialty_rows
-                )
-            elif 'Incentive' in tsp_var:
-                total = sum(
-                    r[working_month] if working_month in r else 0.0
-                    for r in budget if r['header'] in incentive_rows
-                )
-            elif 'Bonus' in tsp_var:
-                total = sum(
-                    r[working_month] if working_month in r else 0.0
-                    for r in budget if r['header'] in bonus_rows
-                )
-            else:
-                total = 0.0
-
-            value = total * rate / 100.0
-
-            if tsp_var.startswith("Trad"):
-                trad_total += value
-            elif tsp_var.startswith("Roth"):
-                roth_total += value
-
-    trad_tsp = trad_total if combat_zone == "No" else 0.0
-    trad_tsp_exempt = trad_total if combat_zone == "Yes" else 0.0
-
-    combined_rate = trad_base_rate + roth_base_rate
-    tsp_matching = base_pay * 0.01
-    if combined_rate >= 5:
-        tsp_matching += base_pay * 0.04
-    elif combined_rate == 4:
-        tsp_matching += base_pay * 0.035
-    elif combined_rate == 3:
-        tsp_matching += base_pay * 0.03
-    elif combined_rate == 2:
-        tsp_matching += base_pay * 0.02
-    elif combined_rate == 1:
-        tsp_matching += base_pay * 0.01
-
-    # Enforce TSP limits
-    elective_remaining = flask_app.config['TSP_ELECTIVE_LIMIT'] - prev_ytd_tsp
-    trad_final = 0.0
-    roth_final = 0.0
-
-    # Add as much trad_tsp as possible
-    if elective_remaining > 0:
-        if trad_tsp > elective_remaining:
-            trad_final = elective_remaining
-            elective_remaining = 0
-            roth_final = 0.0
-        else:
-            trad_final = trad_tsp
-            elective_remaining -= trad_tsp
-            # Add as much roth_total as possible
-            if roth_total > elective_remaining:
-                roth_final = elective_remaining
-            else:
-                roth_final = roth_total
-    # If elective_remaining <= 0, both are zero
-
-    # Step 2: Limit all sources to not exceed TSP_ANNUAL_LIMIT
-    annual_remaining = flask_app.config['TSP_ANNUAL_LIMIT'] - prev_ytd_tsp - trad_final - roth_final
-    trad_tsp_exempt_final = 0.0
-    tsp_matching_final = 0.0
-
-    # Add trad_tsp_exempt if room
-    if annual_remaining > 0:
-        if trad_tsp_exempt > annual_remaining:
-            trad_tsp_exempt_final = annual_remaining
-            annual_remaining = 0
-        else:
-            trad_tsp_exempt_final = trad_tsp_exempt
-            annual_remaining -= trad_tsp_exempt
-
-        # Add tsp_matching if room
-        if annual_remaining > 0:
-            if tsp_matching > annual_remaining:
-                tsp_matching_final = annual_remaining
-            else:
-                tsp_matching_final = tsp_matching
-
-    if combat_zone == "No":
-        trad_final = trad_final
-    elif combat_zone == "Yes":
-        trad_final = trad_tsp_exempt_final
-
-    for row in budget:
-        if row['header'] == 'Traditional TSP':
-            row[working_month] = -round(trad_final, 2)
-        elif row['header'] == 'Roth TSP':
-            row[working_month] = -round(roth_final, 2)
-        elif row['header'] == 'TSP Matching':
-            row[working_month] = round(tsp_matching_final, 2)
-        elif row['header'] == 'Trad TSP Exempt':
-            row[working_month] = -round(trad_tsp_exempt_final, 2)
-
-    return budget
