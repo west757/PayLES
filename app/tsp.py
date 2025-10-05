@@ -192,41 +192,122 @@ def calculate_annual_deferral_remaining(tsp, month):
 
 
 
-def update_tsp(budget, tsp, prev_month, working_month):
-    add_mv_pair(tsp, 'Base Pay Total', working_month, get_table_val(budget, "Base Pay", working_month))
-    add_mv_pair(tsp, 'Specialty Pay Total', working_month, sum_rows_from_modal(budget, "specialty", working_month))
-    add_mv_pair(tsp, 'Incentive Pay Total', working_month, sum_rows_from_modal(budget, "incentive", working_month))
-    add_mv_pair(tsp, 'Bonus Pay Total', working_month, sum_rows_from_modal(budget, "bonus", working_month))
+def update_tsp(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
+    base_pay_total = get_table_val(budget, "Base Pay", working_month)
+    specialty_pay_total = sum_rows_from_modal(budget, "specialty", working_month)
+    incentive_pay_total = sum_rows_from_modal(budget, "incentive", working_month)
+    bonus_pay_total = sum_rows_from_modal(budget, "bonus", working_month)
 
-    for header in flask_app.config['TSP_RATE_HEADERS']:
-        prev_val = next((r.get(prev_month, 0.0) for r in tsp if r.get('header') == header), 0.0)
-        add_mv_pair(tsp, header, working_month, prev_val)
+    add_mv_pair(tsp, 'Base Pay Total', working_month, base_pay_total)
+    add_mv_pair(tsp, 'Specialty Pay Total', working_month, specialty_pay_total)
+    add_mv_pair(tsp, 'Incentive Pay Total', working_month, incentive_pay_total)
+    add_mv_pair(tsp, 'Bonus Pay Total', working_month, bonus_pay_total)
 
+    pay_totals = [base_pay_total, specialty_pay_total, incentive_pay_total, bonus_pay_total]
+    rates = []
 
+    for idx, header in enumerate(flask_app.config['TSP_RATE_HEADERS']):
+        row = next((r for r in tsp if r.get('header') == header), None)
 
+        # update rate value if changed by user, otherwise carry forward previous month
+        if (cell_header is not None and header == cell_header and (working_month == cell_month or cell_repeat)):
+            value = cell_value
+        else:
+            value = row.get(prev_month, 0.0) if row else 0.0
 
-    calculate_trad_roth_tsp(budget, prev_month, working_month)
+        add_mv_pair(tsp, header, working_month, value)
+        rates.append(float(value))
 
-    # Now pull the updated values from budget into tsp
+    # rates slicing to get trad and roth rates
+    trad_total = sum((rate / 100.0) * pay for rate, pay in zip(rates[0:4], pay_totals))
+    roth_total = sum((rate / 100.0) * pay for rate, pay in zip(rates[4:8], pay_totals))
+
     combat_zone = get_table_val(budget, "Combat Zone", working_month)
-    trad_tsp = abs(get_table_val(budget, "Traditional TSP", working_month))
-    roth_tsp = abs(get_table_val(budget, "Roth TSP", working_month))
-    agency_auto = get_table_val(budget, "Agency Auto Contribution", working_month)
-    agency_matching = get_table_val(budget, "Agency Matching Contribution", working_month)
+    trad_tsp_contribution = 0 if combat_zone == "Yes" else trad_total
+    trad_tsp_exempt_contribution = trad_total if combat_zone == "Yes" else 0
+    roth_tsp_contribution = roth_total
 
-    if combat_zone == "Yes":
-        add_mv_pair(tsp, 'Trad TSP Contribution', working_month, 0)
-        add_mv_pair(tsp, 'Trad TSP Exempt Contribution', working_month, trad_tsp)
+    # calculates 1% agency automatic contribution
+    agency_auto_contribution = base_pay_total * 0.01
+
+    # calculates agency matching contribution based on combined rate of Trad TSP Base Rate + Roth TSP Base Rate
+    combined_rate = rates[0] + rates[4]
+    if combined_rate >= 5:
+        agency_matching_contribution = base_pay_total * 0.04
+    elif combined_rate == 4:
+        agency_matching_contribution = base_pay_total * 0.035
+    elif combined_rate == 3:
+        agency_matching_contribution = base_pay_total * 0.03
+    elif combined_rate == 2:
+        agency_matching_contribution = base_pay_total * 0.02
+    elif combined_rate == 1:
+        agency_matching_contribution = base_pay_total * 0.01
     else:
-        add_mv_pair(tsp, 'Trad TSP Contribution', working_month, trad_tsp)
-        add_mv_pair(tsp, 'Trad TSP Exempt Contribution', working_month, 0)
-    add_mv_pair(tsp, 'Roth TSP Contribution', working_month, roth_tsp)
-    add_mv_pair(tsp, 'Agency Auto Contribution', working_month, agency_auto)
-    add_mv_pair(tsp, 'Agency Matching Contribution', working_month, agency_matching)
+        agency_matching_contribution = 0.0
 
-    # 4. Calculate and update summary and YTD rows
-    add_mv_pair(tsp, 'TSP Contribution Total', working_month, calculate_tsp_contribution_total(tsp, working_month))
-    add_mv_pair(tsp, 'YTD TSP Contribution Total', working_month, calculate_ytd_tsp_contribution_total(tsp, working_month, prev_month))
+
+    prev_elective_remaining = flask_app.config['TSP_ELECTIVE_LIMIT']
+    prev_annual_remaining = flask_app.config['TSP_ANNUAL_LIMIT']
+    if prev_month:
+        prev_elective_remaining = calculate_elective_deferral_remaining(tsp, prev_month)
+        prev_annual_remaining = calculate_annual_deferral_remaining(tsp, prev_month)
+
+    trad_final = min(trad_tsp_contribution, prev_elective_remaining)
+    elective_left = prev_elective_remaining - trad_final
+
+    roth_final = min(roth_tsp_contribution, elective_left)
+    elective_left -= roth_final
+
+
+    annual_left = prev_annual_remaining
+    agency_auto_final = min(agency_auto_contribution, annual_left)
+    annual_left -= agency_auto_final
+
+    if elective_left <= 0:
+        agency_matching_final = 0.0
+    else:
+        agency_matching_final = min(agency_matching_contribution, annual_left)
+        annual_left -= agency_matching_final
+
+    trad_final = min(trad_final, annual_left)
+    annual_left -= trad_final
+
+    trad_exempt_final = min(trad_tsp_exempt_contribution, annual_left)
+    annual_left -= trad_exempt_final
+
+    roth_final = min(roth_final, annual_left)
+    annual_left -= roth_final
+
+    add_mv_pair(tsp, 'Trad TSP Contribution', working_month, trad_final)
+    add_mv_pair(tsp, 'Trad TSP Exempt Contribution', working_month, trad_exempt_final)
+    add_mv_pair(tsp, 'Roth TSP Contribution', working_month, roth_final)
+    add_mv_pair(tsp, 'Agency Auto Contribution', working_month, agency_auto_final)
+    add_mv_pair(tsp, 'Agency Matching Contribution', working_month, agency_matching_final)
+
+    tsp_contribution_total = trad_final + trad_exempt_final + roth_final + agency_auto_final + agency_matching_final
+    add_mv_pair(tsp, 'TSP Contribution Total', working_month, tsp_contribution_total)
+
+    def get_prev_ytd(header):
+        row = next((r for r in tsp if r.get('header') == header), None)
+        if row:
+            return row.get(prev_month, 0.0)
+        return 0.0
+
+    if working_month == "JAN":
+        add_mv_pair(tsp, 'YTD Trad TSP', working_month, trad_final)
+        add_mv_pair(tsp, 'YTD Trad TSP Exempt', working_month, trad_exempt_final)
+        add_mv_pair(tsp, 'YTD Roth TSP', working_month, roth_final)
+        add_mv_pair(tsp, 'YTD Agency Auto', working_month, agency_auto_final)
+        add_mv_pair(tsp, 'YTD Agency Matching', working_month, agency_matching_final)
+        add_mv_pair(tsp, 'YTD TSP Contribution Total', working_month, tsp_contribution_total)
+    else:
+        add_mv_pair(tsp, 'YTD Trad TSP', working_month, get_prev_ytd('YTD Trad TSP') + trad_final)
+        add_mv_pair(tsp, 'YTD Trad TSP Exempt', working_month, get_prev_ytd('YTD Trad TSP Exempt') + trad_exempt_final)
+        add_mv_pair(tsp, 'YTD Roth TSP', working_month, get_prev_ytd('YTD Roth TSP') + roth_final)
+        add_mv_pair(tsp, 'YTD Agency Auto', working_month, get_prev_ytd('YTD Agency Auto') + agency_auto_final)
+        add_mv_pair(tsp, 'YTD Agency Matching', working_month, get_prev_ytd('YTD Agency Matching') + agency_matching_final)
+        add_mv_pair(tsp, 'YTD TSP Contribution Total', working_month, get_prev_ytd('YTD TSP Contribution Total') + tsp_contribution_total)
+
     add_mv_pair(tsp, 'Elective Deferral Remaining', working_month, calculate_elective_deferral_remaining(tsp, working_month))
     add_mv_pair(tsp, 'Annual Deferral Remaining', working_month, calculate_annual_deferral_remaining(tsp, working_month))
 

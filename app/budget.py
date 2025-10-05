@@ -405,7 +405,7 @@ def add_ytd_rows(budget, month, les_text):
 def add_months(budget, tsp, latest_month, months_num, init=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
-    
+
     # calculates how many more months to add, starting from latest_month
     months_num_to_add = months_num - len(months)
     latest_month_idx = MONTHS_SHORT.index(latest_month)
@@ -435,14 +435,14 @@ def update_months(budget, tsp, months, cell_header=None, cell_month=None, cell_v
 def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
     update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    update_tsp(budget, tsp, prev_month, working_month)
+    update_tsp(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     calculate_trad_roth_tsp(budget, prev_month, working_month)
     calculate_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
     calculate_tax_exp_net(budget, working_month)
     calculate_difference(budget, prev_month, working_month)
     calculate_ytd_rows(budget, prev_month, working_month)
-    return budget
+    return budget, tsp
 
 
 def update_var_tsp(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
