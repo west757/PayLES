@@ -5,7 +5,7 @@ from app import flask_app
 # calculation functions
 # =========================
 
-def calculate_income(budget, working_month):
+def calc_income(budget, working_month):
     taxable = 0.00
     nontaxable = 0.00
 
@@ -46,7 +46,7 @@ def calculate_income(budget, working_month):
     return budget
 
 
-def calculate_tax_exp_net(budget, working_month):
+def calc_tax_exp_net(budget, working_month):
     taxes = 0.00
     expenses = 0.00
 
@@ -76,7 +76,7 @@ def calculate_tax_exp_net(budget, working_month):
     return budget
 
 
-def calculate_difference(budget, prev_month, working_month):
+def calc_difference(budget, prev_month, working_month):
     net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
 
     for row in budget:
@@ -86,7 +86,7 @@ def calculate_difference(budget, prev_month, working_month):
     return budget
 
 
-def calculate_ytd_rows(budget, prev_month, working_month):
+def calc_ytd_rows(budget, prev_month, working_month):
     ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Income'), None)
     ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Expenses'), None)
     ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
@@ -118,7 +118,7 @@ def calculate_ytd_rows(budget, prev_month, working_month):
 # calculate special rows
 # =========================
 
-def calculate_base_pay(budget, month):
+def calc_base_pay(budget, month):
     PAY_ACTIVE = flask_app.config['PAY_ACTIVE']
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     months_row = next((row for row in budget if row['header'] == "Months in Service"), None)
@@ -140,7 +140,7 @@ def calculate_base_pay(budget, month):
     return round(base_pay, 2)
 
 
-def calculate_bas(budget, month):
+def calc_bas(budget, month):
     BAS_AMOUNT = flask_app.config['BAS_AMOUNT']
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     grade = grade_row.get(month) if grade_row else "Not Found"
@@ -153,7 +153,7 @@ def calculate_bas(budget, month):
     return round(bas, 2)
 
 
-def calculate_bah(budget, month):
+def calc_bah(budget, month):
     grade_row = next((row for row in budget if row['header'] == "Grade"), None)
     mha_row = next((row for row in budget if row['header'] == "Military Housing Area"), None)
     dependents_row = next((row for row in budget if row['header'] == "Dependents"), None)
@@ -175,7 +175,7 @@ def calculate_bah(budget, month):
     return round(bah, 2)
 
 
-def calculate_federal_taxes(budget, month):
+def calc_federal_taxes(budget, month):
     FEDERAL_TAX_RATES = flask_app.config['FEDERAL_TAX_RATES']
     filing_status_row = next((row for row in budget if row['header'] == "Federal Filing Status"), None)
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
@@ -212,19 +212,19 @@ def calculate_federal_taxes(budget, month):
     return -round(tax, 2)
 
 
-def calculate_fica_social_security(budget, month):
+def calc_fica_social_security(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     return round(-taxable_income * flask_app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
 
 
-def calculate_fica_medicare(budget, month):
+def calc_fica_medicare(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
     return round(-taxable_income * flask_app.config['FICA_MEDICARE_TAX_RATE'], 2)
 
 
-def calculate_sgli(budget, month):
+def calc_sgli(budget, month):
     SGLI_RATES = flask_app.config['SGLI_RATES']
     coverage_row = next((row for row in budget if row['header'] == "SGLI Coverage"), None)
     coverage = str(coverage_row.get(month)) if coverage_row and month in coverage_row else "0"
@@ -233,7 +233,7 @@ def calculate_sgli(budget, month):
     return -abs(total)
 
 
-def calculate_state_taxes(budget, month):
+def calc_state_taxes(budget, month):
     STATE_TAX_RATES = flask_app.config['STATE_TAX_RATES']
     HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
     home_of_record_row = next((row for row in budget if row['header'] == "Home of Record"), None)
@@ -256,7 +256,6 @@ def calculate_state_taxes(budget, month):
     mha_state = mha_code[:2] if mha_code and len(mha_code) >= 2 else ""
     living_in_state = (mha_state == home_of_record)
 
-    # Calculate taxable base according to policy
     if income_taxed == "none":
         taxable_base = 0.0
     elif income_taxed == "exempt":

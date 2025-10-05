@@ -94,14 +94,14 @@ class Config:
     TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
 
     special_calculations = {
-        'Base Pay': 'calculate_base_pay',
-        'BAS': 'calculate_bas',
-        'BAH': 'calculate_bah',
-        'Federal Taxes': 'calculate_federal_taxes',
-        'FICA - Social Security': 'calculate_fica_social_security',
-        'FICA - Medicare': 'calculate_fica_medicare',
-        'SGLI Rate': 'calculate_sgli',
-        'State Taxes': 'calculate_state_taxes',
+        'Base Pay': 'calc_base_pay',
+        'BAS': 'calc_bas',
+        'BAH': 'calc_bah',
+        'Federal Taxes': 'calc_federal_taxes',
+        'FICA - Social Security': 'calc_fica_social_security',
+        'FICA - Medicare': 'calc_fica_medicare',
+        'SGLI Rate': 'calc_sgli',
+        'State Taxes': 'calc_state_taxes',
     }
 
     TSP_RATE_HEADERS = [

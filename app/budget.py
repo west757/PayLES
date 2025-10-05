@@ -11,18 +11,18 @@ from app.utils import (
     get_months,
 )
 from app.calculations import (
-    calculate_income,
-    calculate_tax_exp_net,
-    calculate_difference,
-    calculate_ytd_rows,
-    calculate_base_pay,
-    calculate_bas,
-    calculate_bah,
-    calculate_federal_taxes,
-    calculate_fica_social_security,
-    calculate_fica_medicare,
-    calculate_sgli,
-    calculate_state_taxes,
+    calc_income,
+    calc_tax_exp_net,
+    calc_difference,
+    calc_ytd_rows,
+    calc_base_pay,
+    calc_bas,
+    calc_bah,
+    calc_federal_taxes,
+    calc_fica_social_security,
+    calc_fica_medicare,
+    calc_sgli,
+    calc_state_taxes,
 )
 from app.tsp import (
     update_tsp,
@@ -56,12 +56,12 @@ def init_budget(les_text=None, initials=None):
     add_var(budget, init_month, les_text, initials)
     if les_text:
         add_ent_ded_alt_rows(PAY_TEMPLATE, budget, init_month, les_text)
-        calculate_income(budget, init_month)
+        calc_income(budget, init_month)
     elif initials:
         add_ent_rows(PAY_TEMPLATE, budget, init_month)
-        calculate_income(budget, init_month)
+        calc_income(budget, init_month)
         add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
-    calculate_tax_exp_net(budget, init_month)
+    calc_tax_exp_net(budget, init_month)
     add_mv_pair(budget, 'Difference', init_month, 0.00)
     add_ytd_rows(budget, init_month, les_text)
 
@@ -264,9 +264,9 @@ def parse_pay_section(les_text):
 
 def add_ent_rows(PAY_TEMPLATE, budget, month):
     special_calculations = {
-        'Base Pay': calculate_base_pay,
-        'BAS': calculate_bas,
-        'BAH': calculate_bah,
+        'Base Pay': calc_base_pay,
+        'BAS': calc_bas,
+        'BAH': calc_bah,
     }
     for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
@@ -284,11 +284,11 @@ def add_ent_rows(PAY_TEMPLATE, budget, month):
 
 def add_ded_alt_rows(PAY_TEMPLATE, budget, month):
     special_calculations = {
-        'Federal Taxes': calculate_federal_taxes,
-        'FICA - Social Security': calculate_fica_social_security,
-        'FICA - Medicare': calculate_fica_medicare,
-        'SGLI Rate': calculate_sgli,
-        'State Taxes': calculate_state_taxes,
+        'Federal Taxes': calc_federal_taxes,
+        'FICA - Social Security': calc_fica_social_security,
+        'FICA - Medicare': calc_fica_medicare,
+        'SGLI Rate': calc_sgli,
+        'State Taxes': calc_state_taxes,
     }
     for _, row in PAY_TEMPLATE.iterrows():
         header = row['header']
@@ -375,11 +375,11 @@ def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_m
     trad_tsp_row[working_month] = trad_contrib_row.get(working_month, 0) + trad_exempt_row.get(working_month, 0)
     roth_tsp_row[working_month] = roth_contrib_row.get(working_month, 0)
 
-    calculate_income(budget, working_month)
+    calc_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    calculate_tax_exp_net(budget, working_month)
-    calculate_difference(budget, prev_month, working_month)
-    calculate_ytd_rows(budget, prev_month, working_month)
+    calc_tax_exp_net(budget, working_month)
+    calc_difference(budget, prev_month, working_month)
+    calc_ytd_rows(budget, prev_month, working_month)
     return budget, tsp
 
 
@@ -441,9 +441,9 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
     special_calculations = {
-        'Base Pay': calculate_base_pay,
-        'BAS': calculate_bas,
-        'BAH': calculate_bah,
+        'Base Pay': calc_base_pay,
+        'BAS': calc_bas,
+        'BAH': calc_bah,
     }
     
     for row in budget:
@@ -464,11 +464,11 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
     special_calculations = {
-        'Federal Taxes': calculate_federal_taxes,
-        'FICA - Social Security': calculate_fica_social_security,
-        'FICA - Medicare': calculate_fica_medicare,
-        'SGLI Rate': calculate_sgli,
-        'State Taxes': calculate_state_taxes,
+        'Federal Taxes': calc_federal_taxes,
+        'FICA - Social Security': calc_fica_social_security,
+        'FICA - Medicare': calc_fica_medicare,
+        'SGLI Rate': calc_sgli,
+        'State Taxes': calc_state_taxes,
     }
 
     for row in budget:

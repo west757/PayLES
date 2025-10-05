@@ -121,15 +121,15 @@ def init_tsp(init_month, budget, les_text=None, initials=None):
     for header, value in values.items():
         add_mv_pair(tsp, header, init_month, value)
 
-    add_mv_pair(tsp, 'TSP Contribution Total', init_month, calculate_tsp_contribution_total(tsp, init_month))
-    add_mv_pair(tsp, 'YTD TSP Contribution Total', init_month, calculate_ytd_tsp_contribution_total(tsp, init_month))
-    add_mv_pair(tsp, 'Elective Deferral Remaining', init_month, calculate_elective_deferral_remaining(tsp, init_month))
-    add_mv_pair(tsp, 'Annual Deferral Remaining', init_month, calculate_annual_deferral_remaining(tsp, init_month))
+    add_mv_pair(tsp, 'TSP Contribution Total', init_month, calc_tsp_contribution_total(tsp, init_month))
+    add_mv_pair(tsp, 'YTD TSP Contribution Total', init_month, calc_ytd_tsp_contribution_total(tsp, init_month))
+    add_mv_pair(tsp, 'Elective Deferral Remaining', init_month, calc_elective_deferral_remaining(tsp, init_month))
+    add_mv_pair(tsp, 'Annual Deferral Remaining', init_month, calc_annual_deferral_remaining(tsp, init_month))
 
     return tsp
 
 
-def calculate_tsp_contribution_total(tsp, month):
+def calc_tsp_contribution_total(tsp, month):
     total = 0.0
     for header in flask_app.config['TSP_CONTRIBUTION_HEADERS']:
         row = next((r for r in tsp if r.get('header') == header), None)
@@ -141,7 +141,7 @@ def calculate_tsp_contribution_total(tsp, month):
     return total
 
 
-def calculate_ytd_tsp_contribution_total(tsp, month, prev_month=None):
+def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
     ytd_headers = flask_app.config['YTD_TSP_HEADERS']
     total = 0.0
     for header in ytd_headers:
@@ -166,7 +166,7 @@ def calculate_ytd_tsp_contribution_total(tsp, month, prev_month=None):
     return total
 
 
-def calculate_elective_deferral_remaining(tsp, month):
+def calc_elective_deferral_remaining(tsp, month):
     total = 0.0
     for header in flask_app.config['YTD_ELECTIVE_HEADERS']:
         row = next((r for r in tsp if r.get('header') == header), None)
@@ -178,7 +178,7 @@ def calculate_elective_deferral_remaining(tsp, month):
     return flask_app.config['TSP_ELECTIVE_LIMIT'] - total
 
 
-def calculate_annual_deferral_remaining(tsp, month):
+def calc_annual_deferral_remaining(tsp, month):
     total = 0.0
     for header in flask_app.config['YTD_TSP_HEADERS']:
         row = next((r for r in tsp if r.get('header') == header), None)
@@ -248,8 +248,8 @@ def update_tsp(budget, tsp, prev_month, working_month, cell_header=None, cell_mo
     prev_elective_remaining = flask_app.config['TSP_ELECTIVE_LIMIT']
     prev_annual_remaining = flask_app.config['TSP_ANNUAL_LIMIT']
     if prev_month:
-        prev_elective_remaining = calculate_elective_deferral_remaining(tsp, prev_month)
-        prev_annual_remaining = calculate_annual_deferral_remaining(tsp, prev_month)
+        prev_elective_remaining = calc_elective_deferral_remaining(tsp, prev_month)
+        prev_annual_remaining = calc_annual_deferral_remaining(tsp, prev_month)
 
     trad_final = min(trad_tsp_contribution, prev_elective_remaining)
     elective_left = prev_elective_remaining - trad_final
@@ -307,7 +307,7 @@ def update_tsp(budget, tsp, prev_month, working_month, cell_header=None, cell_mo
         add_mv_pair(tsp, 'YTD Agency Matching', working_month, get_prev_ytd('YTD Agency Matching') + agency_matching_final)
         add_mv_pair(tsp, 'YTD TSP Contribution Total', working_month, get_prev_ytd('YTD TSP Contribution Total') + tsp_contribution_total)
 
-    add_mv_pair(tsp, 'Elective Deferral Remaining', working_month, calculate_elective_deferral_remaining(tsp, working_month))
-    add_mv_pair(tsp, 'Annual Deferral Remaining', working_month, calculate_annual_deferral_remaining(tsp, working_month))
+    add_mv_pair(tsp, 'Elective Deferral Remaining', working_month, calc_elective_deferral_remaining(tsp, working_month))
+    add_mv_pair(tsp, 'Annual Deferral Remaining', working_month, calc_annual_deferral_remaining(tsp, working_month))
 
     return tsp
