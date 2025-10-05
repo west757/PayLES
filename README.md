@@ -21,7 +21,7 @@ mid-term:
 -   tags for category (general, financial, moving, education, mental health), branch, featured
 -   alphabetize, stars for featured ones
 -   search bar
-- add pro-rated calculations for cells
+- add pro-rated calculations for rows grade and zip code
 - check for discrepancies between what PayLES would return versus what is actually on the LES for the first month
 - add loading screen after submitting LES
 - add in year for TSP
