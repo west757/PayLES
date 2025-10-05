@@ -24,6 +24,7 @@ mid-term:
 -   alphabetize, stars for featured ones
 -   search bar
 - add pro-rated calculations for cells
+- add in exact value location from les_rectangle for index (like [87][2])
 
 long-term:
 - leave calculator

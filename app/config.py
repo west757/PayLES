@@ -34,21 +34,14 @@ class Config:
     LES_COORD_SCALE = 0.24
     FICA_SOCIALSECURITY_TAX_RATE = 0.062
     FICA_MEDICARE_TAX_RATE = 0.0145
+    BAS_AMOUNT = [465.77, 320.78]
     TRAD_TSP_RATE_MAX = 84
     ROTH_TSP_RATE_MAX = 60
-    TSP_CONTRIBUTION_LIMIT = 23500.00
+    TSP_ELECTIVE_LIMIT = 23500.00
     TSP_ANNUAL_LIMIT = 70000.00
-    BAS_AMOUNT = [465.77, 320.78]
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-    COMPONENTS = {
-        "AD": "Active Duty",
-        "AGR": "Active Guard Reserve",
-        "NG": "National Guard",
-        "RES": "Traditional Reservist",
-        "IRR": "Individual Ready Reserve",
-    }
     BRANCHES = {
         "USA": "United States Army",
         "USAF": "United States Air Force",
@@ -56,6 +49,13 @@ class Config:
         "USN": "United States Navy",
         "USMC": "United States Marine Corps",
         "USCG": "United States Coast Guard",
+    }
+    COMPONENTS = {
+        "AD": "Active Duty",
+        "AGR": "Active Guard Reserve",
+        "NG": "National Guard",
+        "RES": "Traditional Reservist",
+        "IRR": "Individual Ready Reserve",
     }
     TAX_FILING_TYPES_DEDUCTIONS = {
         "Single": 15000,
@@ -104,6 +104,25 @@ class Config:
         'SGLI Rate': 'calculate_sgli',
         'State Taxes': 'calculate_state_taxes',
     }
+
+    TSP_CONTRIBUTION_HEADERS = [
+        "Trad TSP Contribution",
+        "Trad TSP Exempt Contribution",
+        "Roth TSP Contribution",
+        "Agency Auto Contribution",
+        "Agency Matching Contribution"
+    ]
+    YTD_TSP_HEADERS = [
+        "YTD Trad TSP",
+        "YTD Trad TSP Exempt",
+        "YTD Roth TSP",
+        "YTD Agency Auto",
+        "YTD Agency Matching"
+    ]
+    YTD_ELECTIVE_HEADERS = [
+        "YTD Trad TSP",
+        "YTD Roth TSP"
+    ]
 
 
     #load static files
