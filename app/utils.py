@@ -175,7 +175,7 @@ def add_recommendations(budget, months):
         }
 
     # TSP contribution limit recommendation
-    tsp_contribution_limit = flask_app.config['TSP_CONTRIBUTION_LIMIT']
+    tsp_contribution_limit = flask_app.config['TSP_ELECTIVE_LIMIT']
     tsp_contrib_months = []
     for month in months:
         ytd_trad = next((row[month] for row in budget if row.get('header', '') == 'YTD Trad TSP'), 0)

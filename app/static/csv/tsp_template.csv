@@ -3,8 +3,8 @@ Base Pay Total,r,float,False,basepay,Base pay total
 Trad TSP Base Rate,r,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
 Roth TSP Base Rate,r,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 64%
 Specialty Pay Total,r,float,False,specialty,Specialty pay total
-Trad TSP Specialty  Rate,r,int,True,tsp,Trad TSP Specialty Rate must be at least 1% to set a specialty contribution rate
-Roth TSP Specialty  Rate,r,int,True,tsp,Roth TSP Specialty Rate must be at least 1% to set a specialty contribution rate
+Trad TSP Specialty Rate,r,int,True,tsp,Trad TSP Specialty Rate must be at least 1% to set a specialty contribution rate
+Roth TSP Specialty Rate,r,int,True,tsp,Roth TSP Specialty Rate must be at least 1% to set a specialty contribution rate
 Incentive Pay Total,r,float,False,incentive,Incentive pay total
 Trad TSP Incentive Rate,r,int,True,tsp,Trad TSP Incentive Rate must be at least 1% to set an incentive contribution rate
 Roth TSP Incentive Rate,r,int,True,tsp,Roth TSP Incentive Rate must be at least 1% to set an incentive contribution rate

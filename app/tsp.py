@@ -117,13 +117,18 @@ def init_tsp(init_month, budget, les_text=None, initials=None):
         values['YTD Agency Matching'] = 0
         values.update(initials)
 
-    values['TSP Contribution Total'] = calculate_tsp_contribution_total(tsp, init_month)
-    values['YTD TSP Contribution Total'] = calculate_ytd_tsp_contribution_total(tsp, init_month)
-    values['Elective Deferral Remaining'] = calculate_elective_deferral_remaining(tsp, init_month)
-    values['Annual Deferral Remaining'] = calculate_annual_deferral_remaining(tsp, init_month)
-
     for header, value in values.items():
         add_mv_pair(tsp, header, init_month, value)
+
+    print("tsp contribution total: ", calculate_tsp_contribution_total(tsp, init_month))
+    print("ytd tsp contribution total: ", calculate_ytd_tsp_contribution_total(tsp, init_month))
+    print("elective deferral remaining: ", calculate_elective_deferral_remaining(tsp, init_month))
+    print("annual deferral remaining: ", calculate_annual_deferral_remaining(tsp, init_month))
+
+    add_mv_pair(tsp, 'TSP Contribution Total', init_month, calculate_tsp_contribution_total(tsp, init_month))
+    add_mv_pair(tsp, 'YTD TSP Contribution Total', init_month, calculate_ytd_tsp_contribution_total(tsp, init_month))
+    add_mv_pair(tsp, 'Elective Deferral Remaining', init_month, calculate_elective_deferral_remaining(tsp, init_month))
+    add_mv_pair(tsp, 'Annual Deferral Remaining', init_month, calculate_annual_deferral_remaining(tsp, init_month))
 
     return tsp
 
@@ -134,7 +139,7 @@ def calculate_tsp_contribution_total(tsp, month):
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
-                total += float(row.get(month, 0.0))
+                total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
                 continue
     return total
@@ -147,7 +152,7 @@ def calculate_ytd_tsp_contribution_total(tsp, month, prev_month=None):
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
-                total += float(row.get(month, 0.0))
+                total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
                 continue
 
@@ -157,7 +162,7 @@ def calculate_ytd_tsp_contribution_total(tsp, month, prev_month=None):
             row = next((r for r in tsp if r.get('header') == header), None)
             if row:
                 try:
-                    prev_total += float(row.get(prev_month, 0.0))
+                    prev_total += abs(float(row.get(prev_month, 0.0)))
                 except (TypeError, ValueError):
                     continue
         total += prev_total
@@ -171,7 +176,7 @@ def calculate_elective_deferral_remaining(tsp, month):
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
-                total += float(row.get(month, 0.0))
+                total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
                 continue
     return flask_app.config['TSP_ELECTIVE_LIMIT'] - total
@@ -183,7 +188,7 @@ def calculate_annual_deferral_remaining(tsp, month):
         row = next((r for r in tsp if r.get('header') == header), None)
         if row:
             try:
-                total += float(row.get(month, 0.0))
+                total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
                 continue
     return flask_app.config['TSP_ANNUAL_LIMIT'] - total

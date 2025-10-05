@@ -87,6 +87,8 @@ def route_single_example():
         budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         tsp = init_tsp(init_month, budget, les_text=les_text)
+        for row in tsp:
+            print(row)
 
         recommendations = add_recommendations(budget, months)
         budget = convert_numpy_types(budget)
