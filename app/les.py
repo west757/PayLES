@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw
 import base64
 import io
 import pdfplumber
+import numpy as np
 
 from app import flask_app
 
@@ -24,10 +25,10 @@ def validate_les(file):
 
 def process_les(les_pdf):
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
-    les_image, rect_overlay = create_les_image(les_page)
-    les_text = read_les(les_page)
-
-    return les_image, rect_overlay, les_text
+    les_image = create_les_image(les_page)
+    les_text = extract_les_text(les_page)
+    get_rect_bounds()
+    return les_image, les_text
 
 
 def create_les_image(les_page):
@@ -61,12 +62,13 @@ def create_les_image(les_page):
     return les_image
 
 
-def read_les(les_page):
+def extract_les_text(les_page):
+    LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
     LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
     les_text = ["text per rectangle"]
 
-    # extracts text from each rectangle defined in LES_RECTANGLES
-    for _, row in flask_app.config['LES_RECTANGLES'].iterrows():
+    # extracts text from each rectangle defined in LES_RECT_OVERLAY
+    for _, row in LES_RECT_OVERLAY.iterrows():
         x1 = float(row['x1']) * LES_COORD_SCALE
         x2 = float(row['x2']) * LES_COORD_SCALE
         y1 = float(row['y1']) * LES_COORD_SCALE
@@ -81,11 +83,12 @@ def read_les(les_page):
 
 
 def calc_les_rect_overlay():
+    LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
     LES_IMAGE_SCALE = flask_app.config['LES_IMAGE_SCALE']
 
     # initialize and scale rectangle overlay data
     rect_overlay = []
-    for rect in flask_app.config['LES_RECTANGLES'].to_dict(orient="records"):
+    for rect in LES_RECT_OVERLAY.to_dict(orient="records"):
         rect_overlay.append({
             "x1": rect["x1"] * LES_IMAGE_SCALE,
             "y1": rect["y1"] * LES_IMAGE_SCALE,
@@ -95,3 +98,57 @@ def calc_les_rect_overlay():
             "tooltip": rect["tooltip"]
         })
     return rect_overlay
+
+
+
+import csv
+from PIL import ImageFont
+
+def get_rect_bounds():
+    pdf_path = flask_app.config['LES_RECTS_GREEN']
+    rects = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        page = pdf.pages[0]
+        im = page.to_image(resolution=300).original.convert("RGB")
+        arr = np.array(im)
+
+        # Target green: #4CAF50 (76, 175, 80)
+        lower_green = np.array([70, 170, 70])
+        upper_green = np.array([85, 185, 90])
+
+        green_mask = np.all((arr >= lower_green) & (arr <= upper_green), axis=-1)
+
+        from scipy.ndimage import label, find_objects
+        labeled, num_features = label(green_mask)
+        slices = find_objects(labeled)
+
+        # Prepare for drawing numbers
+        draw = ImageDraw.Draw(im)
+        try:
+            font = ImageFont.truetype("arial.ttf", 32)
+        except:
+            font = ImageFont.load_default()
+
+        for idx, sl in enumerate(slices, start=1):
+            y1, x1 = sl[0].start, sl[1].start
+            y2, x2 = sl[0].stop, sl[1].stop
+            rects.append([idx, x1, y1, x2, y2])
+
+            # Draw the number at the center of the rectangle
+            cx = (x1 + x2) // 2
+            cy = (y1 + y2) // 2
+            draw.text((cx, cy), str(idx), fill="black", font=font, anchor="mm")
+
+    # Write to CSV with number column
+    csv_path = "green_rect_bounds.csv"
+    with open(csv_path, "w", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["number", "x1", "y1", "x2", "y2"])
+        for rect in rects:
+            writer.writerow(rect)
+
+    # Save annotated image for visual reference
+    im.save("green_rect_bounds_annotated.png")
+
+    return None

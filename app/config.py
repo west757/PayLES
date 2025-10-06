@@ -194,7 +194,7 @@ class Config:
         },
     )
 
-    LES_RECTANGLES = pd.read_csv(CSV_FOLDER / "les_rectangles.csv",
+    LES_RECT_OVERLAY = pd.read_csv(CSV_FOLDER / "les_rect_overlay.csv",
         dtype={
             'index': int,
             'x1': int,
@@ -204,6 +204,16 @@ class Config:
             'title': str,
             'modal': str,
             'tooltip': str,
+        }
+    )
+
+    LES_RECT_TEXT = pd.read_csv(CSV_FOLDER / "les_rect_text.csv",
+        dtype={
+            'header': str,
+            'x1': int,
+            'y1': int,
+            'x2': int,
+            'y2': int,
         }
     )
 
@@ -263,4 +273,4 @@ class Config:
     MODALS_JSON = JSON_FOLDER / "modals.json"
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
-    EXAMPLE_LES = PDF_FOLDER / "les_example.pdf"
+    LES_EXAMPLE = PDF_FOLDER / "les_example.pdf"

@@ -79,7 +79,7 @@ def route_single_example():
         show_guide_buttons = False
 
     elif 'button_example' in request.form:
-        valid, message, les_pdf = validate_les(flask_app.config['EXAMPLE_LES'])
+        valid, message, les_pdf = validate_les(flask_app.config['LES_EXAMPLE'])
         show_guide_buttons = True
 
     else:
@@ -88,7 +88,9 @@ def route_single_example():
     if valid:
         les_image, les_text = process_les(les_pdf)
         les_rect_overlay = calc_les_rect_overlay()
-        
+
+        print(les_text)
+
         budget, init_month, headers = init_budget(les_text=les_text)
         tsp = init_tsp(budget, init_month, les_text=les_text)
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
@@ -153,8 +155,8 @@ def route_joint():
         return jsonify({'message': message2}), 400
 
     if valid1 and valid2:
-        les_image1, rect_overlay1, les_text1 = process_les(les_pdf1)
-        les_image2, rect_overlay2, les_text2 = process_les(les_pdf2)
+        les_image1, les_text1 = process_les(les_pdf1)
+        les_image2, les_text2 = process_les(les_pdf2)
         les_rect_overlay = calc_les_rect_overlay()
 
 
