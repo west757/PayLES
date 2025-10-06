@@ -39,6 +39,12 @@ def validate_file(file):
     return True, ""
 
 
+def get_headers():
+    return (flask_app.config['PAY_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') 
+            + flask_app.config['PARAMS_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records') 
+            + flask_app.config['TSP_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records'))
+
+
 def add_row(budget, header, template=None, metadata=None):
     ROW_METADATA = flask_app.config['ROW_METADATA']
     TYPE_ORDER = flask_app.config['TYPE_ORDER']

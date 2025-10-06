@@ -3,6 +3,7 @@ from app import csrf
 
 from app import flask_app
 from app.budget import (
+    init_budget_params,
     init_budget,
     add_months,
     update_months,
@@ -26,6 +27,7 @@ from app.utils import (
     load_json,
     convert_numpy_types,
     validate_file,
+    get_headers,
     get_months,
     add_recommendations,
 )
@@ -88,8 +90,12 @@ def route_single_example():
     if valid:
         les_image, les_text = process_les(les_pdf)
         les_rect_overlay = calc_les_rect_overlay()
+        headers = get_headers()
 
-        budget, init_month, headers = init_budget(les_text=les_text)
+        user_budget = init_budget_params(les_text)
+        calc_budget = init_budget_params()
+
+        budget, init_month = init_budget(les_text=les_text)
         tsp = init_tsp(budget, init_month, les_text=les_text)
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 

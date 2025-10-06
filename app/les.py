@@ -28,8 +28,8 @@ def process_les(les_pdf):
     les_text_raw = extract_les_text(les_page)
     les_text = format_les_text(les_text_raw)
 
-    for header, text in les_text.items():
-        print(f"{header}: {text}")
+    #for header, text in les_text.items():
+    #    print(f"{header}: {text}")
     
     return les_image, les_text
 

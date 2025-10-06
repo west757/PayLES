@@ -70,24 +70,7 @@ class Config:
     
     COMBAT_ZONES = ["No", "Yes"]
 
-    ROW_METADATA = [
-        'type',
-        'sign',
-        'field',
-        'tax',
-        'editable',
-        'modal',
-    ]
-
-    TSP_METADATA = [
-        'header',
-        'type',
-        'field',
-        'editable',
-        'modal',
-    ]
-
-    # row types in budget order:
+    # budget type order:
     # v = variables
     # e = entitlements
     # d = deductions
@@ -97,7 +80,27 @@ class Config:
     # y = year-to-date
     # z = accounts
     # m = metadata
-    TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+    BUDGET_TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+    BUDGET_METADATA = [
+        'type',
+        'sign',
+        'field',
+        'tax',
+        'editable',
+        'modal',
+    ]
+
+    # tsp type order:
+    # r = rates
+    # t = tsp rows
+    # p = tsp accounts
+    TSP_TYPE_ORDER = ['r', 't', 'p']
+    TSP_METADATA = [
+        'type',
+        'field',
+        'editable',
+        'modal',
+    ]
 
     special_calculations = {
         'Base Pay': 'calc_base_pay',

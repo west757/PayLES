@@ -33,14 +33,19 @@ from app.tsp import (
 # init and build budget
 # =========================
 
+def init_budget_params(les_text=None, initials=None):
+    PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
+    budget = []
+    for _, row in PARAMS_TEMPLATE.iterrows():
+        budget_row = {meta: row[meta] for meta in PARAMS_METADATA}
+        budget.append(budget_row)
+
+    return budget
+
+
 def init_budget(les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
-    TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
-
-    headers = (PAY_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') 
-               + PARAMS_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records') 
-               + TSP_TEMPLATE[['header', 'type', 'tooltip']].to_dict(orient='records'))
 
     if les_text:
         try:
@@ -68,7 +73,7 @@ def init_budget(les_text=None, initials=None):
     add_mv_pair(budget, 'Difference', init_month, 0.00)
     add_ytd_rows(budget, init_month, les_text)
 
-    return budget, init_month, headers
+    return budget, init_month
 
 
 def add_var(budget, month, les_text, initials):
