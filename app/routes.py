@@ -89,8 +89,6 @@ def route_single_example():
         les_image, les_text = process_les(les_pdf)
         les_rect_overlay = calc_les_rect_overlay()
 
-        print(les_text)
-
         budget, init_month, headers = init_budget(les_text=les_text)
         tsp = init_tsp(budget, init_month, les_text=les_text)
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)

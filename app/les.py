@@ -27,7 +27,6 @@ def process_les(les_pdf):
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
     les_image = create_les_image(les_page)
     les_text = extract_les_text(les_page)
-    get_rect_bounds()
     return les_image, les_text
 
 
@@ -62,22 +61,49 @@ def create_les_image(les_page):
     return les_image
 
 
-def extract_les_text(les_page):
-    LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
-    LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
-    les_text = ["text per rectangle"]
+#def extract_les_text(les_page):
+#    LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
+#    LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
+#    les_text = ["text per rectangle"]
 
-    # extracts text from each rectangle defined in LES_RECT_OVERLAY
-    for _, row in LES_RECT_OVERLAY.iterrows():
+#    # extracts text from each rectangle defined in LES_RECT_OVERLAY
+#    for _, row in LES_RECT_OVERLAY.iterrows():
+#        x1 = float(row['x1']) * LES_COORD_SCALE
+#        x2 = float(row['x2']) * LES_COORD_SCALE
+#        y1 = float(row['y1']) * LES_COORD_SCALE
+#        y2 = float(row['y2']) * LES_COORD_SCALE
+#        upper = min(y1, y2)
+#        lower = max(y1, y2)
+
+#        les_rect_text = les_page.within_bbox((x1, upper, x2, lower)).extract_text()
+#        les_text.append(les_rect_text.replace("\n", " ").split())
+
+#    return les_text
+
+
+def extract_les_text(les_page):
+    LES_RECT_TEXT = flask_app.config['LES_RECT_TEXT']
+    LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
+    les_text = {}
+
+    for _, row in LES_RECT_TEXT.iterrows():
+        header = row['header']
         x1 = float(row['x1']) * LES_COORD_SCALE
-        x2 = float(row['x2']) * LES_COORD_SCALE
         y1 = float(row['y1']) * LES_COORD_SCALE
+        x2 = float(row['x2']) * LES_COORD_SCALE
         y2 = float(row['y2']) * LES_COORD_SCALE
         upper = min(y1, y2)
         lower = max(y1, y2)
 
-        les_rect_text = les_page.within_bbox((x1, upper, x2, lower)).extract_text()
-        les_text.append(les_rect_text.replace("\n", " ").split())
+        text = les_page.within_bbox((x1, upper, x2, lower)).extract_text()
+        if text:
+            text = text.replace("\n", " ").strip()
+        else:
+            text = ""
+        les_text[header] = text
+
+    for header, text in les_text.items():
+        print(f"{header}: {text}")
 
     return les_text
 
@@ -98,57 +124,3 @@ def calc_les_rect_overlay():
             "tooltip": rect["tooltip"]
         })
     return rect_overlay
-
-
-
-import csv
-from PIL import ImageFont
-
-def get_rect_bounds():
-    pdf_path = flask_app.config['LES_RECTS_GREEN']
-    rects = []
-
-    with pdfplumber.open(pdf_path) as pdf:
-        page = pdf.pages[0]
-        im = page.to_image(resolution=300).original.convert("RGB")
-        arr = np.array(im)
-
-        # Target green: #4CAF50 (76, 175, 80)
-        lower_green = np.array([70, 170, 70])
-        upper_green = np.array([85, 185, 90])
-
-        green_mask = np.all((arr >= lower_green) & (arr <= upper_green), axis=-1)
-
-        from scipy.ndimage import label, find_objects
-        labeled, num_features = label(green_mask)
-        slices = find_objects(labeled)
-
-        # Prepare for drawing numbers
-        draw = ImageDraw.Draw(im)
-        try:
-            font = ImageFont.truetype("arial.ttf", 32)
-        except:
-            font = ImageFont.load_default()
-
-        for idx, sl in enumerate(slices, start=1):
-            y1, x1 = sl[0].start, sl[1].start
-            y2, x2 = sl[0].stop, sl[1].stop
-            rects.append([idx, x1, y1, x2, y2])
-
-            # Draw the number at the center of the rectangle
-            cx = (x1 + x2) // 2
-            cy = (y1 + y2) // 2
-            draw.text((cx, cy), str(idx), fill="black", font=font, anchor="mm")
-
-    # Write to CSV with number column
-    csv_path = "green_rect_bounds.csv"
-    with open(csv_path, "w", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["number", "x1", "y1", "x2", "y2"])
-        for rect in rects:
-            writer.writerow(rect)
-
-    # Save annotated image for visual reference
-    im.save("green_rect_bounds_annotated.png")
-
-    return None
