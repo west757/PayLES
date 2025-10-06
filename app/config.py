@@ -214,6 +214,7 @@ class Config:
             'y1': int,
             'x2': int,
             'y2': int,
+            'dtype': str,
         }
     )
 

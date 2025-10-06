@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw
 import base64
 import io
 import pdfplumber
-import numpy as np
 
 from app import flask_app
 
@@ -26,7 +25,12 @@ def validate_les(file):
 def process_les(les_pdf):
     les_page = les_pdf.pages[0].crop((0, 0, 612, 630))
     les_image = create_les_image(les_page)
-    les_text = extract_les_text(les_page)
+    les_text_raw = extract_les_text(les_page)
+    les_text = format_les_text(les_text_raw)
+
+    for header, text in les_text.items():
+        print(f"{header}: {text}")
+    
     return les_image, les_text
 
 
@@ -52,33 +56,13 @@ def create_les_image(les_page):
         y2 = int(rect[3] * LES_IMAGE_SCALE)
         draw.rectangle([x1, y1, x2, y2], fill="white")
 
-    # creates les_image as base64 encoded PNG, result is flattened raster image
+    # creates les_image as base64 encoded flattened raster PNG
     img_io = io.BytesIO()
     scaled_image.save(img_io, format='PNG')
     img_io.seek(0)
     les_image = base64.b64encode(img_io.read()).decode("utf-8")
 
     return les_image
-
-
-#def extract_les_text(les_page):
-#    LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
-#    LES_COORD_SCALE = flask_app.config['LES_COORD_SCALE']
-#    les_text = ["text per rectangle"]
-
-#    # extracts text from each rectangle defined in LES_RECT_OVERLAY
-#    for _, row in LES_RECT_OVERLAY.iterrows():
-#        x1 = float(row['x1']) * LES_COORD_SCALE
-#        x2 = float(row['x2']) * LES_COORD_SCALE
-#        y1 = float(row['y1']) * LES_COORD_SCALE
-#        y2 = float(row['y2']) * LES_COORD_SCALE
-#        upper = min(y1, y2)
-#        lower = max(y1, y2)
-
-#        les_rect_text = les_page.within_bbox((x1, upper, x2, lower)).extract_text()
-#        les_text.append(les_rect_text.replace("\n", " ").split())
-
-#    return les_text
 
 
 def extract_les_text(les_page):
@@ -102,8 +86,49 @@ def extract_les_text(les_page):
             text = ""
         les_text[header] = text
 
-    for header, text in les_text.items():
-        print(f"{header}: {text}")
+    return les_text
+
+
+def format_les_text(les_text_raw):
+    LES_RECT_TEXT = flask_app.config['LES_RECT_TEXT']
+    dtype_map = {row['header']: row['dtype'] for _, row in LES_RECT_TEXT.iterrows()}
+    les_text = {}
+
+    for header, value in les_text_raw.items():
+        dtype = dtype_map.get(header, "string")
+        try:
+            if dtype == "int":
+                # remove commas and spaces, handle empty or invalid values
+                val = value.replace(",", "").strip()
+                les_text[header] = int(val) if val.isdigit() or (val and val.lstrip('-').isdigit()) else 0
+            elif dtype == "float":
+                # remove commas and spaces, handle empty or invalid values
+                val = value.replace(",", "").strip()
+                try:
+                    les_text[header] = float(val)
+                except (ValueError, TypeError):
+                    les_text[header] = 0.0
+            elif dtype == "string":
+                # if empty or only whitespace, set as NOT FOUND
+                les_text[header] = value.strip() if value and value.strip() else "NOT FOUND"
+            else:
+                # unknown dtype, just keep as string
+                les_text[header] = value
+        except Exception as e:
+            # fallback for any unexpected error
+            if dtype == "int":
+                les_text[header] = 0
+            elif dtype == "float":
+                les_text[header] = 0.0
+            else:
+                les_text[header] = "NOT FOUND"
+
+    # combine remarks1 and remarks2 into remarks
+    remarks1 = les_text.get("remarks1", "")
+    remarks2 = les_text.get("remarks2", "") 
+    les_text["remarks"] = (remarks1 + " " + remarks2).strip()
+    les_text.pop("remarks1", None)
+    les_text.pop("remarks2", None)
 
     return les_text
 
@@ -112,7 +137,6 @@ def calc_les_rect_overlay():
     LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
     LES_IMAGE_SCALE = flask_app.config['LES_IMAGE_SCALE']
 
-    # initialize and scale rectangle overlay data
     rect_overlay = []
     for rect in LES_RECT_OVERLAY.to_dict(orient="records"):
         rect_overlay.append({

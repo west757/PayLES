@@ -13,6 +13,7 @@ short-term:
 - change account to just be bank account
 - build an index of headers instead of scanning entire table
 - tsp input restrictions
+- rename settings.html and budget.html
 
 mid-term:
 - get combat zone from les
@@ -24,7 +25,7 @@ mid-term:
 - add pro-rated calculations for rows grade and zip code
 - check for discrepancies between what PayLES would return versus what is actually on the LES for the first month
 - add loading screen after submitting LES
-- add in year for TSP
+- shorten remarks and add in blocks for ytd entitle and ytd deduct
 
 long-term:
 - leave calculator
