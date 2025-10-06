@@ -17,6 +17,7 @@ from app.forms import (
 from app.les import (
     validate_les, 
     process_les,
+    calc_les_rect_overlay,
 )
 from app.tsp import (
     init_tsp,
@@ -85,7 +86,9 @@ def route_single_example():
         return jsonify({'message': "Invalid submission"}), 400
 
     if valid:
-        les_image, rect_overlay, les_text = process_les(les_pdf)
+        les_image, les_text = process_les(les_pdf)
+        les_rect_overlay = calc_les_rect_overlay()
+        
         budget, init_month, headers = init_budget(les_text=les_text)
         tsp = init_tsp(budget, init_month, les_text=les_text)
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
@@ -110,7 +113,7 @@ def route_single_example():
             'months': months,
             'headers': headers,
             'les_image': les_image,
-            'rect_overlay': rect_overlay,
+            'les_rect_overlay': les_rect_overlay,
             'show_guide_buttons': show_guide_buttons,
             'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
@@ -130,10 +133,62 @@ def route_joint():
     file1 = form.input_file_joint_1.data
     file2 = form.input_file_joint_2.data
 
-    if not file1 or not file2:
-        return jsonify({'message': "Both LES files required"}), 400
+    if not file1:
+        return jsonify({'message': "No file submitted for Member 1"}), 400
+    if not file2:
+        return jsonify({'message': "No file submitted for Member 2"}), 400
 
-    return render_template('settings.html')
+    valid1, message1 = validate_file(file1)
+    if not valid1:
+        return jsonify({'message': message1}), 400
+    valid2, message2 = validate_file(file2)
+    if not valid2:
+        return jsonify({'message': message2}), 400
+
+    valid1, message1, les_pdf1 = validate_les(file1)
+    if not valid1:
+        return jsonify({'message': message1}), 400
+    valid2, message2, les_pdf2 = validate_les(file2)
+    if not valid2:
+        return jsonify({'message': message2}), 400
+
+    if valid1 and valid2:
+        les_image1, rect_overlay1, les_text1 = process_les(les_pdf1)
+        les_image2, rect_overlay2, les_text2 = process_les(les_pdf2)
+        les_rect_overlay = calc_les_rect_overlay()
+
+
+        budget, init_month, headers = init_budget(les_text=les_text1)
+        tsp = init_tsp(budget, init_month, les_text=les_text1)
+        budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+        recommendations = add_recommendations(budget, months)
+        budget = convert_numpy_types(budget)
+        session['budget'] = budget
+        session['tsp'] = tsp
+        session['headers'] = headers
+
+        config_js = {
+            'budget': budget,
+            'tsp': tsp,
+            'months': months,
+            'headers': headers,
+            'recommendations': recommendations,
+        }
+        context = {
+            'config_js': config_js,
+            'budget': budget,
+            'tsp': tsp,
+            'months': months,
+            'headers': headers,
+            'les_image': les_image1,
+            'les_rect_overlay': les_rect_overlay,
+            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'MODALS': load_json(flask_app.config['MODALS_JSON']),
+        }
+        return render_template('settings.html', **context)
+    else:
+        return jsonify({'message': "Invalid submission"}), 400
 
 
 @csrf.exempt

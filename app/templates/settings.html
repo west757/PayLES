@@ -183,7 +183,7 @@
         <div id="les-image">
             <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
 
-            {% for rect in rect_overlay %}
+            {% for rect in les_rect_overlay %}
             <button
                 type="button"
                 {% if rect.modal != "none" %}
