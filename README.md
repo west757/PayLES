@@ -14,6 +14,7 @@ short-term:
 - build an index of headers instead of scanning entire table
 - tsp input restrictions
 - rename settings.html and budget.html
+- compare LES with recommendations
 
 mid-term:
 - get combat zone from les
@@ -23,7 +24,6 @@ mid-term:
 -   alphabetize, stars for featured ones
 -   search bar
 - add pro-rated calculations for rows grade and zip code
-- check for discrepancies between what PayLES would return versus what is actually on the LES for the first month
 - add loading screen after submitting LES
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN

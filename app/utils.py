@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import pandas as pd
+import re
 import traceback
 
 from app import flask_app
@@ -185,6 +186,32 @@ def get_hor(home_of_record):
 def get_months(budget):
     metadata_keys = set(['header']) | set(flask_app.config['ROW_METADATA'])
     return [key for key in budget[0].keys() if key not in metadata_keys]
+
+
+
+def parse_pay_string(pay_string, pay_template):
+    results = {}
+
+    # for each lesname in PAY_TEMPLATE, search for it in the string and extract the float after it
+    for _, row in pay_template.iterrows():
+        lesname = row['lesname']
+
+        if not isinstance(lesname, str) or not lesname.strip():
+            continue
+
+        # regex: match lesname followed by a float (with optional comma)
+        pattern = rf"{re.escape(lesname)}\s+(-?\d+(?:\.\d+)?)"
+        match = re.search(pattern, pay_string)
+
+        if match:
+            try:
+                value = float(match.group(1).replace(",", ""))
+                results[lesname] = round(value, 2)
+            except Exception:
+                continue
+
+    return results
+
 
 
 def add_recommendations(budget, months):

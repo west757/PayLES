@@ -94,8 +94,8 @@ def route_single():
             les_rect_overlay = calc_les_rect_overlay()
             headers = get_headers()
 
-            user_budget = init_budget_params(les_text)
-            calc_budget = init_budget_params()
+            upload_budget = init_budget_params(les_text, compare=False)
+            compare_budget = init_budget_params(les_text, compare=True)
 
             budget, init_month = init_budget(les_text=les_text)
             tsp = init_tsp(budget, init_month, les_text=les_text)
