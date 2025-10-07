@@ -1,5 +1,6 @@
 from app import flask_app
 from app.utils import (
+    add_row,
     add_mv_pair,
     get_table_val,
     sum_rows_via_modal,
@@ -8,12 +9,10 @@ from app.utils import (
 
 def init_tsp(budget, init_month, les_text=None, initials=None):
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
-    TSP_METADATA = flask_app.config['TSP_METADATA']
-
+    
     tsp = []
     for _, row in TSP_TEMPLATE.iterrows():
-        tsp_row = {meta: row[meta] for meta in TSP_METADATA}
-        tsp.append(tsp_row)
+        add_row("tsp", tsp, row['header'], template=TSP_TEMPLATE)
 
     values = {}
 

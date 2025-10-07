@@ -2,7 +2,9 @@
 {% block content %}
 
 <div>
-    <h1>Error {{ code }}: {{ message }}</h1>
+    <h1>Error {{ code }}:</h1>
+    <p>{{ message.split('\n')[0] }}</p>
+    <pre>{{ message.split('\n', 1)[1] if '\n' in message else '' }}</pre>
 </div>
 
 {% endblock %}

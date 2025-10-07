@@ -4,6 +4,7 @@ import re
 
 from app import flask_app
 from app.utils import (
+    get_error_context,
     add_row,
     add_mv_pair,
     get_mha,
@@ -35,12 +36,43 @@ from app.tsp import (
 
 def init_budget_params(les_text=None, initials=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
+
     budget = []
     for _, row in PARAMS_TEMPLATE.iterrows():
-        budget_row = {meta: row[meta] for meta in PARAMS_METADATA}
-        budget.append(budget_row)
+        add_row("budget", budget, row['header'], template=PARAMS_TEMPLATE)
+
+    
+    if les_text:
+        try:
+            les_month = les_text.get('les_month', None)
+            if les_month not in flask_app.config['MONTHS_SHORT']:
+                raise ValueError()
+            month = les_month
+            budget = add_variables(budget, month, les_text=les_text)
+        except Exception as e:
+            raise Exception(get_error_context(e, f"Invalid LES month: {les_month}"))
+    elif initials:
+        month = flask_app.config['CURRENT_MONTH']
+    else:
+        raise Exception(get_error_context(e, "Error determining input source, les_text or initials not provided"))
 
     return budget
+
+
+def add_variables(budget, month, les_text=None, initials=None):
+    if les_text:
+        try:
+            year = int('20' + les_text.get('les_year', None))
+            if not year:
+                raise ValueError()
+        except Exception as e:
+            raise Exception(get_error_context(e, f"Invalid LES year: {year}"))
+        add_mv_pair(budget, 'Year', month, year)
+    else:
+        print("Initials provided, but add_variables not implemented for initials")
+    return budget
+
+
 
 
 def init_budget(les_text=None, initials=None):

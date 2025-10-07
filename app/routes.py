@@ -63,70 +63,74 @@ def index():
 
 @flask_app.route('/route_single_example', methods=['POST'])
 def route_single_example():
-    form = FormSingleExample()
+    try:
+        form = FormSingleExample()
 
-    if 'button_single' in request.form:
-        if not form.validate_on_submit():
+        if 'button_single' in request.form:
+            if not form.validate_on_submit():
+                return jsonify({'message': "Invalid submission"}), 400
+
+            file = form.input_file_single.data
+            if not file:
+                return jsonify({'message': "No file submitted"}), 400
+        
+            valid, message = validate_file(file)
+            if not valid:
+                return jsonify({'message': message}), 400
+            
+            valid, message, les_pdf = validate_les(file)
+            show_guide_buttons = False
+
+        elif 'button_example' in request.form:
+            valid, message, les_pdf = validate_les(flask_app.config['LES_EXAMPLE'])
+            show_guide_buttons = True
+
+        else:
             return jsonify({'message': "Invalid submission"}), 400
 
-        file = form.input_file_single.data
-        if not file:
-            return jsonify({'message': "No file submitted"}), 400
-    
-        valid, message = validate_file(file)
-        if not valid:
+        if valid:
+            les_image, les_text = process_les(les_pdf)
+            les_rect_overlay = calc_les_rect_overlay()
+            headers = get_headers()
+
+            user_budget = init_budget_params(les_text)
+            calc_budget = init_budget_params()
+
+            budget, init_month = init_budget(les_text=les_text)
+            tsp = init_tsp(budget, init_month, les_text=les_text)
+            budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+            recommendations = add_recommendations(budget, months)
+            budget = convert_numpy_types(budget)
+            session['budget'] = budget
+            session['tsp'] = tsp
+            session['headers'] = headers
+
+            config_js = {
+                'budget': budget,
+                'tsp': tsp,
+                'months': months,
+                'headers': headers,
+                'recommendations': recommendations,
+            }
+            context = {
+                'config_js': config_js,
+                'budget': budget,
+                'tsp': tsp,
+                'months': months,
+                'headers': headers,
+                'les_image': les_image,
+                'les_rect_overlay': les_rect_overlay,
+                'show_guide_buttons': show_guide_buttons,
+                'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+                'MODALS': load_json(flask_app.config['MODALS_JSON']),
+            }
+            return render_template('settings.html', **context)
+        else:
             return jsonify({'message': message}), 400
-        
-        valid, message, les_pdf = validate_les(file)
-        show_guide_buttons = False
+    except Exception as e:
+        return render_template("errors.html", code=500, message=str(e)), 500
 
-    elif 'button_example' in request.form:
-        valid, message, les_pdf = validate_les(flask_app.config['LES_EXAMPLE'])
-        show_guide_buttons = True
-
-    else:
-        return jsonify({'message': "Invalid submission"}), 400
-
-    if valid:
-        les_image, les_text = process_les(les_pdf)
-        les_rect_overlay = calc_les_rect_overlay()
-        headers = get_headers()
-
-        user_budget = init_budget_params(les_text)
-        calc_budget = init_budget_params()
-
-        budget, init_month = init_budget(les_text=les_text)
-        tsp = init_tsp(budget, init_month, les_text=les_text)
-        budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-
-        recommendations = add_recommendations(budget, months)
-        budget = convert_numpy_types(budget)
-        session['budget'] = budget
-        session['tsp'] = tsp
-        session['headers'] = headers
-
-        config_js = {
-            'budget': budget,
-            'tsp': tsp,
-            'months': months,
-            'headers': headers,
-            'recommendations': recommendations,
-        }
-        context = {
-            'config_js': config_js,
-            'budget': budget,
-            'tsp': tsp,
-            'months': months,
-            'headers': headers,
-            'les_image': les_image,
-            'les_rect_overlay': les_rect_overlay,
-            'show_guide_buttons': show_guide_buttons,
-            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
-            'MODALS': load_json(flask_app.config['MODALS_JSON']),
-        }
-        return render_template('settings.html', **context)
-    else:
-        return jsonify({'message': message}), 400
 
 
 @flask_app.route('/route_joint', methods=['POST'])

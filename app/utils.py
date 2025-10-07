@@ -1,8 +1,19 @@
 import json
 import numpy as np
 import pandas as pd
+import traceback
 
 from app import flask_app
+
+
+def get_error_context(exc, custom_message=""):
+    tb = traceback.extract_tb(exc.__traceback__)[-1]
+    file_name = tb.filename
+    line_number = tb.lineno
+    func_name = tb.name
+    exc_type = type(exc).__name__
+    context = f"{custom_message}\nError in {file_name}, function {func_name}, line {line_number} [{exc_type}]: {str(exc)}"
+    return context
 
 
 def load_json(path):
@@ -45,42 +56,46 @@ def get_headers():
             + flask_app.config['TSP_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records'))
 
 
-def add_row(budget, header, template=None, metadata=None):
-    ROW_METADATA = flask_app.config['ROW_METADATA']
-    TYPE_ORDER = flask_app.config['TYPE_ORDER']
+def add_row(table_type, table, header, template=None, metadata=None):
+    if table_type == "budget":
+        metadata_fields = flask_app.config['BUDGET_METADATA']
+        type_order = flask_app.config['BUDGET_TYPE_ORDER']
+    elif table_type == "tsp":
+        metadata_fields = flask_app.config['TSP_METADATA']
+        type_order = flask_app.config['TSP_TYPE_ORDER']
+    else:
+        raise ValueError("table_type must be 'budget' or 'tsp'")
 
     if template is not None:
         row_data = template[template['header'] == header]
-        row_metadata = {}
-        for col in ROW_METADATA:
-            if col in row_data.columns:
-                row_metadata[col] = row_data.iloc[0][col]
+        if row_data.empty:
+            return None
+        row_metadata = {col: row_data.iloc[0][col] for col in metadata_fields if col in row_data.columns}
     elif metadata:
         row_metadata = metadata.copy()
+    else:
+        return None
 
-    row_type = row_metadata['type']
-
+    row_type = row_metadata.get('type', None)
     row = {'header': header}
     row.update(row_metadata)
 
-    # defaults insert index to end of budget
-    insert_idx = len(budget)
-    for i, t in enumerate(TYPE_ORDER):
-        if t == row_type:
-            # find the last row of the current row type
-            last_idx = max((idx for idx, r in enumerate(budget) if r.get('type') == t), default=None)
-            if last_idx is not None:
-                insert_idx = last_idx + 1
-            else:
-                # find the first row of any later type
-                later_types = TYPE_ORDER[i+1:]
-                next_idx = next((idx for idx, r in enumerate(budget) if r.get('type') in later_types), None)
-                if next_idx is not None:
-                    insert_idx = next_idx
-            break
+    insert_idx = len(table)  # default to end
+    if row_type and type_order:
+        # find all indices of rows with the same type
+        same_type_indices = [i for i, r in enumerate(table) if r.get('type') == row_type]
+        if same_type_indices:
+            insert_idx = same_type_indices[-1] + 1  # insert row after last of same type
+        else:
+            # find the first row of any later type in type_order
+            type_pos = type_order.index(row_type)
+            later_types = type_order[type_pos + 1:]
+            next_idx = next((i for i, r in enumerate(table) if r.get('type') in later_types), None)
+            if next_idx is not None:
+                insert_idx = next_idx
 
-    budget.insert(insert_idx, row)
-    return row
+    table.insert(insert_idx, row)
+    return None
 
 
 # add a month-value pair to a row identified by header
