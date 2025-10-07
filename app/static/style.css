@@ -160,6 +160,31 @@ footer {
     text-align: right;
 }
 
+/* =========================
+   toasts and tooltips
+   ========================= */
+
+#error-container {
+    margin: 2rem auto 0 auto;
+    text-align: center;
+    width: 50%;
+}
+
+#error-icon {
+    color: var(--primary_red_color);
+    font-size: 8rem; 
+    line-height: 5rem;
+}
+
+#error-details {
+    border: 1px solid var(--table_border_color);
+    border-left: 0.25rem solid var(--primary_red_color);
+    background-color: var(--secondary_light_accent_color);
+    padding: 0 0 0 1rem;
+    margin: 2rem 0 0 0;
+    text-align: left;
+}
+
 
 /* =========================
    toasts and tooltips

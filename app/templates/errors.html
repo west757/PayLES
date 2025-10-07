@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div>
-    <h1>Error {{ code }}:</h1>
-    <p>{{ message.split('\n')[0] }}</p>
-    <pre>{{ message.split('\n', 1)[1] if '\n' in message else '' }}</pre>
+<div id="error-container">
+    <span id="error-icon">&#x26A0;</span>
+    <h1>PayLES encountered an error</h1>
+    <p>Try refreshing the page. If that doesn't work, try returning home.</p>
+    <p><a href="/">Return to Home</a></p>
+
+    <div id="error-details">
+        <h2>Error Code {{ code }}</h2>
+        <p>{{ error_context.custom_message }}</p>
+        <p>Filepath: {{ error_context.filepath }}</p>
+        <p>Function: {{ error_context.function }}</p>
+        <p>Line: {{ error_context.line }}</p>
+        <p>{{ error_context.error_type }}: {{ error_context.error_message }}</p>
+    </div>
 </div>
 
 {% endblock %}

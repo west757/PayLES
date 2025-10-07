@@ -9,11 +9,19 @@ from app import flask_app
 def get_error_context(exc, custom_message=""):
     tb = traceback.extract_tb(exc.__traceback__)[-1]
     file_name = tb.filename
+    function_name = tb.name
     line_number = tb.lineno
-    func_name = tb.name
     exc_type = type(exc).__name__
-    context = f"{custom_message}\nError in {file_name}, function {func_name}, line {line_number} [{exc_type}]: {str(exc)}"
-    return context
+    error_message = str(exc)
+    
+    return {
+        "custom_message": custom_message,
+        "filepath": file_name,
+        "function": function_name,
+        "line": line_number,
+        "error_type": exc_type,
+        "error_message": error_message,
+    }
 
 
 def load_json(path):

@@ -24,6 +24,7 @@ from app.tsp import (
     init_tsp,
 )
 from app.utils import (
+    get_error_context,
     load_json,
     convert_numpy_types,
     validate_file,
@@ -128,6 +129,15 @@ def route_single_example():
             return render_template('settings.html', **context)
         else:
             return jsonify({'message': message}), 400
+    except Exception as e:
+        error_context = e.args[0]
+        return render_template("errors.html", code=500, error_context=error_context), 500
+
+
+@flask_app.route('/test_error')
+def test_error():
+    try:
+        raise Exception("Test error for error page")
     except Exception as e:
         return render_template("errors.html", code=500, message=str(e)), 500
 

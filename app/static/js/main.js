@@ -55,14 +55,22 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
 
 document.body.addEventListener('htmx:responseError', function(evt) {
-    // show toasts on htmx swap errors
-    try {
-        const response = JSON.parse(evt.detail.xhr.responseText);
-        if (response.message) {
-            showToast(response.message);
+    const xhr = evt.detail.xhr;
+    const contentType = xhr.getResponseHeader("Content-Type");
+
+    // If JSON, show toast/modal
+    if (contentType && contentType.includes("application/json")) {
+        try {
+            const response = JSON.parse(xhr.responseText);
+            if (response.message) {
+                showToast(response.message); // or showModal(response.message);
+            }
+        } catch (e) {
+            // not a valid JSON, ignore
         }
-    } catch (e) {
-        // not a JSON response, ignore
+    } else {
+        // Assume HTML error page, swap into body
+        document.body.innerHTML = xhr.responseText;
     }
     enableInputs();
 });

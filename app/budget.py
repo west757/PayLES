@@ -46,11 +46,11 @@ def init_budget_params(les_text=None, initials=None):
         try:
             les_month = les_text.get('les_month', None)
             if les_month not in flask_app.config['MONTHS_SHORT']:
-                raise ValueError()
+                raise ValueError(f"Invalid LES month: {les_month}")
             month = les_month
             budget = add_variables(budget, month, les_text=les_text)
         except Exception as e:
-            raise Exception(get_error_context(e, f"Invalid LES month: {les_month}"))
+            raise Exception(get_error_context(e, "Error determining month from LES text"))
     elif initials:
         month = flask_app.config['CURRENT_MONTH']
     else:
@@ -64,9 +64,9 @@ def add_variables(budget, month, les_text=None, initials=None):
         try:
             year = int('20' + les_text.get('les_year', None))
             if not year:
-                raise ValueError()
+                raise ValueError(f"Invalid LES year: {year}")
         except Exception as e:
-            raise Exception(get_error_context(e, f"Invalid LES year: {year}"))
+            raise Exception(get_error_context(e, "Error determining year from LES text"))
         add_mv_pair(budget, 'Year', month, year)
     else:
         print("Initials provided, but add_variables not implemented for initials")
