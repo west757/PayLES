@@ -8,8 +8,8 @@ from app.utils import (
     convert_numpy_types,
     add_row,
     add_mv_pair,
-    get_mha,
-    get_hor,
+    get_military_housing_area,
+    get_home_of_record,
     get_months,
     parse_pay_string,
 )
@@ -53,27 +53,27 @@ def init_budget(les_text=None, initials=None, compare=False):
             raise Exception(get_error_context(e, "Error determining month from LES text"))
         
         budget = add_variables(budget, month, les_text=les_text)
-        budget = add_entitlements(budget, month, les_text=les_text)
+        budget = add_pay_rows(budget, month, sign=1, les_text=les_text)
         budget = calc_income(budget, month)
-        budget = add_deductions_allotments(budget, month, les_text=les_text)
+        budget = add_pay_rows(budget, month, sign=-1, les_text=les_text)
         budget = calc_tax_exp_net(budget, month)
-        add_mv_pair(budget, 'Difference', month, 0.00)
         budget = add_ytds(budget, month, les_text=les_text)
 
     elif initials:
         month = flask_app.config['CURRENT_MONTH']
         budget = add_variables(budget, month, initials=initials)
-        budget = add_entitlements(budget, month, initials=initials)
+        budget = add_pay_rows(budget, month, sign=1, initials=initials)
         budget = calc_income(budget, month)
-        budget = add_deductions_allotments(budget, month, initials=initials)
+        budget = add_pay_rows(budget, month, sign=-1, initials=initials)
         budget = calc_tax_exp_net(budget, month)
-        add_mv_pair(budget, 'Difference', month, 0.00)
         budget = add_ytds(budget, month, initials=initials)
 
     else:
         raise Exception(get_error_context(e, "Error determining input source, les_text or initials not provided"))
 
+    add_mv_pair(budget, 'Difference', month, 0.00)
     budget = convert_numpy_types(budget)
+
     return budget
 
 
@@ -105,6 +105,9 @@ def add_variables(budget, month, les_text=None, initials=None):
         component = "AD"
         add_mv_pair(budget, 'Component', month, component)
 
+        component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
+        add_mv_pair(budget, 'Component Long', month, component_long)
+
         try:
             grade = les_text.get('grade', None)
             if not grade:
@@ -121,6 +124,10 @@ def add_variables(budget, month, les_text=None, initials=None):
             raise Exception(get_error_context(e, "Error determining zip code from LES text"))
         add_mv_pair(budget, 'Zip Code', month, zip_code)
 
+        mha_code, mha_name = get_military_housing_area(zip_code)
+        add_mv_pair(budget, 'Military Housing Area', month, mha_code)
+        add_mv_pair(budget, 'MHA Long', month, mha_name)
+
         try:
             home_of_record = les_text.get('state', None)
             if not home_of_record or home_of_record == "98":
@@ -128,6 +135,9 @@ def add_variables(budget, month, les_text=None, initials=None):
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining home of record from LES text"))
         add_mv_pair(budget, 'Home of Record', month, home_of_record)
+
+        longname, abbr = get_home_of_record(home_of_record)
+        add_mv_pair(budget, 'Home of Record Long', month, longname)
 
         try:
             dependents = les_text.get('dependents', None)
@@ -181,16 +191,6 @@ def add_variables(budget, month, les_text=None, initials=None):
         add_mv_pair(budget, 'Combat Zone', month, "No")
 
         add_mv_pair(budget, 'Drills', month, 0)
-        
-        component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
-        add_mv_pair(budget, 'Component Long', month, component_long)
-
-        mha_code, mha_name = get_mha(zip_code)
-        add_mv_pair(budget, 'Military Housing Area', month, mha_code)
-        add_mv_pair(budget, 'MHA Long', month, mha_name)
-
-        longname, abbr = get_hor(home_of_record)
-        add_mv_pair(budget, 'Home of Record Long', month, longname)
 
     else:
         print("Initials provided, but add_variables not implemented for initials")
@@ -198,19 +198,19 @@ def add_variables(budget, month, les_text=None, initials=None):
     return budget
 
 
-def add_entitlements(budget, month, les_text=None, initials=None):
+def add_pay_rows(budget, month, sign, les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
 
     if les_text:
-        pay_string = parse_pay_string(les_text.get('entitlements', ""), PAY_TEMPLATE)
+        if sign == 1:
+            pay_string = parse_pay_string(les_text.get('entitlements', ""), PAY_TEMPLATE)
+        elif sign == -1:
+            pay_string = parse_pay_string((les_text.get('deductions', "") + " " + les_text.get('allotments', "")), PAY_TEMPLATE)
 
-        for _, row in PAY_TEMPLATE.iterrows():
-            if row['sign'] != 1:
-                continue
-
+        pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
+        for _, row in pay_subset.iterrows():
             header = row['header']
-            sign = row['sign']
             required = row['required']
             lesname = row['lesname']
             value = pay_string.get(lesname, None)
@@ -226,72 +226,18 @@ def add_entitlements(budget, month, les_text=None, initials=None):
             add_mv_pair(budget, header, month, value)
 
     elif initials:
-        for _, row in PAY_TEMPLATE.iterrows():
-            if row['sign'] != 1:
-                continue
-
+        pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
+        for _, row in pay_subset.iterrows():
             header = row['header']
             required = row['required']
-            sign = row['sign']
 
             if header in SPECIAL_CALCULATIONS:
-                value = SPECIAL_CALCULATIONS[header](budget, month)
+                value = round(sign * SPECIAL_CALCULATIONS[header](budget, month), 2)
             elif required:
                 value = 0.00
             else:
                 continue
 
-            value = round(sign * value, 2)
-            add_row("budget", budget, header, template=PAY_TEMPLATE)
-            add_mv_pair(budget, header, month, value)
-
-    return budget
-
-
-def add_deductions_allotments(budget, month, les_text=None, initials=None):
-    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
-    SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
-
-    if les_text:
-        pay_string = parse_pay_string((les_text.get('deductions', "") + " " + les_text.get('allotments', "")), PAY_TEMPLATE)
-
-        for _, row in PAY_TEMPLATE.iterrows():
-            if row['sign'] != -1:
-                continue
-
-            header = row['header']
-            sign = row['sign']
-            required = row['required']
-            lesname = row['lesname']
-            value = pay_string.get(lesname, None)
-
-            if value is not None:
-                value = round(sign * value, 2)
-            elif required:
-                value = 0.00
-            else:
-                continue
-
-            add_row("budget", budget, header, template=PAY_TEMPLATE)
-            add_mv_pair(budget, header, month, value)
-
-    elif initials:
-        for _, row in PAY_TEMPLATE.iterrows():
-            if row['sign'] != -1:
-                continue
-
-            header = row['header']
-            required = row['required']
-            sign = row['sign']
-
-            if header in SPECIAL_CALCULATIONS:
-                value = SPECIAL_CALCULATIONS[header](budget, month)
-            elif required:
-                value = 0.00
-            else:
-                continue
-
-            value = round(sign * value, 2)
             add_row("budget", budget, header, template=PAY_TEMPLATE)
             add_mv_pair(budget, header, month, value)
 
@@ -395,7 +341,7 @@ def update_var(budget, prev_month, working_month, cell_header, cell_month, cell_
         elif row['header'] == "Military Housing Area":
             zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
             zip_code = zip_row.get(working_month)
-            mha_code, mha_name = get_mha(zip_code)
+            mha_code, mha_name = get_military_housing_area(zip_code)
             row[working_month] = mha_code
 
             mha_long_row = next((r for r in budget if r['header'] == "MHA Long"), None)
@@ -415,7 +361,7 @@ def update_var(budget, prev_month, working_month, cell_header, cell_month, cell_
             component_long_row[working_month] = flask_app.config['COMPONENTS'][component_val]
 
         if row['header'] == "Home of Record":
-            longname, abbr = get_hor(row[working_month])
+            longname, abbr = get_home_of_record(row[working_month])
             home_of_record_long = next((r for r in budget if r['header'] == "Home of Record Long"), None)
             home_of_record_long[working_month] = longname
 

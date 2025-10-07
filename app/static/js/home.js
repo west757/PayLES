@@ -17,6 +17,8 @@ function buildInitialsInputs() {
         { container: 'initials-ytd-expenses', field: 'float', rowHeader: 'YTD Expenses' },
     ];
 
+    // add branch, component, change to pay date
+
     initials.forEach(initial => {
         const container = document.getElementById(initial.container);
         let inputWrapper = createStandardInput(initial.rowHeader, initial.field);

@@ -13,8 +13,10 @@ short-term:
 - change account to just be bank account
 - build an index of headers instead of scanning entire table
 - tsp input restrictions
+- tsp input zeroing
 - rename settings.html and budget.html
 - compare LES with recommendations
+- rename initials to manuals
 
 mid-term:
 - get combat zone from les

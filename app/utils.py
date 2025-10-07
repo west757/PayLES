@@ -72,8 +72,6 @@ def add_row(table_type, table, header, template=None, metadata=None):
     elif table_type == "tsp":
         metadata_fields = flask_app.config['TSP_METADATA']
         type_order = flask_app.config['TSP_TYPE_ORDER']
-    else:
-        raise ValueError("table_type must be 'budget' or 'tsp'")
 
     if template is not None:
         row_data = template[template['header'] == header]
@@ -133,54 +131,11 @@ def sum_rows_via_modal(budget, modal_str, month):
     return total
 
 
-def get_mha(zip_code):
-    MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
-
-    if zip_code in ("00000", "", "Not Found"):
-        return "Not Found", "Not Found"
-
-    try:
-        for _, row in MHA_ZIP_CODES.iterrows():
-            for zip_val in row[2:]:
-
-                if pd.isna(zip_val):
-                    continue
-
-                zip_str = str(zip_val).strip()
-                if not zip_str:
-                    continue
-
-                if '.' in zip_str:
-                    zip_str = zip_str.split('.')[0]
-                    
-                zip_str = zip_str.zfill(5)
-                if zip_str == str(zip_code).strip().zfill(5):
-                    return row['mha'], row['mha_name']
-        return "Not Found", "Not Found"
-    except Exception:
-        return "Not Found", "Not Found"
-    
-
 def get_table_val(table, header, month):
     row = next((r for r in table if r['header'] == header), None)
     if row is None:
         return None
     return row.get(month, None)
-
-
-def get_hor(home_of_record):
-    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
-
-    if not home_of_record or home_of_record == "Not Found":
-        return "Not Found", "Not Found"
-
-    home_of_record = str(home_of_record).strip()
-    if len(home_of_record) == 2:
-        row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
-        return row.iloc[0]['longname'], home_of_record
-    else:
-        row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == home_of_record]
-        return home_of_record, row.iloc[0]['abbr']
 
 
 def get_months(budget):
@@ -210,6 +165,49 @@ def parse_pay_string(pay_string, pay_template):
                 continue
 
     return results
+
+
+def get_military_housing_area(zip_code):
+    MHA_ZIP_CODES = flask_app.config['MHA_ZIP_CODES']
+
+    if zip_code in ("00000", "", "Not Found"):
+        return "Not Found", "Not Found"
+
+    try:
+        for _, row in MHA_ZIP_CODES.iterrows():
+            for zip_val in row[2:]:
+
+                if pd.isna(zip_val):
+                    continue
+
+                zip_str = str(zip_val).strip()
+                if not zip_str:
+                    continue
+
+                if '.' in zip_str:
+                    zip_str = zip_str.split('.')[0]
+                    
+                zip_str = zip_str.zfill(5)
+                if zip_str == str(zip_code).strip().zfill(5):
+                    return row['mha'], row['mha_name']
+        return "Not Found", "Not Found"
+    except Exception:
+        return "Not Found", "Not Found"
+
+
+def get_home_of_record(home_of_record):
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+
+    if not home_of_record or home_of_record == "Not Found":
+        return "Not Found", "Not Found"
+
+    home_of_record = str(home_of_record).strip()
+    if len(home_of_record) == 2:
+        row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
+        return row.iloc[0]['longname'], home_of_record
+    else:
+        row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == home_of_record]
+        return home_of_record, row.iloc[0]['abbr']
 
 
 def add_recommendations(budget, months):

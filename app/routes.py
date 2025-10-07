@@ -1,3 +1,5 @@
+import traceback
+
 from flask import request, render_template, session, jsonify
 from app import csrf
 
@@ -24,7 +26,6 @@ from app.tsp import (
 )
 from app.utils import (
     load_json,
-    convert_numpy_types,
     validate_file,
     get_headers,
     get_months,
@@ -62,88 +63,77 @@ def index():
 
 @flask_app.route('/route_single', methods=['POST'])
 def route_single():
-    try:
-        form = FormSingle()
+    form = FormSingle()
 
-        if 'button_single' in request.form:
-            if not form.validate_on_submit():
-                return jsonify({'message': "Invalid submission"}), 400
-
-            file = form.input_file_single.data
-            if not file:
-                return jsonify({'message': "No file submitted"}), 400
-        
-            valid, message = validate_file(file)
-            if not valid:
-                return jsonify({'message': message}), 400
-            
-            valid, message, les_pdf = validate_les(file)
-            show_guide_buttons = False
-
-        elif 'button_example' in request.form:
-            valid, message, les_pdf = validate_les(flask_app.config['LES_EXAMPLE'])
-            show_guide_buttons = True
-
-        else:
+    if 'button_single' in request.form:
+        if not form.validate_on_submit():
             return jsonify({'message': "Invalid submission"}), 400
 
-        if valid:
-            les_image, les_text = process_les(les_pdf)
-            les_rect_overlay = calc_les_rect_overlay()
-            headers = get_headers()
-
-            upload_budget = init_budget(les_text, compare=False)
-            #for row in upload_budget:
-            #    print(row)
-            #compare_budget = init_budget(les_text, compare=True)
-
-            budget = upload_budget
-
-            #budget, init_month = init_budget(les_text=les_text)
-            #tsp = init_tsp(budget, init_month, les_text=les_text)
-            #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-
-            #recommendations = add_recommendations(budget, months)
-            tsp = None
-            months = None
-            recommendations = None
-
-            session['budget'] = budget
-            session['tsp'] = tsp
-            session['headers'] = headers
-
-            config_js = {
-                'budget': budget,
-                'tsp': tsp,
-                'months': months,
-                'headers': headers,
-                'recommendations': recommendations,
-            }
-            context = {
-                'config_js': config_js,
-                'budget': budget,
-                'tsp': tsp,
-                'months': months,
-                'headers': headers,
-                'les_image': les_image,
-                'les_rect_overlay': les_rect_overlay,
-                'show_guide_buttons': show_guide_buttons,
-                'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
-                'MODALS': load_json(flask_app.config['MODALS_JSON']),
-            }
-            return render_template('settings.html', **context)
-        else:
+        file = form.input_file_single.data
+        if not file:
+            return jsonify({'message': "No file submitted"}), 400
+    
+        valid, message = validate_file(file)
+        if not valid:
             return jsonify({'message': message}), 400
-    except Exception as e:
-        error_context = e.args[0] if (e.args and isinstance(e.args[0], dict)) else {
-            "custom_message": str(e),
-            "filepath": "",
-            "function": "",
-            "line": "",
-            "error_type": type(e).__name__,
-            "error_message": str(e),
+        
+        valid, message, les_pdf = validate_les(file)
+        show_guide_buttons = False
+
+    elif 'button_example' in request.form:
+        valid, message, les_pdf = validate_les(flask_app.config['LES_EXAMPLE'])
+        show_guide_buttons = True
+
+    else:
+        return jsonify({'message': "Invalid submission"}), 400
+
+    if valid:
+        les_image, les_text = process_les(les_pdf)
+        les_rect_overlay = calc_les_rect_overlay()
+        headers = get_headers()
+
+        upload_budget = init_budget(les_text)
+        #for row in upload_budget:
+        #    print(row)
+        #compare_budget = init_budget(les_text, compare=True)
+
+        budget = upload_budget
+
+        #budget, init_month = init_budget(les_text=les_text)
+        #tsp = init_tsp(budget, init_month, les_text=les_text)
+        #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+        #recommendations = add_recommendations(budget, months)
+        tsp = None
+        months = None
+        recommendations = None
+
+        session['budget'] = budget
+        session['tsp'] = tsp
+        session['headers'] = headers
+
+        config_js = {
+            'budget': budget,
+            'tsp': tsp,
+            'months': months,
+            'headers': headers,
+            'recommendations': recommendations,
         }
-        return render_template("errors.html", code=500, error_context=error_context), 500
+        context = {
+            'config_js': config_js,
+            'budget': budget,
+            'tsp': tsp,
+            'months': months,
+            'headers': headers,
+            'les_image': les_image,
+            'les_rect_overlay': les_rect_overlay,
+            'show_guide_buttons': show_guide_buttons,
+            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'MODALS': load_json(flask_app.config['MODALS_JSON']),
+        }
+        return render_template('settings.html', **context)
+    else:
+        return jsonify({'message': message}), 400
 
 
 @flask_app.route('/route_joint', methods=['POST'])
@@ -186,7 +176,6 @@ def route_joint():
         budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         recommendations = add_recommendations(budget, months)
-        budget = convert_numpy_types(budget)
         session['budget'] = budget
         session['tsp'] = tsp
         session['headers'] = headers
@@ -224,7 +213,6 @@ def route_initials():
     budget, months = add_months(budget, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'])
     
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['tsp'] = tsp
     session['headers'] = headers
@@ -271,7 +259,6 @@ def route_update_cell():
     budget, tsp = update_months(budget, tsp, months, cell_header, cell_month, cell_value, cell_repeat)
     
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['tsp'] = tsp
 
@@ -307,7 +294,6 @@ def route_change_months():
         budget, tsp, months = add_months(budget, tsp, latest_month=months[-1], months_num=new_months_num)
 
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['tsp'] = tsp
 
@@ -349,7 +335,6 @@ def route_insert_row():
     budget, tsp = update_months(budget, tsp, months)
 
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['tsp'] = tsp
     session['headers'] = headers
@@ -384,7 +369,6 @@ def route_remove_row():
     budget, tsp = update_months(budget, tsp, months)
 
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
     session['budget'] = budget
     session['tsp'] = tsp
     session['headers'] = headers
@@ -429,3 +413,20 @@ def resources():
 @flask_app.route('/leave')
 def leave():
     return render_template('leave.html')
+
+
+@flask_app.errorhandler(Exception)
+def handle_exception(e):
+    if e.args and isinstance(e.args[0], dict):
+        error_context = e.args[0]
+    else:
+        traceback.print_exc()
+        error_context = {
+            "custom_message": str(e),
+            "filepath": "",
+            "function": "",
+            "line": "",
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+        }
+    return render_template("errors.html", code=500, error_context=error_context), 500
