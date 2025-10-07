@@ -51,7 +51,7 @@ class Config:
         "USSF": "United States Space Force",
         "USN": "United States Navy",
         "USMC": "United States Marine Corps",
-        "USCG": "United States Coast Guard",
+        #"USCG": "United States Coast Guard",
     }
 
     COMPONENTS = {

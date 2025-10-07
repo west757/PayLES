@@ -2,7 +2,6 @@ function buildInitialsInputs() {
     const initials = [
         { container: 'initials-years', field: 'select', rowHeader: 'Year' },
         { container: 'initials-months', field: 'select', rowHeader: 'Months' },
-        { container: 'initials-months-in-service', field: 'int', rowHeader: 'Months in Service' },
         { container: 'initials-grade', field: 'select', rowHeader: 'Grade' },
         { container: 'initials-dependents', field: 'int', rowHeader: 'Dependents' },
         { container: 'initials-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
@@ -10,11 +9,6 @@ function buildInitialsInputs() {
         { container: 'initials-zip-code', field: 'string', rowHeader: 'Zip Code' },
         { container: 'initials-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
         { container: 'initials-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
-        { container: 'initials-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
-        { container: 'initials-trad-tsp-base-rate', field: 'int', rowHeader: 'Trad TSP Base Rate' },
-        { container: 'initials-roth-tsp-base-rate', field: 'int', rowHeader: 'Roth TSP Base Rate' },
-        { container: 'initials-ytd-income', field: 'float', rowHeader: 'YTD Income' },
-        { container: 'initials-ytd-expenses', field: 'float', rowHeader: 'YTD Expenses' },
     ];
 
     // add branch, component, change to pay date

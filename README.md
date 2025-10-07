@@ -17,6 +17,7 @@ short-term:
 - rename settings.html and budget.html
 - compare LES with recommendations
 - rename initials to manuals
+- make year a metadata row
 
 mid-term:
 - get combat zone from les

@@ -34,7 +34,6 @@
         </div>
 
         <div id="tab-joint" class="tab-content">
-            <!--
             <form id="form-joint" hx-post="/route_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_joint.hidden_tag() }}
                 <div id="tab-joint-row">
@@ -49,8 +48,6 @@
                 </div>
                 {{ form_joint.button_joint(id="button-joint", class="button-solo") }}
             </form>
-        -->
-            Joint Spouse LES upload coming soon. In the meantime, please use the Single LES Upload tab.
         </div>
 
         <div id="tab-initials" class="tab-content">
@@ -59,41 +56,30 @@
                 <div class="initials-grid">
                     <div class="initials-column">
                         <div class="initials-row">
-                            <label for="initials-years-id">Entered Active Duty:</label>
+                            <label for="initials-years-id">Pay Date:</label>
                             <div id="initials-years-months">
                                 <div id="initials-years"></div>
                                 <div id="initials-months"></div>
                             </div>
+                            <span class="question tooltip" data-tooltip=
+                            "Pay Entry Base Date (PEBD), used to calculate months in service">
+                            ?</span>
                         </div>
                         <div class="initials-row">
-                            <label for="initials-months-in-service-id">Months in Service:</label>
-                            <div id="initials-months-in-service"></div>
+                            <label for="initials-branch">Branch:</label>
+                            <div id="initials-branch"></div>
+                        </div>
+                        <div class="initials-row">
+                            <label for="initials-component">Component:</label>
+                            <div id="initials-component"></div>
+                        </div>
+                        <div class="initials-row">
+                            <label for="initials-drills">Drills:</label>
+                            <div id="initials-drills"></div>
                         </div>
                         <div class="initials-row">
                             <label for="initials-grade">Grade:</label>
                             <div id="initials-grade"></div>
-                        </div>
-                        <div class="initials-row">
-                            <label for="initials-dependents">Dependents:</label>
-                            <div id="initials-dependents"></div>
-                        </div>
-                        <div class="initials-row">
-                            <label for="initials-combat-zone">Combat Zone:</label>
-                            <div id="initials-combat-zone"></div>
-                            <span class="question tooltip" data-tooltip=
-                            "Indicates whether the user is currently in a combat zone, affecting if certain pays are taxed.">
-                            ?</span>
-                        </div>
-
-                        <hr />
-
-                        <div class="initials-row">
-                            <label for="initials-trad-tsp-base-rate">Trad TSP Base Rate:</label>
-                            <div id="initials-trad-tsp-base-rate"></div>
-                        </div>
-                        <div class="initials-row">
-                            <label for="initials-roth-tsp-base-rate">Roth TSP Base Rate:</label>
-                            <div id="initials-roth-tsp-base-rate"></div>
                         </div>
                     </div>
 
@@ -115,21 +101,9 @@
                             <div id="initials-state-filing-status"></div>
                         </div>
                         <div class="initials-row">
-                            <label for="initials-sgli-coverage">SGLI Coverage:</label>
-                            <div id="initials-sgli-coverage"></div>
+                            <label for="initials-dependents">Dependents:</label>
+                            <div id="initials-dependents"></div>
                         </div>
-
-                        <hr />
-
-                        <div class="initials-row">
-                            <label for="initials-ytd-income">YTD Income:</label>
-                            <div id="initials-ytd-income"></div>
-                        </div>
-                        <div class="initials-row">
-                            <label for="initials-ytd-expenses">YTD Expenses:</label>
-                            <div id="initials-ytd-expenses"></div>
-                        </div>
-
                     </div>
                 </div>
 

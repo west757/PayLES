@@ -62,11 +62,11 @@ def init_budget(les_text=None, initials=None, compare=False):
     elif initials:
         month = flask_app.config['CURRENT_MONTH']
         budget = add_variables(budget, month, initials=initials)
-        budget = add_pay_rows(budget, month, sign=1, initials=initials)
+        budget = add_pay_rows(budget, month, sign=1)
         budget = calc_income(budget, month)
-        budget = add_pay_rows(budget, month, sign=-1, initials=initials)
+        budget = add_pay_rows(budget, month, sign=-1)
         budget = calc_tax_exp_net(budget, month)
-        budget = add_ytds(budget, month, initials=initials)
+        budget = add_ytds(budget, month)
 
     else:
         raise Exception(get_error_context(e, "Error determining input source, les_text or initials not provided"))
@@ -101,6 +101,24 @@ def add_variables(budget, month, les_text=None, initials=None):
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining months in service from LES text"))
         add_mv_pair(budget, 'Months in Service', month, months_in_service)
+
+        try:
+            text = les_text.get('branch', None)
+            if text == "ARMY":
+                branch = "USA"
+            elif text == "AF":
+                branch = "USAF"
+            elif text == "SF":
+                branch = "USSF"
+            elif text == "NAVY":
+                branch = "USN"
+            elif text == "USMC":
+                branch = "USMC"
+            else:
+                raise ValueError(f"Invalid LES branch: {text}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining branch from LES text"))
+        add_mv_pair(budget, 'Branch', month, branch)
 
         component = "AD"
         add_mv_pair(budget, 'Component', month, component)
@@ -148,27 +166,27 @@ def add_variables(budget, month, les_text=None, initials=None):
         add_mv_pair(budget, 'Dependents', month, dependents)
 
         try:
-            status = les_text.get('federal_filing_status', None)
-            if status == "S":
+            text = les_text.get('federal_filing_status', None)
+            if text == "S":
                 federal_filing_status = "Single"
-            elif status == "M":
+            elif text == "M":
                 federal_filing_status = "Married"
-            elif status == "H":
+            elif text == "H":
                 federal_filing_status = "Head of Household"
             else:
-                raise ValueError(f"Invalid LES federal filing status: {status}")
+                raise ValueError(f"Invalid LES federal filing status: {text}")
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
         add_mv_pair(budget, 'Federal Filing Status', month, federal_filing_status)
 
         try:
-            status = les_text.get('state_filing_status', None)
-            if status == "S":
+            text = les_text.get('state_filing_status', None)
+            if text == "S":
                 state_filing_status = "Single"
-            elif status == "M":
+            elif text == "M":
                 state_filing_status = "Married"
             else:
-                raise ValueError(f"Invalid LES state filing status: {status}")
+                raise ValueError(f"Invalid LES state filing status: {text}")
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
         add_mv_pair(budget, 'State Filing Status', month, state_filing_status)
@@ -198,7 +216,7 @@ def add_variables(budget, month, les_text=None, initials=None):
     return budget
 
 
-def add_pay_rows(budget, month, sign, les_text=None, initials=None):
+def add_pay_rows(budget, month, sign, les_text=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
 
@@ -225,7 +243,7 @@ def add_pay_rows(budget, month, sign, les_text=None, initials=None):
             add_row("budget", budget, header, template=PAY_TEMPLATE)
             add_mv_pair(budget, header, month, value)
 
-    elif initials:
+    else:
         pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
         for _, row in pay_subset.iterrows():
             header = row['header']
@@ -244,7 +262,7 @@ def add_pay_rows(budget, month, sign, les_text=None, initials=None):
     return budget
 
 
-def add_ytds(budget, month, les_text=None, initials=None):
+def add_ytds(budget, month, les_text=None):
     if les_text:
         try:
             ytd_entitlements = les_text.get('ytd_entitlements', 0.00)
