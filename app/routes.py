@@ -12,7 +12,7 @@ from app.budget import (
     insert_row,
 )
 from app.forms import (
-    FormSingleExample,
+    FormSingle,
     FormJoint,
 )
 from app.les import (
@@ -36,7 +36,7 @@ from app.utils import (
 
 @flask_app.route('/')
 def index():
-    form_single_example = FormSingleExample()
+    form_single = FormSingle()
     form_joint = FormJoint()
 
     config_js = {
@@ -54,7 +54,7 @@ def index():
     }
     context = {
         'config_js': config_js,
-        'form_single_example': form_single_example,
+        'form_single': form_single,
         'form_joint': form_joint,
         'CURRENT_YEAR': flask_app.config['CURRENT_YEAR'],
         'CURRENT_MONTH': flask_app.config['CURRENT_MONTH'],
@@ -62,10 +62,10 @@ def index():
     return render_template('home.html', **context)
 
 
-@flask_app.route('/route_single_example', methods=['POST'])
-def route_single_example():
+@flask_app.route('/route_single', methods=['POST'])
+def route_single():
     try:
-        form = FormSingleExample()
+        form = FormSingle()
 
         if 'button_single' in request.form:
             if not form.validate_on_submit():
@@ -132,15 +132,6 @@ def route_single_example():
     except Exception as e:
         error_context = e.args[0]
         return render_template("errors.html", code=500, error_context=error_context), 500
-
-
-@flask_app.route('/test_error')
-def test_error():
-    try:
-        raise Exception("Test error for error page")
-    except Exception as e:
-        return render_template("errors.html", code=500, message=str(e)), 500
-
 
 
 @flask_app.route('/route_joint', methods=['POST'])

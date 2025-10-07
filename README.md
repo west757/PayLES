@@ -26,6 +26,7 @@ mid-term:
 - check for discrepancies between what PayLES would return versus what is actually on the LES for the first month
 - add loading screen after submitting LES
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
+- get component from LES, maybe use TPC or PACIDN
 
 long-term:
 - leave calculator

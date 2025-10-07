@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, FileField
 
-class FormSingleExample(FlaskForm):
+class FormSingle(FlaskForm):
     input_file_single = FileField('')
     button_single = SubmitField('Submit')
     button_example = SubmitField('View Example')

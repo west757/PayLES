@@ -41,7 +41,6 @@ def init_budget_params(les_text=None, initials=None):
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row("budget", budget, row['header'], template=PARAMS_TEMPLATE)
 
-    
     if les_text:
         try:
             les_month = les_text.get('les_month', None)
@@ -68,6 +67,117 @@ def add_variables(budget, month, les_text=None, initials=None):
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining year from LES text"))
         add_mv_pair(budget, 'Year', month, year)
+
+        try:
+            pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
+            if not pay_date:
+                raise ValueError(f"Invalid LES pay date: {pay_date}")
+            les_date = pd.to_datetime(datetime.strptime((les_text.get('les_year', None) + les_text.get('les_month', None) + "1"), '%y%b%d'))
+            if not les_date:
+                raise ValueError(f"Invalid LES date: {les_date}")
+
+            months_in_service = ((les_date.year - pay_date.year) * 12) + (les_date.month - pay_date.month)
+            if months_in_service < 0:
+                raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining months in service from LES text"))
+        add_mv_pair(budget, 'Months in Service', month, months_in_service)
+
+        #try:
+        #    component = les_text[57][1]
+        #    if not component:
+        #        raise ValueError()
+        #except Exception:
+        #    component = "Not Found"
+        component = "AD"
+        add_mv_pair(budget, 'Component', month, component)
+
+        try:
+            grade = les_text.get('grade', None)
+            if not grade:
+                raise ValueError(f"Invalid LES grade: {grade}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining grade from LES text"))
+        add_mv_pair(budget, 'Grade', month, grade)
+
+        try:
+            zip_code = les_text.get('zip_code', None)
+            if not zip_code or zip_code == "00000":
+                raise ValueError(f"Invalid LES zip code: {zip_code}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining zip code from LES text"))
+        add_mv_pair(budget, 'Zip Code', month, zip_code)
+
+        try:
+            home_of_record = les_text.get('home_of_record', None)
+            if not home_of_record or home_of_record == "98":
+                raise ValueError(f"Invalid LES home of record: {home_of_record}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining home of record from LES text"))
+        add_mv_pair(budget, 'Home of Record', month, home_of_record)
+
+        try:
+            dependents = les_text.get('dependents', None)
+            if not dependents or dependents not in range(0, 99):
+                raise ValueError(f"Invalid LES dependents: {dependents}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining dependents from LES text"))
+        add_mv_pair(budget, 'Dependents', month, dependents)
+
+        try:
+            status = les_text.get('federal_filing_status', None)
+            if status == "S":
+                federal_filing_status = "Single"
+            elif status == "M":
+                federal_filing_status = "Married"
+            elif status == "H":
+                federal_filing_status = "Head of Household"
+            else:
+                raise ValueError(f"Invalid LES federal filing status: {status}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
+        add_mv_pair(budget, 'Federal Filing Status', month, federal_filing_status)
+
+        try:
+            status = les_text.get('state_filing_status', None)
+            if status == "S":
+                state_filing_status = "Single"
+            elif status == "M":
+                state_filing_status = "Married"
+            else:
+                raise ValueError(f"Invalid LES state filing status: {status}")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
+        add_mv_pair(budget, 'State Filing Status', month, state_filing_status)
+
+        try:
+            remarks = les_text.get('remarks', "")
+            # search for SGLI coverage amount in the remarks string
+            match = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
+            if match:
+                sgli_coverage = f"${match.group(1)}"
+                # validate against allowed coverages
+                if sgli_coverage not in flask_app.config['SGLI_COVERAGES']:
+                    raise ValueError(f"SGLI coverage '{sgli_coverage}' not in allowed coverages")
+            else:
+                raise ValueError("SGLI coverage amount not found in remarks")
+        except Exception as e:
+            raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
+        add_mv_pair(budget, 'SGLI Coverage', month, sgli_coverage)
+
+        add_mv_pair(budget, 'Combat Zone', month, "No")
+        add_mv_pair(budget, 'Drills', month, 0)
+
+        component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
+        add_mv_pair(budget, 'Component Long', month, component_long)
+
+        mha_code, mha_name = get_mha(zip_code)
+        add_mv_pair(budget, 'Military Housing Area', month, mha_code)
+        add_mv_pair(budget, 'MHA Long', month, mha_name)
+
+        longname, abbr = get_hor(home_of_record)
+        add_mv_pair(budget, 'Home of Record Long', month, longname)
+
     else:
         print("Initials provided, but add_variables not implemented for initials")
     return budget
