@@ -5,6 +5,7 @@ import re
 from app import flask_app
 from app.utils import (
     get_error_context,
+    convert_numpy_types,
     add_row,
     add_mv_pair,
     get_mha,
@@ -32,10 +33,10 @@ from app.tsp import (
 
 
 # =========================
-# init and build budget
+# init budget
 # =========================
 
-def init_budget_params(les_text=None, initials=None, compare=False):
+def init_budget(les_text=None, initials=None, compare=False):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     budget = []
@@ -56,6 +57,7 @@ def init_budget_params(les_text=None, initials=None, compare=False):
         budget = calc_income(budget, month)
         budget = add_deductions_allotments(budget, month, les_text=les_text)
         budget = calc_tax_exp_net(budget, month)
+        add_mv_pair(budget, 'Difference', month, 0.00)
         budget = add_ytds(budget, month, les_text=les_text)
 
     elif initials:
@@ -65,12 +67,13 @@ def init_budget_params(les_text=None, initials=None, compare=False):
         budget = calc_income(budget, month)
         budget = add_deductions_allotments(budget, month, initials=initials)
         budget = calc_tax_exp_net(budget, month)
+        add_mv_pair(budget, 'Difference', month, 0.00)
         budget = add_ytds(budget, month, initials=initials)
 
     else:
         raise Exception(get_error_context(e, "Error determining input source, les_text or initials not provided"))
 
-
+    budget = convert_numpy_types(budget)
     return budget
 
 
@@ -111,7 +114,7 @@ def add_variables(budget, month, les_text=None, initials=None):
         add_mv_pair(budget, 'Grade', month, grade)
 
         try:
-            zip_code = les_text.get('zip_code', None)
+            zip_code = les_text.get('vha_zip', None)
             if not zip_code or zip_code == "00000":
                 raise ValueError(f"Invalid LES zip code: {zip_code}")
         except Exception as e:
@@ -119,7 +122,7 @@ def add_variables(budget, month, les_text=None, initials=None):
         add_mv_pair(budget, 'Zip Code', month, zip_code)
 
         try:
-            home_of_record = les_text.get('home_of_record', None)
+            home_of_record = les_text.get('state', None)
             if not home_of_record or home_of_record == "98":
                 raise ValueError(f"Invalid LES home of record: {home_of_record}")
         except Exception as e:
@@ -128,7 +131,7 @@ def add_variables(budget, month, les_text=None, initials=None):
 
         try:
             dependents = les_text.get('dependents', None)
-            if not dependents or dependents not in range(0, 99):
+            if dependents is None or dependents == "":
                 raise ValueError(f"Invalid LES dependents: {dependents}")
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining dependents from LES text"))
@@ -178,7 +181,7 @@ def add_variables(budget, month, les_text=None, initials=None):
         add_mv_pair(budget, 'Combat Zone', month, "No")
 
         add_mv_pair(budget, 'Drills', month, 0)
-
+        
         component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
         add_mv_pair(budget, 'Component Long', month, component_long)
 
@@ -197,7 +200,7 @@ def add_variables(budget, month, les_text=None, initials=None):
 
 def add_entitlements(budget, month, les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
-    special_calculations = flask_app.config['special_calculations']
+    SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
 
     if les_text:
         pay_string = parse_pay_string(les_text.get('entitlements', ""), PAY_TEMPLATE)
@@ -231,8 +234,8 @@ def add_entitlements(budget, month, les_text=None, initials=None):
             required = row['required']
             sign = row['sign']
 
-            if header in special_calculations:
-                value = special_calculations[header](budget, month)
+            if header in SPECIAL_CALCULATIONS:
+                value = SPECIAL_CALCULATIONS[header](budget, month)
             elif required:
                 value = 0.00
             else:
@@ -247,7 +250,7 @@ def add_entitlements(budget, month, les_text=None, initials=None):
 
 def add_deductions_allotments(budget, month, les_text=None, initials=None):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
-    special_calculations = flask_app.config['special_calculations']
+    SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
 
     if les_text:
         pay_string = parse_pay_string((les_text.get('deductions', "") + " " + les_text.get('allotments', "")), PAY_TEMPLATE)
@@ -281,8 +284,8 @@ def add_deductions_allotments(budget, month, les_text=None, initials=None):
             required = row['required']
             sign = row['sign']
 
-            if header in special_calculations:
-                value = special_calculations[header](budget, month)
+            if header in SPECIAL_CALCULATIONS:
+                value = SPECIAL_CALCULATIONS[header](budget, month)
             elif required:
                 value = 0.00
             else:
@@ -303,7 +306,7 @@ def add_ytds(budget, month, les_text=None, initials=None):
                 raise ValueError(f"Invalid LES text: {ytd_entitlements}")
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining YTD entitlements from LES text"))
-        add_mv_pair(budget, 'YTD Entitlements', month, round(ytd_entitlements, 2))
+        add_mv_pair(budget, 'YTD Income', month, round(ytd_entitlements, 2))
 
         try:
             ytd_deductions = les_text.get('ytd_deductions', 0.00)
@@ -311,7 +314,7 @@ def add_ytds(budget, month, les_text=None, initials=None):
                 raise ValueError(f"Invalid LES text: {ytd_deductions}")
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining YTD deductions from LES text"))
-        add_mv_pair(budget, 'YTD Deductions', month, round(-ytd_deductions, 2))
+        add_mv_pair(budget, 'YTD Expenses', month, round(-ytd_deductions, 2))
 
         add_mv_pair(budget, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
 
@@ -319,178 +322,6 @@ def add_ytds(budget, month, les_text=None, initials=None):
         print("Initials provided, but add_ytds not implemented for initials")
     
     return budget
-
-
-
-
-
-
-
-
-def init_budget(les_text=None, initials=None):
-    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
-    PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
-
-    if les_text:
-        try:
-            init_month = les_text[8][3]
-            if not init_month:
-                raise ValueError()
-        except Exception as e:
-            raise Exception(f"Error determining initial month: {e}")
-    else:
-        init_month = flask_app.config['CURRENT_MONTH']
-
-    budget = []
-    for _, row in PARAMS_TEMPLATE.iterrows():
-        add_row(budget, row['header'], template=PARAMS_TEMPLATE)
-
-    if les_text:
-        add_ent_ded_alt_rows(PAY_TEMPLATE, budget, init_month, les_text)
-        calc_income(budget, init_month)
-    elif initials:
-        add_ent_rows(PAY_TEMPLATE, budget, init_month)
-        calc_income(budget, init_month)
-        add_ded_alt_rows(PAY_TEMPLATE, budget, init_month)
-    calc_tax_exp_net(budget, init_month)
-    add_mv_pair(budget, 'Difference', init_month, 0.00)
-    add_ytd_rows(budget, init_month, les_text)
-
-    return budget, init_month
-
-
-def add_ent_ded_alt_rows(PAY_TEMPLATE, budget, month, les_text=None):
-    ent_ded_alt_dict = {}
-    
-    if les_text:
-        ents = parse_pay_section(les_text[9])
-        deds = parse_pay_section(les_text[10])
-        alts = parse_pay_section(les_text[11])
-
-        for item in ents + deds + alts:
-            ent_ded_alt_dict[item['header'].upper()] = item['value']
-
-    for _, row in PAY_TEMPLATE.iterrows():
-        header = row['header']
-        sign = row['sign']
-        required = row['required']
-        lesname = row['lesname']
-
-        # only add if lesname in ent_ded_alt_dict or required
-        if lesname in ent_ded_alt_dict or required:
-            add_row(budget, header, template=PAY_TEMPLATE)
-
-            if lesname in ent_ded_alt_dict:
-                value = round(sign * ent_ded_alt_dict[lesname], 2)
-            else:
-                value = 0.00
-
-            add_mv_pair(budget, header, month, value)
-
-    return budget
-
-
-def parse_pay_section(les_text):
-    text_list = les_text[3:-1] 
-    results = []
-    i = 0
-
-    def is_number(s):
-        return bool(re.match(r"^-?\d+(\.\d{1,2})?$", s))
-
-    while i < len(text_list):
-        header_parts = []
-        # collect header parts, skipping single-character labels
-        while i < len(text_list) and not is_number(text_list[i]):
-            if len(text_list[i]) == 1 and text_list[i].isalpha():
-                i += 1
-                continue
-            header_parts.append(text_list[i])
-            i += 1
-
-        if not header_parts or i >= len(text_list):
-            break
-
-        value_str = text_list[i]
-        try:
-            value = float(value_str)
-        except Exception:
-            value = 0.00
-
-        value = round(value, 2)
-
-        header = " ".join(header_parts)
-        if header.upper() != "TOTAL" and header != "":
-            results.append({"header": header, "value": value})
-        i += 1
-
-    return results
-
-
-def add_ent_rows(PAY_TEMPLATE, budget, month):
-    special_calculations = {
-        'Base Pay': calc_base_pay,
-        'BAS': calc_bas,
-        'BAH': calc_bah,
-    }
-    for _, row in PAY_TEMPLATE.iterrows():
-        header = row['header']
-        sign = row['sign']
-        required = row['required']
-        if sign == 1 and required:
-            if header in special_calculations:
-                add_row(budget, header, template=PAY_TEMPLATE)
-                value = special_calculations[header](budget, month)
-            else:
-                value = 0.00
-            add_mv_pair(budget, header, month, value)
-    return budget
-
-
-def add_ded_alt_rows(PAY_TEMPLATE, budget, month):
-    special_calculations = {
-        'Federal Taxes': calc_federal_taxes,
-        'FICA - Social Security': calc_fica_social_security,
-        'FICA - Medicare': calc_fica_medicare,
-        'SGLI Rate': calc_sgli,
-        'State Taxes': calc_state_taxes,
-    }
-    for _, row in PAY_TEMPLATE.iterrows():
-        header = row['header']
-        sign = row['sign']
-        required = row['required']
-        if sign == -1 and required:
-            if header in special_calculations:
-                add_row(budget, header, template=PAY_TEMPLATE)
-                value = special_calculations[header](budget, month)
-            else:
-                value = 0.00
-            add_mv_pair(budget, header, month, value)
-    return budget
-
-
-def add_ytd_rows(budget, month, les_text):
-    values = {}
-
-    remarks = les_text[96]
-    remarks_str = " ".join(str(item) for item in remarks if isinstance(item, str))
-
-    ent_match = re.search(r"YTD ENTITLE\s*(\d+\.\d{2})", remarks_str)
-    ytd_income = float(ent_match.group(1)) if ent_match else 0.00
-    values['YTD Income'] = ytd_income
-
-    ded_match = re.search(r"YTD DEDUCT\s*(\d+\.\d{2})", remarks_str)
-    ytd_expenses = -float(ded_match.group(1)) if ded_match else 0.00
-    values['YTD Expenses'] = ytd_expenses
-
-    ytd_net_pay = round(ytd_income + ytd_expenses, 2)
-    values['YTD Net Pay'] = ytd_net_pay
-
-    for header, value in values.items():
-        add_mv_pair(budget, header, month, value)
-
-    return budget
-
 
 
 # =========================
@@ -605,7 +436,7 @@ def update_var(budget, prev_month, working_month, cell_header, cell_month, cell_
 def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
-    special_calculations = {
+    SPECIAL_CALCULATIONS = {
         'Base Pay': calc_base_pay,
         'BAS': calc_bas,
         'BAH': calc_bah,
@@ -617,8 +448,8 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
             is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
             if init and is_onetime:
                 row[working_month] = 0.00
-            if row['header'] in special_calculations:
-                row[working_month] = special_calculations[row['header']](budget, working_month)
+            if row['header'] in SPECIAL_CALCULATIONS:
+                row[working_month] = SPECIAL_CALCULATIONS[row['header']](budget, working_month)
             elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
                 row[working_month] = cell_value
             elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
@@ -628,7 +459,7 @@ def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, 
 def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
-    special_calculations = {
+    SPECIAL_CALCULATIONS = {
         'Federal Taxes': calc_federal_taxes,
         'FICA - Social Security': calc_fica_social_security,
         'FICA - Medicare': calc_fica_medicare,
@@ -642,8 +473,8 @@ def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_mon
             is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
             if init and is_onetime:
                 row[working_month] = 0.00
-            if row['header'] in special_calculations:
-                row[working_month] = special_calculations[row['header']](budget, working_month)
+            if row['header'] in SPECIAL_CALCULATIONS:
+                row[working_month] = SPECIAL_CALCULATIONS[row['header']](budget, working_month)
             elif row['header'] in ['Traditional TSP', 'Roth TSP']:
                 continue
             elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):

@@ -102,7 +102,7 @@ class Config:
         'modal',
     ]
 
-    special_calculations = {
+    SPECIAL_CALCULATIONS = {
         'Base Pay': 'calc_base_pay',
         'BAS': 'calc_bas',
         'BAH': 'calc_bah',

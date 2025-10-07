@@ -28,13 +28,13 @@ def get_error_context(exc, custom_message=""):
 def load_json(path):
     try:
         with open(path, encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-    except json.JSONDecodeError:
-        return {}
+            return json.load(f), ""
+    except FileNotFoundError as e:
+        return {}, f"JSON file not found: {path}"
+    except json.JSONDecodeError as e:
+        return {}, f"Invalid JSON format in {path}: {e}"
     except Exception as e:
-        return {}
+        return {}, f"Error loading JSON from {path}: {e}"
 
 
 def convert_numpy_types(obj):
@@ -188,7 +188,6 @@ def get_months(budget):
     return [key for key in budget[0].keys() if key not in metadata_keys]
 
 
-
 def parse_pay_string(pay_string, pay_template):
     results = {}
 
@@ -211,7 +210,6 @@ def parse_pay_string(pay_string, pay_template):
                 continue
 
     return results
-
 
 
 def add_recommendations(budget, months):

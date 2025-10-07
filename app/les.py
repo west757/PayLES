@@ -4,7 +4,9 @@ import io
 import pdfplumber
 
 from app import flask_app
-
+from app.utils import (
+    convert_numpy_types,
+)
 
 # =========================
 # validate and process LES

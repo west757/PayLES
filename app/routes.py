@@ -3,7 +3,6 @@ from app import csrf
 
 from app import flask_app
 from app.budget import (
-    init_budget_params,
     init_budget,
     add_months,
     update_months,
@@ -24,7 +23,6 @@ from app.tsp import (
     init_tsp,
 )
 from app.utils import (
-    get_error_context,
     load_json,
     convert_numpy_types,
     validate_file,
@@ -94,15 +92,22 @@ def route_single():
             les_rect_overlay = calc_les_rect_overlay()
             headers = get_headers()
 
-            upload_budget = init_budget_params(les_text, compare=False)
-            compare_budget = init_budget_params(les_text, compare=True)
+            upload_budget = init_budget(les_text, compare=False)
+            #for row in upload_budget:
+            #    print(row)
+            #compare_budget = init_budget(les_text, compare=True)
 
-            budget, init_month = init_budget(les_text=les_text)
-            tsp = init_tsp(budget, init_month, les_text=les_text)
-            budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+            budget = upload_budget
 
-            recommendations = add_recommendations(budget, months)
-            budget = convert_numpy_types(budget)
+            #budget, init_month = init_budget(les_text=les_text)
+            #tsp = init_tsp(budget, init_month, les_text=les_text)
+            #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+            #recommendations = add_recommendations(budget, months)
+            tsp = None
+            months = None
+            recommendations = None
+
             session['budget'] = budget
             session['tsp'] = tsp
             session['headers'] = headers
@@ -130,7 +135,14 @@ def route_single():
         else:
             return jsonify({'message': message}), 400
     except Exception as e:
-        error_context = e.args[0]
+        error_context = e.args[0] if (e.args and isinstance(e.args[0], dict)) else {
+            "custom_message": str(e),
+            "filepath": "",
+            "function": "",
+            "line": "",
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+        }
         return render_template("errors.html", code=500, error_context=error_context), 500
 
 
