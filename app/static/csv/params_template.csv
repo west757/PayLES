@@ -4,7 +4,6 @@ Months in Service,v,0,none,False,False,pebd,Number of months creditable towards 
 Branch,v,0,select,False,True,components,"Identifies branch of U.S. military (USA, USAF, USSF, USN, USMC)"
 Component,v,0,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
 Grade,v,0,select,False,True,basepay,"Grades are designations like E1, W2, O3E, O4, and rank is the full title of the grade"
-Stationed CONUS,v,0,select,False,True,cola,Identifies is member is stationed CONUS or OCONUS
 Zip Code,v,0,string,False,True,bah,U.S. 5-digit zip code
 Military Housing Area,v,0,none,False,False,bah,Code corresponding to a grouping of zip codes used for determining BAH
 OCONUS Locality Code,v,0,select,False,True,cola,Used for determining OHA and OCOLA
@@ -28,3 +27,4 @@ YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the y
 Component Long,m,0,none,False,False,none,none
 MHA Long,m,0,none,False,False,none,none
 Home of Record Long,m,0,none,False,False,none,none
+Locality Code Long,m,0,none,False,False,none,none

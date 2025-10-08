@@ -180,7 +180,7 @@ def get_les_variables(les_text):
     return les_month, les_variables
 
 
-def init_budget(variables, process=None, les_text=None):
+def init_budget(variables, month, les_text=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     budget = []
@@ -188,32 +188,20 @@ def init_budget(variables, process=None, les_text=None):
         add_row("budget", budget, row['header'], template=PARAMS_TEMPLATE)
 
     if les_text:
-        try:
-            les_month = les_text.get('les_month', None)
-            if les_month not in flask_app.config['MONTHS_SHORT']:
-                raise ValueError(f"Invalid LES month: {les_month}")
-            month = les_month
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining month from LES text"))
+        budget = add_variables(budget, month, variables)
+        budget = add_les_pay(budget, month, les_text)
+        budget = calc_income(budget, month)
+        budget = calc_tax_exp_net(budget, month)
+        budget = add_ytds(budget, month, les_text)
     else:
-        month = flask_app.config['CURRENT_MONTH']
-
-
-    if process == "les":
-        print("test")
-    else:
-        print("test")
-
-
-
-    budget = add_variables(budget, month, variables)
-    budget = add_pay_rows(budget, month, sign=1, les_text=les_text)
-    budget = calc_income(budget, month)
-    budget = add_pay_rows(budget, month, sign=-1, les_text=les_text)
-    budget = calc_tax_exp_net(budget, month)
-    budget = add_ytds(budget, month, les_text=les_text)
+        budget = add_variables(budget, month, variables)
+        budget = add_pay_rows(budget, month, sign=1)
+        budget = calc_income(budget, month)
+        budget = add_pay_rows(budget, month, sign=-1)
+        budget = calc_tax_exp_net(budget, month)
+        budget = calc_ytd_rows(budget, prev_month=month, working_month=month)
+    
     add_mv_pair(budget, 'Difference', month, 0.00)
-
     budget = convert_numpy_types(budget)
 
     return budget
@@ -229,76 +217,81 @@ def add_variables(budget, month, variables):
     return budget
 
 
-def add_pay_rows(budget, month, sign, les_text=None):
+def add_les_pay(budget, month, les_text):
+    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
+
+    combined_pay_string = (
+        les_text.get('entitlements', '') + ' ' +
+        les_text.get('deductions', '') + ' ' +
+        les_text.get('allotments', '')
+    )
+
+    # parse all pay items into a dict: {lesname: value}
+    pay_dict = parse_pay_string(combined_pay_string, PAY_TEMPLATE)
+
+    for lesname, value in pay_dict.items():
+        # find the corresponding row in PAY_TEMPLATE
+        template_row = PAY_TEMPLATE[PAY_TEMPLATE['lesname'] == lesname]
+        if template_row.empty:
+            continue  # skip if not found
+
+        header = template_row.iloc[0]['header']
+        sign = template_row.iloc[0]['sign']
+        value = round(sign * value, 2)
+
+        add_row("budget", budget, header, template=PAY_TEMPLATE)
+        add_mv_pair(budget, header, month, value)
+
+    return budget
+
+
+
+
+def add_pay_rows(budget, month, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
 
-    if les_text:
-        if sign == 1:
-            pay_string = parse_pay_string(les_text.get('entitlements', ""), PAY_TEMPLATE)
-        elif sign == -1:
-            pay_string = parse_pay_string((les_text.get('deductions', "") + " " + les_text.get('allotments', "")), PAY_TEMPLATE)
+    pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
+    for _, row in pay_subset.iterrows():
+        header = row['header']
+        required = row['required']
 
-        pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
-        for _, row in pay_subset.iterrows():
-            header = row['header']
-            required = row['required']
-            lesname = row['lesname']
-            value = pay_string.get(lesname, None)
+        if header in SPECIAL_CALCULATIONS:
+            value = round(sign * SPECIAL_CALCULATIONS[header](budget, month), 2)
+        elif required:
+            value = 0.00
+        else:
+            continue
 
-            if value is not None:
-                value = round(sign * value, 2)
-            elif required:
-                value = 0.00
-            else:
-                continue
-
-            add_row("budget", budget, header, template=PAY_TEMPLATE)
-            add_mv_pair(budget, header, month, value)
-
-    else:
-        pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
-        for _, row in pay_subset.iterrows():
-            header = row['header']
-            required = row['required']
-
-            if header in SPECIAL_CALCULATIONS:
-                value = round(sign * SPECIAL_CALCULATIONS[header](budget, month), 2)
-            elif required:
-                value = 0.00
-            else:
-                continue
-
-            add_row("budget", budget, header, template=PAY_TEMPLATE)
-            add_mv_pair(budget, header, month, value)
+        add_row("budget", budget, header, template=PAY_TEMPLATE)
+        add_mv_pair(budget, header, month, value)
 
     return budget
 
 
-def add_ytds(budget, month, les_text=None):
-    if les_text:
-        try:
-            ytd_entitlements = les_text.get('ytd_entitlements', 0.00)
-            if not ytd_entitlements:
-                raise ValueError(f"Invalid LES text: {ytd_entitlements}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining YTD entitlements from LES text"))
-        add_mv_pair(budget, 'YTD Income', month, round(ytd_entitlements, 2))
+def add_ytds(budget, month, les_text):
+    try:
+        ytd_entitlements = les_text.get('ytd_entitlements', 0.00)
+        if not ytd_entitlements:
+            raise ValueError(f"Invalid LES text: {ytd_entitlements}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD entitlements from LES text"))
+    add_mv_pair(budget, 'YTD Income', month, round(ytd_entitlements, 2))
 
-        try:
-            ytd_deductions = les_text.get('ytd_deductions', 0.00)
-            if not ytd_deductions:
-                raise ValueError(f"Invalid LES text: {ytd_deductions}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining YTD deductions from LES text"))
-        add_mv_pair(budget, 'YTD Expenses', month, round(-ytd_deductions, 2))
+    try:
+        ytd_deductions = les_text.get('ytd_deductions', 0.00)
+        if not ytd_deductions:
+            raise ValueError(f"Invalid LES text: {ytd_deductions}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD deductions from LES text"))
+    add_mv_pair(budget, 'YTD Expenses', month, round(-ytd_deductions, 2))
 
-        add_mv_pair(budget, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
+    add_mv_pair(budget, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
 
-    else:
-        print("Initials provided, but add_ytds not implemented for initials")
-    
     return budget
+
+
+
 
 
 # =========================

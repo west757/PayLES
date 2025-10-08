@@ -95,10 +95,9 @@ def route_single():
 
         les_month, les_variables = get_les_variables(les_text)
         budget_les = init_budget(les_variables, les_month, les_text=les_text)
-        budget_calc = init_budget(les_variables, flask_app.config['CURRENT_MONTH'])
-        #for row in upload_budget:
-        #    print(row)
-        #compare_budget = init_budget(les_text, compare=True)
+        #budget_calc = init_budget(les_variables, flask_app.config['CURRENT_MONTH'])
+        for row in budget_les:
+            print(row)
 
         budget = budget_les
 
