@@ -33,10 +33,154 @@ from app.tsp import (
 
 
 # =========================
-# init budget
+# get variables and init budget
 # =========================
 
-def init_budget(les_text=None, initials=None, compare=False):
+def get_les_variables(les_text):
+    try:
+        les_month = les_text.get('les_month', None)
+        if les_month not in flask_app.config['MONTHS_SHORT']:
+            raise ValueError(f"Invalid LES month: {les_month}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining month from LES text"))
+    
+    les_variables = {}
+
+    try:
+        year = int('20' + les_text.get('les_year', None))
+        if not year:
+            raise ValueError(f"Invalid LES year: {year}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining year from LES text"))
+    les_variables['year'] = year
+
+    try:
+        pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
+        if not pay_date:
+            raise ValueError(f"Invalid LES pay date: {pay_date}")
+        les_date = pd.to_datetime(datetime.strptime((les_text.get('les_year', None) + les_text.get('les_month', None) + "1"), '%y%b%d'))
+        if not les_date:
+            raise ValueError(f"Invalid LES date: {les_date}")
+
+        months_in_service = ((les_date.year - pay_date.year) * 12) + (les_date.month - pay_date.month)
+        if months_in_service < 0:
+            raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining months in service from LES text"))
+    les_variables['months_in_service'] = months_in_service
+
+    try:
+        text = les_text.get('branch', None)
+        if text == "ARMY":
+            branch = "USA"
+        elif text == "AF":
+            branch = "USAF"
+        elif text == "SF":
+            branch = "USSF"
+        elif text == "NAVY":
+            branch = "USN"
+        elif text == "USMC":
+            branch = "USMC"
+        else:
+            raise ValueError(f"Invalid LES branch: {text}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining branch from LES text"))
+    les_variables['branch'] = branch
+
+    component = "AD"
+    les_variables['component'] = component
+
+    component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
+    les_variables['component_long'] = component_long
+
+    try:
+        grade = les_text.get('grade', None)
+        if not grade:
+            raise ValueError(f"Invalid LES grade: {grade}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining grade from LES text"))
+    les_variables['grade'] = grade
+
+    try:
+        zip_code = les_text.get('vha_zip', None)
+        if not zip_code or zip_code == "00000":
+            raise ValueError(f"Invalid LES zip code: {zip_code}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining zip code from LES text"))
+    les_variables['zip_code'] = zip_code
+
+    mha_code, mha_name = get_military_housing_area(zip_code)
+    les_variables['military_housing_area'] = mha_code
+    les_variables['mha_long'] = mha_name
+
+    try:
+        home_of_record = les_text.get('state', None)
+        if not home_of_record or home_of_record == "98":
+            raise ValueError(f"Invalid LES home of record: {home_of_record}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining home of record from LES text"))
+    les_variables['home_of_record'] = home_of_record
+
+    longname, abbr = get_home_of_record(home_of_record)
+    les_variables['home_of_record_long'] = longname
+
+    try:
+        dependents = les_text.get('dependents', None)
+        if dependents is None or dependents == "":
+            raise ValueError(f"Invalid LES dependents: {dependents}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining dependents from LES text"))
+    les_variables['dependents'] = dependents
+
+    try:
+        text = les_text.get('federal_filing_status', None)
+        if text == "S":
+            federal_filing_status = "Single"
+        elif text == "M":
+            federal_filing_status = "Married"
+        elif text == "H":
+            federal_filing_status = "Head of Household"
+        else:
+            raise ValueError(f"Invalid LES federal filing status: {text}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
+    les_variables['federal_filing_status'] = federal_filing_status
+
+    try:
+        text = les_text.get('state_filing_status', None)
+        if text == "S":
+            state_filing_status = "Single"
+        elif text == "M":
+            state_filing_status = "Married"
+        else:
+            raise ValueError(f"Invalid LES state filing status: {text}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
+    les_variables['state_filing_status'] = state_filing_status
+
+    try:
+        remarks = les_text.get('remarks', "")
+        # search for SGLI coverage amount in the remarks string
+        match = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
+        if match:
+            sgli_coverage = f"${match.group(1)}"
+            # validate against allowed coverages
+            if sgli_coverage not in flask_app.config['SGLI_COVERAGES']:
+                raise ValueError(f"SGLI coverage '{sgli_coverage}' not in allowed coverages")
+        else:
+            raise ValueError("SGLI coverage amount not found in remarks")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
+    les_variables['sgli_coverage'] = sgli_coverage
+
+    les_variables['combat_zone'] = "No"
+
+    les_variables['drills'] = 0
+
+    return les_month, les_variables
+
+
+def init_budget(variables, process=None, les_text=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     budget = []
@@ -51,168 +195,37 @@ def init_budget(les_text=None, initials=None, compare=False):
             month = les_month
         except Exception as e:
             raise Exception(get_error_context(e, "Error determining month from LES text"))
-        
-        budget = add_variables(budget, month, les_text=les_text)
-        budget = add_pay_rows(budget, month, sign=1, les_text=les_text)
-        budget = calc_income(budget, month)
-        budget = add_pay_rows(budget, month, sign=-1, les_text=les_text)
-        budget = calc_tax_exp_net(budget, month)
-        budget = add_ytds(budget, month, les_text=les_text)
-
-    elif initials:
-        month = flask_app.config['CURRENT_MONTH']
-        budget = add_variables(budget, month, initials=initials)
-        budget = add_pay_rows(budget, month, sign=1)
-        budget = calc_income(budget, month)
-        budget = add_pay_rows(budget, month, sign=-1)
-        budget = calc_tax_exp_net(budget, month)
-        budget = add_ytds(budget, month)
-
     else:
-        raise Exception(get_error_context(e, "Error determining input source, les_text or initials not provided"))
+        month = flask_app.config['CURRENT_MONTH']
 
+
+    if process == "les":
+        print("test")
+    else:
+        print("test")
+
+
+
+    budget = add_variables(budget, month, variables)
+    budget = add_pay_rows(budget, month, sign=1, les_text=les_text)
+    budget = calc_income(budget, month)
+    budget = add_pay_rows(budget, month, sign=-1, les_text=les_text)
+    budget = calc_tax_exp_net(budget, month)
+    budget = add_ytds(budget, month, les_text=les_text)
     add_mv_pair(budget, 'Difference', month, 0.00)
+
     budget = convert_numpy_types(budget)
 
     return budget
 
 
-def add_variables(budget, month, les_text=None, initials=None):
-    if les_text:
-        try:
-            year = int('20' + les_text.get('les_year', None))
-            if not year:
-                raise ValueError(f"Invalid LES year: {year}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining year from LES text"))
-        add_mv_pair(budget, 'Year', month, year)
-
-        try:
-            pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
-            if not pay_date:
-                raise ValueError(f"Invalid LES pay date: {pay_date}")
-            les_date = pd.to_datetime(datetime.strptime((les_text.get('les_year', None) + les_text.get('les_month', None) + "1"), '%y%b%d'))
-            if not les_date:
-                raise ValueError(f"Invalid LES date: {les_date}")
-
-            months_in_service = ((les_date.year - pay_date.year) * 12) + (les_date.month - pay_date.month)
-            if months_in_service < 0:
-                raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining months in service from LES text"))
-        add_mv_pair(budget, 'Months in Service', month, months_in_service)
-
-        try:
-            text = les_text.get('branch', None)
-            if text == "ARMY":
-                branch = "USA"
-            elif text == "AF":
-                branch = "USAF"
-            elif text == "SF":
-                branch = "USSF"
-            elif text == "NAVY":
-                branch = "USN"
-            elif text == "USMC":
-                branch = "USMC"
-            else:
-                raise ValueError(f"Invalid LES branch: {text}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining branch from LES text"))
-        add_mv_pair(budget, 'Branch', month, branch)
-
-        component = "AD"
-        add_mv_pair(budget, 'Component', month, component)
-
-        component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
-        add_mv_pair(budget, 'Component Long', month, component_long)
-
-        try:
-            grade = les_text.get('grade', None)
-            if not grade:
-                raise ValueError(f"Invalid LES grade: {grade}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining grade from LES text"))
-        add_mv_pair(budget, 'Grade', month, grade)
-
-        try:
-            zip_code = les_text.get('vha_zip', None)
-            if not zip_code or zip_code == "00000":
-                raise ValueError(f"Invalid LES zip code: {zip_code}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining zip code from LES text"))
-        add_mv_pair(budget, 'Zip Code', month, zip_code)
-
-        mha_code, mha_name = get_military_housing_area(zip_code)
-        add_mv_pair(budget, 'Military Housing Area', month, mha_code)
-        add_mv_pair(budget, 'MHA Long', month, mha_name)
-
-        try:
-            home_of_record = les_text.get('state', None)
-            if not home_of_record or home_of_record == "98":
-                raise ValueError(f"Invalid LES home of record: {home_of_record}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining home of record from LES text"))
-        add_mv_pair(budget, 'Home of Record', month, home_of_record)
-
-        longname, abbr = get_home_of_record(home_of_record)
-        add_mv_pair(budget, 'Home of Record Long', month, longname)
-
-        try:
-            dependents = les_text.get('dependents', None)
-            if dependents is None or dependents == "":
-                raise ValueError(f"Invalid LES dependents: {dependents}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining dependents from LES text"))
-        add_mv_pair(budget, 'Dependents', month, dependents)
-
-        try:
-            text = les_text.get('federal_filing_status', None)
-            if text == "S":
-                federal_filing_status = "Single"
-            elif text == "M":
-                federal_filing_status = "Married"
-            elif text == "H":
-                federal_filing_status = "Head of Household"
-            else:
-                raise ValueError(f"Invalid LES federal filing status: {text}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
-        add_mv_pair(budget, 'Federal Filing Status', month, federal_filing_status)
-
-        try:
-            text = les_text.get('state_filing_status', None)
-            if text == "S":
-                state_filing_status = "Single"
-            elif text == "M":
-                state_filing_status = "Married"
-            else:
-                raise ValueError(f"Invalid LES state filing status: {text}")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
-        add_mv_pair(budget, 'State Filing Status', month, state_filing_status)
-
-        try:
-            remarks = les_text.get('remarks', "")
-            # search for SGLI coverage amount in the remarks string
-            match = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
-            if match:
-                sgli_coverage = f"${match.group(1)}"
-                # validate against allowed coverages
-                if sgli_coverage not in flask_app.config['SGLI_COVERAGES']:
-                    raise ValueError(f"SGLI coverage '{sgli_coverage}' not in allowed coverages")
-            else:
-                raise ValueError("SGLI coverage amount not found in remarks")
-        except Exception as e:
-            raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
-        add_mv_pair(budget, 'SGLI Coverage', month, sgli_coverage)
-
-        add_mv_pair(budget, 'Combat Zone', month, "No")
-
-        add_mv_pair(budget, 'Drills', month, 0)
-
-    else:
-        print("Initials provided, but add_variables not implemented for initials")
-
+def add_variables(budget, month, variables):
+    for var, val in variables.items():
+        row = next((r for r in budget if r['header'].replace(" ", "_").lower() == var.lower()), None)
+        if row:
+            add_mv_pair(budget, row['header'], month, val)
+        else:
+            raise Exception(f"Variable '{var}' not found in PARAMS_TEMPLATE")
     return budget
 
 

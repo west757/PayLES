@@ -18,6 +18,9 @@ short-term:
 - compare LES with recommendations
 - rename initials to manuals
 - make year a metadata row
+- oconus
+- only add required rows when needed
+- display either conus or oconus variables, or both
 
 mid-term:
 - get combat zone from les

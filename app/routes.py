@@ -5,6 +5,7 @@ from app import csrf
 
 from app import flask_app
 from app.budget import (
+    get_les_variables,
     init_budget,
     add_months,
     update_months,
@@ -92,12 +93,14 @@ def route_single():
         les_rect_overlay = calc_les_rect_overlay()
         headers = get_headers()
 
-        upload_budget = init_budget(les_text)
+        les_month, les_variables = get_les_variables(les_text)
+        budget_les = init_budget(les_variables, les_month, les_text=les_text)
+        budget_calc = init_budget(les_variables, flask_app.config['CURRENT_MONTH'])
         #for row in upload_budget:
         #    print(row)
         #compare_budget = init_budget(les_text, compare=True)
 
-        budget = upload_budget
+        budget = budget_les
 
         #budget, init_month = init_budget(les_text=les_text)
         #tsp = init_tsp(budget, init_month, les_text=les_text)
@@ -207,6 +210,10 @@ def route_joint():
 @flask_app.route('/route_initials', methods=['POST'])
 def route_initials():
     initials = request.form.to_dict()
+
+
+    variables = initials
+    budget = init_budget(variables, flask_app.config['CURRENT_MONTH'])
 
     budget, init_month, headers = init_budget(initials=initials)
     tsp = init_tsp(init_month, budget, initials=initials)
