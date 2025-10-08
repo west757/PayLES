@@ -5,16 +5,16 @@ from app import flask_app
 # calculation functions
 # =========================
 
-def calc_income(budget, working_month):
+def calc_income(budget, index, month):
     taxable = 0.00
     nontaxable = 0.00
 
-    combat_zone_row = next((row for row in budget if row['header'] == "Combat Zone"), None)
-    combat_zone = combat_zone_row[working_month] if combat_zone_row and working_month in combat_zone_row else "No"
+    combat_zone_row = index.get("Combat Zone")
+    combat_zone = combat_zone_row[month] if combat_zone_row and month in combat_zone_row else "No"
 
     for row in budget:
-        if row.get('sign') == 1 and working_month in row:
-            value = row[working_month]
+        if row.get('sign') == 1 and month in row:
+            value = row[month]
             tax = row.get('tax')
 
             if row.get('type') == 'c':
@@ -35,80 +35,60 @@ def calc_income(budget, working_month):
     nontaxable = round(nontaxable, 2)
     income = round(taxable + nontaxable, 2)
 
-    for row in budget:
-        if row['header'] == 'Taxable Income':
-            row[working_month] = taxable
-        elif row['header'] == 'Non-Taxable Income':
-            row[working_month] = nontaxable
-        elif row['header'] == 'Total Income':
-            row[working_month] = income
+    index['Taxable Income'][month] = taxable
+    index['Non-Taxable Income'][month] = nontaxable
+    index['Total Income'][month] = income
 
     return budget
 
 
-def calc_tax_exp_net(budget, working_month):
+def calc_expenses_net(budget, index, month):
     taxes = 0.00
     expenses = 0.00
 
     for row in budget:
-        if working_month in row:
+        if month in row:
             if row.get('sign') == -1:
-                expenses += row[working_month]
+                expenses += row[month]
                 if row.get('tax', False):
-                    taxes += row[working_month]
+                    taxes += row[month]
 
-    income_row = next((r for r in budget if r.get('header') == 'Total Income'), None)
-    income = income_row[working_month]
-
+    income = index['Total Income'][month] if 'Total Income' in index else 0.00
     net_pay = income + expenses
     expenses = round(expenses, 2)
     taxes = round(taxes, 2)
     net_pay = round(net_pay, 2)
 
-    for row in budget:
-        if row['header'] == 'Taxes':
-            row[working_month] = taxes
-        elif row['header'] == 'Total Expenses':
-            row[working_month] = expenses
-        elif row['header'] == 'Net Pay':
-            row[working_month] = net_pay
+    index['Taxes'][month] = taxes
+    index['Total Expenses'][month] = expenses
+    index['Net Pay'][month] = net_pay
 
     return budget
 
 
-def calc_difference(budget, prev_month, working_month):
-    net_pay_row = next((r for r in budget if r['header'] == "Net Pay"), None)
-
-    for row in budget:
-        if row['header'] == 'Difference':
-            row[working_month] = round(net_pay_row[working_month] - net_pay_row[prev_month], 2)
-
+def calc_difference(budget, index, prev_month, month):
+    net_pay_row = index.get("Net Pay")
+    index.get("Difference")[month] = round(net_pay_row[month] - net_pay_row[prev_month], 2)
     return budget
 
 
-def calc_ytd_rows(budget, prev_month, working_month):
-    ytd_ent_row = next((r for r in budget if r['header'] == 'YTD Income'), None)
-    ytd_ded_row = next((r for r in budget if r['header'] == 'YTD Expenses'), None)
-    ytd_net_row = next((r for r in budget if r['header'] == 'YTD Net Pay'), None)
+def calc_ytds(budget, index, prev_month, month):
+    ytd_entitlements = index.get('YTD Income')
+    ytd_deductions = index.get('YTD Expenses')
+    ytd_net_pay = index.get('YTD Net Pay')
 
-    income_row = next((r for r in budget if r['header'] == 'Total Income'), None)
-    income = income_row[working_month]
+    income = index.get('Total Income')[month]
+    expenses = index.get('Total Expenses')[month]
+    net_pay = index.get('Net Pay')[month]
 
-    expenses_row = next((r for r in budget if r['header'] == 'Total Expenses'), None)
-    expenses = expenses_row[working_month]
-
-    net_pay_row = next((r for r in budget if r['header'] == 'Net Pay'), None)
-    net_pay = net_pay_row[working_month]
-
-
-    if working_month == "JAN":
-        ytd_ent_row[working_month] = income
-        ytd_ded_row[working_month] = expenses
-        ytd_net_row[working_month] = net_pay
+    if month == "JAN":
+        if ytd_entitlements: ytd_entitlements[month] = income
+        if ytd_deductions: ytd_deductions[month] = expenses
+        if ytd_net_pay: ytd_net_pay[month] = net_pay
     else:
-        ytd_ent_row[working_month] = round(ytd_ent_row[prev_month] + income, 2)
-        ytd_ded_row[working_month] = round(ytd_ded_row[prev_month] + expenses, 2)
-        ytd_net_row[working_month] = round(ytd_net_row[prev_month] + net_pay, 2)
+        if ytd_entitlements: ytd_entitlements[month] = round(ytd_entitlements[prev_month] + income, 2)
+        if ytd_deductions: ytd_deductions[month] = round(ytd_deductions[prev_month] + expenses, 2)
+        if ytd_net_pay: ytd_net_pay[month] = round(ytd_net_pay[prev_month] + net_pay, 2)
 
     return budget
 

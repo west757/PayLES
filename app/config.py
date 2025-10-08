@@ -172,7 +172,7 @@ class Config:
             'tax': bool,
             'editable': bool,
             'modal': str,
-            'required': bool,
+            'trigger': str,
             'onetime': bool,
             'lesname': str,
             'tooltip': str,

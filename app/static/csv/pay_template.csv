@@ -1,127 +1,125 @@
-﻿header,type,sign,field,tax,editable,modal,required,onetime,lesname,tooltip
-Base Pay,e,1,float,True,False,basepay,True,False,BASE PAY,Base Pay
-BAS,e,1,float,False,False,bas,True,False,BAS,Basic Allowance for Subsistence
-Meal Discount,e,1,float,False,True,bas,False,False,DSCT,Meal Discount
-SEA,e,1,float,False,True,bas,False,False,SEA,Subsistence Expense Allowance
-Separation Rations,e,1,float,False,True,bas,False,False,SR,Separation Rations
-BAH,e,1,float,False,False,bah,True,False,BAH,Basic Allowance for Housing
-BAQ,e,1,float,False,True,bah,False,False,BAQ,Basic Allowance for Quarters
-LQA,e,1,float,False,True,bah,False,False,LQA,Living Quarters Allowance
-CONUS COLA,e,1,float,False,True,cola,False,False,CONUS COLA,CONUS Cost of Living Allowance
-OCONUS COLA,e,1,float,False,True,cola,False,False,OCONUS COLA,OCONUS Cost of Living Allowance
-OHA,e,1,float,False,True,bah,False,False,OHA,Overseas Housing Allowance
-FLPB,e,1,float,True,True,specialty,False,False,FLPB,Foreign Language Profiency Bonus
-Foreign Duty Pay,e,1,float,True,True,specialty,False,False,FDP,Foreign Duty Pay
-ASP,e,1,float,True,True,specialty,False,False,ASP,Additional Special Pay
-Fly Pay,e,1,float,True,True,specialty,False,False,FLY PAY,Fly Pay
-Dive Pay,e,1,float,True,True,specialty,False,False,DP,Dive Pay
-Jump Pay,e,1,float,True,True,specialty,False,False,JP,Jump Pay
-MSP,e,1,float,True,True,specialty,False,False,MSP,Multiyear Special Pay
-SDAP,e,1,float,True,True,specialty,False,False,SDAP,Special Duty Assignment Pay
-Special Duty Pay,e,1,float,True,True,specialty,False,False,SDP,Special Duty Pay
-Specialty Pay,e,1,float,True,True,specialty,False,False,SP,Specialty Pay
-Variable Special Pay,e,1,float,True,True,specialty,False,False,VSP,Variable Special Pay
-Board Certified Pay,e,1,float,True,True,specialty,False,False,BCP,Board Certified Pay
-AIP,e,1,float,True,True,incentive,False,False,AIP,Assignment Incentive Pay
-ACIP,e,1,float,True,True,incentive,False,False,ACIP,Aviation Career Incentive Pay
-CEFIP,e,1,float,True,True,incentive,False,False,CEFIP,Career Enlisted Flyer Incentive Pay
-Flight Pay,e,1,float,True,True,incentive,False,False,FP,Flight Pay
-HALO,e,1,float,True,True,incentive,False,False,HALO,High Altitude/Low Altitude Pay
-HDIP,e,1,float,True,True,incentive,False,False,HDIP,Hazardous Duty Incentive Pay
-Hazardous Duty Pay,e,1,float,True,True,incentive,False,False,HZD,Hazardous Duty Pay
-Incentive Special Pay,e,1,float,True,True,incentive,False,False,ISP,Incentive Special Pay
-Accession Bonus,e,1,float,True,True,bonus,False,False,ACCESSION BONUS,Accession Bonus
-ACP,e,1,float,True,True,bonus,False,False,ACP,Aviation Continuation Pay
-CSRB,e,1,float,True,True,bonus,False,False,CSRB,Critical Skills Retention Bonus
-MRB,e,1,float,True,True,bonus,False,False,MRB,Multiyear Retention Bonus
-NIB,e,1,float,True,True,bonus,False,False,NIB,Nuclear Career Annual Incentive Bonus
-NPAB,e,1,float,True,True,bonus,False,False,NPAB,Nuclear Power Accession Bonus
-SEB,e,1,float,True,True,bonus,False,False,SEB,Selective Enlistment Bonus
-SRB,e,1,float,True,True,bonus,False,False,SRB,Selective Reenlistment Bonus
-CONT PAY,e,1,float,True,True,bonus,False,False,CONT PAY,Continuation Pay
-NUCLEAR,e,1,float,True,True,bonus,False,False,NUCLEAR,Nuclear Continuation Pay
-Combat Duty,e,1,float,False,True,combat,False,False,CD,Combat Duty
-Combat Zone Pay,e,1,float,False,True,combat,False,False,CZP,Combat Zone Pay
-HFP/IDP,e,1,float,False,True,combat,False,False,HFP/IDP,Hostile Fire/Imminent Danger Pay
-HFP-L,e,1,float,False,True,combat,False,False,HFP-L,Hostile Fire Pay - Location
-Imminent Danger Pay,e,1,float,True,True,combat,False,False,IDP,Imminent Danger Pay
-HDP-IE,e,1,float,False,True,hardship,False,False,HDP-IE,Hardship Duty Pay - Involuntary Extension
-HDP-L,e,1,float,False,True,hardship,False,False,HDP-L,Hardship Duty Pay - Location
-HDP-M,e,1,float,False,True,hardship,False,False,HDP-M,Hardship Duty Pay - Mission
-PCS Member,e,1,float,False,True,pcs,False,True,PCS MEMBER,Permanent Change of Station Payment
-Dislocation Allowance,e,1,float,False,True,pcs,False,False,DLA,Dislocation Allowance
-MIHA-M,e,1,float,False,True,pcs,False,False,MIHA-M,Moving Housing Allowance - Miscellaneous
-MIHA-R,e,1,float,False,True,pcs,False,False,MIHA-R,Moving Housing Allowance - Rent
-MIHA-SM,e,1,float,False,True,pcs,False,False,MIHA-SM,Housing Allowance - Security
-TLE CONUS,e,1,float,False,True,pcs,False,False,TLE CONUS,Temporary Lodging Expense CONUS
-TLA,e,1,float,False,True,pcs,False,False,TLA,Temporary Living Allowance
-TLA OCONUS,e,1,float,False,True,pcs,False,False,TLA OCONUS,Temporary Lodging Allowance OCONUS
-TQSA,e,1,float,False,True,pcs,False,False,TQSA,Temporary Quarters Subsistence Allowance
-CCA,e,1,float,False,True,clothingallowance,False,True,CCA,Civilian Clothing Allowance
-CCCA,e,1,float,False,True,clothingallowance,False,True,CCCA,Continuing Civilian Clothing Allowance
-CCRA,e,1,float,False,True,clothingallowance,False,True,CCRA,Cash Clothing Replacement Allowance
-CMA,e,1,float,False,True,clothingallowance,False,True,CMA,Clothing Maintenance Allowance
-CRA,e,1,float,False,True,clothingallowance,False,True,CRA,Clothing Replacement Allowance
-ICCA,e,1,float,False,True,clothingallowance,False,True,ICCA,Initial Civilian Clothing Allowance
-MCA,e,1,float,False,True,clothingallowance,False,True,MCA,Maternity Clothing Allowance
-PCCA,e,1,float,False,True,clothingallowance,False,True,PCCA,Partial Civilian Clothing Allowance
-RBMA,e,1,float,False,True,clothingallowance,False,True,RBMA,Reserve Basic Maintenance Allowance
-SMA,e,1,float,False,True,clothingallowance,False,True,SMA,Standard Maintenance Allowance
-SRA,e,1,float,False,True,clothingallowance,False,True,SRA,Standard Replacement Allowance
-SICA,e,1,float,False,True,clothingallowance,False,True,SICA,Standard Initial Clothing Allowance
-SUPP CMA,e,1,float,False,True,clothingallowance,False,True,SUPP CMA,Enlisted Supplemental Clothing Allowance
-TDY CCA,e,1,float,False,True,clothingallowance,False,True,TDY CCA,Temporary Duty Civilian Clothing Allowance
-UEA Initial,e,1,float,False,True,clothingallowance,False,True,UEA INITIAL,Initial Clothing Allowance
-SBP,e,1,float,False,True,none,False,False,SBP,Military Survivor Benefits Plan
-CIP,e,1,float,False,True,none,False,False,CIP,Combat-Related Injury and Rehabilitation
-Advance Debt,e,1,float,False,True,none,False,True,ADVANCE DEBT,Advance Debt Payment
-BRA,e,1,float,False,True,none,False,False,BRA,Basic Replacement Allowance
-CVI,e,1,float,False,True,none,False,False,CVI,Conditional Voluntary Indefinite Status
-FSA,e,1,float,False,True,none,False,False,FSA,Family Separation Allowance
-FSH,e,1,float,False,True,none,False,False,FSH,Family Separation Housing
-FSSA,e,1,float,False,True,none,False,False,FSSA,Family Subsistence Supplemental Allowance
-OEP,e,1,float,False,True,none,False,False,OEP,Overseas Extension Pay
-Ref Social Security,e,1,float,False,False,none,False,True,REF SOC SECURITY,Refund Social Security
-VI,e,1,float,False,True,none,False,False,VI,Voluntary Indefinite Status
-Career Sea Pay,e,1,float,False,True,none,False,False,CSP,Career Sea Pay
-CSP-P,e,1,float,False,True,none,False,False,CSP-P,Career Sea Pay - Premium
-SDIP,e,1,float,False,True,none,False,False,SDIP,Submarine Duty Incentive Pay
-Sea Pay,e,1,float,False,True,none,False,False,SP,Sea Pay
-Split Payment Option,e,1,float,False,True,none,False,False,SPO,Split Payment Option
-Federal Taxes,d,-1,float,True,False,federaltaxes,True,False,FEDERAL TAXES,Federal Taxes
-FICA - Social Security,d,-1,float,True,False,fica,True,False,FICA-SOC SECURITY,FICA - Social Security
-FICA - Medicare,d,-1,float,True,False,fica,True,False,FICA-MEDICARE,FICA - Medicare
-SGLI Rate,d,-1,float,False,False,sgli,True,False,SGLI,SGLI Premium
-Family SGLI,d,-1,float,False,True,sgli,False,False,SGLI FAM/SPOUSE,SGLI Premium for Spouses/Children
-TSGLI,d,-1,float,False,True,sgli,False,False,TSGLI,SGLI Premium for Traumatic Brain Injury
-State Taxes,d,-1,float,True,False,statetaxes,True,False,STATE TAXES,State Taxes
-Traditional TSP,d,-1,float,False,False,tsp,True,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
-Roth TSP,d,-1,float,False,False,tsp,True,False,ROTH TSP,Roth Thrift Savings Plan
-MGIB,d,-1,float,False,True,mgib,False,False,MGIB,Montgomery G.I. Bill Program
-Debt,d,-1,float,False,True,debt,False,True,DEBT,Government Debt
-Fine,d,-1,float,False,True,debt,False,True,FINE,Military Fines
-Garnishment,d,-1,float,False,True,debt,False,True,GARNISHMENT,Garnished Income
-AAFES Debt,d,-1,float,False,True,debt,False,True,AAFES,AAFES Debt
-GPLD,d,-1,float,False,True,debt,False,True,GPLD,Government Property Lost or Damaged
-Meal Deduction,d,-1,float,False,True,bas,False,False,MEAL DEDUCT,Meal Deduction
-Partial Pay,d,-1,float,False,True,none,False,True,PARTIAL PAY,Partial Pay
-Pay Released,d,-1,float,False,True,none,False,True,PAY RELEASED,Pay Released
-SUPP/COM,d,-1,float,False,True,none,False,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
-Repay Advance,d,-1,float,False,True,none,False,True,REPAY ADVANCE,Repayment of Advance Pay
-Split Pay,d,-1,float,False,True,none,False,False,SPLIT PAY,Split Pay Option
-Split Pay Option,d,-1,float,False,True,none,False,False,SPO PAYMENT,Split Pay Option Payment for Accounting
-AFRH,d,-1,float,False,True,afrh,False,False,AFRH,Armed Forces Retirement Home
-USN/MC AFRH,d,-1,float,False,True,afrh,False,False,USN/MC RET HOME,Armed Forces Retirement Home
-USSH AFRH,d,-1,float,False,True,afrh,False,False,USSH,Armed Forces Retirement Home
-Bank Account Allot,a,-1,float,False,True,allotments,False,False,BANK ACCT ALLOT,Bank Account Allotment
-Discretionary Allot,a,-1,float,False,True,allotments,False,False,DISCRETIONARY ALT,Discretionary Allotment
-Insurance Allot,a,-1,float,False,True,allotments,False,False,INSURANCE ALLOT,Insurance Allotment
-CFC Allot,a,-1,float,False,True,allotments,False,False,CFC ALLOT,Combined Federal Campaign Allotment
-AFAF Allot,a,-1,float,False,True,allotments,False,False,AFAF ALLOT,Air Force Assistance Fund Allotment
-AER Allot,a,-1,float,False,True,allotments,False,False,AER ALLOT,Army Emergency Relief Allotment
-NMCRS Allot,a,-1,float,False,True,allotments,False,False,NMCRS ALLOT,Navy-Marine Corp Relief Society
-Tricare Dental,a,-1,float,False,True,allotments,False,False,TRICARE DENTAL,Tricare Dental
-U.S. Debt,a,-1,float,False,True,allotments,False,False,US DEBT,U.S. Debt
-Bond 1,a,-1,float,False,True,allotments,False,False,BOND #01,Bond 1
-Bond 2,a,-1,float,False,True,allotments,False,False,BOND #02,Bond 2
-Bond 3,a,-1,float,False,True,allotments,False,False,BOND #03,Bond 3
+﻿header,type,sign,field,tax,editable,modal,trigger,onetime,lesname,tooltip
+Base Pay,e,1,float,True,False,basepay,Grade,False,BASE PAY,Base Pay
+BAS,e,1,float,False,False,bas,Grade,False,BAS,Basic Allowance for Subsistence
+Meal Discount,e,1,float,False,True,bas,none,False,DSCT,Meal Discount
+SEA,e,1,float,False,True,bas,none,False,SEA,Subsistence Expense Allowance
+Separation Rations,e,1,float,False,True,bas,none,False,SR,Separation Rations
+BAH,e,1,float,False,False,bah,Zip Code,False,BAH,Basic Allowance for Housing
+BAQ,e,1,float,False,True,bah,none,False,BAQ,Basic Allowance for Quarters
+LQA,e,1,float,False,True,bah,none,False,LQA,Living Quarters Allowance
+CONUS COLA,e,1,float,False,False,cola,Zip Code,False,CONUS COLA,CONUS Cost of Living Allowance
+OCONUS COLA,e,1,float,False,False,cola,OCONUS Locality Code,False,OCONUS COLA,OCONUS Cost of Living Allowance
+OHA,e,1,float,False,False,bah,OCONUS Locality Code,False,OHA,Overseas Housing Allowance
+FLPB,e,1,float,True,True,specialty,none,False,FLPB,Foreign Language Profiency Bonus
+Foreign Duty Pay,e,1,float,True,True,specialty,none,False,FDP,Foreign Duty Pay
+ASP,e,1,float,True,True,specialty,none,False,ASP,Additional Special Pay
+Fly Pay,e,1,float,True,True,specialty,none,False,FLY PAY,Fly Pay
+Dive Pay,e,1,float,True,True,specialty,none,False,DP,Dive Pay
+Jump Pay,e,1,float,True,True,specialty,none,False,JP,Jump Pay
+MSP,e,1,float,True,True,specialty,none,False,MSP,Multiyear Special Pay
+SDAP,e,1,float,True,True,specialty,none,False,SDAP,Special Duty Assignment Pay
+Special Duty Pay,e,1,float,True,True,specialty,none,False,SDP,Special Duty Pay
+Specialty Pay,e,1,float,True,True,specialty,none,False,SP,Specialty Pay
+Variable Special Pay,e,1,float,True,True,specialty,none,False,VSP,Variable Special Pay
+Board Certified Pay,e,1,float,True,True,specialty,none,False,BCP,Board Certified Pay
+AIP,e,1,float,True,True,incentive,none,False,AIP,Assignment Incentive Pay
+ACIP,e,1,float,True,True,incentive,none,False,ACIP,Aviation Career Incentive Pay
+CEFIP,e,1,float,True,True,incentive,none,False,CEFIP,Career Enlisted Flyer Incentive Pay
+Flight Pay,e,1,float,True,True,incentive,none,False,FP,Flight Pay
+HALO,e,1,float,True,True,incentive,none,False,HALO,High Altitude/Low Altitude Pay
+HDIP,e,1,float,True,True,incentive,none,False,HDIP,Hazardous Duty Incentive Pay
+Hazardous Duty Pay,e,1,float,True,True,incentive,none,False,HZD,Hazardous Duty Pay
+Incentive Special Pay,e,1,float,True,True,incentive,none,False,ISP,Incentive Special Pay
+Accession Bonus,e,1,float,True,True,bonus,none,False,ACCESSION BONUS,Accession Bonus
+ACP,e,1,float,True,True,bonus,none,False,ACP,Aviation Continuation Pay
+CSRB,e,1,float,True,True,bonus,none,False,CSRB,Critical Skills Retention Bonus
+MRB,e,1,float,True,True,bonus,none,False,MRB,Multiyear Retention Bonus
+NIB,e,1,float,True,True,bonus,none,False,NIB,Nuclear Career Annual Incentive Bonus
+NPAB,e,1,float,True,True,bonus,none,False,NPAB,Nuclear Power Accession Bonus
+SEB,e,1,float,True,True,bonus,none,False,SEB,Selective Enlistment Bonus
+SRB,e,1,float,True,True,bonus,none,False,SRB,Selective Reenlistment Bonus
+CONT PAY,e,1,float,True,True,bonus,none,False,CONT PAY,Continuation Pay
+NUCLEAR,e,1,float,True,True,bonus,none,False,NUCLEAR,Nuclear Continuation Pay
+Combat Duty,e,1,float,False,True,combat,none,False,CD,Combat Duty
+Combat Zone Pay,e,1,float,False,True,combat,none,False,CZP,Combat Zone Pay
+HFP/IDP,e,1,float,False,True,combat,none,False,HFP/IDP,Hostile Fire/Imminent Danger Pay
+HFP-L,e,1,float,False,True,combat,none,False,HFP-L,Hostile Fire Pay - Location
+Imminent Danger Pay,e,1,float,True,True,combat,none,False,IDP,Imminent Danger Pay
+HDP-IE,e,1,float,False,True,hardship,none,False,HDP-IE,Hardship Duty Pay - Involuntary Extension
+HDP-L,e,1,float,False,True,hardship,none,False,HDP-L,Hardship Duty Pay - Location
+HDP-M,e,1,float,False,True,hardship,none,False,HDP-M,Hardship Duty Pay - Mission
+PCS Member,e,1,float,False,True,pcs,none,True,PCS MEMBER,Permanent Change of Station Payment
+Dislocation Allowance,e,1,float,False,True,pcs,none,False,DLA,Dislocation Allowance
+MIHA-M,e,1,float,False,True,pcs,OCONUS Locality Code,True,MIHA-M,Moving Initial Housing Allowance - Miscellaneous
+TLE CONUS,e,1,float,False,True,pcs,none,False,TLE CONUS,Temporary Lodging Expense CONUS
+TLA,e,1,float,False,True,pcs,none,False,TLA,Temporary Living Allowance
+TLA OCONUS,e,1,float,False,True,pcs,none,False,TLA OCONUS,Temporary Lodging Allowance OCONUS
+TQSA,e,1,float,False,True,pcs,none,False,TQSA,Temporary Quarters Subsistence Allowance
+CCA,e,1,float,False,True,clothingallowance,none,True,CCA,Civilian Clothing Allowance
+CCCA,e,1,float,False,True,clothingallowance,none,True,CCCA,Continuing Civilian Clothing Allowance
+CCRA,e,1,float,False,True,clothingallowance,none,True,CCRA,Cash Clothing Replacement Allowance
+CMA,e,1,float,False,True,clothingallowance,none,True,CMA,Clothing Maintenance Allowance
+CRA,e,1,float,False,True,clothingallowance,none,True,CRA,Clothing Replacement Allowance
+ICCA,e,1,float,False,True,clothingallowance,none,True,ICCA,Initial Civilian Clothing Allowance
+MCA,e,1,float,False,True,clothingallowance,none,True,MCA,Maternity Clothing Allowance
+PCCA,e,1,float,False,True,clothingallowance,none,True,PCCA,Partial Civilian Clothing Allowance
+RBMA,e,1,float,False,True,clothingallowance,none,True,RBMA,Reserve Basic Maintenance Allowance
+SMA,e,1,float,False,True,clothingallowance,none,True,SMA,Standard Maintenance Allowance
+SRA,e,1,float,False,True,clothingallowance,none,True,SRA,Standard Replacement Allowance
+SICA,e,1,float,False,True,clothingallowance,none,True,SICA,Standard Initial Clothing Allowance
+SUPP CMA,e,1,float,False,True,clothingallowance,none,True,SUPP CMA,Enlisted Supplemental Clothing Allowance
+TDY CCA,e,1,float,False,True,clothingallowance,none,True,TDY CCA,Temporary Duty Civilian Clothing Allowance
+UEA Initial,e,1,float,False,True,clothingallowance,none,True,UEA INITIAL,Initial Clothing Allowance
+SBP,e,1,float,False,True,none,none,False,SBP,Military Survivor Benefits Plan
+CIP,e,1,float,False,True,none,none,False,CIP,Combat-Related Injury and Rehabilitation
+Advance Debt,e,1,float,False,True,none,none,True,ADVANCE DEBT,Advance Debt Payment
+BRA,e,1,float,False,True,none,none,False,BRA,Basic Replacement Allowance
+CVI,e,1,float,False,True,none,none,False,CVI,Conditional Voluntary Indefinite Status
+FSA,e,1,float,False,True,none,none,False,FSA,Family Separation Allowance
+FSH,e,1,float,False,True,none,none,False,FSH,Family Separation Housing
+FSSA,e,1,float,False,True,none,none,False,FSSA,Family Subsistence Supplemental Allowance
+OEP,e,1,float,False,True,none,none,False,OEP,Overseas Extension Pay
+Ref Social Security,e,1,float,False,False,none,none,True,REF SOC SECURITY,Refund Social Security
+VI,e,1,float,False,True,none,none,False,VI,Voluntary Indefinite Status
+Career Sea Pay,e,1,float,False,True,none,none,False,CSP,Career Sea Pay
+CSP-P,e,1,float,False,True,none,none,False,CSP-P,Career Sea Pay - Premium
+SDIP,e,1,float,False,True,none,none,False,SDIP,Submarine Duty Incentive Pay
+Sea Pay,e,1,float,False,True,none,none,False,SP,Sea Pay
+Split Payment Option,e,1,float,False,True,none,none,False,SPO,Split Payment Option
+Federal Taxes,d,-1,float,True,False,federaltaxes,Grade,False,FEDERAL TAXES,Federal Taxes
+FICA - Social Security,d,-1,float,True,False,fica,Grade,False,FICA-SOC SECURITY,FICA - Social Security
+FICA - Medicare,d,-1,float,True,False,fica,Grade,False,FICA-MEDICARE,FICA - Medicare
+SGLI Rate,d,-1,float,False,False,sgli,SGLI Coverage,False,SGLI,SGLI Premium
+Family SGLI,d,-1,float,False,True,sgli,none,False,SGLI FAM/SPOUSE,SGLI Premium for Spouses/Children
+TSGLI,d,-1,float,False,True,sgli,none,False,TSGLI,SGLI Premium for Traumatic Brain Injury
+State Taxes,d,-1,float,True,False,statetaxes,Home of Record,False,STATE TAXES,State Taxes
+Traditional TSP,d,-1,float,False,False,tsp,Grade,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
+Roth TSP,d,-1,float,False,False,tsp,Grade,False,ROTH TSP,Roth Thrift Savings Plan
+MGIB,d,-1,float,False,True,mgib,none,False,MGIB,Montgomery G.I. Bill Program
+Debt,d,-1,float,False,True,debt,none,True,DEBT,Government Debt
+Fine,d,-1,float,False,True,debt,none,True,FINE,Military Fines
+Garnishment,d,-1,float,False,True,debt,none,True,GARNISHMENT,Garnished Income
+AAFES Debt,d,-1,float,False,True,debt,none,True,AAFES,AAFES Debt
+GPLD,d,-1,float,False,True,debt,none,True,GPLD,Government Property Lost or Damaged
+Meal Deduction,d,-1,float,False,True,bas,none,False,MEAL DEDUCT,Meal Deduction
+Partial Pay,d,-1,float,False,True,none,none,True,PARTIAL PAY,Partial Pay
+Pay Released,d,-1,float,False,True,none,none,True,PAY RELEASED,Pay Released
+SUPP/COM,d,-1,float,False,True,none,none,False,SUPP/COM DEBT,Support/Court-Ordered Child Support
+Repay Advance,d,-1,float,False,True,none,none,True,REPAY ADVANCE,Repayment of Advance Pay
+Split Pay,d,-1,float,False,True,none,none,False,SPLIT PAY,Split Pay Option
+Split Pay Option,d,-1,float,False,True,none,none,False,SPO PAYMENT,Split Pay Option Payment for Accounting
+AFRH,d,-1,float,False,True,afrh,none,False,AFRH,Armed Forces Retirement Home
+USN/MC AFRH,d,-1,float,False,True,afrh,none,False,USN/MC RET HOME,Armed Forces Retirement Home
+USSH AFRH,d,-1,float,False,True,afrh,none,False,USSH,Armed Forces Retirement Home
+Bank Account Allot,a,-1,float,False,True,allotments,none,False,BANK ACCT ALLOT,Bank Account Allotment
+Discretionary Allot,a,-1,float,False,True,allotments,none,False,DISCRETIONARY ALT,Discretionary Allotment
+Insurance Allot,a,-1,float,False,True,allotments,none,False,INSURANCE ALLOT,Insurance Allotment
+CFC Allot,a,-1,float,False,True,allotments,none,False,CFC ALLOT,Combined Federal Campaign Allotment
+AFAF Allot,a,-1,float,False,True,allotments,none,False,AFAF ALLOT,Air Force Assistance Fund Allotment
+AER Allot,a,-1,float,False,True,allotments,none,False,AER ALLOT,Army Emergency Relief Allotment
+NMCRS Allot,a,-1,float,False,True,allotments,none,False,NMCRS ALLOT,Navy-Marine Corp Relief Society
+Tricare Dental,a,-1,float,False,True,allotments,none,False,TRICARE DENTAL,Tricare Dental
+U.S. Debt,a,-1,float,False,True,allotments,none,False,US DEBT,U.S. Debt
+Bond 1,a,-1,float,False,True,allotments,none,False,BOND #01,Bond 1
+Bond 2,a,-1,float,False,True,allotments,none,False,BOND #02,Bond 2
+Bond 3,a,-1,float,False,True,allotments,none,False,BOND #03,Bond 3

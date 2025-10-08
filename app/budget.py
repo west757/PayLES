@@ -17,9 +17,9 @@ from app.utils import (
 )
 from app.calculations import (
     calc_income,
-    calc_tax_exp_net,
+    calc_expenses_net,
     calc_difference,
-    calc_ytd_rows,
+    calc_ytds,
     calc_base_pay,
     calc_bas,
     calc_bah,
@@ -89,7 +89,17 @@ def get_les_variables(les_text):
         raise Exception(get_error_context(e, "Error determining branch from LES text"))
     les_variables['branch'] = branch
 
-    component = "AD"
+    try:
+        text = les_text.get('tpc', None)
+        if text == "A":
+            component = "AGR"
+        elif text == "M":
+            component = "USAF"
+        else:
+            component = "AD"
+            #raise ValueError(f"Invalid LES grade: {grade}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining component from LES text"))
     les_variables['component'] = component
 
     try:
@@ -107,9 +117,6 @@ def get_les_variables(les_text):
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining zip code from LES text"))
     les_variables['zip_code'] = zip_code
-
-    mha_code, mha_name = get_military_housing_area(zip_code)
-    les_variables['military_housing_area'] = mha_code
 
     try:
         oconus_locality_code = les_text.get('jftr', None)
@@ -197,7 +204,7 @@ def init_budget(variables, month, les_text=None):
         budget_index = build_table_index(budget)
         budget = calc_income(budget, budget_index, month)
         budget_index = build_table_index(budget)
-        budget = calc_tax_exp_net(budget, budget_index, month)
+        budget = calc_expenses_net(budget, budget_index, month)
         budget = add_ytds(budget, month, les_text)
     else:
         budget = add_variables(budget, month, variables)
@@ -206,13 +213,12 @@ def init_budget(variables, month, les_text=None):
         budget = calc_income(budget, budget_index, month)
         budget = add_pay_rows(budget, month, sign=-1)
         budget_index = build_table_index(budget)
-        budget = calc_tax_exp_net(budget, budget_index, month)
+        budget = calc_expenses_net(budget, budget_index, month)
         budget_index = build_table_index(budget)
-        budget = calc_ytd_rows(budget, prev_month=month, working_month=month)
+        budget = calc_ytds(budget, prev_month=month, working_month=month)
     
     add_mv_pair(budget, 'Difference', month, 0.00)
     budget_index = build_table_index(budget)
-    budget = set_variable_longs(budget, budget_index, month)
     budget = convert_numpy_types(budget)
 
     return budget
@@ -225,6 +231,9 @@ def add_variables(budget, month, variables):
             add_mv_pair(budget, row['header'], month, val)
         else:
             raise Exception(f"Variable '{var}' not found in PARAMS_TEMPLATE")
+        
+    budget_index = build_table_index(budget)
+    budget = set_variable_longs(budget, budget_index, month)
     return budget
 
 
@@ -351,9 +360,9 @@ def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_m
 
     calc_income(budget, working_month)
     update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    calc_tax_exp_net(budget, working_month)
+    calc_expenses_net(budget, working_month)
     calc_difference(budget, prev_month, working_month)
-    calc_ytd_rows(budget, prev_month, working_month)
+    calc_ytds(budget, prev_month, working_month)
     return budget, tsp
 
 

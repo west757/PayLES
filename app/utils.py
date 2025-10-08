@@ -181,7 +181,8 @@ def set_variable_longs(budget, budget_index, month):
     add_mv_pair(budget, 'Component Long', month, component_long)
 
     zip_code = budget_index.get('Zip Code').get(month)
-    _, mha_long = get_military_housing_area(zip_code)
+    mha_code, mha_long = get_military_housing_area(zip_code)
+    add_mv_pair(budget, 'Military Housing Area', month, mha_code)
     add_mv_pair(budget, 'MHA Long', month, mha_long)
 
     locality_code = budget_index.get('OCONUS Locality Code').get(month)
