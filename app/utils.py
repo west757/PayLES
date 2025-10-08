@@ -119,6 +119,10 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
+def build_table_index(table):
+    return {row['header']: row for row in table}
+
+
 def sum_rows_via_modal(budget, modal_str, month):
     total = 0.0
     for row in budget:
@@ -165,6 +169,30 @@ def parse_pay_string(pay_string, pay_template):
                 continue
 
     return results
+
+
+def set_variable_longs(budget, budget_index, month):
+    branch = budget_index.get('Branch').get(month)
+    branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
+    add_mv_pair(budget, 'Branch Long', month, branch_long)
+
+    component = budget_index.get('Component').get(month)
+    component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
+    add_mv_pair(budget, 'Component Long', month, component_long)
+
+    zip_code = budget_index.get('Zip Code').get(month)
+    _, mha_long = get_military_housing_area(zip_code)
+    add_mv_pair(budget, 'MHA Long', month, mha_long)
+
+    locality_code = budget_index.get('OCONUS Locality Code').get(month)
+    #get locality code long
+    add_mv_pair(budget, 'Locality Code Long', month, "")
+    
+    home_of_record = budget_index.get('Home of Record').get(month)
+    longname, _ = get_home_of_record(home_of_record)
+    add_mv_pair(budget, 'Home of Record Long', month, longname)
+
+    return budget
 
 
 def get_military_housing_area(zip_code):

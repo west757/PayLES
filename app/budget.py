@@ -8,6 +8,8 @@ from app.utils import (
     convert_numpy_types,
     add_row,
     add_mv_pair,
+    build_table_index,
+    set_variable_longs,
     get_military_housing_area,
     get_home_of_record,
     get_months,
@@ -90,9 +92,6 @@ def get_les_variables(les_text):
     component = "AD"
     les_variables['component'] = component
 
-    component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
-    les_variables['component_long'] = component_long
-
     try:
         grade = les_text.get('grade', None)
         if not grade:
@@ -111,7 +110,15 @@ def get_les_variables(les_text):
 
     mha_code, mha_name = get_military_housing_area(zip_code)
     les_variables['military_housing_area'] = mha_code
-    les_variables['mha_long'] = mha_name
+
+    try:
+        oconus_locality_code = les_text.get('jftr', None)
+        if oconus_locality_code is None or oconus_locality_code == "":
+            oconus_locality_code = "N/A"
+            #raise ValueError(f"Invalid LES OCONUS locality code: {oconus_locality_code}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining OCONUS locality code from LES text"))
+    les_variables['oconus_locality_code'] = oconus_locality_code
 
     try:
         home_of_record = les_text.get('state', None)
@@ -120,9 +127,6 @@ def get_les_variables(les_text):
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining home of record from LES text"))
     les_variables['home_of_record'] = home_of_record
-
-    longname, abbr = get_home_of_record(home_of_record)
-    les_variables['home_of_record_long'] = longname
 
     try:
         dependents = les_text.get('dependents', None)
@@ -190,18 +194,25 @@ def init_budget(variables, month, les_text=None):
     if les_text:
         budget = add_variables(budget, month, variables)
         budget = add_les_pay(budget, month, les_text)
-        budget = calc_income(budget, month)
-        budget = calc_tax_exp_net(budget, month)
+        budget_index = build_table_index(budget)
+        budget = calc_income(budget, budget_index, month)
+        budget_index = build_table_index(budget)
+        budget = calc_tax_exp_net(budget, budget_index, month)
         budget = add_ytds(budget, month, les_text)
     else:
         budget = add_variables(budget, month, variables)
         budget = add_pay_rows(budget, month, sign=1)
-        budget = calc_income(budget, month)
+        budget_index = build_table_index(budget)
+        budget = calc_income(budget, budget_index, month)
         budget = add_pay_rows(budget, month, sign=-1)
-        budget = calc_tax_exp_net(budget, month)
+        budget_index = build_table_index(budget)
+        budget = calc_tax_exp_net(budget, budget_index, month)
+        budget_index = build_table_index(budget)
         budget = calc_ytd_rows(budget, prev_month=month, working_month=month)
     
     add_mv_pair(budget, 'Difference', month, 0.00)
+    budget_index = build_table_index(budget)
+    budget = set_variable_longs(budget, budget_index, month)
     budget = convert_numpy_types(budget)
 
     return budget
@@ -289,9 +300,6 @@ def add_ytds(budget, month, les_text):
     add_mv_pair(budget, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
 
     return budget
-
-
-
 
 
 # =========================
