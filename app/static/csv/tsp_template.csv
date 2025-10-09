@@ -17,11 +17,11 @@ Roth TSP Contribution,t,float,False,tsp,Total amount of Roth TSP contributions
 Agency Auto Contribution,t,float,False,tsp,Total amount of automatic agency contributions (1% of base pay)
 Agency Matching Contribution,t,float,False,tsp,Total amount of agency matching contributions (up to 4% of base pay)
 TSP Contribution Total,t,float,False,tsp,Total amount of TSP contribution
-YTD Trad TSP,t,float,False,tsp,YTD Traditional TSP contributions
-YTD Trad TSP Exempt,t,float,False,tsp,YTD Traditional TSP exempt contributions (made within a designated combat tax-exempt zone)
-YTD Roth TSP,t,float,False,tsp,YTD Roth TSP contributions
-YTD Agency Auto,t,float,False,tsp,YTD agency auto contributions
-YTD Agency Matching,t,float,False,tsp,YTD agency matching contributions
-YTD TSP Contribution Total,t,float,False,tsp,Total YTD TSP contributions
-Elective Deferral Remaining,t,float,False,tsp,"Elective deferral remaining ($23,500 minus Traditional non-exempt and Roth TSP contributions)"
-Annual Deferral Remaining,t,float,False,tsp,"Annual deferral remaining ($70,000 minus all TSP contributions including exempt and agency)"
+YTD Trad TSP,s,float,False,tsp,YTD Traditional TSP contributions
+YTD Trad TSP Exempt,s,float,False,tsp,YTD Traditional TSP exempt contributions (made within a designated combat tax-exempt zone)
+YTD Roth TSP,s,float,False,tsp,YTD Roth TSP contributions
+YTD Agency Auto,s,float,False,tsp,YTD agency auto contributions
+YTD Agency Matching,s,float,False,tsp,YTD agency matching contributions
+YTD TSP Contribution Total,u,float,False,tsp,Total YTD TSP contributions
+Elective Deferral Remaining,u,float,False,tsp,"Elective deferral remaining ($23,500 minus Traditional non-exempt and Roth TSP contributions)"
+Annual Deferral Remaining,u,float,False,tsp,"Annual deferral remaining ($70,000 minus all TSP contributions including exempt and agency)"

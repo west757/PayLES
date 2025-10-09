@@ -1,5 +1,6 @@
 from app import flask_app
 from app.utils import (
+    get_error_context,
     add_row,
     add_mv_pair,
     build_table_index,
@@ -28,118 +29,177 @@ def init_tsp(budget, budget_index, month, les_text=None):
     combat_zone = budget[budget_index.get("Combat Zone")].get(month, "No")
 
     if les_text:
-        tsp = add_tsp_from_les(tsp, month, les_text)
+        tsp_variables = get_les_tsp_variables(les_text)
+        tsp = add_tsp_variables(tsp, month, tsp_variables)
+
+        trad_tsp_contribution = budget[budget_index.get("Traditional TSP")].get(month, 0.0)
+        roth_tsp_contribution = budget[budget_index.get("Roth TSP")].get(month, 0.0)
+        if combat_zone == "No":
+            add_mv_pair(tsp, 'Trad TSP Contribution', month, trad_tsp_contribution)
+            add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, 0)
+        elif combat_zone == "Yes":
+            add_mv_pair(tsp, 'Trad TSP Contribution', month, 0)
+            add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, trad_tsp_contribution)
+        add_mv_pair(tsp, 'Roth TSP Exempt Contribution', month, roth_tsp_contribution)
+
+        add_mv_pair(tsp, 'YTD TSP Contribution Total', month, calc_ytd_tsp_contribution_total(tsp, month))
+        add_mv_pair(tsp, 'Elective Deferral Remaining', month, calc_elective_deferral_remaining(tsp, month))
+    
     else:
-        print("test")
+        tsp = add_tsp_variables(tsp, month, tsp_variables)
+        tsp_contributions = calc_tsp_contributions(tsp, tsp_index, month, base_pay_total, specialty_pay_total, incentive_pay_total, bonus_pay_total, combat_zone, prev_elective_remaining, prev_annual_remaining)
+        add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_final'])
+        add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, tsp_contributions['trad_exempt_final'])
+        add_mv_pair(tsp, 'Roth TSP Contribution', month, tsp_contributions['roth_final'])
+        add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_final'])
+        add_mv_pair(tsp, 'Agency Matching Contribution', month, tsp_contributions['agency_matching_final'])
+        add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contributions['tsp_contribution_total'])
+        add_mv_pair(tsp, 'Elective Deferral Remaining', month, tsp_contributions['elective_remaining'])
+        add_mv_pair(tsp, 'Annual Deferral Remaining', month, tsp_contributions['annual_remaining'])
 
-    tsp_contributions = calc_tsp_contributions(tsp, tsp_index, month, base_pay_total, specialty_pay_total, incentive_pay_total, bonus_pay_total, combat_zone, prev_elective_remaining, prev_annual_remaining)
-
-    add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_final'])
-    add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, tsp_contributions['trad_exempt_final'])
-    add_mv_pair(tsp, 'Roth TSP Contribution', month, tsp_contributions['roth_final'])
-    add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_final'])
-    add_mv_pair(tsp, 'Agency Matching Contribution', month, tsp_contributions['agency_matching_final'])
-    add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contributions['tsp_contribution_total'])
-
-    add_mv_pair(tsp, 'YTD TSP Contribution Total', month, calc_ytd_tsp_contribution_total(tsp, month))
+    
     add_mv_pair(tsp, 'Elective Deferral Remaining', month, calc_elective_deferral_remaining(tsp, month))
     add_mv_pair(tsp, 'Annual Deferral Remaining', month, calc_annual_deferral_remaining(tsp, month))
 
     return tsp, tsp_index
 
 
-
-def add_tsp_from_les(tsp, month, les_text):
-    TSP_RATE_HEADERS = flask_app.config['TSP_RATE_HEADERS']
-
-    tsp_rate_rows = [
-        ("Trad TSP Base Rate", 60),
-        ("Trad TSP Specialty Rate", 62),
-        ("Trad TSP Incentive Rate", 64),
-        ("Trad TSP Bonus Rate", 66),
-        ("Roth TSP Base Rate", 69),
-        ("Roth TSP Specialty Rate", 71),
-        ("Roth TSP Incentive Rate", 73),
-        ("Roth TSP Bonus Rate", 75),
-    ]
-    for header, idx in tsp_rate_rows:
-        try:
-            rate = float(les_text[idx][3])
-            if not rate:
-                raise ValueError()
-        except Exception:
-            rate = 0.0
-        
-    try:
-        agency_auto_contribution = float(les_text[85][1])
-        if not agency_auto_contribution:
-            raise ValueError()
-    except Exception:
-        agency_auto_contribution = 0.0
-    add_mv_pair(tsp, 'Agency Auto Contribution', month, agency_auto_contribution)
+def get_les_tsp_variables(les_text):
+    tsp_variables = {}
 
     try:
-        agency_matching_contribution = float(les_text[86][1])
-        if not agency_matching_contribution:
-            raise ValueError()
-    except Exception:
-        agency_matching_contribution = 0.0
-    add_mv_pair(tsp, 'Agency Matching Contribution', month, agency_matching_contribution)
+        trad_tsp_base_rate = les_text.get('trad_tsp_base_rate', None)
+        if trad_tsp_base_rate is None or trad_tsp_base_rate == "" or trad_tsp_base_rate < 0:
+            raise ValueError(f"Invalid LES Trad TSP Base Rate: {trad_tsp_base_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Trad TSP Base Rate from LES text"))
+    tsp_variables['Trad TSP Base Rate'] = trad_tsp_base_rate
 
     try:
-        ytd_trad_tsp = float(les_text[79][3])
-        if not ytd_trad_tsp:
-            raise ValueError()
-    except Exception:
-        ytd_trad_tsp = 0.0
-    add_mv_pair(tsp, 'YTD Trad TSP', month, ytd_trad_tsp)
+        trad_tsp_specialty_rate = les_text.get('trad_tsp_specialty_rate', None)
+        if trad_tsp_specialty_rate is None or trad_tsp_specialty_rate == "" or trad_tsp_specialty_rate < 0:
+            raise ValueError(f"Invalid LES Trad TSP Specialty Rate: {trad_tsp_specialty_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Trad TSP Specialty Rate from LES text"))
+    tsp_variables['Trad TSP Specialty Rate'] = trad_tsp_specialty_rate
 
     try:
-        ytd_trad_tsp_exempt = float(les_text[80][3])
-        if not ytd_trad_tsp_exempt:
-            raise ValueError()
-    except Exception:
-        ytd_trad_tsp_exempt = 0.0
-    add_mv_pair(tsp, 'YTD Trad TSP Exempt', month, ytd_trad_tsp_exempt)
+        trad_tsp_incentive_rate = les_text.get('trad_tsp_incentive_rate', None)
+        if trad_tsp_incentive_rate is None or trad_tsp_incentive_rate == "" or trad_tsp_incentive_rate < 0:
+            raise ValueError(f"Invalid LES Trad TSP Incentive Rate: {trad_tsp_incentive_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Trad TSP Incentive Rate from LES text"))
+    tsp_variables['Trad TSP Incentive Rate'] = trad_tsp_incentive_rate
 
     try:
-        ytd_roth_tsp = float(les_text[81][2])
-        if not ytd_roth_tsp:
-            raise ValueError()
-    except Exception:
-        ytd_roth_tsp = 0.0
-    add_mv_pair(tsp, 'YTD Roth TSP', month, ytd_roth_tsp)
+        trad_tsp_bonus_rate = les_text.get('trad_tsp_bonus_rate', None)
+        if trad_tsp_bonus_rate is None or trad_tsp_bonus_rate == "" or trad_tsp_bonus_rate < 0:
+            raise ValueError(f"Invalid LES Trad TSP Bonus Rate: {trad_tsp_bonus_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Trad TSP Bonus Rate from LES text"))
+    tsp_variables['Trad TSP Bonus Rate'] = trad_tsp_bonus_rate
 
     try:
-        ytd_agency_auto = float(les_text[82][3])
-        if not ytd_agency_auto:
-            raise ValueError()
-    except Exception:
-        ytd_agency_auto = 0.0
-    add_mv_pair(tsp, 'YTD Agency Auto', month, ytd_agency_auto)
+        roth_tsp_base_rate = les_text.get('roth_tsp_base_rate', None)
+        if roth_tsp_base_rate is None or roth_tsp_base_rate == "" or roth_tsp_base_rate < 0:
+            raise ValueError(f"Invalid LES Roth TSP Base Rate: {roth_tsp_base_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Roth TSP Base Rate from LES text"))
+    tsp_variables['Roth TSP Base Rate'] = roth_tsp_base_rate
 
     try:
-        ytd_agency_matching = float(les_text[83][3])
-        if not ytd_agency_matching:
-            raise ValueError()
-    except Exception:
-        ytd_agency_matching = 0.0
-    add_mv_pair(tsp, 'YTD Agency Matching', month, ytd_agency_matching)
+        roth_tsp_specialty_rate = les_text.get('roth_tsp_specialty_rate', None)
+        if roth_tsp_specialty_rate is None or roth_tsp_specialty_rate == "" or roth_tsp_specialty_rate < 0:
+            raise ValueError(f"Invalid LES Roth TSP Specialty Rate: {roth_tsp_specialty_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Roth TSP Specialty Rate from LES text"))
+    tsp_variables['Roth TSP Specialty Rate'] = roth_tsp_specialty_rate
 
+    try:
+        roth_tsp_incentive_rate = les_text.get('roth_tsp_incentive_rate', None)
+        if roth_tsp_incentive_rate is None or roth_tsp_incentive_rate == "" or roth_tsp_incentive_rate < 0:
+            raise ValueError(f"Invalid LES Roth TSP Incentive Rate: {roth_tsp_incentive_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Roth TSP Incentive Rate from LES text"))
+    tsp_variables['Roth TSP Incentive Rate'] = roth_tsp_incentive_rate
+
+    try:
+        roth_tsp_bonus_rate = les_text.get('roth_tsp_bonus_rate', None)
+        if roth_tsp_bonus_rate is None or roth_tsp_bonus_rate == "" or roth_tsp_bonus_rate < 0:
+            raise ValueError(f"Invalid LES Roth TSP Bonus Rate: {roth_tsp_bonus_rate}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Roth TSP Bonus Rate from LES text"))
+    tsp_variables['Roth TSP Bonus Rate'] = roth_tsp_bonus_rate
+
+    try:
+        tsp_agency_auto = les_text.get('agency_auto_contribution', None)
+        if tsp_agency_auto is None or tsp_agency_auto == "" or tsp_agency_auto < 0:
+            raise ValueError(f"Invalid LES Agency Auto Contribution: {tsp_agency_auto}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Agency Auto Contribution from LES text"))
+    tsp_variables['Agency Auto Contribution'] = tsp_agency_auto
+
+    try:
+        tsp_agency_matching = les_text.get('agency_matching_contribution', None)
+        if tsp_agency_matching is None or tsp_agency_matching == "" or tsp_agency_matching < 0:
+            raise ValueError(f"Invalid LES Agency Matching Contribution: {tsp_agency_matching}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining Agency Matching Contribution from LES text"))
+    tsp_variables['Agency Matching Contribution'] = tsp_agency_matching
+
+    try:
+        ytd_trad_tsp = les_text.get('trad_tsp_ytd', None)
+        if ytd_trad_tsp is None or ytd_trad_tsp == "" or ytd_trad_tsp < 0:
+            raise ValueError(f"Invalid LES YTD Trad TSP: {ytd_trad_tsp}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD Trad TSP from LES text"))
+    tsp_variables['YTD Trad TSP'] = ytd_trad_tsp
+
+    try:
+        ytd_trad_tsp_exempt = les_text.get('trad_tsp_ytd_exempt', None)
+        if ytd_trad_tsp_exempt is None or ytd_trad_tsp_exempt == "" or ytd_trad_tsp_exempt < 0:
+            raise ValueError(f"Invalid LES YTD Trad TSP Exempt: {ytd_trad_tsp_exempt}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD Trad TSP Exempt from LES text"))
+    tsp_variables['YTD Trad TSP Exempt'] = ytd_trad_tsp_exempt
+
+    try:
+        ytd_roth_tsp = les_text.get('roth_tsp_ytd', None)
+        if ytd_roth_tsp is None or ytd_roth_tsp == "" or ytd_roth_tsp < 0:
+            raise ValueError(f"Invalid LES YTD Roth TSP: {ytd_roth_tsp}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD Roth TSP from LES text"))
+    tsp_variables['YTD Roth TSP'] = ytd_roth_tsp
+
+    try:
+        tsp_agency_auto_ytd = les_text.get('tsp_agency_auto_ytd', None)
+        if tsp_agency_auto_ytd is None or tsp_agency_auto_ytd == "" or tsp_agency_auto_ytd < 0:
+            raise ValueError(f"Invalid LES YTD Agency Auto Contribution: {tsp_agency_auto_ytd}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD Agency Auto Contribution from LES text"))
+    tsp_variables['YTD Agency Auto'] = tsp_agency_auto_ytd
+
+    try:
+        tsp_agency_matching_ytd = les_text.get('tsp_agency_matching_ytd', None)
+        if tsp_agency_matching_ytd is None or tsp_agency_matching_ytd == "" or tsp_agency_matching_ytd < 0:
+            raise ValueError(f"Invalid LES YTD Agency Matching Contribution: {tsp_agency_matching_ytd}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining YTD Agency Matching Contribution from LES text"))
+    tsp_variables['YTD Agency Matching'] = tsp_agency_matching_ytd
+
+    return tsp_variables
+
+
+def add_tsp_variables(tsp, month, variables):
+    for var, val in variables.items():
+        add_mv_pair(tsp, var, month, val)
     return tsp
 
 
-
-
-
-
-
 def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
-    ytd_headers = flask_app.config['TSP_YTD_HEADERS']
     total = 0.0
-    for header in ytd_headers:
-        row = next((r for r in tsp if r.get('header') == header), None)
-        if row:
+    for idx, row in enumerate(tsp):
+        if row.get("type") == "s":
             try:
                 total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
@@ -147,9 +207,8 @@ def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
 
     if prev_month and month != "JAN":
         prev_total = 0.0
-        for header in ytd_headers:
-            row = next((r for r in tsp if r.get('header') == header), None)
-            if row:
+        for idx, row in enumerate(tsp):
+            if row.get("type") == "s":
                 try:
                     prev_total += abs(float(row.get(prev_month, 0.0)))
                 except (TypeError, ValueError):
@@ -183,8 +242,6 @@ def calc_annual_deferral_remaining(tsp, month):
     return flask_app.config['TSP_ANNUAL_LIMIT'] - total
 
 
-
-
 def calc_tsp_contributions(tsp, tsp_index, month, base_pay_total, specialty_pay_total, incentive_pay_total, bonus_pay_total, combat_zone, prev_elective_remaining, prev_annual_remaining):
     rates_dict = get_tsp_rates(tsp, tsp_index, month)
     rate_headers = flask_app.config['TSP_RATE_HEADERS']
@@ -215,29 +272,29 @@ def calc_tsp_contributions(tsp, tsp_index, month, base_pay_total, specialty_pay_
         agency_matching_contribution = 0.0
 
     trad_final = min(trad_tsp_contribution, prev_elective_remaining)
-    elective_left = prev_elective_remaining - trad_final
+    elective_remaining = prev_elective_remaining - trad_final
 
-    roth_final = min(roth_tsp_contribution, elective_left)
-    elective_left -= roth_final
+    roth_final = min(roth_tsp_contribution, elective_remaining)
+    elective_remaining -= roth_final
 
-    annual_left = prev_annual_remaining
-    agency_auto_final = min(agency_auto_contribution, annual_left)
-    annual_left -= agency_auto_final
+    annual_remaining = prev_annual_remaining
+    agency_auto_final = min(agency_auto_contribution, annual_remaining)
+    annual_remaining -= agency_auto_final
 
-    if elective_left <= 0:
+    if elective_remaining <= 0:
         agency_matching_final = 0.0
     else:
-        agency_matching_final = min(agency_matching_contribution, annual_left)
-        annual_left -= agency_matching_final
+        agency_matching_final = min(agency_matching_contribution, annual_remaining)
+        annual_remaining -= agency_matching_final
 
-    trad_final = min(trad_final, annual_left)
-    annual_left -= trad_final
+    trad_final = min(trad_final, annual_remaining)
+    annual_remaining -= trad_final
 
-    trad_exempt_final = min(trad_tsp_exempt_contribution, annual_left)
-    annual_left -= trad_exempt_final
+    trad_exempt_final = min(trad_tsp_exempt_contribution, annual_remaining)
+    annual_remaining -= trad_exempt_final
 
-    roth_final = min(roth_final, annual_left)
-    annual_left -= roth_final
+    roth_final = min(roth_final, annual_remaining)
+    annual_remaining -= roth_final
 
     tsp_contribution_total = trad_final + trad_exempt_final + roth_final + agency_auto_final + agency_matching_final
 
@@ -248,8 +305,8 @@ def calc_tsp_contributions(tsp, tsp_index, month, base_pay_total, specialty_pay_
         "agency_auto_final": agency_auto_final,
         "agency_matching_final": agency_matching_final,
         "tsp_contribution_total": tsp_contribution_total,
-        "elective_left": elective_left,
-        "annual_left": annual_left
+        "elective_remaining": elective_remaining,
+        "annual_remaining": annual_remaining
     }
 
 

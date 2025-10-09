@@ -93,9 +93,11 @@ class Config:
 
     # tsp type order:
     # r = rates
-    # t = tsp rows
+    # t = tsp contribution rows
+    # s = ytd tsp contribution rows
+    # u = tsp calculation rows
     # p = tsp accounts
-    TSP_TYPE_ORDER = ['r', 't', 'p']
+    TSP_TYPE_ORDER = ['r', 't', 's', 'u', 'p']
     TSP_METADATA = [
         'type',
         'field',
@@ -127,24 +129,6 @@ class Config:
         "Roth TSP Specialty Rate",
         "Roth TSP Incentive Rate",
         "Roth TSP Bonus Rate",
-    ]
-    TSP_CONTRIBUTION_HEADERS = [
-        "Trad TSP Contribution",
-        "Trad TSP Exempt Contribution",
-        "Roth TSP Contribution",
-        "Agency Auto Contribution",
-        "Agency Matching Contribution"
-    ]
-    TSP_YTD_HEADERS = [
-        "YTD Trad TSP",
-        "YTD Trad TSP Exempt",
-        "YTD Roth TSP",
-        "YTD Agency Auto",
-        "YTD Agency Matching"
-    ]
-    TSP_YTD_ELECTIVE_HEADERS = [
-        "YTD Trad TSP",
-        "YTD Roth TSP"
     ]
 
 

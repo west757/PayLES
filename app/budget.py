@@ -138,7 +138,7 @@ def get_les_variables(les_text):
 
     try:
         dependents = les_text.get('dependents', None)
-        if dependents is None or dependents == "":
+        if dependents is None or dependents == "" or dependents < 0:
             raise ValueError(f"Invalid LES dependents: {dependents}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining dependents from LES text"))
@@ -214,6 +214,7 @@ def init_budget(variables, month, les_text=None):
         budget = add_pay_rows(budget, month, variables, sign=1)
         budget_index = build_table_index(budget)
         budget = calc_income(budget, budget_index, month)
+        tsp, tsp_index = init_tsp(budget, budget_index, month)
         budget = add_pay_rows(budget, month, variables, sign=-1)
         budget_index = build_table_index(budget)
         budget = calc_expenses_net(budget, budget_index, month)
