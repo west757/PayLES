@@ -15,7 +15,8 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #16MB
     ALLOWED_EXTENSIONS = {'pdf'}
     CURRENT_YEAR = datetime.now().year
-    CURRENT_MONTH = datetime.now().strftime('%B')  
+    CURRENT_MONTH = datetime.now().strftime('%b').upper()
+    CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
     VERSION = "Version 0.1.0 2025-10-05"
 
 

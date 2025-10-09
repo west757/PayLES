@@ -135,13 +135,6 @@ def sum_rows_via_modal(budget, modal_str, month):
     return total
 
 
-def get_table_val(table, header, month):
-    row = next((r for r in table if r['header'] == header), None)
-    if row is None:
-        return None
-    return row.get(month, None)
-
-
 def get_months(budget):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     return [key for key in budget[0].keys() if key in MONTHS_SHORT]

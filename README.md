@@ -33,6 +33,7 @@ mid-term:
 - add loading screen after submitting LES
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN
+- add calculator lookups for certain things (zip code to mha, etc)
 
 long-term:
 - leave calculator

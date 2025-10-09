@@ -57,7 +57,7 @@ def index():
         'form_single': form_single,
         'form_joint': form_joint,
         'CURRENT_YEAR': flask_app.config['CURRENT_YEAR'],
-        'CURRENT_MONTH': flask_app.config['CURRENT_MONTH'],
+        'CURRENT_MONTH_LONG': flask_app.config['CURRENT_MONTH_LONG'],
     }
     return render_template('home.html', **context)
 
@@ -94,15 +94,8 @@ def route_single():
         headers = get_headers()
 
         les_month, les_variables = get_les_variables(les_text)
-        #for var in les_variables:
-        #    print(f"{var}: {les_variables[var]}")
         budget_les = init_budget(les_variables, les_month, les_text=les_text)
-        #for row in budget_les:
-        #    print(row)
-        #print("------------")
-        budget_calc = init_budget(les_variables, flask_app.config['CURRENT_MONTH'])
-        #for row in budget_calc:
-        #    print(row)
+        budget_calc = init_budget(les_variables, les_month)
 
         budget = budget_les
 

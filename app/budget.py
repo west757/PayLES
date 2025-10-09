@@ -30,6 +30,7 @@ from app.calculations import (
     calc_state_taxes,
 )
 from app.tsp import (
+    init_tsp,
     update_tsp,
 )
 
@@ -204,6 +205,7 @@ def init_budget(variables, month, les_text=None):
         budget = add_les_pay(budget, month, les_text)
         budget_index = build_table_index(budget)
         budget = calc_income(budget, budget_index, month)
+        tsp, tsp_index = init_tsp(budget, budget_index, month, les_text)
         budget_index = build_table_index(budget)
         budget = calc_expenses_net(budget, budget_index, month)
         budget = add_ytds(budget, month, les_text)
@@ -280,8 +282,8 @@ def add_pay_rows(budget, month, variables, sign):
         if variable not in [0, None, "NOT FOUND"]:
             function = globals().get(TRIGGER_CALCULATIONS[header])
             if callable(function):
-                value = round(sign * function(budget, month), 2)
-
+                value = round(function(budget, month), 2)
+                
                 add_row("budget", budget, header, template=PAY_TEMPLATE)
                 add_mv_pair(budget, header, month, value)
 

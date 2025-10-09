@@ -195,13 +195,13 @@ def calc_federal_taxes(budget, month):
 def calc_fica_social_security(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
-    return round(-taxable_income * flask_app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
+    return -round(taxable_income * flask_app.config['FICA_SOCIALSECURITY_TAX_RATE'], 2)
 
 
 def calc_fica_medicare(budget, month):
     taxable_income_row = next((row for row in budget if row['header'] == "Taxable Income"), None)
     taxable_income = taxable_income_row.get(month, 0.00) if taxable_income_row else 0.00
-    return round(-taxable_income * flask_app.config['FICA_MEDICARE_TAX_RATE'], 2)
+    return -round(taxable_income * flask_app.config['FICA_MEDICARE_TAX_RATE'], 2)
 
 
 def calc_sgli(budget, month):
