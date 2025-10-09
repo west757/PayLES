@@ -102,10 +102,14 @@ class Config:
         'modal',
     ]
 
-    SPECIAL_CALCULATIONS = {
+    TRIGGER_CALCULATIONS = {
         'Base Pay': 'calc_base_pay',
         'BAS': 'calc_bas',
         'BAH': 'calc_bah',
+        'CONUS COLA': 'calc_conus_cola',
+        'OCONUS COLA': 'calc_oconus_cola',
+        'OHA': 'calc_oha',
+        'MIHA-M': 'calc_miha_m',
         'Federal Taxes': 'calc_federal_taxes',
         'FICA - Social Security': 'calc_fica_social_security',
         'FICA - Medicare': 'calc_fica_medicare',

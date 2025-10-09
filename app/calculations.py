@@ -285,3 +285,16 @@ def calc_state_taxes(budget, month):
 
     tax = tax / 12
     return -round(tax, 2)
+
+
+def calc_conus_cola(budget, month):
+    return budget
+
+def calc_oconus_cola(budget, month):
+    return budget
+
+def calc_oha(budget, month):
+    return budget
+
+def calc_miha_m(budget, month):
+    return budget

@@ -50,11 +50,11 @@ def get_les_variables(les_text):
 
     try:
         year = int('20' + les_text.get('les_year', None))
-        if not year:
+        if not year or year < 2021 or year > flask_app.config['CURRENT_YEAR'] + 1:
             raise ValueError(f"Invalid LES year: {year}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining year from LES text"))
-    les_variables['year'] = year
+    les_variables['Year'] = year
 
     try:
         pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
@@ -69,7 +69,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining months in service from LES text"))
-    les_variables['months_in_service'] = months_in_service
+    les_variables['Months in Service'] = months_in_service
 
     try:
         text = les_text.get('branch', None)
@@ -87,7 +87,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES branch: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining branch from LES text"))
-    les_variables['branch'] = branch
+    les_variables['Branch'] = branch
 
     try:
         text = les_text.get('tpc', None)
@@ -100,7 +100,7 @@ def get_les_variables(les_text):
             #raise ValueError(f"Invalid LES grade: {grade}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining component from LES text"))
-    les_variables['component'] = component
+    les_variables['Component'] = component
 
     try:
         grade = les_text.get('grade', None)
@@ -108,7 +108,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES grade: {grade}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining grade from LES text"))
-    les_variables['grade'] = grade
+    les_variables['Grade'] = grade
 
     try:
         zip_code = les_text.get('vha_zip', None)
@@ -116,7 +116,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES zip code: {zip_code}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining zip code from LES text"))
-    les_variables['zip_code'] = zip_code
+    les_variables['Zip Code'] = zip_code
 
     try:
         oconus_locality_code = les_text.get('jftr', None)
@@ -125,7 +125,7 @@ def get_les_variables(les_text):
             #raise ValueError(f"Invalid LES OCONUS locality code: {oconus_locality_code}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining OCONUS locality code from LES text"))
-    les_variables['oconus_locality_code'] = oconus_locality_code
+    les_variables['OCONUS Locality Code'] = oconus_locality_code
 
     try:
         home_of_record = les_text.get('state', None)
@@ -133,7 +133,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES home of record: {home_of_record}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining home of record from LES text"))
-    les_variables['home_of_record'] = home_of_record
+    les_variables['Home of Record'] = home_of_record
 
     try:
         dependents = les_text.get('dependents', None)
@@ -141,7 +141,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES dependents: {dependents}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining dependents from LES text"))
-    les_variables['dependents'] = dependents
+    les_variables['Dependents'] = dependents
 
     try:
         text = les_text.get('federal_filing_status', None)
@@ -155,7 +155,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES federal filing status: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
-    les_variables['federal_filing_status'] = federal_filing_status
+    les_variables['Federal Filing Status'] = federal_filing_status
 
     try:
         text = les_text.get('state_filing_status', None)
@@ -167,7 +167,7 @@ def get_les_variables(les_text):
             raise ValueError(f"Invalid LES state filing status: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
-    les_variables['state_filing_status'] = state_filing_status
+    les_variables['State Filing Status'] = state_filing_status
 
     try:
         remarks = les_text.get('remarks', "")
@@ -182,11 +182,11 @@ def get_les_variables(les_text):
             raise ValueError("SGLI coverage amount not found in remarks")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
-    les_variables['sgli_coverage'] = sgli_coverage
+    les_variables['SGLI Coverage'] = sgli_coverage
 
-    les_variables['combat_zone'] = "No"
+    les_variables['Combat Zone'] = "No"
 
-    les_variables['drills'] = 0
+    les_variables['Drills'] = 0
 
     return les_month, les_variables
 
@@ -197,9 +197,10 @@ def init_budget(variables, month, les_text=None):
     budget = []
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row("budget", budget, row['header'], template=PARAMS_TEMPLATE)
+    budget_index = build_table_index(budget)
 
     if les_text:
-        budget = add_variables(budget, month, variables)
+        budget = add_variables(budget, budget_index, month, variables)
         budget = add_les_pay(budget, month, les_text)
         budget_index = build_table_index(budget)
         budget = calc_income(budget, budget_index, month)
@@ -207,15 +208,15 @@ def init_budget(variables, month, les_text=None):
         budget = calc_expenses_net(budget, budget_index, month)
         budget = add_ytds(budget, month, les_text)
     else:
-        budget = add_variables(budget, month, variables)
-        budget = add_pay_rows(budget, month, sign=1)
+        budget = add_variables(budget, budget_index, month, variables)
+        budget = add_pay_rows(budget, month, variables, sign=1)
         budget_index = build_table_index(budget)
         budget = calc_income(budget, budget_index, month)
-        budget = add_pay_rows(budget, month, sign=-1)
+        budget = add_pay_rows(budget, month, variables, sign=-1)
         budget_index = build_table_index(budget)
         budget = calc_expenses_net(budget, budget_index, month)
         budget_index = build_table_index(budget)
-        budget = calc_ytds(budget, prev_month=month, working_month=month)
+        #budget = calc_ytds(budget, budget_index, prev_month=month, month=month)
     
     add_mv_pair(budget, 'Difference', month, 0.00)
     budget_index = build_table_index(budget)
@@ -224,9 +225,9 @@ def init_budget(variables, month, les_text=None):
     return budget
 
 
-def add_variables(budget, month, variables):
+def add_variables(budget, index, month, variables):
     for var, val in variables.items():
-        row = next((r for r in budget if r['header'].replace(" ", "_").lower() == var.lower()), None)
+        row = index.get(var, None)
         if row:
             add_mv_pair(budget, row['header'], month, val)
         else:
@@ -265,26 +266,24 @@ def add_les_pay(budget, month, les_text):
     return budget
 
 
-
-
-def add_pay_rows(budget, month, sign):
+def add_pay_rows(budget, month, variables, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
-    SPECIAL_CALCULATIONS = flask_app.config['SPECIAL_CALCULATIONS']
+    TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 
-    pay_subset = PAY_TEMPLATE[PAY_TEMPLATE['sign'] == sign]
+    pay_subset = PAY_TEMPLATE[(PAY_TEMPLATE['sign'] == sign) & (PAY_TEMPLATE['trigger'] != "none")]
+
     for _, row in pay_subset.iterrows():
         header = row['header']
-        required = row['required']
+        trigger = row['trigger']
+        variable = variables.get(trigger, None)
 
-        if header in SPECIAL_CALCULATIONS:
-            value = round(sign * SPECIAL_CALCULATIONS[header](budget, month), 2)
-        elif required:
-            value = 0.00
-        else:
-            continue
+        if variable not in [0, None, "NOT FOUND"]:
+            function = globals().get(TRIGGER_CALCULATIONS[header])
+            if callable(function):
+                value = round(sign * function(budget, month), 2)
 
-        add_row("budget", budget, header, template=PAY_TEMPLATE)
-        add_mv_pair(budget, header, month, value)
+                add_row("budget", budget, header, template=PAY_TEMPLATE)
+                add_mv_pair(budget, header, month, value)
 
     return budget
 

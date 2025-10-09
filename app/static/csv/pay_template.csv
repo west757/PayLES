@@ -50,7 +50,7 @@ HDP-L,e,1,float,False,True,hardship,none,False,HDP-L,Hardship Duty Pay - Locatio
 HDP-M,e,1,float,False,True,hardship,none,False,HDP-M,Hardship Duty Pay - Mission
 PCS Member,e,1,float,False,True,pcs,none,True,PCS MEMBER,Permanent Change of Station Payment
 Dislocation Allowance,e,1,float,False,True,pcs,none,False,DLA,Dislocation Allowance
-MIHA-M,e,1,float,False,True,pcs,OCONUS Locality Code,True,MIHA-M,Moving Initial Housing Allowance - Miscellaneous
+MIHA-M,e,1,float,False,False,pcs,OCONUS Locality Code,True,MIHA-M,Moving Initial Housing Allowance - Miscellaneous
 TLE CONUS,e,1,float,False,True,pcs,none,False,TLE CONUS,Temporary Lodging Expense CONUS
 TLA,e,1,float,False,True,pcs,none,False,TLA,Temporary Living Allowance
 TLA OCONUS,e,1,float,False,True,pcs,none,False,TLA OCONUS,Temporary Lodging Allowance OCONUS
@@ -93,8 +93,8 @@ SGLI Rate,d,-1,float,False,False,sgli,SGLI Coverage,False,SGLI,SGLI Premium
 Family SGLI,d,-1,float,False,True,sgli,none,False,SGLI FAM/SPOUSE,SGLI Premium for Spouses/Children
 TSGLI,d,-1,float,False,True,sgli,none,False,TSGLI,SGLI Premium for Traumatic Brain Injury
 State Taxes,d,-1,float,True,False,statetaxes,Home of Record,False,STATE TAXES,State Taxes
-Traditional TSP,d,-1,float,False,False,tsp,Grade,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
-Roth TSP,d,-1,float,False,False,tsp,Grade,False,ROTH TSP,Roth Thrift Savings Plan
+Traditional TSP,d,-1,float,False,False,tsp,none,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
+Roth TSP,d,-1,float,False,False,tsp,none,False,ROTH TSP,Roth Thrift Savings Plan
 MGIB,d,-1,float,False,True,mgib,none,False,MGIB,Montgomery G.I. Bill Program
 Debt,d,-1,float,False,True,debt,none,True,DEBT,Government Debt
 Fine,d,-1,float,False,True,debt,none,True,FINE,Military Fines

@@ -143,8 +143,8 @@ def get_table_val(table, header, month):
 
 
 def get_months(budget):
-    metadata_keys = set(['header']) | set(flask_app.config['ROW_METADATA'])
-    return [key for key in budget[0].keys() if key not in metadata_keys]
+    MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
+    return [key for key in budget[0].keys() if key in MONTHS_SHORT]
 
 
 def parse_pay_string(pay_string, pay_template):

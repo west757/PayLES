@@ -94,11 +94,15 @@ def route_single():
         headers = get_headers()
 
         les_month, les_variables = get_les_variables(les_text)
+        #for var in les_variables:
+        #    print(f"{var}: {les_variables[var]}")
         budget_les = init_budget(les_variables, les_month, les_text=les_text)
-
+        #for row in budget_les:
+        #    print(row)
+        #print("------------")
         budget_calc = init_budget(les_variables, flask_app.config['CURRENT_MONTH'])
-        for row in budget_calc:
-            print(row)
+        #for row in budget_calc:
+        #    print(row)
 
         budget = budget_les
 
@@ -108,7 +112,7 @@ def route_single():
 
         #recommendations = add_recommendations(budget, months)
         tsp = None
-        months = None
+        months = get_months(budget)
         recommendations = None
 
         session['budget'] = budget

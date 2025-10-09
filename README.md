@@ -74,3 +74,66 @@ Why it matters:
 Helps prevent XSS, clickjacking, and other browser-based attacks.
 
 -->
+
+
+
+<!-- tsp table-->
+<div id="tsp-container">
+    <table id="tsp-table" class="styled-table">
+        <thead>
+            <tr>
+                <th>TSP Calculator</th>
+                {% for month in months %}
+                <th>{{ month }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in tsp %}
+                {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
+                {% set next_row = budget[loop.index] if not loop.last else None %}
+
+                {% set section_break = false %}
+                {% if row.header in ['Roth TSP Bonus Rate', 'TSP Contribution Total', 'YTD TSP Contribution Total'] %}
+                    {% set section_break = true %}
+                {% endif %}
+
+                {% set row_class = "" %}
+                {% if row.type == 'r' %}
+                    {% set row_class = "row-tsp-rate" %}
+                {% endif %}
+
+                <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
+                    {% if row.type %}
+                        <td class="cell row-header-cell">
+                            <button
+                                class="styled-table-button modal-button tooltip{% if row.modal != 'none' %} clickable{% endif %}"
+                                data-modal="{{ row.modal }}"
+                                data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
+                                {{ row.header }}
+                            </button>
+                        </td>
+                    {% else %}
+                        <td>
+                            {{ row.header }}
+                        </td>
+                    {% endif %}
+                    
+                    {% for month in months %}
+                        {% if row.editable and not loop.first %}
+                            <td class="cell">
+                                <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                    {{ format_cell(row, month) }}
+                                </button>
+                            </td>
+                        {% else %}
+                            <td class="tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-value="{{ row[month] }}">
+                                {{ format_cell(row, month) }}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
