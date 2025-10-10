@@ -204,6 +204,8 @@ def init_budget(variables, month, les_text=None):
         budget = add_variables(budget, budget_index, month, variables)
         budget = add_les_pay(budget, month, les_text)
         budget_index = build_table_index(budget)
+        print(budget_index)
+        print("-------------------")
         budget = calc_income(budget, budget_index, month)
         tsp, tsp_index = init_tsp(budget, budget_index, month, les_text)
         budget_index = build_table_index(budget)
@@ -221,6 +223,9 @@ def init_budget(variables, month, les_text=None):
         budget_index = build_table_index(budget)
         #budget = calc_ytds(budget, budget_index, prev_month=month, month=month)
     
+    for row in budget_index:
+        print(row)
+
     add_mv_pair(budget, 'Difference', month, 0.00)
     budget_index = build_table_index(budget)
     budget = convert_numpy_types(budget)

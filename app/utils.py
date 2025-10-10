@@ -119,8 +119,8 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
-def build_table_index(table):
-    return {row['header']: row for row in table}
+def get_row(table, header):
+    return next((row for row in table if row.get('header') == header), None)
 
 
 def sum_rows_via_modal(budget, modal_str, month):

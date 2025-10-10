@@ -42,6 +42,14 @@ class Config:
     ROTH_TSP_RATE_MAX = 60
     TSP_ELECTIVE_LIMIT = 23500.00
     TSP_ANNUAL_LIMIT = 70000.00
+    TSP_AGENCY_AUTO_RATE = 1.0
+    TSP_AGENCY_MATCH_RATE = {
+        1: 1.0,
+        2: 2.0,
+        3: 3.0,
+        4: 3.5,
+        5: 4.0,
+    }
 
     MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
