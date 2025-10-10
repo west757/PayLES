@@ -23,6 +23,7 @@ from app.les import (
     calc_les_rect_overlay,
 )
 from app.tsp import (
+    get_tsp_variables,
     init_tsp,
 )
 from app.utils import (
@@ -94,17 +95,24 @@ def route_single():
         headers = get_headers()
 
         les_month, les_variables = get_les_variables(les_text)
-        budget_les = init_budget(les_variables, les_month, les_text=les_text)
-        budget_calc = init_budget(les_variables, les_month)
+        tsp_variables = get_tsp_variables(les_text)
+        budget_les, tsp_les = init_budget(les_variables, tsp_variables, les_month, les_text=les_text)
+        budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, les_month)
 
         budget = budget_les
+        tsp = tsp_les
+
+        #for row in budget:
+        #    print(row, type(row.get('value')), type(row.get('field')))
+        #print("------------------------")
+        #for row in tsp:
+        #    print(row, type(row.get('value')), type(row.get('field')))
 
         #budget, init_month = init_budget(les_text=les_text)
         #tsp = init_tsp(budget, init_month, les_text=les_text)
         #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         #recommendations = add_recommendations(budget, months)
-        tsp = None
         months = get_months(budget)
         recommendations = None
 

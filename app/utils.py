@@ -164,25 +164,25 @@ def parse_pay_string(pay_string, pay_template):
     return results
 
 
-def set_variable_longs(budget, budget_index, month):
-    branch = budget_index.get('Branch').get(month)
+def set_variable_longs(budget, month):
+    branch = get_row(budget, 'Branch').get(month)
     branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
     add_mv_pair(budget, 'Branch Long', month, branch_long)
 
-    component = budget_index.get('Component').get(month)
+    component = get_row(budget, 'Component').get(month)
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
     add_mv_pair(budget, 'Component Long', month, component_long)
 
-    zip_code = budget_index.get('Zip Code').get(month)
+    zip_code = get_row(budget, 'Zip Code').get(month)
     mha_code, mha_long = get_military_housing_area(zip_code)
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
     add_mv_pair(budget, 'MHA Long', month, mha_long)
 
-    locality_code = budget_index.get('OCONUS Locality Code').get(month)
+    locality_code = get_row(budget, 'OCONUS Locality Code').get(month)
     #get locality code long
     add_mv_pair(budget, 'Locality Code Long', month, "")
-    
-    home_of_record = budget_index.get('Home of Record').get(month)
+
+    home_of_record = get_row(budget, 'Home of Record').get(month)
     longname, _ = get_home_of_record(home_of_record)
     add_mv_pair(budget, 'Home of Record Long', month, longname)
 

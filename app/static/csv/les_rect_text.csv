@@ -66,10 +66,10 @@ tsp_deductions_ytd,425,1478,658,1535,float
 trad_tsp_ytd,747,1478,977,1535,float
 trad_tsp_exempt_ytd,1059,1478,1289,1535,float
 roth_tsp_ytd,1383,1478,1613,1535,float
-tsp_agency_matching_ytd,1737,1478,1967,1535,float
+tsp_agency_match_ytd,1737,1478,1967,1535,float
 tsp_agency_auto_ytd,2134,1478,2364,1535,float
 tsp_agency_auto,435,1582,665,1635,float
-tsp_agency_matching,787,1582,1017,1635,float
+tsp_agency_match,787,1582,1017,1635,float
 leave_beginning_balance,1269,1584,1394,1635,float
 leave_earned,1420,1584,1545,1635,float
 leave_used,1568,1584,1693,1635,float

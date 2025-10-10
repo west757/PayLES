@@ -8,7 +8,7 @@ from app.utils import (
     convert_numpy_types,
     add_row,
     add_mv_pair,
-    build_table_index,
+    get_row,
     set_variable_longs,
     get_military_housing_area,
     get_home_of_record,
@@ -31,7 +31,7 @@ from app.calculations import (
 )
 from app.tsp import (
     init_tsp,
-    update_tsp,
+    #update_tsp,
 )
 
 
@@ -192,57 +192,65 @@ def get_les_variables(les_text):
     return les_month, les_variables
 
 
-def init_budget(variables, month, les_text=None):
+def init_budget(les_variables, tsp_variables, month, les_text=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     budget = []
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row("budget", budget, row['header'], template=PARAMS_TEMPLATE)
-    budget_index = build_table_index(budget)
 
     if les_text:
-        budget = add_variables(budget, budget_index, month, variables)
+        budget = add_variables(budget, month, les_variables)
         budget = add_les_pay(budget, month, les_text)
-        budget_index = build_table_index(budget)
-        print(budget_index)
-        print("-------------------")
-        budget = calc_income(budget, budget_index, month)
-        tsp, tsp_index = init_tsp(budget, budget_index, month, les_text)
-        budget_index = build_table_index(budget)
-        budget = calc_expenses_net(budget, budget_index, month)
+
+        taxable, nontaxable, income = calc_income(budget, month)
+        add_mv_pair(budget, 'Taxable Income', month, taxable)
+        add_mv_pair(budget, 'Non-Taxable Income', month, nontaxable)
+        add_mv_pair(budget, 'Total Income', month, income)
+
+        tsp = init_tsp(tsp_variables, budget, month, les_text)
+        
+        taxes, expenses, net_pay = calc_expenses_net(budget, month)
+        add_mv_pair(budget, 'Taxes', month, taxes)
+        add_mv_pair(budget, 'Total Expenses', month, expenses)
+        add_mv_pair(budget, 'Net Pay', month, net_pay)
+
         budget = add_ytds(budget, month, les_text)
     else:
-        budget = add_variables(budget, budget_index, month, variables)
-        budget = add_pay_rows(budget, month, variables, sign=1)
-        budget_index = build_table_index(budget)
-        budget = calc_income(budget, budget_index, month)
-        tsp, tsp_index = init_tsp(budget, budget_index, month)
-        budget = add_pay_rows(budget, month, variables, sign=-1)
-        budget_index = build_table_index(budget)
-        budget = calc_expenses_net(budget, budget_index, month)
-        budget_index = build_table_index(budget)
-        #budget = calc_ytds(budget, budget_index, prev_month=month, month=month)
-    
-    for row in budget_index:
-        print(row)
+        budget = add_variables(budget, month, les_variables)
+        budget = add_pay_rows(budget, month, les_variables, sign=1)
+
+        taxable, nontaxable, income = calc_income(budget, month)
+        add_mv_pair(budget, 'Taxable Income', month, taxable)
+        add_mv_pair(budget, 'Non-Taxable Income', month, nontaxable)
+        add_mv_pair(budget, 'Total Income', month, income)
+
+        tsp = init_tsp(tsp_variables, budget, month)
+        budget = add_pay_rows(budget, month, les_variables, sign=-1)
+
+        taxes, expenses, net_pay = calc_expenses_net(budget, month)
+        add_mv_pair(budget, 'Taxes', month, taxes)
+        add_mv_pair(budget, 'Total Expenses', month, expenses)
+        add_mv_pair(budget, 'Net Pay', month, net_pay)
+
+        #budget = calc_ytds(budget, prev_month=month, month=month)
 
     add_mv_pair(budget, 'Difference', month, 0.00)
-    budget_index = build_table_index(budget)
     budget = convert_numpy_types(budget)
+    tsp = convert_numpy_types(tsp)
 
-    return budget
+    return budget, tsp
 
 
-def add_variables(budget, index, month, variables):
+def add_variables(budget, month, variables):
     for var, val in variables.items():
-        row = index.get(var, None)
+        row = get_row(budget, var)
         if row:
             add_mv_pair(budget, row['header'], month, val)
         else:
             raise Exception(f"Variable '{var}' not found in PARAMS_TEMPLATE")
         
-    budget_index = build_table_index(budget)
-    budget = set_variable_longs(budget, budget_index, month)
+    budget = set_variable_longs(budget, month)
     return budget
 
 
@@ -355,7 +363,7 @@ def update_months(budget, tsp, months, cell_header=None, cell_month=None, cell_v
 def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
     update_var(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
     update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    update_tsp(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+    #update_tsp(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
 
     trad_tsp_row = next((r for r in budget if r.get('header') == 'Traditional TSP'), None)
     trad_contrib_row = next((r for r in tsp if r.get('header') == 'Trad TSP Contribution'), None)
