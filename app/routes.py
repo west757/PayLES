@@ -29,6 +29,7 @@ from app.tsp import (
 from app.utils import (
     load_json,
     validate_file,
+    convert_numpy_types,
     get_headers,
     get_months,
     add_recommendations,
@@ -94,25 +95,28 @@ def route_single():
         les_rect_overlay = calc_les_rect_overlay()
         headers = get_headers()
 
-        les_month, les_variables = get_les_variables(les_text)
+        month, les_variables = get_les_variables(les_text)
         tsp_variables = get_tsp_variables(les_text)
-        budget_les, tsp_les = init_budget(les_variables, tsp_variables, les_month, les_text=les_text)
-        budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, les_month)
+        budget_les, tsp_les = init_budget(les_variables, tsp_variables, month, les_text=les_text)
+        budget_les, tsp_les, months = add_months(budget_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+
+        for row in budget_les:
+            print(row)
+
+        print("-------------------")
+        for row in tsp_les:
+            print(row)
+
+        #budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, month)
 
         budget = budget_les
         tsp = tsp_les
 
-        #for row in budget:
-        #    print(row, type(row.get('value')), type(row.get('field')))
-        #print("------------------------")
-        #for row in tsp:
-        #    print(row, type(row.get('value')), type(row.get('field')))
-
-        #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-
         #recommendations = add_recommendations(budget, months)
-        months = get_months(budget)
         recommendations = None
+
+        budget = convert_numpy_types(budget)
+        tsp = convert_numpy_types(tsp)
 
         session['budget'] = budget
         session['tsp'] = tsp

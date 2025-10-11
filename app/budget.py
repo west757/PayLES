@@ -6,13 +6,10 @@ from app import flask_app
 from app.utils import (
     get_error_context,
     convert_numpy_types,
+    get_row_value,
     add_row,
     add_mv_pair,
-    get_row,
-    get_row_value,
     set_variable_longs,
-    get_military_housing_area,
-    get_home_of_record,
     get_months,
     parse_pay_string,
 )
@@ -24,6 +21,10 @@ from app.calculations import (
     calc_base_pay,
     calc_bas,
     calc_bah,
+    calc_conus_cola,
+    calc_oconus_cola,
+    calc_oha,
+    calc_miha_m,
     calc_federal_taxes,
     calc_fica_social_security,
     calc_fica_medicare,
@@ -32,7 +33,7 @@ from app.calculations import (
 )
 from app.tsp import (
     init_tsp,
-    #update_tsp,
+    update_tsp,
 )
 
 
@@ -42,9 +43,9 @@ from app.tsp import (
 
 def get_les_variables(les_text):
     try:
-        les_month = les_text.get('les_month', None)
-        if les_month not in flask_app.config['MONTHS_SHORT']:
-            raise ValueError(f"Invalid LES month: {les_month}")
+        month = les_text.get('les_month', None)
+        if month not in flask_app.config['MONTHS_SHORT']:
+            raise ValueError(f"Invalid LES month: {month}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining month from LES text"))
     
@@ -190,7 +191,7 @@ def get_les_variables(les_text):
 
     les_variables['Drills'] = 0
 
-    return les_month, les_variables
+    return month, les_variables
 
 
 def init_budget(les_variables, tsp_variables, month, les_text=None):
@@ -219,7 +220,7 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         budget = add_ytds(budget, month, les_text)
     else:
         budget = add_variables(budget, month, les_variables)
-        budget = add_pay_rows(budget, month, les_variables, sign=1)
+        budget = add_pays(budget, month, les_variables, sign=1)
 
         taxable, nontaxable, income = calc_income(budget, month)
         add_mv_pair(budget, 'Taxable Income', month, taxable)
@@ -227,14 +228,17 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         add_mv_pair(budget, 'Total Income', month, income)
 
         tsp = init_tsp(tsp_variables, budget, month)
-        budget = add_pay_rows(budget, month, les_variables, sign=-1)
+        budget = add_pays(budget, month, les_variables, sign=-1)
 
         taxes, expenses, net_pay = calc_expenses_net(budget, month)
         add_mv_pair(budget, 'Taxes', month, taxes)
         add_mv_pair(budget, 'Total Expenses', month, expenses)
         add_mv_pair(budget, 'Net Pay', month, net_pay)
 
-        #budget = calc_ytds(budget, prev_month=month, month=month)
+        ytd_income, ytd_expenses, ytd_net_pay = calc_ytds(budget, month)
+        add_mv_pair(budget, 'YTD Income', month, ytd_income)
+        add_mv_pair(budget, 'YTD Expenses', month, ytd_expenses)
+        add_mv_pair(budget, 'YTD Net Pay', month, ytd_net_pay)
 
     add_mv_pair(budget, 'Difference', month, 0.00)
     budget = convert_numpy_types(budget)
@@ -245,7 +249,7 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
 
 def add_variables(budget, month, variables):
     for var, val in variables.items():
-        row = get_row(budget, var)
+        row = next((row for row in budget if row.get('header') == var), None)
         if row:
             add_mv_pair(budget, row['header'], month, val)
         else:
@@ -283,7 +287,7 @@ def add_les_pay(budget, month, les_text):
     return budget
 
 
-def add_pay_rows(budget, month, variables, sign):
+def add_pays(budget, month, variables, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 
@@ -292,12 +296,12 @@ def add_pay_rows(budget, month, variables, sign):
     for _, row in pay_subset.iterrows():
         header = row['header']
         trigger = row['trigger']
-        variable = variables.get(trigger, None)
+        variable = get_row_value(budget, trigger, month)
 
         if variable not in [0, None, "NOT FOUND"]:
             function = globals().get(TRIGGER_CALCULATIONS[header])
             if callable(function):
-                value = round(function(budget, month), 2)
+                value = function(budget, month)
                 
                 add_row("budget", budget, header, template=PAY_TEMPLATE)
                 add_mv_pair(budget, header, month, value)
@@ -327,17 +331,18 @@ def add_ytds(budget, month, les_text):
     return budget
 
 
+
 # =========================
 # update budget months and variables
 # =========================
 
-def add_months(budget, tsp, latest_month, months_num, init=False):
+def add_months(budget, tsp, month, months_num, init=False):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
     months = get_months(budget)
 
     # calculates how many more months to add, starting from latest_month
     months_num_to_add = months_num - len(months)
-    latest_month_idx = MONTHS_SHORT.index(latest_month)
+    latest_month_idx = MONTHS_SHORT.index(month)
 
     for i in range(months_num_to_add):
         month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
@@ -356,30 +361,45 @@ def update_months(budget, tsp, months, cell=None):
         start_idx = 1
 
     for i in range(start_idx, len(months)):
-        budget, tsp = build_month(budget, tsp, months[i], months[i-1], cell)
+        budget, tsp = build_month(budget, tsp, months[i], months[i-1], cell=cell)
 
     return budget, tsp
 
 
 def build_month(budget, tsp, month, prev_month, cell=None, init=False):
-    update_variables(budget, month, prev_month, cell)
-    set_variable_longs(budget, month)
-    update_ent_rows(budget, prev_month, month, cell, init)
-    #update_tsp(budget, tsp, prev_month, month, cell_header, cell_month, cell_value, cell_repeat)
+    budget = update_variables(budget, month, prev_month, cell)
+    budget = update_pays(budget, month, prev_month, sign=1, cell=cell, init=init)
 
-    trad_tsp_row = next((r for r in budget if r.get('header') == 'Traditional TSP'), None)
-    trad_contrib_row = next((r for r in tsp if r.get('header') == 'Trad TSP Contribution'), None)
-    trad_exempt_row = next((r for r in tsp if r.get('header') == 'Trad TSP Exempt Contribution'), None)
-    roth_tsp_row = next((r for r in budget if r.get('header') == 'Roth TSP'), None)
-    roth_contrib_row = next((r for r in tsp if r.get('header') == 'Roth TSP Contribution'), None)
-    trad_tsp_row[month] = trad_contrib_row.get(month, 0) + trad_exempt_row.get(month, 0)
-    roth_tsp_row[month] = roth_contrib_row.get(month, 0)
+    taxable, nontaxable, income = calc_income(budget, month)
+    add_mv_pair(budget, 'Taxable Income', month, taxable)
+    add_mv_pair(budget, 'Non-Taxable Income', month, nontaxable)
+    add_mv_pair(budget, 'Total Income', month, income)
 
-    calc_income(budget, month)
-    update_ded_alt_rows(budget, prev_month, month, cell, init)
-    calc_expenses_net(budget, month)
-    calc_difference(budget, prev_month, month)
-    calc_ytds(budget, prev_month, month)
+    tsp = update_tsp(budget, tsp, month, prev_month, cell=cell)
+
+    trad_tsp_row = next((r for r in budget if r.get('header') == "Traditional TSP"), None)
+    roth_tsp_row = next((r for r in budget if r.get('header') == "Roth TSP"), None)
+
+    if trad_tsp_row:
+        trad_tsp_row[month] = get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month)
+    if roth_tsp_row:
+        roth_tsp_row[month] = get_row_value(tsp, 'Roth TSP Contribution', month)
+
+    budget = update_pays(budget, month, prev_month, sign=-1, cell=cell, init=init)
+
+    taxes, expenses, net_pay = calc_expenses_net(budget, month)
+    add_mv_pair(budget, 'Taxes', month, taxes)
+    add_mv_pair(budget, 'Total Expenses', month, expenses)
+    add_mv_pair(budget, 'Net Pay', month, net_pay)
+
+    difference = calc_difference(budget, month, prev_month)
+    add_mv_pair(budget, 'Difference', month, difference)
+
+    ytd_income, ytd_expenses, ytd_net_pay = calc_ytds(budget, month, prev_month=prev_month)
+    add_mv_pair(budget, 'YTD Income', month, ytd_income)
+    add_mv_pair(budget, 'YTD Expenses', month, ytd_expenses)
+    add_mv_pair(budget, 'YTD Net Pay', month, ytd_net_pay)
+
     return budget, tsp
 
 
@@ -400,59 +420,43 @@ def update_variables(budget, month, prev_month, cell=None):
 
         elif cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
             row[month] = cell.get('value')
-
         else:
             row[month] = prev_value
 
+    budget = set_variable_longs(budget, month)
+    return budget
 
-def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
+
+def update_pays(budget, month, prev_month, sign, cell=None, init=False):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
+    TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 
-    SPECIAL_CALCULATIONS = {
-        'Base Pay': calc_base_pay,
-        'BAS': calc_bas,
-        'BAH': calc_bah,
-    }
-    
-    for row in budget:
-        if row.get('sign') == 1:
-            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == row['header']]
-            is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
-            if init and is_onetime:
-                row[working_month] = 0.00
-            if row['header'] in SPECIAL_CALCULATIONS:
-                row[working_month] = SPECIAL_CALCULATIONS[row['header']](budget, working_month)
-            elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
-                row[working_month] = cell_value
-            elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
-                row[working_month] = row[prev_month]
+    rows = [row for row in budget if row.get('sign') == sign]
+    for row in rows:
+        header = row['header']
+        prev_value = row.get(prev_month)
 
+        if header in ["Traditional TSP", "Roth TSP"]:
+            continue
 
-def update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):
-    PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
+        template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == header]
+        onetime = template_row.iloc[0].get('onetime', False)
+        if init and onetime:
+            row[month] = 0.00
+            continue
 
-    SPECIAL_CALCULATIONS = {
-        'Federal Taxes': calc_federal_taxes,
-        'FICA - Social Security': calc_fica_social_security,
-        'FICA - Medicare': calc_fica_medicare,
-        'SGLI Rate': calc_sgli,
-        'State Taxes': calc_state_taxes,
-    }
+        trigger = TRIGGER_CALCULATIONS.get(header)
+        function = globals().get(trigger)
+        if callable(function):
+            row[month] = function(budget, month)
+            continue
 
-    for row in budget:
-        if row.get('sign') == -1:
-            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == row['header']]
-            is_onetime = not template_row.empty and template_row.iloc[0].get('onetime', False)
-            if init and is_onetime:
-                row[working_month] = 0.00
-            if row['header'] in SPECIAL_CALCULATIONS:
-                row[working_month] = SPECIAL_CALCULATIONS[row['header']](budget, working_month)
-            elif row['header'] in ['Traditional TSP', 'Roth TSP']:
-                continue
-            elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
-                row[working_month] = cell_value
-            elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
-                row[working_month] = row[prev_month]
+        if cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
+            row[month] = cell.get('value')
+        else:
+            row[month] = prev_value
+
+    return budget
 
 
 def remove_months(budget, months_num):

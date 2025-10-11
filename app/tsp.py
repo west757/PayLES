@@ -3,7 +3,7 @@ from app.utils import (
     get_error_context,
     add_row,
     add_mv_pair,
-    get_row,
+    get_row_value,
     sum_rows_via_modal,
 )
 
@@ -141,8 +141,7 @@ def init_tsp(tsp_variables, budget, month, les_text=None):
     for _, row in TSP_TEMPLATE.iterrows():
         add_row("tsp", tsp, row['header'], template=TSP_TEMPLATE)
 
-
-    base_pay_total = get_row(budget, "Base Pay").get(month, 0.0)
+    base_pay_total = get_row_value(budget, "Base Pay", month)
     specialty_pay_total = sum_rows_via_modal(budget, "specialty", month)
     incentive_pay_total = sum_rows_via_modal(budget, "incentive", month)
     bonus_pay_total = sum_rows_via_modal(budget, "bonus", month)
@@ -152,14 +151,15 @@ def init_tsp(tsp_variables, budget, month, les_text=None):
     add_mv_pair(tsp, 'Incentive Pay Total', month, incentive_pay_total)
     add_mv_pair(tsp, 'Bonus Pay Total', month, bonus_pay_total)
 
-    combat_zone = get_row(budget, "Combat Zone").get(month, "No")
+    combat_zone = get_row_value(budget, "Combat Zone", month)
 
     if les_text:
         tsp = add_tsp_variables(tsp, month, tsp_variables)
 
-        trad_row = get_row(budget, "Traditional TSP")
+        trad_row = next((r for r in budget if r.get('header') == "Traditional TSP"), None)
         trad_tsp_contribution = trad_row.get(month, 0.0) if trad_row else 0.0
-        roth_row = get_row(budget, "Roth TSP")
+
+        roth_row = next((r for r in budget if r.get('header') == "Roth TSP"), None)
         roth_tsp_contribution = roth_row.get(month, 0.0) if roth_row else 0.0
 
         if combat_zone == "No":
@@ -170,17 +170,17 @@ def init_tsp(tsp_variables, budget, month, les_text=None):
             add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, abs(trad_tsp_contribution))
         add_mv_pair(tsp, 'Roth TSP Contribution', month, abs(roth_tsp_contribution))
 
-        tsp_contribution_total = (get_row(tsp, "Trad TSP Contribution").get(month, 0.0) + 
-                                  get_row(tsp, "Trad TSP Exempt Contribution").get(month, 0.0) + 
-                                  get_row(tsp, "Roth TSP Contribution").get(month, 0.0) + 
-                                  get_row(tsp, "Agency Auto Contribution").get(month, 0.0) + 
-                                  get_row(tsp, "Agency Match Contribution").get(month, 0.0))
+        tsp_contribution_total = (get_row_value(tsp, "Trad TSP Contribution", month) + 
+                                  get_row_value(tsp, "Trad TSP Exempt Contribution", month) + 
+                                  get_row_value(tsp, "Roth TSP Contribution", month) + 
+                                  get_row_value(tsp, "Agency Auto Contribution", month) + 
+                                  get_row_value(tsp, "Agency Match Contribution", month))
         add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contribution_total)
 
         ytd_tsp_contribution_total = round(calc_ytd_tsp_contribution_total(tsp, month), 2)
         add_mv_pair(tsp, 'YTD TSP Contribution Total', month, ytd_tsp_contribution_total)
 
-        elective_deferral_remaining = flask_app.config['TSP_ELECTIVE_LIMIT'] - get_row(tsp, "YTD Trad TSP").get(month, 0.0) - get_row(tsp, "YTD Roth TSP").get(month, 0.0)
+        elective_deferral_remaining = flask_app.config['TSP_ELECTIVE_LIMIT'] - get_row_value(tsp, "YTD Trad TSP", month) - get_row_value(tsp, "YTD Roth TSP", month)
         add_mv_pair(tsp, 'Elective Deferral Remaining', month, elective_deferral_remaining)
 
         annual_deferral_remaining = flask_app.config['TSP_ANNUAL_LIMIT'] - ytd_tsp_contribution_total
@@ -189,11 +189,11 @@ def init_tsp(tsp_variables, budget, month, les_text=None):
     else:
         tsp = add_tsp_variables(tsp, month, tsp_variables)
         tsp_contributions = calc_tsp_contributions(tsp, month, combat_zone)
-        add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_final'])
-        add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, tsp_contributions['trad_exempt_final'])
-        add_mv_pair(tsp, 'Roth TSP Contribution', month, tsp_contributions['roth_final'])
-        add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_final'])
-        add_mv_pair(tsp, 'Agency Match Contribution', month, tsp_contributions['agency_match_final'])
+        add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_tsp_contribution'])
+        add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, tsp_contributions['trad_tsp_exempt_contribution'])
+        add_mv_pair(tsp, 'Roth TSP Contribution', month, tsp_contributions['roth_tsp_contribution'])
+        add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_contribution'])
+        add_mv_pair(tsp, 'Agency Match Contribution', month, tsp_contributions['agency_match_contribution'])
         add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contributions['tsp_contribution_total'])
         add_mv_pair(tsp, 'Elective Deferral Remaining', month, tsp_contributions['elective_remaining'])
         add_mv_pair(tsp, 'Annual Deferral Remaining', month, tsp_contributions['annual_remaining'])
@@ -230,23 +230,23 @@ def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
 
 
 def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
-    base_pay_total = get_row(tsp, "Base Pay Total").get(month, 0.0)
-    specialty_pay_total = get_row(tsp, "Specialty Pay Total").get(month, 0.0)
-    incentive_pay_total = get_row(tsp, "Incentive Pay Total").get(month, 0.0)
-    bonus_pay_total = get_row(tsp, "Bonus Pay Total").get(month, 0.0)
+    base_pay_total = get_row_value(tsp, "Base Pay Total", month)
+    specialty_pay_total = get_row_value(tsp, "Specialty Pay Total", month)
+    incentive_pay_total = get_row_value(tsp, "Incentive Pay Total", month)
+    bonus_pay_total = get_row_value(tsp, "Bonus Pay Total", month)
 
-    trad_base_rate = float(get_row(tsp, "Trad TSP Base Rate").get(month, 0.0))
-    trad_specialty_rate = float(get_row(tsp, "Trad TSP Specialty Rate").get(month, 0.0))
-    trad_incentive_rate = float(get_row(tsp, "Trad TSP Incentive Rate").get(month, 0.0))
-    trad_bonus_rate = float(get_row(tsp, "Trad TSP Bonus Rate").get(month, 0.0))
-    roth_base_rate = float(get_row(tsp, "Roth TSP Base Rate").get(month, 0.0))
-    roth_specialty_rate = float(get_row(tsp, "Roth TSP Specialty Rate").get(month, 0.0))
-    roth_incentive_rate = float(get_row(tsp, "Roth TSP Incentive Rate").get(month, 0.0))
-    roth_bonus_rate = float(get_row(tsp, "Roth TSP Bonus Rate").get(month, 0.0))
+    trad_base_rate = float(get_row_value(tsp, "Trad TSP Base Rate", month))
+    trad_specialty_rate = float(get_row_value(tsp, "Trad TSP Specialty Rate", month))
+    trad_incentive_rate = float(get_row_value(tsp, "Trad TSP Incentive Rate", month))
+    trad_bonus_rate = float(get_row_value(tsp, "Trad TSP Bonus Rate", month))
+    roth_base_rate = float(get_row_value(tsp, "Roth TSP Base Rate", month))
+    roth_specialty_rate = float(get_row_value(tsp, "Roth TSP Specialty Rate", month))
+    roth_incentive_rate = float(get_row_value(tsp, "Roth TSP Incentive Rate", month))
+    roth_bonus_rate = float(get_row_value(tsp, "Roth TSP Bonus Rate", month))
 
     if prev_month:
-        prev_elective_remaining = get_row(tsp, "Elective Deferral Remaining").get(prev_month, flask_app.config['TSP_ELECTIVE_LIMIT'])
-        prev_annual_remaining = get_row(tsp, "Annual Deferral Remaining").get(prev_month, flask_app.config['TSP_ANNUAL_LIMIT'])
+        prev_elective_remaining = get_row_value(tsp, "Elective Deferral Remaining", prev_month)
+        prev_annual_remaining = get_row_value(tsp, "Annual Deferral Remaining", prev_month)
     else:
         prev_elective_remaining = flask_app.config['TSP_ELECTIVE_LIMIT']
         prev_annual_remaining = flask_app.config['TSP_ANNUAL_LIMIT']
@@ -301,25 +301,76 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
     tsp_contribution_total = trad_final + trad_exempt_final + roth_final + agency_auto_final + agency_match_final
 
     return {
-        "trad_final": trad_final,
-        "trad_exempt_final": trad_exempt_final,
-        "roth_final": roth_final,
-        "agency_auto_final": agency_auto_final,
-        "agency_match_final": agency_match_final,
-        "tsp_contribution_total": tsp_contribution_total,
-        "elective_remaining": elective_remaining,
-        "annual_remaining": annual_remaining
+        "trad_tsp_contribution": round(trad_final, 2),
+        "trad_tsp_exempt_contribution": round(trad_exempt_final, 2),
+        "roth_tsp_contribution": round(roth_final, 2),
+        "agency_auto_contribution": round(agency_auto_final, 2),
+        "agency_match_contribution": round(agency_match_final, 2),
+        "tsp_contribution_total": round(tsp_contribution_total, 2),
+        "elective_remaining": round(elective_remaining, 2),
+        "annual_remaining": round(annual_remaining, 2)
     }
 
-    # TSP specialty/incentive/bonus zeroing
-    #tsp_types = [
-    #    ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
-    #    ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
-    #]
-    #for base_header, specialty_headers in tsp_types:
-    #    base_row = next((r for r in budget if r['header'] == base_header), None)
-    #    if base_row and base_row.get(working_month, 0) == 0:
-    #        for header in specialty_headers:
-    #            rate_row = next((r for r in budget if r['header'] == header), None)
-    #            if rate_row:
-    #                rate_row[working_month] = 0
+
+def update_tsp(budget, tsp, month, prev_month, cell=None):
+    base_pay_total = get_row_value(budget, "Base Pay", month)
+    specialty_pay_total = sum_rows_via_modal(budget, "specialty", month)
+    incentive_pay_total = sum_rows_via_modal(budget, "incentive", month)
+    bonus_pay_total = sum_rows_via_modal(budget, "bonus", month)
+
+    add_mv_pair(tsp, 'Base Pay Total', month, base_pay_total)
+    add_mv_pair(tsp, 'Specialty Pay Total', month, specialty_pay_total)
+    add_mv_pair(tsp, 'Incentive Pay Total', month, incentive_pay_total)
+    add_mv_pair(tsp, 'Bonus Pay Total', month, bonus_pay_total)
+
+    rate_headers = [
+        "Trad TSP Base Rate", "Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate",
+        "Roth TSP Base Rate", "Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"
+    ]
+    for header in rate_headers:
+        row = next((row for row in tsp if row.get('header') == header), None)
+        prev_value = row.get(prev_month, 0.0)
+        if cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
+            row[month] = cell.get('value')
+        else:
+            row[month] = prev_value
+
+    # Rate zeroing
+    trad_base_row = next((row for row in tsp if row.get('header') == "Trad TSP Base Rate"), None)
+    roth_base_row = next((row for row in tsp if row.get('header') == "Roth TSP Base Rate"), None)
+    trad_base_rate = trad_base_row.get(month, 0.0)
+    roth_base_rate = roth_base_row.get(month, 0.0)
+    if trad_base_rate == 0:
+        for h in ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]:
+            next((row for row in tsp if row.get('header') == h), None)[month] = 0.0
+    if roth_base_rate == 0:
+        for h in ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"]:
+            next((row for row in tsp if row.get('header') == h), None)[month] = 0.0
+
+    combat_zone = get_row_value(budget, "Combat Zone", month)
+
+    tsp_contributions = calc_tsp_contributions(tsp, month, combat_zone, prev_month=prev_month)
+    add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_tsp_contribution'])
+    add_mv_pair(tsp, 'Trad TSP Exempt Contribution', month, tsp_contributions['trad_tsp_exempt_contribution'])
+    add_mv_pair(tsp, 'Roth TSP Contribution', month, tsp_contributions['roth_tsp_contribution'])
+    add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_contribution'])
+    add_mv_pair(tsp, 'Agency Match Contribution', month, tsp_contributions['agency_match_contribution'])
+    add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contributions['tsp_contribution_total'])
+    add_mv_pair(tsp, 'Elective Deferral Remaining', month, tsp_contributions['elective_remaining'])
+    add_mv_pair(tsp, 'Annual Deferral Remaining', month, tsp_contributions['annual_remaining'])
+
+    ytd_trad_prev = get_row_value(tsp, "YTD Trad TSP", prev_month)
+    ytd_trad_exempt_prev = get_row_value(tsp, "YTD Trad TSP Exempt", prev_month)
+    ytd_roth_prev = get_row_value(tsp, "YTD Roth TSP", prev_month)
+    ytd_agency_auto_prev = get_row_value(tsp, "YTD Agency Auto", prev_month)
+    ytd_agency_match_prev = get_row_value(tsp, "YTD Agency Match", prev_month)
+    ytd_tsp_contribution_total = get_row_value(tsp, "YTD TSP Contribution Total", prev_month)
+
+    add_mv_pair(tsp, "YTD Trad TSP", month, tsp_contributions['trad_tsp_contribution'] if month == "JAN" else round(ytd_trad_prev + tsp_contributions['trad_tsp_contribution'], 2))
+    add_mv_pair(tsp, "YTD Trad TSP Exempt", month, tsp_contributions['trad_tsp_exempt_contribution'] if month == "JAN" else round(ytd_trad_exempt_prev + tsp_contributions['trad_tsp_exempt_contribution'], 2))
+    add_mv_pair(tsp, "YTD Roth TSP", month, tsp_contributions['roth_tsp_contribution'] if month == "JAN" else round(ytd_roth_prev + tsp_contributions['roth_tsp_contribution'], 2))
+    add_mv_pair(tsp, "YTD Agency Auto", month, tsp_contributions['agency_auto_contribution'] if month == "JAN" else round(ytd_agency_auto_prev + tsp_contributions['agency_auto_contribution'], 2))
+    add_mv_pair(tsp, "YTD Agency Match", month, tsp_contributions['agency_match_contribution'] if month == "JAN" else round(ytd_agency_match_prev + tsp_contributions['agency_match_contribution'], 2))
+    add_mv_pair(tsp, "YTD TSP Contribution Total", month, tsp_contributions['tsp_contribution_total'] if month == "JAN" else round(ytd_tsp_contribution_total + tsp_contributions['tsp_contribution_total'], 2))
+
+    return tsp

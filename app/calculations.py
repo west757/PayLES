@@ -1,7 +1,7 @@
 from app import flask_app
 
 from app.utils import (
-    get_row,
+    get_row_value,
 )
 
 # =========================
@@ -12,7 +12,7 @@ def calc_income(budget, month):
     taxable = 0.00
     nontaxable = 0.00
 
-    combat_zone = get_row(budget, "Combat Zone").get(month, "No")
+    combat_zone = get_row_value(budget, "Combat Zone", month)
 
     income_rows = [row for row in budget if row.get('sign') == 1]
     for row in income_rows:
@@ -50,7 +50,7 @@ def calc_expenses_net(budget, month):
         if row.get('tax', False):
             taxes += row[month]
 
-    income = get_row(budget, 'Total Income').get(month, 0.00)
+    income = get_row_value(budget, 'Total Income', month)
     net_pay = income + expenses
     expenses = round(expenses, 2)
     taxes = round(taxes, 2)
@@ -59,30 +59,25 @@ def calc_expenses_net(budget, month):
     return taxes, expenses, net_pay
 
 
-def calc_difference(budget, prev_month, month):
-    difference = get_row(budget, "Difference")[month] - get_row(budget, "Difference")[prev_month]
+def calc_difference(budget, month, prev_month):
+    difference = round(get_row_value(budget, "Net Pay", month) - get_row_value(budget, "Net Pay", prev_month), 2)
     return difference
 
 
-def calc_ytds(budget, prev_month, month):
-    ytd_entitlements = get_row(budget, 'YTD Income').get(month, 0.00)
-    ytd_deductions = get_row(budget, 'YTD Expenses').get(month, 0.00)
-    ytd_net_pay = get_row(budget, 'YTD Net Pay').get(month, 0.00)
+def calc_ytds(budget, month, prev_month=None):
+    ytd_income = get_row_value(budget, 'YTD Income', prev_month) if prev_month else 0
+    ytd_expenses = get_row_value(budget, 'YTD Expenses', prev_month) if prev_month else 0
+    ytd_net_pay = get_row_value(budget, 'YTD Net Pay', prev_month) if prev_month else 0
 
-    income = get_row(budget, 'Total Income').get(month, 0.00)
-    expenses = get_row(budget, 'Total Expenses').get(month, 0.00)
-    net_pay = get_row(budget, 'Net Pay').get(month, 0.00)
+    income = get_row_value(budget, 'Total Income', month)
+    expenses = get_row_value(budget, 'Total Expenses', month)
+    net_pay = get_row_value(budget, 'Net Pay', month)
 
-    if month == "JAN":
-        if ytd_entitlements: ytd_entitlements[month] = income
-        if ytd_deductions: ytd_deductions[month] = expenses
-        if ytd_net_pay: ytd_net_pay[month] = net_pay
-    else:
-        if ytd_entitlements: ytd_entitlements[month] = round(ytd_entitlements[prev_month] + income, 2)
-        if ytd_deductions: ytd_deductions[month] = round(ytd_deductions[prev_month] + expenses, 2)
-        if ytd_net_pay: ytd_net_pay[month] = round(ytd_net_pay[prev_month] + net_pay, 2)
+    ytd_income = income if month == "JAN" else round(ytd_income + income, 2)
+    ytd_expenses = expenses if month == "JAN" else round(ytd_expenses + expenses, 2)
+    ytd_net_pay = net_pay if month == "JAN" else round(ytd_net_pay + net_pay, 2)
 
-    return budget
+    return ytd_income, ytd_expenses, ytd_net_pay
 
 
 
@@ -280,13 +275,13 @@ def calc_state_taxes(budget, month):
 
 
 def calc_conus_cola(budget, month):
-    return budget
+    return 0.0
 
 def calc_oconus_cola(budget, month):
-    return budget
+    return 0.0
 
 def calc_oha(budget, month):
-    return budget
+    return 0.0
 
 def calc_miha_m(budget, month):
-    return budget
+    return 0.0
