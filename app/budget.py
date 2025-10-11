@@ -9,6 +9,7 @@ from app.utils import (
     add_row,
     add_mv_pair,
     get_row,
+    get_row_value,
     set_variable_longs,
     get_military_housing_area,
     get_home_of_record,
@@ -339,100 +340,69 @@ def add_months(budget, tsp, latest_month, months_num, init=False):
     latest_month_idx = MONTHS_SHORT.index(latest_month)
 
     for i in range(months_num_to_add):
-        working_month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
-        budget, tsp = build_month(budget, tsp, months[-1], working_month, init=init)
-        months.append(working_month)
+        month = MONTHS_SHORT[(latest_month_idx + 1 + i) % 12]
+        budget, tsp = build_month(budget, tsp, month, months[-1], init=init)
+        months.append(month)
 
     return budget, tsp, months
 
 
-def update_months(budget, tsp, months, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False):
-    if cell_header is None:
-        start_idx = 1
+def update_months(budget, tsp, months, cell=None):
+    # if cell is provided, start from that month and update from there
+    # else, start from the second month to update entire table
+    if cell:
+        start_idx = months.index(cell.get('month'))
     else:
-        start_idx = months.index(cell_month)
+        start_idx = 1
 
     for i in range(start_idx, len(months)):
-        prev_month = months[i - 1]
-        working_month = months[i]
-        budget, tsp = build_month(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+        budget, tsp = build_month(budget, tsp, months[i], months[i-1], cell)
 
     return budget, tsp
 
 
-def build_month(budget, tsp, prev_month, working_month, cell_header=None, cell_month=None, cell_value=None, cell_repeat=False, init=False):
-    update_var(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
-    update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    #update_tsp(budget, tsp, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat)
+def build_month(budget, tsp, month, prev_month, cell=None, init=False):
+    update_variables(budget, month, prev_month, cell)
+    set_variable_longs(budget, month)
+    update_ent_rows(budget, prev_month, month, cell, init)
+    #update_tsp(budget, tsp, prev_month, month, cell_header, cell_month, cell_value, cell_repeat)
 
     trad_tsp_row = next((r for r in budget if r.get('header') == 'Traditional TSP'), None)
     trad_contrib_row = next((r for r in tsp if r.get('header') == 'Trad TSP Contribution'), None)
     trad_exempt_row = next((r for r in tsp if r.get('header') == 'Trad TSP Exempt Contribution'), None)
     roth_tsp_row = next((r for r in budget if r.get('header') == 'Roth TSP'), None)
     roth_contrib_row = next((r for r in tsp if r.get('header') == 'Roth TSP Contribution'), None)
-    trad_tsp_row[working_month] = trad_contrib_row.get(working_month, 0) + trad_exempt_row.get(working_month, 0)
-    roth_tsp_row[working_month] = roth_contrib_row.get(working_month, 0)
+    trad_tsp_row[month] = trad_contrib_row.get(month, 0) + trad_exempt_row.get(month, 0)
+    roth_tsp_row[month] = roth_contrib_row.get(month, 0)
 
-    calc_income(budget, working_month)
-    update_ded_alt_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init)
-    calc_expenses_net(budget, working_month)
-    calc_difference(budget, prev_month, working_month)
-    calc_ytds(budget, prev_month, working_month)
+    calc_income(budget, month)
+    update_ded_alt_rows(budget, prev_month, month, cell, init)
+    calc_expenses_net(budget, month)
+    calc_difference(budget, prev_month, month)
+    calc_ytds(budget, prev_month, month)
     return budget, tsp
 
 
-def update_var(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat):
-    for row in budget:
-        if row.get('type') not in ('v', 't'):
-            continue
-
+def update_variables(budget, month, prev_month, cell=None):
+    variable_rows = [row for row in budget if row.get('type') == 'v']
+    for row in variable_rows:
+        header = row['header']
         prev_value = row.get(prev_month)
 
-        if row['header'] == "Year":
-            row[working_month] = prev_value + 1 if working_month == "JAN" else prev_value
+        if header == "Year":
+            row[month] = prev_value + 1 if month == "JAN" else prev_value
 
-        elif row['header'] == "Months in Service":
-            row[working_month] = prev_value + 1
+        elif header == "Months in Service":
+            row[month] = prev_value + 1
 
-        elif row['header'] == "Military Housing Area":
-            zip_row = next((r for r in budget if r['header'] == "Zip Code"), None)
-            zip_code = zip_row.get(working_month)
-            mha_code, mha_name = get_military_housing_area(zip_code)
-            row[working_month] = mha_code
+        elif header == "Military Housing Area":
+            continue
 
-            mha_long_row = next((r for r in budget if r['header'] == "MHA Long"), None)
-            mha_long_row[working_month] = mha_name
+        elif cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
+            row[month] = cell.get('value')
 
-        elif cell_header is not None and row['header'] == cell_header and (working_month == cell_month or cell_repeat):
-            row[working_month] = cell_value
-
-        elif working_month not in row or pd.isna(row[working_month]) or row[working_month] == '' or (isinstance(row[working_month], (list, tuple)) and len(row[working_month]) == 0):
-            row[working_month] = row[prev_month]
-
-
-        if row['header'] == "Component":
-            component_row = next((r for r in budget if r['header'] == "Component"), None)
-            component_val = component_row.get(working_month)
-            component_long_row = next((r for r in budget if r['header'] == "Component Long"), None)
-            component_long_row[working_month] = flask_app.config['COMPONENTS'][component_val]
-
-        if row['header'] == "Home of Record":
-            longname, abbr = get_home_of_record(row[working_month])
-            home_of_record_long = next((r for r in budget if r['header'] == "Home of Record Long"), None)
-            home_of_record_long[working_month] = longname
-
-    # TSP specialty/incentive/bonus zeroing
-    #tsp_types = [
-    #    ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
-    #    ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
-    #]
-    #for base_header, specialty_headers in tsp_types:
-    #    base_row = next((r for r in budget if r['header'] == base_header), None)
-    #    if base_row and base_row.get(working_month, 0) == 0:
-    #        for header in specialty_headers:
-    #            rate_row = next((r for r in budget if r['header'] == header), None)
-    #            if rate_row:
-    #                rate_row[working_month] = 0
+        else:
+            row[month] = prev_value
 
 
 def update_ent_rows(budget, prev_month, working_month, cell_header, cell_month, cell_value, cell_repeat, init=False):

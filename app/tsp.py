@@ -177,7 +177,7 @@ def init_tsp(tsp_variables, budget, month, les_text=None):
                                   get_row(tsp, "Agency Match Contribution").get(month, 0.0))
         add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contribution_total)
 
-        ytd_tsp_contribution_total = calc_ytd_tsp_contribution_total(tsp, month)
+        ytd_tsp_contribution_total = round(calc_ytd_tsp_contribution_total(tsp, month), 2)
         add_mv_pair(tsp, 'YTD TSP Contribution Total', month, ytd_tsp_contribution_total)
 
         elective_deferral_remaining = flask_app.config['TSP_ELECTIVE_LIMIT'] - get_row(tsp, "YTD Trad TSP").get(month, 0.0) - get_row(tsp, "YTD Roth TSP").get(month, 0.0)
@@ -311,3 +311,15 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
         "annual_remaining": annual_remaining
     }
 
+    # TSP specialty/incentive/bonus zeroing
+    #tsp_types = [
+    #    ("Trad TSP Base Rate", ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]),
+    #    ("Roth TSP Base Rate", ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"])
+    #]
+    #for base_header, specialty_headers in tsp_types:
+    #    base_row = next((r for r in budget if r['header'] == base_header), None)
+    #    if base_row and base_row.get(working_month, 0) == 0:
+    #        for header in specialty_headers:
+    #            rate_row = next((r for r in budget if r['header'] == header), None)
+    #            if rate_row:
+    #                rate_row[working_month] = 0

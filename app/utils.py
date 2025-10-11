@@ -123,6 +123,13 @@ def get_row(table, header):
     return next((row for row in table if row.get('header') == header), None)
 
 
+def get_row_value(table, header, key):
+    row = next((r for r in table if r.get('header') == header), None)
+    if row is not None:
+        return row.get(key)
+    return None
+
+
 def sum_rows_via_modal(budget, modal_str, month):
     total = 0.0
     for row in budget:

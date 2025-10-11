@@ -21,6 +21,7 @@ short-term:
 - display either conus or oconus variables, or both
 - set dependents limit to 5
 - remove editable from pay_template, use trigger instead
+- comparison modal button
 
 mid-term:
 - get combat zone from les

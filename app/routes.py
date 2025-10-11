@@ -108,8 +108,6 @@ def route_single():
         #for row in tsp:
         #    print(row, type(row.get('value')), type(row.get('field')))
 
-        #budget, init_month = init_budget(les_text=les_text)
-        #tsp = init_tsp(budget, init_month, les_text=les_text)
         #budget, tsp, months = add_months(budget, tsp, latest_month=init_month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
         #recommendations = add_recommendations(budget, months)
@@ -268,7 +266,14 @@ def route_update_cell():
     elif cell_field in ('float', float):
         cell_value = round((float(cell_value) * cell_row.get('sign')), 2)
 
-    budget, tsp = update_months(budget, tsp, months, cell_header, cell_month, cell_value, cell_repeat)
+    cell = {
+        "header": cell_header,
+        "month": cell_month,
+        "value": cell_value,
+        "repeat": cell_repeat
+    }
+
+    budget, tsp = update_months(budget, tsp, months, cell=cell)
     
     recommendations = add_recommendations(budget, months)
     session['budget'] = budget

@@ -14,24 +14,24 @@ def calc_income(budget, month):
 
     combat_zone = get_row(budget, "Combat Zone").get(month, "No")
 
-    for row in budget:
-        if row.get('sign') == 1 and month in row:
-            value = row[month]
-            tax = row.get('tax')
+    income_rows = [row for row in budget if row.get('sign') == 1]
+    for row in income_rows:
+        value = row[month]
+        tax = row.get('tax')
 
-            if row.get('type') == 'c':
+        if row.get('type') == 'c':
+            if tax:
+                taxable += value
+            else:
+                nontaxable += value
+        else:
+            if combat_zone == "Yes":
+                nontaxable += value
+            else:
                 if tax:
                     taxable += value
                 else:
                     nontaxable += value
-            else:
-                if combat_zone == "Yes":
-                    nontaxable += value
-                else:
-                    if tax:
-                        taxable += value
-                    else:
-                        nontaxable += value
 
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
@@ -44,12 +44,11 @@ def calc_expenses_net(budget, month):
     taxes = 0.00
     expenses = 0.00
 
-    for row in budget:
-        if month in row:
-            if row.get('sign') == -1:
-                expenses += row[month]
-                if row.get('tax', False):
-                    taxes += row[month]
+    expense_rows = [row for row in budget if row.get('sign') == -1]
+    for row in expense_rows:
+        expenses += row[month]
+        if row.get('tax', False):
+            taxes += row[month]
 
     income = get_row(budget, 'Total Income').get(month, 0.00)
     net_pay = income + expenses
