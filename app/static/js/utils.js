@@ -1,3 +1,9 @@
+// load config data from hidden div into global CONFIG variable
+function getConfigData() {
+    const configData = JSON.parse(document.getElementById('config-data').textContent);
+    window.CONFIG = Object.assign(window.CONFIG || {}, configData);
+}
+
 // confirmation alert to user before changing off budget page
 function budgetUnloadPrompt(e) {
     e.preventDefault();
@@ -97,12 +103,9 @@ function highlightChanges() {
 
 function toggleRows(type) {
     let checkbox, rows;
-    if (type === 'var') {
-        checkbox = document.getElementById('checkbox-var');
-        rows = document.getElementsByClassName('var-row');
-    } else if (type === 'tsp') {
-        checkbox = document.getElementById('checkbox-tsp');
-        rows = document.getElementsByClassName('tsp-row');
+    if (type === 'variables') {
+        checkbox = document.getElementById('checkbox-variables');
+        rows = document.getElementsByClassName('row-variable');
     } else if (type === 'tsp-rates') {
         checkbox = document.getElementById('checkbox-tsp-rates');
         rows = document.getElementsByClassName('row-tsp-rate');

@@ -176,14 +176,18 @@ def set_variable_longs(budget, month):
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
     add_mv_pair(budget, 'Component Long', month, component_long)
 
+    grade = get_row_value(budget, 'Grade', month)
+    rank_long = ""
+    add_mv_pair(budget, 'Grade Long', month, rank_long)
+
     zip_code = get_row_value(budget, 'Zip Code', month)
     mha_code, mha_long = get_military_housing_area(zip_code)
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
-    add_mv_pair(budget, 'MHA Long', month, mha_long)
+    add_mv_pair(budget, 'Military Housing Area Long', month, mha_long)
 
-    locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
-    #get locality code long
-    add_mv_pair(budget, 'Locality Code Long', month, "")
+    oconus_locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
+    oconus_locality_long = ""
+    add_mv_pair(budget, 'OCONUS Locality Code Long', month, oconus_locality_long)
 
     home_of_record = get_row_value(budget, 'Home of Record', month)
     longname, _ = get_home_of_record(home_of_record)

@@ -47,7 +47,7 @@
 
                     {% set row_class = "" %}
                     {% if row.type == 'v' %}
-                        {% set row_class = "var-row" %}
+                        {% set row_class = "row-variable" %}
                     {% endif %}
 
                     {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}

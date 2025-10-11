@@ -4,11 +4,31 @@ let budgetScrollTop = 0;
 let removeRowConfirm = {};
 
 
+document.body.addEventListener('htmx:responseError', function(evt) {
+    const xhr = evt.detail.xhr;
+    const contentType = xhr.getResponseHeader("Content-Type");
+
+    // if JSON, show toast/modal
+    if (contentType && contentType.includes("application/json")) {
+        try {
+            const response = JSON.parse(xhr.responseText);
+            if (response.message) {
+                showToast(response.message); // or showModal(response.message);
+            }
+        } catch (e) {
+            // not a valid JSON, ignore
+        }
+    } else {
+        // HTML error page, swap into body
+        document.body.innerHTML = xhr.responseText;
+    }
+    enableInputs();
+});
+
+
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('home')) {
-        // capture and parse config data
-        const configData = JSON.parse(document.getElementById('config-data').textContent);
-        window.CONFIG = Object.assign(window.CONFIG || {}, configData);
+        getConfigData();
 
         attachDragAndDropListeners();
         attachHomeListeners();
@@ -28,6 +48,8 @@ document.body.addEventListener('htmx:beforeRequest', function(evt) {
 
 // htmx after swap event listener, runs every time the budget is loaded
 document.body.addEventListener('htmx:afterSwap', function(evt) {
+    getConfigData();
+
     //only runs the first time the budget is loaded
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
@@ -35,13 +57,9 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         attachAccountModalListeners();
     }
 
-    // capture and parse config data
-    const configData = JSON.parse(document.getElementById('config-data').textContent);
-    window.CONFIG = Object.assign(window.CONFIG || {}, configData);
-
     highlightChanges();
-    toggleRows('var');
-    toggleRows('tsp');
+    toggleRows('variables');
+    toggleRows('tsp-rates');
     enableInputs();
     disableDrillsButtons();
     disableTSPRateButtons();
@@ -51,28 +69,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (budgetContainer && typeof budgetScrollTop === 'number') {
         budgetContainer.scrollTop = budgetScrollTop;
     }
-});
-
-
-document.body.addEventListener('htmx:responseError', function(evt) {
-    const xhr = evt.detail.xhr;
-    const contentType = xhr.getResponseHeader("Content-Type");
-
-    // If JSON, show toast/modal
-    if (contentType && contentType.includes("application/json")) {
-        try {
-            const response = JSON.parse(xhr.responseText);
-            if (response.message) {
-                showToast(response.message); // or showModal(response.message);
-            }
-        } catch (e) {
-            // not a valid JSON, ignore
-        }
-    } else {
-        // Assume HTML error page, swap into body
-        document.body.innerHTML = xhr.responseText;
-    }
-    enableInputs();
 });
 
 
@@ -93,14 +89,20 @@ document.addEventListener('mousemove', function(e) {
                 const remMonths = months % 12;
                 tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
             } 
+            else if (row === 'Branch' && value) {
+                tooltip = getBudgetValue('Branch Long', month);
+            }
             else if (row === 'Component' && value) {
                 tooltip = getBudgetValue('Component Long', month);
             }
+            else if (row === 'Military Housing Area' && value) {
+                tooltip = getBudgetValue('Military Housing Area Long', month);
+            }
+            else if (row === 'OCONUS Locality Code' && value) {
+                tooltip = getBudgetValue('OCONUS Locality Code Long', month);
+            }
             else if (row === 'Home of Record' && value) {
                 tooltip = getBudgetValue('Home of Record Long', month);
-            }
-            else if (row === 'Military Housing Area' && value) {
-                tooltip = getBudgetValue('MHA Long', month);
             }
 
             if (tooltip) showTooltip(e, tooltip);

@@ -26,6 +26,7 @@ YTD Expenses,y,0,float,False,False,none,Total expenses from the beginning of the
 YTD Net Pay,y,0,float,False,False,none,Total net pay from the beginning of the year
 Branch Long,m,0,none,False,False,none,none
 Component Long,m,0,none,False,False,none,none
-MHA Long,m,0,none,False,False,none,none
-Locality Code Long,m,0,none,False,False,none,none
+Rank Long,m,0,none,False,False,none,none
+Military Housing Area Long,m,0,none,False,False,none,none
+OCONUS Locality Code Long,m,0,none,False,False,none,none
 Home of Record Long,m,0,none,False,False,none,none

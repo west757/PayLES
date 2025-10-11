@@ -31,6 +31,8 @@ mid-term:
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN
 - page with official calculators
+- adjustable table size
+- adjustable les size
 
 long-term:
 - leave calculator

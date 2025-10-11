@@ -915,7 +915,7 @@ hr {
     border-bottom: 0.4rem solid var(--table_border_color) !important;
 }
 
-.var-row, .tsp-row, .row-tsp-rate {
+.row-variable, .row-tsp-rate {
     display: none;
 }
 
