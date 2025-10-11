@@ -58,10 +58,10 @@ trad_tsp_base_rate,380,1280,610,1335,int
 trad_tsp_specialty_rate,932,1280,1157,1335,int
 trad_tsp_incentive_rate,1470,1280,1650,1335,int
 trad_tsp_bonus_rate,1937,1280,2158,1335,int
-roth_tsp_base_rate,1934,1380,2164,1435,int
-roth_tsp_specialty_rate,383,1380,608,1435,int
-roth_tsp_incentive_rate,932,1380,1157,1435,int
-roth_tsp_bonus_rate,1460,1380,1656,1435,int
+roth_tsp_base_rate,380,1380,610,1435,int
+roth_tsp_specialty_rate,932,1380,1157,1435,int
+roth_tsp_incentive_rate,1470,1380,1650,1435,int
+roth_tsp_bonus_rate,1937,1380,2158,1435,int
 tsp_deductions_ytd,425,1478,658,1535,float
 trad_tsp_ytd,747,1478,977,1535,float
 trad_tsp_exempt_ytd,1059,1478,1289,1535,float

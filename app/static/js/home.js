@@ -40,58 +40,11 @@ function attachHomeListeners() {
         });
     });
 
-    buildInitialsInputs();
-
-    // After initialsYM and initialsMonthsInService are created
-    const selectYear = document.getElementById('initials-years-id');
-    const selectMonth = document.getElementById('initials-months-id');
-    const inputMIS = document.getElementById('initials-months-in-service-id');
-
-    function calculateMonthsInService(year, monthShort) {
-        const now = new Date();
-        const startYear = parseInt(year, 10);
-        const startMonthIdx = window.CONFIG.MONTHS_SHORT.indexOf(monthShort);
-        const months = (now.getFullYear() - startYear) * 12 + (now.getMonth() - startMonthIdx);
-        return Math.max(months, 0);
-    }
-
-    function calculateYearMonthFromMIS(mis) {
-        const now = new Date();
-        let totalMonths = parseInt(mis, 10);
-        if (isNaN(totalMonths) || totalMonths < 0) totalMonths = 0;
-        let year = now.getFullYear();
-        let monthIdx = now.getMonth();
-        year -= Math.floor(totalMonths / 12);
-        monthIdx -= (totalMonths % 12);
-        if (monthIdx < 0) {
-            year -= 1;
-            monthIdx += 12;
-        }
-        return { year, monthShort: window.CONFIG.MONTHS_SHORT[monthIdx] };
-    }
-
-    // When year/month changes, update MIS
-    if (selectYear && selectMonth && inputMIS) {
-        selectYear.addEventListener('change', function() {
-            inputMIS.value = calculateMonthsInService(selectYear.value, selectMonth.value);
-        });
-        selectMonth.addEventListener('change', function() {
-            inputMIS.value = calculateMonthsInService(selectYear.value, selectMonth.value);
-        });
-
-        // When MIS changes, update year/month
-        inputMIS.addEventListener('input', function() {
-            const { year, monthShort } = calculateYearMonthFromMIS(inputMIS.value);
-            selectYear.value = year;
-            selectMonth.value = monthShort;
-        });
-    }
+    //buildInitialsInputs();
 
 
-
-
-    const buttonInitials = document.getElementById('button-initials');
-    buttonInitials.addEventListener('click', submitInitials);
+    //const buttonInitials = document.getElementById('button-initials');
+    //buttonInitials.addEventListener('click', submitInitials);
 
     // disable inputs on any home form submit
     document.querySelectorAll('#form-single, #form-joint, #form-initials, #form-example').forEach(form => {

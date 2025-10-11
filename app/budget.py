@@ -220,7 +220,7 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         budget = add_ytds(budget, month, les_text)
     else:
         budget = add_variables(budget, month, les_variables)
-        budget = add_pays(budget, month, les_variables, sign=1)
+        budget = add_pays(budget, month, sign=1)
 
         taxable, nontaxable, income = calc_income(budget, month)
         add_mv_pair(budget, 'Taxable Income', month, taxable)
@@ -228,7 +228,7 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         add_mv_pair(budget, 'Total Income', month, income)
 
         tsp = init_tsp(tsp_variables, budget, month)
-        budget = add_pays(budget, month, les_variables, sign=-1)
+        budget = add_pays(budget, month, sign=-1)
 
         taxes, expenses, net_pay = calc_expenses_net(budget, month)
         add_mv_pair(budget, 'Taxes', month, taxes)
@@ -287,7 +287,7 @@ def add_les_pay(budget, month, les_text):
     return budget
 
 
-def add_pays(budget, month, variables, sign):
+def add_pays(budget, month, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 

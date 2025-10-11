@@ -28,13 +28,13 @@ def get_error_context(exc, custom_message=""):
 def load_json(path):
     try:
         with open(path, encoding='utf-8') as f:
-            return json.load(f), ""
+            return json.load(f)
     except FileNotFoundError as e:
-        return {}, f"JSON file not found: {path}"
+        raise Exception(f"JSON file not found: {path}")
     except json.JSONDecodeError as e:
-        return {}, f"Invalid JSON format in {path}: {e}"
+        raise Exception(f"Invalid JSON format in {path}: {e}")
     except Exception as e:
-        return {}, f"Error loading JSON from {path}: {e}"
+        raise Exception(f"Error loading JSON from {path}: {e}")
 
 
 def convert_numpy_types(obj):

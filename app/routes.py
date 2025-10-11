@@ -100,12 +100,11 @@ def route_single():
         budget_les, tsp_les = init_budget(les_variables, tsp_variables, month, les_text=les_text)
         budget_les, tsp_les, months = add_months(budget_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-        for row in budget_les:
-            print(row)
-
-        print("-------------------")
-        for row in tsp_les:
-            print(row)
+        #for row in budget_les:
+        #    print(row)
+        #print("-------------------")
+        #for row in tsp_les:
+        #    print(row)
 
         #budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, month)
 
@@ -138,7 +137,7 @@ def route_single():
             'les_image': les_image,
             'les_rect_overlay': les_rect_overlay,
             'show_guide_buttons': show_guide_buttons,
-            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'REMARKS': load_json(flask_app.config['REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
         return render_template('settings.html', **context)
@@ -205,7 +204,7 @@ def route_joint():
             'headers': headers,
             'les_image': les_image1,
             'les_rect_overlay': les_rect_overlay,
-            'LES_REMARKS': load_json(flask_app.config['LES_REMARKS_JSON']),
+            'REMARKS': load_json(flask_app.config['REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
         return render_template('settings.html', **context)

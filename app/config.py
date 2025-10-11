@@ -270,7 +270,7 @@ class Config:
     )
 
     FAQ_JSON = JSON_FOLDER / "faq.json"
-    LES_REMARKS_JSON = JSON_FOLDER / "les_remarks.json"
+    REMARKS_JSON = JSON_FOLDER / "remarks.json"
     MODALS_JSON = JSON_FOLDER / "modals.json"
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
