@@ -29,6 +29,8 @@ class Config:
     
 
     #constants 
+    MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     DEFAULT_MONTHS_NUM = 6
     MAX_ROWS = 99
     LES_IMAGE_SCALE = 0.42
@@ -50,9 +52,6 @@ class Config:
         4: 3.5,
         5: 4.0,
     }
-
-    MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
     BRANCHES = {
         "USA": "United States Army",

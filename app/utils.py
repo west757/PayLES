@@ -30,11 +30,11 @@ def load_json(path):
         with open(path, encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError as e:
-        raise Exception(f"JSON file not found: {path}")
+        raise Exception(get_error_context(e, f"JSON file not found: {path}"))
     except json.JSONDecodeError as e:
-        raise Exception(f"Invalid JSON format in {path}: {e}")
+        raise Exception(get_error_context(e, f"Invalid JSON format in {path}: {e}"))
     except Exception as e:
-        raise Exception(f"Error loading JSON from {path}: {e}")
+        raise Exception(get_error_context(e, f"Error loading JSON from {path}: {e}"))
 
 
 def convert_numpy_types(obj):
@@ -119,10 +119,6 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
-def get_row(table, header):
-    return next((row for row in table if row.get('header') == header), None)
-
-
 def get_row_value(table, header, key):
     row = next((r for r in table if r.get('header') == header), None)
     if row is not None:
@@ -172,24 +168,24 @@ def parse_pay_string(pay_string, pay_template):
 
 
 def set_variable_longs(budget, month):
-    branch = get_row(budget, 'Branch').get(month)
+    branch = get_row_value(budget, 'Branch', month)
     branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
     add_mv_pair(budget, 'Branch Long', month, branch_long)
 
-    component = get_row(budget, 'Component').get(month)
+    component = get_row_value(budget, 'Component', month)
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
     add_mv_pair(budget, 'Component Long', month, component_long)
 
-    zip_code = get_row(budget, 'Zip Code').get(month)
+    zip_code = get_row_value(budget, 'Zip Code', month)
     mha_code, mha_long = get_military_housing_area(zip_code)
     add_mv_pair(budget, 'Military Housing Area', month, mha_code)
     add_mv_pair(budget, 'MHA Long', month, mha_long)
 
-    locality_code = get_row(budget, 'OCONUS Locality Code').get(month)
+    locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
     #get locality code long
     add_mv_pair(budget, 'Locality Code Long', month, "")
 
-    home_of_record = get_row(budget, 'Home of Record').get(month)
+    home_of_record = get_row_value(budget, 'Home of Record', month)
     longname, _ = get_home_of_record(home_of_record)
     add_mv_pair(budget, 'Home of Record Long', month, longname)
 

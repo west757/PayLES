@@ -11,16 +11,12 @@ short-term:
 - make tsp account for tsp table
 - change account to just be bank account
 - tsp input restrictions
-- tsp input zeroing
 - rename settings.html and budget.html
 - compare LES with recommendations
 - rename initials to manuals
 - make year a metadata row
 - oconus calculations
-- only add required rows when needed
-- display either conus or oconus variables, or both
 - set dependents limit to 5
-- remove editable from pay_template, use trigger instead
 - comparison modal button
 
 mid-term:
@@ -38,6 +34,7 @@ mid-term:
 
 long-term:
 - leave calculator
+- tdy cost calculator
 - set initial value for template rows
 - update readme
 - add comments to code
