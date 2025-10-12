@@ -228,7 +228,10 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         add_mv_pair(budget, 'Total Income', month, income)
 
         tsp = init_tsp(tsp_variables, budget, month)
+
         budget = add_pays(budget, month, sign=-1)
+        add_mv_pair(budget, 'Traditional TSP', month, get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))
+        add_mv_pair(budget, 'Roth TSP', month, get_row_value(tsp, 'Roth TSP Contribution', month))
 
         taxes, expenses, net_pay = calc_expenses_net(budget, month)
         add_mv_pair(budget, 'Taxes', month, taxes)
@@ -305,6 +308,10 @@ def add_pays(budget, month, sign):
                 
                 add_row("budget", budget, header, template=PAY_TEMPLATE)
                 add_mv_pair(budget, header, month, value)
+
+    if sign == -1:
+        add_row("budget", budget, 'Traditional TSP', template=PAY_TEMPLATE)
+        add_row("budget", budget, 'Roth TSP', template=PAY_TEMPLATE)
 
     return budget
 

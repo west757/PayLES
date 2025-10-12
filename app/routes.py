@@ -33,6 +33,7 @@ from app.utils import (
     get_row_value,
     get_headers,
     get_months,
+    compare_budget,
     add_recommendations,
 )
 
@@ -98,16 +99,20 @@ def route_single():
 
         month, les_variables = get_les_variables(les_text)
         tsp_variables = get_tsp_variables(les_text)
+
         budget_les, tsp_les = init_budget(les_variables, tsp_variables, month, les_text=les_text)
+        budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, month)
+        discrepancies = compare_budget(budget_les, budget_calc, month)
+
         budget_les, tsp_les, months = add_months(budget_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-        #for row in budget_les:
+
+
+        #for row in budget_calc:
         #    print(row)
         #print("-------------------")
-        #for row in tsp_les:
+        #for row in tsp_calc:
         #    print(row)
-
-        #budget_calc, tsp_calc = init_budget(les_variables, tsp_variables, month)
 
         budget = budget_les
         tsp = tsp_les
@@ -134,6 +139,7 @@ def route_single():
             'tsp': tsp,
             'months': months,
             'headers': headers,
+            'discrepancies': discrepancies,
             'les_image': les_image,
             'les_rect_overlay': les_rect_overlay,
             'show_guide_buttons': show_guide_buttons,

@@ -275,7 +275,7 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-instructions, #button-inject, #button-account-bank, #button-recs, #button-tsp, #button-account-tsp, #button-tsp-analysis {
+#button-instructions, #button-inject, #button-account-bank, #button-recs, #button-verification, #button-tsp, #button-account-tsp, #button-tsp-analysis {
     width: 11rem;
 }
 
@@ -533,7 +533,7 @@ input[type=file] {
     margin-left: 0.5em;
 }
 
-#badge-recs {
+.badge {
     align-items: center;
     background: var(--primary_red_color);
     border-radius: 50%;

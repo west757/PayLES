@@ -173,36 +173,36 @@ document.addEventListener('click', function(e) {
         enterEditMode(e.target, header, month, value, fieldType);
     }
 
-    // open instructions modal
-    if (e.target && e.target.id === 'button-instructions') {
-        const instructionsModalCheckbox = document.getElementById('instructions');
-        instructionsModalCheckbox.checked = true;
+    // open guide modal
+    if (e.target && e.target.id === 'button-guide') {
+        const guideModalCheckbox = document.getElementById('modal-guide');
+        guideModalCheckbox.checked = true;
     }
 
     // open inject modal
     if (e.target && e.target.id === 'button-inject') {
-        const injectModalCheckbox = document.getElementById('inject');
+        const injectModalCheckbox = document.getElementById('modal-inject');
         injectModalCheckbox.checked = true;
         resetInjectModal();
     }
 
     // open account modal
     if (e.target && e.target.id === 'button-account') {
-        const accountModalCheckbox = document.getElementById('account');
+        const accountModalCheckbox = document.getElementById('modal-account');
         accountModalCheckbox.checked = true;
         resetAccountModal();
     }
 
-    // open tsp calculator modal
-    if (e.target && e.target.id === 'button-tsp') {
-        const tspModalCheckbox = document.getElementById('tsp_calc');
-        tspModalCheckbox.checked = true;
-    }
-
     // open recommendation modal
     if (e.target && e.target.id === 'button-recs') {
-        const recsModalCheckbox = document.getElementById('recs');
+        const recsModalCheckbox = document.getElementById('modal-recs');
         recsModalCheckbox.checked = true;
+    }
+
+    // open pay verification modal
+    if (e.target && e.target.id === 'button-verification') {
+        const verificationModalCheckbox = document.getElementById('modal-verification');
+        verificationModalCheckbox.checked = true;
     }
 
     // export button

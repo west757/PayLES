@@ -241,6 +241,25 @@ def get_home_of_record(home_of_record):
         return home_of_record, row.iloc[0]['abbr']
 
 
+def compare_budget(budget_les, budget_calc, month):
+    calc_lookup = {row['header']: row for row in budget_calc if row.get('type') in ('e', 'd')}
+    discrepancies = []
+
+    for row in budget_les:
+        if row.get('type') in ('e', 'd') and row['header'] in calc_lookup:
+            les_value = row.get(month)
+            calc_value = calc_lookup[row['header']].get(month)
+
+            if les_value != calc_value:
+                discrepancies.append({
+                    'header': row['header'],
+                    'les_value': les_value,
+                    'calc_value': calc_value
+                })
+
+    return discrepancies
+
+
 def add_recommendations(budget, months):
     recs = {}
 

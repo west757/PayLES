@@ -13,7 +13,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- show budget guide -->
                         {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
@@ -22,8 +21,6 @@
                             </tr>
                         {% endif %}
 
-
-                        <!-- months display-->
                         <tr>
                             <td>
                                 <label for="months-num-dropdown">Months Displayed:</label>
@@ -35,8 +32,6 @@
                             </td>
                         </tr>
 
-
-                        <!-- highlight changes -->
                         <tr>
                             <td>
                                 <div class="checkbox-row">
@@ -46,8 +41,6 @@
                             </td>
                         </tr>
 
-                        
-                        <!-- show all variables -->
                         <tr>
                             <td>
                                 <div class="checkbox-row">
@@ -57,46 +50,38 @@
                             </td>
                         </tr>
 
-
-                        <!-- add inject row -->
                         <tr>
                             <td>
                                 <button id="button-inject" class="button-solo">Add Custom Row</button>
                             </td>
                         </tr>
 
-
-                        <!-- add bank account -->
                         <tr>
                             <td>
                                 <button id="button-account-bank" class="button-solo">Add Bank Account</button>
                             </td>
                         </tr>
 
+                        
+                        <tr>
+                            <td>
+                                <button id="button-verification" class="button-solo">
+                                    Pay Verification
+                                    <span class="badge" id="badge-verification"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        
 
-                        <!-- LES recommendations -->
                         <tr class="section-break">
                             <td>
                                 <button id="button-recs" class="button-solo">
                                     Recommendations
-                                    <span id="badge-recs"></span>
+                                    <span class="badge" id="badge-recs"></span>
                                 </button>
                             </td>
                         </tr>
 
-
-                        <!-- LES recommendations -->
-                        <tr class="section-break">
-                            <td>
-                                <button id="button-verification" class="button-solo">
-                                    Pay Verification
-                                    <span id="badge-verification"></span>
-                                </button>
-                            </td>
-                        </tr>
-
-
-                        <!-- export-->
                         <tr>
                             <td>
                                 <div class="export-row">
@@ -122,7 +107,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- show tsp guide -->
                         {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
@@ -131,8 +115,6 @@
                             </tr>
                         {% endif %}
 
-
-                        <!-- highlight changes -->
                         <tr>
                             <td>
                                 <div class="checkbox-row">
@@ -142,8 +124,6 @@
                             </td>
                         </tr>
 
-                        
-                        <!-- show TSP rates -->
                         <tr>
                             <td>
                                 <div class="checkbox-row">
@@ -153,23 +133,18 @@
                             </td>
                         </tr>
 
-
-                        <!-- add tsp account -->
                         <tr>
                             <td>
                                 <button id="button-account-tsp" class="button-solo">Add TSP Account</button>
                             </td>
                         </tr>
 
-                        <!-- TSP analysis -->
                         <tr class="section-break">
                             <td>
                                 <button id="button-tsp-analysis" class="button-solo">TSP Analysis</button>
                             </td>
                         </tr>
 
-
-                        <!-- export-->
                         <tr>
                             <td>
                                 <div class="export-row">
@@ -504,6 +479,40 @@
             <button class="modal-close" type="button">✖</button>
             <h2>Budget Recommendations</h2>
             <div id="rec-content"></div>
+        </div>
+    </div>
+
+
+    <!-- pay verification modal (discrepancies) -->
+    <input id="modal-verification" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="modal-verification"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Pay Verification</h2>
+            <p>This table shows discrepancies between the LES and calculated values.</p>
+            {% if discrepancies and discrepancies|length > 0 %}
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Header</th>
+                            <th>LES Value</th>
+                            <th>Calculated Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in discrepancies %}
+                            <tr>
+                                <td>{{ row.header }}</td>
+                                <td>{{ row.les_value }}</td>
+                                <td>{{ row.calc_value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No discrepancies found between LES and calculated values.</p>
+            {% endif %}
         </div>
     </div>
 
