@@ -57,7 +57,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
         attachAccountModalListeners();
     }
 
-    highlightChanges();
+    highlightChanges('budget');
+    highlightChanges('tsp');
     toggleRows('variables');
     toggleRows('tsp-rates');
     enableInputs();
@@ -203,7 +204,7 @@ document.addEventListener('click', function(e) {
             removeRowConfirm[header] = false;
             hideTooltip();
             htmx.ajax('POST', '/route_remove_row', {
-                target: '#budget',
+                target: '#tables',
                 swap: 'innerHTML',
                 values: { header: header }
             });

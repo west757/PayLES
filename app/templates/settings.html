@@ -1,537 +1,157 @@
-<div id="content" hx-swap-oob="true">
-    <div id="tables-settings">
-        <div id="budget">
-            {% include 'budget.html' %}
-        </div>
-
-        <div id="settings">
-            <div id="settings-budget">
-                <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Settings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if show_guide_buttons %}
-                            <tr class="section-break">
-                                <td>
-                                    <button id="button-guide-budget" class="button-solo">Guide</button>
-                                </td>
-                            </tr>
-                        {% endif %}
-
-                        <tr>
-                            <td>
-                                <label for="months-num-dropdown">Months Displayed:</label>
-                                <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
-                                    {% for i in range(2, 13) %}
-                                        <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="checkbox-row">
-                                    <label for="checkbox-highlight-budget">Highlight Changes:</label>
-                                    <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="checkbox-row">
-                                    <label for="checkbox-variables">Show All Variables:</label>
-                                    <input id="checkbox-variables" class="checkbox-styled" type="checkbox">
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <button id="button-inject" class="button-solo">Add Custom Row</button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <button id="button-account-bank" class="button-solo">Add Bank Account</button>
-                            </td>
-                        </tr>
-
-                        {% if discrepancies and discrepancies|length > 0 %}
-                            <tr>
-                                <td>
-                                    <button id="button-verification" class="button-solo">
-                                        Pay Verification
-                                        <span class="badge" id="badge-verification"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
-
-                        <tr class="section-break">
-                            <td>
-                                <button id="button-recommendations" class="button-solo">
-                                    Recommendations
-                                    <span class="badge" id="badge-recommendations"></span>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="export-row">
-                                    <span>Export as:</span>
-                                    <select>
-                                        <option value="xlsx">Excel</option>
-                                        <option value="csv">CSV</option>
-                                    </select>
-                                    <button id="button-export-budget" class="button-solo" title="Download">↯</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
-            <div id="settings-tsp">
-                <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Settings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if show_guide_buttons %}
-                            <tr class="section-break">
-                                <td>
-                                    <button id="button-guide-tsp" class="button-solo">Guide</button>
-                                </td>
-                            </tr>
-                        {% endif %}
-
-                        <tr>
-                            <td>
-                                <div class="checkbox-row">
-                                    <label for="checkbox-highlight-tsp">Highlight Changes:</label>
-                                    <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="checkbox-row">
-                                    <label for="checkbox-tsp-rates">Show TSP Rates:</label>
-                                    <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <button id="button-account-tsp" class="button-solo">Add TSP Account</button>
-                            </td>
-                        </tr>
-
-                        <tr class="section-break">
-                            <td>
-                                <button id="button-tsp-analysis" class="button-solo">TSP Analysis</button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="export-row">
-                                    <span>Export as:</span>
-                                    <select>
-                                        <option value="xlsx">Excel</option>
-                                        <option value="csv">CSV</option>
-                                    </select>
-                                    <button id="button-export-tsp" class="button-solo" title="Download">↯</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- render LES image -->
-    {% if les_image is defined and les_image %}
-        <div id="les-image">
-            <img src="data:image/png;base64,{{ les_image }}" alt="LES image unable to be generated" />
-
-            {% for rect in les_rect_overlay %}
-            <button
-                type="button"
-                {% if rect.modal != "none" %}
-                    class="rect-highlight tooltip modal-button{% if rect.modal != 'none' %} clickable {% endif %}"
-                    data-modal="{{ rect.modal }}"
-                {% else %}
-                    class="rect-highlight tooltip"
-                {% endif %}
-                style="
-                    left: {{ rect.x1 }}px;
-                    top: {{ rect.y1 }}px;
-                    width: {{ rect.x2 - rect.x1 }}px;
-                    height: {{ rect.y2 - rect.y1 }}px;"
-                data-tooltip="{{ rect.tooltip }}">
-            </button>
-            {% endfor %}
-        </div>
-
-
-        <!-- LES remarks -->
-        <div id="remarks-container">
-            <h2>Common LES Remarks</h2>
-            <div id="remarks">
-                {% for remark in REMARKS %}
-                    <div class="remark">
-                        {{ remark.text|safe }}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-
-
-    <!-- modals -->
-    {% for modal in MODALS %}
-        <input id="{{ modal.id }}" class="modal-state" type="checkbox" />
-        <div class="modal">
-            <label class="modal-background" for="{{ modal.id }}"></label>
-            <div class="modal-inner">
-                <button class="modal-close" type="button">✖</button>
-                <h2>{{ modal.title }}</h2>
-                <p>{{ modal.content|safe }}</p>
-
-                {% if modal.id == "sgli" %}
-                    <table class="modal-table">
-                        <tr>
-                            <td>Coverage Amount</td>
-                            <td>Monthly Premium Rate</td>
-                            <td>TSGLI Premium Rate</td>
-                            <td>Total Monthly Deduction</td>
-                        </tr>
-                        {% for row in config['SGLI_RATES'].itertuples() %}
-                        <tr>
-                            <td>{{ row.coverage }}</td>
-                            <td>{{ '${:,.2f}'.format(row.premium) }}</td>
-                            <td>{{ '${:,.2f}'.format(row.tsglipremium) }}</td>
-                            <td>{{ '${:,.2f}'.format(row.total) }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
-
-                <p>More Resources:</p>
-                <ul>
-                    {% for resource in modal.resources %}
-                        <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endfor %}
-
-
-    <!-- budget guide modal -->
-    <input id="modal-guide-budget" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-guide-budget"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>PayLES Budget Guide</h2>
-            <p>This guide provides an overview of the PayLES budget process, including key terms and concepts.</p>
-        </div>
-    </div>
-
-
-    <!-- inject modal-->
-    <input id="modal-inject" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-inject"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Add Custom Entitlement/Deduction/Allotment Row</h2>
-
-            <div class="modal-grid">
-                <div class="modal-grid-column">
-                    <div class="modal-grid-column-section">
-                        <span class="modal-grid-span">Method:</span>
-                        <div class="modal-radio-group">
-                            <label>
-                                <input id="inject-method-template" type="radio" name="row-method" value="template">
-                                Choose From Template
-                            </label>
-                            <label>
-                                <input id="inject-method-custom" type="radio" name="row-method" value="custom">
-                                Create Custom Row
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="inject-template-types" class="modal-grid-column-section">
-                        <span class="modal-grid-span">Row Type:</span>
-                        <div class="modal-radio-group">
-                            <label>
-                                <input id="inject-type-entitlement" type="radio" name="row-type" value="e" >
-                                Entitlement (+$)
-                            </label>
-                            <label>
-                                <input id="inject-type-deduction" type="radio" name="row-type" value="d">
-                                Deduction (-$)
-                            </label>
-                            <label>
-                                <input id="inject-type-allotment" type="radio" name="row-type" value="a">
-                                Allotment (-$)
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="inject-custom-types" class="modal-grid-column-section">
-                        <span class="modal-grid-span">Row Type:</span>
-                        <div class="modal-radio-group">
-                            <label>
-                                <input id="inject-type-income" type="radio" name="row-type" value="e" >
-                                Income (+$)
-                            </label>
-                            <label>
-                                <input id="inject-type-expense" type="radio" name="row-type" value="d">
-                                Expense (-$)
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="inject-template-custom" class="modal-grid-column">
-                    <div id="inject-template" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="inject-template-select">Row Header:</label>
-                            <select id="inject-template-select" class="input-long"></select>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="inject-template-value">Initial Value:</label>
-                            <div id="inject-template-value"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="inject-template-button" class="button-solo">Add Row</button>
-                        </div>
-                    </div>
-
-                    <div id="inject-custom" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="inject-custom-header">Row Header:</label>
-                            <div id="inject-custom-header"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="inject-custom-value">Initial Value:</label>
-                            <div id="inject-custom-value"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="inject-custom-tax">Tax:</label>
-                            <input id="inject-custom-tax" class="checkbox-styled" type="checkbox">
-                            <span class="question tooltip" data-tooltip=
-                            "Indicates if the row is used for tax purposes. 
-                            If an entitlement, sets whether taxable or non-taxable income. 
-                            If a deduction, sets as a tax added to total taxes.">
-                            ?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="inject-custom-button" class="button-solo">Add Row</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="inject-info" class="modal-grid-column"></div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- bank account modal-->
-    <input id="modal-account-bank" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-account-bank"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Add Custom Account Row</h2>
-
-            <div id="account-modal-content" class="modal-grid">
-                <div class="modal-grid-column-section">
-                    <span class="modal-grid-span">Account:</span>
-                    <div class="modal-radio-group">
-                        <label>
-                            <input id="account-method-tsp" type="radio" name="row-method" value="tsp">
-                            TSP
-                        </label>
-                        <label>
-                            <input id="account-method-bank" type="radio" name="row-method" value="bank">
-                            Bank
-                        </label>
-                        <label>
-                            <input id="account-method-special" type="radio" name="row-method" value="special">
-                            Custom
-                        </label>
-                    </div>
-                </div>
-
-                <div id="account-tsp-bank-custom" class="modal-grid-column">
-                    <div id="account-tsp" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-header">Row Header:</label>
-                            <div id="account-tsp-header"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-value">Initial Value:</label>
-                            <div id="account-tsp-value"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
-                            <div id="account-tsp-interest"></div>
-                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="account-tsp-button" class="button-solo">Add Account</button>
-                        </div>
-                    </div>
-
-                    <div id="account-bank" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-bank-header">Row Header:</label>
-                            <div id="account-bank-header"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-bank-value">Initial Value:</label>
-                            <div id="account-bank-value"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-bank-percent">% of Net Pay:</label>
-                            <div id="account-bank-percent"></div>
-                            <span class="question tooltip" data-tooltip="Percent of Net Pay to allocate towards this bank account.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-bank-interest">Interest Rate:</label>
-                            <div id="account-bank-interest"></div>
-                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="account-bank-button" class="button-solo">Add Account</button>
-                        </div>
-                    </div>
-
-                    <div id="account-special" class="modal-grid-column-stack">
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-special-header">Row Header:</label>
-                            <div id="account-special-header"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-special-value">Initial Value:</label>
-                            <div id="account-special-value"></div>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-special-percent">% of Row:</label>
-                            <div id="account-special-percent"></div>
-                            <span class="question tooltip" data-tooltip="Percent of selected row to allocate towards this bank account.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <label class="styled-label" for="account-special-interest">Interest Rate:</label>
-                            <div id="account-special-interest"></div>
-                            <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
-                        </div>
-                        <div class="modal-grid-column-row">
-                            <button id="account-special-button" class="button-solo">Add Account</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="account-info" class="modal-grid-column">filler</div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- pay verification modal (discrepancies) -->
-    <input id="modal-verification" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-verification"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Pay Verification</h2>
-            {% if discrepancies and discrepancies|length > 0 %}
-                <p>This table shows discrepancies between the LES and calculated values.</p>
-                <table class="modal-table">
-                    <tr>
-                        <td>Header</td>
-                        <td>Value from LES</td>
-                        <td>Calculated Value</td>
+<div id="settings">
+    <div id="settings-budget">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if show_guide_buttons %}
+                    <tr class="section-break">
+                        <td>
+                            <button id="button-guide-budget" class="button-solo">Guide</button>
+                        </td>
                     </tr>
-                    {% for row in discrepancies %}
-                        <tr>
-                            <td>{{ row.header }}</td>
-                            <td>{{ row.les_value }}</td>
-                            <td>{{ row.calc_value }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <p>No discrepancies found between LES and calculated values.</p>
-            {% endif %}
-        </div>
+                {% endif %}
+
+                <tr>
+                    <td>
+                        <label for="months-num-dropdown">Months Displayed:</label>
+                        <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
+                            {% for i in range(2, 13) %}
+                                <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="checkbox-row">
+                            <label for="checkbox-highlight-budget">Highlight Changes:</label>
+                            <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="checkbox-row">
+                            <label for="checkbox-variables">Show All Variables:</label>
+                            <input id="checkbox-variables" class="checkbox-styled" type="checkbox">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button id="button-inject" class="button-solo">Add Custom Row</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button id="button-account-bank" class="button-solo">Add Bank Account</button>
+                    </td>
+                </tr>
+
+                {% if discrepancies and discrepancies|length > 0 %}
+                    <tr>
+                        <td>
+                            <button id="button-verification" class="button-solo">
+                                Pay Verification
+                                <span class="badge" id="badge-verification"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                <tr class="section-break">
+                    <td>
+                        <button id="button-recommendations" class="button-solo">
+                            Recommendations
+                            <span class="badge" id="badge-recommendations"></span>
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="export-row">
+                            <span>Export as:</span>
+                            <select>
+                                <option value="xlsx">Excel</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                            <button id="button-export-budget" class="button-solo" title="Download">↯</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 
-    <!-- recommendations modal -->
-    <input id="modal-recs" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-recs"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Budget Recommendations</h2>
-            <div id="rec-content"></div>
-        </div>
+    <div id="settings-tsp">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if show_guide_buttons %}
+                    <tr class="section-break">
+                        <td>
+                            <button id="button-guide-tsp" class="button-solo">Guide</button>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                <tr>
+                    <td>
+                        <div class="checkbox-row">
+                            <label for="checkbox-highlight-tsp">Highlight Changes:</label>
+                            <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="checkbox-row">
+                            <label for="checkbox-tsp-rates">Show TSP Rates:</label>
+                            <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button id="button-account-tsp" class="button-solo">Add TSP Account</button>
+                    </td>
+                </tr>
+
+                <tr class="section-break">
+                    <td>
+                        <button id="button-tsp-analysis" class="button-solo">TSP Analysis</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="export-row">
+                            <span>Export as:</span>
+                            <select>
+                                <option value="xlsx">Excel</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                            <button id="button-export-tsp" class="button-solo" title="Download">↯</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-
-    <!-- tsp guide modal -->
-    <input id="modal-guide-tsp" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-guide-tsp"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Thrift Savings Plan (TSP) Calculator Guide</h2>
-            <p>This guide provides an overview of the Thrift Savings Plan (TSP) calculator, including key features and usage instructions.</p>
-        </div>
-    </div>
-
-
-    <!-- tsp account modal-->
-    <input id="modal-account-tsp" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-account-tsp"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Add TSP Account row</h2>
-        </div>
-    </div>
-
-
-    <!-- tsp analysis modal -->
-    <input id="modal-tsp-analysis" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-tsp-analysis"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>TSP Analysis</h2>
-        </div>
-    </div>
-
 </div>

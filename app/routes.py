@@ -29,7 +29,6 @@ from app.tsp import (
 from app.utils import (
     load_json,
     validate_file,
-    convert_numpy_types,
     get_row_value,
     get_headers,
     get_months,
@@ -141,7 +140,7 @@ def route_single():
             'REMARKS': load_json(flask_app.config['REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
-        return render_template('settings.html', **context)
+        return render_template('tslm.html', **context)
     else:
         return jsonify({'message': message}), 400
 
@@ -208,7 +207,7 @@ def route_joint():
             'REMARKS': load_json(flask_app.config['REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }
-        return render_template('settings.html', **context)
+        return render_template('tslm.html', **context)
     else:
         return jsonify({'message': "Invalid submission"}), 400
 
@@ -245,7 +244,7 @@ def route_initials():
         'headers': headers,
         'MODALS': load_json(flask_app.config['MODALS_JSON']),
     }
-    return render_template('settings.html', **context)
+    return render_template('tslm.html', **context)
 
 
 @csrf.exempt
@@ -293,7 +292,7 @@ def route_update_cell():
         'months': months,
         'headers': headers,
     }
-    return render_template('budget.html', **context)
+    return render_template('tables.html', **context)
 
 
 @csrf.exempt
@@ -329,7 +328,7 @@ def route_change_months():
         'months': months,
         'headers': headers,
     }
-    return render_template('budget.html', **context)
+    return render_template('tables.html', **context)
 
 
 @csrf.exempt
@@ -371,7 +370,7 @@ def route_insert_row():
         'months': months,
         'headers': headers,
     }
-    return render_template('budget.html', **context)
+    return render_template('tables.html', **context)
 
 
 @csrf.exempt
@@ -405,7 +404,7 @@ def route_remove_row():
         'headers': headers,
         'recommendations': recommendations,
     }
-    return render_template('budget.html', **context)
+    return render_template('tables.html', **context)
 
 
 @flask_app.route('/about')

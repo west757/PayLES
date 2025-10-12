@@ -141,7 +141,7 @@ footer {
 }
 
 /* =========================
-   error page
+   error page, toasts, and tooltips
    ========================= */
 
 #error-container {
@@ -164,11 +164,6 @@ footer {
     margin: 2rem 0 0 0;
     text-align: left;
 }
-
-
-/* =========================
-   toasts and tooltips
-   ========================= */
 
 #toast-container {
     align-items: center;
@@ -255,7 +250,14 @@ input[type=file]::file-selector-button {
     height: 2.5rem;
 }
 
-#button-instructions, #button-inject, #button-account-bank, #button-recs, #button-verification, #button-tsp, #button-account-tsp, #button-tsp-analysis {
+#button-guide-budget, 
+#button-inject, 
+#button-account-bank, 
+#button-recommendations, 
+#button-verification, 
+#button-guide-tsp, 
+#button-account-tsp, 
+#button-tsp-analysis {
     width: 11rem;
 }
 
@@ -433,7 +435,6 @@ select::-webkit-scrollbar-button {
     display: none;
     height: 0;
 }
-
 
 .input-long {
     width: 12rem;

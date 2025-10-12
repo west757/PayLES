@@ -80,7 +80,7 @@ function updateBudget(repeat) {
     exitEditMode();
 
     htmx.ajax('POST', '/route_update_cell', {
-        target: '#budget',
+        target: '#tables',
         swap: 'innerHTML',
         values: {
             header: header,
