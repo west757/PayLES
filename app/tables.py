@@ -149,7 +149,7 @@ def build_month(budget, tsp, month, prev_month, cell=None, init=False):
     return budget, tsp
 
 
-def remove_months(budget, months_num):
+def remove_months(budget, tsp, months_num):
     months = get_months(budget)
     months_to_remove = months[months_num:]
 
@@ -157,9 +157,13 @@ def remove_months(budget, months_num):
         for month in months_to_remove:
             if month in row:
                 del row[month]
+    for row in tsp:
+        for month in months_to_remove:
+            if month in row:
+                del row[month]
     months = months[:months_num]
 
-    return budget, months
+    return budget, tsp, months
 
 
 def insert_row(budget, months, headers, row_data):
@@ -275,7 +279,7 @@ def insert_row(budget, months, headers, row_data):
 
 
 def remove_row(budget, headers, header):
-    row = next((r for r in budget if r.get('header').lower() == header.lower()), None)
+    row = get_row_value('budget', header)
     budget = [r for r in budget if r.get('header').lower() != header.lower()]
     
     if row.get('type') == 'c':

@@ -181,7 +181,7 @@ def route_joint():
         tsp_variables2 = get_tsp_variables(les_text2)
 
         if month1 != month2:
-            return jsonify({'message': "LES months do not match. In order to use joint LES upload, both months must match."}), 400
+            return jsonify({'message': "LES months do not match. In order to use joint LES upload, both months must be the same."}), 400
         month = month1
 
         budget_les1, tsp_les1 = init_tables(les_variables1, tsp_variables1, month, les_text=les_text1)
@@ -315,10 +315,10 @@ def route_change_months():
     old_months_num = len(months)
     new_months_num = int(request.form.get('months_num', flask_app.config['DEFAULT_MONTHS_NUM']))
 
-    if new_months_num < old_months_num:
+    if old_months_num > new_months_num:
         budget, tsp, months = remove_months(budget, tsp, new_months_num)
-    elif new_months_num > old_months_num:
-        budget, tsp, months = add_months(budget, tsp, latest_month=months[-1], months_num=new_months_num)
+    elif old_months_num < new_months_num:
+        budget, tsp, months = add_months(budget, tsp, months[-1], new_months_num)
 
     session['budget'] = budget
     session['tsp'] = tsp

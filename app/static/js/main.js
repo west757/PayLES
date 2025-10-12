@@ -70,6 +70,10 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (budgetContainer && typeof budgetScrollTop === 'number') {
         budgetContainer.scrollTop = budgetScrollTop;
     }
+    const tspContainer = document.getElementById('tsp-container');
+    if (tspContainer && typeof tspScrollTop === 'number') {
+        tspContainer.scrollTop = tspScrollTop;
+    }
 });
 
 

@@ -11,18 +11,16 @@ short-term:
 - make tsp account for tsp table
 - change account to just be bank account
 - tsp input restrictions
-- rename settings.html and budget.html
 - rename initials to manuals
 - make year a metadata row
 - oconus calculations
 - set dependents limit to 5
-- comparison modal button
-- add rank long
 - refactor update tsp with rate headers
+- move zip code tooltip to mha long
 
 mid-term:
 - get combat zone from les
-- instructions modal
+- guide modal
 - rework resources 
 -   tags for category (general, financial, moving, education, mental health), branch, featured
 -   alphabetize, stars for featured ones
@@ -31,7 +29,7 @@ mid-term:
 - add loading screen after submitting LES
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN
-- page with official calculators
+- add official calculators to resources list
 - adjustable table size
 - adjustable les size
 
@@ -41,8 +39,6 @@ long-term:
 - set initial value for template rows
 - update readme
 - add comments to code
-- add in ranks for each branch tooltip
-- add in branch row
 - import/export for custom rows
 - account for specific pays (submarine, dive, jump, etc)
 - update modal content

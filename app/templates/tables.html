@@ -40,7 +40,6 @@
         <tbody>
             {% for row in budget %}
                 {% if row.type != 'm' %}
-
                     {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
                     {% set next_row = budget[loop.index] if not loop.last else None %}
                     {% set section_break = false %}
@@ -114,7 +113,6 @@
         <tbody>
             {% for row in tsp %}
                 {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
-                {% set next_row = budget[loop.index] if not loop.last else None %}
 
                 {% set section_break = false %}
                 {% if row.header in ['Roth TSP Bonus Rate', 'TSP Contribution Total', 'YTD TSP Contribution Total'] %}
