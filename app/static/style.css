@@ -279,7 +279,7 @@ input[type=file]::file-selector-button {
     width: 11rem;
 }
 
-#button-export, #button-tsp-export {
+#button-export-budget, #button-export-tsp {
     align-items: center;
     display: flex;
     height: 2rem;

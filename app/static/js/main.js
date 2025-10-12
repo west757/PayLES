@@ -73,47 +73,51 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
 
 document.addEventListener('mousemove', function(e) {
+    // show tooltip on hover
     if (e.target && e.target.classList && e.target.classList.contains('tooltip')) {
         let tooltipText = e.target.getAttribute('data-tooltip');
         if (tooltipText) {
             showTooltip(e, tooltipText);
-        } else {
-            const row = e.target.getAttribute('data-row');
-            const value = e.target.getAttribute('data-value');
-            const month = e.target.getAttribute('data-month');
-            let tooltip = '';
-
-            if (row === 'Months in Service' && value) {
-                const months = parseInt(value, 10) % 12;
-                const years = Math.floor(months / 12);
-                tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
-            } 
-            else if (row === 'Branch' && value) {
-                tooltip = getBudgetValue('Branch Long', month);
-            }
-            else if (row === 'Component' && value) {
-                tooltip = getBudgetValue('Component Long', month);
-            }
-            else if (row === 'Grade' && value) {
-                tooltip = getBudgetValue('Rank Long', month);
-            }
-            else if (row === 'Military Housing Area' && value) {
-                tooltip = getBudgetValue('Military Housing Area Long', month);
-            }
-            else if (row === 'OCONUS Locality Code' && value) {
-                tooltip = getBudgetValue('OCONUS Locality Code Long', month);
-            }
-            else if (row === 'Home of Record' && value) {
-                tooltip = getBudgetValue('Home of Record Long', month);
-            }
-
-            if (tooltip) showTooltip(e, tooltip);
+            return;
         }
+
+        // only build tooltip if tooltipText is not present
+        const row = e.target.getAttribute('data-row');
+        const value = e.target.getAttribute('data-value');
+        const month = e.target.getAttribute('data-month');
+        let tooltip = '';
+
+        if (row === 'Months in Service' && value) {
+            const months = parseInt(value, 10) % 12;
+            const years = Math.floor(parseInt(value, 10) / 12);
+            tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
+        } 
+        else if (row === 'Branch' && value) {
+            tooltip = getBudgetValue('Branch Long', month);
+        }
+        else if (row === 'Component' && value) {
+            tooltip = getBudgetValue('Component Long', month);
+        }
+        else if (row === 'Grade' && value) {
+            tooltip = getBudgetValue('Rank Long', month);
+        }
+        else if (row === 'Military Housing Area' && value) {
+            tooltip = getBudgetValue('Military Housing Area Long', month);
+        }
+        else if (row === 'OCONUS Locality Code' && value) {
+            tooltip = getBudgetValue('OCONUS Locality Code Long', month);
+        }
+        else if (row === 'Home of Record' && value) {
+            tooltip = getBudgetValue('Home of Record Long', month);
+        }
+
+        if (tooltip) showTooltip(e, tooltip);
     }
 });
 
 
 document.addEventListener('mouseleave', function(e) {
+    // hide tooltip when mouse leaves element
     if (e.target && e.target.classList && e.target.classList.contains('tooltip')) {
         hideTooltip();
     }
@@ -181,10 +185,11 @@ document.addEventListener('click', function(e) {
         });
     }
 
-    // remove row
+    // remove row button click
     if (e.target.classList.contains('remove-row-button')) {
         let header = e.target.getAttribute('data-row');
 
+        // sets a confirmation state for 2.5 seconds to prevent accidental row removal
         if (!removeRowConfirm[header]) {
             e.target.setAttribute('data-tooltip', 'Please click again to remove row');
             showTooltip(e, 'Please click again to remove row');
@@ -194,6 +199,7 @@ document.addEventListener('click', function(e) {
                 e.target.setAttribute('data-tooltip', 'Remove Row');
             }, 2500); // reset confirmation after 2.5s
         } else {
+            // remove row confirmed, sends htmx request
             removeRowConfirm[header] = false;
             hideTooltip();
             htmx.ajax('POST', '/route_remove_row', {
@@ -235,16 +241,16 @@ document.addEventListener('change', function(e) {
         disableInputs();
     }
 
-    if (e.target && e.target.id === 'checkbox-highlight') {
-        highlightChanges();
+    if (e.target && e.target.id === 'checkbox-highlight-budget') {
+        highlightChanges('budget');
     }
 
     if (e.target && e.target.id === 'checkbox-variables') {
         toggleRows('variables');
     }
     
-    if (e.target && e.target.id === 'checkbox-tsp-highlight') {
-        tspHighlightChanges();
+    if (e.target && e.target.id === 'checkbox-highlight-tsp') {
+        highlightChanges('tsp');
     }
 
     if (e.target && e.target.id === 'checkbox-tsp-rates') {

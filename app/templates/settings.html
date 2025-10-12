@@ -35,8 +35,8 @@
                         <tr>
                             <td>
                                 <div class="checkbox-row">
-                                    <label for="checkbox-highlight">Highlight Changes:</label>
-                                    <input id="checkbox-highlight" class="checkbox-styled" type="checkbox">
+                                    <label for="checkbox-highlight-budget">Highlight Changes:</label>
+                                    <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
                                 </div>
                             </td>
                         </tr>
@@ -118,8 +118,8 @@
                         <tr>
                             <td>
                                 <div class="checkbox-row">
-                                    <label for="checkbox-tsp-highlight">Highlight Changes:</label>
-                                    <input id="checkbox-tsp-highlight" class="checkbox-styled" type="checkbox">
+                                    <label for="checkbox-highlight-tsp">Highlight Changes:</label>
+                                    <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
                                 </div>
                             </td>
                         </tr>
@@ -466,12 +466,12 @@
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Pay Verification</h2>
-            <p>This table shows discrepancies between the LES and calculated values.</p>
             {% if discrepancies and discrepancies|length > 0 %}
+                <p>This table shows discrepancies between the LES and calculated values.</p>
                 <table class="modal-table">
                     <tr>
                         <td>Header</td>
-                        <td>LES Value</td>
+                        <td>Value from LES</td>
                         <td>Calculated Value</td>
                     </tr>
                     {% for row in discrepancies %}

@@ -178,9 +178,12 @@ def set_variable_longs(budget, month):
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
     add_mv_pair(budget, 'Component Long', month, component_long)
 
+    GRADES_RANKS = flask_app.config['GRADES_RANKS']
     grade = get_row_value(budget, 'Grade', month)
-    rank_long = ""
-    add_mv_pair(budget, 'Grade Long', month, rank_long)
+    branch = get_row_value(budget, 'Branch', month)
+    rank_row = GRADES_RANKS[GRADES_RANKS['grade'] == grade]
+    rank_long = rank_row.iloc[0][branch]
+    add_mv_pair(budget, 'Rank Long', month, rank_long)
 
     zip_code = get_row_value(budget, 'Zip Code', month)
     mha_code, mha_long = get_military_housing_area(zip_code)

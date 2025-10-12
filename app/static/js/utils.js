@@ -70,18 +70,27 @@ function enableInputs() {
 }
 
 
-function highlightChanges() {
+function highlightChanges(tableName) {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
-    var checkbox = document.getElementById('checkbox-highlight');
-    var table = document.getElementById('budget-table');
+    let checkbox, table;
+
+    if (tableName === 'budget') {
+        checkbox = document.getElementById('checkbox-highlight-budget');
+        table = document.getElementById('budget-table');
+    } else if (tableName === 'tsp') {
+        checkbox = document.getElementById('checkbox-highlight-tsp');
+        table = document.getElementById('tsp-table');
+    }
+
     var rows = table.getElementsByTagName('tr');
 
     for (var i = 1; i < rows.length; i++) {
         var cells = rows[i].getElementsByTagName('td');
+        if (cells.length === 0) continue;
 
         // get row header (first cell)
         var header = cells[0].textContent.trim();
-        
+
         //start from month 3 (index 2), skip row header and first month
         for (var j = 2; j < cells.length; j++) {
             var cell = cells[j];
@@ -101,16 +110,15 @@ function highlightChanges() {
 }
 
 
-function toggleRows(type) {
+function toggleRows(rowName) {
     let checkbox, rows;
-    if (type === 'variables') {
+    
+    if (rowName === 'variables') {
         checkbox = document.getElementById('checkbox-variables');
         rows = document.getElementsByClassName('row-variable');
-    } else if (type === 'tsp-rates') {
+    } else if (rowName === 'tsp-rates') {
         checkbox = document.getElementById('checkbox-tsp-rates');
         rows = document.getElementsByClassName('row-tsp-rate');
-    } else {
-        return;
     }
 
     for (let row of rows) {
@@ -119,13 +127,13 @@ function toggleRows(type) {
 }
 
 
-function exportTable(table) {
+function exportTable(tableName) {
     let tableId, filename;
 
-    if (table === 'budget') {
+    if (tableName === 'budget') {
         tableId = 'budget-table';
         filename = 'PayLES_Budget';
-    } else if (table === 'tsp') {
+    } else if (tableName === 'tsp') {
         tableId = 'tsp-table';
         filename = 'PayLES_TSP';
     }

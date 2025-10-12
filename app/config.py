@@ -140,14 +140,17 @@ class Config:
 
 
     #load static files
-    dtype_pay_active = {'grade': str}
-    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
-        dtype_pay_active[str(i)] = float
-    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
-        dtype=dtype_pay_active
+    GRADES_RANKS = pd.read_csv(CSV_FOLDER / "grades_ranks.csv",
+        dtype={
+            'grade': str,
+            'USA': str,
+            'USAF': str,
+            'USSF': str,
+            'USN': str,
+            'USMC': str,
+        }
     )
-    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
-    GRADES = list(reversed(PAY_ACTIVE['grade'].tolist()))
+    GRADES = GRADES_RANKS['grade'].tolist()
 
     dtype_bah = {'mha': str}
     for grade in GRADES:
@@ -174,6 +177,14 @@ class Config:
             'tooltip': str,
         }
     )
+
+    dtype_pay_active = {'grade': str}
+    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
+        dtype_pay_active[str(i)] = float
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
+        dtype=dtype_pay_active
+    )
+    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
 
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
         dtype={

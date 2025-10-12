@@ -1,26 +1,26 @@
-grade,army,navy,mc,af,sf
-E1,Private (Recruit),Seaman Recruit,Private,Airman Basic,Specialist 1
-E2,Private,Seaman Apprentice,Private First Class,Airman,Specialist 2
-E3,Private First Class,Seaman,Lance Corporal,Airman First Class,Specialist 3
-E4,Specialist/Corporal,Petty Officer Third Class,Corporal,Senior Airman,Specialist 4
-E5,Sergeant,Petty Officer Second Class,Sergeant,Staff Sergeant,Sergeant
-E6,Staff Sergeant,Petty Officer First Class,Staff Sergeant,Technical Sergeant,Technical Sergeant
-E7,Sergeant First Class,Chief Petty Officer,Gunnery Sergeant,Master Sergeant,Master Sergeant
-E8,Master Sergeant,Senior Chief Petty Officer,Master Sergeant,Senior Master Sergeant,Senior Master Sergeant
-E9,Sergeant Major,Master Chief Petty Officer,Master Gunnery Sergeant/Sergeant Major,Chief Master Sergeant,Chief Master Sergeant
-W1,Warrant Officer 1,Warrant Officer 1,Warrant Officer,Warrant Officer 1,Not a valid rank
-W2,Chief Warrant Officer 2,Warrant Officer 2,Chief Warrant Officer 2,Chief Warrant Officer 2,Not a valid rank
-W3,Chief Warrant Officer 3,Warrant Officer 3,Chief Warrant Officer 3,Not a valid rank,Not a valid rank
-W4,Chief Warrant Officer 4,Warrant Officer 4,Chief Warrant Officer 4,Not a valid rank,Not a valid rank
+grade,USA,USAF,USSF,USN,USMC
+E1,Private (Recruit),Airman Basic,Specialist 1,Seaman Recruit,Private
+E2,Private Second Class,Airman,Specialist 2,Seaman Apprentice,Private First Class
+E3,Private First Class,Airman First Class,Specialist 3,Seaman,Lance Corporal
+E4,Specialist/Corporal,Senior Airman,Specialist 4,Petty Officer Third Class,Corporal
+E5,Sergeant,Staff Sergeant,Sergeant,Petty Officer Second Class,Sergeant
+E6,Staff Sergeant,Technical Sergeant,Technical Sergeant,Petty Officer First Class,Staff Sergeant
+E7,Sergeant First Class,Master Sergeant,Master Sergeant,Chief Petty Officer,Gunnery Sergeant
+E8,Master Sergeant,Senior Master Sergeant,Senior Master Sergeant,Senior Chief Petty Officer,Master Sergeant
+E9,Sergeant Major,Chief Master Sergeant,Chief Master Sergeant,Master Chief Petty Officer,Master Gunnery Sergeant/Sergeant Major
+W1,Warrant Officer 1,Warrant Officer 1,Invalid,Warrant Officer 1,Warrant Officer
+W2,Chief Warrant Officer 2,Chief Warrant Officer 2,Invalid,Warrant Officer 2,Chief Warrant Officer 2
+W3,Chief Warrant Officer 3,Invalid,Invalid,Warrant Officer 3,Chief Warrant Officer 3
+W4,Chief Warrant Officer 4,Invalid,Invalid,Warrant Officer 4,Chief Warrant Officer 4
 W5,"Master Warrant
-Officer 5",Chief Warrant Officer 5,Chief Warrant Officer 5,Not a valid rank,Not a valid rank
-O1,2nd Lieutenant,Ensign,2nd Lieutenant,2nd Lieutenant,2nd Lieutenant
-O2,1st Lieutenant,Lieutenant Junior Grade,1st Lieutenant,1st Lieutenant,1st Lieutenant
-O3,Captain,Lieutenant,Captain,Captain,Captain
-O4,Major,Lieutenant Commander,Major,Major,Major
-O5,Lieutenant Colonel,Commander,Lieutenant Colonel,Lieutenant Colonel,Lieutenant Colonel
-O6,Colonel,Captain,Colonel,Colonel,Colonel
-O7,Brigadier General,Rear Admiral Lower Half,Brigadier General,Brigadier General,Brigadier General
-O8,Major General,Rear Admiral Upper Half,Major General,Major General,Major General
-O9,Lieutenant General,Vice Admiral,Lieutenant General,Lieutenant General,Lieutenant General
-O10,General,Admiral,General,General,General
+Officer 5",Invalid,Invalid,Chief Warrant Officer 5,Chief Warrant Officer 5
+O1,Second Lieutenant,Second Lieutenant,Second Lieutenant,Ensign,Second Lieutenant
+O2,First Lieutenant,First Lieutenant,First Lieutenant,Lieutenant Junior Grade,First Lieutenant
+O3,Captain,Captain,Captain,Lieutenant,Captain
+O4,Major,Major,Major,Lieutenant Commander,Major
+O5,Lieutenant Colonel,Lieutenant Colonel,Lieutenant Colonel,Commander,Lieutenant Colonel
+O6,Colonel,Colonel,Colonel,Captain,Colonel
+O7,Brigadier General,Brigadier General,Brigadier General,Rear Admiral Lower Half,Brigadier General
+O8,Major General,Major General,Major General,Rear Admiral Upper Half,Major General
+O9,Lieutenant General,Lieutenant General,Lieutenant General,Vice Admiral,Lieutenant General
+O10,General,General,General,Admiral,General
