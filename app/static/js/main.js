@@ -193,16 +193,16 @@ document.addEventListener('click', function(e) {
         resetAccountModal();
     }
 
-    // open recommendation modal
-    if (e.target && e.target.id === 'button-recs') {
-        const recsModalCheckbox = document.getElementById('modal-recs');
-        recsModalCheckbox.checked = true;
-    }
-
     // open pay verification modal
     if (e.target && e.target.id === 'button-verification') {
         const verificationModalCheckbox = document.getElementById('modal-verification');
         verificationModalCheckbox.checked = true;
+    }
+
+    // open recommendation modal
+    if (e.target && e.target.id === 'button-recs') {
+        const recsModalCheckbox = document.getElementById('modal-recs');
+        recsModalCheckbox.checked = true;
     }
 
     // export button

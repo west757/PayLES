@@ -62,16 +62,16 @@
                             </td>
                         </tr>
 
-                        
-                        <tr>
-                            <td>
-                                <button id="button-verification" class="button-solo">
-                                    Pay Verification
-                                    <span class="badge" id="badge-verification"></span>
-                                </button>
-                            </td>
-                        </tr>
-                        
+                        {% if discrepancies and discrepancies|length > 0 %}
+                            <tr>
+                                <td>
+                                    <button id="button-verification" class="button-solo">
+                                        Pay Verification
+                                        <span class="badge" id="badge-verification"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
 
                         <tr class="section-break">
                             <td>
@@ -493,22 +493,18 @@
             <p>This table shows discrepancies between the LES and calculated values.</p>
             {% if discrepancies and discrepancies|length > 0 %}
                 <table class="modal-table">
-                    <thead>
+                    <tr>
+                        <td>Header</td>
+                        <td>LES Value</td>
+                        <td>Calculated Value</td>
+                    </tr>
+                    {% for row in discrepancies %}
                         <tr>
-                            <th>Header</th>
-                            <th>LES Value</th>
-                            <th>Calculated Value</th>
+                            <td>{{ row.header }}</td>
+                            <td>{{ row.les_value }}</td>
+                            <td>{{ row.calc_value }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in discrepancies %}
-                            <tr>
-                                <td>{{ row.header }}</td>
-                                <td>{{ row.les_value }}</td>
-                                <td>{{ row.calc_value }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
+                    {% endfor %}
                 </table>
             {% else %}
                 <p>No discrepancies found between LES and calculated values.</p>

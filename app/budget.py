@@ -230,8 +230,8 @@ def init_budget(les_variables, tsp_variables, month, les_text=None):
         tsp = init_tsp(tsp_variables, budget, month)
 
         budget = add_pays(budget, month, sign=-1)
-        add_mv_pair(budget, 'Traditional TSP', month, get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))
-        add_mv_pair(budget, 'Roth TSP', month, get_row_value(tsp, 'Roth TSP Contribution', month))
+        add_mv_pair(budget, 'Traditional TSP', month, -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month)))
+        add_mv_pair(budget, 'Roth TSP', month, -(get_row_value(tsp, 'Roth TSP Contribution', month)))
 
         taxes, expenses, net_pay = calc_expenses_net(budget, month)
         add_mv_pair(budget, 'Taxes', month, taxes)
@@ -388,9 +388,9 @@ def build_month(budget, tsp, month, prev_month, cell=None, init=False):
     roth_tsp_row = next((r for r in budget if r.get('header') == "Roth TSP"), None)
 
     if trad_tsp_row:
-        trad_tsp_row[month] = get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month)
+        trad_tsp_row[month] = -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))
     if roth_tsp_row:
-        roth_tsp_row[month] = get_row_value(tsp, 'Roth TSP Contribution', month)
+        roth_tsp_row[month] = -(get_row_value(tsp, 'Roth TSP Contribution', month))
 
     budget = update_pays(budget, month, prev_month, sign=-1, cell=cell, init=init)
 
