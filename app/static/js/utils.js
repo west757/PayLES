@@ -80,7 +80,7 @@ function highlightChanges() {
         var cells = rows[i].getElementsByTagName('td');
 
         // get row header (first cell)
-        var rowHeader = cells[0].textContent.trim();
+        var header = cells[0].textContent.trim();
         
         //start from month 3 (index 2), skip row header and first month
         for (var j = 2; j < cells.length; j++) {
@@ -90,7 +90,7 @@ function highlightChanges() {
             if (
                 checkbox.checked &&
                 cell.textContent.trim() !== prevCell.textContent.trim() &&
-                !(rowHeader === "Difference" && cell.textContent.trim() === "$0.00")
+                !(header === "Difference" && cell.textContent.trim() === "$0.00")
             ) {
                 cell.style.backgroundColor = highlight_color;
             } else {
@@ -160,8 +160,8 @@ function updateRecommendations() {
 }
 
 
-function getBudgetValue(rowHeader, month) {
-    const row = window.CONFIG.budget.find(r => r.header === rowHeader);
+function getBudgetValue(header, month) {
+    const row = window.CONFIG.budget.find(r => r.header === header);
 
     if (row && row.hasOwnProperty(month)) {
         return row[month];
@@ -211,7 +211,7 @@ function disableDrillsButtons() {
 }
 
 
-function createStandardInput(rowHeader, field, value = '') {
+function createStandardInput(header, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
 
@@ -222,7 +222,7 @@ function createStandardInput(rowHeader, field, value = '') {
         input = document.createElement('select');
         let options = [];
 
-        if (rowHeader === 'Year') {
+        if (header === 'Year') {
             const now = new Date();
             const startYear = now.getFullYear();
             const endYear = startYear - 50;
@@ -232,12 +232,12 @@ function createStandardInput(rowHeader, field, value = '') {
             input.classList.add('input-short');
         }
 
-        else if (rowHeader === 'Months') {
+        else if (header === 'Months') {
             options = window.CONFIG.MONTHS_SHORT;
             input.classList.add('input-short');
         }
 
-        else if (rowHeader === 'Home of Record Long') {
+        else if (header === 'Home of Record Long') {
             options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.longname);
             input.classList.add('input-long');
             const defaultOption = document.createElement('option');
@@ -246,37 +246,37 @@ function createStandardInput(rowHeader, field, value = '') {
             input.appendChild(defaultOption);
         }
 
-        else if (rowHeader === 'Component') {
+        else if (header === 'Component') {
             options = window.CONFIG.COMPONENTS;
             input.classList.add('input-short');
         }
 
-        else if (rowHeader === 'Grade') {
+        else if (header === 'Grade') {
             options = window.CONFIG.GRADES;
             input.classList.add('input-short');
         }
 
-        else if (rowHeader === 'Home of Record') {
+        else if (header === 'Home of Record') {
             options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.abbr);
             input.classList.add('input-short');
         }
 
-        else if (rowHeader === 'Federal Filing Status') {
+        else if (header === 'Federal Filing Status') {
             options = window.CONFIG.FEDERAL_FILING_STATUSES;
             input.classList.add('input-mid');
         }
 
-        else if (rowHeader === 'State Filing Status') {
+        else if (header === 'State Filing Status') {
             options = window.CONFIG.STATE_FILING_STATUSES;
             input.classList.add('input-mid');
         }
 
-        else if (rowHeader === 'SGLI Coverage') {
+        else if (header === 'SGLI Coverage') {
             options = window.CONFIG.SGLI_COVERAGES;
             input.classList.add('input-mid');
         }
 
-        else if (rowHeader === 'Combat Zone') {
+        else if (header === 'Combat Zone') {
             options = window.CONFIG.COMBAT_ZONES;
             input.classList.add('input-short');
         }
@@ -301,7 +301,7 @@ function createStandardInput(rowHeader, field, value = '') {
             'Account Special Percent',
             'Account Special Interest'
         ];
-        if (percentHeaders.includes(rowHeader)) {
+        if (percentHeaders.includes(header)) {
             input.classList.add('table-input', 'input-percent', 'input-short');
             input.placeholder = '0-100';
             input.maxLength = 3;
@@ -314,23 +314,23 @@ function createStandardInput(rowHeader, field, value = '') {
             return wrapper;
         }
 
-        else if (rowHeader === 'Dependents') {
+        else if (header === 'Dependents') {
             input.classList.add('table-input', 'input-short');
             input.placeholder = '0-9';
             input.maxLength = 1;
             input.addEventListener('input', setInputRestriction('int', 1));
         }
 
-        else if (rowHeader && rowHeader.toLowerCase().includes('tsp')) {
+        else if (header && header.toLowerCase().includes('tsp')) {
             input.classList.add('table-input', 'input-percent', 'input-short');
             
             // Determine max value and maxLength
             let maxVal = 100;
             let maxLength = 3;
-            if (rowHeader.toLowerCase().includes('base')) {
-                if (rowHeader.toLowerCase().includes('trad')) {
+            if (header.toLowerCase().includes('base')) {
+                if (header.toLowerCase().includes('trad')) {
                     maxVal = window.CONFIG.TRAD_TSP_RATE_MAX;
-                } else if (rowHeader.toLowerCase().includes('roth')) {
+                } else if (header.toLowerCase().includes('roth')) {
                     maxVal = window.CONFIG.ROTH_TSP_RATE_MAX;
                 }
                 maxLength = 2;
@@ -383,7 +383,7 @@ function createStandardInput(rowHeader, field, value = '') {
             return wrapper;
         }
 
-        else if (rowHeader === 'Months in Service') {
+        else if (header === 'Months in Service') {
             input.classList.add('table-input', 'input-short');
             input.placeholder = '0';
             input.maxLength = 3;
@@ -460,7 +460,7 @@ function createStandardInput(rowHeader, field, value = '') {
             'Account Bank Value',
             'Account Special Value'
         ];
-        if (largeNumInputs.includes(rowHeader)) {
+        if (largeNumInputs.includes(header)) {
             digitsBeforeDecimal = 6; // 6 before decimal, 1 for '.', 2 after = 9 total
         }
 
@@ -477,7 +477,7 @@ function createStandardInput(rowHeader, field, value = '') {
         input.type = 'text';
         input.value = value;
 
-        if (rowHeader === 'Zip Code') {
+        if (header === 'Zip Code') {
             input.classList.add('table-input', 'input-mid');
             input.placeholder = '12345';
             input.maxLength = 5;

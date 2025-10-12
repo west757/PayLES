@@ -84,16 +84,18 @@ document.addEventListener('mousemove', function(e) {
             let tooltip = '';
 
             if (row === 'Months in Service' && value) {
-                const months = parseInt(value, 10);
+                const months = parseInt(value, 10) % 12;
                 const years = Math.floor(months / 12);
-                const remMonths = months % 12;
-                tooltip = `${years} year${years !== 1 ? 's' : ''} ${remMonths} month${remMonths !== 1 ? 's' : ''}`;
+                tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
             } 
             else if (row === 'Branch' && value) {
                 tooltip = getBudgetValue('Branch Long', month);
             }
             else if (row === 'Component' && value) {
                 tooltip = getBudgetValue('Component Long', month);
+            }
+            else if (row === 'Grade' && value) {
+                tooltip = getBudgetValue('Rank Long', month);
             }
             else if (row === 'Military Housing Area' && value) {
                 tooltip = getBudgetValue('Military Housing Area Long', month);
@@ -164,11 +166,11 @@ document.addEventListener('click', function(e) {
 
     // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
-        let rowHeader = e.target.getAttribute('data-row');
+        let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
         let fieldType = e.target.getAttribute('data-field');
-        let value = getBudgetValue(rowHeader, month);
-        enterEditMode(e.target, rowHeader, month, value, fieldType);
+        let value = getBudgetValue(header, month);
+        enterEditMode(e.target, header, month, value, fieldType);
     }
 
     // open instructions modal
@@ -221,14 +223,10 @@ document.addEventListener('change', function(e) {
         highlightChanges();
     }
 
-    if (e.target && e.target.id === 'checkbox-var') {
-        toggleRows('var');
+    if (e.target && e.target.id === 'checkbox-variables') {
+        toggleRows('variables');
     }
-
-    if (e.target && e.target.id === 'checkbox-tsp') {
-        toggleRows('tsp');
-    }
-
+    
     if (e.target && e.target.id === 'checkbox-tsp-highlight') {
         tspHighlightChanges();
     }

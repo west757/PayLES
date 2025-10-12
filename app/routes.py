@@ -30,6 +30,7 @@ from app.utils import (
     load_json,
     validate_file,
     convert_numpy_types,
+    get_row_value,
     get_headers,
     get_months,
     add_recommendations,
@@ -217,7 +218,6 @@ def route_joint():
 def route_initials():
     initials = request.form.to_dict()
 
-
     variables = initials
     budget = init_budget(variables, flask_app.config['CURRENT_MONTH'])
 
@@ -255,19 +255,18 @@ def route_update_cell():
     tsp = session.get('tsp', [])
     months = get_months(budget)
     headers = session.get('headers', [])
-    
-    cell_header = request.form.get('row_header', '')
+
+    cell_header = request.form.get('header', '')
     cell_month = request.form.get('month', '')
     cell_value = request.form.get('value', 0)
     cell_repeat = request.form.get('repeat', False).lower() == "true"
 
-    cell_row = next((r for r in budget if r.get('header') == cell_header), None)
-    cell_field = cell_row.get('field')
+    cell_field = get_row_value(budget, cell_header, 'field')
 
-    if cell_field in ('int', int):
+    if cell_field == "int":
         cell_value = int(cell_value)
-    elif cell_field in ('float', float):
-        cell_value = round((float(cell_value) * cell_row.get('sign')), 2)
+    elif cell_field == "float":
+        cell_value = round((float(cell_value) * get_row_value(budget, cell_header, 'sign')), 2)
 
     cell = {
         "header": cell_header,
@@ -278,7 +277,15 @@ def route_update_cell():
 
     budget, tsp = update_months(budget, tsp, months, cell=cell)
     
+    for row in budget:
+        print(row)
+    print("--------------")
+    for row in tsp:
+        print(row)
+
     recommendations = add_recommendations(budget, months)
+    budget = convert_numpy_types(budget)
+    tsp = convert_numpy_types(tsp)
     session['budget'] = budget
     session['tsp'] = tsp
 

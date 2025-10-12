@@ -1,18 +1,18 @@
-// states
+// editing states
 let isEditing = false;
 let currentEdit = null;
 
 
-function enterEditMode(cellButton, rowHeader, month, value, field) {
+function enterEditMode(cellButton, header, month, value, field) {
     if (isEditing) return;
 
     isEditing = true;
-    currentEdit = {cellButton, rowHeader, month, value, field};
+    currentEdit = {cellButton, header, month, value, field};
 
     disableInputs([]);
 
     // Use standardized input creation
-    let inputWrapper = createStandardInput(rowHeader, field, value);
+    let inputWrapper = createStandardInput(header, field, value);
 
     // Find the actual input/select inside the wrapper for enabling/disabling
     let input = inputWrapper.querySelector('input, select') || inputWrapper;
@@ -64,7 +64,7 @@ function enterEditMode(cellButton, rowHeader, month, value, field) {
 
 
 function updateBudget(repeat) {
-    let {rowHeader, month, field} = currentEdit;
+    let {header, month, field} = currentEdit;
 
     let input = document.querySelector('.table-input, select');
     let value = input.value;
@@ -75,7 +75,7 @@ function updateBudget(repeat) {
         value = parseFloat(value);
     }
 
-    if (!validateInput(field, rowHeader, value, repeat)) return;
+    if (!validateInput(field, header, value, repeat)) return;
 
     exitEditMode();
 
@@ -83,7 +83,7 @@ function updateBudget(repeat) {
         target: '#budget',
         swap: 'innerHTML',
         values: {
-            row_header: rowHeader,
+            header: header,
             month: month,
             value: value,
             repeat: repeat
@@ -92,7 +92,7 @@ function updateBudget(repeat) {
 }
 
 
-function validateInput(field, rowHeader, value, repeat = false) {
+function validateInput(field, header, value, repeat = false) {
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
         return false;
@@ -104,7 +104,7 @@ function validateInput(field, rowHeader, value, repeat = false) {
             showToast('Value must be a number.');
             return false;
         }
-        if (rowHeader.toLowerCase().includes('tsp rate') && (num < 0 || num > 100)) {
+        if (header.toLowerCase().includes('tsp rate') && (num < 0 || num > 100)) {
             showToast('TSP rate must be between 0 and 100.');
             return false;
         }
@@ -125,7 +125,7 @@ function validateInput(field, rowHeader, value, repeat = false) {
         }
     }
     
-    if (rowHeader === 'Zip Code') {
+    if (header === 'Zip Code') {
         if (!/^\d{5}$/.test(value)) {
             showToast('Zip code must be exactly 5 digits.');
             return false;
@@ -134,7 +134,7 @@ function validateInput(field, rowHeader, value, repeat = false) {
 
 
     // TSP base rate validation
-    if (rowHeader === 'Trad TSP Base Rate') {
+    if (header === 'Trad TSP Base Rate') {
         if (value > window.CONFIG.TRAD_TSP_RATE_MAX) {
             showToast(`Trad TSP Base Rate cannot be more than ${window.CONFIG.TRAD_TSP_RATE_MAX}.`);
             return false;
@@ -156,7 +156,7 @@ function validateInput(field, rowHeader, value, repeat = false) {
         }
     }
 
-    if (rowHeader === 'Roth TSP Base Rate') {
+    if (header === 'Roth TSP Base Rate') {
         if (value > window.CONFIG.ROTH_TSP_RATE_MAX) {
             showToast(`Roth TSP Base Rate cannot be more than ${window.CONFIG.ROTH_TSP_RATE_MAX}.`);
             return false;
@@ -180,29 +180,29 @@ function validateInput(field, rowHeader, value, repeat = false) {
     }
 
     if (
-        rowHeader.includes('Specialty Rate') ||
-        rowHeader.includes('Incentive Rate') ||
-        rowHeader.includes('Bonus Rate')
+        header.includes('Specialty Rate') ||
+        header.includes('Incentive Rate') ||
+        header.includes('Bonus Rate')
     ) {
         if (value > 100) {
             showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
             return false;
         }
-        if (rowHeader.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.month) === 0) {
+        if (header.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
-        if (rowHeader.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.month) === 0) {
+        if (header.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
     }
 
     
-    if (repeat && (rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate'))) {
+    if (repeat && (header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate'))) {
         const months = window.CONFIG.months;
         const startIdx = months.indexOf(currentEdit.month);
-        const baseRow = rowHeader.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
+        const baseRow = header.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
         console.log('Repeat validation:', months.slice(startIdx), baseRow);
         for (let i = startIdx; i < months.length; i++) { // Only future months
             const baseRate = getBudgetValue(baseRow, months[i]);
@@ -213,22 +213,22 @@ function validateInput(field, rowHeader, value, repeat = false) {
         }
     }
 
-    if (rowHeader.includes('TSP Base Rate') || rowHeader.includes('Specialty Rate') || rowHeader.includes('Incentive Rate') || rowHeader.includes('Bonus Rate')) {
+    if (header.includes('TSP Base Rate') || header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate')) {
         const month = currentEdit.month;
         let tradValue = 0, rothValue = 0;
 
-        if (rowHeader.startsWith('Trad')) {
+        if (header.startsWith('Trad')) {
             tradValue = parseInt(value, 10);
-            if (rowHeader.includes('Base Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Base Rate', month), 10);
-            if (rowHeader.includes('Specialty Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Specialty Rate', month), 10);
-            if (rowHeader.includes('Incentive Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Incentive Rate', month), 10);
-            if (rowHeader.includes('Bonus Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Bonus Rate', month), 10);
-        } else if (rowHeader.startsWith('Roth')) {
+            if (header.includes('Base Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Base Rate', month), 10);
+            if (header.includes('Specialty Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Specialty Rate', month), 10);
+            if (header.includes('Incentive Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Incentive Rate', month), 10);
+            if (header.includes('Bonus Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Bonus Rate', month), 10);
+        } else if (header.startsWith('Roth')) {
             rothValue = parseInt(value, 10);
-            if (rowHeader.includes('Base Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Base Rate', month), 10);
-            if (rowHeader.includes('Specialty Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Specialty Rate', month), 10);
-            if (rowHeader.includes('Incentive Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Incentive Rate', month), 10);
-            if (rowHeader.includes('Bonus Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Bonus Rate', month), 10);
+            if (header.includes('Base Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Base Rate', month), 10);
+            if (header.includes('Specialty Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Specialty Rate', month), 10);
+            if (header.includes('Incentive Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Incentive Rate', month), 10);
+            if (header.includes('Bonus Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Bonus Rate', month), 10);
         }
 
         if ((tradValue + rothValue) > 100) {

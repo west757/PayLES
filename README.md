@@ -18,6 +18,7 @@ short-term:
 - oconus calculations
 - set dependents limit to 5
 - comparison modal button
+- add rank long
 
 mid-term:
 - get combat zone from les

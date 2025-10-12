@@ -119,10 +119,12 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
-def get_row_value(table, header, key):
+def get_row_value(table, header, key=None):
     row = next((r for r in table if r.get('header') == header), None)
     if row is not None:
-        return row.get(key)
+        if key is not None:
+            return row.get(key)
+        return row
     return None
 
 
@@ -186,8 +188,8 @@ def set_variable_longs(budget, month):
     add_mv_pair(budget, 'Military Housing Area Long', month, mha_long)
 
     oconus_locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
-    oconus_locality_long = ""
-    add_mv_pair(budget, 'OCONUS Locality Code Long', month, oconus_locality_long)
+    oconus_locality_code_long = ""
+    add_mv_pair(budget, 'OCONUS Locality Code Long', month, oconus_locality_code_long)
 
     home_of_record = get_row_value(budget, 'Home of Record', month)
     longname, _ = get_home_of_record(home_of_record)
