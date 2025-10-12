@@ -5,13 +5,6 @@ function getConfigData() {
 }
 
 
-// confirmation alert to user before changing off budget page
-function budgetUnloadPrompt(e) {
-    e.preventDefault();
-    e.returnValue = "Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.";
-}
-
-
 // show toast messages for 6 seconds and 0.5 second fade transition
 function showToast(message, duration = 6500) {
     const MAX_TOASTS = 3;
@@ -74,165 +67,17 @@ function enableInputs() {
 }
 
 
-// highlight changes in table compared to previous month
-function highlightChanges(tableName) {
-    const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
-    let checkbox, table;
-
-    if (tableName === 'budget') {
-        checkbox = document.getElementById('checkbox-highlight-budget');
-        table = document.getElementById('budget-table');
-    } else if (tableName === 'tsp') {
-        checkbox = document.getElementById('checkbox-highlight-tsp');
-        table = document.getElementById('tsp-table');
-    }
-
-    var rows = table.getElementsByTagName('tr');
-
-    for (var i = 1; i < rows.length; i++) {
-        var cells = rows[i].getElementsByTagName('td');
-        var header = cells[0].textContent.trim();
-
-        //start from month 3 (index 2), skip row header and first month
-        for (var j = 2; j < cells.length; j++) {
-            var cell = cells[j];
-            var prevCell = cells[j - 1];
-
-            if (
-                checkbox.checked &&
-                cell.textContent.trim() !== prevCell.textContent.trim() &&
-                !(header === "Difference" && cell.textContent.trim() === "$0.00")
-            ) {
-                cell.style.backgroundColor = highlight_color;
-            } else {
-                cell.style.backgroundColor = '';
-            }
-        }
-    }
-}
-
-
-// toggle display of rows
-function toggleRows(rowClass) {
-    let checkbox, rows;
-
-    if (rowClass === 'variables') {
-        checkbox = document.getElementById('checkbox-variables');
-        rows = document.getElementsByClassName('row-variable');
-    } else if (rowClass === 'tsp-rates') {
-        checkbox = document.getElementById('checkbox-tsp-rates');
-        rows = document.getElementsByClassName('row-tsp-rate');
-    }
-
-    for (let row of rows) {
-        row.style.display = checkbox.checked ? 'table-row' : 'none';
-    }
-}
-
-
-// export table to xlsx or csv using SheetJS
-function exportTable(tableName) {
-    let filename;
-
-    if (tableName === 'budget') {
-        var table = document.getElementById('budget-table');
-        var filetype = document.getElementById('dropdown-export-budget').value;
-        filename = 'PayLES_Budget';
-    } else if (tableName === 'tsp') {
-        var table = document.getElementById('tsp-table');
-        var filetype = document.getElementById('dropdown-export-tsp').value;
-        filename = 'PayLES_TSP';
-    }
-
-    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
-
-    var clone = table.cloneNode(true);
-
-    // remove row buttons from export
-    clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
-
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
-    if (filetype === 'xlsx') {
-        XLSX.writeFile(workbook, fullFilename);
-    } else {
-        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
-    }
-}
-
-
-function displayRecommendations(recommendations) {
-    const container = document.getElementById('recommendations-container');
-    const badge = document.getElementById('badge-recommendations');
-
-    if (recommendations.length > 0) {
-        container.innerHTML = recommendations.map(r => `<div class="modal-list-text">${r}</div>`).join('');
-        badge.textContent = recommendations.length;
-        badge.style.display = 'inline-block';
-    } else {
-        container.innerHTML = '<div class="modal-list-text">No current recommendations for your budget.</div>';
-        badge.style.display = 'none';
-    }
-}
-
-
-function formatMoney(val) {
-    let num = Number(val);
-    if (isNaN(num)) return val;
+// format number as money string
+function formatValue(value) {
+    let num = Number(value);
+    if (isNaN(num)) return value;
     let sign = num < 0 ? '-' : '';
     num = Math.abs(num);
     return `${sign}$${num.toFixed(2)}`;
 }
 
-function getDiscrepancyMessage(header) {
-    const messages = {
-        'SGLI Rate': "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
-        'BAH': "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
-        'Federal Taxes': "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
-    };
-    return messages[header] || null;
-}
 
-function displayDiscrepanciesModal(discrepancies) {
-    const tableContainer = document.getElementById('discrepancies-table-container');
-    const messageContainer = document.getElementById('discrepancies-message-container');
-    const badge = document.getElementById('badge-discrepancies');
-
-    if (!discrepancies || discrepancies.length === 0) {
-        tableContainer.innerHTML = '<div class="modal-list-text">PayLES has analyzed your budget and found no discrepancies.</div>';
-        messageContainer.innerHTML = '';
-        badge.style.display = 'none';
-        return;
-    }
-
-    let tableHTML = `<table class="modal-table">
-        <tr>
-            <td>Header</td>
-            <td>Value from LES</td>
-            <td>Calculated Value</td>
-        </tr>`;
-    let messages = [];
-
-    discrepancies.forEach(row => {
-        tableHTML += `<tr>
-            <td>${row.header}</td>
-            <td>${formatMoney(row.les_value)}</td>
-            <td>${formatMoney(row.calc_value)}</td>
-        </tr>`;
-        const msg = getDiscrepancyMessage(row.header);
-        if (msg) messages.push(`<div class="modal-list-text">${msg}</div>`);
-    });
-
-    tableHTML += `</table>
-        <div class="modal-list-text">PayLES found these discrepancies.</div>`;
-
-    badge.textContent = discrepancies.length;
-    badge.style.display = 'inline-block';
-
-    tableContainer.innerHTML = tableHTML;
-    messageContainer.innerHTML = messages.join('');
-}
-
-
+// returns either the entire row object or the value for a specific key in the row
 function getRowValue(tableName, header, key = null) {
     let table;
     if (tableName === 'budget') {
@@ -248,47 +93,6 @@ function getRowValue(tableName, header, key = null) {
         return row.hasOwnProperty(key) ? row[key] : null;
     }
     return row;
-}
-
-
-function disableTSPRateButtons() {
-    const months = window.CONFIG.months;
-    months.forEach(month => {
-        const tradBase = getRowValue('tsp', 'Trad TSP Base Rate', month);
-        const rothBase = getRowValue('tsp', 'Roth TSP Base Rate', month);
-
-        const tradRows = [
-            'Trad TSP Specialty Rate',
-            'Trad TSP Incentive Rate',
-            'Trad TSP Bonus Rate'
-        ];
-        const rothRows = [
-            'Roth TSP Specialty Rate',
-            'Roth TSP Incentive Rate',
-            'Roth TSP Bonus Rate'
-        ];
-
-        tradRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
-        });
-        rothRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
-            if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
-        });
-    });
-}
-
-
-function disableDrillsButtons() {
-    const months = window.CONFIG.months;
-    months.forEach(month => {
-        const component = getRowValue('budget', 'Component', month);
-        const btn = document.querySelector(`.cell-button[data-row="Drills"][data-month="${month}"]`);
-        if (btn) {
-            btn.disabled = !(component === 'NG' || component === 'RES');
-        }
-    });
 }
 
 

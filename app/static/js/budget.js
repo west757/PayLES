@@ -259,3 +259,68 @@ function exitEditMode() {
     isEditing = false;
     currentEdit = null;
 }
+
+
+function displayRecommendations(recommendations) {
+    const container = document.getElementById('recommendations-container');
+    const badge = document.getElementById('badge-recommendations');
+
+    if (recommendations.length > 0) {
+        container.innerHTML = recommendations.map(r => `<div class="modal-list-text">${r}</div>`).join('');
+        badge.textContent = recommendations.length;
+        badge.style.display = 'inline-block';
+    } else {
+        container.innerHTML = '<div class="modal-list-text">No current recommendations for your budget.</div>';
+        badge.style.display = 'none';
+    }
+}
+
+
+function getDiscrepancyMessage(header) {
+    const messages = {
+        'SGLI Rate': "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
+        'BAH': "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
+        'Federal Taxes': "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
+    };
+    return messages[header] || null;
+}
+
+function displayDiscrepanciesModal(discrepancies) {
+    const tableContainer = document.getElementById('discrepancies-table-container');
+    const messageContainer = document.getElementById('discrepancies-message-container');
+    const badge = document.getElementById('badge-discrepancies');
+
+    if (!discrepancies || discrepancies.length === 0) {
+        tableContainer.innerHTML = '<div class="modal-list-text">PayLES has analyzed your budget and found no discrepancies.</div>';
+        messageContainer.innerHTML = '';
+        badge.style.display = 'none';
+        return;
+    }
+
+    let tableHTML = `<table class="modal-table">
+        <tr>
+            <td>Header</td>
+            <td>Value from LES</td>
+            <td>Calculated Value</td>
+        </tr>`;
+    let messages = [];
+
+    discrepancies.forEach(row => {
+        tableHTML += `<tr>
+            <td>${row.header}</td>
+            <td>${formatValue(row.les_value)}</td>
+            <td>${formatValue(row.calc_value)}</td>
+        </tr>`;
+        const msg = getDiscrepancyMessage(row.header);
+        if (msg) messages.push(`<div class="modal-list-text">${msg}</div>`);
+    });
+
+    tableHTML += `</table>
+        <div class="modal-list-text">PayLES found these discrepancies.</div>`;
+
+    badge.textContent = discrepancies.length;
+    badge.style.display = 'inline-block';
+
+    tableContainer.innerHTML = tableHTML;
+    messageContainer.innerHTML = messages.join('');
+}

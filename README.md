@@ -8,6 +8,8 @@ run: python -m app.main
 
 short-term:
 - drill pay calculation (divide monthly total by 30)
+- rework row type characters
+- set height of tsp settings to height of tsp table
 - make tsp account for tsp table
 - change account to just be bank account
 - tsp input restrictions
@@ -16,7 +18,8 @@ short-term:
 - oconus calculations
 - set dependents limit to 5
 - refactor update tsp with rate headers
-- move zip code tooltip to mha long
+- widen columns, shorten height, add line to not take up width in cell for section break
+- make badge go away after user first clicks on the modal
 
 mid-term:
 - get combat zone from les
@@ -32,6 +35,7 @@ mid-term:
 - add official calculators to resources list
 - adjustable table size
 - adjustable les size
+- restrict LES upload to be within past 2 months
 
 long-term:
 - leave calculator
