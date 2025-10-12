@@ -208,7 +208,7 @@ def set_variable_longs(budget, month):
 
     zip_code = get_row_value(budget, 'Zip Code', month)
     mha_code, mha_long = get_military_housing_area(zip_code)
-    add_mv_pair(budget, 'Military Housing Area', month, mha_code)
+    add_mv_pair(budget, 'Military Housing Area Code', month, mha_code)
     add_mv_pair(budget, 'Military Housing Area Long', month, mha_long)
 
     oconus_locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
@@ -376,9 +376,6 @@ def update_variables(budget, month, prev_month, cell=None):
 
         elif header == "Months in Service":
             row[month] = prev_value + 1
-
-        elif header == "Military Housing Area":
-            continue
 
         elif cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
             row[month] = cell.get('value')

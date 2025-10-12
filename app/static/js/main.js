@@ -106,7 +106,7 @@ document.addEventListener('mousemove', function(e) {
         else if (row === 'Grade' && value) {
             tooltip = getRowValue('budget', 'Rank Long', month);
         }
-        else if (row === 'Military Housing Area' && value) {
+        else if (row === 'Zip Code' && value) {
             tooltip = getRowValue('budget', 'Military Housing Area Long', month);
         }
         else if (row === 'OCONUS Locality Code' && value) {

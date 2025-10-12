@@ -119,10 +119,10 @@ def calc_bas(budget, month):
 
 def calc_bah(budget, month):
     grade = get_row_value(budget, "Grade", month)
-    military_housing_area = get_row_value(budget, "Military Housing Area", month)
+    military_housing_area_code = get_row_value(budget, "Military Housing Area Code", month)
     dependents = get_row_value(budget, "Dependents", month)
     
-    if military_housing_area == "Not Found":
+    if military_housing_area_code == "Not Found":
         return 0.00
 
     if dependents > 0:
@@ -130,7 +130,7 @@ def calc_bah(budget, month):
     else:
         BAH_DF = flask_app.config['BAH_WITHOUT_DEPENDENTS']
 
-    bah_row = BAH_DF[BAH_DF["mha"] == military_housing_area]
+    bah_row = BAH_DF[BAH_DF["mha"] == military_housing_area_code]
     bah = bah_row[grade].values[0]
     return round(float(bah), 2)
 
