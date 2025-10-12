@@ -6,8 +6,8 @@
         <title>PayLES</title>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='graphics/favicon.ico') }}">
         <link rel="stylesheet" href="/static/style.css">
-        <script src="https://unpkg.com/htmx.org@1.8.0"></script>
-        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+        <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/xlsx.full.min.js') }}"></script>
     </head>
 
     <body>
@@ -23,21 +23,12 @@
 
             <nav>
                 <ul>
-                    <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
-                    <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
-                    <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
-                    <li class="nav-top">
-                        <a href="{{ url_for('resources') }}">Resources</a>
-                        <ul>
-                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='-resources') }}">General Resources</a></li>
-                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial-resources') }}">Financial Resources</a></li>
-                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='moving-resources') }}">Moving Resources</a></li>
-                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='education-resources') }}">Education Resources</a></li>
-                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mental-health-resources') }}">Mental Health Resources</a></li>
-                        </ul>
-                    </li>
-                    <!--<li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>-->
-                    <li class="nav-top"><a href="https://github.com/west757/PayLES" target="_blank">GitHub</a></li>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('resources') }}">Resources</a></li>
+                    <!--<li><a href="{{ url_for('leave') }}">Leave Calculator</a></li>-->
+                    <li><a href="https://github.com/west757/PayLES" target="_blank">GitHub</a></li>
                 </ul>
             </nav>
         </div>
@@ -51,7 +42,7 @@
 
         <footer>
             <div id="footer-left">
-                All Rights Reserved 2025 PayLES
+                &copy; 2025 PayLES - <a href="https://github.com/west757/PayLES/blob/main/LICENSE" target="_blank">MIT License</a>
             </div>
             <div id="footer-right">
                 {{ config['VERSION'] }}

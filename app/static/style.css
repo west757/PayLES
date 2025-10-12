@@ -89,15 +89,10 @@ nav ul {
     position: relative;
 }
 
-.nav-top {
+nav li {
     display: inherit;
     height: inherit;
     margin: 0 0 0 -0.3rem;
-}
-
-.nav-sub {
-    background-color: var(--primary_dark_accent_color);
-    display: inherit;
 }
 
 nav a {
@@ -107,32 +102,12 @@ nav a {
     text-decoration: none;
 }
 
-.nav-top a {
+nav li a {
     padding: 4rem 1rem 0 1rem;
-}
-
-.nav-sub a {
-    padding: 1rem;
 }
 
 nav a:hover {
     background-color: var(--primary_green_accent_color);
-}
-
-nav ul ul li {
-    display: list-item;
-    float: none;
-    position: relative;
-}
-
-nav ul ul {
-    display: none;
-    position: absolute;
-    top: 6rem;
-}
-
-nav ul li:hover > ul {
-    display: inherit;
 }
 
 
@@ -153,6 +128,11 @@ footer {
 #footer-left {
     padding: 0.35rem 0 0.35rem 1.5rem;
     text-align: left;
+}
+
+#footer-left a {
+    color: var(--light_text_color);
+    text-decoration: underline;
 }
 
 #footer-right {
