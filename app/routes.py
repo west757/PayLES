@@ -112,8 +112,7 @@ def route_single():
         budget = budget_les
         tsp = tsp_les
 
-        #recommendations = add_recommendations(budget, months)
-        recommendations = None
+        recommendations = add_recommendations(budget, months)
 
         budget = convert_numpy_types(budget)
         tsp = convert_numpy_types(tsp)
@@ -276,16 +275,8 @@ def route_update_cell():
     }
 
     budget, tsp = update_months(budget, tsp, months, cell=cell)
-    
-    for row in budget:
-        print(row)
-    print("--------------")
-    for row in tsp:
-        print(row)
 
     recommendations = add_recommendations(budget, months)
-    budget = convert_numpy_types(budget)
-    tsp = convert_numpy_types(tsp)
     session['budget'] = budget
     session['tsp'] = tsp
 
