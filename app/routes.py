@@ -101,7 +101,6 @@ def route_single():
 
         budget_les, tsp_les = init_tables(les_variables, tsp_variables, month, les_text=les_text)
         budget_calc, tsp_calc = init_tables(les_variables, tsp_variables, month)
-        discrepancies = compare_budgets(budget_les, budget_calc, month)
 
         budget_les, tsp_les, months = add_months(budget_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
@@ -120,6 +119,7 @@ def route_single():
             'tsp': tsp_les,
             'months': months,
             'headers': headers,
+            'discrepancies': compare_budgets(budget_les, budget_calc, month),
             'recommendations': add_recommendations(budget_les, months),
         }
         context = {
@@ -129,7 +129,6 @@ def route_single():
             'months': months,
             'headers': headers,
             'show_guide_buttons': show_guide_buttons,
-            'discrepancies': discrepancies,
             'les_image': les_image,
             'les_rect_overlay': get_les_rect_overlay(),
             'REMARKS': load_json(flask_app.config['REMARKS_JSON']),

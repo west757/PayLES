@@ -91,8 +91,6 @@ function highlightChanges(tableName) {
 
     for (var i = 1; i < rows.length; i++) {
         var cells = rows[i].getElementsByTagName('td');
-        if (cells.length === 0) continue;
-
         var header = cells[0].textContent.trim();
 
         //start from month 3 (index 2), skip row header and first month
@@ -132,6 +130,7 @@ function toggleRows(rowClass) {
 }
 
 
+// export table to xlsx or csv using SheetJS
 function exportTable(tableName) {
     let filename;
 
@@ -161,25 +160,76 @@ function exportTable(tableName) {
 }
 
 
-function updateRecommendations() {
-    const recs = (window.CONFIG && window.CONFIG.recommendations) || [];
-    const recContent = document.getElementById('rec-content');
-    const badge = document.getElementById('badge-recs');
-    if (badge) {
-        if (recs.length > 0) {
-            badge.textContent = recs.length;
-            badge.style.display = 'inline-block';
-        } else {
-            badge.style.display = 'none';
-        }
+function displayRecommendations(recommendations) {
+    const container = document.getElementById('recommendations-container');
+    const badge = document.getElementById('badge-recommendations');
+
+    if (recommendations.length > 0) {
+        container.innerHTML = recommendations.map(r => `<div class="modal-list-text">${r}</div>`).join('');
+        badge.textContent = recommendations.length;
+        badge.style.display = 'inline-block';
+    } else {
+        container.innerHTML = '<div class="modal-list-text">No current recommendations for your budget.</div>';
+        badge.style.display = 'none';
     }
-    if (recContent) {
-        if (recs.length === 0) {
-            recContent.innerHTML = '<div class="rec-item">No current recommendations for your budget.</div>';
-        } else {
-            recContent.innerHTML = recs.map(r => `<div class="rec-item">${r}</div>`).join('');
-        }
+}
+
+
+function formatMoney(val) {
+    let num = Number(val);
+    if (isNaN(num)) return val;
+    let sign = num < 0 ? '-' : '';
+    num = Math.abs(num);
+    return `${sign}$${num.toFixed(2)}`;
+}
+
+function getDiscrepancyMessage(header) {
+    const messages = {
+        'SGLI Rate': "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
+        'BAH': "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
+        'Federal Taxes': "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
+    };
+    return messages[header] || null;
+}
+
+function displayDiscrepanciesModal(discrepancies) {
+    const tableContainer = document.getElementById('discrepancies-table-container');
+    const messageContainer = document.getElementById('discrepancies-message-container');
+    const badge = document.getElementById('badge-discrepancies');
+
+    if (!discrepancies || discrepancies.length === 0) {
+        tableContainer.innerHTML = '<div class="modal-list-text">PayLES has analyzed your budget and found no discrepancies.</div>';
+        messageContainer.innerHTML = '';
+        badge.style.display = 'none';
+        return;
     }
+
+    let tableHTML = `<table class="modal-table">
+        <tr>
+            <td>Header</td>
+            <td>Value from LES</td>
+            <td>Calculated Value</td>
+        </tr>`;
+    let messages = [];
+
+    discrepancies.forEach(row => {
+        tableHTML += `<tr>
+            <td>${row.header}</td>
+            <td>${formatMoney(row.les_value)}</td>
+            <td>${formatMoney(row.calc_value)}</td>
+        </tr>`;
+        const msg = getDiscrepancyMessage(row.header);
+        if (msg) messages.push(`<div class="modal-list-text">${msg}</div>`);
+    });
+
+    tableHTML += `</table>
+        <div class="modal-list-text">PayLES found these discrepancies.</div>`;
+
+    badge.textContent = discrepancies.length;
+    badge.style.display = 'inline-block';
+
+    tableContainer.innerHTML = tableHTML;
+    messageContainer.innerHTML = messages.join('');
 }
 
 

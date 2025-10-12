@@ -253,44 +253,28 @@
 </div>
 
 
-<!-- pay verification modal (discrepancies) -->
-<input id="modal-verification" class="modal-state" type="checkbox" />
+<!-- pay discrepancies modal -->
+<input id="modal-discrepancies" class="modal-state" type="checkbox" />
 <div class="modal">
-    <label class="modal-background" for="modal-verification"></label>
+    <label class="modal-background" for="modal-discrepancies"></label>
     <div class="modal-inner">
         <button class="modal-close" type="button">✖</button>
-        <h2>Pay Verification</h2>
-        {% if discrepancies and discrepancies|length > 0 %}
-            <p>This table shows discrepancies between the LES and calculated values.</p>
-            <table class="modal-table">
-                <tr>
-                    <td>Header</td>
-                    <td>Value from LES</td>
-                    <td>Calculated Value</td>
-                </tr>
-                {% for row in discrepancies %}
-                    <tr>
-                        <td>{{ row.header }}</td>
-                        <td>{{ row.les_value }}</td>
-                        <td>{{ row.calc_value }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>No discrepancies found between LES and calculated values.</p>
-        {% endif %}
+        <h2>Pay Discrepancies</h2>
+        <p>PayLES performs analysis to find any discrepancies between the uploaded LES and calculated values for the first month. Factors that may cause a discrepancy are an LES older than one month, pay errors, outdated data sets used by PayLES, and certain specific individual circumstances.</p>
+        <div id="discrepancies-table-container"></div>
+        <div id="discrepancies-message-container"></div>
     </div>
 </div>
 
 
 <!-- recommendations modal -->
-<input id="modal-recs" class="modal-state" type="checkbox" />
+<input id="modal-recommendations" class="modal-state" type="checkbox" />
 <div class="modal">
-    <label class="modal-background" for="modal-recs"></label>
+    <label class="modal-background" for="modal-recommendations"></label>
     <div class="modal-inner">
         <button class="modal-close" type="button">✖</button>
         <h2>Budget Recommendations</h2>
-        <div id="rec-content"></div>
+        <div id="recommendations-container"></div>
     </div>
 </div>
 

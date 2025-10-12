@@ -4,9 +4,6 @@ from app.utils import (
     get_row_value,
 )
 
-# =========================
-# calculation functions
-# =========================
 
 def calc_income(budget, month):
     taxable = 0.00

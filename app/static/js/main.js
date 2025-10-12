@@ -64,7 +64,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     enableInputs();
     disableDrillsButtons();
     disableTSPRateButtons();
-    updateRecommendations();
+    displayRecommendations(window.CONFIG.recommendations);
+    displayDiscrepanciesModal(window.CONFIG.discrepancies);
 
     const budgetContainer = document.getElementById('budget-container');
     if (budgetContainer && typeof budgetScrollTop === 'number') {
@@ -158,9 +159,9 @@ document.addEventListener('click', function(e) {
         //resetAccountModal();
     }
 
-    if (e.target && e.target.id === 'button-verification') {
-        const verificationModalCheckbox = document.getElementById('modal-verification');
-        verificationModalCheckbox.checked = true;
+    if (e.target && e.target.id === 'button-discrepancies') {
+        const discrepanciesModalCheckbox = document.getElementById('modal-discrepancies');
+        discrepanciesModalCheckbox.checked = true;
     }
 
     if (e.target && e.target.id === 'button-recommendations') {
