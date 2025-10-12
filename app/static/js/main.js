@@ -93,22 +93,22 @@ document.addEventListener('mousemove', function(e) {
             tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
         } 
         else if (row === 'Branch' && value) {
-            tooltip = getBudgetValue('Branch Long', month);
+            tooltip = getRowValue('budget', 'Branch Long', month);
         }
         else if (row === 'Component' && value) {
-            tooltip = getBudgetValue('Component Long', month);
+            tooltip = getRowValue('budget', 'Component Long', month);
         }
         else if (row === 'Grade' && value) {
-            tooltip = getBudgetValue('Rank Long', month);
+            tooltip = getRowValue('budget', 'Rank Long', month);
         }
         else if (row === 'Military Housing Area' && value) {
-            tooltip = getBudgetValue('Military Housing Area Long', month);
+            tooltip = getRowValue('budget', 'Military Housing Area Long', month);
         }
         else if (row === 'OCONUS Locality Code' && value) {
-            tooltip = getBudgetValue('OCONUS Locality Code Long', month);
+            tooltip = getRowValue('budget', 'OCONUS Locality Code Long', month);
         }
         else if (row === 'Home of Record' && value) {
-            tooltip = getBudgetValue('Home of Record Long', month);
+            tooltip = getRowValue('budget', 'Home of Record Long', month);
         }
 
         if (tooltip) showTooltip(e, tooltip);
@@ -217,7 +217,7 @@ document.addEventListener('click', function(e) {
         let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
         let fieldType = e.target.getAttribute('data-field');
-        let value = getBudgetValue(header, month);
+        let value = getRowValue('budget', header, month);
         enterEditMode(e.target, header, month, value, fieldType);
     }
 

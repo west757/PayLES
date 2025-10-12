@@ -4,6 +4,7 @@ function getConfigData() {
     window.CONFIG = Object.assign(window.CONFIG || {}, configData);
 }
 
+
 // confirmation alert to user before changing off budget page
 function budgetUnloadPrompt(e) {
     e.preventDefault();
@@ -21,7 +22,7 @@ function showToast(message, duration = 6500) {
     }
 
     let toast = document.createElement('div');
-    toast.className = 'toast shadow';
+    toast.className = 'toast';
     toast.textContent = message;
 
     let closeButton = document.createElement('span');
@@ -38,6 +39,7 @@ function showToast(message, duration = 6500) {
 }
 
 
+// displays tooltip overlay
 function showTooltip(evt, text) {
     const tooltipContainer = document.getElementById('tooltip-container');
     tooltipContainer.innerText = text;
@@ -47,14 +49,15 @@ function showTooltip(evt, text) {
 }
 
 
+// hides tooltip overlay
 function hideTooltip() {
     const tooltipContainer = document.getElementById('tooltip-container');
     tooltipContainer.style.display = 'none';
 }
 
 
+// disable all inputs except those in exceptions array
 function disableInputs(exceptions=[]) {
-    // disable all inputs except those in exceptions array
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         if (!exceptions.includes(el)) {
             el.disabled = true;
@@ -63,6 +66,7 @@ function disableInputs(exceptions=[]) {
 }
 
 
+// enable all inputs
 function enableInputs() {
     document.querySelectorAll('input, button, select, textarea').forEach(el => {
         el.disabled = false;
@@ -70,6 +74,7 @@ function enableInputs() {
 }
 
 
+// highlight changes in table compared to previous month
 function highlightChanges(tableName) {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
     let checkbox, table;
@@ -88,7 +93,6 @@ function highlightChanges(tableName) {
         var cells = rows[i].getElementsByTagName('td');
         if (cells.length === 0) continue;
 
-        // get row header (first cell)
         var header = cells[0].textContent.trim();
 
         //start from month 3 (index 2), skip row header and first month
@@ -110,13 +114,14 @@ function highlightChanges(tableName) {
 }
 
 
-function toggleRows(rowName) {
+// toggle display of rows
+function toggleRows(rowClass) {
     let checkbox, rows;
-    
-    if (rowName === 'variables') {
+
+    if (rowClass === 'variables') {
         checkbox = document.getElementById('checkbox-variables');
         rows = document.getElementsByClassName('row-variable');
-    } else if (rowName === 'tsp-rates') {
+    } else if (rowClass === 'tsp-rates') {
         checkbox = document.getElementById('checkbox-tsp-rates');
         rows = document.getElementsByClassName('row-tsp-rate');
     }
@@ -178,21 +183,29 @@ function updateRecommendations() {
 }
 
 
-function getBudgetValue(header, month) {
-    const row = window.CONFIG.budget.find(r => r.header === header);
-
-    if (row && row.hasOwnProperty(month)) {
-        return row[month];
+function getRowValue(tableName, header, key = null) {
+    let table;
+    if (tableName === 'budget') {
+        table = window.CONFIG.budget;
+    } else if (tableName === 'tsp') {
+        table = window.CONFIG.tsp;
     }
-    return '';
+
+    const row = table.find(r => r.header === header);
+    if (!row) return null;
+
+    if (key !== null) {
+        return row.hasOwnProperty(key) ? row[key] : null;
+    }
+    return row;
 }
 
 
 function disableTSPRateButtons() {
     const months = window.CONFIG.months;
     months.forEach(month => {
-        const tradBase = getBudgetValue('Trad TSP Base Rate', month);
-        const rothBase = getBudgetValue('Roth TSP Base Rate', month);
+        const tradBase = getRowValue('tsp', 'Trad TSP Base Rate', month);
+        const rothBase = getRowValue('tsp', 'Roth TSP Base Rate', month);
 
         const tradRows = [
             'Trad TSP Specialty Rate',
@@ -220,7 +233,7 @@ function disableTSPRateButtons() {
 function disableDrillsButtons() {
     const months = window.CONFIG.months;
     months.forEach(month => {
-        const component = getBudgetValue('Component', month);
+        const component = getRowValue('budget', 'Component', month);
         const btn = document.querySelector(`.cell-button[data-row="Drills"][data-month="${month}"]`);
         if (btn) {
             btn.disabled = !(component === 'NG' || component === 'RES');

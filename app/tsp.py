@@ -337,7 +337,7 @@ def update_tsp(budget, tsp, month, prev_month, cell=None):
     ]
     for header in rate_headers:
         row = next((row for row in tsp if row.get('header') == header), None)
-        prev_value = row.get(prev_month, 0.0)
+        prev_value = row.get(prev_month, 0)
         if cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
             row[month] = cell.get('value')
         else:
@@ -346,14 +346,14 @@ def update_tsp(budget, tsp, month, prev_month, cell=None):
     # Rate zeroing
     trad_base_row = next((row for row in tsp if row.get('header') == "Trad TSP Base Rate"), None)
     roth_base_row = next((row for row in tsp if row.get('header') == "Roth TSP Base Rate"), None)
-    trad_base_rate = trad_base_row.get(month, 0.0)
-    roth_base_rate = roth_base_row.get(month, 0.0)
+    trad_base_rate = trad_base_row.get(month, 0)
+    roth_base_rate = roth_base_row.get(month, 0)
     if trad_base_rate == 0:
         for h in ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]:
-            next((row for row in tsp if row.get('header') == h), None)[month] = 0.0
+            next((row for row in tsp if row.get('header') == h), None)[month] = 0
     if roth_base_rate == 0:
         for h in ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"]:
-            next((row for row in tsp if row.get('header') == h), None)[month] = 0.0
+            next((row for row in tsp if row.get('header') == h), None)[month] = 0
 
     combat_zone = get_row_value(budget, "Combat Zone", month)
 

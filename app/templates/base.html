@@ -1,67 +1,67 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayLES</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='graphics/favicon.ico') }}">
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PayLES</title>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='graphics/favicon.ico') }}">
+        <link rel="stylesheet" href="/static/style.css">
+        <script src="https://unpkg.com/htmx.org@1.8.0"></script>
+        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    </head>
 
-<body>
-    <div id="header-nav">
-        <header>
-            <div id="logo">
-                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='graphics/logo.png') }}" alt="PayLES Logo"></a>
-            </div>
-            <div id="title">
-                Program analyzing your LES
-            </div>
-        </header>
+    <body>
+        <div id="header-nav">
+            <header>
+                <div id="logo">
+                    <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='graphics/logo.png') }}" alt="PayLES Logo"></a>
+                </div>
+                <div id="title">
+                    Program analyzing your LES
+                </div>
+            </header>
 
-        <nav>
-            <ul>
-                <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
-                <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
-                <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
-                <li class="nav-top">
-                    <a href="{{ url_for('resources') }}">Resources</a>
-                    <ul>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='-resources') }}">General Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial-resources') }}">Financial Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='moving-resources') }}">Moving Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='education-resources') }}">Education Resources</a></li>
-                        <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mental-health-resources') }}">Mental Health Resources</a></li>
-                    </ul>
-                </li>
-                <!--<li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>-->
-                <li class="nav-top"><a href="https://github.com/west757/PayLES" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <div id="toast-container"></div>
-    <div id="tooltip-container"></div>
-
-    <div id="content" hx-swap-oob="true">
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer>
-        <div id="footer-left">
-            All Rights Reserved 2025 PayLES
+            <nav>
+                <ul>
+                    <li class="nav-top"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-top"><a href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-top"><a href="{{ url_for('faq') }}">FAQ</a></li>
+                    <li class="nav-top">
+                        <a href="{{ url_for('resources') }}">Resources</a>
+                        <ul>
+                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='-resources') }}">General Resources</a></li>
+                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='financial-resources') }}">Financial Resources</a></li>
+                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='moving-resources') }}">Moving Resources</a></li>
+                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='education-resources') }}">Education Resources</a></li>
+                            <li class="nav-sub"><a href="{{ url_for('resources', _anchor='mental-health-resources') }}">Mental Health Resources</a></li>
+                        </ul>
+                    </li>
+                    <!--<li class="nav-top"><a href="{{ url_for('leave') }}">Leave Calculator</a></li>-->
+                    <li class="nav-top"><a href="https://github.com/west757/PayLES" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
         </div>
-        <div id="footer-right">
-            {{ config['VERSION'] }}
-        </div>
-    </footer>
 
-    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/budget.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/insert.js') }}"></script>
-</body>
+        <div id="toast-container"></div>
+        <div id="tooltip-container"></div>
+
+        <div id="content" hx-swap-oob="true">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer>
+            <div id="footer-left">
+                All Rights Reserved 2025 PayLES
+            </div>
+            <div id="footer-right">
+                {{ config['VERSION'] }}
+            </div>
+        </footer>
+
+        <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/budget.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/insert.js') }}"></script>
+    </body>
 </html>

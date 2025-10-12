@@ -148,7 +148,7 @@ function validateInput(field, header, value, repeat = false) {
         ];
 
         for (let r of rows) {
-            const v = getBudgetValue(r, month);
+            const v = getRowValue('budget', r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
                 showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;
@@ -170,7 +170,7 @@ function validateInput(field, header, value, repeat = false) {
         ];
 
         for (let r of rows) {
-            const v = getBudgetValue(r, month);
+            const v = getRowValue('budget', r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
                 showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;
@@ -188,11 +188,11 @@ function validateInput(field, header, value, repeat = false) {
             showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
             return false;
         }
-        if (header.startsWith('Trad') && getBudgetValue('Trad TSP Base Rate', currentEdit.month) === 0) {
+        if (header.startsWith('Trad') && getRowValue('tsp', 'Trad TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
-        if (header.startsWith('Roth') && getBudgetValue('Roth TSP Base Rate', currentEdit.month) === 0) {
+        if (header.startsWith('Roth') && getRowValue('tsp', 'Roth TSP Base Rate', currentEdit.month) === 0) {
             showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
             return false;
         }
@@ -205,7 +205,7 @@ function validateInput(field, header, value, repeat = false) {
         const baseRow = header.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
         console.log('Repeat validation:', months.slice(startIdx), baseRow);
         for (let i = startIdx; i < months.length; i++) { // Only future months
-            const baseRate = getBudgetValue(baseRow, months[i]);
+            const baseRate = getRowValue('tsp', baseRow, months[i]);
             if (parseInt(baseRate, 10) === 0) {
                 showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0% (${months[i]}).`);
                 return false;
@@ -219,16 +219,16 @@ function validateInput(field, header, value, repeat = false) {
 
         if (header.startsWith('Trad')) {
             tradValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) rothValue = parseInt(getBudgetValue('Roth TSP Bonus Rate', month), 10);
+            if (header.includes('Base Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Base Rate', month), 10);
+            if (header.includes('Specialty Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Specialty Rate', month), 10);
+            if (header.includes('Incentive Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Incentive Rate', month), 10);
+            if (header.includes('Bonus Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Bonus Rate', month), 10);
         } else if (header.startsWith('Roth')) {
             rothValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) tradValue = parseInt(getBudgetValue('Trad TSP Bonus Rate', month), 10);
+            if (header.includes('Base Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Base Rate', month), 10);
+            if (header.includes('Specialty Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Specialty Rate', month), 10);
+            if (header.includes('Incentive Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Incentive Rate', month), 10);
+            if (header.includes('Bonus Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Bonus Rate', month), 10);
         }
 
         if ((tradValue + rothValue) > 100) {

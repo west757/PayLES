@@ -106,10 +106,10 @@ def route_single():
 
         budget_les, tsp_les, months = add_months(budget_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-        #for row in budget_calc:
+        #for row in budget_les:
         #    print(row)
         #print("-------------------")
-        #for row in tsp_calc:
+        #for row in tsp_les:
         #    print(row)
 
         budget = budget_les

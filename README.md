@@ -18,6 +18,7 @@ short-term:
 - set dependents limit to 5
 - comparison modal button
 - add rank long
+- refactor update tsp with rate headers
 
 mid-term:
 - get combat zone from les
