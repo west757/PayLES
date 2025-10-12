@@ -5,9 +5,6 @@ import pdfplumber
 
 from app import flask_app
 
-# =========================
-# validate and process LES
-# =========================
 
 def validate_les(file):
     with pdfplumber.open(file) as les_pdf:
@@ -132,7 +129,7 @@ def format_les_text(les_text_raw):
     return les_text
 
 
-def calc_les_rect_overlay():
+def get_les_rect_overlay():
     LES_RECT_OVERLAY = flask_app.config['LES_RECT_OVERLAY']
     LES_IMAGE_SCALE = flask_app.config['LES_IMAGE_SCALE']
 

@@ -17,8 +17,8 @@
 
                 <tr>
                     <td>
-                        <label for="months-num-dropdown">Months Displayed:</label>
-                        <select id="months-num-dropdown" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
+                        <label for="dropdown-months-num">Months Displayed:</label>
+                        <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#tables" hx-swap="innerHTML">
                             {% for i in range(2, 13) %}
                                 <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
                             {% endfor %}
@@ -80,7 +80,7 @@
                     <td>
                         <div class="export-row">
                             <span>Export as:</span>
-                            <select>
+                            <select id="dropdown-export-budget">
                                 <option value="xlsx">Excel</option>
                                 <option value="csv">CSV</option>
                             </select>
@@ -143,7 +143,7 @@
                     <td>
                         <div class="export-row">
                             <span>Export as:</span>
-                            <select>
+                            <select id="dropdown-export-tsp">
                                 <option value="xlsx">Excel</option>
                                 <option value="csv">CSV</option>
                             </select>

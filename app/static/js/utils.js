@@ -133,18 +133,18 @@ function toggleRows(rowClass) {
 
 
 function exportTable(tableName) {
-    let tableId, filename;
+    let filename;
 
     if (tableName === 'budget') {
-        tableId = 'budget-table';
+        var table = document.getElementById('budget-table');
+        var filetype = document.getElementById('dropdown-export-budget').value;
         filename = 'PayLES_Budget';
     } else if (tableName === 'tsp') {
-        tableId = 'tsp-table';
+        var table = document.getElementById('tsp-table');
+        var filetype = document.getElementById('dropdown-export-tsp').value;
         filename = 'PayLES_TSP';
     }
 
-    var table = document.getElementById(tableId);
-    var filetype = document.getElementById('dropdown-export').value;
     var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
 
     var clone = table.cloneNode(true);
