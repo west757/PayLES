@@ -268,9 +268,17 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
     trad_tsp_exempt_contribution = 0 if combat_zone == "No" else trad_total
     roth_tsp_contribution = roth_total
 
-    agency_auto_contribution = base_pay_total * flask_app.config['TSP_AGENCY_AUTO_RATE'] / 100.0
+    agency_auto_contribution = base_pay_total * flask_app.config['TSP_AGENCY_AUTO_RATE']
 
-    match_rate = flask_app.config['TSP_AGENCY_MATCH_RATE'].get(int(trad_base_rate + roth_base_rate), 0.0) / 100.0
+    TSP_AGENCY_MATCH_RATE = flask_app.config['TSP_AGENCY_MATCH_RATE']
+    max_combined_rate = max(TSP_AGENCY_MATCH_RATE.keys())
+    max_match_rate = TSP_AGENCY_MATCH_RATE[max_combined_rate]
+
+    total_base_rate = trad_base_rate + roth_base_rate
+    if total_base_rate >= max_combined_rate:
+        match_rate = max_match_rate
+    else:
+        match_rate = TSP_AGENCY_MATCH_RATE.get(total_base_rate, 0.0)
     agency_match_contribution = base_pay_total * match_rate
 
     trad_final = min(trad_tsp_contribution, prev_elective_remaining)

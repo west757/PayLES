@@ -121,7 +121,7 @@ document.addEventListener('mouseleave', function(e) {
 
 
 document.addEventListener('click', function(e) {
-    // open modals
+    // open dynamic modals
     if (e.target.classList.contains('modal-button')) {
         const modalId = e.target.getAttribute('data-modal');
         if (modalId) {
@@ -132,7 +132,49 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    // close modals
+    if (e.target && e.target.id === 'button-guide-budget') {
+        const guideBudgetModalCheckbox = document.getElementById('modal-guide-budget');
+        guideBudgetModalCheckbox.checked = true;
+    }
+
+    if (e.target && e.target.id === 'button-inject') {
+        const injectModalCheckbox = document.getElementById('modal-inject');
+        injectModalCheckbox.checked = true;
+        resetInjectModal();
+    }
+
+    if (e.target && e.target.id === 'button-account-bank') {
+        const accountBankModalCheckbox = document.getElementById('modal-account-bank');
+        accountBankModalCheckbox.checked = true;
+        //resetAccountModal();
+    }
+
+    if (e.target && e.target.id === 'button-verification') {
+        const verificationModalCheckbox = document.getElementById('modal-verification');
+        verificationModalCheckbox.checked = true;
+    }
+
+    if (e.target && e.target.id === 'button-recommendations') {
+        const recommendationsModalCheckbox = document.getElementById('modal-recommendations');
+        recommendationsModalCheckbox.checked = true;
+    }
+
+    if (e.target && e.target.id === 'button-guide-tsp') {
+        const guideTspModalCheckbox = document.getElementById('modal-guide-tsp');
+        guideTspModalCheckbox.checked = true;
+    }
+
+    if (e.target && e.target.id === 'button-account-tsp') {
+        const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
+        accountTspModalCheckbox.checked = true;
+        //resetAccountModal();
+    }
+
+    if (e.target && e.target.id === 'button-tsp-analysis') {
+        const tspAnalysisModalCheckbox = document.getElementById('modal-tsp-analysis');
+        tspAnalysisModalCheckbox.checked = true;
+    }
+
     if (e.target.classList.contains('modal-close')) {
         document.querySelectorAll('.modal-state:checked').forEach(function(input) {
             input.checked = false;
@@ -173,42 +215,16 @@ document.addEventListener('click', function(e) {
         enterEditMode(e.target, header, month, value, fieldType);
     }
 
-    // open guide modal
-    if (e.target && e.target.id === 'button-guide') {
-        const guideModalCheckbox = document.getElementById('modal-guide');
-        guideModalCheckbox.checked = true;
-    }
-
-    // open inject modal
-    if (e.target && e.target.id === 'button-inject') {
-        const injectModalCheckbox = document.getElementById('modal-inject');
-        injectModalCheckbox.checked = true;
-        resetInjectModal();
-    }
-
-    // open account modal
-    if (e.target && e.target.id === 'button-account') {
-        const accountModalCheckbox = document.getElementById('modal-account');
-        accountModalCheckbox.checked = true;
-        resetAccountModal();
-    }
-
-    // open pay verification modal
-    if (e.target && e.target.id === 'button-verification') {
-        const verificationModalCheckbox = document.getElementById('modal-verification');
-        verificationModalCheckbox.checked = true;
-    }
-
-    // open recommendation modal
-    if (e.target && e.target.id === 'button-recs') {
-        const recsModalCheckbox = document.getElementById('modal-recs');
-        recsModalCheckbox.checked = true;
-    }
-
-    // export button
-    if (e.target && e.target.id === 'button-export') {
+    // export budget button
+    if (e.target && e.target.id === 'button-export-budget') {
         e.preventDefault();
-        exportBudget();
+        exportTable('budget');
+    }
+
+    // export tsp button
+    if (e.target && e.target.id === 'button-export-tsp') {
+        e.preventDefault();
+        exportTable('tsp');
     }
 });
 

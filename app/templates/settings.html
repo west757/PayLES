@@ -16,7 +16,7 @@
                         {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
-                                    <button id="button-budget-guide" class="button-solo">Guide</button>
+                                    <button id="button-guide-budget" class="button-solo">Guide</button>
                                 </td>
                             </tr>
                         {% endif %}
@@ -75,9 +75,9 @@
 
                         <tr class="section-break">
                             <td>
-                                <button id="button-recs" class="button-solo">
+                                <button id="button-recommendations" class="button-solo">
                                     Recommendations
-                                    <span class="badge" id="badge-recs"></span>
+                                    <span class="badge" id="badge-recommendations"></span>
                                 </button>
                             </td>
                         </tr>
@@ -90,7 +90,7 @@
                                         <option value="xlsx">Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
-                                    <button id="button-export" class="button-solo" title="Download">↯</button>
+                                    <button id="button-export-budget" class="button-solo" title="Download">↯</button>
                                 </div>
                             </td>
                         </tr>
@@ -110,7 +110,7 @@
                         {% if show_guide_buttons %}
                             <tr class="section-break">
                                 <td>
-                                    <button id="button-tsp-guide" class="button-solo">Guide</button>
+                                    <button id="button-guide-tsp" class="button-solo">Guide</button>
                                 </td>
                             </tr>
                         {% endif %}
@@ -153,7 +153,7 @@
                                         <option value="xlsx">Excel</option>
                                         <option value="csv">CSV</option>
                                     </select>
-                                    <button id="button-tsp-export" class="button-solo" title="Download">↯</button>
+                                    <button id="button-export-tsp" class="button-solo" title="Download">↯</button>
                                 </div>
                             </td>
                         </tr>
@@ -244,23 +244,13 @@
 
 
     <!-- budget guide modal -->
-    <input id="modal-budget-guide" class="modal-state" type="checkbox" />
+    <input id="modal-guide-budget" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="modal-budget-guide"></label>
+        <label class="modal-background" for="modal-guide-budget"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
-            <h2>Budget Guide</h2>
-        </div>
-    </div>
-
-
-    <!-- tsp guide modal -->
-    <input id="modal-tsp-guide" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-tsp-guide"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Thrift Savings Plan (TSP) Calculator Guide</h2>
+            <h2>PayLES Budget Guide</h2>
+            <p>This guide provides an overview of the PayLES budget process, including key terms and concepts.</p>
         </div>
     </div>
 
@@ -323,7 +313,6 @@
                 </div>
 
                 <div id="inject-template-custom" class="modal-grid-column">
-                    <!-- add template row inputs -->
                     <div id="inject-template" class="modal-grid-column-stack">
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="inject-template-select">Row Header:</label>
@@ -338,7 +327,6 @@
                         </div>
                     </div>
 
-                    <!-- add custom row inputs -->
                     <div id="inject-custom" class="modal-grid-column-stack">
                         <div class="modal-grid-column-row">
                             <label class="styled-label" for="inject-custom-header">Row Header:</label>
@@ -369,10 +357,10 @@
     </div>
 
 
-    <!-- account modal-->
-    <input id="account" class="modal-state" type="checkbox" />
+    <!-- bank account modal-->
+    <input id="modal-account-bank" class="modal-state" type="checkbox" />
     <div class="modal">
-        <label class="modal-background" for="account"></label>
+        <label class="modal-background" for="modal-account-bank"></label>
         <div class="modal-inner">
             <button class="modal-close" type="button">✖</button>
             <h2>Add Custom Account Row</h2>
@@ -471,18 +459,6 @@
     </div>
 
 
-    <!-- recommendations modal -->
-    <input id="modal-recs" class="modal-state" type="checkbox" />
-    <div class="modal">
-        <label class="modal-background" for="modal-recs"></label>
-        <div class="modal-inner">
-            <button class="modal-close" type="button">✖</button>
-            <h2>Budget Recommendations</h2>
-            <div id="rec-content"></div>
-        </div>
-    </div>
-
-
     <!-- pay verification modal (discrepancies) -->
     <input id="modal-verification" class="modal-state" type="checkbox" />
     <div class="modal">
@@ -513,7 +489,42 @@
     </div>
 
 
-    <!-- TSP analysis -->
+    <!-- recommendations modal -->
+    <input id="modal-recs" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="modal-recs"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Budget Recommendations</h2>
+            <div id="rec-content"></div>
+        </div>
+    </div>
+
+
+    <!-- tsp guide modal -->
+    <input id="modal-guide-tsp" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="modal-guide-tsp"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Thrift Savings Plan (TSP) Calculator Guide</h2>
+            <p>This guide provides an overview of the Thrift Savings Plan (TSP) calculator, including key features and usage instructions.</p>
+        </div>
+    </div>
+
+
+    <!-- tsp account modal-->
+    <input id="modal-account-tsp" class="modal-state" type="checkbox" />
+    <div class="modal">
+        <label class="modal-background" for="modal-account-tsp"></label>
+        <div class="modal-inner">
+            <button class="modal-close" type="button">✖</button>
+            <h2>Add TSP Account row</h2>
+        </div>
+    </div>
+
+
+    <!-- tsp analysis modal -->
     <input id="modal-tsp-analysis" class="modal-state" type="checkbox" />
     <div class="modal">
         <label class="modal-background" for="modal-tsp-analysis"></label>

@@ -12,7 +12,6 @@ short-term:
 - change account to just be bank account
 - tsp input restrictions
 - rename settings.html and budget.html
-- compare LES with recommendations
 - rename initials to manuals
 - make year a metadata row
 - oconus calculations

@@ -119,21 +119,31 @@ function toggleRows(type) {
 }
 
 
-function exportBudget() {
-    var budgetTable = document.getElementById('budget-table');
-    var filetype = document.getElementById('dropdown-export').value;
-    var filename = filetype === 'xlsx' ? 'PayLES_Budget.xlsx' : 'PayLES_Budget.csv';
+function exportTable(table) {
+    let tableId, filename;
 
-    var clone = budgetTable.cloneNode(true);
+    if (table === 'budget') {
+        tableId = 'budget-table';
+        filename = 'PayLES_Budget';
+    } else if (table === 'tsp') {
+        tableId = 'tsp-table';
+        filename = 'PayLES_TSP';
+    }
+
+    var table = document.getElementById(tableId);
+    var filetype = document.getElementById('dropdown-export').value;
+    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+
+    var clone = table.cloneNode(true);
 
     // remove row buttons from export
     clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
 
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: "Budget", raw: true});
+    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
     if (filetype === 'xlsx') {
-        XLSX.writeFile(workbook, filename);
+        XLSX.writeFile(workbook, fullFilename);
     } else {
-        XLSX.writeFile(workbook, filename, {bookType: 'csv'});
+        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
     }
 }
 
