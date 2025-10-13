@@ -575,9 +575,7 @@ hr {
 }
 
 
-/* =========================
-   budget and settings
-   ========================= */
+
 
 #tables-settings {
     align-items: flex-start;
@@ -587,6 +585,9 @@ hr {
     margin: 2rem;
 }
 
+.table-container {
+    height: 52rem;
+}
 
 #container-budget, #container-tsp {
     border: 1px solid var(--table_border_color);
@@ -594,14 +595,13 @@ hr {
     border-top-right-radius: 0.5rem;
     border-bottom-left-radius: 1.5rem;
     border-bottom-right-radius: 0.5rem;
-    height: 52rem;
     flex: 1 1 auto;
     max-width: calc(100vw - 14rem - 7rem);
     overflow-x: auto;
     overflow-y: auto; 
 }
 
-#container-tsp {
+#container-tsp, #settings-tsp {
     margin-top: 2rem;
 }
 
@@ -704,10 +704,6 @@ hr {
     border-radius: 1.5rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
     overflow: hidden;
-}
-
-#settings-tsp {
-    margin-top: 18rem;
 }
 
 .button-setting {

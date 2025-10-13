@@ -1,155 +1,158 @@
 <div id="settings">
-    <div id="settings-budget">
-        <table class="table-styled">
-            <thead>
-                <tr>
-                    <th>Settings</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if show_guide_buttons %}
-                    <tr class="section-break">
+    <div class="table-container">
+        <div id="settings-budget">
+            <table class="table-styled">
+                <thead>
+                    <tr>
+                        <th>Settings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if show_guide_buttons %}
+                        <tr class="section-break">
+                            <td>
+                                <button id="button-modal-guide-budget" class="button-generic button-positive button-setting">Guide</button>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
                         <td>
-                            <button id="button-modal-guide-budget" class="button-generic button-positive button-setting">Guide</button>
+                            <label for="dropdown-months-num">Months Displayed:</label>
+                            <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#tables" hx-swap="innerHTML">
+                                {% for i in range(2, 13) %}
+                                    <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
+                                {% endfor %}
+                            </select>
                         </td>
                     </tr>
-                {% endif %}
 
-                <tr>
-                    <td>
-                        <label for="dropdown-months-num">Months Displayed:</label>
-                        <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#tables" hx-swap="innerHTML">
-                            {% for i in range(2, 13) %}
-                                <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-row">
+                                <label for="checkbox-highlight-budget">Highlight Changes:</label>
+                                <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
+                            </div>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <div class="checkbox-row">
-                            <label for="checkbox-highlight-budget">Highlight Changes:</label>
-                            <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-row">
+                                <label for="checkbox-variables">Show All Variables:</label>
+                                <input id="checkbox-variables" class="checkbox-styled" type="checkbox">
+                            </div>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <div class="checkbox-row">
-                            <label for="checkbox-variables">Show All Variables:</label>
-                            <input id="checkbox-variables" class="checkbox-styled" type="checkbox">
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <button id="button-modal-inject" class="button-generic button-positive button-setting">Add Custom Row</button>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <button id="button-modal-inject" class="button-generic button-positive button-setting">Add Custom Row</button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <button id="button-modal-account-bank" class="button-generic button-positive button-setting">Add Bank Account</button>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <button id="button-modal-account-bank" class="button-generic button-positive button-setting">Add Bank Account</button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <button id="button-modal-discrepancies" class="button-generic button-positive button-setting">
+                                Pay Discrepancies
+                                <span class="badge" id="badge-discrepancies"></span>
+                            </button>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <button id="button-modal-discrepancies" class="button-generic button-positive button-setting">
-                            Pay Discrepancies
-                            <span class="badge" id="badge-discrepancies"></span>
-                        </button>
-                    </td>
-                </tr>
+                    <tr class="section-break">
+                        <td>
+                            <button id="button-modal-recommendations" class="button-generic button-positive button-setting">
+                                Recommendations
+                                <span class="badge" id="badge-recommendations"></span>
+                            </button>
+                        </td>
+                    </tr>
 
-                <tr class="section-break">
-                    <td>
-                        <button id="button-modal-recommendations" class="button-generic button-positive button-setting">
-                            Recommendations
-                            <span class="badge" id="badge-recommendations"></span>
-                        </button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="export-row">
-                            <span>Export as:</span>
-                            <select id="dropdown-export-budget">
-                                <option value="xlsx">Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                            <button id="button-export-budget" class="button-generic button-positive" title="Download">↯</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr>
+                        <td>
+                            <div class="export-row">
+                                <span>Export as:</span>
+                                <select id="dropdown-export-budget">
+                                    <option value="xlsx">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                                <button id="button-export-budget" class="button-generic button-positive" title="Download">↯</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    <div class="table-container">
+        <div id="settings-tsp">
+            <table class="table-styled">
+                <thead>
+                    <tr>
+                        <th>Settings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if show_guide_buttons %}
+                        <tr class="section-break">
+                            <td>
+                                <button id="button-modal-guide-tsp" class="button-generic button-positive button-setting">Guide</button>
+                            </td>
+                        </tr>
+                    {% endif %}
 
-    <div id="settings-tsp">
-        <table class="table-styled">
-            <thead>
-                <tr>
-                    <th>Settings</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if show_guide_buttons %}
-                    <tr class="section-break">
+                    <tr>
                         <td>
-                            <button id="button-modal-guide-tsp" class="button-generic button-positive button-setting">Guide</button>
+                            <div class="checkbox-row">
+                                <label for="checkbox-highlight-tsp">Highlight Changes:</label>
+                                <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
+                            </div>
                         </td>
                     </tr>
-                {% endif %}
 
-                <tr>
-                    <td>
-                        <div class="checkbox-row">
-                            <label for="checkbox-highlight-tsp">Highlight Changes:</label>
-                            <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-row">
+                                <label for="checkbox-tsp-rates">Show TSP Rates:</label>
+                                <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
+                            </div>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <div class="checkbox-row">
-                            <label for="checkbox-tsp-rates">Show TSP Rates:</label>
-                            <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <button id="button-modal-account-tsp" class="button-generic button-positive button-setting">Add TSP Account</button>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <button id="button-modal-account-tsp" class="button-generic button-positive button-setting">Add TSP Account</button>
-                    </td>
-                </tr>
+                    <tr class="section-break">
+                        <td>
+                            <button id="button-modal-tsp-analysis" class="button-generic button-positive button-setting">TSP Analysis</button>
+                        </td>
+                    </tr>
 
-                <tr class="section-break">
-                    <td>
-                        <button id="button-modal-tsp-analysis" class="button-generic button-positive button-setting">TSP Analysis</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="export-row">
-                            <span>Export as:</span>
-                            <select id="dropdown-export-tsp">
-                                <option value="xlsx">Excel</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                            <button id="button-export-tsp" class="button-generic button-positive" title="Download">↯</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr>
+                        <td>
+                            <div class="export-row">
+                                <span>Export as:</span>
+                                <select id="dropdown-export-tsp">
+                                    <option value="xlsx">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                                <button id="button-export-tsp" class="button-generic button-positive" title="Download">↯</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
