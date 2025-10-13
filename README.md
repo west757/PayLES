@@ -20,6 +20,7 @@ short-term:
 - refactor update tsp with rate headers
 - widen columns, shorten height, add line to not take up width in cell for section break
 - make badge go away after user first clicks on the modal
+- fix parse string
 
 mid-term:
 - get combat zone from les

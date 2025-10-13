@@ -64,14 +64,14 @@
                     {% endif %}
 
                     <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
-                        <td class="cell row-header-cell">
+                        <td class="cell cell-header">
                             {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
                                 <button class="button-generic button-negative button-remove-row tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
                                     ✖
                                 </button>
                             {% endif %}
                             <button
-                                class="styled-table-button modal-button tooltip{% if row.modal != 'none' %} clickable {% endif %}"
+                                class="button-table button-modal-dynamic tooltip {% if row.modal != 'none' %} clickable {% endif %}"
                                 data-modal="{{ row.modal }}"
                                 data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
                                 {{ row.header }}
@@ -81,7 +81,7 @@
                         {% for month in months %}
                             {% if row.editable and not loop.first %}
                                 <td class="cell">
-                                    <button class="styled-table-button cell-button tooltip" data-tableName="budget" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                    <button class="button-table button-cell tooltip" data-tableName="budget" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                         {{ format_cell(row, month) }}
                                     </button>
                                 </td>
@@ -125,9 +125,9 @@
                 {% endif %}
 
                 <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
-                    <td class="cell row-header-cell">
+                    <td class="cell cell-header">
                         <button
-                            class="styled-table-button modal-button tooltip{% if row.modal != 'none' %} clickable{% endif %}"
+                            class="button-table button-modal-dynamic tooltip {% if row.modal != 'none' %} clickable {% endif %}"
                             data-modal="{{ row.modal }}"
                             data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
                             {{ row.header }}
@@ -137,7 +137,7 @@
                     {% for month in months %}
                         {% if row.editable and not loop.first %}
                             <td class="cell">
-                                <button class="styled-table-button cell-button tooltip" data-tableName="tsp" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                <button class="button-table button-cell tooltip" data-tableName="tsp" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                     {{ format_cell(row, month) }}
                                 </button>
                             </td>

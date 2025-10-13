@@ -53,8 +53,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     //only runs the first time the budget is loaded
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
-        attachInjectModalListeners();
-        attachAccountModalListeners();
+        //attachInjectModalListeners();
+        //attachAccountModalListeners();
     }
 
     highlightChanges('budget');
@@ -132,7 +132,7 @@ document.addEventListener('mouseleave', function(e) {
 
 document.addEventListener('click', function(e) {
     // open dynamic modals
-    if (e.target.classList.contains('modal-button')) {
+    if (e.target.classList.contains('button-modal-dynamic')) {
         const modalId = e.target.getAttribute('data-modal');
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
@@ -142,49 +142,60 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    if (e.target && e.target.id === 'button-guide-budget') {
+    if (e.target && e.target.id === 'button-modal-guide-budget') {
         const guideBudgetModalCheckbox = document.getElementById('modal-guide-budget');
         guideBudgetModalCheckbox.checked = true;
     }
 
-    if (e.target && e.target.id === 'button-inject') {
+    if (e.target && e.target.id === 'button-modal-inject') {
         const injectModalCheckbox = document.getElementById('modal-inject');
         injectModalCheckbox.checked = true;
         resetInjectModal();
     }
 
-    if (e.target && e.target.id === 'button-account-bank') {
+    if (e.target && e.target.id === 'button-modal-account-bank') {
         const accountBankModalCheckbox = document.getElementById('modal-account-bank');
         accountBankModalCheckbox.checked = true;
         //resetAccountModal();
     }
 
-    if (e.target && e.target.id === 'button-discrepancies') {
+    if (e.target && e.target.id === 'button-modal-discrepancies') {
         const discrepanciesModalCheckbox = document.getElementById('modal-discrepancies');
         discrepanciesModalCheckbox.checked = true;
     }
 
-    if (e.target && e.target.id === 'button-recommendations') {
+    if (e.target && e.target.id === 'button-modal-recommendations') {
         const recommendationsModalCheckbox = document.getElementById('modal-recommendations');
         recommendationsModalCheckbox.checked = true;
     }
 
-    if (e.target && e.target.id === 'button-guide-tsp') {
+    if (e.target && e.target.id === 'button-modal-guide-tsp') {
         const guideTspModalCheckbox = document.getElementById('modal-guide-tsp');
         guideTspModalCheckbox.checked = true;
     }
 
-    if (e.target && e.target.id === 'button-account-tsp') {
+    if (e.target && e.target.id === 'button-modal-account-tsp') {
         const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
         accountTspModalCheckbox.checked = true;
         //resetAccountModal();
     }
 
-    if (e.target && e.target.id === 'button-tsp-analysis') {
+    if (e.target && e.target.id === 'button-modal-tsp-analysis') {
         const tspAnalysisModalCheckbox = document.getElementById('modal-tsp-analysis');
         tspAnalysisModalCheckbox.checked = true;
     }
 
+    // open edit cell modal
+    if (e.target.classList.contains('button-modal-edit')) {
+        let tableName = e.target.getAttribute('data-tableName');
+        let header = e.target.getAttribute('data-row');
+        let month = e.target.getAttribute('data-month');
+        let value = getRowValue(tableName, header, month);
+        let field = e.target.getAttribute('data-field');
+        openEditModal(header, month, value, field);
+    }
+
+    // close modal from close button in modal
     if (e.target.classList.contains('modal-close')) {
         document.querySelectorAll('.modal-state:checked').forEach(function(input) {
             input.checked = false;
@@ -192,7 +203,7 @@ document.addEventListener('click', function(e) {
     }
 
     // remove row button click
-    if (e.target.classList.contains('remove-row-button')) {
+    if (e.target.classList.contains('button-remove-row')) {
         let header = e.target.getAttribute('data-row');
 
         // sets a confirmation state for 2.5 seconds to prevent accidental row removal
@@ -216,16 +227,6 @@ document.addEventListener('click', function(e) {
             showToast("Row " + header + " removed");
         }
         e.stopPropagation();
-    }
-
-    // enter edit mode for cell
-    if (e.target.classList.contains('cell-button')) {
-        let tableName = e.target.getAttribute('data-tableName');
-        let header = e.target.getAttribute('data-row');
-        let month = e.target.getAttribute('data-month');
-        let value = getRowValue(tableName, header, month);
-        let field = e.target.getAttribute('data-field');
-        openEditModal(header, month, value, field);
     }
 
     // export budget button

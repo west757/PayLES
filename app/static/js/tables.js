@@ -162,8 +162,8 @@ function exportTable(tableName) {
 
     var clone = table.cloneNode(true);
 
-    // remove row buttons from export
-    clone.querySelectorAll('.remove-row-button').forEach(btn => btn.remove());
+    // exclude remove row buttons from export
+    clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
 
     var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
     if (filetype === 'xlsx') {
