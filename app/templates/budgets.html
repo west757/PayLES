@@ -1,0 +1,158 @@
+<!-- cell formatting macro -->
+{% macro format_cell(row, month) %}
+    {% set cell_val = row[month] %}
+    {% if row.field != 'float' %}
+        {% if row.type == 'r' %}
+            {{ cell_val }}%
+        {% else %}
+            {{ cell_val }}
+        {% endif %}
+    {% else %}
+        {% set val = cell_val|float %}
+        {% if val == 0 %}
+            $0.00
+        {% elif val < 0 %}
+            -${{ "{:,.2f}".format(-val) }}
+        {% else %}
+            ${{ "{:,.2f}".format(val) }}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+
+<!-- send config data to scripts -->
+<script id="config-data" type="application/json">
+    {{ config_js|tojson }}
+</script>
+
+
+<!-- pay budget-->
+<div class="container-budgets-settings">
+    <div id="budget-pay">
+        <table id="budget-pay-table" class="styled">
+            <thead>
+                <tr>
+                    <th>Budget</th>
+                    {% for month in months %}
+                        <th>{{ month }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in pay %}
+                    {% if row.type != 'm' %}
+                        {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
+                        {% set next_row = pay[loop.index] if not loop.last else None %}
+                        {% set section_break = false %}
+
+                        {% set row_class = "" %}
+                        {% if row.type == 'v' %}
+                            {% set row_class = "row-variable" %}
+                        {% endif %}
+
+                        {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
+                            {% set section_break = true %}
+                        {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
+                            {% set section_break = true %}
+                        {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
+                            {% set section_break = true %}
+                        {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
+                            {% set section_break = true %}
+                        {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
+                            {% set section_break = true %}
+                        {% elif row.type == 'x' and (not next_row or next_row.type != 'x') %}
+                            {% set section_break = true %}
+                        {% endif %}
+
+                        <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
+                            <td class="cell cell-header">
+                                {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
+                                    <button class="button-generic button-negative button-remove-row tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
+                                        ✖
+                                    </button>
+                                {% endif %}
+                                <button
+                                    class="button-cell button-modal-info tooltip {% if row.modal != 'none' %} clickable {% endif %}"
+                                    data-modal="{{ row.modal }}"
+                                    data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
+                                    {{ row.header }}
+                                </button>
+                            </td>
+                            
+                            {% for month in months %}
+                                {% if row.editable and not loop.first %}
+                                    <td class="cell">
+                                        <button class="button-cell button-modal-edit tooltip" data-budgetName="pay" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                            {{ format_cell(row, month) }}
+                                        </button>
+                                    </td>
+                                {% else %}
+                                    <td class="tooltip">
+                                        {{ format_cell(row, month) }}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- tsp budget-->
+<div class="container-budgets-settings">
+    <div id="budget-tsp">
+        <table id="budget-tsp-table" class="styled">
+            <thead>
+                <tr>
+                    <th>TSP Calculator</th>
+                    {% for month in months %}
+                        <th>{{ month }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in tsp %}
+                    {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
+
+                    {% set section_break = false %}
+                    {% if row.header in ['Roth TSP Bonus Rate', 'TSP Contribution Total', 'YTD TSP Contribution Total'] %}
+                        {% set section_break = true %}
+                    {% endif %}
+
+                    {% set row_class = "" %}
+                    {% if row.type == 'r' %}
+                        {% set row_class = "row-tsp-rate" %}
+                    {% endif %}
+
+                    <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
+                        <td class="cell cell-header">
+                            <button
+                                class="button-cell button-modal-info tooltip {% if row.modal != 'none' %} clickable {% endif %}"
+                                data-modal="{{ row.modal }}"
+                                data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
+                                {{ row.header }}
+                            </button>
+                        </td>
+                        
+                        {% for month in months %}
+                            {% if row.editable and not loop.first %}
+                                <td class="cell">
+                                    <button class="button-cell button-modal-edit tooltip" data-budgetName="tsp" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                        {{ format_cell(row, month) }}
+                                    </button>
+                                </td>
+                            {% else %}
+                                <td class="tooltip">
+                                    {{ format_cell(row, month) }}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

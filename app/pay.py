@@ -25,7 +25,7 @@ from app.utils import (
 )
 
 
-def get_budget_variables(les_text):
+def get_pay_variables(les_text):
     try:
         month = les_text.get('les_month', None)
         if month not in flask_app.config['MONTHS_SHORT']:
@@ -178,48 +178,48 @@ def get_budget_variables(les_text):
     return month, les_variables
 
 
-def add_budget_variables(budget, month, variables):
+def add_pay_variables(pay, month, variables):
     for var, val in variables.items():
-        row = next((row for row in budget if row.get('header') == var), None)
+        row = next((row for row in pay if row.get('header') == var), None)
         if row:
-            add_mv_pair(budget, row['header'], month, val)
+            add_mv_pair(pay, row['header'], month, val)
         else:
             raise Exception(f"Variable '{var}' not found in PARAMS_TEMPLATE")
         
-    budget = set_variable_longs(budget, month)
-    return budget
+    pay = set_variable_longs(pay, month)
+    return pay
 
 
-def set_variable_longs(budget, month):
-    branch = get_row_value(budget, 'Branch', month)
+def set_variable_longs(pay, month):
+    branch = get_row_value(pay, 'Branch', month)
     branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
-    add_mv_pair(budget, 'Branch Long', month, branch_long)
+    add_mv_pair(pay, 'Branch Long', month, branch_long)
 
-    component = get_row_value(budget, 'Component', month)
+    component = get_row_value(pay, 'Component', month)
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
-    add_mv_pair(budget, 'Component Long', month, component_long)
+    add_mv_pair(pay, 'Component Long', month, component_long)
 
     GRADES_RANKS = flask_app.config['GRADES_RANKS']
-    grade = get_row_value(budget, 'Grade', month)
-    branch = get_row_value(budget, 'Branch', month)
+    grade = get_row_value(pay, 'Grade', month)
+    branch = get_row_value(pay, 'Branch', month)
     rank_row = GRADES_RANKS[GRADES_RANKS['grade'] == grade]
     rank_long = rank_row.iloc[0][branch]
-    add_mv_pair(budget, 'Rank Long', month, rank_long)
+    add_mv_pair(pay, 'Rank Long', month, rank_long)
 
-    zip_code = get_row_value(budget, 'Zip Code', month)
+    zip_code = get_row_value(pay, 'Zip Code', month)
     mha_code, mha_long = get_military_housing_area(zip_code)
-    add_mv_pair(budget, 'Military Housing Area Code', month, mha_code)
-    add_mv_pair(budget, 'Military Housing Area Long', month, mha_long)
+    add_mv_pair(pay, 'Military Housing Area Code', month, mha_code)
+    add_mv_pair(pay, 'Military Housing Area Long', month, mha_long)
 
-    oconus_locality_code = get_row_value(budget, 'OCONUS Locality Code', month)
+    oconus_locality_code = get_row_value(pay, 'OCONUS Locality Code', month)
     oconus_locality_code_long = ""
-    add_mv_pair(budget, 'OCONUS Locality Code Long', month, oconus_locality_code_long)
+    add_mv_pair(pay, 'OCONUS Locality Code Long', month, oconus_locality_code_long)
 
-    home_of_record = get_row_value(budget, 'Home of Record', month)
+    home_of_record = get_row_value(pay, 'Home of Record', month)
     longname, _ = get_home_of_record(home_of_record)
-    add_mv_pair(budget, 'Home of Record Long', month, longname)
+    add_mv_pair(pay, 'Home of Record Long', month, longname)
 
-    return budget
+    return pay
 
 
 def get_military_housing_area(zip_code):
@@ -265,7 +265,7 @@ def get_home_of_record(home_of_record):
         return home_of_record, row.iloc[0]['abbr']
 
 
-def add_les_pay(budget, month, les_text):
+def add_les_pay(pay, month, les_text):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
 
     combined_pay_string = (
@@ -287,10 +287,10 @@ def add_les_pay(budget, month, les_text):
         sign = template_row.iloc[0]['sign']
         value = round(sign * value, 2)
 
-        add_row("budget", budget, header, template=PAY_TEMPLATE)
-        add_mv_pair(budget, header, month, value)
+        add_row("pay", pay, header, template=PAY_TEMPLATE)
+        add_mv_pair(pay, header, month, value)
 
-    return budget
+    return pay
 
 
 def parse_pay_string(pay_string, pay_template):
@@ -315,7 +315,7 @@ def parse_pay_string(pay_string, pay_template):
     return results
 
 
-def add_calc_pay(budget, month, sign):
+def add_calc_pay(pay, month, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 
@@ -324,31 +324,31 @@ def add_calc_pay(budget, month, sign):
     for _, row in pay_subset.iterrows():
         header = row['header']
         trigger = row['trigger']
-        variable = get_row_value(budget, trigger, month)
+        variable = get_row_value(pay, trigger, month)
 
         if variable not in [0, None, "NOT FOUND"]:
             function = globals().get(TRIGGER_CALCULATIONS[header])
             if callable(function):
-                value = function(budget, month)
+                value = function(pay, month)
                 
-                add_row("budget", budget, header, template=PAY_TEMPLATE)
-                add_mv_pair(budget, header, month, value)
+                add_row("pay", pay, header, template=PAY_TEMPLATE)
+                add_mv_pair(pay, header, month, value)
 
     if sign == -1:
-        add_row("budget", budget, 'Traditional TSP', template=PAY_TEMPLATE)
-        add_row("budget", budget, 'Roth TSP', template=PAY_TEMPLATE)
+        add_row("pay", pay, 'Traditional TSP', template=PAY_TEMPLATE)
+        add_row("pay", pay, 'Roth TSP', template=PAY_TEMPLATE)
 
-    return budget
+    return pay
 
 
-def add_ytds(budget, month, les_text):
+def add_ytds(pay, month, les_text):
     try:
         ytd_entitlements = les_text.get('ytd_entitlements', 0.00)
         if not ytd_entitlements:
             raise ValueError(f"Invalid LES text: {ytd_entitlements}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD entitlements from LES text"))
-    add_mv_pair(budget, 'YTD Income', month, round(ytd_entitlements, 2))
+    add_mv_pair(pay, 'YTD Income', month, round(ytd_entitlements, 2))
 
     try:
         ytd_deductions = les_text.get('ytd_deductions', 0.00)
@@ -356,15 +356,15 @@ def add_ytds(budget, month, les_text):
             raise ValueError(f"Invalid LES text: {ytd_deductions}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD deductions from LES text"))
-    add_mv_pair(budget, 'YTD Expenses', month, round(-ytd_deductions, 2))
+    add_mv_pair(pay, 'YTD Expenses', month, round(-ytd_deductions, 2))
 
-    add_mv_pair(budget, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
+    add_mv_pair(pay, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
 
-    return budget
+    return pay
 
 
-def update_variables(budget, month, prev_month, cell=None):
-    variable_rows = [row for row in budget if row.get('type') == 'v']
+def update_variables(pay, month, prev_month, cell=None):
+    variable_rows = [row for row in pay if row.get('type') == 'v']
     for row in variable_rows:
         header = row['header']
         prev_value = row.get(prev_month)
@@ -388,15 +388,15 @@ def update_variables(budget, month, prev_month, cell=None):
         else:
             row[month] = prev_value
 
-    budget = set_variable_longs(budget, month)
-    return budget
+    pay = set_variable_longs(pay, month)
+    return pay
 
 
-def update_pays(budget, month, prev_month, sign, cell=None, init=False):
+def update_pays(pay, month, prev_month, sign, cell=None, init=False):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
 
-    rows = [row for row in budget if row.get('sign') == sign]
+    rows = [row for row in pay if row.get('sign') == sign]
     for row in rows:
         header = row['header']
         prev_value = row.get(prev_month)
@@ -413,7 +413,7 @@ def update_pays(budget, month, prev_month, sign, cell=None, init=False):
         trigger = TRIGGER_CALCULATIONS.get(header)
         function = globals().get(trigger)
         if callable(function):
-            row[month] = function(budget, month)
+            row[month] = function(pay, month)
             continue
 
         if cell is not None and header == cell.get('header'):
@@ -428,14 +428,14 @@ def update_pays(budget, month, prev_month, sign, cell=None, init=False):
         else:
             row[month] = prev_value
 
-    return budget
+    return pay
 
 
-def compare_budgets(budget_les, budget_calc, month):
-    calc_lookup = {row['header']: row for row in budget_calc if row.get('type') in ('e', 'd')}
+def compare_pay(pay_les, pay_calc, month):
+    calc_lookup = {row['header']: row for row in pay_calc if row.get('type') in ('e', 'd')}
     discrepancies = []
 
-    for row in budget_les:
+    for row in pay_les:
         if row.get('type') in ('e', 'd') and row['header'] in calc_lookup:
             les_value = row.get(month)
             calc_value = calc_lookup[row['header']].get(month)

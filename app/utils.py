@@ -63,11 +63,11 @@ def get_all_headers():
             + flask_app.config['TSP_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records'))
 
 
-def add_row(table_type, table, header, template=None, metadata=None):
-    if table_type == "budget":
-        metadata_fields = flask_app.config['BUDGET_METADATA']
-        type_order = flask_app.config['BUDGET_TYPE_ORDER']
-    elif table_type == "tsp":
+def add_row(budget_name, budget, header, template=None, metadata=None):
+    if budget_name == "pay":
+        metadata_fields = flask_app.config['PAY_METADATA']
+        type_order = flask_app.config['PAY_TYPE_ORDER']
+    elif budget_name == "tsp":
         metadata_fields = flask_app.config['TSP_METADATA']
         type_order = flask_app.config['TSP_TYPE_ORDER']
 
@@ -85,27 +85,27 @@ def add_row(table_type, table, header, template=None, metadata=None):
     row = {'header': header}
     row.update(row_metadata)
 
-    insert_idx = len(table)  # default to end
+    insert_idx = len(budget)  # default to end
     if row_type and type_order:
         # find all indices of rows with the same type
-        same_type_indices = [i for i, r in enumerate(table) if r.get('type') == row_type]
+        same_type_indices = [i for i, r in enumerate(budget) if r.get('type') == row_type]
         if same_type_indices:
             insert_idx = same_type_indices[-1] + 1  # insert row after last of same type
         else:
             # find the first row of any later type in type_order
             type_pos = type_order.index(row_type)
             later_types = type_order[type_pos + 1:]
-            next_idx = next((i for i, r in enumerate(table) if r.get('type') in later_types), None)
+            next_idx = next((i for i, r in enumerate(budget) if r.get('type') in later_types), None)
             if next_idx is not None:
                 insert_idx = next_idx
 
-    table.insert(insert_idx, row)
+    budget.insert(insert_idx, row)
     return None
 
 
 # add a month-value pair to a row identified by header
-def add_mv_pair(table, header, month, value):
-    row = next((r for r in table if r['header'] == header), None)
+def add_mv_pair(budget, header, month, value):
+    row = next((r for r in budget if r['header'] == header), None)
     if row is None:
         return
     
@@ -117,13 +117,13 @@ def add_mv_pair(table, header, month, value):
     row[month] = value
 
 
-def get_months(budget):
+def get_months(pay):
     MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    return [key for key in budget[0].keys() if key in MONTHS_SHORT]
+    return [key for key in pay[0].keys() if key in MONTHS_SHORT]
 
 
-def get_row_value(table, header, key=None):
-    row = next((r for r in table if r.get('header') == header), None)
+def get_row_value(budget, header, key=None):
+    row = next((r for r in budget if r.get('header') == header), None)
     if row is not None:
         if key is not None:
             return row.get(key)
@@ -131,9 +131,9 @@ def get_row_value(table, header, key=None):
     return None
 
 
-def sum_rows_via_modal(budget, modal_str, month):
+def sum_rows_via_modal(pay, modal_str, month):
     total = 0.0
-    for row in budget:
+    for row in pay:
         if row.get('modal') == modal_str:
             value = row.get(month, 0.0)
             try:

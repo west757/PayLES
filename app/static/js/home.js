@@ -96,7 +96,7 @@ function attachDragAndDropListeners() {
 function submitInitials(e) {
     e.preventDefault();
 
-    if (!validateinitialsBudgetForm()) {
+    if (!validateinitialspayForm()) {
         return;
     }
 
@@ -111,7 +111,7 @@ function submitInitials(e) {
 }
 
 
-function validateinitialsBudgetForm() {
+function validateinitialspayForm() {
     const inputIntInitialsZC = document.getElementById('initials-zip-code-id');
     const inputIntInitialsDeps = document.getElementById('initials-dependents-id');
     const inputSelectInitialsHor = document.getElementById('initials-home-of-record-id');

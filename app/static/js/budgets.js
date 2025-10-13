@@ -1,5 +1,5 @@
-// confirmation alert to user before changing pages when tables.html is loaded
-function budgetUnloadPrompt(e) {
+// confirmation alert to user before changing pages when budgets.html is loaded
+function payUnloadPrompt(e) {
     e.preventDefault();
     e.returnValue = "Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.";
 }
@@ -72,7 +72,7 @@ function submitEditModal(header, month, field, repeat) {
     document.getElementById('modal-edit').checked = false;
 
     htmx.ajax('POST', '/route_update_cell', {
-        target: '#tables',
+        target: '#budget',
         swap: 'innerHTML',
         values: {
             header: header,
@@ -84,20 +84,20 @@ function submitEditModal(header, month, field, repeat) {
 }
 
 
-// highlight changes in table compared to previous month
-function highlightChanges(tableName) {
+// highlight changes in budget compared to previous month
+function highlightChanges(budgetName) {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();
-    let checkbox, table;
+    let checkbox, budget;
 
-    if (tableName === 'budget') {
-        checkbox = document.getElementById('checkbox-highlight-budget');
-        table = document.getElementById('budget-table');
-    } else if (tableName === 'tsp') {
+    if (budgetName === 'pay') {
+        checkbox = document.getElementById('checkbox-highlight-pay');
+        budget = document.getElementById('budget-pay');
+    } else if (budgetName === 'tsp') {
         checkbox = document.getElementById('checkbox-highlight-tsp');
-        table = document.getElementById('tsp-table');
+        budget = document.getElementById('budget-tsp');
     }
 
-    var rows = table.getElementsByTagName('tr');
+    var rows = budget.getElementsByTagName('tr');
 
     for (var i = 1; i < rows.length; i++) {
         var cells = rows[i].getElementsByTagName('td');
@@ -140,28 +140,28 @@ function toggleRows(rowClass) {
 }
 
 
-// export table to xlsx or csv using SheetJS
-function exportTable(tableName) {
+// export budget to xlsx or csv using SheetJS
+function exportBudget(budgetName) {
     let filename;
 
-    if (tableName === 'budget') {
-        var table = document.getElementById('budget-table');
-        var filetype = document.getElementById('dropdown-export-budget').value;
-        filename = 'PayLES_Budget';
-    } else if (tableName === 'tsp') {
-        var table = document.getElementById('tsp-table');
+    if (budgetName === 'pay') {
+        var budget = document.getElementById('pay-budget');
+        var filetype = document.getElementById('dropdown-export-pay').value;
+        filename = 'PayLES_PAY_BUDGET';
+    } else if (budgetName === 'tsp') {
+        var budget = document.getElementById('tsp-budget');
         var filetype = document.getElementById('dropdown-export-tsp').value;
-        filename = 'PayLES_TSP';
+        filename = 'PayLES_TSP_BUDGET';
     }
 
     var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
 
-    var clone = table.cloneNode(true);
+    var clone = budget.cloneNode(true);
 
     // exclude remove row buttons from export
     clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
 
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
+    var workbook = XLSX.utils.budget_to_book(clone, {sheet: filename, raw: true});
     if (filetype === 'xlsx') {
         XLSX.writeFile(workbook, fullFilename);
     } else {
@@ -202,7 +202,7 @@ function disableTSPRateButtons() {
 function disableDrillsButtons() {
     const months = window.CONFIG.months;
     months.forEach(month => {
-        const component = getRowValue('budget', 'Component', month);
+        const component = getRowValue('pay', 'Component', month);
         const btn = document.querySelector(`.cell-button[data-row="Drills"][data-month="${month}"]`);
         if (btn) {
             btn.disabled = !(component === 'NG' || component === 'RES');

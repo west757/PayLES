@@ -78,7 +78,7 @@ class Config:
     
     COMBAT_ZONES = ["No", "Yes"]
 
-    # budget type order:
+    # pay type order:
     # v = variables
     # e = entitlements
     # d = deductions
@@ -88,8 +88,8 @@ class Config:
     # y = year-to-date
     # z = accounts
     # m = metadata
-    BUDGET_TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
-    BUDGET_METADATA = [
+    PAY_TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+    PAY_METADATA = [
         'type',
         'sign',
         'field',

@@ -134,32 +134,32 @@ def get_tsp_variables(les_text):
     return tsp_variables
 
 
-def init_tsp(tsp_variables, budget, month, les_text=None):
+def init_tsp(tsp_variables, pay, month, les_text=None):
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
     
     tsp = []
     for _, row in TSP_TEMPLATE.iterrows():
         add_row("tsp", tsp, row['header'], template=TSP_TEMPLATE)
 
-    base_pay_total = get_row_value(budget, "Base Pay", month)
-    specialty_pay_total = sum_rows_via_modal(budget, "specialty", month)
-    incentive_pay_total = sum_rows_via_modal(budget, "incentive", month)
-    bonus_pay_total = sum_rows_via_modal(budget, "bonus", month)
+    base_pay_total = get_row_value(pay, "Base Pay", month)
+    specialty_pay_total = sum_rows_via_modal(pay, "specialty", month)
+    incentive_pay_total = sum_rows_via_modal(pay, "incentive", month)
+    bonus_pay_total = sum_rows_via_modal(pay, "bonus", month)
 
     add_mv_pair(tsp, 'Base Pay Total', month, base_pay_total)
     add_mv_pair(tsp, 'Specialty Pay Total', month, specialty_pay_total)
     add_mv_pair(tsp, 'Incentive Pay Total', month, incentive_pay_total)
     add_mv_pair(tsp, 'Bonus Pay Total', month, bonus_pay_total)
 
-    combat_zone = get_row_value(budget, "Combat Zone", month)
+    combat_zone = get_row_value(pay, "Combat Zone", month)
 
     if les_text:
         tsp = add_tsp_variables(tsp, month, tsp_variables)
 
-        trad_row = next((r for r in budget if r.get('header') == "Traditional TSP"), None)
+        trad_row = next((r for r in pay if r.get('header') == "Traditional TSP"), None)
         trad_tsp_contribution = trad_row.get(month, 0.0) if trad_row else 0.0
 
-        roth_row = next((r for r in budget if r.get('header') == "Roth TSP"), None)
+        roth_row = next((r for r in pay if r.get('header') == "Roth TSP"), None)
         roth_tsp_contribution = roth_row.get(month, 0.0) if roth_row else 0.0
 
         if combat_zone == "No":
@@ -320,11 +320,11 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
     }
 
 
-def update_tsp(budget, tsp, month, prev_month, cell=None):
-    base_pay_total = get_row_value(budget, "Base Pay", month)
-    specialty_pay_total = sum_rows_via_modal(budget, "specialty", month)
-    incentive_pay_total = sum_rows_via_modal(budget, "incentive", month)
-    bonus_pay_total = sum_rows_via_modal(budget, "bonus", month)
+def update_tsp(pay, tsp, month, prev_month, cell=None):
+    base_pay_total = get_row_value(pay, "Base Pay", month)
+    specialty_pay_total = sum_rows_via_modal(pay, "specialty", month)
+    incentive_pay_total = sum_rows_via_modal(pay, "incentive", month)
+    bonus_pay_total = sum_rows_via_modal(pay, "bonus", month)
 
     add_mv_pair(tsp, 'Base Pay Total', month, base_pay_total)
     add_mv_pair(tsp, 'Specialty Pay Total', month, specialty_pay_total)
@@ -362,7 +362,7 @@ def update_tsp(budget, tsp, month, prev_month, cell=None):
         for h in ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"]:
             next((row for row in tsp if row.get('header') == h), None)[month] = 0
 
-    combat_zone = get_row_value(budget, "Combat Zone", month)
+    combat_zone = get_row_value(pay, "Combat Zone", month)
 
     tsp_contributions = calc_tsp_contributions(tsp, month, combat_zone, prev_month=prev_month)
     add_mv_pair(tsp, 'Trad TSP Contribution', month, tsp_contributions['trad_tsp_contribution'])

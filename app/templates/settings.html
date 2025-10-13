@@ -1,7 +1,7 @@
 <div id="settings">
-    <div class="table-container">
-        <div id="settings-budget">
-            <table class="table-styled">
+    <div class="container-budgets-settings">
+        <div id="settings-pay">
+            <table class="styled">
                 <thead>
                     <tr>
                         <th>Settings</th>
@@ -11,7 +11,7 @@
                     {% if show_guide_buttons %}
                         <tr class="section-break">
                             <td>
-                                <button id="button-modal-guide-budget" class="button-generic button-positive button-setting">Guide</button>
+                                <button id="button-modal-guide-pay" class="button-generic button-positive button-setting">Guide</button>
                             </td>
                         </tr>
                     {% endif %}
@@ -19,7 +19,7 @@
                     <tr>
                         <td>
                             <label for="dropdown-months-num">Months Displayed:</label>
-                            <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#tables" hx-swap="innerHTML">
+                            <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
                                 {% for i in range(2, 13) %}
                                     <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
                                 {% endfor %}
@@ -30,8 +30,8 @@
                     <tr>
                         <td>
                             <div class="checkbox-row">
-                                <label for="checkbox-highlight-budget">Highlight Changes:</label>
-                                <input id="checkbox-highlight-budget" class="checkbox-styled" type="checkbox">
+                                <label for="checkbox-highlight-pay">Highlight Changes:</label>
+                                <input id="checkbox-highlight-pay" class="checkbox-styled" type="checkbox">
                             </div>
                         </td>
                     </tr>
@@ -79,11 +79,11 @@
                         <td>
                             <div class="export-row">
                                 <span>Export as:</span>
-                                <select id="dropdown-export-budget">
+                                <select id="dropdown-export-pay">
                                     <option value="xlsx">Excel</option>
                                     <option value="csv">CSV</option>
                                 </select>
-                                <button id="button-export-budget" class="button-generic button-positive" title="Download">↯</button>
+                                <button id="button-export-pay" class="button-generic button-positive" title="Download">↯</button>
                             </div>
                         </td>
                     </tr>
@@ -92,9 +92,9 @@
         </div>
     </div>
 
-    <div class="table-container">
+    <div class="container-budgets-settings">
         <div id="settings-tsp">
-            <table class="table-styled">
+            <table class="styled">
                 <thead>
                     <tr>
                         <th>Settings</th>

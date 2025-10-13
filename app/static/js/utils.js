@@ -78,15 +78,15 @@ function formatValue(value) {
 
 
 // returns either the entire row object or the value for a specific key in the row
-function getRowValue(tableName, header, key = null) {
-    let table;
-    if (tableName === 'budget') {
-        table = window.CONFIG.budget;
-    } else if (tableName === 'tsp') {
-        table = window.CONFIG.tsp;
+function getRowValue(budgetName, header, key = null) {
+    let budget;
+    if (budgetName === 'pay') {
+        budget = window.CONFIG.pay;
+    } else if (budgetName === 'tsp') {
+        budget = window.CONFIG.tsp;
     }
 
-    const row = table.find(r => r.header === header);
+    const row = budget.find(r => r.header === header);
     if (!row) return null;
 
     if (key !== null) {
@@ -187,7 +187,7 @@ function createStandardInput(header, field, value = '') {
             'Account Special Interest'
         ];
         if (percentHeaders.includes(header)) {
-            input.classList.add('table-input', 'input-percent', 'input-short');
+            input.classList.add('budget-input', 'input-percent', 'input-short');
             input.placeholder = '0-100';
             input.maxLength = 3;
             input.addEventListener('input', setInputRestriction('int', 3));
@@ -200,14 +200,14 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Dependents') {
-            input.classList.add('table-input', 'input-short');
+            input.classList.add('budget-input', 'input-short');
             input.placeholder = '0-9';
             input.maxLength = 1;
             input.addEventListener('input', setInputRestriction('int', 1));
         }
 
         else if (header && header.toLowerCase().includes('tsp')) {
-            input.classList.add('table-input', 'input-percent', 'input-short');
+            input.classList.add('budget-input', 'input-percent', 'input-short');
             
             // Determine max value and maxLength
             let maxVal = 100;
@@ -269,7 +269,7 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Months in Service') {
-            input.classList.add('table-input', 'input-short');
+            input.classList.add('budget-input', 'input-short');
             input.placeholder = '0';
             input.maxLength = 3;
 
@@ -310,7 +310,7 @@ function createStandardInput(header, field, value = '') {
         }
 
         else {
-            input.classList.add('table-input', 'input-int', 'input-short');
+            input.classList.add('budget-input', 'input-int', 'input-short');
             input.placeholder = '0';
             input.maxLength = 3;
             input.addEventListener('input', setInputRestriction('int', 3));
@@ -330,7 +330,7 @@ function createStandardInput(header, field, value = '') {
         }
 
         input.value = numValue;
-        input.classList.add('table-input', 'input-float', 'input-mid');
+        input.classList.add('budget-input', 'input-float', 'input-mid');
         input.placeholder = '0.00';
 
         // Determine max digits before decimal for large number inputs
@@ -363,13 +363,13 @@ function createStandardInput(header, field, value = '') {
         input.value = value;
 
         if (header === 'Zip Code') {
-            input.classList.add('table-input', 'input-mid');
+            input.classList.add('budget-input', 'input-mid');
             input.placeholder = '12345';
             input.maxLength = 5;
             input.addEventListener('input', setInputRestriction('text', 5));
         }
         else {
-            input.classList.add('table-input', 'input-text');
+            input.classList.add('budget-input', 'input-text');
             input.addEventListener('input', setInputRestriction('text', 20));
         }
     }
@@ -492,7 +492,7 @@ function validateInput(field, header, value, repeat = false) {
         ];
 
         for (let r of rows) {
-            const v = getRowValue('budget', r, month);
+            const v = getRowValue('pay', r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
                 showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;
@@ -514,7 +514,7 @@ function validateInput(field, header, value, repeat = false) {
         ];
 
         for (let r of rows) {
-            const v = getRowValue('budget', r, month);
+            const v = getRowValue('pay', r, month);
             if (parseInt(v, 10) > 0 && value === 0) {
                 showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
                 return false;

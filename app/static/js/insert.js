@@ -67,7 +67,7 @@ function attachInjectModalListeners() {
         if (!validateAddRow({ method, header, value })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#tables',
+            target: '#budget',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -87,7 +87,7 @@ function attachInjectModalListeners() {
         if (!validateAddRow({ method, header, value })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#tables',
+            target: '#budget',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -163,7 +163,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#tables',
+            target: '#budget',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -185,7 +185,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#tables',
+            target: '#budget',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -208,7 +208,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#tables',
+            target: '#budget',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -337,7 +337,7 @@ function getAccountModalElements() {
 
 
 function validateAddRow({ method, header, value, percent, interest }) {
-    if (window.CONFIG.budget.length >= window.CONFIG.MAX_ROWS) {
+    if (window.CONFIG.pay.length >= window.CONFIG.MAX_ROWS) {
         showToast('Maximum number of rows reached. Cannot have more than ' + window.CONFIG.MAX_ROWS + ' rows in the budget.');
         return false;
     }
@@ -444,7 +444,7 @@ function populateTemplateDropdown(rowType) {
 
 function getTemplateRows(rowType) {
     const headers = window.CONFIG.headers || [];
-    const inBudget = window.CONFIG.budget ? window.CONFIG.budget.map(r => r.header) : [];
+    const inPay = window.CONFIG.pay ? window.CONFIG.pay.map(r => r.header) : [];
 
     let subset = headers.filter(row => {
         if (rowType === 'e') {
@@ -457,7 +457,7 @@ function getTemplateRows(rowType) {
         return false;
     });
 
-    subset = subset.filter(row => !inBudget.includes(row.header));
+    subset = subset.filter(row => !inPay.includes(row.header));
     subset.sort((a, b) => a.header.localeCompare(b.header));
 
     return subset;

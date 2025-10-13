@@ -576,8 +576,9 @@ hr {
 
 
 
+/* budget-settings layout */
 
-#tables-settings {
+#budgets-settings {
     align-items: flex-start;
     display: flex;
     gap: 2rem;
@@ -585,36 +586,37 @@ hr {
     margin: 2rem;
 }
 
-.table-container {
+.container-budgets-settings {
     height: 52rem;
 }
 
-#container-budget, #container-tsp {
+#budget-pay, #budget-tsp {
     border: 1px solid var(--table_border_color);
     border-top-left-radius: 1.5rem;
     border-top-right-radius: 0.5rem;
     border-bottom-left-radius: 1.5rem;
     border-bottom-right-radius: 0.5rem;
     flex: 1 1 auto;
+    height: 52rem;
     max-width: calc(100vw - 14rem - 7rem);
     overflow-x: auto;
     overflow-y: auto; 
 }
 
-#container-tsp, #settings-tsp {
+#budget-tsp, #settings-tsp {
     margin-top: 2rem;
 }
 
-#container-budget::-webkit-scrollbar {
+#budget-pay::-webkit-scrollbar, #budget-tsp::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
 }
 
-#container-budget::-webkit-scrollbar-track {
+#budget-pay::-webkit-scrollbar-track, #budget-tsp::-webkit-scrollbar-track {
     background-color: none;
 }
 
-#container-budget::-webkit-scrollbar-thumb {
+#budget-pay::-webkit-scrollbar-thumb, #budget-tsp::-webkit-scrollbar-thumb {
     background: var(--table_border_color);
     border: none;
     border-radius: 0.5rem;
@@ -622,65 +624,38 @@ hr {
     transition: background 0.5s;
 }
 
-
-#table-budget {
+#budget-pay, #budget-tsp {
     table-layout: fixed;
 }
 
-#table-budget th {
+#budget-pay th, #budget-tsp th {
     position: sticky;
     top: 0;
     z-index: 1101;
 }
 
-#table-budget td:first-child, #table-budget th:first-child {
+#budget-pay td:first-child, #budget-pay th:first-child, #budget-tsp td:first-child, #budget-tsp th:first-child {
     left: 0;
     position: sticky;
     z-index: 1102;
 }
 
-#table-budget th:nth-child(1) {
+#budget-pay th:nth-child(1), #budget-tsp th:nth-child(1) {
     z-index: 1103;
 }
 
-
-#container-tsp::-webkit-scrollbar {
-    height: 0.5rem;
-    width: 0.5rem;
+#settings {
+    flex-shrink: 0;
 }
 
-#container-tsp::-webkit-scrollbar-track {
-    background-color: none;
+#settings-pay, #settings-tsp {
+    border-radius: 1.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
+    overflow: hidden;
 }
 
-#container-tsp::-webkit-scrollbar-thumb {
-    background: var(--table_border_color);
-    border: none;
-    border-radius: 0.5rem;
-    background-clip: padding-box;
-    transition: background 0.5s;
-}
 
-#table-tsp {
-    table-layout: fixed;
-}
-
-#table-tsp th {
-    position: sticky;
-    top: 0;
-    z-index: 1104;
-}
-
-#table-tsp td:first-child, #table-tsp th:first-child {
-    left: 0;
-    position: sticky;
-    z-index: 1105;
-}
-
-#table-tsp th:nth-child(1) {
-    z-index: 1106;
-}
-
+/* budget-settings buttons */
 
 .button-remove-row {
     display: none;
@@ -695,22 +670,11 @@ hr {
     z-index: var(--z-table-button);
 }
 
-
-#settings {
-    flex-shrink: 0;
-}
-
-#settings-budget, #settings-tsp {
-    border-radius: 1.5rem;
-    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.10);
-    overflow: hidden;
-}
-
 .button-setting {
     width: 11rem;
 }
 
-#button-export-budget, #button-export-tsp {
+#button-export-pay, #button-export-tsp {
     align-items: center;
     display: flex;
     height: 2rem;
@@ -724,17 +688,15 @@ hr {
 }
 
 
-/* =========================
-   styled table
-   ========================= */
+/* styled table */
 
-.table-styled {
+table.styled {
     background: var(--primary_light_accent_color); 
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.table-styled th, .table-styled td {
+table.styled th, table.styled td {
     border-bottom: 1px solid var(--table_border_color);
     border-left: none;
     border-right: 1px solid var(--table_border_color);
@@ -742,64 +704,51 @@ hr {
     text-align: center;
 }
 
-.table-styled th:last-child, .table-styled td:last-child {
+table.styled th:last-child, table.styled td:last-child {
     border-right: none;
 }
 
-.table-styled tr:last-child th, .table-styled tr:last-child td {
+table.styled tr:last-child th, table.styled tr:last-child td {
     border-bottom: none;
 }
 
-.table-styled th {
+table.styled th {
     background-color: var(--primary_dark_accent_color);
     color: var(--light_text_color);
     font-weight: bold;
 }
 
-#table-budget th:first-child {
-    background-color: var(--primary_dark_accent_color);
-    color: var(--light_text_color);
+table.styled th:first-child, table.styled td:first-child {
+    max-width: 15rem;
+    min-width: 15rem;
+    width: 15rem;
 }
 
-.table-styled th:first-child, .table-styled td:first-child {
-    max-width: 14rem;
-    min-width: 14rem;
-    width: 14rem;
-}
-
-.table-styled th:not(:first-child), .table-styled td:not(:first-child) {
+table.styled th:not(:first-child), table.styled td:not(:first-child) {
     max-width: 7.25rem;
     min-width: 7.25rem;
     width: 7.25rem;
 }
 
-.table-styled tr {
+table.styled tr {
     height: 4rem;
     max-height: 4rem;
     min-height: 4rem;
 }
 
-.table-styled tr:nth-child(even) {
+table.styled tr:nth-child(even) {
     background-color: var(--secondary_light_accent_color);
-}
-
-#table-budget tr:nth-child(odd) td:first-child {
-    background-color: var(--primary_light_accent_color);
-}
-
-#table-budget tr:nth-child(even) td:first-child {
-    background-color: var(--secondary_light_accent_color);
-}
-
-.table-styled td.cell {
-    height: 4rem;
-    padding: 0;
-    vertical-align: top;
-    white-space: nowrap;
 }
 
 .section-break td {
     border-bottom: 0.4rem solid var(--table_border_color) !important;
+}
+
+table.styled td.cell {
+    height: 4rem;
+    padding: 0;
+    vertical-align: top;
+    white-space: nowrap;
 }
 
 .row-variable, .row-tsp-rate {
@@ -812,23 +761,6 @@ hr {
 
 .row-header-cell:hover .button-remove-row {
     display: flex;
-}
-
-#table-budget.highlight-mode .budget-highlight {
-    background-color: var(--highlight_yellow_color);
-}
-
-.editingButtonContainer {
-    display: flex;
-    justify-content: center;
-    margin: -0.25rem 0 0 0;
-}
-
-.editing-cell {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .checkbox-row {
@@ -852,7 +784,7 @@ hr {
 }
 
 
-.button-table {
+.button-cell {
     align-items: center;
     background: none;
     border: none;
@@ -868,14 +800,12 @@ hr {
     width: 100%;
 }
 
-.button-table:hover {
+.button-cell:hover {
     background-color: var(--highlight_green_color);
 }
 
 
-/* =========================
-   les image and remarks
-   ========================= */
+/* les image and rect overlay */
 
 #les-image {
     border: 1px solid var(--table_border_color);
@@ -899,6 +829,9 @@ hr {
 .rect-highlight:not(.clickable) {
     cursor: default;
 }
+
+
+/* les remarks */
 
 #remarks-container {
     text-align: center;

@@ -1,5 +1,6 @@
-// stores scroll position of budget, used to restore after htmx swap
-let budgetScrollTop = 0;
+// stores scroll position of pay and tsp, used to restore after htmx swap
+let payScrollTop = 0;
+let tspScrollTop = 0;
 //stores state of removing row, used for confirmation timeout
 let removeRowConfirm = {};
 
@@ -36,28 +37,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// save scroll position before any htmx request that will update the budget
+// save scroll position before any htmx request that will update the pay
 document.body.addEventListener('htmx:beforeRequest', function(evt) {
-    // only save if the budget is present
-    const budgetContainer = document.getElementById('budget-container');
-    if (budgetContainer) {
-        budgetScrollTop = budgetContainer.scrollTop;
+    // only save if the pay is present
+    const payContainer = document.getElementById('pay-container');
+    if (payContainer) {
+        payScrollTop = payContainer.scrollTop;
+    }
+    // only save if the tsp is present
+    const tspContainer = document.getElementById('tsp-container');
+    if (tspContainer) {
+        tspScrollTop = tspContainer.scrollTop;
     }
 });
 
 
-// htmx after swap event listener, runs every time the budget is loaded
+// htmx after swap event listener, runs every time the pay is loaded
 document.body.addEventListener('htmx:afterSwap', function(evt) {
     getConfigData();
 
-    //only runs the first time the budget is loaded
+    //only runs the first time the pay is loaded
     if (evt.target && evt.target.id === 'content') {
-        //window.addEventListener('beforeunload', budgetUnloadPrompt);
+        //window.addEventListener('beforeunload', payUnloadPrompt);
         //attachInjectModalListeners();
         //attachAccountModalListeners();
     }
 
-    highlightChanges('budget');
+    highlightChanges('pay');
     highlightChanges('tsp');
     toggleRows('variables');
     toggleRows('tsp-rates');
@@ -67,9 +73,9 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     displayRecommendations(window.CONFIG.recommendations);
     displayDiscrepanciesModal(window.CONFIG.discrepancies);
 
-    const budgetContainer = document.getElementById('budget-container');
-    if (budgetContainer && typeof budgetScrollTop === 'number') {
-        budgetContainer.scrollTop = budgetScrollTop;
+    const payContainer = document.getElementById('pay-container');
+    if (payContainer && typeof payScrollTop === 'number') {
+        payContainer.scrollTop = payScrollTop;
     }
     const tspContainer = document.getElementById('tsp-container');
     if (tspContainer && typeof tspScrollTop === 'number') {
@@ -99,22 +105,22 @@ document.addEventListener('mousemove', function(e) {
             tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
         } 
         else if (row === 'Branch' && value) {
-            tooltip = getRowValue('budget', 'Branch Long', month);
+            tooltip = getRowValue('pay', 'Branch Long', month);
         }
         else if (row === 'Component' && value) {
-            tooltip = getRowValue('budget', 'Component Long', month);
+            tooltip = getRowValue('pay', 'Component Long', month);
         }
         else if (row === 'Grade' && value) {
-            tooltip = getRowValue('budget', 'Rank Long', month);
+            tooltip = getRowValue('pay', 'Rank Long', month);
         }
         else if (row === 'Zip Code' && value) {
-            tooltip = getRowValue('budget', 'Military Housing Area Long', month);
+            tooltip = getRowValue('pay', 'Military Housing Area Long', month);
         }
         else if (row === 'OCONUS Locality Code' && value) {
-            tooltip = getRowValue('budget', 'OCONUS Locality Code Long', month);
+            tooltip = getRowValue('pay', 'OCONUS Locality Code Long', month);
         }
         else if (row === 'Home of Record' && value) {
-            tooltip = getRowValue('budget', 'Home of Record Long', month);
+            tooltip = getRowValue('pay', 'Home of Record Long', month);
         }
 
         if (tooltip) showTooltip(e, tooltip);
@@ -141,9 +147,9 @@ document.addEventListener('click', function(e) {
         }
     }
 
-    if (e.target && e.target.id === 'button-modal-guide-budget') {
-        const guideBudgetModalCheckbox = document.getElementById('modal-guide-budget');
-        guideBudgetModalCheckbox.checked = true;
+    if (e.target && e.target.id === 'button-modal-guide-pay') {
+        const guidepayModalCheckbox = document.getElementById('modal-guide-pay');
+        guidepayModalCheckbox.checked = true;
     }
 
     if (e.target && e.target.id === 'button-modal-inject') {
@@ -187,10 +193,10 @@ document.addEventListener('click', function(e) {
 
     // open edit cell modal
     if (e.target.classList.contains('button-modal-edit')) {
-        let tableName = e.target.getAttribute('data-tableName');
+        let budgetName = e.target.getAttribute('data-budgetName');
         let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
-        let value = getRowValue(tableName, header, month);
+        let value = getRowValue(budgetName, header, month);
         let field = e.target.getAttribute('data-field');
         openEditModal(header, month, value, field);
     }
@@ -220,7 +226,7 @@ document.addEventListener('click', function(e) {
             removeRowConfirm[header] = false;
             hideTooltip();
             htmx.ajax('POST', '/route_remove_row', {
-                target: '#tables',
+                target: '#budget',
                 swap: 'innerHTML',
                 values: { header: header }
             });
@@ -229,16 +235,16 @@ document.addEventListener('click', function(e) {
         e.stopPropagation();
     }
 
-    // export budget button
-    if (e.target && e.target.id === 'button-export-budget') {
+    // export pay button
+    if (e.target && e.target.id === 'button-export-pay') {
         e.preventDefault();
-        exportTable('budget');
+        exportBudget('pay');
     }
 
     // export tsp button
     if (e.target && e.target.id === 'button-export-tsp') {
         e.preventDefault();
-        exportTable('tsp');
+        exportBudget('tsp');
     }
 });
 
@@ -248,8 +254,8 @@ document.addEventListener('change', function(e) {
         disableInputs();
     }
 
-    if (e.target && e.target.id === 'checkbox-highlight-budget') {
-        highlightChanges('budget');
+    if (e.target && e.target.id === 'checkbox-highlight-pay') {
+        highlightChanges('pay');
     }
 
     if (e.target && e.target.id === 'checkbox-variables') {
