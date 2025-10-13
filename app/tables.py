@@ -123,8 +123,8 @@ def build_month(budget, tsp, month, prev_month, cell=None, init=False):
 
     tsp = update_tsp(budget, tsp, month, prev_month, cell=cell)
 
-    trad_tsp_row = next((r for r in budget if r.get('header') == "Traditional TSP"), None)
-    roth_tsp_row = next((r for r in budget if r.get('header') == "Roth TSP"), None)
+    trad_tsp_row = get_row_value(budget, 'Traditional TSP')
+    roth_tsp_row = get_row_value(budget, 'Roth TSP')
 
     if trad_tsp_row:
         trad_tsp_row[month] = -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))

@@ -371,12 +371,20 @@ def update_variables(budget, month, prev_month, cell=None):
 
         if header == "Year":
             row[month] = prev_value + 1 if month == "JAN" else prev_value
-
+            continue
         elif header == "Months in Service":
             row[month] = prev_value + 1
+            continue
 
-        elif cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
-            row[month] = cell.get('value')
+        if cell is not None and header == cell.get('header'):
+            if cell.get('repeat') or cell.get('month') == month:
+                row[month] = cell.get('value')
+            elif month in row:
+                pass
+            else:
+                row[month] = prev_value
+        elif month in row:
+            pass
         else:
             row[month] = prev_value
 
@@ -408,8 +416,15 @@ def update_pays(budget, month, prev_month, sign, cell=None, init=False):
             row[month] = function(budget, month)
             continue
 
-        if cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
-            row[month] = cell.get('value')
+        if cell is not None and header == cell.get('header'):
+            if cell.get('repeat') or cell.get('month') == month:
+                row[month] = cell.get('value')
+            elif month in row:
+                pass
+            else:
+                row[month] = prev_value
+        elif month in row:
+            pass
         else:
             row[month] = prev_value
 

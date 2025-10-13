@@ -7,20 +7,20 @@ function budgetUnloadPrompt(e) {
 
 // opens modal for editing cell
 function openEditModal(header, month, value, field) {
-    const modalCheckbox = document.getElementById('modal-edit');
-    modalCheckbox.checked = true;
+    const modalEdit = document.getElementById('modal-edit');
+    modalEdit.checked = true;
 
-    const editContainer = document.getElementById('modal-content-edit');
-    editContainer.innerHTML = '';
+    const modalContentEdit = document.getElementById('modal-content-edit');
+    modalContentEdit.innerHTML = '';
 
-    const title = document.createElement('h2');
-    title.textContent = `Editing ${header} for ${month}`;
-    editContainer.appendChild(title);
+    const modalHeader = document.createElement('h2');
+    modalHeader.textContent = `Editing ${header} for ${month}`;
+    modalContentEdit.appendChild(modalHeader);
 
     const currentValueDiv = document.createElement('div');
     currentValueDiv.style.marginBottom = '1rem';
     currentValueDiv.innerHTML = `<strong>Current:</strong> ${formatValue(value)}`;
-    editContainer.appendChild(currentValueDiv);
+    modalContentEdit.appendChild(currentValueDiv);
 
     const futureValueDiv = document.createElement('div');
     futureValueDiv.style.marginBottom = '1rem';
@@ -29,46 +29,42 @@ function openEditModal(header, month, value, field) {
     const inputWrapper = createStandardInput(header, field, value);
 
     futureValueDiv.appendChild(inputWrapper);
-    editContainer.appendChild(futureValueDiv);
+    modalContentEdit.appendChild(futureValueDiv);
 
-    const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'editing-buttons';
+    const buttonsEdit = document.createElement('div');
+    buttonsEdit.className = 'buttons-edit';
 
-    const onetimeButton = document.createElement('button');
-    onetimeButton.textContent = 'One-Time Change';
-    onetimeButton.classList.add('button-generic', 'button-positive');
-    onetimeButton.onclick = function() {
-        submitEditModal(header, month, field, false);
+    const buttonOnetime = document.createElement('button');
+    buttonOnetime.textContent = 'One-Time';
+    buttonOnetime.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonOnetime.onclick = function() {
+        submitEditModal(header, month, field, repeat=false);
     };
+    buttonsEdit.appendChild(buttonOnetime);
 
-    const repeatButton = document.createElement('button');
-    repeatButton.textContent = 'Repeat Change';
-    repeatButton.classList.add('button-generic', 'button-positive');
-    repeatButton.onclick = function() {
-        submitEditModal(header, month, field, true);
+    const buttonRepeat = document.createElement('button');
+    buttonRepeat.textContent = 'Repeat';
+    buttonRepeat.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonRepeat.onclick = function() {
+        submitEditModal(header, month, field, repeat=true);
     };
+    buttonsEdit.appendChild(buttonRepeat);
 
-    const cancelButton = document.createElement('button');
-    cancelButton.textContent = 'Cancel';
-    cancelButton.classList.add('button-generic', 'button-negative');
-    cancelButton.onclick = function() {
+    const buttonCancel = document.createElement('button');
+    buttonCancel.textContent = 'Cancel';
+    buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
+    buttonCancel.onclick = function() {
         document.getElementById('modal-edit').checked = false;
     };
+    buttonsEdit.appendChild(buttonCancel);
 
-    buttonContainer.appendChild(onetimeButton);
-    buttonContainer.appendChild(repeatButton);
-    buttonContainer.appendChild(cancelButton);
-
-    editContainer.appendChild(buttonContainer);
-
-    // Store current edit info for validation
-    window.currentEditModal = { header, month, field };
+    modalContentEdit.appendChild(buttonsEdit);
 }
 
 
-// Submit handler for modal edit
+// submit handler for modal edit
 function submitEditModal(header, month, field, repeat) {
-    const input = document.querySelector('#edit-container input, #edit-container select');
+    const input = document.querySelector('#modal-content-edit input, #modal-content-edit select');
     const value = input.value;
 
     if (!validateInput(field, header, value, repeat)) return;
@@ -213,166 +209,6 @@ function disableDrillsButtons() {
         }
     });
 }
-
-
-
-
-
-
-
-// editing states
-let isEditing = false;
-let currentEdit = null;
-
-
-function validateInput(field, header, value, repeat = false) {
-    if (value === '' || value === null || value === undefined) {
-        showToast('A value must be entered.');
-        return false;
-    }
-
-    if (field === 'int') {
-        let num = parseInt(value, 10);
-        if (isNaN(num)) {
-            showToast('Value must be a number.');
-            return false;
-        }
-        if (header.toLowerCase().includes('tsp rate') && (num < 0 || num > 100)) {
-            showToast('TSP rate must be between 0 and 100.');
-            return false;
-        }
-        if (value.length > 3) {
-            showToast('Value must be at most 3 digits.');
-            return false;
-        }
-    }
-
-    if (field === 'float') {
-        if (!/^\d{0,4}(\.\d{0,2})?$/.test(value)) {
-            showToast('Value must be a decimal with up to 4 digits before and 2 after the decimal.');
-            return false;
-        }
-        if (value.length > 7) {
-            showToast('Value must be at most 7 characters.');
-            return false;
-        }
-    }
-    
-    if (header === 'Zip Code') {
-        if (!/^\d{5}$/.test(value)) {
-            showToast('Zip code must be exactly 5 digits.');
-            return false;
-        }
-    }
-
-
-    // TSP base rate validation
-    if (header === 'Trad TSP Base Rate') {
-        if (value > window.CONFIG.TRAD_TSP_RATE_MAX) {
-            showToast(`Trad TSP Base Rate cannot be more than ${window.CONFIG.TRAD_TSP_RATE_MAX}.`);
-            return false;
-        }
-
-        const month = currentEdit.month;
-        const rows = [
-            'Trad TSP Specialty Rate',
-            'Trad TSP Incentive Rate',
-            'Trad TSP Bonus Rate'
-        ];
-
-        for (let r of rows) {
-            const v = getRowValue('budget', r, month);
-            if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
-                return false;
-            }
-        }
-    }
-
-    if (header === 'Roth TSP Base Rate') {
-        if (value > window.CONFIG.ROTH_TSP_RATE_MAX) {
-            showToast(`Roth TSP Base Rate cannot be more than ${window.CONFIG.ROTH_TSP_RATE_MAX}.`);
-            return false;
-        }
-
-        const month = currentEdit.month;
-        const rows = [
-            'Roth TSP Specialty Rate',
-            'Roth TSP Incentive Rate',
-            'Roth TSP Bonus Rate'
-        ];
-
-        for (let r of rows) {
-            const v = getRowValue('budget', r, month);
-            if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
-                return false;
-            }
-        }
-
-    }
-
-    if (
-        header.includes('Specialty Rate') ||
-        header.includes('Incentive Rate') ||
-        header.includes('Bonus Rate')
-    ) {
-        if (value > 100) {
-            showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
-            return false;
-        }
-        if (header.startsWith('Trad') && getRowValue('tsp', 'Trad TSP Base Rate', currentEdit.month) === 0) {
-            showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
-            return false;
-        }
-        if (header.startsWith('Roth') && getRowValue('tsp', 'Roth TSP Base Rate', currentEdit.month) === 0) {
-            showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
-            return false;
-        }
-    }
-
-    
-    if (repeat && (header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate'))) {
-        const months = window.CONFIG.months;
-        const startIdx = months.indexOf(currentEdit.month);
-        const baseRow = header.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
-        console.log('Repeat validation:', months.slice(startIdx), baseRow);
-        for (let i = startIdx; i < months.length; i++) { // Only future months
-            const baseRate = getRowValue('tsp', baseRow, months[i]);
-            if (parseInt(baseRate, 10) === 0) {
-                showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0% (${months[i]}).`);
-                return false;
-            }
-        }
-    }
-
-    if (header.includes('TSP Base Rate') || header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate')) {
-        const month = currentEdit.month;
-        let tradValue = 0, rothValue = 0;
-
-        if (header.startsWith('Trad')) {
-            tradValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Bonus Rate', month), 10);
-        } else if (header.startsWith('Roth')) {
-            rothValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Bonus Rate', month), 10);
-        }
-
-        if ((tradValue + rothValue) > 100) {
-            showToast('Combined Traditional and Roth TSP rates for this type cannot exceed 100%.');
-            return false;
-        }
-    }
-
-    return true;
-}
-
 
 
 function displayRecommendations(recommendations) {

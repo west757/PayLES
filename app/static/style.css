@@ -927,9 +927,7 @@ hr {
 }
 
 
-/* =========================
-   modals
-   ========================= */
+/* modals */
 
 .modal {
     background: rgba(0,0,0, .75);
@@ -987,8 +985,15 @@ hr {
     right: 0;
     top: -20%;
     transition: top .3s ease;
-    width: 65rem;
     z-index: 3002;
+}
+
+.modal-wide {
+    width: 65rem;
+}
+
+.modal-short {
+    width: 30rem;
 }
 
 .button-modal-close {
@@ -1011,7 +1016,7 @@ hr {
 }
 
 .button-modal-close:hover {
-    color: var(--primary_red_color);
+    color: var(--secondary_red_color);
 }
 
 .modal-table {
@@ -1026,6 +1031,8 @@ hr {
     border: 1px solid black;
 }
 
+
+/* account modal grid */
 .modal-grid {
     align-items: flex-start;
     display: grid;
@@ -1121,6 +1128,18 @@ hr {
 
 .modal-list-text {
     margin-bottom: 1rem;
+}
+
+/* modal edit */
+.buttons-edit {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.button-edit {
+    width: 7rem;
 }
 
 

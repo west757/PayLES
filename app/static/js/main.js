@@ -196,7 +196,7 @@ document.addEventListener('click', function(e) {
     }
 
     // close modal from close button in modal
-    if (e.target.classList.contains('modal-close')) {
+    if (e.target.classList.contains('button-modal-close')) {
         document.querySelectorAll('.modal-state:checked').forEach(function(input) {
             input.checked = false;
         });
@@ -244,8 +244,7 @@ document.addEventListener('click', function(e) {
 
 
 document.addEventListener('change', function(e) {
-    // setting function calls on dropdown or checkbox change
-    if (e.target && e.target.id === 'months-num-dropdown') {
+    if (e.target && e.target.id === 'dropdown-months-num') {
         disableInputs();
     }
 

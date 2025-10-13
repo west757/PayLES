@@ -338,8 +338,15 @@ def update_tsp(budget, tsp, month, prev_month, cell=None):
     for header in rate_headers:
         row = next((row for row in tsp if row.get('header') == header), None)
         prev_value = row.get(prev_month, 0)
-        if cell is not None and header == cell.get('header') and (month == cell.get('month') or cell.get('repeat')):
-            row[month] = cell.get('value')
+        if cell is not None and header == cell.get('header'):
+            if cell.get('repeat') or cell.get('month') == month:
+                row[month] = cell.get('value')
+            elif month in row:
+                pass
+            else:
+                row[month] = prev_value
+        elif month in row:
+            pass
         else:
             row[month] = prev_value
 
