@@ -19,7 +19,7 @@
                     <tr>
                         <td>
                             <label for="dropdown-months-num">Months Displayed:</label>
-                            <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#budget" hx-swap="innerHTML">
+                            <select id="dropdown-months-num" name="months_num" hx-post="/route_change_months" hx-target="#budgets" hx-swap="innerHTML">
                                 {% for i in range(2, 13) %}
                                     <option value="{{i}}" {% if i==months|length %} selected {% endif %}>{{i}}</option>
                                 {% endfor %}
@@ -31,7 +31,7 @@
                         <td>
                             <div class="checkbox-row">
                                 <label for="checkbox-highlight-pay">Highlight Changes:</label>
-                                <input id="checkbox-highlight-pay" class="checkbox-styled" type="checkbox">
+                                <input id="checkbox-highlight-pay" class="styled" type="checkbox">
                             </div>
                         </td>
                     </tr>
@@ -40,7 +40,7 @@
                         <td>
                             <div class="checkbox-row">
                                 <label for="checkbox-variables">Show All Variables:</label>
-                                <input id="checkbox-variables" class="checkbox-styled" type="checkbox">
+                                <input id="checkbox-variables" class="styled" type="checkbox">
                             </div>
                         </td>
                     </tr>
@@ -113,7 +113,7 @@
                         <td>
                             <div class="checkbox-row">
                                 <label for="checkbox-highlight-tsp">Highlight Changes:</label>
-                                <input id="checkbox-highlight-tsp" class="checkbox-styled" type="checkbox">
+                                <input id="checkbox-highlight-tsp" class="styled" type="checkbox">
                             </div>
                         </td>
                     </tr>
@@ -122,7 +122,7 @@
                         <td>
                             <div class="checkbox-row">
                                 <label for="checkbox-tsp-rates">Show TSP Rates:</label>
-                                <input id="checkbox-tsp-rates" class="checkbox-styled" type="checkbox">
+                                <input id="checkbox-tsp-rates" class="styled" type="checkbox">
                             </div>
                         </td>
                     </tr>

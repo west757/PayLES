@@ -67,7 +67,7 @@ function attachInjectModalListeners() {
         if (!validateAddRow({ method, header, value })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#budget',
+            target: '#budgets',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -87,7 +87,7 @@ function attachInjectModalListeners() {
         if (!validateAddRow({ method, header, value })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#budget',
+            target: '#budgets',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -163,7 +163,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#budget',
+            target: '#budgets',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -185,7 +185,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#budget',
+            target: '#budgets',
             swap: 'innerHTML',
             values: {
                 method: method,
@@ -208,7 +208,7 @@ function attachAccountModalListeners() {
         if (!validateAddRow({ method, header, value, percent, interest })) return;
 
         htmx.ajax('POST', '/route_insert_row', {
-            target: '#budget',
+            target: '#budgets',
             swap: 'innerHTML',
             values: {
                 method: method,

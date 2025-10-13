@@ -14,7 +14,7 @@ function openEditModal(header, month, value, field) {
     modalContentEdit.innerHTML = '';
 
     const modalHeader = document.createElement('h2');
-    modalHeader.textContent = `Editing ${header} for ${month}`;
+    modalHeader.textContent = `Edit ${header} for ${month}`;
     modalContentEdit.appendChild(modalHeader);
 
     const currentValueDiv = document.createElement('div');
@@ -72,7 +72,7 @@ function submitEditModal(header, month, field, repeat) {
     document.getElementById('modal-edit').checked = false;
 
     htmx.ajax('POST', '/route_update_cell', {
-        target: '#budget',
+        target: '#budgets',
         swap: 'innerHTML',
         values: {
             header: header,

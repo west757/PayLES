@@ -37,17 +37,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// save scroll position before any htmx request that will update the pay
+// save scroll position before any htmx request that will update budgets
 document.body.addEventListener('htmx:beforeRequest', function(evt) {
     // only save if the pay is present
-    const payContainer = document.getElementById('pay-container');
-    if (payContainer) {
-        payScrollTop = payContainer.scrollTop;
+    const budgetPay = document.getElementById('budget-pay');
+    if (budgetPay) {
+        payScrollTop = budgetPay.scrollTop;
     }
     // only save if the tsp is present
-    const tspContainer = document.getElementById('tsp-container');
-    if (tspContainer) {
-        tspScrollTop = tspContainer.scrollTop;
+    const budgetTSP = document.getElementById('budget-tsp');
+    if (budgetTSP) {
+        tspScrollTop = budgetTSP.scrollTop;
     }
 });
 
@@ -73,13 +73,13 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     displayRecommendations(window.CONFIG.recommendations);
     displayDiscrepanciesModal(window.CONFIG.discrepancies);
 
-    const payContainer = document.getElementById('pay-container');
-    if (payContainer && typeof payScrollTop === 'number') {
-        payContainer.scrollTop = payScrollTop;
+    const budgetPay = document.getElementById('budget-pay');
+    if (budgetPay && typeof payScrollTop === 'number') {
+        budgetPay.scrollTop = payScrollTop;
     }
-    const tspContainer = document.getElementById('tsp-container');
-    if (tspContainer && typeof tspScrollTop === 'number') {
-        tspContainer.scrollTop = tspScrollTop;
+    const budgetTSP = document.getElementById('budget-tsp');
+    if (budgetTSP && typeof tspScrollTop === 'number') {
+        budgetTSP.scrollTop = tspScrollTop;
     }
 });
 
@@ -226,7 +226,7 @@ document.addEventListener('click', function(e) {
             removeRowConfirm[header] = false;
             hideTooltip();
             htmx.ajax('POST', '/route_remove_row', {
-                target: '#budget',
+                target: '#budgets',
                 swap: 'innerHTML',
                 values: { header: header }
             });

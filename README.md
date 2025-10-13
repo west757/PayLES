@@ -9,7 +9,6 @@ run: python -m app.main
 short-term:
 - drill pay calculation (divide monthly total by 30)
 - rework row type characters
-- set height of tsp settings to height of tsp table
 - make tsp account for tsp table
 - change account to just be bank account
 - tsp input restrictions
@@ -18,7 +17,7 @@ short-term:
 - oconus calculations
 - set dependents limit to 5
 - refactor update tsp with rate headers
-- widen columns, shorten height, add line to not take up width in cell for section break
+- line to not take up width in cell for section break
 - make badge go away after user first clicks on the modal
 - add specific class names for radio buttons, file inputs
 

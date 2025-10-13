@@ -363,7 +363,7 @@ select::-webkit-scrollbar-button {
 
 /* checkboxes */
 
-.checkbox-styled {
+input[type="checkbox"].styled {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -655,7 +655,7 @@ hr {
 }
 
 
-/* budget-settings buttons */
+/* budget-settings elements */
 
 .button-remove-row {
     display: none;
@@ -668,6 +668,58 @@ hr {
     vertical-align: middle;
     width: 1.5rem;
     z-index: var(--z-table-button);
+}
+
+.row-variable, .row-tsp-rate {
+    display: none;
+}
+
+.cell-header {
+    position: relative;
+}
+
+.cell-header:hover .button-remove-row {
+    display: flex;
+}
+
+.checkbox-row {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem 0 0;
+}
+
+.checkbox-row label {
+    text-align: right;
+    min-width: 9rem;
+    margin-right: 0.25rem;
+}
+
+.export-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.button-cell {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: 1rem;
+    height: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1.25rem;
+    text-align: center;
+    width: 100%;
+}
+
+.button-cell:hover {
+    background-color: var(--highlight_green_color);
 }
 
 .button-setting {
@@ -719,15 +771,15 @@ table.styled th {
 }
 
 table.styled th:first-child, table.styled td:first-child {
-    max-width: 15rem;
-    min-width: 15rem;
-    width: 15rem;
+    max-width: 16rem;
+    min-width: 16rem;
+    width: 16rem;
 }
 
 table.styled th:not(:first-child), table.styled td:not(:first-child) {
-    max-width: 7.25rem;
-    min-width: 7.25rem;
-    width: 7.25rem;
+    max-width: 7rem;
+    min-width: 7rem;
+    width: 7rem;
 }
 
 table.styled tr {
@@ -749,59 +801,6 @@ table.styled td.cell {
     padding: 0;
     vertical-align: top;
     white-space: nowrap;
-}
-
-.row-variable, .row-tsp-rate {
-    display: none;
-}
-
-.row-header-cell {
-    position: relative;
-}
-
-.row-header-cell:hover .button-remove-row {
-    display: flex;
-}
-
-.checkbox-row {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    padding: 0 1rem 0 0;
-}
-
-.checkbox-row label {
-    text-align: right;
-    min-width: 9rem;
-    margin-right: 0.25rem;
-}
-
-.export-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-}
-
-
-.button-cell {
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    font: inherit;
-    font-size: 1rem;
-    height: 100%;
-    justify-content: center;
-    margin: 0;
-    padding: 0 1.25rem;
-    text-align: center;
-    width: 100%;
-}
-
-.button-cell:hover {
-    background-color: var(--highlight_green_color);
 }
 
 
@@ -921,7 +920,7 @@ table.styled td.cell {
 }
 
 .modal-short {
-    width: 30rem;
+    width: 32rem;
 }
 
 .button-modal-close {
