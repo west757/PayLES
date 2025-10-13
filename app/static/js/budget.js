@@ -3,6 +3,7 @@ let isEditing = false;
 let currentEdit = null;
 
 
+
 function enterEditMode(cellButton, header, month, value, field) {
     if (isEditing) return;
 

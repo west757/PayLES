@@ -5,6 +5,120 @@ function budgetUnloadPrompt(e) {
 }
 
 
+
+
+// opens modal for editing cell
+function openEditModal(header, month, value, field) {
+    const modalCheckbox = document.getElementById('modal-edit');
+    modalCheckbox.checked = true;
+
+    const editContainer = document.getElementById('edit-container');
+    editContainer.innerHTML = '';
+
+    const title = document.createElement('h2');
+    title.textContent = `Editing ${header} for month ${month}`;
+    editContainer.appendChild(title);
+
+    const currentValueDiv = document.createElement('div');
+    currentValueDiv.style.marginBottom = '1rem';
+    currentValueDiv.innerHTML = `<strong>Current Value:</strong> ${formatValue(value)}`;
+    editContainer.appendChild(currentValueDiv);
+
+    const futureValueDiv = document.createElement('div');
+    futureValueDiv.style.marginBottom = '1rem';
+    futureValueDiv.innerHTML = `<strong>Future Value:</strong>`;
+
+    // branch and grade, zip code and OCONUS locality code, all tsp rates, filing statuses
+
+    let inputWrapper;
+    if (header === 'Grade') {
+        const branchWrapper = createStandardInput('Branch', 'select', getRowValue('budget', 'Branch', month));
+        const gradeWrapper = createStandardInput('Grade', 'select', value);
+        futureValueDiv.appendChild(branchWrapper);
+        futureValueDiv.appendChild(gradeWrapper);
+        inputWrapper = null; // handled above
+    } else {
+        inputWrapper = createStandardInput(header, field, value);
+    }
+
+    futureValueDiv.appendChild(inputWrapper);
+
+    editContainer.appendChild(futureValueDiv);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'editingButtonContainer';
+
+    const onetimeButton = document.createElement('button');
+    onetimeButton.textContent = 'One-Time Change';
+    onetimeButton.classList.add('editing-button', 'onetime-button');
+    onetimeButton.onclick = function() {
+        submitEditModal(header, month, field, false);
+    };
+
+    const repeatButton = document.createElement('button');
+    repeatButton.textContent = 'Repeat Change';
+    repeatButton.classList.add('editing-button', 'repeat-button');
+    repeatButton.onclick = function() {
+        submitEditModal(header, month, field, true);
+    };
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.classList.add('editing-button', 'cancel-button');
+    cancelButton.onclick = function() {
+        document.getElementById('modal-edit').checked = false;
+    };
+
+    buttonContainer.appendChild(onetimeButton);
+    buttonContainer.appendChild(repeatButton);
+    buttonContainer.appendChild(cancelButton);
+
+    editContainer.appendChild(buttonContainer);
+
+    // Store current edit info for validation
+    window.currentEditModal = { header, month, field };
+}
+
+
+// Submit handler for modal edit
+function submitEditModal(header, month, field, repeat) {
+    let value;
+    // For Grade, get both Branch and Grade values
+    if (header === 'Grade') {
+        const branchInput = document.querySelector('#edit-container select');
+        const gradeInput = document.querySelectorAll('#edit-container select')[1];
+        value = gradeInput.value;
+        // Optionally, handle branch change if needed
+    } else {
+        const input = document.querySelector('#edit-container input, #edit-container select');
+        value = input.value;
+    }
+
+    // Validate
+    if (!validateInput(field, header, value, repeat)) return;
+
+    // Close modal
+    document.getElementById('modal-edit').checked = false;
+
+    // Submit via AJAX
+    htmx.ajax('POST', '/route_update_cell', {
+        target: '#tables',
+        swap: 'innerHTML',
+        values: {
+            header: header,
+            month: month,
+            value: value,
+            repeat: repeat
+        }
+    });
+}
+
+
+
+
+
+
+
 // highlight changes in table compared to previous month
 function highlightChanges(tableName) {
     const highlight_color = getComputedStyle(document.documentElement).getPropertyValue('--highlight_yellow_color').trim();

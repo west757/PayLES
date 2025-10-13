@@ -220,11 +220,12 @@ document.addEventListener('click', function(e) {
 
     // enter edit mode for cell
     if (e.target.classList.contains('cell-button')) {
+        let tableName = e.target.getAttribute('data-tableName');
         let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
-        let fieldType = e.target.getAttribute('data-field');
-        let value = getRowValue('budget', header, month);
-        enterEditMode(e.target, header, month, value, fieldType);
+        let value = getRowValue(tableName, header, month);
+        let field = e.target.getAttribute('data-field');
+        openEditModal(header, month, value, field);
     }
 
     // export budget button

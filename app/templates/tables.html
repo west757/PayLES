@@ -81,12 +81,12 @@
                         {% for month in months %}
                             {% if row.editable and not loop.first %}
                                 <td class="cell">
-                                    <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                    <button class="styled-table-button cell-button tooltip" data-tableName="budget" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                         {{ format_cell(row, month) }}
                                     </button>
                                 </td>
                             {% else %}
-                                <td class="tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-value="{{ row[month] }}">
+                                <td class="tooltip">
                                     {{ format_cell(row, month) }}
                                 </td>
                             {% endif %}
@@ -137,7 +137,7 @@
                     {% for month in months %}
                         {% if row.editable and not loop.first %}
                             <td class="cell">
-                                <button class="styled-table-button cell-button tooltip" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                <button class="styled-table-button cell-button tooltip" data-tableName="tsp" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                     {{ format_cell(row, month) }}
                                 </button>
                             </td>
