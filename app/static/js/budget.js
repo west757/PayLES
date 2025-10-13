@@ -3,96 +3,6 @@ let isEditing = false;
 let currentEdit = null;
 
 
-
-function enterEditMode(cellButton, header, month, value, field) {
-    if (isEditing) return;
-
-    isEditing = true;
-    currentEdit = {cellButton, header, month, value, field};
-
-    disableInputs([]);
-
-    // use standardized input creation
-    let inputWrapper = createStandardInput(header, field, value);
-
-    // find the actual input/select inside the wrapper for enabling/disabling
-    let input = inputWrapper.querySelector('input, select') || inputWrapper;
-
-    // cell edit buttons
-    cellButton.style.display = 'none';
-    let cell = cellButton.parentElement;
-    cell.classList.add('editing-cell');
-    cell.appendChild(inputWrapper);
-
-    let buttonContainer = document.createElement('div');
-    buttonContainer.className = 'editingButtonContainer';
-
-    let onetimeButton = document.createElement('button');
-    onetimeButton.textContent = '▼';
-    onetimeButton.classList.add('editing-button', 'onetime-button', 'tooltip');
-    onetimeButton.setAttribute('data-tooltip', 'One-Time Change');
-    onetimeButton.onclick = function() {
-        hideTooltip();
-        updateBudget(false);
-    };
-
-    let repeatButton = document.createElement('button');
-    repeatButton.textContent = '▶';
-    repeatButton.classList.add('editing-button', 'repeat-button', 'tooltip');
-    repeatButton.setAttribute('data-tooltip', 'Repeat Change');
-    repeatButton.onclick = function() {
-        hideTooltip();
-        updateBudget(true);
-    };
-
-    let cancelButton = document.createElement('button');
-    cancelButton.textContent = '✖';
-    cancelButton.classList.add('editing-button', 'cancel-button', 'tooltip');
-    cancelButton.setAttribute('data-tooltip', 'Cancel');
-    cancelButton.onclick = function() {
-        hideTooltip();
-        exitEditMode();
-    };
-
-    buttonContainer.appendChild(onetimeButton);
-    buttonContainer.appendChild(repeatButton);
-    buttonContainer.appendChild(cancelButton);
-
-    cell.insertBefore(buttonContainer, inputWrapper);
-
-    disableInputs([input, onetimeButton, repeatButton, cancelButton]);
-}
-
-
-function updateBudget(repeat) {
-    let {header, month, field} = currentEdit;
-
-    let input = document.querySelector('.table-input, select');
-    let value = input.value;
-
-    if (field === 'int') {
-        value = parseInt(value, 10);
-    } else if (field === 'float') {
-        value = parseFloat(value);
-    }
-
-    if (!validateInput(field, header, value, repeat)) return;
-
-    exitEditMode();
-
-    htmx.ajax('POST', '/route_update_cell', {
-        target: '#tables',
-        swap: 'innerHTML',
-        values: {
-            header: header,
-            month: month,
-            value: value,
-            repeat: repeat
-        }
-    });
-}
-
-
 function validateInput(field, header, value, repeat = false) {
     if (value === '' || value === null || value === undefined) {
         showToast('A value must be entered.');
@@ -241,25 +151,6 @@ function validateInput(field, header, value, repeat = false) {
     return true;
 }
 
-
-function exitEditMode() {
-    if (!isEditing || !currentEdit) return;
-
-    let {cellButton} = currentEdit;
-    let cell = cellButton.parentElement;
-    cell.classList.remove('editing-cell');
-
-    cell.querySelectorAll('input, select, div').forEach(el => {
-        if (el !== cellButton) el.remove();
-    });
-
-    cellButton.style.display = '';
-    enableInputs();
-    disableDrillsButtons();
-    disableTSPRateButtons();
-    isEditing = false;
-    currentEdit = null;
-}
 
 
 function displayRecommendations(recommendations) {

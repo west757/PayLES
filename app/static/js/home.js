@@ -29,7 +29,7 @@ function buildManualInputs() {
 
 
 function attachHomeListeners() {
-    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabButtons = document.querySelectorAll('.button-tab');
     const tabContents = document.querySelectorAll('.tab-content');
 
     tabButtons.forEach(btn => {

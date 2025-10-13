@@ -13,11 +13,11 @@
     </div>
 
     <div id="tab-container">
-        <div id="tab-buttons">
-            <button class="tab-button active" data-tab="tab-single">Single LES Upload</button>
-            <button class="tab-button" data-tab="tab-joint">Joint Spouse</button>
-            <button class="tab-button" data-tab="tab-manual">Build Without LES</button>
-            <button class="tab-button" data-tab="tab-example">Instructions & Example</button>
+        <div id="tab-button-row">
+            <button class="button-tab active" data-tab="tab-single">Single LES Upload</button>
+            <button class="button-tab" data-tab="tab-joint">Joint Spouse</button>
+            <button class="button-tab" data-tab="tab-manual">Build Without LES</button>
+            <button class="button-tab" data-tab="tab-example">Instructions & Example</button>
         </div>
 
         <div id="tab-single" class="tab-content active">
@@ -28,7 +28,7 @@
                     or
                     {{ form_single.input_file_single(id="input-file-single", accept=".pdf") }}
                 </label>
-                {{ form_single.button_single(id="button-single", class="button-solo") }}
+                {{ form_single.button_single(id="button-single", class="button-generic button-positive") }}
             </form>
         </div>
 
@@ -45,7 +45,7 @@
                         {{ form_joint.input_file_joint_2(id="input-file-joint-2", accept=".pdf") }}
                     </div>
                 </div>
-                {{ form_joint.button_joint(id="button-joint", class="button-solo") }}
+                {{ form_joint.button_joint(id="button-joint", class="button-generic button-positive") }}
             </form>
         </div>
 
@@ -107,7 +107,7 @@
                     </div>
                 </div>
 
-                <button id="button-initials" class="button-solo">Submit</button>
+                <button id="button-initials" class="button-generic button-positive">Submit</button>
             </form>
         -->
         </div>
@@ -119,7 +119,7 @@
             
             <form id="form-example" hx-post="/route_single" hx-swap="innerHTML" method="POST">
                 {{ form_single.hidden_tag() }}
-                {{ form_single.button_example(id="button-example", class="button-solo") }}
+                {{ form_single.button_example(id="button-example", class="button-generic button-positive") }}
             </form>
         </div>
     </div>

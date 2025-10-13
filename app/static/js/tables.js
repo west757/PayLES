@@ -5,8 +5,6 @@ function budgetUnloadPrompt(e) {
 }
 
 
-
-
 // opens modal for editing cell
 function openEditModal(header, month, value, field) {
     const modalCheckbox = document.getElementById('modal-edit');
@@ -16,33 +14,21 @@ function openEditModal(header, month, value, field) {
     editContainer.innerHTML = '';
 
     const title = document.createElement('h2');
-    title.textContent = `Editing ${header} for month ${month}`;
+    title.textContent = `Editing ${header} for ${month}`;
     editContainer.appendChild(title);
 
     const currentValueDiv = document.createElement('div');
     currentValueDiv.style.marginBottom = '1rem';
-    currentValueDiv.innerHTML = `<strong>Current Value:</strong> ${formatValue(value)}`;
+    currentValueDiv.innerHTML = `<strong>Current:</strong> ${formatValue(value)}`;
     editContainer.appendChild(currentValueDiv);
 
     const futureValueDiv = document.createElement('div');
     futureValueDiv.style.marginBottom = '1rem';
-    futureValueDiv.innerHTML = `<strong>Future Value:</strong>`;
+    futureValueDiv.innerHTML = `<strong>Future:</strong>`;
 
-    // branch and grade, zip code and OCONUS locality code, all tsp rates, filing statuses
-
-    let inputWrapper;
-    if (header === 'Grade') {
-        const branchWrapper = createStandardInput('Branch', 'select', getRowValue('budget', 'Branch', month));
-        const gradeWrapper = createStandardInput('Grade', 'select', value);
-        futureValueDiv.appendChild(branchWrapper);
-        futureValueDiv.appendChild(gradeWrapper);
-        inputWrapper = null; // handled above
-    } else {
-        inputWrapper = createStandardInput(header, field, value);
-    }
+    const inputWrapper = createStandardInput(header, field, value);
 
     futureValueDiv.appendChild(inputWrapper);
-
     editContainer.appendChild(futureValueDiv);
 
     const buttonContainer = document.createElement('div');
@@ -50,21 +36,21 @@ function openEditModal(header, month, value, field) {
 
     const onetimeButton = document.createElement('button');
     onetimeButton.textContent = 'One-Time Change';
-    onetimeButton.classList.add('editing-button', 'onetime-button');
+    onetimeButton.classList.add('button-generic', 'button-positive');
     onetimeButton.onclick = function() {
         submitEditModal(header, month, field, false);
     };
 
     const repeatButton = document.createElement('button');
     repeatButton.textContent = 'Repeat Change';
-    repeatButton.classList.add('editing-button', 'repeat-button');
+    repeatButton.classList.add('button-generic', 'button-positive');
     repeatButton.onclick = function() {
         submitEditModal(header, month, field, true);
     };
 
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
-    cancelButton.classList.add('editing-button', 'cancel-button');
+    cancelButton.classList.add('button-generic', 'button-negative');
     cancelButton.onclick = function() {
         document.getElementById('modal-edit').checked = false;
     };
@@ -82,25 +68,13 @@ function openEditModal(header, month, value, field) {
 
 // Submit handler for modal edit
 function submitEditModal(header, month, field, repeat) {
-    let value;
-    // For Grade, get both Branch and Grade values
-    if (header === 'Grade') {
-        const branchInput = document.querySelector('#edit-container select');
-        const gradeInput = document.querySelectorAll('#edit-container select')[1];
-        value = gradeInput.value;
-        // Optionally, handle branch change if needed
-    } else {
-        const input = document.querySelector('#edit-container input, #edit-container select');
-        value = input.value;
-    }
+    const input = document.querySelector('#edit-container input, #edit-container select');
+    const value = input.value;
 
-    // Validate
     if (!validateInput(field, header, value, repeat)) return;
 
-    // Close modal
     document.getElementById('modal-edit').checked = false;
 
-    // Submit via AJAX
     htmx.ajax('POST', '/route_update_cell', {
         target: '#tables',
         swap: 'innerHTML',
@@ -112,11 +86,6 @@ function submitEditModal(header, month, field, repeat) {
         }
     });
 }
-
-
-
-
-
 
 
 // highlight changes in table compared to previous month

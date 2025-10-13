@@ -48,10 +48,7 @@ body {
 }
 
 
-/* =========================
-   header and nav
-   ========================= */
-
+/* header */
 #header-nav {
     background-color: var(--primary_dark_accent_color);
     display: flex;
@@ -76,6 +73,7 @@ header {
     margin: 0 0 0.75rem 0;
 }
 
+/* nav */
 nav {
     height: inherit;
 }
@@ -111,10 +109,7 @@ nav a:hover {
 }
 
 
-/* =========================
-   footer
-   ========================= */
-
+/* footer */
 footer {
     background-color: var(--primary_dark_accent_color);
     color: var(--light_text_color);
@@ -140,10 +135,8 @@ footer {
     text-align: right;
 }
 
-/* =========================
-   error page, toasts, and tooltips
-   ========================= */
 
+/* error page */
 #error-container {
     margin: 2rem auto 0 auto;
     text-align: center;
@@ -165,6 +158,8 @@ footer {
     text-align: left;
 }
 
+
+/* toasts */
 #toast-container {
     align-items: center;
     display: flex;
@@ -206,6 +201,8 @@ footer {
     to { opacity: 0; }
 }
 
+
+/* tooltips */
 #tooltip-container {
     background-color: var(--primary_dark_accent_color);
     border-radius: 0.5rem;
@@ -223,15 +220,13 @@ footer {
    buttons
    ========================= */
 
-.button-solo, input[type=file]::file-selector-button {
-    background-color: var(--primary_green_accent_color);
-    border: 2px solid var(--primary_green_accent_color);
+.button-generic, input[type=file]::file-selector-button {
     border-radius: 0.5rem;
     color: var(--light_text_color);
     cursor: pointer;
     display: inline-block;
     font-size: 1rem;
-    height: 3rem;
+    height: 2.5rem;
     padding: 0 1rem;
     text-align: center;
     transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
@@ -239,16 +234,31 @@ footer {
     will-change: transform;
 }
 
-.button-solo:hover, input[type=file]::file-selector-button:hover {
-    background-color: var(--secondary_green_accent_color);
-    border: 2px solid var(--secondary_green_accent_color);
+.button-generic:hover, input[type=file]::file-selector-button:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.25rem 0.5rem;
     transform: translateY(-2px);
 }
 
-input[type=file]::file-selector-button {
-    height: 2.5rem;
+.button-positive, input[type=file]::file-selector-button {
+    background-color: var(--primary_green_accent_color);
+    border: 2px solid var(--primary_green_accent_color);
 }
+
+.button-positive:hover, input[type=file]::file-selector-button {
+    background-color: var(--secondary_green_accent_color);
+    border: 2px solid var(--secondary_green_accent_color);
+}
+
+.button-negative {
+    background-color: var(--primary_red_color);
+    border: 2px solid var(--primary_red_color);
+}
+
+.button-negative:hover, .remove-row-button:hover {
+    background-color: var(--secondary_red_color);
+    border: 2px solid var(--secondary_red_color);
+}
+
 
 #button-guide-budget, 
 #button-inject, 
@@ -274,6 +284,31 @@ input[type=file]::file-selector-button {
     width: 2rem;
 }
 
+.button-remove-row {
+    display: none;
+    left: 0.25rem;
+    position: absolute;
+    top: 0.25rem;
+    z-index: var(--z-table-button);
+}
+
+
+.editing-button {
+    align-items: center;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
+    color: var(--light_text_color);
+    cursor: pointer;
+    font-size: 1rem;
+    height: 1.5rem;
+    justify-content: center;
+    margin: 0.2rem 0.2rem;
+    transition: background 0.2s;
+    width: 1.5rem;
+}
+
+
 .styled-table-button {
     align-items: center;
     background: none;
@@ -294,57 +329,6 @@ input[type=file]::file-selector-button {
     background-color: var(--highlight_green_color);
 }
 
-/*
-.styled-table-button.cell-button {
-    text-decoration: underline;
-    text-decoration-style: dotted; 
-    text-decoration-skip-ink: none;
-    text-decoration-thickness: 1px;
-    text-decoration-color: var(--cell_disabled_color);
-}
-    */
-
-.editing-button {
-    align-items: center;
-    border: none;
-    border-radius: 0.5rem;
-    box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
-    color: var(--light_text_color);
-    cursor: pointer;
-    font-size: 1rem;
-    height: 1.5rem;
-    justify-content: center;
-    margin: 0.2rem 0.2rem;
-    transition: background 0.2s;
-    width: 1.5rem;
-}
-
-.editing-button.onetime-button, .editing-button.repeat-button {
-    background: var(--primary_green_accent_color);
-    display: flex;
-}
-
-.editing-button.onetime-button:hover, .editing-button.repeat-button:hover {
-    background: var(--secondary_green_accent_color);
-}
-
-.editing-button.cancel-button {
-    background: var(--primary_red_color);
-    display: flex;
-}
-
-.remove-row-button {
-    background: var(--primary_red_color);
-    display: none;
-    left: 0.25rem;
-    position: absolute;
-    top: 0.25rem;
-    z-index: var(--z-table-button);
-}
-
-.editing-button.cancel-button:hover, .remove-row-button:hover {
-    background: var(--secondary_red_color);
-}
 
 .modal-close {
     align-items: center;
@@ -393,10 +377,7 @@ input[type="submit"]:disabled {
 }
 
 
-/* =========================
-   inputs and dropdowns
-   ========================= */
-
+/* inputs */
 input[type="text"], select {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -409,6 +390,24 @@ input[type="text"], select {
     text-align: center;
 }
 
+.input-long {
+    width: 12rem;
+}
+
+.input-mid {
+    width: 5.75rem;
+}
+
+.input-mid2 {
+    width: 4.5rem;
+}
+
+.input-short {
+    width: 3.75rem;
+}
+
+
+/* dropdowns */
 select {
     text-align: left;
     direction: ltr;
@@ -436,31 +435,12 @@ select::-webkit-scrollbar-button {
     height: 0;
 }
 
-.input-long {
-    width: 12rem;
-}
-
-.input-mid {
-    width: 5.75rem;
-}
-
-.input-mid2 {
-    width: 4.5rem;
-}
-
-.input-short {
-    width: 3.75rem;
-}
-
 #dropdown-months-num {
     width: 2.75rem;
 }
 
 
-/* =========================
-   checkboxes, radio buttons, and file input
-   ========================= */
-
+/* checkboxes */
 .checkbox-styled {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
@@ -472,6 +452,8 @@ select::-webkit-scrollbar-button {
     width: 1.25rem;
 }
 
+
+/* radio buttons */
 input[type="radio"] {
     accent-color: var(--primary_green_accent_color);
     height: 1rem;
@@ -479,6 +461,8 @@ input[type="radio"] {
     width: 1rem;
 }
 
+
+/* file input */
 input[type=file] {
     border: 1px solid var(--primary_dark_accent_color);
     border-radius: 0.5rem;
@@ -514,6 +498,8 @@ input[type=file] {
     margin-left: 0.5em;
 }
 
+
+/* badges */
 .badge {
     align-items: center;
     background: var(--primary_red_color);
@@ -534,10 +520,7 @@ input[type=file] {
 }
 
 
-/* =========================
-   home
-   ========================= */
-
+/* home */
 #home-welcome {
     font-size: 1.5rem;
     margin: 2rem auto 2rem auto;
@@ -551,14 +534,14 @@ input[type=file] {
     width: 55rem;
 }
 
-#tab-buttons {
+#tab-button-row {
     align-items: flex-end;
     display: flex;
     justify-content: stretch;
     position: relative;
 }
 
-.tab-button {
+.button-tab {
     background: var(--secondary_light_accent_color);
     border: 1px solid var(--table_border_color);
     border-bottom: none;
@@ -572,16 +555,16 @@ input[type=file] {
     position: relative;
 }
 
-.tab-button:hover {
+.button-tab:hover {
     background: var(--highlight_green_color);
 }
 
-.tab-button.active {
+.button-tab.active {
     background: var(--highlight_green_color);
     height: 4.25rem;
 }
 
-.tab-button:last-child {
+.button-tab:last-child {
     border-right: 1px solid var(--table_border_color);
 }
 
@@ -600,6 +583,8 @@ input[type=file] {
     display: block;
 }
 
+
+/* file drop */
 #input-filedrop-single {
     align-items: center;
     border: 2px dashed var(--primary_dark_accent_color);
