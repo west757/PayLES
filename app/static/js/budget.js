@@ -11,10 +11,10 @@ function enterEditMode(cellButton, header, month, value, field) {
 
     disableInputs([]);
 
-    // Use standardized input creation
+    // use standardized input creation
     let inputWrapper = createStandardInput(header, field, value);
 
-    // Find the actual input/select inside the wrapper for enabling/disabling
+    // find the actual input/select inside the wrapper for enabling/disabling
     let input = inputWrapper.querySelector('input, select') || inputWrapper;
 
     // cell edit buttons

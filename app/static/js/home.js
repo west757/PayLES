@@ -1,24 +1,27 @@
-function buildInitialsInputs() {
-    const initials = [
-        { container: 'initials-years', field: 'select', rowHeader: 'Year' },
-        { container: 'initials-months', field: 'select', rowHeader: 'Months' },
-        { container: 'initials-grade', field: 'select', rowHeader: 'Grade' },
-        { container: 'initials-dependents', field: 'int', rowHeader: 'Dependents' },
-        { container: 'initials-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
-        { container: 'initials-home-of-record', field: 'select', rowHeader: 'Home of Record Long' },
-        { container: 'initials-zip-code', field: 'string', rowHeader: 'Zip Code' },
-        { container: 'initials-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
-        { container: 'initials-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
+function buildManualInputs() {
+    const manuals = [
+        { container: 'manual-year', field: 'select', rowHeader: 'Year' },
+        { container: 'manual-month', field: 'select', rowHeader: 'Months' },
+        { container: 'manual-branch', field: 'select', rowHeader: 'Branch' },
+        { container: 'manual-component', field: 'select', rowHeader: 'Component' },
+        { container: 'manual-grade', field: 'select', rowHeader: 'Grade' },
+        { container: 'manual-zip-code', field: 'string', rowHeader: 'Zip Code' },
+        { container: 'manual-oconus-locality-code', field: 'string', rowHeader: 'OCONUS Locality Code' },
+        { container: 'manual-home-of-record', field: 'select', rowHeader: 'Home of Record Long' },
+        { container: 'manual-dependents', field: 'select', rowHeader: 'Dependents' },
+        { container: 'manual-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
+        { container: 'manual-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
+        { container: 'manual-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
+        { container: 'manual-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
+        { container: 'manual-drills', field: 'select', rowHeader: 'Drills' },
     ];
 
-    // add branch, component, change to pay date
-
-    initials.forEach(initial => {
-        const container = document.getElementById(initial.container);
-        let inputWrapper = createStandardInput(initial.rowHeader, initial.field);
+    manuals.forEach(manual => {
+        const container = document.getElementById(manual.container);
+        let inputWrapper = createStandardInput(manual.rowHeader, manual.field);
         const input = inputWrapper.querySelector('input, select');
-        input.id = initial.container + '-id';
-        input.name = initial.rowHeader;
+        input.id = manual.container + '-id';
+        input.name = manual.rowHeader;
         container.innerHTML = '';
         container.appendChild(inputWrapper);
     });

@@ -71,7 +71,7 @@
                                 </button>
                             {% endif %}
                             <button
-                                class="styled-table-button modal-button tooltip{% if row.modal != 'none' %} clickable{% endif %}"
+                                class="styled-table-button modal-button tooltip{% if row.modal != 'none' %} clickable {% endif %}"
                                 data-modal="{{ row.modal }}"
                                 data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
                                 {{ row.header }}

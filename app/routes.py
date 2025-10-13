@@ -223,14 +223,14 @@ def route_joint():
 
 
 @csrf.exempt
-@flask_app.route('/route_initials', methods=['POST'])
-def route_initials():
+@flask_app.route('/route_manual', methods=['POST'])
+def route_manual():
     month = flask_app.config['CURRENT_MONTH']
     headers = get_all_headers()
 
-    initials = request.form.to_dict()
-    variables = initials
-    
+    manuals = request.form.to_dict()
+    variables = manuals
+
     budget_calc, tsp_calc = init_tables(variables, variables, month)
     budget_calc, tsp_calc, months = add_months(budget_calc, tsp_calc, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
