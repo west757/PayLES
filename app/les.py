@@ -25,7 +25,7 @@ def process_les(les_pdf):
     les_text = format_les_text(les_text_raw)
 
     #for header, text in les_text.items():
-    #    print(f"{header}: {text} ({type(text)})")
+    #    print(f"{header}: {text}")
     
     return les_image, les_text
 

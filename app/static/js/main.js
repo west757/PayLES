@@ -131,7 +131,6 @@ document.addEventListener('mouseleave', function(e) {
 
 
 document.addEventListener('click', function(e) {
-    // open dynamic modals
     if (e.target.classList.contains('button-modal-info')) {
         const modalId = e.target.getAttribute('data-modal');
         if (modalId) {

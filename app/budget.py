@@ -296,23 +296,21 @@ def add_les_pay(budget, month, les_text):
 def parse_pay_string(pay_string, pay_template):
     results = {}
 
-    # for each lesname in PAY_TEMPLATE, search for it in the string and extract the float after it
-    for _, row in pay_template.iterrows():
-        lesname = row['lesname']
+    # build a regex pattern that matches all LESNAMEs as whole words, followed by a number
+    # sort by length descending to match longer names first
+    lesnames = [row['lesname'] for _, row in pay_template.iterrows() if isinstance(row['lesname'], str) and row['lesname'].strip()]
+    lesnames = sorted(lesnames, key=len, reverse=True)
+    # escape and join for regex alternation
+    pattern = r'(' + '|'.join(re.escape(lesname) for lesname in lesnames) + r')\s+(-?\d+(?:\.\d+)?)'
 
-        if not isinstance(lesname, str) or not lesname.strip():
+    # find all matches
+    for match in re.findall(pattern, pay_string):
+        lesname, value_str = match
+        try:
+            value = float(value_str.replace(",", ""))
+            results[lesname] = round(value, 2)
+        except Exception:
             continue
-
-        # regex: match lesname followed by a float (with optional comma)
-        pattern = rf"{re.escape(lesname)}\s+(-?\d+(?:\.\d+)?)"
-        match = re.search(pattern, pay_string)
-
-        if match:
-            try:
-                value = float(match.group(1).replace(",", ""))
-                results[lesname] = round(value, 2)
-            except Exception:
-                continue
 
     return results
 

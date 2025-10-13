@@ -49,6 +49,7 @@ body {
 
 
 /* header */
+
 #header-nav {
     background-color: var(--primary_dark_accent_color);
     display: flex;
@@ -73,7 +74,9 @@ header {
     margin: 0 0 0.75rem 0;
 }
 
+
 /* nav */
+
 nav {
     height: inherit;
 }
@@ -110,6 +113,7 @@ nav a:hover {
 
 
 /* footer */
+
 footer {
     background-color: var(--primary_dark_accent_color);
     color: var(--light_text_color);
@@ -136,7 +140,16 @@ footer {
 }
 
 
+/* pages */
+
+#home, #remarks-container, #about-container, #faq-container, #resources-container {
+    margin: 0 auto 3rem auto;
+    max-width: 60%;
+    min-width: 50rem;
+}
+
 /* error page */
+
 #error-container {
     margin: 2rem auto 0 auto;
     text-align: center;
@@ -160,6 +173,7 @@ footer {
 
 
 /* toasts */
+
 #toast-container {
     align-items: center;
     display: flex;
@@ -203,6 +217,7 @@ footer {
 
 
 /* tooltips */
+
 #tooltip-container {
     background-color: var(--primary_dark_accent_color);
     border-radius: 0.5rem;
@@ -215,8 +230,18 @@ footer {
     z-index: var(--z-top);
 }
 
+.tooltip-question {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    font-size: 0.85rem;
+    margin: -0.35rem 0 0 0.25rem;
+    font-weight: bold;
+}
+
 
 /* general buttons */
+
 .button-generic, input[type=file]::file-selector-button {
     border-radius: 0.5rem;
     color: var(--light_text_color);
@@ -259,28 +284,12 @@ footer {
 button:disabled,
 input[type="button"]:disabled,
 input[type="submit"]:disabled {
-    background: var(--button_disabled_color) !important;
-    border: 1px solid var(--button_disabled_color) !important;
-    color: var(--table_border_color) !important;
     cursor: not-allowed !important;
-}
-
-.styled-table-button:disabled {
-    background: var(--cell_disabled_color) !important; 
-    border: none !important;
-    color: var(--secondary_dark_accent_color) !important;
-}
-
-.rect-highlight:disabled {
-    background: var(--cell_disabled_color) !important;
-    border: none !important;
-    color: var(--secondary_dark_accent_color) !important;
-    cursor: not-allowed !important;
-    opacity: 0.75 !important;
 }
 
 
 /* inputs */
+
 input[type="text"], select {
     background-color: var(--input_background_color);
     border: 1px solid var(--secondary_dark_accent_color);
@@ -309,8 +318,17 @@ input[type="text"], select {
     width: 3.75rem;
 }
 
+.input-adornment-left {
+    margin-right: 0.5em;
+}
+
+.input-adornment-right {
+    margin-left: 0.5em;
+}
+
 
 /* dropdowns */
+
 select {
     text-align: left;
     direction: ltr;
@@ -344,6 +362,7 @@ select::-webkit-scrollbar-button {
 
 
 /* checkboxes */
+
 .checkbox-styled {
     accent-color: var(--primary_green_accent_color);
     background-color: var(--input_background_color);
@@ -357,6 +376,7 @@ select::-webkit-scrollbar-button {
 
 
 /* radio buttons */
+
 input[type="radio"] {
     accent-color: var(--primary_green_accent_color);
     height: 1rem;
@@ -366,37 +386,12 @@ input[type="radio"] {
 
 
 /* file input */
+
 input[type=file] {
     border: 1px solid var(--primary_dark_accent_color);
     border-radius: 0.5rem;
     cursor: pointer;
     padding: 0.5rem;
-}
-
-
-
-
-#home, #remarks-container, #about-container, #faq-container, #resources-container {
-    margin: 0 auto 3rem auto;
-    max-width: 60%;
-    min-width: 50rem;
-}
-
-.question {
-    display: inline-block;
-    position: relative;
-    text-align: center;
-    font-size: 0.85rem;
-    margin: -0.35rem 0 0 0.25rem;
-    font-weight: bold;
-}
-
-.input-adornment-left {
-    margin-right: 0.5em;
-}
-
-.input-adornment-right {
-    margin-left: 0.5em;
 }
 
 

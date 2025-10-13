@@ -6,7 +6,7 @@
         <button
             type="button"
             {% if rect.modal != "none" %}
-                class="rect-highlight tooltip modal-button{% if rect.modal != 'none' %} clickable {% endif %}"
+                class="rect-highlight button-modal-info tooltip {% if rect.modal != 'none' %} clickable {% endif %}"
                 data-modal="{{ rect.modal }}"
             {% else %}
                 class="rect-highlight tooltip"
