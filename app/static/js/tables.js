@@ -10,7 +10,7 @@ function openEditModal(header, month, value, field) {
     const modalCheckbox = document.getElementById('modal-edit');
     modalCheckbox.checked = true;
 
-    const editContainer = document.getElementById('edit-container');
+    const editContainer = document.getElementById('modal-content-edit');
     editContainer.innerHTML = '';
 
     const title = document.createElement('h2');
@@ -32,7 +32,7 @@ function openEditModal(header, month, value, field) {
     editContainer.appendChild(futureValueDiv);
 
     const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'editingButtonContainer';
+    buttonContainer.className = 'editing-buttons';
 
     const onetimeButton = document.createElement('button');
     onetimeButton.textContent = 'One-Time Change';

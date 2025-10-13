@@ -158,47 +158,6 @@
     <div class="modal-inner">
         <button class="button-modal-close" type="button">✖</button>
         <h2>Add Custom Account Row</h2>
-
-        <div id="account-modal-content" class="modal-grid">
-            <div class="modal-grid-column-section">
-                <span class="modal-grid-span">Account:</span>
-                <div class="modal-radio-group">
-                    <label>
-                        <input id="account-method-tsp" type="radio" name="row-method" value="tsp">
-                        TSP
-                    </label>
-                    <label>
-                        <input id="account-method-bank" type="radio" name="row-method" value="bank">
-                        Bank
-                    </label>
-                    <label>
-                        <input id="account-method-special" type="radio" name="row-method" value="special">
-                        Custom
-                    </label>
-                </div>
-            </div>
-
-            <div id="account-tsp-bank-custom" class="modal-grid-column">
-                <div id="account-tsp" class="modal-grid-column-stack">
-                    <div class="modal-grid-column-row">
-                        <label class="styled-label" for="account-tsp-header">Row Header:</label>
-                        <div id="account-tsp-header"></div>
-                    </div>
-                    <div class="modal-grid-column-row">
-                        <label class="styled-label" for="account-tsp-value">Initial Value:</label>
-                        <div id="account-tsp-value"></div>
-                    </div>
-                    <div class="modal-grid-column-row">
-                        <label class="styled-label" for="account-tsp-interest">Interest Rate:</label>
-                        <div id="account-tsp-interest"></div>
-                        <span class="question tooltip" data-tooltip="Input a percentage value to apply an interest rate to the account to calculate more accurate budgeting results. Default is 0%.">?</span>
-                    </div>
-                    <div class="modal-grid-column-row">
-                        <button id="account-tsp-button" class="button-generic button-positive">Add Account</button>
-                    </div>
-                </div>
-            <div id="account-info" class="modal-grid-column">filler</div>
-        </div>
     </div>
 </div>
 
@@ -269,6 +228,6 @@
     <label class="modal-background" for="modal-edit"></label>
     <div class="modal-inner">
         <button class="button-modal-close" type="button">✖</button>
-        <div id="edit-container"></div>
+        <div id="modal-content-edit"></div>
     </div>
 </div>

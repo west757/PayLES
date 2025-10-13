@@ -132,7 +132,7 @@ document.addEventListener('mouseleave', function(e) {
 
 document.addEventListener('click', function(e) {
     // open dynamic modals
-    if (e.target.classList.contains('button-modal-dynamic')) {
+    if (e.target.classList.contains('button-modal-info')) {
         const modalId = e.target.getAttribute('data-modal');
         if (modalId) {
             const modalCheckbox = document.getElementById(modalId);
@@ -160,6 +160,7 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-discrepancies') {
+        console.log("test");
         const discrepanciesModalCheckbox = document.getElementById('modal-discrepancies');
         discrepanciesModalCheckbox.checked = true;
     }
