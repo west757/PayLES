@@ -588,9 +588,8 @@ hr {
 }
 
 
-#budget-container, #tsp-container {
+#container-budget, #container-tsp {
     border: 1px solid var(--table_border_color);
-    border-radius: 1.5rem;
     border-top-left-radius: 1.5rem;
     border-top-right-radius: 0.5rem;
     border-bottom-left-radius: 1.5rem;
@@ -602,20 +601,20 @@ hr {
     overflow-y: auto; 
 }
 
-#tsp-container {
+#container-tsp {
     margin-top: 2rem;
 }
 
-#budget-container::-webkit-scrollbar {
+#container-budget::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
 }
 
-#budget-container::-webkit-scrollbar-track {
+#container-budget::-webkit-scrollbar-track {
     background-color: none;
 }
 
-#budget-container::-webkit-scrollbar-thumb {
+#container-budget::-webkit-scrollbar-thumb {
     background: var(--table_border_color);
     border: none;
     border-radius: 0.5rem;
@@ -624,37 +623,37 @@ hr {
 }
 
 
-#budget-table {
+#table-budget {
     table-layout: fixed;
 }
 
-#budget-table th {
+#table-budget th {
     position: sticky;
     top: 0;
     z-index: 1101;
 }
 
-#budget-table td:first-child, #budget-table th:first-child {
+#table-budget td:first-child, #table-budget th:first-child {
     left: 0;
     position: sticky;
     z-index: 1102;
 }
 
-#budget-table th:nth-child(1) {
+#table-budget th:nth-child(1) {
     z-index: 1103;
 }
 
 
-#tsp-container::-webkit-scrollbar {
+#container-tsp::-webkit-scrollbar {
     height: 0.5rem;
     width: 0.5rem;
 }
 
-#tsp-container::-webkit-scrollbar-track {
+#container-tsp::-webkit-scrollbar-track {
     background-color: none;
 }
 
-#tsp-container::-webkit-scrollbar-thumb {
+#container-tsp::-webkit-scrollbar-thumb {
     background: var(--table_border_color);
     border: none;
     border-radius: 0.5rem;
@@ -662,23 +661,23 @@ hr {
     transition: background 0.5s;
 }
 
-#tsp-table {
+#table-tsp {
     table-layout: fixed;
 }
 
-#tsp-table th {
+#table-tsp th {
     position: sticky;
     top: 0;
     z-index: 1104;
 }
 
-#tsp-table td:first-child, #tsp-table th:first-child {
+#table-tsp td:first-child, #table-tsp th:first-child {
     left: 0;
     position: sticky;
     z-index: 1105;
 }
 
-#tsp-table th:nth-child(1) {
+#table-tsp th:nth-child(1) {
     z-index: 1106;
 }
 
@@ -733,13 +732,13 @@ hr {
    styled table
    ========================= */
 
-.styled-table {
+.table-styled {
     background: var(--primary_light_accent_color); 
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.styled-table th, .styled-table td {
+.table-styled th, .table-styled td {
     border-bottom: 1px solid var(--table_border_color);
     border-left: none;
     border-right: 1px solid var(--table_border_color);
@@ -747,56 +746,56 @@ hr {
     text-align: center;
 }
 
-.styled-table th:last-child, .styled-table td:last-child {
+.table-styled th:last-child, .table-styled td:last-child {
     border-right: none;
 }
 
-.styled-table tr:last-child th, .styled-table tr:last-child td {
+.table-styled tr:last-child th, .table-styled tr:last-child td {
     border-bottom: none;
 }
 
-.styled-table th {
+.table-styled th {
     background-color: var(--primary_dark_accent_color);
     color: var(--light_text_color);
     font-weight: bold;
 }
 
-#budget-table th:first-child {
+#table-budget th:first-child {
     background-color: var(--primary_dark_accent_color);
     color: var(--light_text_color);
 }
 
-.styled-table th:first-child, .styled-table td:first-child {
+.table-styled th:first-child, .table-styled td:first-child {
     max-width: 14rem;
     min-width: 14rem;
     width: 14rem;
 }
 
-.styled-table th:not(:first-child), .styled-table td:not(:first-child) {
+.table-styled th:not(:first-child), .table-styled td:not(:first-child) {
     max-width: 7.25rem;
     min-width: 7.25rem;
     width: 7.25rem;
 }
 
-.styled-table tr {
+.table-styled tr {
     height: 4rem;
     max-height: 4rem;
     min-height: 4rem;
 }
 
-.styled-table tr:nth-child(even) {
+.table-styled tr:nth-child(even) {
     background-color: var(--secondary_light_accent_color);
 }
 
-#budget-table tr:nth-child(odd) td:first-child {
+#table-budget tr:nth-child(odd) td:first-child {
     background-color: var(--primary_light_accent_color);
 }
 
-#budget-table tr:nth-child(even) td:first-child {
+#table-budget tr:nth-child(even) td:first-child {
     background-color: var(--secondary_light_accent_color);
 }
 
-.styled-table td.cell {
+.table-styled td.cell {
     height: 4rem;
     padding: 0;
     vertical-align: top;
@@ -819,7 +818,7 @@ hr {
     display: flex;
 }
 
-#budget-table.highlight-mode .budget-highlight {
+#table-budget.highlight-mode .budget-highlight {
     background-color: var(--highlight_yellow_color);
 }
 
