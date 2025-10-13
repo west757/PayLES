@@ -37,6 +37,7 @@ mid-term:
 - adjustable table size
 - adjustable les size
 - restrict LES upload to be within past 2 months
+- animation for home tab change
 
 long-term:
 - leave calculator

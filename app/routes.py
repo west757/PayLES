@@ -146,8 +146,8 @@ def route_joint():
     if not form.validate_on_submit():
         return jsonify({'message': "Invalid submission"}), 400
 
-    file1 = form.input_file_joint_1.data
-    file2 = form.input_file_joint_2.data
+    file1 = form.input_file_joint1.data
+    file2 = form.input_file_joint2.data
 
     if not file1:
         return jsonify({'message': "No file submitted for Member 1"}), 400

@@ -8,7 +8,7 @@
 
 
 <div id="home">
-    <div id="home-welcome">
+    <div id="welcome">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
     </div>
 
@@ -23,7 +23,7 @@
         <div id="tab-single" class="tab-content active">
             <form id="form-single" hx-post="/route_single" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_single.hidden_tag() }}
-                <label id="input-filedrop-single" for="input-file-single">
+                <label id="input-filedrop" for="input-file-single">
                     <span>Drop LES here</span>
                     or
                     {{ form_single.input_file_single(id="input-file-single", accept=".pdf") }}
@@ -38,11 +38,11 @@
                 <div id="tab-joint-row">
                     <div>
                         <span>Upload Member 1 LES</span>
-                        {{ form_joint.input_file_joint_1(id="input-file-joint-1", accept=".pdf") }}
+                        {{ form_joint.input_file_joint1(id="input-file-joint1", accept=".pdf") }}
                     </div>
                     <div>
                         <span>Upload Member 2 LES</span>
-                        {{ form_joint.input_file_joint_2(id="input-file-joint-2", accept=".pdf") }}
+                        {{ form_joint.input_file_joint2(id="input-file-joint2", accept=".pdf") }}
                     </div>
                 </div>
                 {{ form_joint.button_joint(id="button-joint", class="button-generic button-positive") }}

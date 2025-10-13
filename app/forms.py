@@ -7,6 +7,6 @@ class FormSingle(FlaskForm):
     button_example = SubmitField('View Example')
 
 class FormJoint(FlaskForm):
-    input_file_joint_1 = FileField('Upload Member 1 LES')
-    input_file_joint_2 = FileField('Upload Member 2 LES')
+    input_file_joint1 = FileField('Upload Member 1 LES')
+    input_file_joint2 = FileField('Upload Member 2 LES')
     button_joint = SubmitField('Submit')

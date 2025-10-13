@@ -59,14 +59,12 @@ function attachHomeListeners() {
 
 
 function attachDragAndDropListeners() {
-    const inputFiledropSingle = document.getElementById("input-filedrop-single");
+    const inputFiledrop = document.getElementById("input-filedrop");
     const inputFileSingle = document.getElementById("input-file-single");
-
-    if (!inputFiledropSingle || !inputFileSingle) return;
 
     // prevent default browser behavior for drag/drop
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        inputFiledropSingle.addEventListener(eventName, function(e) {
+        inputFiledrop.addEventListener(eventName, function(e) {
             e.preventDefault();
             e.stopPropagation();
         }, false);
@@ -74,20 +72,20 @@ function attachDragAndDropListeners() {
 
     // highlight drop area on dragenter/dragover
     ['dragenter', 'dragover'].forEach(eventName => {
-        inputFiledropSingle.addEventListener(eventName, function() {
-            inputFiledropSingle.classList.add('drag-active');
+        inputFiledrop.addEventListener(eventName, function() {
+            inputFiledrop.classList.add('drag-active');
         }, false);
     });
 
     // remove highlight on dragleave/drop
     ['dragleave', 'drop'].forEach(eventName => {
-        inputFiledropSingle.addEventListener(eventName, function() {
-            inputFiledropSingle.classList.remove('drag-active');
+        inputFiledrop.addEventListener(eventName, function() {
+            inputFiledrop.classList.remove('drag-active');
         }, false);
     });
 
     // handle dropped files
-    inputFiledropSingle.addEventListener('drop', function(e) {
+    inputFiledrop.addEventListener('drop', function(e) {
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             inputFileSingle.files = e.dataTransfer.files;
         }
