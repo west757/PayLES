@@ -63,43 +63,31 @@ def get_all_headers():
             + flask_app.config['TSP_TEMPLATE'][['header', 'type', 'tooltip']].to_dict(orient='records'))
 
 
-def add_row(budget_name, budget, header, template=None, metadata=None):
-    if budget_name == "pay":
-        metadata_fields = flask_app.config['PAY_METADATA']
-        type_order = flask_app.config['PAY_TYPE_ORDER']
-    elif budget_name == "tsp":
-        metadata_fields = flask_app.config['TSP_METADATA']
-        type_order = flask_app.config['TSP_TYPE_ORDER']
+def add_row(pay, header, template=None, metadata=None):
+    PAY_METADATA = flask_app.config['PAY_METADATA']
+    PAY_TYPE_ORDER = flask_app.config['PAY_TYPE_ORDER']
 
     if template is not None:
         row_data = template[template['header'] == header]
-        if row_data.empty:
-            return None
-        row_metadata = {col: row_data.iloc[0][col] for col in metadata_fields if col in row_data.columns}
+        row_metadata = {col: row_data.iloc[0][col] for col in PAY_METADATA if col in row_data.columns}
     elif metadata:
         row_metadata = metadata.copy()
-    else:
-        return None
 
-    row_type = row_metadata.get('type', None)
-    row = {'header': header}
-    row.update(row_metadata)
+    type = row_metadata.get('type')
+    row = {'header': header, **row_metadata}
 
-    insert_idx = len(budget)  # default to end
-    if row_type and type_order:
-        # find all indices of rows with the same type
-        same_type_indices = [i for i, r in enumerate(budget) if r.get('type') == row_type]
+    insert_idx = len(pay)
+    if type and PAY_TYPE_ORDER:
+        same_type_indices = [i for i, r in enumerate(pay) if r.get('type') == type]
         if same_type_indices:
-            insert_idx = same_type_indices[-1] + 1  # insert row after last of same type
+            insert_idx = same_type_indices[-1] + 1
         else:
-            # find the first row of any later type in type_order
-            type_pos = type_order.index(row_type)
-            later_types = type_order[type_pos + 1:]
-            next_idx = next((i for i, r in enumerate(budget) if r.get('type') in later_types), None)
+            type_pos = PAY_TYPE_ORDER.index(type)
+            later_types = set(PAY_TYPE_ORDER[type_pos + 1:])
+            next_idx = next((i for i, r in enumerate(pay) if r.get('type') in later_types), None)
             if next_idx is not None:
                 insert_idx = next_idx
-
-    budget.insert(insert_idx, row)
+    pay.insert(insert_idx, row)
     return None
 
 

@@ -11,24 +11,24 @@ def calc_income(pay, month):
 
     combat_zone = get_row_value(pay, "Combat Zone", month)
 
-    income_rows = [row for row in pay if row.get('sign') == 1]
+    income_rows = [row for row in pay if row.get('type') in ['ent', 'inc']]
     for row in income_rows:
-        value = row[month]
-        tax = row.get('tax')
+        value = row.get(month, 0.0)
+        tax = row.get('tax', False)
+        type = row.get('type')
 
-        if row.get('type') == 'c':
-            if tax:
-                taxable += value
-            else:
-                nontaxable += value
-        else:
-            if combat_zone == "Yes":
-                nontaxable += value
-            else:
-                if tax:
-                    taxable += value
-                else:
-                    nontaxable += value
+        # Combined logic:
+        if (
+            (type == 'ent' and combat_zone == "Yes") or
+            (type == 'ent' and not tax and combat_zone == "No") or
+            (type == 'inc' and not tax)
+        ):
+            nontaxable += value
+        elif (
+            (type == 'ent' and tax and combat_zone == "No") or
+            (type == 'inc' and tax)
+        ):
+            taxable += value
 
     taxable = round(taxable, 2)
     nontaxable = round(nontaxable, 2)
@@ -41,7 +41,7 @@ def calc_expenses_net(pay, month):
     taxes = 0.00
     expenses = 0.00
 
-    expense_rows = [row for row in pay if row.get('sign') == -1]
+    expense_rows = [row for row in pay if row.get('type') in ['ded', 'alt', 'exp']]
     for row in expense_rows:
         expenses += row[month]
         if row.get('tax', False):
@@ -210,7 +210,7 @@ def calc_state_taxes(pay, month):
         taxable_base = sum(
             row.get(month, 0.0)
             for row in pay
-            if row.get('type') == 'c' and row.get('sign') == 1 and isinstance(row.get(month, 0.0), (int, float))
+            if row.get('type') == 'inc' and isinstance(row.get(month, 0.0), (int, float))
         )
     elif income_taxed == "outside":
         if living_in_state:
@@ -221,7 +221,7 @@ def calc_state_taxes(pay, month):
             taxable_base = sum(
                 row.get(month, 0.0)
                 for row in pay
-                if row.get('type') == 'c' and row.get('sign') == 1 and isinstance(row.get(month, 0.0), (int, float))
+                if row.get('type') == 'inc' and isinstance(row.get(month, 0.0), (int, float))
             )
     else:  # "full" or any other value
         taxable_base = taxable_income

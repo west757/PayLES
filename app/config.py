@@ -79,16 +79,17 @@ class Config:
     COMBAT_ZONES = ["No", "Yes"]
 
     # pay type order:
-    # v = variables
-    # e = entitlements
-    # d = deductions
-    # a = allotments
-    # c = custom
-    # x = calculations
-    # y = year-to-date
-    # z = accounts
-    # m = metadata
-    PAY_TYPE_ORDER = ['v', 'e', 'd', 'a', 'c', 'x', 'y', 'z', 'm']
+    # var = variables
+    # ent = entitlements
+    # ded = deductions
+    # alt = allotments
+    # inc = custom income
+    # exp = custom expenses
+    # calc = calculations
+    # ytd = year-to-date
+    # acc = accounts
+    # meta = metadata
+    PAY_TYPE_ORDER = ['var', 'ent', 'ded', 'alt', 'inc', 'exp', 'calc', 'ytd', 'acc', 'meta']
     PAY_METADATA = [
         'type',
         'sign',
@@ -98,13 +99,14 @@ class Config:
         'modal',
     ]
 
-    # tsp type order:
-    # r = rates
-    # t = tsp contribution rows
-    # s = ytd tsp contribution rows
-    # u = tsp calculation rows
-    # p = tsp accounts
-    TSP_TYPE_ORDER = ['r', 't', 's', 'u', 'p']
+    # tsp types:
+    # tot = pay total
+    # rate = rates
+    # cont = tsp contribution
+    # calc = tsp calculation
+    # ytd = tsp year-to-date
+    # acc = tsp account
+    TSP_TYPE_ORDER = ['tot', 'rate', 'cont', 'calc', 'ytd', 'acc']
     TSP_METADATA = [
         'type',
         'field',

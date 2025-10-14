@@ -287,7 +287,7 @@ def add_les_pay(pay, month, les_text):
         sign = template_row.iloc[0]['sign']
         value = round(sign * value, 2)
 
-        add_row("pay", pay, header, template=PAY_TEMPLATE)
+        add_row(pay, header, template=PAY_TEMPLATE)
         add_mv_pair(pay, header, month, value)
 
     return pay
@@ -331,12 +331,12 @@ def add_calc_pay(pay, month, sign):
             if callable(function):
                 value = function(pay, month)
                 
-                add_row("pay", pay, header, template=PAY_TEMPLATE)
+                add_row(pay, header, template=PAY_TEMPLATE)
                 add_mv_pair(pay, header, month, value)
 
     if sign == -1:
-        add_row("pay", pay, 'Traditional TSP', template=PAY_TEMPLATE)
-        add_row("pay", pay, 'Roth TSP', template=PAY_TEMPLATE)
+        add_row(pay, 'Traditional TSP', template=PAY_TEMPLATE)
+        add_row(pay, 'Roth TSP', template=PAY_TEMPLATE)
 
     return pay
 
@@ -364,7 +364,7 @@ def add_ytds(pay, month, les_text):
 
 
 def update_variables(pay, month, prev_month, cell=None):
-    variable_rows = [row for row in pay if row.get('type') == 'v']
+    variable_rows = [row for row in pay if row.get('type') == 'var']
     for row in variable_rows:
         header = row['header']
         prev_value = row.get(prev_month)
@@ -432,11 +432,11 @@ def update_pays(pay, month, prev_month, sign, cell=None, init=False):
 
 
 def compare_pay(pay_les, pay_calc, month):
-    calc_lookup = {row['header']: row for row in pay_calc if row.get('type') in ('e', 'd')}
+    calc_lookup = {row['header']: row for row in pay_calc if row.get('type') in ('ent', 'ded')}
     discrepancies = []
 
     for row in pay_les:
-        if row.get('type') in ('e', 'd') and row['header'] in calc_lookup:
+        if row.get('type') in ('ent', 'ded') and row['header'] in calc_lookup:
             les_value = row.get(month)
             calc_value = calc_lookup[row['header']].get(month)
 

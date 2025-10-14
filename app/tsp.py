@@ -1,7 +1,6 @@
 from app import flask_app
 from app.utils import (
     get_error_context,
-    add_row,
     add_mv_pair,
     get_row_value,
     sum_rows_via_modal,
@@ -136,10 +135,12 @@ def get_tsp_variables(les_text):
 
 def init_tsp(tsp_variables, pay, month, les_text=None):
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
+    TSP_METADATA = flask_app.config['TSP_METADATA']
     
     tsp = []
     for _, row in TSP_TEMPLATE.iterrows():
-        add_row("tsp", tsp, row['header'], template=TSP_TEMPLATE)
+        row_metadata = {col: row[col] for col in TSP_METADATA if col in row}
+        tsp.append({'header': row['header'], **row_metadata})
 
     base_pay_total = get_row_value(pay, "Base Pay", month)
     specialty_pay_total = sum_rows_via_modal(pay, "specialty", month)
@@ -210,7 +211,7 @@ def add_tsp_variables(tsp, month, variables):
 def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
     total = 0.0
     for idx, row in enumerate(tsp):
-        if row.get("type") == "s":
+        if row.get("type") == "ytd":
             try:
                 total += abs(float(row.get(month, 0.0)))
             except (TypeError, ValueError):
@@ -219,7 +220,7 @@ def calc_ytd_tsp_contribution_total(tsp, month, prev_month=None):
     if prev_month and month != "JAN":
         prev_total = 0.0
         for idx, row in enumerate(tsp):
-            if row.get("type") == "s":
+            if row.get("type") == "ytd":
                 try:
                     prev_total += abs(float(row.get(prev_month, 0.0)))
                 except (TypeError, ValueError):

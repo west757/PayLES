@@ -31,7 +31,7 @@ def init_budgets(les_variables, tsp_variables, month, les_text=None):
 
     pay = []
     for _, row in PARAMS_TEMPLATE.iterrows():
-        add_row("pay", pay, row['header'], template=PARAMS_TEMPLATE)
+        add_row(pay, row['header'], template=PARAMS_TEMPLATE)
 
     if les_text:
         pay = add_pay_variables(pay, month, les_variables)
@@ -75,7 +75,8 @@ def init_budgets(les_variables, tsp_variables, month, les_text=None):
         add_mv_pair(pay, 'YTD Expenses', month, ytd_expenses)
         add_mv_pair(pay, 'YTD Net Pay', month, ytd_net_pay)
 
-    add_mv_pair(pay, 'Difference', month, 0.00)
+    add_mv_pair(pay, 'Difference', month, 0.0)
+
     pay = convert_numpy_types(pay)
     tsp = convert_numpy_types(tsp)
 
@@ -286,6 +287,27 @@ def remove_row(pay, headers, header):
         headers = [h for h in headers if h.get('header').lower() != header.lower()]
 
     return pay, headers
+
+
+def calc_account(budget, header, months, initial, interest):
+    row = get_row_value(budget, header)
+
+    if header == "Direct Deposit Account":
+        add_row_name = "Net Pay"
+    elif header == "TSP Account":
+        add_row_name = "TSP Contribution Total"
+
+    prev_value = initial
+    for idx, month in enumerate(months):
+        if idx == 0:
+            row[month] = round(prev_value, 2)
+        else:
+            add_value = next((r.get(month, 0.0) for r in budget if r.get('header') == add_row_name), 0.0)
+            value = prev_value + add_value
+            value = value * (1 + interest)
+            row[month] = round(value, 2)
+            prev_value = value
+    return None
 
 
 def add_recommendations(pay, months):

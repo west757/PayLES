@@ -20,6 +20,9 @@ short-term:
 - line to not take up width in cell for section break
 - make badge go away after user first clicks on the modal
 - add specific class names for radio buttons, file inputs
+- show custom rows checkbox
+- make cell buttons visible in table
+- rewrite insert row
 
 mid-term:
 - get combat zone from les

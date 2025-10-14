@@ -4,6 +4,7 @@ from flask import request, render_template, session, jsonify
 from app import csrf
 
 from app import flask_app
+from app import pay
 from app.pay import (
     get_pay_variables,
     compare_pay,
@@ -24,6 +25,7 @@ from app.budgets import (
     remove_months,
     insert_row,
     remove_row,
+    calc_account,
     add_recommendations,
 )
 from app.tsp import (
@@ -103,6 +105,8 @@ def route_single():
         pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, month)
 
         pay_les, tsp_les, months = add_months(pay_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+        calc_account(pay_les, "Direct Deposit Account", months, initial=0.0, interest=0.0)
+        calc_account(tsp_les, "TSP Account", months, initial=0.0, interest=0.0)
 
         #for row in pay_les:
         #    print(row)
@@ -299,6 +303,41 @@ def route_update_cell():
         'tsp': tsp,
         'months': months,
         'headers': headers,
+    }
+    return render_template('budgets.html', **context)
+
+
+@csrf.exempt
+@flask_app.route('/route_update_account', methods=['POST'])
+def route_update_account():
+    pay = session.get('pay', [])
+    tsp = session.get('tsp', [])
+    months = get_months(pay)
+
+    header = request.form.get('header', '')
+    initial = float(request.form.get('initial', 0.0))
+    interest = float(request.form.get('interest', 0.0))
+
+    if header == "Direct Deposit Account":
+        calc_account(pay, header, months, initial, interest)
+    elif header == "TSP Account":
+        calc_account(tsp, header, months, initial, interest)
+    else:
+        return jsonify({'message': "Invalid account header"}), 400
+
+    session['pay'] = pay
+    session['tsp'] = tsp
+
+    config_js = {
+        'pay': pay,
+        'tsp': tsp,
+        'months': months,
+    }
+    context = {
+        'config_js': config_js,
+        'pay': pay,
+        'tsp': tsp,
+        'months': months,
     }
     return render_template('budgets.html', **context)
 

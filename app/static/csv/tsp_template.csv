@@ -1,27 +1,28 @@
 ﻿header,type,field,editable,modal,tooltip
-Base Pay Total,r,float,False,basepay,Base pay total
-Trad TSP Base Rate,r,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
-Roth TSP Base Rate,r,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 64%
-Specialty Pay Total,r,float,False,specialty,Specialty pay total
-Trad TSP Specialty Rate,r,int,True,tsp,Trad TSP Specialty Rate must be at least 1% to set a specialty contribution rate
-Roth TSP Specialty Rate,r,int,True,tsp,Roth TSP Specialty Rate must be at least 1% to set a specialty contribution rate
-Incentive Pay Total,r,float,False,incentive,Incentive pay total
-Trad TSP Incentive Rate,r,int,True,tsp,Trad TSP Incentive Rate must be at least 1% to set an incentive contribution rate
-Roth TSP Incentive Rate,r,int,True,tsp,Roth TSP Incentive Rate must be at least 1% to set an incentive contribution rate
-Bonus Pay Total,r,float,False,bonus,Bonus pay total
-Trad TSP Bonus Rate,r,int,True,tsp,Trad TSP Bonus Rate must be at least 1% to set a bonus contribution rate
-Roth TSP Bonus Rate,r,int,True,tsp,Roth TSP Bonus Rate must be at least 1% to set a bonus contribution rate
-Trad TSP Contribution,t,float,False,tsp,Total amount of Traditional TSP contributions
-Trad TSP Exempt Contribution,t,float,False,tsp,Total amount of Traditional TSP exempt contributions
-Roth TSP Contribution,t,float,False,tsp,Total amount of Roth TSP contributions
-Agency Auto Contribution,t,float,False,tsp,Total amount of automatic agency contributions (1% of base pay)
-Agency Match Contribution,t,float,False,tsp,Total amount of agency matching contributions (up to 4% of base pay)
-TSP Contribution Total,t,float,False,tsp,Total amount of TSP contribution
-YTD Trad TSP,s,float,False,tsp,YTD Traditional TSP contributions
-YTD Trad TSP Exempt,s,float,False,tsp,YTD Traditional TSP exempt contributions (made within a designated combat tax-exempt zone)
-YTD Roth TSP,s,float,False,tsp,YTD Roth TSP contributions
-YTD Agency Auto,s,float,False,tsp,YTD agency auto contributions
-YTD Agency Match,s,float,False,tsp,YTD agency matching contributions
-YTD TSP Contribution Total,u,float,False,tsp,Total YTD TSP contributions
-Elective Deferral Remaining,u,float,False,tsp,"Elective deferral remaining ($23,500 minus Traditional non-exempt and Roth TSP contributions)"
-Annual Deferral Remaining,u,float,False,tsp,"Annual deferral remaining ($70,000 minus all TSP contributions including exempt and agency)"
+Base Pay Total,tot,float,False,basepay,Base pay total
+Trad TSP Base Rate,rate,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 80%
+Roth TSP Base Rate,rate,int,True,tsp,Determines the percentage of base pay allocated towards the TSP. Percentage cannot exceed 64%
+Specialty Pay Total,tot,float,False,specialty,Specialty pay total
+Trad TSP Specialty Rate,rate,int,True,tsp,Trad TSP Specialty Rate must be at least 1% to set a specialty contribution rate
+Roth TSP Specialty Rate,rate,int,True,tsp,Roth TSP Specialty Rate must be at least 1% to set a specialty contribution rate
+Incentive Pay Total,tot,float,False,incentive,Incentive pay total
+Trad TSP Incentive Rate,rate,int,True,tsp,Trad TSP Incentive Rate must be at least 1% to set an incentive contribution rate
+Roth TSP Incentive Rate,rate,int,True,tsp,Roth TSP Incentive Rate must be at least 1% to set an incentive contribution rate
+Bonus Pay Total,tot,float,False,bonus,Bonus pay total
+Trad TSP Bonus Rate,rate,int,True,tsp,Trad TSP Bonus Rate must be at least 1% to set a bonus contribution rate
+Roth TSP Bonus Rate,rate,int,True,tsp,Roth TSP Bonus Rate must be at least 1% to set a bonus contribution rate
+Trad TSP Contribution,cont,float,False,tsp,Total amount of Traditional TSP contributions
+Trad TSP Exempt Contribution,cont,float,False,tsp,Total amount of Traditional TSP exempt contributions
+Roth TSP Contribution,cont,float,False,tsp,Total amount of Roth TSP contributions
+Agency Auto Contribution,cont,float,False,tsp,Total amount of automatic agency contributions (1% of base pay)
+Agency Match Contribution,cont,float,False,tsp,Total amount of agency matching contributions (up to 4% of base pay)
+TSP Contribution Total,calc,float,False,tsp,Total amount of TSP contribution
+YTD Trad TSP,ytd,float,False,tsp,YTD Traditional TSP contributions
+YTD Trad TSP Exempt,ytd,float,False,tsp,YTD Traditional TSP exempt contributions (made within a designated combat tax-exempt zone)
+YTD Roth TSP,ytd,float,False,tsp,YTD Roth TSP contributions
+YTD Agency Auto,ytd,float,False,tsp,YTD agency auto contributions
+YTD Agency Match,ytd,float,False,tsp,YTD agency matching contributions
+YTD TSP Contribution Total,calc,float,False,tsp,Total YTD TSP contributions
+Elective Deferral Remaining,calc,float,False,tsp,"Elective deferral remaining ($23,500 minus Traditional non-exempt and Roth TSP contributions)"
+Annual Deferral Remaining,calc,float,False,tsp,"Annual deferral remaining ($70,000 minus all TSP contributions including exempt and agency)"
+TSP Account,acc,float,False,tsp,Individual TSP account accumulating all TSP contributions over time
