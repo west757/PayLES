@@ -40,28 +40,19 @@
             </thead>
             <tbody>
                 {% for row in pay %}
-                    {% if row.type != 'm' %}
+                    {% if row.type != 'meta' %}
                         {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
                         {% set next_row = pay[loop.index] if not loop.last else None %}
-                        {% set section_break = false %}
 
-                        {% set row_class = "" %}
-                        {% if row.type == 'v' %}
-                            {% set row_class = "row-variable" %}
+                        {% set section_types = ['var', 'ent', 'ded', 'alt', 'inc', 'exp', 'calc', 'ytd'] %}
+                        {% set section_break = false %}
+                        {% if row.type in section_types and (not next_row or next_row.type != row.type) %}
+                            {% set section_break = true %}
                         {% endif %}
 
-                        {% if row.type == 'v' and (not next_row or next_row.type != 'v') %}
-                            {% set section_break = true %}
-                        {% elif row.type == 'e' and (not next_row or next_row.type != 'e') %}
-                            {% set section_break = true %}
-                        {% elif row.type == 'd' and (not next_row or next_row.type != 'd') %}
-                            {% set section_break = true %}
-                        {% elif row.type == 'a' and (not next_row or next_row.type != 'a') %}
-                            {% set section_break = true %}
-                        {% elif row.type == 'c' and (not next_row or next_row.type != 'c') %}
-                            {% set section_break = true %}
-                        {% elif row.type == 'x' and (not next_row or next_row.type != 'x') %}
-                            {% set section_break = true %}
+                        {% set row_class = "" %}
+                        {% if row.type == 'var' %}
+                            {% set row_class = "row-variable" %}
                         {% endif %}
 
                         <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
@@ -118,12 +109,12 @@
                     {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
 
                     {% set section_break = false %}
-                    {% if row.header in ['Roth TSP Bonus Rate', 'TSP Contribution Total', 'YTD TSP Contribution Total'] %}
+                    {% if row.header in ['Roth TSP Bonus Rate', 'TSP Contribution Total', 'YTD TSP Contribution Total', 'Annual Deferral Remaining'] %}
                         {% set section_break = true %}
                     {% endif %}
 
                     {% set row_class = "" %}
-                    {% if row.type == 'r' %}
+                    {% if row.type in ['tot', 'rate'] %}
                         {% set row_class = "row-tsp-rate" %}
                     {% endif %}
 

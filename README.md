@@ -40,6 +40,7 @@ mid-term:
 - adjustable les size
 - restrict LES upload to be within past 2 months
 - animation for home tab change
+- recommendation for mid-month pay
 
 long-term:
 - leave calculator

@@ -158,9 +158,15 @@ document.addEventListener('click', function(e) {
         resetInjectModal();
     }
 
-    if (e.target && e.target.id === 'button-modal-account-bank') {
-        const accountBankModalCheckbox = document.getElementById('modal-account-bank');
-        accountBankModalCheckbox.checked = true;
+    if (e.target && e.target.id === 'button-modal-account-deposit') {
+        const accountDepositModalCheckbox = document.getElementById('modal-account-deposit');
+        accountDepositModalCheckbox.checked = true;
+        //resetAccountModal();
+    }
+
+    if (e.target && e.target.id === 'button-modal-account-other') {
+        const accountOtherModalCheckbox = document.getElementById('modal-account-other');
+        accountOtherModalCheckbox.checked = true;
         //resetAccountModal();
     }
 
