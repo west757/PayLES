@@ -332,12 +332,9 @@ def update_tsp(pay, tsp, month, prev_month, cell=None):
     add_mv_pair(tsp, 'Incentive Pay Total', month, incentive_pay_total)
     add_mv_pair(tsp, 'Bonus Pay Total', month, bonus_pay_total)
 
-    rate_headers = [
-        "Trad TSP Base Rate", "Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate",
-        "Roth TSP Base Rate", "Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"
-    ]
+    rate_headers = [row['header'] for row in tsp if row.get('type') == 'rate']
     for header in rate_headers:
-        row = next((row for row in tsp if row.get('header') == header), None)
+        row = get_row_value(tsp, header)
         prev_value = row.get(prev_month, 0)
         if cell is not None and header == cell.get('header'):
             if cell.get('repeat') or cell.get('month') == month:
@@ -351,17 +348,15 @@ def update_tsp(pay, tsp, month, prev_month, cell=None):
         else:
             row[month] = prev_value
 
-    # Rate zeroing
-    trad_base_row = next((row for row in tsp if row.get('header') == "Trad TSP Base Rate"), None)
-    roth_base_row = next((row for row in tsp if row.get('header') == "Roth TSP Base Rate"), None)
-    trad_base_rate = trad_base_row.get(month, 0)
-    roth_base_rate = roth_base_row.get(month, 0)
-    if trad_base_rate == 0:
-        for h in ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]:
-            next((row for row in tsp if row.get('header') == h), None)[month] = 0
-    if roth_base_rate == 0:
-        for h in ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"]:
-            next((row for row in tsp if row.get('header') == h), None)[month] = 0
+    # rate zeroing
+    trad_tsp_base_rate = get_row_value(tsp, "Trad TSP Base Rate", month)
+    roth_tsp_base_rate = get_row_value(tsp, "Roth TSP Base Rate", month)
+    if trad_tsp_base_rate == 0:
+        for rate in ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]:
+            get_row_value(tsp, rate)[month] = 0
+    if roth_tsp_base_rate == 0:
+        for rate in ["Roth TSP Specialty Rate", "Roth TSP Incentive Rate", "Roth TSP Bonus Rate"]:
+            get_row_value(tsp, rate)[month] = 0
 
     combat_zone = get_row_value(pay, "Combat Zone", month)
 

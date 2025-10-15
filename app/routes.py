@@ -50,13 +50,15 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS_SHORT': flask_app.config['MONTHS_SHORT'],
+        'BRANCHES': list(flask_app.config['BRANCHES'].keys()),
         'COMPONENTS': list(flask_app.config['COMPONENTS'].keys()),
         'GRADES': flask_app.config['GRADES'],
         'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].to_dict(orient='records'),
-        'FEDERAL_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
-        'STATE_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys())[:2],
+        'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
+        'TAX_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
         'COMBAT_ZONES': flask_app.config['COMBAT_ZONES'],
+        'DRILLS_MAX': flask_app.config['DRILLS_MAX'],
     }
     context = {
         'config_js': config_js,

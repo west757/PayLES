@@ -122,13 +122,9 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-short');
         }
 
-        else if (header === 'Home of Record Long') {
-            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.longname);
-            input.classList.add('input-long');
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "Choose an option";
-            defaultOption.textContent = "Choose an option";
-            input.appendChild(defaultOption);
+        else if (header === 'Branch') {
+            options = window.CONFIG.BRANCHES;
+            input.classList.add('input-short');
         }
 
         else if (header === 'Component') {
@@ -141,18 +137,29 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-short');
         }
 
+        else if (header === 'OCONUS Locality Code') {
+            options = "temp"
+            input.classList.add('input-short');
+        }
+
         else if (header === 'Home of Record') {
             options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.abbr);
             input.classList.add('input-short');
         }
 
+        else if (header === 'Dependents') {
+            const max = window.CONFIG.DEPENDENTS_MAX;
+            options = Array.from({length: max + 1}, (_, i) => i);
+            input.classList.add('input-mid');
+        }
+
         else if (header === 'Federal Filing Status') {
-            options = window.CONFIG.FEDERAL_FILING_STATUSES;
+            options = window.CONFIG.TAX_FILING_STATUSES;
             input.classList.add('input-mid');
         }
 
         else if (header === 'State Filing Status') {
-            options = window.CONFIG.STATE_FILING_STATUSES;
+            options = window.CONFIG.TAX_FILING_STATUSES.slice(0, 2);
             input.classList.add('input-mid');
         }
 
@@ -164,6 +171,21 @@ function createStandardInput(header, field, value = '') {
         else if (header === 'Combat Zone') {
             options = window.CONFIG.COMBAT_ZONES;
             input.classList.add('input-short');
+        }
+
+        else if (header === 'Drills') {
+            const max = window.CONFIG.DRILLS_MAX;
+            options = Array.from({length: max + 1}, (_, i) => i);
+            input.classList.add('input-mid');
+        }
+
+        else if (header === 'Home of Record Long') {
+            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.longname);
+            input.classList.add('input-long');
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "Choose an option";
+            defaultOption.textContent = "Choose an option";
+            input.appendChild(defaultOption);
         }
 
         options.forEach(opt => {
@@ -180,36 +202,10 @@ function createStandardInput(header, field, value = '') {
         input.type = 'text';
         input.value = value;
 
-        const percentHeaders = [
-            'Account Bank Percent',
-            'Account Bank Interest',
-            'Account Special Percent',
-            'Account Special Interest'
-        ];
-        if (percentHeaders.includes(header)) {
-            input.classList.add('budget-input', 'input-percent', 'input-short');
-            input.placeholder = '0-100';
-            input.maxLength = 3;
-            input.addEventListener('input', setInputRestriction('int', 3));
-            wrapper.appendChild(input);
-            adornment = document.createElement('span');
-            adornment.textContent = '%';
-            adornment.className = 'input-adornment input-adornment-right';
-            wrapper.appendChild(adornment);
-            return wrapper;
-        }
-
-        else if (header === 'Dependents') {
-            input.classList.add('budget-input', 'input-short');
-            input.placeholder = '0-9';
-            input.maxLength = 1;
-            input.addEventListener('input', setInputRestriction('int', 1));
-        }
-
-        else if (header && header.toLowerCase().includes('tsp')) {
-            input.classList.add('budget-input', 'input-percent', 'input-short');
+        if (header && header.toLowerCase().includes('tsp')) {
+            input.classList.add('input-short');
             
-            // Determine max value and maxLength
+            // determine max value and maxLength
             let maxVal = 100;
             let maxLength = 3;
             if (header.toLowerCase().includes('base')) {
@@ -223,25 +219,25 @@ function createStandardInput(header, field, value = '') {
             input.placeholder = '0-' + maxVal;
             input.maxLength = maxLength;
 
-            // Add beforeinput restriction for TSP fields
+            // add beforeinput restriction for TSP fields
             input.addEventListener('beforeinput', function(e) {
                 if (e.inputType === 'insertText') {
                     if (!/^[0-9]$/.test(e.data)) {
                         e.preventDefault();
                         return;
                     }
-                    // Simulate the value after input
+                    // simulate the value after input
                     let newValue = input.value;
                     const start = input.selectionStart;
                     const end = input.selectionEnd;
                     newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
 
-                    // Prevent exceeding maxLength
+                    // prevent exceeding maxLength
                     if (newValue.length > maxLength) {
                         e.preventDefault();
                         return;
                     }
-                    // Prevent exceeding maxVal
+                    // prevent exceeding maxVal
                     if (newValue && parseInt(newValue, 10) > maxVal) {
                         e.preventDefault();
                         return;
@@ -263,57 +259,16 @@ function createStandardInput(header, field, value = '') {
             wrapper.appendChild(input);
             adornment = document.createElement('span');
             adornment.textContent = '%';
-            adornment.className = 'input-adornment input-adornment-right';
+            adornment.className = 'input-adornment-right';
             wrapper.appendChild(adornment);
             return wrapper;
         }
 
-        else if (header === 'Months in Service') {
-            input.classList.add('budget-input', 'input-short');
-            input.placeholder = '0';
-            input.maxLength = 3;
-
-            // Prevent non-numeric and >600 on beforeinput
-            input.addEventListener('beforeinput', function(e) {
-                if (e.inputType === 'insertText') {
-                    if (!/^[0-9]$/.test(e.data)) {
-                        e.preventDefault();
-                        return;
-                    }
-                    let newValue = input.value;
-                    const start = input.selectionStart;
-                    const end = input.selectionEnd;
-                    newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
-
-                    if (newValue.length > 3) {
-                        e.preventDefault();
-                        return;
-                    }
-                    if (newValue && parseInt(newValue, 10) > 600) {
-                        e.preventDefault();
-                        return;
-                    }
-                }
-            });
-
-            // Enforce max value and max length on input
-            input.addEventListener('input', function(e) {
-                let val = e.target.value.replace(/\D/g, '');
-                if (val.length > 3) {
-                    val = val.slice(0, 3);
-                }
-                if (val && parseInt(val, 10) > 600) {
-                    val = '600';
-                }
-                e.target.value = val;
-            });
-        }
-
         else {
-            input.classList.add('budget-input', 'input-int', 'input-short');
-            input.placeholder = '0';
-            input.maxLength = 3;
-            input.addEventListener('input', setInputRestriction('int', 3));
+            //input.classList.add('input-int', 'input-short');
+            //input.placeholder = '0';
+            //input.maxLength = 3;
+            //input.addEventListener('input', setInputRestriction('int', 3));
         }
     }
 
@@ -321,39 +276,18 @@ function createStandardInput(header, field, value = '') {
         input = document.createElement('input');
         input.type = 'text';
 
-        let isNegative = false;
-        let numValue = value;
+        const isNegative = value < 0 ? true : false;
 
-        if (value < 0) {
-            isNegative = true;
-            numValue = Math.abs(value);
-        }
-
-        input.value = numValue;
-        input.classList.add('budget-input', 'input-float', 'input-mid');
+        input.value = Math.abs(value);
+        input.classList.add('input-mid');
         input.placeholder = '0.00';
 
-        // Determine max digits before decimal for large number inputs
-        let digitsBeforeDecimal = 4; // default: 4 before decimal, 1 for '.', 2 after = 7 total
-        const largeNumInputs = [
-            'YTD Income',
-            'YTD Expenses',
-            'YTD TSP Contribution',
-            'Template Value',
-            'Custom Value',
-            'Account TSP Value',
-            'Account Bank Value',
-            'Account Special Value'
-        ];
-        if (largeNumInputs.includes(header)) {
-            digitsBeforeDecimal = 6; // 6 before decimal, 1 for '.', 2 after = 9 total
-        }
-
-        input.addEventListener('input', setInputRestriction('float', digitsBeforeDecimal));
+        // sets 6 digits before decimal, input restriction automatically handles decimal point and 2 digits after
+        input.addEventListener('input', setInputRestriction('float', 6));
 
         adornment = document.createElement('span');
         adornment.textContent = isNegative ? '-$' : '$';
-        adornment.className = 'input-adornment input-adornment-left';
+        adornment.className = 'input-adornment-left';
         wrapper.appendChild(adornment);
     }
 
@@ -363,18 +297,18 @@ function createStandardInput(header, field, value = '') {
         input.value = value;
 
         if (header === 'Zip Code') {
-            input.classList.add('budget-input', 'input-mid');
+            input.classList.add('input-mid');
             input.placeholder = '12345';
             input.maxLength = 5;
             input.addEventListener('input', setInputRestriction('text', 5));
         }
         else {
-            input.classList.add('budget-input', 'input-text');
+            input.classList.add('input-long');
             input.addEventListener('input', setInputRestriction('text', 20));
         }
     }
 
-    if (input) wrapper.appendChild(input);
+    wrapper.appendChild(input);
     return wrapper;
 }
 
@@ -386,21 +320,25 @@ function setInputRestriction(field, maxLength = null) {
         return function(e) {
             let val = e.target.value.replace(/[^0-9.]/g, '');
             let parts = val.split('.');
-            // Only allow one decimal point
+
+            // only allow one decimal point
             if (parts.length > 2) {
                 val = parts[0] + '.' + parts.slice(1).join('');
                 parts = val.split('.');
             }
-            // Restrict digits before decimal
+
+            // restrict digits before decimal
             if (maxLength && parts[0].length > maxLength) {
                 parts[0] = parts[0].slice(0, maxLength);
             }
-            // Restrict to 2 digits after decimal
+
+            // restrict to 2 digits after decimal
             if (parts.length > 1 && parts[1].length > 2) {
                 parts[1] = parts[1].slice(0, 2);
             }
             val = parts.length > 1 ? parts[0] + '.' + parts[1] : parts[0];
-            // Prevent leading zeros unless immediately followed by a decimal
+
+            // prevent leading zeros unless immediately followed by a decimal
             if (val.startsWith('00')) {
                 val = val.replace(/^0+/, '0');
             } else if (val.startsWith('0') && val.length > 1 && val[1] !== '.') {

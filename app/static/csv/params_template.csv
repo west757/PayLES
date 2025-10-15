@@ -7,12 +7,12 @@ Grade,var,0,select,False,True,basepay,"Grades are designations like E1, W2, O3E,
 Zip Code,var,0,string,False,True,bah,U.S. 5-digit zip code
 OCONUS Locality Code,var,0,select,False,True,cola,Used for determining OHA and OCOLA
 Home of Record,var,0,select,False,True,bah,State or U.S. territory used for computing state taxes
-Dependents,var,0,int,False,True,bah,Number of assigned dependents in DEERS
+Dependents,var,0,select,False,True,bah,Number of assigned dependents in DEERS
 Federal Filing Status,var,0,select,False,True,federaltaxes,"Identifies if single, married, or head of household for federal tax filing purposes"
 State Filing Status,var,0,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
 SGLI Coverage,var,0,select,False,True,sgli,SGLI coverage payable
 Combat Zone,var,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
-Drills,var,0,int,False,True,drillpay,Identifies number of drills participated in
+Drills,var,0,select,False,True,drillpay,Identifies number of drills participated in
 Taxable Income,calc,0,float,False,False,none,Income that is subject to Federal Income Tax Witholding (FITW)
 Non-Taxable Income,calc,0,float,False,False,none,Income that is not subject to Federal Income Tax Witholding (FITW)
 Total Income,calc,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""

@@ -8,18 +8,15 @@ run: python -m app.main
 
 short-term:
 - drill pay calculation (divide monthly total by 30)
-- rework row type characters
 - make tsp account for tsp table
 - change account to just be bank account
 - tsp input restrictions
 - rename initials to manuals
 - make year a metadata row
-- oconus calculations
+- oconus cola and oha calculations
 - set dependents limit to 5
-- refactor update tsp with rate headers
 - line to not take up width in cell for section break
 - make badge go away after user first clicks on the modal
-- add specific class names for radio buttons, file inputs
 - show custom rows checkbox
 - make cell buttons visible in table
 - rewrite insert row
