@@ -28,7 +28,7 @@ from app.utils import (
 def get_pay_variables(les_text):
     try:
         month = les_text.get('les_month', None)
-        if month not in flask_app.config['MONTHS_SHORT']:
+        if month not in flask_app.config['MONTHS'].keys():
             raise ValueError(f"Invalid LES month: {month}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining month from LES text"))
@@ -191,6 +191,9 @@ def add_pay_variables(pay, month, variables):
 
 
 def set_variable_longs(pay, month):
+    month_long = flask_app.config['MONTHS'].get(month, "Not Found")
+    add_mv_pair(pay, 'Month Long', month, month_long)
+
     branch = get_row_value(pay, 'Branch', month)
     branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
     add_mv_pair(pay, 'Branch Long', month, branch_long)

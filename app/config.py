@@ -29,8 +29,20 @@ class Config:
     
 
     #constants 
-    MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    MONTHS_SHORT = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    MONTHS = {
+        'JAN': 'January',
+        'FEB': 'February',
+        'MAR': 'March',
+        'APR': 'April',
+        'MAY': 'May',
+        'JUN': 'June',
+        'JUL': 'July',
+        'AUG': 'August',
+        'SEP': 'September',
+        'OCT': 'October',
+        'NOV': 'November',
+        'DEC': 'December',
+    }
     DEFAULT_MONTHS_NUM = 6
     MAX_ROWS = 99
     LES_IMAGE_SCALE = 0.42

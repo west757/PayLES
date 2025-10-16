@@ -118,7 +118,7 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Months') {
-            options = window.CONFIG.MONTHS_SHORT;
+            options = Object.keys(window.CONFIG.MONTHS);
             input.classList.add('input-short');
         }
 

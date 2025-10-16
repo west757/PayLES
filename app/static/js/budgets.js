@@ -13,6 +13,16 @@ function openEditModal(header, month, value, field) {
     const modalContentEdit = document.getElementById('modal-content-edit');
     modalContentEdit.innerHTML = '';
 
+    // edit service information (branch, component, zip code)
+    // edit stationed location (zip code, military housing area, mha code, OCONUS locality code, oconus locality, oconus territory)
+    // edit home of record
+    // edit dependents and filing statuses (dependents, federal filing status, state filing status)
+    // edit sgli coverage (sgli coverage, sgli rate)
+    // edit combat zone
+    // edit drills
+    // edit tsp rates
+    // 
+
     const modalHeader = document.createElement('h2');
     modalHeader.textContent = `Edit ${header} for ${month}`;
     modalContentEdit.appendChild(modalHeader);

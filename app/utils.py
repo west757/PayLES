@@ -106,8 +106,7 @@ def add_mv_pair(budget, header, month, value):
 
 
 def get_months(pay):
-    MONTHS_SHORT = flask_app.config['MONTHS_SHORT']
-    return [key for key in pay[0].keys() if key in MONTHS_SHORT]
+    return [key for key in pay[0].keys() if key in flask_app.config['MONTHS'].keys()]
 
 
 def get_row_value(budget, header, key=None):
