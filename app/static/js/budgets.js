@@ -148,7 +148,6 @@ function openEditModal(header, month, value, field) {
     // Append rows container
     modalContentEdit.appendChild(rowsContainer);
 
-    // buttons (preserve existing)
     const buttonsEdit = document.createElement('div');
     buttonsEdit.className = 'buttons-edit';
 
@@ -256,6 +255,132 @@ function toggleRows(rowClass) {
         row.style.display = checkbox.checked ? 'table-row' : 'none';
     }
 }
+
+
+
+// ...existing code...
+function editAccount(accountType) {
+    // accountType can be 'direct', 'tsp', 'Direct Deposit Account', or 'TSP Account'
+    const header = (String(accountType).toLowerCase().includes('tsp')) ? 'TSP Account' : 'Direct Deposit Account';
+    const budgetName = header === 'TSP Account' ? 'tsp' : 'pay';
+
+    const modalEdit = document.getElementById('modal-edit');
+    modalEdit.checked = true;
+
+    const modalContentEdit = document.getElementById('modal-content-edit');
+    modalContentEdit.innerHTML = '';
+
+    // helper to make a labeled row
+    function buildRow(labelText, inputElement) {
+        const row = document.createElement('div');
+        row.className = 'modal-row';
+
+        const label = document.createElement('div');
+        label.className = 'modal-label';
+        label.textContent = labelText;
+
+        const inputWrap = document.createElement('div');
+        inputWrap.className = 'modal-input';
+        inputWrap.appendChild(inputElement);
+
+        row.appendChild(label);
+        row.appendChild(inputWrap);
+        return row;
+    }
+
+    // read existing values (fallback to 0)
+    let initialVal = getRowValue(budgetName, header, 'initial');
+    if (initialVal === null || initialVal === undefined) initialVal = 0.0;
+    let interestVal = getRowValue(budgetName, header, 'interest');
+    if (interestVal === null || interestVal === undefined) interestVal = 0;
+
+    // Title
+    const monthTop = document.createElement('div');
+    monthTop.className = 'modal-month';
+    // try to show current month long if available, else empty
+    const months = window.CONFIG && window.CONFIG.months ? window.CONFIG.months : [];
+    const activeMonth = months.length ? months[0] : '';
+    const monthLong = activeMonth ? getRowValue('pay', 'Month Long', activeMonth) : '';
+    monthTop.textContent = monthLong || '';
+    modalContentEdit.appendChild(monthTop);
+
+    const modalHeader = document.createElement('h2');
+    modalHeader.className = 'modal-title-left';
+    modalHeader.textContent = `Edit ${header}`;
+    modalContentEdit.appendChild(modalHeader);
+
+    // Initial Value row (with dollar adornment on left)
+    const initialWrapper = document.createElement('div');
+    initialWrapper.className = 'input-adornment-group';
+    const dollar = document.createElement('span');
+    dollar.className = 'input-adornment-left';
+    dollar.textContent = '$';
+    const initialInput = document.createElement('input');
+    initialInput.type = 'number';
+    initialInput.step = '0.01';
+    initialInput.min = '0';
+    initialInput.className = 'input-mid';
+    initialInput.value = parseFloat(initialVal).toFixed(2);
+    initialWrapper.appendChild(dollar);
+    initialWrapper.appendChild(initialInput);
+    modalContentEdit.appendChild(buildRow('Initial Value:', initialWrapper));
+
+    // Interest Rate row (with percent adornment on right)
+    const interestWrapper = document.createElement('div');
+    interestWrapper.className = 'input-adornment-group';
+    const interestInput = document.createElement('input');
+    interestInput.type = 'number';
+    interestInput.step = '0.01';
+    interestInput.min = '0';
+    interestInput.className = 'input-short';
+    interestInput.value = parseFloat(interestVal);
+    const percent = document.createElement('span');
+    percent.className = 'input-adornment-right';
+    percent.textContent = '%';
+    interestWrapper.appendChild(interestInput);
+    interestWrapper.appendChild(percent);
+    modalContentEdit.appendChild(buildRow('Interest Rate:', interestWrapper));
+
+    // buttons
+    const buttonsEdit = document.createElement('div');
+    buttonsEdit.className = 'buttons-edit';
+
+    const buttonUpdate = document.createElement('button');
+    buttonUpdate.textContent = 'Update';
+    buttonUpdate.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonUpdate.onclick = function () {
+        // read values and POST to route_update_account
+        const initial = parseFloat(initialInput.value) || 0.0;
+        const interest = parseFloat(interestInput.value) || 0.0;
+
+        // close modal immediately
+        document.getElementById('modal-edit').checked = false;
+
+        htmx.ajax('POST', '/route_update_account', {
+            target: '#budgets',
+            swap: 'innerHTML',
+            values: {
+                header: header,
+                initial: String(initial),
+                interest: String(interest)
+            }
+        });
+    };
+    buttonsEdit.appendChild(buttonUpdate);
+
+    const buttonCancel = document.createElement('button');
+    buttonCancel.textContent = 'Cancel';
+    buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
+    buttonCancel.onclick = function () {
+        document.getElementById('modal-edit').checked = false;
+    };
+    buttonsEdit.appendChild(buttonCancel);
+
+    modalContentEdit.appendChild(buttonsEdit);
+}
+// ...existing code...
+
+
 
 
 // export budget to xlsx or csv using SheetJS

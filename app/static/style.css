@@ -1134,6 +1134,59 @@ table.styled td.cell {
 
 
 
+/* ...existing code... */
+
+/* adornment input groups used in editAccount */
+.input-adornment-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.input-adornment-left,
+.input-adornment-right {
+    background: transparent;
+    color: var(--primary_dark_accent_color);
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ensure adornment + input appear as a single control */
+.input-adornment-group input[type="number"],
+.input-adornment-group input[type="text"] {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--table_border_color);
+    border-radius: 0.25rem;
+    background: var(--input_background_color);
+}
+
+/* make left adornment visually attached */
+.input-adornment-group .input-adornment-left {
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* make right adornment visually attached */
+.input-adornment-group .input-adornment-right {
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* ...existing code... */
+
+
+
+
+
+
+
+
+
 /* =========================
    faqs
    ========================= */

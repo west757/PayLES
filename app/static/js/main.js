@@ -159,8 +159,9 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-account-deposit') {
-        const accountDepositModalCheckbox = document.getElementById('modal-account-deposit');
-        accountDepositModalCheckbox.checked = true;
+       // const accountDepositModalCheckbox = document.getElementById('modal-account-deposit');
+        //accountDepositModalCheckbox.checked = true;
+        editAccount("Direct Deposit Account")
         //resetAccountModal();
     }
 
@@ -187,8 +188,9 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-account-tsp') {
-        const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
-        accountTspModalCheckbox.checked = true;
+        //const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
+        //countTspModalCheckbox.checked = true;
+        editAccount("TSP Account");
         //resetAccountModal();
     }
 
