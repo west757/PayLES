@@ -84,7 +84,7 @@ def init_budgets(les_variables, tsp_variables, month, les_text=None):
 
 
 def add_months(pay, tsp, month, months_num, init=False):
-    MONTHS = flask_app.config['MONTHS'].keys()
+    MONTHS = list(flask_app.config['MONTHS'].keys())
     months = get_months(pay)
 
     # calculates how many more months to add, starting from latest_month

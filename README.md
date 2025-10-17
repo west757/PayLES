@@ -20,7 +20,6 @@ short-term:
 - make cell buttons visible in table
 - rewrite insert row
 - conus cola
-- Month Long metadata
 
 mid-term:
 - get combat zone from les

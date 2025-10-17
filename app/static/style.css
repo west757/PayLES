@@ -1066,6 +1066,74 @@ table.styled td.cell {
 }
 
 
+
+
+/* modal month and rows styling */
+.modal-month {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 1rem 0 0.5rem 0;
+    color: var(--primary_dark_accent_color);
+}
+
+.modal-title-left {
+    text-align: left;
+    margin: 0.25rem 0 0.75rem 0;
+    font-size: 1.25rem;
+    color: var(--primary_dark_accent_color);
+}
+
+/* rows inside modal: label left, input right */
+#modal-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.modal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.modal-label {
+    min-width: 12rem;
+    text-align: right;
+    font-weight: bold;
+    padding-right: 0.75rem;
+}
+
+.modal-input {
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+/* input sizing inside modal rows */
+.modal-input .input-short {
+    width: 6rem;
+}
+
+.modal-input .input-mid {
+    width: 9rem;
+}
+
+.modal-input .input-long {
+    width: 12rem;
+}
+
+/* ensure select elements look consistent */
+.modal-input select, .modal-input input[type="text"] {
+    text-align: left;
+    padding: 0.25rem;
+}
+
+
+
+
+
 /* =========================
    faqs
    ========================= */
