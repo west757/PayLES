@@ -1068,75 +1068,32 @@ table.styled td.cell {
 
 
 
-/* modal month and rows styling */
-.modal-month {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin: 1rem 0 0.5rem 0;
-    color: var(--primary_dark_accent_color);
-}
 
-.modal-title-left {
-    text-align: left;
-    margin: 0.25rem 0 0.75rem 0;
-    font-size: 1.25rem;
-    color: var(--primary_dark_accent_color);
-}
-
-/* rows inside modal: label left, input right */
-#modal-rows-container {
+#modal-edit-inputs {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    gap: 1rem;
+    margin: 0 auto 1.5rem auto;
 }
 
-.modal-row {
+.input-line {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
 }
 
-.modal-label {
+.input-label {
     min-width: 12rem;
     text-align: right;
     font-weight: bold;
-    padding-right: 0.75rem;
-}
-
-.modal-input {
-    flex: 1 1 auto;
-    text-align: left;
-}
-
-/* input sizing inside modal rows */
-.modal-input .input-short {
-    width: 6rem;
-}
-
-.modal-input .input-mid {
-    width: 9rem;
-}
-
-.modal-input .input-long {
-    width: 12rem;
-}
-
-/* ensure select elements look consistent */
-.modal-input select, .modal-input input[type="text"] {
-    text-align: left;
-    padding: 0.25rem;
+    margin: 0 0.5rem 0 0;
 }
 
 
 
 
 
-/* ...existing code... */
 
-/* adornment input groups used in editAccount */
+/*
 .input-adornment-group {
     display: inline-flex;
     align-items: center;
@@ -1154,7 +1111,7 @@ table.styled td.cell {
     align-items: center;
 }
 
-/* ensure adornment + input appear as a single control */
+
 .input-adornment-group input[type="number"],
 .input-adornment-group input[type="text"] {
     padding: 0.25rem 0.5rem;
@@ -1163,21 +1120,20 @@ table.styled td.cell {
     background: var(--input_background_color);
 }
 
-/* make left adornment visually attached */
+
 .input-adornment-group .input-adornment-left {
     border-right: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-/* make right adornment visually attached */
+
 .input-adornment-group .input-adornment-right {
     border-left: 0;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
-
-/* ...existing code... */
+*/
 
 
 

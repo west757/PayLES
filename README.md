@@ -14,7 +14,7 @@ short-term:
 - rename initials to manuals
 - make year a metadata row
 - oconus cola and oha calculations
-- line to not take up width in cell for section break
+- section break table line to not take up width in cell for section break
 - make badge go away after user first clicks on the modal
 - show custom rows checkbox
 - make cell buttons visible in table

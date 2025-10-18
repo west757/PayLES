@@ -16,137 +16,60 @@ function payUnloadPrompt(e) {
     // edit tsp rates
 
 
-function openEditModal(header, month, value, field) {
-    const modalEdit = document.getElementById('modal-edit');
-    modalEdit.checked = true;
+function openEditModal(header, month, field) {
+    const modalDynamic = document.getElementById('modal-dynamic');
+    modalDynamic.checked = true;
 
-    const modalContentEdit = document.getElementById('modal-content-edit');
-    modalContentEdit.innerHTML = '';
+    const modalContentDynamic = document.getElementById('modal-content-dynamic');
+    modalContentDynamic.innerHTML = '';
 
-    // small helper to build a labeled row: label on left, inputElement on right
-    function buildRow(labelText, inputElement) {
-        const row = document.createElement('div');
-        row.className = 'modal-row';
+    function addInputToEditModal(labelText, input) {
+        const inputLine = document.createElement('div');
+        inputLine.className = 'input-line';
 
         const label = document.createElement('div');
-        label.className = 'modal-label';
+        label.className = 'input-label';
         label.textContent = labelText;
 
-        const inputWrap = document.createElement('div');
-        inputWrap.className = 'modal-input';
-        inputWrap.appendChild(inputElement);
-
-        row.appendChild(label);
-        row.appendChild(inputWrap);
-        return row;
+        inputLine.appendChild(label);
+        inputLine.appendChild(input);
+        return inputLine;
     }
 
-    // create a select from options array (options may be array of strings or objects)
-    function createSelect(options, current) {
-        const sel = document.createElement('select');
-        sel.className = 'input-long';
-        if (Array.isArray(options)) {
-            options.forEach(opt => {
-                const optionEl = document.createElement('option');
-                if (opt && typeof opt === 'object') {
-                    optionEl.value = opt.abbr ?? opt.longname ?? JSON.stringify(opt);
-                    optionEl.textContent = opt.longname ?? opt.abbr ?? optionEl.value;
-                } else {
-                    optionEl.value = opt;
-                    optionEl.textContent = opt;
-                }
-                if (String(optionEl.value) === String(current)) optionEl.selected = true;
-                sel.appendChild(optionEl);
-            });
-        }
-        return sel;
-    }
-
-    // top-centered month
     const monthLong = getRowValue('pay', 'Month Long', month);
-    const monthTop = document.createElement('div');
-    monthTop.className = 'modal-month';
-    monthTop.textContent = monthLong;
-    modalContentEdit.appendChild(monthTop);
-
-    // build title depending on header (exact matches)
-    let modalTitleText = `Editing ${header}`;
-
-    // containers for rows
-    const rowsContainer = document.createElement('div');
-    rowsContainer.id = 'modal-rows-container';
+    let modalTitle;
+    const modalEditInputs = document.createElement('div');
+    modalEditInputs.id = 'modal-edit-inputs';
 
     if (header === 'Branch' || header === 'Component' || header === 'Grade') {
-        modalTitleText = 'Edit Service Information';
-
-        const branchOptions = window.CONFIG && window.CONFIG.BRANCHES ? window.CONFIG.BRANCHES : [];
-        const branchCurrent = getRowValue('pay', 'Branch', month);
-        const branchSelect = createSelect(branchOptions, branchCurrent);
-        rowsContainer.appendChild(buildRow('Branch:', branchSelect));
-
-        const componentOptions = window.CONFIG && window.CONFIG.COMPONENTS ? window.CONFIG.COMPONENTS : [];
-        const componentCurrent = getRowValue('pay', 'Component', month);
-        const componentSelect = createSelect(componentOptions, componentCurrent);
-        rowsContainer.appendChild(buildRow('Component:', componentSelect));
-
-        const gradeOptions = window.CONFIG && window.CONFIG.GRADES ? window.CONFIG.GRADES : [];
-        const gradeCurrent = getRowValue('pay', 'Grade', month);
-        const gradeSelect = createSelect(gradeOptions, gradeCurrent);
-        rowsContainer.appendChild(buildRow('Grade:', gradeSelect));
+        modalTitle = `Service Information - ${monthLong}`;
+        modalEditInputs.appendChild(addInputToEditModal('Branch:', createStandardInput('Branch', field, getRowValue('pay', 'Branch', month))));
+        modalEditInputs.appendChild(addInputToEditModal('Component:', createStandardInput('Component', field, getRowValue('pay', 'Component', month))));
+        modalEditInputs.appendChild(addInputToEditModal('Grade:', createStandardInput('Grade', field, getRowValue('pay', 'Grade', month))));
 
     } else if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
-        modalTitleText = 'Edit Location Stationed';
-
-        const zipcodeInput = document.createElement('input');
-        zipcodeInput.type = 'text';
-        zipcodeInput.value = getRowValue('pay', 'Zip Code', month) || '';
-        zipcodeInput.className = 'input-short';
-        zipcodeInput.placeholder = 'e.g., 12345';
-        rowsContainer.appendChild(buildRow('Zip Code:', zipcodeInput));
-
-        const oconusOptions = (window.CONFIG && window.CONFIG.MHA_ZIP_CODES) ? window.CONFIG.MHA_ZIP_CODES : [];
-        const oconusCurrent = getRowValue('pay', 'OCONUS Locality Code', month);
-        const oconusSelect = createSelect(oconusOptions, oconusCurrent);
-        rowsContainer.appendChild(buildRow('OCONUS Locality Code:', oconusSelect));
+        modalTitle = `Location Stationed - ${monthLong}`;
+        modalEditInputs.appendChild(addInputToEditModal('Zip Code:', createStandardInput('Zip Code', field, getRowValue('pay', 'Zip Code', month))));
+        modalEditInputs.appendChild(addInputToEditModal('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', field, getRowValue('pay', 'OCONUS Locality Code', month))));
 
     } else if (header === 'Federal Filing Status' || header === 'State Filing Status') {
-        modalTitleText = 'Edit Tax Filing Status';
-
-        const federalFilingStatusOptions = window.CONFIG && window.CONFIG.TAX_FILING_STATUSES ? window.CONFIG.TAX_FILING_STATUSES : [];
-        const federalFilingStatusCurrent = getRowValue('pay', 'Federal Filing Status', month);
-        const federalFilingStatusSelect = createSelect(federalFilingStatusOptions, federalFilingStatusCurrent);
-        rowsContainer.appendChild(buildRow('Federal Filing Status:', federalFilingStatusSelect));
-
-        const stateFilingStatusOptions = window.CONFIG && window.CONFIG.HOME_OF_RECORDS ? window.CONFIG.HOME_OF_RECORDS : [];
-        const stateFilingStatusCurrent = getRowValue('pay', 'State Filing Status', month);
-        const stateFilingStatusSelect = createSelect(stateFilingStatusOptions, stateFilingStatusCurrent);
-        rowsContainer.appendChild(buildRow('State Filing Status:', stateFilingStatusSelect));
+        modalTitle = `Tax Filing Status - ${monthLong}`;
+        modalEditInputs.appendChild(addInputToEditModal('Federal Filing Status:', createStandardInput('Federal Filing Status', field, getRowValue('pay', 'Federal Filing Status', month))));
+        modalEditInputs.appendChild(addInputToEditModal('State Filing Status:', createStandardInput('State Filing Status', field, getRowValue('pay', 'State Filing Status', month))));
 
     } else if (header === 'SGLI Coverage') {
-        modalTitleText = 'Edit SGLI Coverage';
-
-        const sgliCoverageOptions = window.CONFIG && window.CONFIG.SGLI_COVERAGE_OPTIONS ? window.CONFIG.SGLI_COVERAGE_OPTIONS : [];
-        const sgliCoverageCurrent = getRowValue('pay', 'SGLI Coverage', month);
-        const sgliCoverageSelect = createSelect(sgliCoverageOptions, sgliCoverageCurrent);
-        rowsContainer.appendChild(buildRow('SGLI Coverage:', sgliCoverageSelect));
+        modalTitle = `SGLI Coverage - ${monthLong}`;
+        modalEditInputs.appendChild(addInputToEditModal('SGLI Coverage:', createStandardInput('SGLI Coverage', field, getRowValue('pay', 'SGLI Coverage', month))));
 
     } else {
-        modalTitleText = `Editing ${header}`;
-        const inputWrapper = createStandardInput(header, field, value);
-        const singleRow = document.createElement('div');
-        singleRow.style.marginTop = '1rem';
-        singleRow.appendChild(inputWrapper);
-        rowsContainer.appendChild(singleRow);
+        modalTitle = `${header} - ${monthLong}`;
+        modalEditInputs.appendChild(addInputToEditModal(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
     }
 
-    // Title left-aligned
     const modalHeader = document.createElement('h2');
-    modalHeader.className = 'modal-title-left';
-    modalHeader.textContent = modalTitleText;
-    modalContentEdit.appendChild(modalHeader);
-
-    // Append rows container
-    modalContentEdit.appendChild(rowsContainer);
+    modalHeader.textContent = modalTitle;
+    modalContentDynamic.appendChild(modalHeader);
+    modalContentDynamic.appendChild(modalEditInputs);
 
     const buttonsEdit = document.createElement('div');
     buttonsEdit.className = 'buttons-edit';
@@ -175,7 +98,7 @@ function openEditModal(header, month, value, field) {
     };
     buttonsEdit.appendChild(buttonCancel);
 
-    modalContentEdit.appendChild(buttonsEdit);
+    modalContentDynamic.appendChild(buttonsEdit);
 }
 
 

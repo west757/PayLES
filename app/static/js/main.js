@@ -199,14 +199,12 @@ document.addEventListener('click', function(e) {
         tspAnalysisModalCheckbox.checked = true;
     }
 
-    // open edit cell modal
-    if (e.target.classList.contains('button-modal-edit')) {
-        let budgetName = e.target.getAttribute('data-budgetName');
+    // open dynamic modal on cell button click
+    if (e.target.classList.contains('button-modal-dynamic')) {
         let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
-        let value = getRowValue(budgetName, header, month);
         let field = e.target.getAttribute('data-field');
-        openEditModal(header, month, value, field);
+        openEditModal(header, month, field);
     }
 
     // close modal from close button in modal
