@@ -94,7 +94,7 @@ function openEditModal(header, month, field) {
     buttonCancel.textContent = 'Cancel';
     buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
     buttonCancel.onclick = function() {
-        document.getElementById('modal-edit').checked = false;
+        document.getElementById('modal-dynamic').checked = false;
     };
     buttonsEdit.appendChild(buttonCancel);
 
@@ -181,7 +181,6 @@ function toggleRows(rowClass) {
 
 
 
-// ...existing code...
 function editAccount(accountType) {
     // accountType can be 'direct', 'tsp', 'Direct Deposit Account', or 'TSP Account'
     const header = (String(accountType).toLowerCase().includes('tsp')) ? 'TSP Account' : 'Direct Deposit Account';
@@ -295,7 +294,7 @@ function editAccount(accountType) {
     buttonCancel.textContent = 'Cancel';
     buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
     buttonCancel.onclick = function () {
-        document.getElementById('modal-edit').checked = false;
+        document.getElementById('modal-dynamic').checked = false;
     };
     buttonsEdit.appendChild(buttonCancel);
 

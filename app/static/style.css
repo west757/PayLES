@@ -299,7 +299,7 @@ input[type="text"], select {
     font-size: 0.92rem;
     height: 1.75rem;
     padding: 0.25rem;
-    text-align: center;
+    text-align: left;
 }
 
 .input-long {
@@ -1065,10 +1065,6 @@ table.styled td.cell {
     width: 7rem;
 }
 
-
-
-
-
 #modal-edit-inputs {
     display: flex;
     flex-direction: column;
@@ -1084,7 +1080,7 @@ table.styled td.cell {
 .input-label {
     font-weight: bold;
     margin: 0 0.5rem 0 0;
-    min-width: 12rem;
+    min-width: 11rem;
     text-align: right;
 }
 

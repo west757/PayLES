@@ -123,44 +123,44 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Branch') {
-            options = window.CONFIG.BRANCHES;
-            input.classList.add('input-short');
+            options = window.CONFIG.BRANCHES_OPTIONS;
+            input.classList.add('input-long');
         }
 
         else if (header === 'Component') {
-            options = window.CONFIG.COMPONENTS;
-            input.classList.add('input-short');
+            options = window.CONFIG.COMPONENTS_OPTIONS;
+            input.classList.add('input-long');
         }
 
         else if (header === 'Grade') {
-            options = window.CONFIG.GRADES;
+            options = window.CONFIG.GRADES_OPTIONS;
             input.classList.add('input-short');
         }
 
         else if (header === 'OCONUS Locality Code') {
-            options = "temp"
-            input.classList.add('input-short');
+            options = [];
+            input.classList.add('input-long');
         }
 
         else if (header === 'Home of Record') {
-            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.abbr);
-            input.classList.add('input-short');
+            options = window.CONFIG.HOME_OF_RECORDS_OPTIONS;
+            input.classList.add('input-long');
         }
 
         else if (header === 'Dependents') {
             const max = window.CONFIG.DEPENDENTS_MAX;
             options = Array.from({length: max + 1}, (_, i) => i);
-            input.classList.add('input-mid');
+            input.classList.add('input-short');
         }
 
         else if (header === 'Federal Filing Status') {
             options = window.CONFIG.TAX_FILING_STATUSES;
-            input.classList.add('input-mid');
+            input.classList.add('input-long');
         }
 
         else if (header === 'State Filing Status') {
             options = window.CONFIG.TAX_FILING_STATUSES.slice(0, 2);
-            input.classList.add('input-mid');
+            input.classList.add('input-long');
         }
 
         else if (header === 'SGLI Coverage') {
@@ -176,17 +176,17 @@ function createStandardInput(header, field, value = '') {
         else if (header === 'Drills') {
             const max = window.CONFIG.DRILLS_MAX;
             options = Array.from({length: max + 1}, (_, i) => i);
-            input.classList.add('input-mid');
+            input.classList.add('input-short');
         }
 
-        else if (header === 'Home of Record Long') {
-            options = window.CONFIG.HOME_OF_RECORDS.map(hor => hor.longname);
-            input.classList.add('input-long');
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "Choose an option";
-            defaultOption.textContent = "Choose an option";
-            input.appendChild(defaultOption);
-        }
+        //else if (header === 'Home of Record Long') {
+        //    options = window.CONFIG.HOME_OF_RECORDS_OPTIONS.map(hor => hor.longname);
+        //    input.classList.add('input-long');
+        //    const defaultOption = document.createElement('option');
+        //    defaultOption.value = "Choose an option";
+        //    defaultOption.textContent = "Choose an option";
+        //    input.appendChild(defaultOption);
+        //}
 
         options.forEach(opt => {
             let o = document.createElement('option');
