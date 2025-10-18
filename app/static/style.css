@@ -1077,15 +1077,15 @@ table.styled td.cell {
 }
 
 .input-line {
-    display: flex;
     align-items: center;
+    display: flex;
 }
 
 .input-label {
-    min-width: 12rem;
-    text-align: right;
     font-weight: bold;
     margin: 0 0.5rem 0 0;
+    min-width: 12rem;
+    text-align: right;
 }
 
 

@@ -68,12 +68,12 @@ class Config:
     }
 
     BRANCHES = {
-        "USA": "United States Army",
-        "USAF": "United States Air Force",
-        "USSF": "United States Space Force",
-        "USN": "United States Navy",
-        "USMC": "United States Marine Corps",
-        #"USCG": "United States Coast Guard",
+        "USA": "U.S. Army",
+        "USAF": "U.S. Air Force",
+        "USSF": "U.S. Space Force",
+        "USN": "U.S. Navy",
+        "USMC": "U.S. Marine Corps",
+        #"USCG": "U.S. Coast Guard",
     }
 
     COMPONENTS = {

@@ -40,7 +40,7 @@
             </thead>
             <tbody>
                 {% for row in pay %}
-                    {% if row.type != 'meta' %}
+                    {% if row.type != 'meta' and row.header != 'Branch' %}
                         {% set row_meta = headers | selectattr('header', 'equalto', row.header) | list | first %}
                         {% set next_row = pay[loop.index] if not loop.last else None %}
 

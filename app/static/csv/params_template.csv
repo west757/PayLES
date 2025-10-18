@@ -1,7 +1,7 @@
 ﻿header,type,sign,field,tax,editable,modal,tooltip
 Year,var,0,none,False,False,none,none
 Months in Service,var,0,none,False,False,pebd,Number of months creditable towards military service
-Branch,var,0,select,False,True,components,"Identifies branch of U.S. military (USA, USAF, USSF, USN, USMC)"
+Branch,var,0,none,False,False,none,none
 Component,var,0,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
 Grade,var,0,select,False,True,basepay,"Grades are designations like E1, W2, O3E, O4, and rank is the full title of the grade"
 Zip Code,var,0,string,False,True,bah,U.S. 5-digit zip code
@@ -25,7 +25,6 @@ YTD Expenses,ytd,0,float,False,False,none,Total expenses from the beginning of t
 YTD Net Pay,ytd,0,float,False,False,none,Total net pay from the beginning of the year
 Direct Deposit Account,acc,0,float,False,False,none,Individual direct deposit account accumulating all net pay over time
 Month Long,meta,0,none,False,False,none,none
-Branch Long,meta,0,none,False,False,none,none
 Component Long,meta,0,none,False,False,none,none
 Rank Long,meta,0,none,False,False,none,none
 Military Housing Area Code,meta,0,none,False,False,none,none

@@ -61,15 +61,15 @@ def get_pay_variables(les_text):
     try:
         text = les_text.get('branch', None)
         if text == "ARMY":
-            branch = "USA"
+            branch = "U.S. Army"
         elif text == "AF":
-            branch = "USAF"
+            branch = "U.S. Air Force"
         elif text == "SF":
-            branch = "USSF"
+            branch = "U.S. Space Force"
         elif text == "NAVY":
-            branch = "USN"
+            branch = "U.S. Navy"
         elif text == "USMC":
-            branch = "USMC"
+            branch = "U.S. Marine Corps"
         else:
             raise ValueError(f"Invalid LES branch: {text}")
     except Exception as e:
@@ -193,10 +193,6 @@ def add_pay_variables(pay, month, variables):
 def set_variable_longs(pay, month):
     month_long = flask_app.config['MONTHS'].get(month, "Not Found")
     add_mv_pair(pay, 'Month Long', month, month_long)
-
-    branch = get_row_value(pay, 'Branch', month)
-    branch_long = flask_app.config['BRANCHES'].get(branch, "Not Found")
-    add_mv_pair(pay, 'Branch Long', month, branch_long)
 
     component = get_row_value(pay, 'Component', month)
     component_long = flask_app.config['COMPONENTS'].get(component, "Not Found")
