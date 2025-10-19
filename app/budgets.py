@@ -212,7 +212,7 @@ def insert_row(pay, months, headers, row_data):
 
 
 def remove_row(pay, headers, header):
-    row = get_row_value('pay', header)
+    row = get_row_value(pay, header)
     pay = [r for r in pay if r.get('header').lower() != header.lower()]
     
     if row.get('type') == 'c':

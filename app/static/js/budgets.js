@@ -176,7 +176,7 @@ function buildAccountModal(header) {
     buttonUpdate.textContent = 'Update';
     buttonUpdate.classList.add('button-generic', 'button-positive');
     buttonUpdate.onclick = function () {
-        submitAccountModal(accountName);
+        submitAccountModal(header);
     };
     buttons.appendChild(buttonUpdate);
 
@@ -192,7 +192,7 @@ function buildAccountModal(header) {
 }
 
 
-function submitAccountModal(accountName) {
+function submitAccountModal(header) {
     const input = document.querySelector('#modal-content-dynamic input');
     const initial = input.value;
 
@@ -204,7 +204,7 @@ function submitAccountModal(accountName) {
         target: '#budgets',
         swap: 'innerHTML',
         values: {
-            accountName: accountName,
+            header: header,
             initial: initial,
         }
     });

@@ -9,10 +9,7 @@ run: python -m app.main
 short-term:
 - drill pay calculation (divide monthly total by 30)
 - rename initials to manuals
-- make year a metadata row
 - oconus cola and oha calculations
-- section break table line to not take up height in cell for section break
-- make badge go away after user first clicks on the modal
 - show custom rows checkbox
 - make cell buttons visible in table
 - rewrite insert row
@@ -21,6 +18,7 @@ short-term:
 
 mid-term:
 - get combat zone from les
+- make year a metadata row
 - guide modal
 - rework resources 
 -   tags for category (general, financial, moving, education, mental health), branch, featured

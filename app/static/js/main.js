@@ -60,7 +60,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', payUnloadPrompt);
         //attachInjectModalListeners();
-        //attachAccountModalListeners();
+        displayDiscrepanciesModal(window.CONFIG.discrepancies);
     }
 
     highlightChanges('pay');
@@ -71,7 +71,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     disableDrillsButtons();
     disableTSPRateButtons();
     displayRecommendations(window.CONFIG.recommendations);
-    displayDiscrepanciesModal(window.CONFIG.discrepancies);
 
     const budgetPay = document.getElementById('budget-pay');
     if (budgetPay && typeof payScrollTop === 'number') {
@@ -98,7 +97,7 @@ document.addEventListener('mousemove', function(e) {
         const value = e.target.getAttribute('data-value');
         const month = e.target.getAttribute('data-month');
         let tooltip = '';
-        
+
         if (row === 'Months in Service' && value) {
             const months = parseInt(value, 10) % 12;
             const years = Math.floor(parseInt(value, 10) / 12);
@@ -162,10 +161,14 @@ document.addEventListener('click', function(e) {
 
     if (e.target && e.target.id === 'button-modal-discrepancies') {
         document.getElementById('modal-discrepancies').checked = true;
+        const badge = document.getElementById('badge-discrepancies');
+        if (badge) badge.style.display = 'none';
     }
 
     if (e.target && e.target.id === 'button-modal-recommendations') {
         document.getElementById('modal-recommendations').checked = true;
+        const badge = document.getElementById('badge-recommendations');
+        if (badge) badge.style.display = 'none';
     }
 
     if (e.target && e.target.id === 'button-modal-guide-tsp') {
