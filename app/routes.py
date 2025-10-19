@@ -315,15 +315,16 @@ def route_update_account():
     pay = session.get('pay', [])
     tsp = session.get('tsp', [])
     months = get_months(pay)
+    headers = session.get('headers', [])
 
-    budgetName = request.form.get('budgetName', '')
+    accountName = request.form.get('accountName', '')
     initial = float(request.form.get('initial', 0.0))
     interest = float(request.form.get('interest', 0.0))
 
-    if budgetName == "Direct Deposit Account":
-        calc_account(pay, budgetName, months, initial, interest)
-    elif budgetName == "TSP Account":
-        calc_account(tsp, budgetName, months, initial, interest)
+    if accountName == "Direct Deposit Account":
+        calc_account(pay, accountName, months, initial, interest)
+    elif accountName == "TSP Account":
+        calc_account(tsp, accountName, months, initial, interest)
     else:
         return jsonify({'message': "Invalid account header"}), 400
 
@@ -340,6 +341,7 @@ def route_update_account():
         'pay': pay,
         'tsp': tsp,
         'months': months,
+        'headers': headers,
     }
     return render_template('budgets.html', **context)
 

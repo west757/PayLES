@@ -10,7 +10,6 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - make tsp account for tsp table
 - change account to just be bank account
-- tsp input restrictions
 - rename initials to manuals
 - make year a metadata row
 - oconus cola and oha calculations
@@ -20,6 +19,7 @@ short-term:
 - make cell buttons visible in table
 - rewrite insert row
 - conus cola
+- remove interest calculation for accounts
 
 mid-term:
 - get combat zone from les

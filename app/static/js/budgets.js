@@ -202,7 +202,7 @@ function buildAccountModal(accountName) {
     buttonUpdate.textContent = 'Update';
     buttonUpdate.classList.add('button-generic', 'button-positive');
     buttonUpdate.onclick = function () {
-        submitAccountModal(budgetName, initial, interest);
+        submitAccountModal(accountName);
     };
     buttons.appendChild(buttonUpdate);
 
@@ -218,9 +218,15 @@ function buildAccountModal(accountName) {
 }
 
 
-function submitAccountModal(budgetName, initial, interest) {
-    if (!validateInput('float', 'Account Initial Value', initial)) return;
-    if (!validateInput('int', 'Account Interest Rate', interest)) return;
+function submitAccountModal(accountName) {
+    const inputs = document.querySelectorAll('#modal-content-dynamic input');
+
+    // first input is initial value, second is interest rate
+    const initial = parseFloat(inputs[0].value);
+    const interest = parseFloat(inputs[1].value);
+
+    if (!validateInput('float', 'Initial Value', initial)) return;
+    if (!validateInput('float', 'Interest Rate', interest)) return;
 
     document.getElementById('modal-dynamic').checked = false;
 
@@ -228,7 +234,7 @@ function submitAccountModal(budgetName, initial, interest) {
         target: '#budgets',
         swap: 'innerHTML',
         values: {
-            budgetName: budgetName,
+            accountName: accountName,
             initial: initial,
             interest: interest
         }

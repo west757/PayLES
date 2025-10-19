@@ -290,21 +290,21 @@ def remove_row(pay, headers, header):
 
 
 def calc_account(budget, header, months, initial, interest):
-    row = get_row_value(budget, header)
-
     if header == "Direct Deposit Account":
-        add_row_name = "Net Pay"
+        add_row = "Net Pay"
     elif header == "TSP Account":
-        add_row_name = "TSP Contribution Total"
+        add_row = "TSP Contribution Total"
+
+    row = get_row_value(budget, header)
 
     prev_value = initial
     for idx, month in enumerate(months):
         if idx == 0:
             row[month] = round(prev_value, 2)
         else:
-            add_value = next((r.get(month, 0.0) for r in budget if r.get('header') == add_row_name), 0.0)
+            add_value = get_row_value(budget, add_row, month)
             value = prev_value + add_value
-            value = value * (1 + interest)
+            value += value * interest
             row[month] = round(value, 2)
             prev_value = value
     return None
