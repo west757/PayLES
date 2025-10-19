@@ -16,13 +16,7 @@ function buildEditModal(header, month, field) {
     const inputLines = document.createElement('div');
     inputLines.id = 'modal-dynamic-input-lines';
 
-    if (header === 'Branch' || header === 'Component' || header === 'Grade') {
-        titleText = `Service Information - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine('Branch:', createStandardInput('Branch', 'select', getRowValue('pay', 'Branch', month))));
-        inputLines.appendChild(addModalDynamicInputLine('Component:', createStandardInput('Component', 'select', getRowValue('pay', 'Component', month))));
-        inputLines.appendChild(addModalDynamicInputLine('Grade:', createStandardInput('Grade', 'select', getRowValue('pay', 'Grade', month))));
-
-    } else if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
+    if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
         titleText = `Location Stationed - ${monthLong}`;
         inputLines.appendChild(addModalDynamicInputLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
         inputLines.appendChild(addModalDynamicInputLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
@@ -30,15 +24,6 @@ function buildEditModal(header, month, field) {
     } else if (header === 'Home of Record') {
         titleText = `Home of Record - ${monthLong}`;
         inputLines.appendChild(addModalDynamicInputLine('Home of Record:', createStandardInput('Home of Record', 'select', getRowValue('pay', 'Home of Record Long', month))));
-
-    } else if (header === 'Federal Filing Status' || header === 'State Filing Status') {
-        titleText = `Tax Filing Status - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine('Federal Filing Status:', createStandardInput('Federal Filing Status', 'select', getRowValue('pay', 'Federal Filing Status', month))));
-        inputLines.appendChild(addModalDynamicInputLine('State Filing Status:', createStandardInput('State Filing Status', 'select', getRowValue('pay', 'State Filing Status', month))));
-
-    } else if (header === 'SGLI Coverage') {
-        titleText = `SGLI Coverage - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine('SGLI Coverage:', createStandardInput('SGLI Coverage', 'select', getRowValue('pay', 'SGLI Coverage', month))));
 
     } else {
         titleText = `${header} - ${monthLong}`;
@@ -159,39 +144,28 @@ function toggleRows(rowClass) {
 }
 
 
-
-
-
-let accountDepositInitial = 0.0;
-let accountDepositInterest = 0;
-let accountTSPInitial = 0.0;
-let accountTSPInterest = 0;
-
-function buildAccountModal(accountName) {
+function buildAccountModal(header) {
     document.getElementById('modal-dynamic').checked = true;
 
-    if (accountName === 'Direct Deposit Account') {
+    if (header === 'Direct Deposit Account') {
         budget = document.getElementById('budget-pay');
-        initial = accountDepositInitial;
-        interest = accountDepositInterest;
-    } else if (accountName === 'TSP Account') {
+        initial = getRowValue('pay', 'Direct Deposit Account', window.CONFIG.months[0]);
+    } else if (header === 'TSP Account') {
         budget = document.getElementById('budget-tsp');
-        initial = accountTSPInitial;
-        interest = accountTSPInterest;
+        initial = getRowValue('tsp', 'TSP Account', window.CONFIG.months[0]);
     }
 
     const content = document.getElementById('modal-content-dynamic');
     content.innerHTML = '';
 
     const title = document.createElement('h2');
-    title.textContent = "Edit " + accountName;
+    title.textContent = "Edit " + header;
     content.appendChild(title);
 
     const inputLines = document.createElement('div');
     inputLines.id = 'modal-dynamic-input-lines';
 
     inputLines.appendChild(addModalDynamicInputLine('Initial Value:', createStandardInput('Initial Value', 'float', initial)));
-    inputLines.appendChild(addModalDynamicInputLine('Interest Rate:', createStandardInput('Interest Rate', 'float', interest)));
 
     content.appendChild(inputLines);
 
@@ -219,14 +193,10 @@ function buildAccountModal(accountName) {
 
 
 function submitAccountModal(accountName) {
-    const inputs = document.querySelectorAll('#modal-content-dynamic input');
-
-    // first input is initial value, second is interest rate
-    const initial = parseFloat(inputs[0].value);
-    const interest = parseFloat(inputs[1].value);
+    const input = document.querySelector('#modal-content-dynamic input');
+    const initial = input.value;
 
     if (!validateInput('float', 'Initial Value', initial)) return;
-    if (!validateInput('float', 'Interest Rate', interest)) return;
 
     document.getElementById('modal-dynamic').checked = false;
 
@@ -236,7 +206,6 @@ function submitAccountModal(accountName) {
         values: {
             accountName: accountName,
             initial: initial,
-            interest: interest
         }
     });
 }

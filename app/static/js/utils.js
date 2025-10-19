@@ -265,32 +265,17 @@ function createStandardInput(header, field, value = '') {
         input.value = Math.abs(value);
         input.placeholder = '0.00';
 
+        input.classList.add('input-mid');
+        input.maxLength = 9;
+        input.addEventListener('input', setInputRestriction('float', 6));
+
+        const isNegative = value < 0 ? true : false;
         adornment = document.createElement('span');
-
-        if (header === 'Interest Rate') {
-            input.classList.add('input-short');
-            input.maxLength = 5;
-            input.addEventListener('input', setInputRestriction('float', 2));
-
-            wrapper.appendChild(input);
-            adornment = document.createElement('span');
-            adornment.textContent = '%';
-            adornment.className = 'input-adornment-right';
-            wrapper.appendChild(adornment);
-            return wrapper;
-        }
-        else{
-            input.classList.add('input-mid');
-            input.maxLength = 9;
-            input.addEventListener('input', setInputRestriction('float', 6));
-
-            const isNegative = value < 0 ? true : false;
-            adornment.textContent = isNegative ? '-$' : '$';
-            adornment.className = 'input-adornment-left';
-            wrapper.appendChild(adornment);
-            wrapper.appendChild(input);
-            return wrapper;
-        }
+        adornment.textContent = isNegative ? '-$' : '$';
+        adornment.className = 'input-adornment-left';
+        wrapper.appendChild(adornment);
+        wrapper.appendChild(input);
+        return wrapper;
     }
 
     else if (field === 'string') {

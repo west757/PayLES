@@ -157,15 +157,8 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-account-deposit') {
-       // const accountDepositModalCheckbox = document.getElementById('modal-account-deposit');
-        //accountDepositModalCheckbox.checked = true;
         buildAccountModal("Direct Deposit Account")
     }
-
-    //if (e.target && e.target.id === 'button-modal-account-other') {
-    //    const accountOtherModalCheckbox = document.getElementById('modal-account-other');
-    //    accountOtherModalCheckbox.checked = true;
-    //}
 
     if (e.target && e.target.id === 'button-modal-discrepancies') {
         document.getElementById('modal-discrepancies').checked = true;
@@ -180,8 +173,6 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-account-tsp') {
-        //const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
-        //countTspModalCheckbox.checked = true;
         buildAccountModal("TSP Account");
     }
 

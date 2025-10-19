@@ -107,8 +107,8 @@ def route_single():
         pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, month)
 
         pay_les, tsp_les, months = add_months(pay_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-        calc_account(pay_les, "Direct Deposit Account", months, initial=0.0, interest=0.0)
-        calc_account(tsp_les, "TSP Account", months, initial=0.0, interest=0.0)
+        calc_account(pay_les, "Direct Deposit Account", months, initial=0.0)
+        calc_account(tsp_les, "TSP Account", months, initial=0.0)
 
         #for row in pay_les:
         #    print(row)
@@ -319,12 +319,11 @@ def route_update_account():
 
     accountName = request.form.get('accountName', '')
     initial = float(request.form.get('initial', 0.0))
-    interest = float(request.form.get('interest', 0.0))
 
     if accountName == "Direct Deposit Account":
-        calc_account(pay, accountName, months, initial, interest)
+        calc_account(pay, accountName, months, initial)
     elif accountName == "TSP Account":
-        calc_account(tsp, accountName, months, initial, interest)
+        calc_account(tsp, accountName, months, initial)
     else:
         return jsonify({'message': "Invalid account header"}), 400
 
@@ -396,7 +395,6 @@ def route_insert_row():
         'value': request.form.get('value', '0').strip(),
         'tax': request.form.get('tax', 'false').lower() == 'true',
         'percent': request.form.get('percent', '0'),
-        'interest': request.form.get('interest', '0'),
     }
 
     pay, headers = insert_row(pay, months, headers, row_data)

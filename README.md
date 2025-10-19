@@ -8,18 +8,15 @@ run: python -m app.main
 
 short-term:
 - drill pay calculation (divide monthly total by 30)
-- make tsp account for tsp table
-- change account to just be bank account
 - rename initials to manuals
 - make year a metadata row
 - oconus cola and oha calculations
-- section break table line to not take up width in cell for section break
+- section break table line to not take up height in cell for section break
 - make badge go away after user first clicks on the modal
 - show custom rows checkbox
 - make cell buttons visible in table
 - rewrite insert row
 - conus cola
-- remove interest calculation for accounts
 
 mid-term:
 - get combat zone from les

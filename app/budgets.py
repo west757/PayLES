@@ -208,74 +208,6 @@ def insert_row(pay, months, headers, row_data):
                 'tooltip': 'Custom row added by user',
             })
 
-    elif row_data['method'] in ['tsp', 'bank', 'special']:
-        row_meta = {'header': row_data['header']}
-        for meta in flask_app.config['ROW_METADATA']:
-            if meta == 'type':
-                row_meta['type'] = 'z'
-            elif meta == 'sign':
-                row_meta['sign'] = 0
-            elif meta == 'field':
-                row_meta['field'] = 'float'
-            elif meta == 'tax':
-                row_meta['tax'] = False
-            elif meta == 'editable':
-                row_meta['editable'] = True
-            elif meta == 'modal':
-                row_meta['modal'] = 'none'
-
-        row = add_row(pay, row_data['header'], metadata=row_meta)
-
-        percent = float(row_data.get('percent', 0)) / 100
-        interest = float(row_data.get('interest', 0)) / 100
-
-        if row_data['method'] == 'tsp':
-            trad_row = next((r for r in pay if r['header'] == 'Traditional TSP'), None)
-            roth_row = next((r for r in pay if r['header'] == 'Roth TSP'), None)
-            prev_val = value
-
-            for idx, m in enumerate(months):
-                trad_val = abs(trad_row[m]) if trad_row and m in trad_row else 0.0
-                roth_val = abs(roth_row[m]) if roth_row and m in roth_row else 0.0
-                month_sum = trad_val + roth_val
-
-                if idx == 0:
-                    val = prev_val + month_sum
-                else:
-                    val = prev_val + month_sum
-
-                val = val * (1 + interest)
-                row[m] = round(val, 2)
-                prev_val = val
-
-        elif row_data['method'] == 'bank':
-            net_pay_row = next((r for r in pay if r['header'] == 'Net Pay'), None)
-            prev_val = value
-
-            for idx, m in enumerate(months):
-                net_pay = net_pay_row[m] if net_pay_row and m in net_pay_row else 0.0
-                month_sum = net_pay * percent
-
-                if idx == 0:
-                    val = prev_val + month_sum
-                else:
-                    val = prev_val + month_sum
-
-                val = val * (1 + interest)
-                row[m] = round(val, 2)
-                prev_val = val
-
-        elif row_data['method'] == 'special':
-            for idx, m in enumerate(months):
-                row[m] = value
-
-        if not any(h['header'].lower() == row_data['header'].lower() for h in headers):
-            headers.append({
-                'header': row_data['header'],
-                'type': 'z',
-                'tooltip': 'Custom account added by user',
-            })
-
     return pay, headers
 
 
@@ -289,7 +221,7 @@ def remove_row(pay, headers, header):
     return pay, headers
 
 
-def calc_account(budget, header, months, initial, interest):
+def calc_account(budget, header, months, initial):
     if header == "Direct Deposit Account":
         add_row = "Net Pay"
     elif header == "TSP Account":
@@ -304,7 +236,6 @@ def calc_account(budget, header, months, initial, interest):
         else:
             add_value = get_row_value(budget, add_row, month)
             value = prev_value + add_value
-            value += value * interest
             row[month] = round(value, 2)
             prev_value = value
     return None
