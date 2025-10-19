@@ -50,7 +50,7 @@ def index():
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
         'MONTHS': flask_app.config['MONTHS'],
-        'BRANCHES_OPTIONS': list(flask_app.config['BRANCHES'].values()),
+        'BRANCHES': flask_app.config['BRANCHES'],
         'COMPONENTS_OPTIONS': list(flask_app.config['COMPONENTS'].values()),
         'GRADES_OPTIONS': flask_app.config['GRADES'],
         'HOME_OF_RECORDS_OPTIONS': flask_app.config['HOME_OF_RECORDS'].iloc[:, 0].tolist(),

@@ -94,11 +94,11 @@ document.addEventListener('mousemove', function(e) {
         }
 
         // only build tooltip if tooltipText is not present
-        const row = e.target.getAttribute('data-row');
+        const row = e.target.getAttribute('data-header');
         const value = e.target.getAttribute('data-value');
         const month = e.target.getAttribute('data-month');
         let tooltip = '';
-
+        
         if (row === 'Months in Service' && value) {
             const months = parseInt(value, 10) % 12;
             const years = Math.floor(parseInt(value, 10) / 12);
@@ -182,7 +182,7 @@ document.addEventListener('click', function(e) {
 
     // open dynamic modal on cell button click
     if (e.target.classList.contains('button-modal-dynamic')) {
-        let header = e.target.getAttribute('data-row');
+        let header = e.target.getAttribute('data-header');
         let month = e.target.getAttribute('data-month');
         let field = e.target.getAttribute('data-field');
         buildEditModal(header, month, field);
@@ -197,7 +197,7 @@ document.addEventListener('click', function(e) {
 
     // remove row button click
     if (e.target.classList.contains('button-remove-row')) {
-        let header = e.target.getAttribute('data-row');
+        let header = e.target.getAttribute('data-header');
 
         // sets a confirmation state for 2.5 seconds to prevent accidental row removal
         if (!removeRowConfirm[header]) {

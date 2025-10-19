@@ -123,8 +123,9 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Branch') {
-            options = window.CONFIG.BRANCHES_OPTIONS;
+            options = Object.values(window.CONFIG.BRANCHES);
             input.classList.add('input-long');
+            value = window.CONFIG.BRANCHES[value];
         }
 
         else if (header === 'Component') {

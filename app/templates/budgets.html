@@ -57,8 +57,8 @@
 
                         <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
                             <td class="cell cell-header">
-                                {% if row.editable and row.type in ['e', 'd', 'a', 'c', 'z'] %}
-                                    <button class="button-generic button-negative button-remove-row tooltip" data-row="{{ row.header }}" data-tooltip="Remove Row">
+                                {% if row.editable and row.type in ['ent', 'ded', 'alt', 'inc', 'exp'] %}
+                                    <button class="button-generic button-negative button-remove-row tooltip" data-header="{{ row.header }}" data-tooltip="Remove Row">
                                         ✖
                                     </button>
                                 {% endif %}
@@ -73,12 +73,12 @@
                             {% for month in months %}
                                 {% if row.editable and not loop.first %}
                                     <td class="cell">
-                                        <button class="button-cell button-modal-dynamic tooltip" data-budgetName="pay" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                        <button class="button-cell button-modal-dynamic tooltip" data-budgetName="pay" data-header="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                             {{ format_cell(row, month) }}
                                         </button>
                                     </td>
                                 {% else %}
-                                    <td class="tooltip">
+                                    <td class="tooltip" data-budgetName="pay" data-header="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                         {{ format_cell(row, month) }}
                                     </td>
                                 {% endif %}
@@ -131,12 +131,12 @@
                         {% for month in months %}
                             {% if row.editable and not loop.first %}
                                 <td class="cell">
-                                    <button class="button-cell button-modal-dynamic tooltip" data-budgetName="tsp" data-row="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
+                                    <button class="button-cell button-modal-dynamic tooltip" data-budgetName="tsp" data-header="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                         {{ format_cell(row, month) }}
                                     </button>
                                 </td>
                             {% else %}
-                                <td class="tooltip">
+                                <td class="tooltip" data-budgetName="tsp" data-header="{{ row.header }}" data-month="{{ month }}" data-field="{{ row.field }}" data-value="{{ row[month] }}">
                                     {{ format_cell(row, month) }}
                                 </td>
                             {% endif %}

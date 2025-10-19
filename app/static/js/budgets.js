@@ -259,11 +259,11 @@ function disableTSPRateButtons() {
         ];
 
         tradRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
+            const btn = document.querySelector(`.cell-button[data-header="${row}"][data-month="${month}"]`);
             if (btn) btn.disabled = (parseInt(tradBase, 10) === 0);
         });
         rothRows.forEach(row => {
-            const btn = document.querySelector(`.cell-button[data-row="${row}"][data-month="${month}"]`);
+            const btn = document.querySelector(`.cell-button[data-header="${row}"][data-month="${month}"]`);
             if (btn) btn.disabled = (parseInt(rothBase, 10) === 0);
         });
     });
@@ -274,7 +274,7 @@ function disableDrillsButtons() {
     const months = window.CONFIG.months;
     months.forEach(month => {
         const component = getRowValue('pay', 'Component', month);
-        const btn = document.querySelector(`.cell-button[data-row="Drills"][data-month="${month}"]`);
+        const btn = document.querySelector(`.cell-button[data-header="Drills"][data-month="${month}"]`);
         if (btn) {
             btn.disabled = !(component === 'NG' || component === 'RES');
         }

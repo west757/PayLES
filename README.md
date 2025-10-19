@@ -17,6 +17,7 @@ short-term:
 - make cell buttons visible in table
 - rewrite insert row
 - conus cola
+- ordering of dicts sent to javascript
 
 mid-term:
 - get combat zone from les
