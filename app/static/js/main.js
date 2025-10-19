@@ -148,55 +148,45 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-guide-pay') {
-        const guidepayModalCheckbox = document.getElementById('modal-guide-pay');
-        guidepayModalCheckbox.checked = true;
+        document.getElementById('modal-guide-pay').checked = true;
     }
 
     if (e.target && e.target.id === 'button-modal-inject') {
-        const injectModalCheckbox = document.getElementById('modal-inject');
-        injectModalCheckbox.checked = true;
+        document.getElementById('modal-inject').checked = true;
         resetInjectModal();
     }
 
     if (e.target && e.target.id === 'button-modal-account-deposit') {
        // const accountDepositModalCheckbox = document.getElementById('modal-account-deposit');
         //accountDepositModalCheckbox.checked = true;
-        editAccount("Direct Deposit Account")
-        //resetAccountModal();
+        buildAccountModal("Direct Deposit Account")
     }
 
-    if (e.target && e.target.id === 'button-modal-account-other') {
-        const accountOtherModalCheckbox = document.getElementById('modal-account-other');
-        accountOtherModalCheckbox.checked = true;
-        //resetAccountModal();
-    }
+    //if (e.target && e.target.id === 'button-modal-account-other') {
+    //    const accountOtherModalCheckbox = document.getElementById('modal-account-other');
+    //    accountOtherModalCheckbox.checked = true;
+    //}
 
     if (e.target && e.target.id === 'button-modal-discrepancies') {
-        console.log("test");
-        const discrepanciesModalCheckbox = document.getElementById('modal-discrepancies');
-        discrepanciesModalCheckbox.checked = true;
+        document.getElementById('modal-discrepancies').checked = true;
     }
 
     if (e.target && e.target.id === 'button-modal-recommendations') {
-        const recommendationsModalCheckbox = document.getElementById('modal-recommendations');
-        recommendationsModalCheckbox.checked = true;
+        document.getElementById('modal-recommendations').checked = true;
     }
 
     if (e.target && e.target.id === 'button-modal-guide-tsp') {
-        const guideTspModalCheckbox = document.getElementById('modal-guide-tsp');
-        guideTspModalCheckbox.checked = true;
+        document.getElementById('modal-guide-tsp').checked = true;
     }
 
     if (e.target && e.target.id === 'button-modal-account-tsp') {
         //const accountTspModalCheckbox = document.getElementById('modal-account-tsp');
         //countTspModalCheckbox.checked = true;
-        editAccount("TSP Account");
-        //resetAccountModal();
+        buildAccountModal("TSP Account");
     }
 
     if (e.target && e.target.id === 'button-modal-tsp-analysis') {
-        const tspAnalysisModalCheckbox = document.getElementById('modal-tsp-analysis');
-        tspAnalysisModalCheckbox.checked = true;
+        document.getElementById('modal-tsp-analysis').checked = true;
     }
 
     // open dynamic modal on cell button click
@@ -204,7 +194,7 @@ document.addEventListener('click', function(e) {
         let header = e.target.getAttribute('data-row');
         let month = e.target.getAttribute('data-month');
         let field = e.target.getAttribute('data-field');
-        openEditModal(header, month, field);
+        buildEditModal(header, month, field);
     }
 
     // close modal from close button in modal

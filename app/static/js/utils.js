@@ -359,8 +359,8 @@ function setInputRestriction(field, maxLength = null) {
         };
     }
 
-    // input restrictions for text inputs
-    if (field === 'text') {
+    // input restrictions for string inputs
+    if (field === 'string') {
         return function(e) {
             let val = e.target.value.replace(/[^A-Za-z0-9_\- ]/g, '');
             if (maxLength && val.length > maxLength) {
@@ -381,39 +381,42 @@ function validateInput(field, header, value, repeat = false) {
     }
 
     if (field === 'int') {
-        let num = parseInt(value, 10);
-        if (isNaN(num)) {
+        if (isNaN(parseInt(value, 10))) {
             showToast('Value must be a number.');
-            return false;
-        }
-        if (header.toLowerCase().includes('tsp rate') && (num < 0 || num > 100)) {
-            showToast('TSP rate must be between 0 and 100.');
-            return false;
-        }
-        if (value.length > 3) {
-            showToast('Value must be at most 3 digits.');
             return false;
         }
     }
 
     if (field === 'float') {
-        if (!/^\d{0,4}(\.\d{0,2})?$/.test(value)) {
-            showToast('Value must be a decimal with up to 4 digits before and 2 after the decimal.');
+        if (isNaN(parseFloat(value))) {
+            showToast('Value must be a number.');
             return false;
         }
-        if (value.length > 7) {
-            showToast('Value must be at most 7 characters.');
+        if (!/^\d{0,6}(\.\d{0,2})?$/.test(value)) {
+            showToast('Value must be a number with up to 6 digits before and 2 digits after the decimal.');
+            return false;
+        }
+        if (value.length > 9) {
+            showToast('Value must be at most 9 characters.');
+            return false;
+        }
+    }
+
+    if (field === 'string') {
+        const invalidChars = /[^A-Za-z0-9_\- ]/;
+        if (invalidChars.test(value)) {
+            showToast('Text contains invalid characters. Only characters allowed are letters, numbers, underscore, hyphen, and space.');
             return false;
         }
     }
     
+    // this may cause issues if zip code is N/A
     if (header === 'Zip Code') {
         if (!/^\d{5}$/.test(value)) {
             showToast('Zip code must be exactly 5 digits.');
             return false;
         }
     }
-
 
     // TSP base rate validation
     if (header === 'Trad TSP Base Rate') {
@@ -520,4 +523,18 @@ function validateInput(field, header, value, repeat = false) {
     }
 
     return true;
+}
+
+
+function addModalDynamicLine(labelText, input) {
+    const inputLine = document.createElement('div');
+    inputLine.className = 'input-line';
+
+    const label = document.createElement('div');
+    label.className = 'input-label';
+    label.textContent = labelText;
+
+    inputLine.appendChild(label);
+    inputLine.appendChild(input);
+    return inputLine;
 }

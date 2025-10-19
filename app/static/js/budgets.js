@@ -5,36 +5,11 @@ function payUnloadPrompt(e) {
 }
 
 
-    // edit service information (branch, component, grade)
-    // edit stationed location (zip code, military housing area, mha code, OCONUS locality code, oconus locality, oconus territory)
-    // edit home of record
-    // edit dependents (dependents)
-    // edit tax filing status (federal filing status, state filing status)
-    // edit sgli coverage (sgli coverage, sgli rate)
-    // edit combat zone
-    // edit drills
-    // edit tsp rates
-
-
-function openEditModal(header, month, field) {
-    const modalDynamic = document.getElementById('modal-dynamic');
-    modalDynamic.checked = true;
+function buildEditModal(header, month, field) {
+    document.getElementById('modal-dynamic').checked = true;
 
     const modalContentDynamic = document.getElementById('modal-content-dynamic');
     modalContentDynamic.innerHTML = '';
-
-    function addInputToEditModal(labelText, input) {
-        const inputLine = document.createElement('div');
-        inputLine.className = 'input-line';
-
-        const label = document.createElement('div');
-        label.className = 'input-label';
-        label.textContent = labelText;
-
-        inputLine.appendChild(label);
-        inputLine.appendChild(input);
-        return inputLine;
-    }
 
     const monthLong = getRowValue('pay', 'Month Long', month);
     let modalTitle;
@@ -43,27 +18,27 @@ function openEditModal(header, month, field) {
 
     if (header === 'Branch' || header === 'Component' || header === 'Grade') {
         modalTitle = `Service Information - ${monthLong}`;
-        modalEditInputs.appendChild(addInputToEditModal('Branch:', createStandardInput('Branch', field, getRowValue('pay', 'Branch', month))));
-        modalEditInputs.appendChild(addInputToEditModal('Component:', createStandardInput('Component', field, getRowValue('pay', 'Component', month))));
-        modalEditInputs.appendChild(addInputToEditModal('Grade:', createStandardInput('Grade', field, getRowValue('pay', 'Grade', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('Branch:', createStandardInput('Branch', 'select', getRowValue('pay', 'Branch', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('Component:', createStandardInput('Component', 'select', getRowValue('pay', 'Component', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('Grade:', createStandardInput('Grade', 'select', getRowValue('pay', 'Grade', month))));
 
     } else if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
         modalTitle = `Location Stationed - ${monthLong}`;
-        modalEditInputs.appendChild(addInputToEditModal('Zip Code:', createStandardInput('Zip Code', field, getRowValue('pay', 'Zip Code', month))));
-        modalEditInputs.appendChild(addInputToEditModal('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', field, getRowValue('pay', 'OCONUS Locality Code', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
 
     } else if (header === 'Federal Filing Status' || header === 'State Filing Status') {
         modalTitle = `Tax Filing Status - ${monthLong}`;
-        modalEditInputs.appendChild(addInputToEditModal('Federal Filing Status:', createStandardInput('Federal Filing Status', field, getRowValue('pay', 'Federal Filing Status', month))));
-        modalEditInputs.appendChild(addInputToEditModal('State Filing Status:', createStandardInput('State Filing Status', field, getRowValue('pay', 'State Filing Status', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('Federal Filing Status:', createStandardInput('Federal Filing Status', 'select', getRowValue('pay', 'Federal Filing Status', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('State Filing Status:', createStandardInput('State Filing Status', 'select', getRowValue('pay', 'State Filing Status', month))));
 
     } else if (header === 'SGLI Coverage') {
         modalTitle = `SGLI Coverage - ${monthLong}`;
-        modalEditInputs.appendChild(addInputToEditModal('SGLI Coverage:', createStandardInput('SGLI Coverage', field, getRowValue('pay', 'SGLI Coverage', month))));
+        modalEditInputs.appendChild(addModalDynamicLine('SGLI Coverage:', createStandardInput('SGLI Coverage', 'select', getRowValue('pay', 'SGLI Coverage', month))));
 
     } else {
         modalTitle = `${header} - ${monthLong}`;
-        modalEditInputs.appendChild(addInputToEditModal(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
+        modalEditInputs.appendChild(addModalDynamicLine(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
     }
 
     const modalHeader = document.createElement('h2');
@@ -104,12 +79,12 @@ function openEditModal(header, month, field) {
 
 // submit handler for modal edit
 function submitEditModal(header, month, field, repeat) {
-    const input = document.querySelector('#modal-content-edit input, #modal-content-edit select');
+    const input = document.querySelector('#modal-content-dynamic input, #modal-content-dynamic select');
     const value = input.value;
 
     if (!validateInput(field, header, value, repeat)) return;
 
-    document.getElementById('modal-edit').checked = false;
+    document.getElementById('modal-dynamic').checked = false;
 
     htmx.ajax('POST', '/route_update_cell', {
         target: '#budgets',
@@ -181,89 +156,42 @@ function toggleRows(rowClass) {
 
 
 
-function editAccount(accountType) {
-    // accountType can be 'direct', 'tsp', 'Direct Deposit Account', or 'TSP Account'
-    const header = (String(accountType).toLowerCase().includes('tsp')) ? 'TSP Account' : 'Direct Deposit Account';
-    const budgetName = header === 'TSP Account' ? 'tsp' : 'pay';
 
-    const modalEdit = document.getElementById('modal-edit');
-    modalEdit.checked = true;
 
-    const modalContentEdit = document.getElementById('modal-content-edit');
-    modalContentEdit.innerHTML = '';
+let accountDepositInitial = 0.0;
+let accountDepositInterest = 0;
+let accountTSPInitial = 0.0;
+let accountTSPInterest = 0;
 
-    // helper to make a labeled row
-    function buildRow(labelText, inputElement) {
-        const row = document.createElement('div');
-        row.className = 'modal-row';
+function buildAccountModal(accountName) {
+    document.getElementById('modal-dynamic').checked = true;
 
-        const label = document.createElement('div');
-        label.className = 'modal-label';
-        label.textContent = labelText;
-
-        const inputWrap = document.createElement('div');
-        inputWrap.className = 'modal-input';
-        inputWrap.appendChild(inputElement);
-
-        row.appendChild(label);
-        row.appendChild(inputWrap);
-        return row;
+    if (accountName === 'Direct Deposit Account') {
+        budget = document.getElementById('budget-pay');
+        initial = accountDepositInitial;
+        interest = accountDepositInterest;
+    } else if (accountName === 'TSP Account') {
+        budget = document.getElementById('budget-tsp');
+        initial = accountTSPInitial;
+        interest = accountTSPInterest;
     }
 
-    // read existing values (fallback to 0)
-    let initialVal = getRowValue(budgetName, header, 'initial');
-    if (initialVal === null || initialVal === undefined) initialVal = 0.0;
-    let interestVal = getRowValue(budgetName, header, 'interest');
-    if (interestVal === null || interestVal === undefined) interestVal = 0;
+    modalTitle = "Edit " + accountName;
 
-    // Title
-    const monthTop = document.createElement('div');
-    monthTop.className = 'modal-month';
-    // try to show current month long if available, else empty
-    const months = window.CONFIG && window.CONFIG.months ? window.CONFIG.months : [];
-    const activeMonth = months.length ? months[0] : '';
-    const monthLong = activeMonth ? getRowValue('pay', 'Month Long', activeMonth) : '';
-    monthTop.textContent = monthLong || '';
-    modalContentEdit.appendChild(monthTop);
+    const modalContentDynamic = document.getElementById('modal-content-dynamic');
+    modalContentDynamic.innerHTML = '';
+
+    const modalContentDynamicLine = document.createElement('div');
+    modalContentDynamicLine.id = 'modal-content-dynamic-line';
+
+    modalContentDynamicLine.appendChild(addModalDynamicLine('Initial Value:', createStandardInput('Initial Value', 'float', initial)));
+    modalContentDynamicLine.appendChild(addModalDynamicLine('Interest Rate:', createStandardInput('Interest Rate', 'int', interest)));
 
     const modalHeader = document.createElement('h2');
-    modalHeader.className = 'modal-title-left';
-    modalHeader.textContent = `Edit ${header}`;
-    modalContentEdit.appendChild(modalHeader);
+    modalHeader.textContent = modalTitle;
+    modalContentDynamic.appendChild(modalHeader);
+    modalContentDynamic.appendChild(modalEditInputs);
 
-    // Initial Value row (with dollar adornment on left)
-    const initialWrapper = document.createElement('div');
-    initialWrapper.className = 'input-adornment-group';
-    const dollar = document.createElement('span');
-    dollar.className = 'input-adornment-left';
-    dollar.textContent = '$';
-    const initialInput = document.createElement('input');
-    initialInput.type = 'number';
-    initialInput.step = '0.01';
-    initialInput.min = '0';
-    initialInput.className = 'input-mid';
-    initialInput.value = parseFloat(initialVal).toFixed(2);
-    initialWrapper.appendChild(dollar);
-    initialWrapper.appendChild(initialInput);
-    modalContentEdit.appendChild(buildRow('Initial Value:', initialWrapper));
-
-    // Interest Rate row (with percent adornment on right)
-    const interestWrapper = document.createElement('div');
-    interestWrapper.className = 'input-adornment-group';
-    const interestInput = document.createElement('input');
-    interestInput.type = 'number';
-    interestInput.step = '0.01';
-    interestInput.min = '0';
-    interestInput.className = 'input-short';
-    interestInput.value = parseFloat(interestVal);
-    const percent = document.createElement('span');
-    percent.className = 'input-adornment-right';
-    percent.textContent = '%';
-    interestWrapper.appendChild(interestInput);
-    interestWrapper.appendChild(percent);
-    modalContentEdit.appendChild(buildRow('Interest Rate:', interestWrapper));
-
-    // buttons
     const buttonsEdit = document.createElement('div');
     buttonsEdit.className = 'buttons-edit';
 
@@ -271,22 +199,7 @@ function editAccount(accountType) {
     buttonUpdate.textContent = 'Update';
     buttonUpdate.classList.add('button-generic', 'button-positive', 'button-edit');
     buttonUpdate.onclick = function () {
-        // read values and POST to route_update_account
-        const initial = parseFloat(initialInput.value) || 0.0;
-        const interest = parseFloat(interestInput.value) || 0.0;
-
-        // close modal immediately
-        document.getElementById('modal-edit').checked = false;
-
-        htmx.ajax('POST', '/route_update_account', {
-            target: '#budgets',
-            swap: 'innerHTML',
-            values: {
-                header: header,
-                initial: String(initial),
-                interest: String(interest)
-            }
-        });
+        submitAccountModal(budgetName, initial, interest);
     };
     buttonsEdit.appendChild(buttonUpdate);
 
@@ -298,9 +211,27 @@ function editAccount(accountType) {
     };
     buttonsEdit.appendChild(buttonCancel);
 
-    modalContentEdit.appendChild(buttonsEdit);
+    modalContentDynamic.appendChild(buttonsEdit);
 }
-// ...existing code...
+
+
+
+function submitAccountModal(budgetName, initial, interest) {
+    if (!validateInput('float', 'Account Initial Value', initial)) return;
+    if (!validateInput('int', 'Account Interest Rate', interest)) return;
+
+    document.getElementById('modal-dynamic').checked = false;
+
+    htmx.ajax('POST', '/route_update_account', {
+        target: '#budgets',
+        swap: 'innerHTML',
+        values: {
+            budgetName: budgetName,
+            initial: initial,
+            interest: interest
+        }
+    });
+}
 
 
 
