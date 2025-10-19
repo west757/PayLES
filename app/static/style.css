@@ -469,12 +469,21 @@ input[type=file] {
     border-radius: 0 0 1rem 1rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
     display: none;
+    opacity: 0;
     padding: 2rem;
     position: relative;
+    transition: opacity 1s ease;
 }
 
 .tab-content.active {
     display: block;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+.tab-content:not(.active) {
+    display: none;
+    opacity: 0;
 }
 
 #input-file-single, #input-file-joint1, #input-file-joint2 {
@@ -916,7 +925,7 @@ table.styled td.cell {
 }
 
 .modal-short {
-    width: 32rem;
+    width: 26rem;
 }
 
 .button-modal-close {
@@ -1029,7 +1038,7 @@ table.styled td.cell {
     gap: 1.1rem;
 }
 
-#inject-template-button, #inject-custom-button, #account-tsp-button, #account-bank-button, #account-special-button {
+#inject-template-button, #inject-custom-button {
     height: 2.5rem;
     margin: 0 0 0 auto;
     width: 7rem;
@@ -1083,60 +1092,6 @@ table.styled td.cell {
     min-width: 11rem;
     text-align: right;
 }
-
-
-
-
-
-
-/*
-.input-adornment-group {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.input-adornment-left,
-.input-adornment-right {
-    background: transparent;
-    color: var(--primary_dark_accent_color);
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    display: inline-flex;
-    align-items: center;
-}
-
-
-.input-adornment-group input[type="number"],
-.input-adornment-group input[type="text"] {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--table_border_color);
-    border-radius: 0.25rem;
-    background: var(--input_background_color);
-}
-
-
-.input-adornment-group .input-adornment-left {
-    border-right: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-
-.input-adornment-group .input-adornment-right {
-    border-left: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-*/
-
-
-
-
-
-
-
 
 
 /* =========================
@@ -1210,8 +1165,8 @@ table.styled td.cell {
 .resources {
     border-radius: 0.5rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
-    overflow: hidden;
     flex: 1;
+    overflow: hidden;
 }
 
 .resources a {

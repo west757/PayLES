@@ -54,6 +54,7 @@ def get_pay_variables(les_text):
         months_in_service = ((les_date.year - pay_date.year) * 12) + (les_date.month - pay_date.month)
         if months_in_service < 0:
             raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
+
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining months in service from LES text"))
     les_variables['Months in Service'] = months_in_service

@@ -35,10 +35,19 @@ function attachHomeListeners() {
     tabButtons.forEach(btn => {
         btn.addEventListener('click', function() {
             tabButtons.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+            tabContents.forEach(c => {
+                c.classList.remove('active');
+                // Remove display block immediately, but allow fade out
+                c.style.display = '';
+            });
             btn.classList.add('active');
             const tabId = btn.getAttribute('data-tab');
             const tabContent = document.getElementById(tabId);
+
+            // Show tab and trigger fade in
+            tabContent.style.display = 'block';
+            // Force reflow for transition
+            void tabContent.offsetWidth;
             tabContent.classList.add('active');
         });
     });

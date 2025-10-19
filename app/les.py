@@ -2,8 +2,12 @@ from PIL import Image, ImageDraw
 import base64
 import io
 import pdfplumber
+import re
 
 from app import flask_app
+from app.utils import (
+    get_error_context,
+)
 
 
 def validate_les(file):
@@ -119,6 +123,19 @@ def format_les_text(les_text_raw):
             else:
                 les_text[header] = "NOT FOUND"
 
+    # parse period into les_month and les_year
+    period = les_text.get("period", "")
+    match = re.search(r"\d+-\d+\s+([A-Z]{3})\s+(\d{2})", period)
+    if match:
+        les_month = match.group(1)
+        les_year = match.group(2)
+        les_text["les_month"] = les_month
+        les_text["les_year"] = les_year
+    else:
+        les_text["les_month"] = ""
+        les_text["les_year"] = ""
+    les_text.pop("period", None)
+
     # combine remarks1 and remarks2 into remarks
     remarks1 = les_text.get("remarks1", "")
     remarks2 = les_text.get("remarks2", "") 
@@ -144,3 +161,31 @@ def get_les_rect_overlay():
             "tooltip": rect["tooltip"]
         })
     return rect_overlay
+
+
+def validate_les_age(les_text):
+    CURRENT_MONTH = flask_app.config['CURRENT_MONTH']
+    CURRENT_YEAR = flask_app.config['CURRENT_YEAR']
+    MONTHS = flask_app.config['MONTHS']
+    LES_AGE_LIMIT = flask_app.config['LES_AGE_LIMIT']
+    
+    try:
+        month = les_text.get('les_month', None)
+        if month not in MONTHS.keys():
+            raise ValueError(f"Invalid LES month: {month}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining month from LES text"))
+    
+    try:
+        year = int('20' + les_text.get('les_year', None))
+        if not year or year < 2021 or year > flask_app.config['CURRENT_YEAR'] + 1:
+            raise ValueError(f"Invalid LES year: {year}")
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining year from LES text"))
+
+    months_number_map = {k: i+1 for i, k in enumerate(MONTHS.keys())}
+    delta_months = (CURRENT_YEAR - year) * 12 + (months_number_map.get(CURRENT_MONTH) - months_number_map.get(month))
+    #if delta_months > LES_AGE_LIMIT:
+    #    return False, f"The LES you submitted is more than {LES_AGE_LIMIT} months old. Please upload a recent LES.", year, month
+
+    return True, "", year, month

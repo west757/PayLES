@@ -7,14 +7,13 @@ run: python -m app.main
 
 
 short-term:
+- update adding custom row
+- update home and manual input
 - drill pay calculation (divide monthly total by 30)
-- rename initials to manuals
 - oconus cola and oha calculations
-- show custom rows checkbox
-- make cell buttons visible in table
-- rewrite insert row
 - conus cola
 - ordering of dicts sent to javascript
+- error checking and validation for les variables
 
 mid-term:
 - get combat zone from les
@@ -29,11 +28,9 @@ mid-term:
 - shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN
 - add official calculators to resources list
-- adjustable table size
-- adjustable les size
-- restrict LES upload to be within past 2 months
-- animation for home tab change
 - recommendation for mid-month pay
+- show custom rows checkbox
+- make cell buttons visible in table
 
 long-term:
 - leave calculator

@@ -16,6 +16,7 @@ from app.forms import (
 from app.les import (
     validate_les, 
     process_les,
+    validate_les_age,
     get_les_rect_overlay,
 )
 from app.budgets import (
@@ -98,6 +99,11 @@ def route_single():
 
     if valid:
         les_image, les_text = process_les(les_pdf)
+
+        valid, message, year, month = validate_les_age(les_text)
+        if not valid:
+            return jsonify({'message': message}), 400
+
         headers = get_all_headers()
 
         month, les_variables = get_pay_variables(les_text)

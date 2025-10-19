@@ -5,9 +5,7 @@ years_of_service,1390,170,1582,222,int
 ets,1602,170,1727,222,string
 branch,1748,170,1911,222,string
 adsn,1926,170,2131,222,int
-les_days,2155,170,2217,222,string
-les_month,2219,170,2290,222,string
-les_year,2292,170,2370,222,string
+period,2155,170,2370,222,string
 entitlements,176,378,756,824,string
 deductions,770,376,1329,822,string
 allotments,1341,378,1896,824,string
