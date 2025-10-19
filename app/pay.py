@@ -74,7 +74,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES branch: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining branch from LES text"))
-    les_variables['Branch'] = branch
+    les_variables['Branch Long'] = branch
 
     try:
         text = les_text.get('tpc', None)
@@ -200,9 +200,9 @@ def set_variable_longs(pay, month):
 
     GRADES_RANKS = flask_app.config['GRADES_RANKS']
     grade = get_row_value(pay, 'Grade', month)
-    branch = get_row_value(pay, 'Branch', month)
+    branch_long = get_row_value(pay, 'Branch Long', month)
     rank_row = GRADES_RANKS[GRADES_RANKS['grade'] == grade]
-    rank_long = rank_row.iloc[0][branch]
+    rank_long = rank_row.iloc[0][branch_long]
     add_mv_pair(pay, 'Rank Long', month, rank_long)
 
     zip_code = get_row_value(pay, 'Zip Code', month)
