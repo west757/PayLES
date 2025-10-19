@@ -8,72 +8,76 @@ function payUnloadPrompt(e) {
 function buildEditModal(header, month, field) {
     document.getElementById('modal-dynamic').checked = true;
 
-    const modalContentDynamic = document.getElementById('modal-content-dynamic');
-    modalContentDynamic.innerHTML = '';
+    const content = document.getElementById('modal-content-dynamic');
+    content.innerHTML = '';
 
     const monthLong = getRowValue('pay', 'Month Long', month);
-    let modalTitle;
-    const modalEditInputs = document.createElement('div');
-    modalEditInputs.id = 'modal-edit-inputs';
+    let titleText;
+    const inputLines = document.createElement('div');
+    inputLines.id = 'modal-dynamic-input-lines';
 
     if (header === 'Branch' || header === 'Component' || header === 'Grade') {
-        modalTitle = `Service Information - ${monthLong}`;
-        modalEditInputs.appendChild(addModalDynamicLine('Branch:', createStandardInput('Branch', 'select', getRowValue('pay', 'Branch', month))));
-        modalEditInputs.appendChild(addModalDynamicLine('Component:', createStandardInput('Component', 'select', getRowValue('pay', 'Component', month))));
-        modalEditInputs.appendChild(addModalDynamicLine('Grade:', createStandardInput('Grade', 'select', getRowValue('pay', 'Grade', month))));
+        titleText = `Service Information - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine('Branch:', createStandardInput('Branch', 'select', getRowValue('pay', 'Branch', month))));
+        inputLines.appendChild(addModalDynamicInputLine('Component:', createStandardInput('Component', 'select', getRowValue('pay', 'Component', month))));
+        inputLines.appendChild(addModalDynamicInputLine('Grade:', createStandardInput('Grade', 'select', getRowValue('pay', 'Grade', month))));
 
     } else if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
-        modalTitle = `Location Stationed - ${monthLong}`;
-        modalEditInputs.appendChild(addModalDynamicLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
-        modalEditInputs.appendChild(addModalDynamicLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
+        titleText = `Location Stationed - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
+        inputLines.appendChild(addModalDynamicInputLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
+
+    } else if (header === 'Home of Record') {
+        titleText = `Home of Record - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine('Home of Record:', createStandardInput('Home of Record', 'select', getRowValue('pay', 'Home of Record Long', month))));
 
     } else if (header === 'Federal Filing Status' || header === 'State Filing Status') {
-        modalTitle = `Tax Filing Status - ${monthLong}`;
-        modalEditInputs.appendChild(addModalDynamicLine('Federal Filing Status:', createStandardInput('Federal Filing Status', 'select', getRowValue('pay', 'Federal Filing Status', month))));
-        modalEditInputs.appendChild(addModalDynamicLine('State Filing Status:', createStandardInput('State Filing Status', 'select', getRowValue('pay', 'State Filing Status', month))));
+        titleText = `Tax Filing Status - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine('Federal Filing Status:', createStandardInput('Federal Filing Status', 'select', getRowValue('pay', 'Federal Filing Status', month))));
+        inputLines.appendChild(addModalDynamicInputLine('State Filing Status:', createStandardInput('State Filing Status', 'select', getRowValue('pay', 'State Filing Status', month))));
 
     } else if (header === 'SGLI Coverage') {
-        modalTitle = `SGLI Coverage - ${monthLong}`;
-        modalEditInputs.appendChild(addModalDynamicLine('SGLI Coverage:', createStandardInput('SGLI Coverage', 'select', getRowValue('pay', 'SGLI Coverage', month))));
+        titleText = `SGLI Coverage - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine('SGLI Coverage:', createStandardInput('SGLI Coverage', 'select', getRowValue('pay', 'SGLI Coverage', month))));
 
     } else {
-        modalTitle = `${header} - ${monthLong}`;
-        modalEditInputs.appendChild(addModalDynamicLine(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
+        titleText = `${header} - ${monthLong}`;
+        inputLines.appendChild(addModalDynamicInputLine(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
     }
 
-    const modalHeader = document.createElement('h2');
-    modalHeader.textContent = modalTitle;
-    modalContentDynamic.appendChild(modalHeader);
-    modalContentDynamic.appendChild(modalEditInputs);
+    const title = document.createElement('h2');
+    title.textContent = titleText;
+    content.appendChild(title);
+    content.appendChild(inputLines);
 
-    const buttonsEdit = document.createElement('div');
-    buttonsEdit.className = 'buttons-edit';
+    const buttons = document.createElement('div');
+    buttons.className = 'modal-dynamic-buttons';
 
     const buttonOnetime = document.createElement('button');
     buttonOnetime.textContent = 'One-Time';
-    buttonOnetime.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonOnetime.classList.add('button-generic', 'button-positive');
     buttonOnetime.onclick = function() {
         submitEditModal(header, month, field, repeat=false);
     };
-    buttonsEdit.appendChild(buttonOnetime);
+    buttons.appendChild(buttonOnetime);
 
     const buttonRepeat = document.createElement('button');
     buttonRepeat.textContent = 'Repeat';
-    buttonRepeat.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonRepeat.classList.add('button-generic', 'button-positive');
     buttonRepeat.onclick = function() {
         submitEditModal(header, month, field, repeat=true);
     };
-    buttonsEdit.appendChild(buttonRepeat);
+    buttons.appendChild(buttonRepeat);
 
     const buttonCancel = document.createElement('button');
     buttonCancel.textContent = 'Cancel';
-    buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
+    buttonCancel.classList.add('button-generic', 'button-negative');
     buttonCancel.onclick = function() {
         document.getElementById('modal-dynamic').checked = false;
     };
-    buttonsEdit.appendChild(buttonCancel);
+    buttons.appendChild(buttonCancel);
 
-    modalContentDynamic.appendChild(buttonsEdit);
+    content.appendChild(buttons);
 }
 
 
@@ -176,44 +180,42 @@ function buildAccountModal(accountName) {
         interest = accountTSPInterest;
     }
 
-    modalTitle = "Edit " + accountName;
+    const content = document.getElementById('modal-content-dynamic');
+    content.innerHTML = '';
 
-    const modalContentDynamic = document.getElementById('modal-content-dynamic');
-    modalContentDynamic.innerHTML = '';
+    const title = document.createElement('h2');
+    title.textContent = "Edit " + accountName;
+    content.appendChild(title);
 
-    const modalContentDynamicLine = document.createElement('div');
-    modalContentDynamicLine.id = 'modal-content-dynamic-line';
+    const inputLines = document.createElement('div');
+    inputLines.id = 'modal-dynamic-input-lines';
 
-    modalContentDynamicLine.appendChild(addModalDynamicLine('Initial Value:', createStandardInput('Initial Value', 'float', initial)));
-    modalContentDynamicLine.appendChild(addModalDynamicLine('Interest Rate:', createStandardInput('Interest Rate', 'int', interest)));
+    inputLines.appendChild(addModalDynamicInputLine('Initial Value:', createStandardInput('Initial Value', 'float', initial)));
+    inputLines.appendChild(addModalDynamicInputLine('Interest Rate:', createStandardInput('Interest Rate', 'float', interest)));
 
-    const modalHeader = document.createElement('h2');
-    modalHeader.textContent = modalTitle;
-    modalContentDynamic.appendChild(modalHeader);
-    modalContentDynamic.appendChild(modalEditInputs);
+    content.appendChild(inputLines);
 
-    const buttonsEdit = document.createElement('div');
-    buttonsEdit.className = 'buttons-edit';
+    const buttons = document.createElement('div');
+    buttons.className = 'modal-dynamic-buttons';
 
     const buttonUpdate = document.createElement('button');
     buttonUpdate.textContent = 'Update';
-    buttonUpdate.classList.add('button-generic', 'button-positive', 'button-edit');
+    buttonUpdate.classList.add('button-generic', 'button-positive');
     buttonUpdate.onclick = function () {
         submitAccountModal(budgetName, initial, interest);
     };
-    buttonsEdit.appendChild(buttonUpdate);
+    buttons.appendChild(buttonUpdate);
 
     const buttonCancel = document.createElement('button');
     buttonCancel.textContent = 'Cancel';
-    buttonCancel.classList.add('button-generic', 'button-negative', 'button-edit');
+    buttonCancel.classList.add('button-generic', 'button-negative');
     buttonCancel.onclick = function () {
         document.getElementById('modal-dynamic').checked = false;
     };
-    buttonsEdit.appendChild(buttonCancel);
+    buttons.appendChild(buttonCancel);
 
-    modalContentDynamic.appendChild(buttonsEdit);
+    content.appendChild(buttons);
 }
-
 
 
 function submitAccountModal(budgetName, initial, interest) {
@@ -232,8 +234,6 @@ function submitAccountModal(budgetName, initial, interest) {
         }
     });
 }
-
-
 
 
 // export budget to xlsx or csv using SheetJS

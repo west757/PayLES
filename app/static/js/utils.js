@@ -179,15 +179,6 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-short');
         }
 
-        //else if (header === 'Home of Record Long') {
-        //    options = window.CONFIG.HOME_OF_RECORDS_OPTIONS.map(hor => hor.longname);
-        //    input.classList.add('input-long');
-        //    const defaultOption = document.createElement('option');
-        //    defaultOption.value = "Choose an option";
-        //    defaultOption.textContent = "Choose an option";
-        //    input.appendChild(defaultOption);
-        //}
-
         options.forEach(opt => {
             let o = document.createElement('option');
             o.value = opt;
@@ -195,6 +186,9 @@ function createStandardInput(header, field, value = '') {
             if (opt === value) o.selected = true;
             input.appendChild(o);
         });
+
+        wrapper.appendChild(input);
+        return wrapper;
     }
 
     else if (field === 'int') {
@@ -262,33 +256,41 @@ function createStandardInput(header, field, value = '') {
             adornment.className = 'input-adornment-right';
             wrapper.appendChild(adornment);
             return wrapper;
-        }
-
-        else {
-            //input.classList.add('input-int', 'input-short');
-            //input.placeholder = '0';
-            //input.maxLength = 3;
-            //input.addEventListener('input', setInputRestriction('int', 3));
-        }
+        } 
     }
 
     else if (field === 'float') {
         input = document.createElement('input');
         input.type = 'text';
-
-        const isNegative = value < 0 ? true : false;
-
         input.value = Math.abs(value);
-        input.classList.add('input-mid');
         input.placeholder = '0.00';
 
-        // sets 6 digits before decimal, input restriction automatically handles decimal point and 2 digits after
-        input.addEventListener('input', setInputRestriction('float', 6));
-
         adornment = document.createElement('span');
-        adornment.textContent = isNegative ? '-$' : '$';
-        adornment.className = 'input-adornment-left';
-        wrapper.appendChild(adornment);
+
+        if (header === 'Interest Rate') {
+            input.classList.add('input-short');
+            input.maxLength = 5;
+            input.addEventListener('input', setInputRestriction('float', 2));
+
+            wrapper.appendChild(input);
+            adornment = document.createElement('span');
+            adornment.textContent = '%';
+            adornment.className = 'input-adornment-right';
+            wrapper.appendChild(adornment);
+            return wrapper;
+        }
+        else{
+            input.classList.add('input-mid');
+            input.maxLength = 9;
+            input.addEventListener('input', setInputRestriction('float', 6));
+
+            const isNegative = value < 0 ? true : false;
+            adornment.textContent = isNegative ? '-$' : '$';
+            adornment.className = 'input-adornment-left';
+            wrapper.appendChild(adornment);
+            wrapper.appendChild(input);
+            return wrapper;
+        }
     }
 
     else if (field === 'string') {
@@ -306,12 +308,11 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-long');
             input.addEventListener('input', setInputRestriction('text', 20));
         }
+
+        wrapper.appendChild(input);
+        return wrapper;
     }
-
-    wrapper.appendChild(input);
-    return wrapper;
 }
-
 
 
 function setInputRestriction(field, maxLength = null) {
@@ -526,12 +527,12 @@ function validateInput(field, header, value, repeat = false) {
 }
 
 
-function addModalDynamicLine(labelText, input) {
+function addModalDynamicInputLine(labelText, input) {
     const inputLine = document.createElement('div');
-    inputLine.className = 'input-line';
+    inputLine.className = 'modal-dynamic-input-line';
 
     const label = document.createElement('div');
-    label.className = 'input-label';
+    label.className = 'modal-dynamic-input-label';
     label.textContent = labelText;
 
     inputLine.appendChild(label);
