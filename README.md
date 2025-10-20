@@ -14,7 +14,6 @@ short-term:
 - conus cola
 - ordering of dicts sent to javascript
 - error checking and validation for les variables
-- make year a metadata row
 
 mid-term:
 - get combat zone from les

@@ -1,6 +1,7 @@
 // stores scroll position of pay and tsp, used to restore after htmx swap
 let payScrollTop = 0;
 let tspScrollTop = 0;
+
 //stores state of removing row, used for confirmation timeout
 let removeRowConfirm = {};
 
@@ -9,28 +10,27 @@ document.body.addEventListener('htmx:responseError', function(evt) {
     const xhr = evt.detail.xhr;
     const contentType = xhr.getResponseHeader("Content-Type");
 
-    // if JSON, show toast/modal
+    // if JSON error show toast, else show error page
     if (contentType && contentType.includes("application/json")) {
         try {
             const response = JSON.parse(xhr.responseText);
             if (response.message) {
-                showToast(response.message); // or showModal(response.message);
+                showToast(response.message);
             }
         } catch (e) {
-            // not a valid JSON, ignore
+            console.warn("Failed to parse JSON error response:", e);
         }
     } else {
-        // HTML error page, swap into body
         document.body.innerHTML = xhr.responseText;
     }
     enableInputs();
 });
 
 
+// initial setup when home page is loaded
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('home')) {
         getConfigData();
-
         attachDragAndDropListeners();
         attachHomeListeners();
     }
@@ -39,16 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // save scroll position before any htmx request that will update budgets
 document.body.addEventListener('htmx:beforeRequest', function(evt) {
-    // only save if the pay is present
-    const budgetPay = document.getElementById('budget-pay');
-    if (budgetPay) {
-        payScrollTop = budgetPay.scrollTop;
-    }
-    // only save if the tsp is present
-    const budgetTSP = document.getElementById('budget-tsp');
-    if (budgetTSP) {
-        tspScrollTop = budgetTSP.scrollTop;
-    }
+    payScrollTop = document.getElementById('budget-pay').scrollTop;
+    tspScrollTop = document.getElementById('budget-tsp').scrollTop;
 });
 
 
@@ -59,7 +51,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     //only runs the first time the pay is loaded
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', payUnloadPrompt);
-        //attachInjectModalListeners();
+        attachInjectModalListeners();
         displayDiscrepanciesModal(window.CONFIG.discrepancies);
     }
 
@@ -72,14 +64,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     disableTSPRateButtons();
     displayRecommendations(window.CONFIG.recommendations);
 
-    const budgetPay = document.getElementById('budget-pay');
-    if (budgetPay && typeof payScrollTop === 'number') {
-        budgetPay.scrollTop = payScrollTop;
-    }
-    const budgetTSP = document.getElementById('budget-tsp');
-    if (budgetTSP && typeof tspScrollTop === 'number') {
-        budgetTSP.scrollTop = tspScrollTop;
-    }
+    document.getElementById('budget-pay').scrollTop = payScrollTop;
+    document.getElementById('budget-tsp').scrollTop = tspScrollTop;
 });
 
 
@@ -183,7 +169,7 @@ document.addEventListener('click', function(e) {
         document.getElementById('modal-tsp-analysis').checked = true;
     }
 
-    // open dynamic modal on cell button click
+    // build edit modal on cell button click
     if (e.target.classList.contains('button-modal-dynamic')) {
         let header = e.target.getAttribute('data-header');
         let month = e.target.getAttribute('data-month');

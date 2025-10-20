@@ -102,127 +102,6 @@ function attachInjectModalListeners() {
 }
 
 
-// attach account modal event listeners
-function attachAccountModalListeners() {
-    //resetAccountModal();
-
-    const injectInputs = [
-        { container: 'account-tsp-header', field: 'string', rowHeader: 'Account TSP Header' },
-        { container: 'account-tsp-value', field: 'float', rowHeader: 'Account TSP Value' },
-        { container: 'account-tsp-interest', field: 'int', rowHeader: 'Account TSP Interest' },
-        { container: 'account-bank-header', field: 'string', rowHeader: 'Account Bank Header' },
-        { container: 'account-bank-value', field: 'float', rowHeader: 'Account Bank Value' },
-        { container: 'account-bank-percent', field: 'int', rowHeader: 'Account Bank Percent' },
-        { container: 'account-bank-interest', field: 'int', rowHeader: 'Account Bank Interest' },
-        { container: 'account-special-header', field: 'string', rowHeader: 'Account Special Header' },
-        { container: 'account-special-value', field: 'float', rowHeader: 'Account Special Value' },
-        { container: 'account-special-percent', field: 'int', rowHeader: 'Account Special Percent' },
-        { container: 'account-special-interest', field: 'int', rowHeader: 'Account Special Interest' }
-    ];
-
-    injectInputs.forEach(item => {
-        const container = document.getElementById(item.container);
-        let inputWrapper = createStandardInput(item.rowHeader, item.field);
-        const input = inputWrapper.querySelector('input, select');
-        input.id = item.container + '-id';
-        input.name = item.rowHeader;
-        container.innerHTML = '';
-        container.appendChild(inputWrapper);
-    });
-
-    const el = getAccountModalElements();
-
-    // method radio buttons (template/custom)
-    [el.methodTSP, el.methodBank, el.methodSpecial].forEach(radio => {
-        radio.addEventListener('change', function() {
-            selectedMethod = this.value;
-            resetAccountModal();
-
-            if (this.value === 'tsp') {
-                el.methodTSP.checked = true;
-                el.accountTSP.style.display = 'flex';
-            } else if (this.value === 'bank') {
-                el.methodBank.checked = true;
-                el.accountBank.style.display = 'flex';
-            } else if (this.value === 'special') {
-                el.methodSpecial.checked = true;
-                el.accountSpecial.style.display = 'flex';
-            }
-        });
-    });
-
-    el.accountTSPButton.addEventListener('click', function() {
-        let method = 'tsp';
-        const header = el.accountTSPHeader.value.trim();
-        const value = el.accountTSPValue.value.trim();
-        const percent = 100;
-        const interest = el.accountTSPInterest.value.trim();
-        
-        console.log({ method, header, value, percent, interest });
-
-        if (!validateAddRow({ method, header, value, percent, interest })) return;
-
-        htmx.ajax('POST', '/route_insert_row', {
-            target: '#budgets',
-            swap: 'innerHTML',
-            values: {
-                method: method,
-                header: header,
-                value: value,
-                interest: interest,
-            }
-        });
-        document.getElementById('account').checked = false;
-    });
-
-    el.accountBankButton.addEventListener('click', function() {
-        let method = 'bank';
-        const header = el.accountBankHeader.value.trim();
-        const value = el.accountBankValue.value.trim();
-        const percent = el.accountBankPercent.value.trim();
-        const interest = el.accountBankInterest.value.trim();
-
-        if (!validateAddRow({ method, header, value, percent, interest })) return;
-
-        htmx.ajax('POST', '/route_insert_row', {
-            target: '#budgets',
-            swap: 'innerHTML',
-            values: {
-                method: method,
-                header: header,
-                value: value,
-                percent: percent,
-                interest: interest,
-            }
-        });
-        document.getElementById('account').checked = false;
-    });
-
-    el.accountSpecialButton.addEventListener('click', function() {
-        let method = 'special';
-        const header = el.accountSpecialHeader.value.trim();
-        const value = el.accountSpecialValue.value.trim();
-        const percent = el.accountSpecialPercent.value.trim();
-        const interest = el.accountSpecialInterest.value.trim();
-
-        if (!validateAddRow({ method, header, value, percent, interest })) return;
-
-        htmx.ajax('POST', '/route_insert_row', {
-            target: '#budgets',
-            swap: 'innerHTML',
-            values: {
-                method: method,
-                header: header,
-                value: value,
-                percent: percent,
-                interest: interest,
-            }
-        });
-        document.getElementById('account').checked = false;
-    });
-}
-
-
 // reset inject modal
 function resetInjectModal() {
     const el = getInjectModalElements();
@@ -245,32 +124,6 @@ function resetInjectModal() {
     el.customTax.checked = false;
 
     el.info.innerHTML = '';
-}
-
-
-function resetAccountModal() {
-    const el = getAccountModalElements();
-
-    el.methodTSP.checked = false;
-    el.methodBank.checked = false;
-    el.methodSpecial.checked = false;
-
-    el.accountTSP.style.display = 'none';
-    el.accountTSPHeader.value = '';
-    el.accountTSPValue.value = '';
-    el.accountTSPInterest.value = '0';
-
-    el.accountBank.style.display = 'none';
-    el.accountBankHeader.value = '';
-    el.accountBankValue.value = '';
-    el.accountBankPercent.value = '100';
-    el.accountBankInterest.value = '0';
-
-    el.accountSpecial.style.display = 'none';
-    el.accountSpecialHeader.value = '';
-    el.accountSpecialValue.value = '';
-    el.accountSpecialPercent.value = '100';
-    el.accountSpecialInterest.value = '0';
 }
 
 
@@ -302,36 +155,6 @@ function getInjectModalElements() {
         customButton: document.getElementById('inject-custom-button'),
 
         info: document.getElementById('inject-info')
-    };
-}
-
-
-// get account modal elements
-function getAccountModalElements() {
-    return {
-        methodTSP: document.getElementById('account-method-tsp'),
-        methodBank: document.getElementById('account-method-bank'),
-        methodSpecial: document.getElementById('account-method-special'),
-
-        accountTSP: document.getElementById('account-tsp'),
-        accountTSPHeader: document.getElementById('account-tsp-header-id'),
-        accountTSPValue: document.getElementById('account-tsp-value-id'),
-        accountTSPInterest: document.getElementById('account-tsp-interest-id'),
-        accountTSPButton: document.getElementById('account-tsp-button'),
-
-        accountBank: document.getElementById('account-bank'),
-        accountBankHeader: document.getElementById('account-bank-header-id'),
-        accountBankValue: document.getElementById('account-bank-value-id'),
-        accountBankPercent: document.getElementById('account-bank-percent-id'),
-        accountBankInterest: document.getElementById('account-bank-interest-id'),
-        accountBankButton: document.getElementById('account-bank-button'),
-
-        accountSpecial: document.getElementById('account-special'),
-        accountSpecialHeader: document.getElementById('account-special-header-id'),
-        accountSpecialValue: document.getElementById('account-special-value-id'),
-        accountSpecialPercent: document.getElementById('account-special-percent-id'),
-        accountSpecialInterest: document.getElementById('account-special-interest-id'),
-        accountSpecialButton: document.getElementById('account-special-button')
     };
 }
 
