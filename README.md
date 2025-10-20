@@ -14,10 +14,10 @@ short-term:
 - conus cola
 - ordering of dicts sent to javascript
 - error checking and validation for les variables
+- make year a metadata row
 
 mid-term:
 - get combat zone from les
-- make year a metadata row
 - guide modal
 - rework resources 
 -   tags for category (general, financial, moving, education, mental health), branch, featured
@@ -25,7 +25,6 @@ mid-term:
 -   search bar
 - add pro-rated calculations for rows grade and zip code
 - add loading screen after submitting LES
-- shorten remarks and add in blocks for ytd entitle and ytd deduct
 - get component from LES, maybe use TPC or PACIDN
 - add official calculators to resources list
 - recommendation for mid-month pay
@@ -34,7 +33,6 @@ mid-term:
 
 long-term:
 - leave calculator
-- tdy cost calculator
 - set initial value for template rows
 - update readme
 - add comments to code

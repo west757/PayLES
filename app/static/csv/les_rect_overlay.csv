@@ -94,4 +94,6 @@ leave ets balance,2306,1540,2474,1642,leave,Projected leave balance to the membe
 leave lost,1826,1540,1974,1642,leave,Amount of leave days that have been lost
 leave paid,1976,1540,2154,1642,leave,Amount of leave days that have been paid
 leave use lose,2156,1540,2304,1642,leave,Projected number of days of leave that will be lost if the member does not take them in the current fiscal year on a monthly basis. The number of days in this block will decrease with any leave usage
-remarks,74,1715,2474,2530,none,This area is used to provide general notices
+ytd entitlements,590,1720,950,1766,none,Amount of YTD entitlements
+ytd deductions,1150,1720,1520,1766,none,Amount of YTD deductions
+remarks,74,1766,2474,2530,none,This area is used to provide general notices

@@ -57,17 +57,17 @@
 
                         <tr class="{{ row_class }}{% if section_break %} section-break {% endif %}">
                             <td class="cell cell-header">
-                                {% if row.editable and row.type in ['ent', 'ded', 'alt', 'inc', 'exp'] %}
-                                    <button class="button-generic button-negative button-remove-row tooltip" data-header="{{ row.header }}" data-tooltip="Remove Row">
-                                        ✖
-                                    </button>
-                                {% endif %}
                                 <button
                                     class="button-cell button-modal-info tooltip {% if row.modal != 'none' %} clickable {% endif %}"
                                     data-modal="{{ row.modal }}"
                                     data-tooltip="{{ row_meta.tooltip if row_meta.tooltip != 'none' }}">
                                     {{ row.header }}
                                 </button>
+                                {% if row.editable and row.type in ['ent', 'ded', 'alt', 'inc', 'exp'] %}
+                                    <button class="button-generic button-negative button-remove-row tooltip" data-header="{{ row.header }}" data-tooltip="Remove Row">
+                                        ✖
+                                    </button>
+                                {% endif %}
                             </td>
                             
                             {% for month in months %}

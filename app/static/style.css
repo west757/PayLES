@@ -683,7 +683,7 @@ hr {
     position: relative;
 }
 
-.cell-header:hover .button-remove-row {
+.button-cell.button-modal-info:hover + .button-remove-row, .button-remove-row:hover {
     display: flex;
 }
 
