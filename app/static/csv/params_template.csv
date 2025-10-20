@@ -1,5 +1,4 @@
 ﻿header,type,sign,field,tax,editable,modal,tooltip
-Year,var,0,none,False,False,none,none
 Months in Service,var,0,none,False,False,pebd,Number of months creditable towards military service
 Branch,var,0,select,False,True,none,Branch
 Component,var,0,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
@@ -24,6 +23,7 @@ YTD Income,ytd,0,float,False,False,none,Total income from the beginning of the y
 YTD Expenses,ytd,0,float,False,False,none,Total expenses from the beginning of the year
 YTD Net Pay,ytd,0,float,False,False,none,Total net pay from the beginning of the year
 Direct Deposit Account,acc,0,float,False,False,none,Individual direct deposit account accumulating all net pay over time
+Year,meta,0,none,False,False,none,none
 Month Long,meta,0,none,False,False,none,none
 Branch Long,meta,0,none,False,False,none,none
 Component Long,meta,0,none,False,False,none,none

@@ -106,11 +106,11 @@ def route_single():
 
         headers = get_all_headers()
 
-        month, les_variables = get_pay_variables(les_text)
+        les_variables = get_pay_variables(les_text)
         tsp_variables = get_tsp_variables(les_text)
 
-        pay_les, tsp_les = init_budgets(les_variables, tsp_variables, month, les_text=les_text)
-        pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, month)
+        pay_les, tsp_les = init_budgets(les_variables, tsp_variables, year, month, les_text=les_text)
+        pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, year, month)
 
         pay_les, tsp_les, months = add_months(pay_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
@@ -367,12 +367,6 @@ def route_change_months():
 
     session['pay'] = pay
     session['tsp'] = tsp
-
-    for row in pay:
-        print(row)
-    print("-------------------")
-    for row in tsp:
-        print(row)
 
     config_js = {
         'pay': pay,

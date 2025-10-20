@@ -26,22 +26,7 @@ from app.utils import (
 
 
 def get_pay_variables(les_text):
-    try:
-        month = les_text.get('les_month', None)
-        if month not in flask_app.config['MONTHS'].keys():
-            raise ValueError(f"Invalid LES month: {month}")
-    except Exception as e:
-        raise Exception(get_error_context(e, "Error determining month from LES text"))
-    
     les_variables = {}
-
-    try:
-        year = int('20' + les_text.get('les_year', None))
-        if not year or year < 2021 or year > flask_app.config['CURRENT_YEAR'] + 1:
-            raise ValueError(f"Invalid LES year: {year}")
-    except Exception as e:
-        raise Exception(get_error_context(e, "Error determining year from LES text"))
-    les_variables['Year'] = year
 
     try:
         pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
@@ -176,7 +161,7 @@ def get_pay_variables(les_text):
 
     les_variables['Drills'] = 0
 
-    return month, les_variables
+    return les_variables
 
 
 def add_pay_variables(pay, month, variables):
@@ -373,10 +358,7 @@ def update_variables(pay, month, prev_month, cell=None):
         header = row['header']
         prev_value = row.get(prev_month)
 
-        if header == "Year":
-            row[month] = prev_value + 1 if month == "JAN" else prev_value
-            continue
-        elif header == "Months in Service":
+        if header == "Months in Service":
             row[month] = prev_value + 1
             continue
 

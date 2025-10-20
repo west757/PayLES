@@ -26,12 +26,14 @@ from app.utils import (
 )
 
 
-def init_budgets(les_variables, tsp_variables, month, les_text=None):
+def init_budgets(les_variables, tsp_variables, year, month, les_text=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     pay = []
     for _, row in PARAMS_TEMPLATE.iterrows():
         add_row(pay, row['header'], template=PARAMS_TEMPLATE)
+
+    add_mv_pair(pay, 'Year', month, year)
 
     if les_text:
         pay = add_pay_variables(pay, month, les_variables)
@@ -117,6 +119,10 @@ def update_months(pay, tsp, months, cell=None):
 
 
 def build_month(pay, tsp, month, prev_month, cell=None, init=False):
+    prev_year = get_row_value(pay, 'Year', prev_month)
+    year = prev_year + 1 if month == 'JAN' else prev_year
+    add_mv_pair(pay, 'Year', month, year)
+
     pay = update_variables(pay, month, prev_month, cell)
     pay = update_pays(pay, month, prev_month, sign=1, cell=cell, init=init)
 
