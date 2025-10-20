@@ -54,6 +54,7 @@ long-term:
 - add in recommendation for type of bank
 - uncomment prompt when leaving budget page
 - better css for border table scroll bar
+- uncomment les age limit check
 
 
 3. Security Headers

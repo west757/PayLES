@@ -26,7 +26,7 @@ from app.budgets import (
     remove_months,
     insert_row,
     remove_row,
-    calc_account,
+    update_account,
     add_recommendations,
 )
 from app.tsp import (
@@ -113,8 +113,6 @@ def route_single():
         pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, month)
 
         pay_les, tsp_les, months = add_months(pay_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-        calc_account(pay_les, "Direct Deposit Account", months, initial=0.0)
-        calc_account(tsp_les, "TSP Account", months, initial=0.0)
 
         #for row in pay_les:
         #    print(row)
@@ -327,9 +325,9 @@ def route_update_account():
     initial = float(request.form.get('initial', 0.0))
 
     if header == "Direct Deposit Account":
-        calc_account(pay, header, months, initial)
+        update_account(pay, header, months=months, initial=initial)
     elif header == "TSP Account":
-        calc_account(tsp, header, months, initial)
+        update_account(tsp, header, months=months, initial=initial)
     else:
         return jsonify({'message': "Invalid account header"}), 400
 
@@ -369,6 +367,12 @@ def route_change_months():
 
     session['pay'] = pay
     session['tsp'] = tsp
+
+    for row in pay:
+        print(row)
+    print("-------------------")
+    for row in tsp:
+        print(row)
 
     config_js = {
         'pay': pay,

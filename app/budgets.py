@@ -77,6 +77,9 @@ def init_budgets(les_variables, tsp_variables, month, les_text=None):
 
     add_mv_pair(pay, 'Difference', month, 0.0)
 
+    add_mv_pair(pay, 'Direct Deposit Account', month, 0.0)
+    add_mv_pair(tsp, 'TSP Account',  month, 0.0)
+
     pay = convert_numpy_types(pay)
     tsp = convert_numpy_types(tsp)
 
@@ -146,6 +149,9 @@ def build_month(pay, tsp, month, prev_month, cell=None, init=False):
     add_mv_pair(pay, 'YTD Income', month, ytd_income)
     add_mv_pair(pay, 'YTD Expenses', month, ytd_expenses)
     add_mv_pair(pay, 'YTD Net Pay', month, ytd_net_pay)
+
+    update_account(pay, "Direct Deposit Account", month=month, prev_month=prev_month)
+    update_account(tsp, "TSP Account", month=month, prev_month=prev_month)
 
     return pay, tsp
 
@@ -221,23 +227,33 @@ def remove_row(pay, headers, header):
     return pay, headers
 
 
-def calc_account(budget, header, months, initial):
+def update_account(budget, header, month=None, prev_month=None, months=None, initial=None,):
     if header == "Direct Deposit Account":
         add_row = "Net Pay"
     elif header == "TSP Account":
         add_row = "TSP Contribution Total"
+    else:
+        return None
 
     row = get_row_value(budget, header)
 
-    prev_value = initial
-    for idx, month in enumerate(months):
-        if idx == 0:
-            row[month] = round(prev_value, 2)
-        else:
-            add_value = get_row_value(budget, add_row, month)
-            value = prev_value + add_value
-            row[month] = round(value, 2)
-            prev_value = value
+    # if months and initial are provided, rewrite the entire row
+    if months is not None and initial is not None:
+        prev_value = initial
+        for idx, m in enumerate(months):
+            if idx == 0:
+                row[m] = round(prev_value, 2)
+            else:
+                add_value = get_row_value(budget, add_row, m)
+                value = prev_value + add_value
+                row[m] = round(value, 2)
+                prev_value = value
+    # otherwise, just update the current month using previous value
+    elif month is not None and prev_month is not None:
+        prev_value = row.get(prev_month, initial)
+        add_value = get_row_value(budget, add_row, month)
+        row[month] = round(prev_value + add_value, 2)
+
     return None
 
 

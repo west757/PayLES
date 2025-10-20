@@ -32,7 +32,16 @@
         <table id="budget-pay-table" class="styled">
             <thead>
                 <tr>
-                    <th>Budget</th>
+                    {% set year_row = pay | selectattr('header', 'equalto', 'Year') | list | first %}
+                    {% set min_year = year_row[months[0]] %}
+                    {% set max_year = year_row[months[-1]] %}
+                    {% if min_year == max_year %}
+                        {% set budget_year_text = "Budget " ~ min_year %}
+                    {% else %}
+                        {% set budget_year_text = "Budget " ~ min_year ~ "-" ~ max_year %}
+                    {% endif %}
+                    <th>{{ budget_year_text }}</th>
+
                     {% for month in months %}
                         <th>{{ month }}</th>
                     {% endfor %}
