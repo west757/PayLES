@@ -7,19 +7,19 @@ function attachInjectModalListeners() {
     resetInjectModal();
 
     const injectInputs = [
-        { container: 'inject-template-value', field: 'float', rowHeader: 'Template Value' },
-        { container: 'inject-custom-header', field: 'string', rowHeader: 'Custom Header' },
-        { container: 'inject-custom-value', field: 'float', rowHeader: 'Custom Value' }
+        { location: 'inject-template-value-location', header: 'Inject Template Value', field: 'float' },
+        { location: 'inject-custom-header-location', header: 'Inject Custom Header', field: 'string' },
+        { location: 'inject-custom-value-location', header: 'Inject Custom Value', field: 'float' }
     ];
 
     injectInputs.forEach(item => {
-        const container = document.getElementById(item.container);
-        let inputWrapper = createStandardInput(item.rowHeader, item.field);
-        const input = inputWrapper.querySelector('input, select');
-        input.id = item.container + '-id';
-        input.name = item.rowHeader;
-        container.innerHTML = '';
-        container.appendChild(inputWrapper);
+        const location = document.getElementById(item.location);
+        let wrapper = createStandardInput(item.header, item.field);
+        const input = wrapper.querySelector('input, select');
+        input.id = item.location.replace('-location', '');
+        input.name = item.header;
+        location.innerHTML = '';
+        location.appendChild(wrapper);
     });
 
     const el = getInjectModalElements();
@@ -145,12 +145,12 @@ function getInjectModalElements() {
 
         templateSection: document.getElementById('inject-template'),
         templateSelect: document.getElementById('inject-template-select'),
-        templateValue: document.getElementById('inject-template-value-id'),
+        templateValue: document.getElementById('inject-template-value'),
         templateButton: document.getElementById('inject-template-button'),
 
         customSection: document.getElementById('inject-custom'),
-        customHeader: document.getElementById('inject-custom-header-id'),
-        customValue: document.getElementById('inject-custom-value-id'),
+        customHeader: document.getElementById('inject-custom-header'),
+        customValue: document.getElementById('inject-custom-value'),
         customTax: document.getElementById('inject-custom-tax'),
         customButton: document.getElementById('inject-custom-button'),
 
@@ -270,12 +270,12 @@ function getTemplateRows(rowType) {
     const inPay = window.CONFIG.pay ? window.CONFIG.pay.map(r => r.header) : [];
 
     let subset = headers.filter(row => {
-        if (rowType === 'e') {
-            return row.type === 'e';
-        } else if (rowType === 'd') {
-            return row.type === 'd';
-        } else if (rowType === 'a') {
-            return row.type === 'a';
+        if (rowType === 'ent') {
+            return row.type === 'ent';
+        } else if (rowType === 'ded') {
+            return row.type === 'ded';
+        } else if (rowType === 'alt') {
+            return row.type === 'alt';
         }
         return false;
     });
@@ -290,7 +290,7 @@ function getTemplateRows(rowType) {
 // set custom info
 function setCustomInfo(rowType, infoDiv) {
     let text = '';
-    if (rowType === 'e') {
+    if (rowType === 'inc') {
         text = `<strong>Example Income:</strong>
             <div class="inject-list-grid">
                 <ul>
@@ -309,7 +309,7 @@ function setCustomInfo(rowType, infoDiv) {
                     <li>Compensation</li>
                 </ul>
             </div>`;
-    } else if (rowType === 'd') {
+    } else if (rowType === 'exp') {
         text = `<strong>Example Expenses:</strong>
             <div class="inject-list-grid">
                 <ul>

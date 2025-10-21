@@ -1,5 +1,5 @@
 // confirmation alert to user before changing pages when budgets.html is loaded
-function payUnloadPrompt(e) {
+function budgetUnloadPrompt(e) {
     e.preventDefault();
     e.returnValue = "Please confirm to return to the home page. You will lose all existing data on this page and will be unable to return. \n\nTo save a copy of your budget, please use the export function.";
 }
