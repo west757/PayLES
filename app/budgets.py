@@ -257,7 +257,7 @@ def update_account(budget, header, month=None, prev_month=None, months=None, ini
     return None
 
 
-def add_recommendations(pay, months):
+def add_recommendations(pay, tsp, months):
     recs = {}
 
     # SGLI minimum coverage recommendation

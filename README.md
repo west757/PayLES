@@ -11,8 +11,7 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- ordering of dicts sent to javascript
-- error checking and validation for les variables
+- info for pay
 
 mid-term:
 - get combat zone from les
@@ -27,7 +26,6 @@ mid-term:
 - add official calculators to resources list
 - recommendation for mid-month pay
 - show custom rows checkbox
-- make cell buttons visible in table
 
 long-term:
 - leave calculator
@@ -53,6 +51,7 @@ long-term:
 - uncomment prompt when leaving budget page
 - better css for border table scroll bar
 - uncomment les age limit check
+- error checking and validation for les variables
 
 
 3. Security Headers

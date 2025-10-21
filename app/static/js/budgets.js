@@ -297,18 +297,37 @@ function disableDrillsButtons() {
 }
 
 
-function displayRecommendations(recommendations) {
-    const container = document.getElementById('recommendations-container');
-    const badge = document.getElementById('badge-recommendations');
+function displayRecommendations(budgetName, recommendations) {
+    document.getElementById('modal-dynamic').checked = true;
 
-    if (recommendations.length > 0) {
-        container.innerHTML = recommendations.map(r => `<div class="modal-list-text">${r}</div>`).join('');
+    const titleText = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
+    const badgeId = budgetName === 'pay' ? 'badge-recommendations-pay' : 'badge-recommendations-tsp';
+    
+    const badge = document.getElementById(badgeId);
+    if (badge) {
         badge.textContent = recommendations.length;
-        badge.style.display = 'inline-block';
-    } else {
-        container.innerHTML = '<div class="modal-list-text">No current recommendations for your budget.</div>';
-        badge.style.display = 'none';
+        badge.style.display = recommendations.length > 0 ? 'inline-block' : 'none';
     }
+
+    const content = document.getElementById('modal-content-dynamic');
+    content.innerHTML = '';
+
+    const title = document.createElement('h2');
+    title.textContent = titleText;
+    content.appendChild(title);
+
+    const recommendationsList = document.createElement('div');
+    if (recommendations.length > 0) {
+        recommendations.forEach(r => {
+            recommendationsList.className = 'modal-list-text';
+            recommendationsList.textContent = r;
+        });
+    } else {
+        recommendationsList.className = 'modal-list-text';
+        recommendationsList.textContent = 'No current recommendations.';
+        
+    }
+    content.appendChild(recommendationsList);
 }
 
 

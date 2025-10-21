@@ -62,7 +62,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     enableInputs();
     disableDrillsButtons();
     disableTSPRateButtons();
-    displayRecommendations(window.CONFIG.recommendations);
 
     document.getElementById('budget-pay').scrollTop = payScrollTop;
     document.getElementById('budget-tsp').scrollTop = tspScrollTop;
@@ -151,9 +150,9 @@ document.addEventListener('click', function(e) {
         if (badge) badge.style.display = 'none';
     }
 
-    if (e.target && e.target.id === 'button-modal-recommendations') {
-        document.getElementById('modal-recommendations').checked = true;
-        const badge = document.getElementById('badge-recommendations');
+    if (e.target && e.target.id === 'button-modal-recommendations-pay') {
+        displayRecommendations('pay', window.CONFIG.recommendations);
+        const badge = document.getElementById('badge-recommendations-pay');
         if (badge) badge.style.display = 'none';
     }
 
@@ -167,6 +166,12 @@ document.addEventListener('click', function(e) {
 
     if (e.target && e.target.id === 'button-modal-tsp-analysis') {
         document.getElementById('modal-tsp-analysis').checked = true;
+    }
+
+    if (e.target && e.target.id === 'button-modal-recommendations-tsp') {
+        displayRecommendations('tsp', window.CONFIG.recommendations);
+        const badge = document.getElementById('badge-recommendations-tsp');
+        if (badge) badge.style.display = 'none';
     }
 
     // build edit modal on cell button click

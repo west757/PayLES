@@ -109,33 +109,33 @@ def route_single():
         les_variables = get_pay_variables(les_text)
         tsp_variables = get_tsp_variables(les_text)
 
-        pay_les, tsp_les = init_budgets(les_variables, tsp_variables, year, month, les_text=les_text)
+        pay, tsp = init_budgets(les_variables, tsp_variables, year, month, les_text=les_text)
         pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, year, month)
 
-        pay_les, tsp_les, months = add_months(pay_les, tsp_les, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+        pay, tsp, months = add_months(pay, tsp, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-        #for row in pay_les:
+        #for row in pay:
         #    print(row)
         #print("-------------------")
-        #for row in tsp_les:
+        #for row in tsp:
         #    print(row)
 
-        session['pay'] = pay_les
-        session['tsp'] = tsp_les
+        session['pay'] = pay
+        session['tsp'] = tsp
         session['headers'] = headers
 
         config_js = {
-            'pay': pay_les,
-            'tsp': tsp_les,
+            'pay': pay,
+            'tsp': tsp,
             'months': months,
             'headers': headers,
-            'discrepancies': compare_pay(pay_les, pay_calc, month),
-            'recommendations': add_recommendations(pay_les, months),
+            'discrepancies': compare_pay(pay, pay_calc, month),
+            'recommendations': add_recommendations(pay, tsp, months),
         }
         context = {
             'config_js': config_js,
-            'pay': pay_les,
-            'tsp': tsp_les,
+            'pay': pay,
+            'tsp': tsp,
             'months': months,
             'headers': headers,
             'show_guide_buttons': show_guide_buttons,

@@ -1089,7 +1089,6 @@ table.styled td.cell {
 .modal-dynamic-input-label {
     font-weight: bold;
     margin: 0 0.5rem 0 0;
-    min-width: 11rem;
     text-align: right;
 }
 
