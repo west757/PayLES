@@ -144,6 +144,21 @@ function toggleRows(rowClass) {
 }
 
 
+function boldEditableCells(active) {
+    const editableCells = document.querySelectorAll(
+        '#budget-pay-table .button-modal-dynamic, #budget-tsp-table .button-modal-dynamic'
+    );
+    
+    editableCells.forEach(cell => {
+        if (active) {
+            cell.style.fontWeight = 'bold';
+        } else {
+            cell.style.fontWeight = '';
+        }
+    });
+}
+
+
 function buildAccountModal(header) {
     document.getElementById('modal-dynamic').checked = true;
 
@@ -216,13 +231,13 @@ function exportBudget(budgetName) {
     let filename;
 
     if (budgetName === 'pay') {
-        var budget = document.getElementById('pay-budget');
+        var budget = document.getElementById('budget-pay-table');
         var filetype = document.getElementById('dropdown-export-pay').value;
-        filename = 'PayLES_PAY_BUDGET';
+        filename = 'PayLES_Budget';
     } else if (budgetName === 'tsp') {
-        var budget = document.getElementById('tsp-budget');
+        var budget = document.getElementById('budget-tsp-table');
         var filetype = document.getElementById('dropdown-export-tsp').value;
-        filename = 'PayLES_TSP_BUDGET';
+        filename = 'PayLES_TSP_Budget';
     }
 
     var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
@@ -232,7 +247,7 @@ function exportBudget(budgetName) {
     // exclude remove row buttons from export
     clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
 
-    var workbook = XLSX.utils.budget_to_book(clone, {sheet: filename, raw: true});
+    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
     if (filetype === 'xlsx') {
         XLSX.writeFile(workbook, fullFilename);
     } else {

@@ -728,7 +728,7 @@ hr {
 }
 
 .button-setting {
-    width: 11rem;
+    width: 12rem;
 }
 
 #button-export-pay, #button-export-tsp {
@@ -776,9 +776,9 @@ table.styled th {
 }
 
 table.styled th:first-child, table.styled td:first-child {
-    max-width: 16rem;
-    min-width: 16rem;
-    width: 16rem;
+    max-width: 15rem;
+    min-width: 15rem;
+    width: 15rem;
 }
 
 table.styled th:not(:first-child), table.styled td:not(:first-child) {

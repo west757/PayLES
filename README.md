@@ -7,7 +7,6 @@ run: python -m app.main
 
 
 short-term:
-- update adding custom row
 - update home and manual input
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations

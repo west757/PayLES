@@ -237,6 +237,10 @@ document.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'checkbox-variables') {
         toggleRows('variables');
     }
+
+    if (e.target && e.target.id === 'checkbox-editable') {
+        boldEditableCells(e.target.checked);
+    }
     
     if (e.target && e.target.id === 'checkbox-highlight-tsp') {
         highlightChanges('tsp');
