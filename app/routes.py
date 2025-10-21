@@ -392,16 +392,15 @@ def route_insert_row():
     months = get_months(pay)
     headers = session.get('headers', [])
 
-    row_data = {
+    insert = {
         'method': request.form.get('method', ''),
         'type': request.form.get('type', ''),
         'header': request.form.get('header', '').strip(),
         'value': request.form.get('value', '0').strip(),
         'tax': request.form.get('tax', 'false').lower() == 'true',
-        'percent': request.form.get('percent', '0'),
     }
 
-    pay, headers = insert_row(pay, months, headers, row_data)
+    pay, headers = insert_row(pay, months, headers, insert)
     pay, tsp = update_months(pay, tsp, months)
 
     session['pay'] = pay

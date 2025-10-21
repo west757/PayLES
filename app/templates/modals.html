@@ -77,15 +77,15 @@
                     <span class="modal-grid-span">Row Type:</span>
                     <div class="modal-radio-group">
                         <label>
-                            <input id="inject-type-entitlement" type="radio" name="row-type" value="e" >
+                            <input id="inject-type-entitlement" type="radio" name="row-type" value="ent" >
                             Entitlement (+$)
                         </label>
                         <label>
-                            <input id="inject-type-deduction" type="radio" name="row-type" value="d">
+                            <input id="inject-type-deduction" type="radio" name="row-type" value="ded">
                             Deduction (-$)
                         </label>
                         <label>
-                            <input id="inject-type-allotment" type="radio" name="row-type" value="a">
+                            <input id="inject-type-allotment" type="radio" name="row-type" value="alt">
                             Allotment (-$)
                         </label>
                     </div>
@@ -95,11 +95,11 @@
                     <span class="modal-grid-span">Row Type:</span>
                     <div class="modal-radio-group">
                         <label>
-                            <input id="inject-type-income" type="radio" name="row-type" value="e" >
+                            <input id="inject-type-income" type="radio" name="row-type" value="inc" >
                             Income (+$)
                         </label>
                         <label>
-                            <input id="inject-type-expense" type="radio" name="row-type" value="d">
+                            <input id="inject-type-expense" type="radio" name="row-type" value="exp">
                             Expense (-$)
                         </label>
                     </div>
@@ -109,8 +109,8 @@
             <div id="inject-template-custom" class="modal-grid-column">
                 <div id="inject-template" class="modal-grid-column-stack">
                     <div class="modal-grid-column-row">
-                        <label class="styled-label" for="inject-template-select">Row Header:</label>
-                        <select id="inject-template-select" class="input-long"></select>
+                        <label class="styled-label" for="inject-template-dropdown">Row Header:</label>
+                        <select id="inject-template-dropdown" class="input-long"></select>
                     </div>
                     <div class="modal-grid-column-row">
                         <label class="styled-label" for="inject-template-value">Initial Value:</label>
@@ -132,11 +132,11 @@
                     </div>
                     <div class="modal-grid-column-row">
                         <label class="styled-label" for="inject-custom-tax">Tax:</label>
-                        <input id="inject-custom-tax" class="checkbox-styled" type="checkbox">
+                        <input id="inject-custom-tax" class="styled" type="checkbox">
                         <span class="tooltip-question tooltip" data-tooltip=
                         "Indicates if the row is used for tax purposes. 
-                        If an entitlement, sets whether taxable or non-taxable income. 
-                        If a deduction, sets as a tax added to total taxes.">
+                        If income, sets whether taxable or non-taxable. 
+                        If an expense, sets as a tax added to total taxes.">
                         ?</span>
                     </div>
                     <div class="modal-grid-column-row">

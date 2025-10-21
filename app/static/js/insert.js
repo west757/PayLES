@@ -62,9 +62,10 @@ function attachInjectModalListeners() {
 
     el.templateButton.addEventListener('click', function() {
         let method = 'template';
-        let header = el.templateSelect.value;
+        let header = el.templateDropdown.value;
         let value = el.templateValue.value.trim();
-        if (!validateAddRow({ method, header, value })) return;
+
+        if (!validateInject(method, header, value)) return;
 
         htmx.ajax('POST', '/route_insert_row', {
             target: '#budgets',
@@ -84,7 +85,8 @@ function attachInjectModalListeners() {
         let header = el.customHeader.value;
         let value = el.customValue.value.trim();
         let tax = el.customTax.checked ? 'true' : 'false';
-        if (!validateAddRow({ method, header, value })) return;
+
+        if (!validateInject(method, header, value)) return;
 
         htmx.ajax('POST', '/route_insert_row', {
             target: '#budgets',
@@ -119,7 +121,7 @@ function resetInjectModal() {
     el.typeExpense.checked = false;
 
     el.templateSection.style.display = 'none';
-    el.templateSelect.innerHTML = '';
+    el.templateDropdown.innerHTML = '';
     el.customSection.style.display = 'none';
     el.customTax.checked = false;
 
@@ -144,7 +146,7 @@ function getInjectModalElements() {
         typeExpense: document.getElementById('inject-type-expense'),
 
         templateSection: document.getElementById('inject-template'),
-        templateSelect: document.getElementById('inject-template-select'),
+        templateDropdown: document.getElementById('inject-template-dropdown'),
         templateValue: document.getElementById('inject-template-value'),
         templateButton: document.getElementById('inject-template-button'),
 
@@ -159,14 +161,14 @@ function getInjectModalElements() {
 }
 
 
-function validateAddRow({ method, header, value, percent, interest }) {
+function validateInject(method, header, value) {
     if (window.CONFIG.pay.length >= window.CONFIG.MAX_ROWS) {
         showToast('Maximum number of rows reached. Cannot have more than ' + window.CONFIG.MAX_ROWS + ' rows in the budget.');
         return false;
     }
 
     if ((!/^\d{0,6}(\.\d{0,2})?$/.test(value) || value === '')) {
-        showToast('Please enter a valid initial value (up to 6 digits before and 2 after decimal).');
+        showToast('Please enter a valid initial value (up to 6 digits before and 2 digits after the decimal).');
         return false;
     }
 
@@ -177,7 +179,7 @@ function validateAddRow({ method, header, value, percent, interest }) {
         }
     }
 
-    if(method === 'custom' || method === 'tsp' || method === 'bank' || method === 'special') {
+    if(method === 'custom') {
         const reservedHeaders = (window.CONFIG.headers || []).map(h => h.header.toLowerCase());
 
         if (!header || header.trim().length === 0) {
@@ -194,87 +196,54 @@ function validateAddRow({ method, header, value, percent, interest }) {
             showToast('Row header cannot be longer than 20 characters with no special characters.');
             return false;
         }
-
-        if(method === 'tsp' || method === 'bank' || method === 'special') {
-            if (interest == '') {
-                showToast('Please enter a valid interest rate.');
-                return false;
-            }
-
-            if (method === 'bank' || method === 'special') {
-                if (percent == '') {
-                    showToast('Please enter a valid percent rate.');
-                    return false;
-                }
-            }
-        }
     }
 
     return true;
 }
 
 
-function populateTemplateDropdown(rowType) {
+function populateTemplateDropdown(type) {
     const el = getInjectModalElements();
-    const templateDropdown = el.templateSelect;
-    const templateValue = el.templateValue;
-    const templateSubmit = el.templateButton;
-    const infoDiv = document.getElementById('inject-info');
+    const templateDropdown = el.templateDropdown;
+    const info = document.getElementById('inject-info');
     templateDropdown.innerHTML = '';
 
-    let firstOpt = document.createElement('option');
-    firstOpt.value = 'choose-header';
-    firstOpt.textContent = 'Choose header';
-    templateDropdown.appendChild(firstOpt);
+    let chooseHeaderOption = document.createElement('option');
+    chooseHeaderOption.value = 'choose-header';
+    chooseHeaderOption.textContent = 'Choose Header';
+    templateDropdown.appendChild(chooseHeaderOption);
 
-    let rows = getTemplateRows(rowType);
-
-    if (rows.length === 0) {
-        let opt = document.createElement('option');
-        opt.value = '';
-        opt.textContent = 'No available rows';
-        templateDropdown.appendChild(opt);
-        templateDropdown.disabled = true;
-        templateValue.disabled = true;
-        templateSubmit.disabled = true;
-        if (infoDiv) infoDiv.textContent = '';
-        return;
-    }
+    let rows = getTemplateRows(type);
 
     rows.forEach(row => {
-        let opt = document.createElement('option');
-        opt.value = row.header;
-        opt.textContent = row.header;
-        opt.dataset.tooltip = row.tooltip || '';
-        templateDropdown.appendChild(opt);
+        let option = document.createElement('option');
+        option.value = row.header;
+        option.textContent = row.header;
+        option.dataset.tooltip = row.tooltip || '';
+        templateDropdown.appendChild(option);
     });
-
-    templateDropdown.disabled = false;
-    templateValue.disabled = false;
-    templateSubmit.disabled = false;
 
     // show tooltip for selected header in info div
     templateDropdown.addEventListener('change', function() {
-        const selected = templateDropdown.selectedOptions[0];
-        if (infoDiv) {
-            infoDiv.textContent = selected && selected.dataset.tooltip ? selected.dataset.tooltip : '';
-        }
+        const selectedHeader = templateDropdown.selectedOptions[0];
+        info.textContent = selectedHeader && selectedHeader.dataset.tooltip ? selectedHeader.dataset.tooltip : '';
     });
 
-    if (infoDiv) infoDiv.textContent = '';
+    // clear info div on dropdown change
+    if (info) info.textContent = '';
 }
 
 
-function getTemplateRows(rowType) {
-    const headers = window.CONFIG.headers || [];
+function getTemplateRows(type) {
+    const headers = window.CONFIG.headers;
     const inPay = window.CONFIG.pay ? window.CONFIG.pay.map(r => r.header) : [];
 
     let subset = headers.filter(row => {
-        if (rowType === 'ent') {
+        if (type === 'ent') {
             return row.type === 'ent';
-        } else if (rowType === 'ded') {
+        } else if (type === 'ded') {
             return row.type === 'ded';
-        } else if (rowType === 'alt') {
+        } else if (type === 'alt') {
             return row.type === 'alt';
         }
         return false;
@@ -288,9 +257,9 @@ function getTemplateRows(rowType) {
 
 
 // set custom info
-function setCustomInfo(rowType, infoDiv) {
+function setCustomInfo(type, info) {
     let text = '';
-    if (rowType === 'inc') {
+    if (type === 'inc') {
         text = `<strong>Example Income:</strong>
             <div class="inject-list-grid">
                 <ul>
@@ -309,7 +278,7 @@ function setCustomInfo(rowType, infoDiv) {
                     <li>Compensation</li>
                 </ul>
             </div>`;
-    } else if (rowType === 'exp') {
+    } else if (type === 'exp') {
         text = `<strong>Example Expenses:</strong>
             <div class="inject-list-grid">
                 <ul>
@@ -332,7 +301,7 @@ function setCustomInfo(rowType, infoDiv) {
                 </ul>
             </div>`;
     }
-    infoDiv.innerHTML = text;
-    infoDiv.style.display = text ? 'flex' : 'none';
+    info.innerHTML = text;
+    info.style.display = text ? 'flex' : 'none';
 }
 

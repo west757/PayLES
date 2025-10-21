@@ -179,46 +179,34 @@ def remove_months(pay, tsp, months_num):
     return pay, tsp, months
 
 
-def insert_row(pay, months, headers, row_data):
-    if row_data['type'] == 'd' or row_data['type'] == 'a':
-        sign = -1
-    else:
-        sign = 1
+def insert_row(pay, months, headers, insert):
+    sign = -1 if insert['type'] in ['ded', 'alt', 'exp'] else 1
+    value = round(sign * float(insert['value']), 2)
 
-    value = round(sign * float(row_data['value']), 2)
-
-    if row_data['method'] == 'template':
-        row = add_row(pay, row_data['header'], flask_app.config['PAY_TEMPLATE'])
+    if insert['method'] == 'template':
+        row = add_row(pay, insert['header'], flask_app.config['PAY_TEMPLATE'])
         for idx, m in enumerate(months):
-            row[m] = value
+            row[m] = 0.0 if idx == 0 else value
 
-    elif row_data['method'] == 'custom':
-        row_meta = {'header': row_data['header']}
-        for meta in flask_app.config['ROW_METADATA']:
-            if meta == 'type':
-                row_meta['type'] = 'c'
-            elif meta == 'sign':
-                row_meta['sign'] = sign
-            elif meta == 'field':
-                row_meta['field'] = 'float'
-            elif meta == 'tax':
-                row_meta['tax'] = row_data['tax']
-            elif meta == 'editable':
-                row_meta['editable'] = True
-            elif meta == 'modal':
-                row_meta['modal'] = 'none'
+    elif insert['method'] == 'custom':
+        metadata = {}
+        metadata['type'] = insert['type']
+        metadata['sign'] = sign
+        metadata['field'] = 'float'
+        metadata['tax'] = insert['tax']
+        metadata['editable'] = True
+        metadata['modal'] = 'none'
 
-        row = add_row(pay, row_data['header'], metadata=row_meta)
+        row = add_row(pay, insert['header'], metadata=metadata)
 
         for idx, m in enumerate(months):
-            row[m] = 0.00 if idx == 0 else value
+            row[m] = 0.0 if idx == 0 else value
 
-        if not any(h['header'].lower() == row_data['header'].lower() for h in headers):
-            headers.append({
-                'header': row_data['header'],
-                'type': 'c',
-                'tooltip': 'Custom row added by user',
-            })
+        headers.append({
+            'header': insert['header'],
+            'type': insert['type'],
+            'tooltip': 'Custom row added by user',
+        })
 
     return pay, headers
 
