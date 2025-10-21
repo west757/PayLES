@@ -4,7 +4,6 @@ let selectedRowType = null;
 
 // attach inject modal event listeners
 function attachInjectModalListeners() {
-    resetInjectModal();
 
     const injectInputs = [
         { location: 'inject-template-value-location', header: 'Inject Template Value', field: 'float' },
@@ -22,6 +21,7 @@ function attachInjectModalListeners() {
         location.appendChild(wrapper);
     });
 
+    //resetInjectModal();
     const el = getInjectModalElements();
 
     // method radio buttons (template/custom)
@@ -67,6 +67,8 @@ function attachInjectModalListeners() {
 
         if (!validateInject(method, header, value)) return;
 
+        document.getElementById('modal-inject').checked = false;
+
         htmx.ajax('POST', '/route_insert_row', {
             target: '#budgets',
             swap: 'innerHTML',
@@ -77,7 +79,6 @@ function attachInjectModalListeners() {
                 value: value
             }
         });
-        el.injectModalCheckbox.checked = false;
     });
 
     el.customButton.addEventListener('click', function() {
@@ -87,6 +88,8 @@ function attachInjectModalListeners() {
         let tax = el.customTax.checked ? 'true' : 'false';
 
         if (!validateInject(method, header, value)) return;
+
+        document.getElementById('modal-inject').checked = false;
 
         htmx.ajax('POST', '/route_insert_row', {
             target: '#budgets',
@@ -99,7 +102,6 @@ function attachInjectModalListeners() {
                 tax: tax
             }
         });
-        el.injectModalCheckbox.checked = false;
     });
 }
 
@@ -122,7 +124,11 @@ function resetInjectModal() {
 
     el.templateSection.style.display = 'none';
     el.templateDropdown.innerHTML = '';
+    el.templateValue.value = '';
+
     el.customSection.style.display = 'none';
+    el.customHeader.value = '';
+    el.customValue.value = '';
     el.customTax.checked = false;
 
     el.info.innerHTML = '';

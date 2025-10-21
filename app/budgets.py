@@ -184,7 +184,9 @@ def insert_row(pay, months, headers, insert):
     value = round(sign * float(insert['value']), 2)
 
     if insert['method'] == 'template':
-        row = add_row(pay, insert['header'], flask_app.config['PAY_TEMPLATE'])
+        add_row(pay, insert['header'], flask_app.config['PAY_TEMPLATE'])
+        row = get_row_value(pay, insert['header'])
+
         for idx, m in enumerate(months):
             row[m] = 0.0 if idx == 0 else value
 
@@ -197,7 +199,8 @@ def insert_row(pay, months, headers, insert):
         metadata['editable'] = True
         metadata['modal'] = 'none'
 
-        row = add_row(pay, insert['header'], metadata=metadata)
+        add_row(pay, insert['header'], metadata=metadata)
+        row = get_row_value(pay, insert['header'])
 
         for idx, m in enumerate(months):
             row[m] = 0.0 if idx == 0 else value
@@ -207,6 +210,8 @@ def insert_row(pay, months, headers, insert):
             'type': insert['type'],
             'tooltip': 'Custom row added by user',
         })
+
+    pay = convert_numpy_types(pay)
 
     return pay, headers
 
@@ -239,14 +244,15 @@ def update_account(budget, header, month=None, prev_month=None, months=None, ini
                 row[m] = round(prev_value, 2)
             else:
                 add_value = get_row_value(budget, add_row, m)
-                value = prev_value + add_value
+                value = prev_value + add_value if add_value > 0 else prev_value
                 row[m] = round(value, 2)
                 prev_value = value
     # otherwise, just update the current month using previous value
     elif month is not None and prev_month is not None:
         prev_value = row.get(prev_month, initial)
         add_value = get_row_value(budget, add_row, month)
-        row[month] = round(prev_value + add_value, 2)
+        value = prev_value + add_value if add_value > 0 else prev_value
+        row[month] = round(value, 2)
 
     return None
 

@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // save scroll position before any htmx request that will update budgets
 document.body.addEventListener('htmx:beforeRequest', function(evt) {
-    payScrollTop = document.getElementById('budget-pay').scrollTop;
-    tspScrollTop = document.getElementById('budget-tsp').scrollTop;
+    payScrollTop = document.getElementById('budget-pay') ? document.getElementById('budget-pay').scrollTop : 0;
+    tspScrollTop = document.getElementById('budget-tsp') ? document.getElementById('budget-tsp').scrollTop : 0;
 });
 
 

@@ -390,11 +390,12 @@ def update_pays(pay, month, prev_month, sign, cell=None, init=False):
         if header in ["Traditional TSP", "Roth TSP"]:
             continue
 
-        template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == header]
-        onetime = template_row.iloc[0].get('onetime', False)
-        if init and onetime:
-            row[month] = 0.00
-            continue
+        if init:
+            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == header]
+            onetime = template_row.iloc[0].get('onetime', False)
+            if onetime:
+                row[month] = 0.00
+                continue
 
         trigger = TRIGGER_CALCULATIONS.get(header)
         function = globals().get(trigger)
