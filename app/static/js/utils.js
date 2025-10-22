@@ -96,6 +96,19 @@ function getRowValue(budgetName, header, key = null) {
 }
 
 
+function displayBadge(badgeName, list) {
+    const badge = document.getElementById(`badge-${badgeName}`);
+    if (!badge) return;
+    if (list && list.length > 0) {
+        badge.textContent = list.length;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.textContent = '';
+        badge.style.display = 'none';
+    }
+}
+
+
 function createStandardInput(header, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';

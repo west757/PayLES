@@ -13,9 +13,12 @@ short-term:
 - conus cola
 - info for pay
 
+- rework recommendations
+- have recommendations modal be used instead of dynamic, maybe two different ones
+
 mid-term:
 - get combat zone from les
-- guide modal
+- guide modals
 - rework resources 
 -   tags for category (general, financial, moving, education, mental health), branch, featured
 -   alphabetize, stars for featured ones

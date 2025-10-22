@@ -27,7 +27,8 @@ from app.budgets import (
     insert_row,
     remove_row,
     update_account,
-    add_recommendations,
+    add_pay_recommendations,
+    add_tsp_recommendations,
 )
 from app.tsp import (
     get_tsp_variables,
@@ -130,7 +131,8 @@ def route_single():
             'months': months,
             'headers': headers,
             'discrepancies': compare_pay(pay, pay_calc, month),
-            'recommendations': add_recommendations(pay, tsp, months),
+            'pay_recommendations': add_pay_recommendations(pay, months),
+            'tsp_recommendations': add_tsp_recommendations(tsp, months),
         }
         context = {
             'config_js': config_js,
@@ -193,33 +195,34 @@ def route_joint():
             return jsonify({'message': "LES months do not match. In order to use joint LES upload, both months must be the same."}), 400
         month = month1
 
-        pay_les1, tsp_les1 = init_budgets(les_variables1, tsp_variables1, month, les_text=les_text1)
-        pay_les2, tsp_les2 = init_budgets(les_variables2, tsp_variables2, month, les_text=les_text2)
+        pay1, tsp1 = init_budgets(les_variables1, tsp_variables1, month, les_text=les_text1)
+        pay2, tsp2 = init_budgets(les_variables2, tsp_variables2, month, les_text=les_text2)
 
-        pay_les1, tsp_les1, months = add_months(pay_les1, tsp_les1, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
-        pay_les2, tsp_les2, months = add_months(pay_les2, tsp_les2, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+        pay1, tsp1, months = add_months(pay1, tsp1, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+        pay2, tsp2, months = add_months(pay2, tsp2, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-        session['pay1'] = pay_les1
-        session['pay2'] = pay_les2
-        session['tsp1'] = tsp_les1
-        session['tsp2'] = tsp_les2
+        session['pay1'] = pay1
+        session['pay2'] = pay2
+        session['tsp1'] = tsp1
+        session['tsp2'] = tsp2
         session['headers'] = headers
 
         config_js = {
-            'pay1': pay_les1,
-            'tsp1': tsp_les1,
-            'pay2': pay_les2,
-            'tsp2': tsp_les2,
+            'pay1': pay1,
+            'tsp1': tsp1,
+            'pay2': pay2,
+            'tsp2': tsp2,
             'months': months,
             'headers': headers,
-            'recommendations': add_recommendations(pay_les1, months),
+            'pay_recommendations': add_pay_recommendations(pay1, months),
+            'tsp_recommendations': add_tsp_recommendations(tsp1, months),
         }
         context = {
             'config_js': config_js,
-            'pay1': pay_les1,
-            'tsp1': tsp_les1,
-            'pay2': pay_les2,
-            'tsp2': tsp_les2,
+            'pay1': pay1,
+            'tsp1': tsp1,
+            'pay2': pay2,
+            'tsp2': tsp2,
             'months': months,
             'headers': headers,
             'les_image': les_image1,
@@ -241,24 +244,25 @@ def route_manual():
     manuals = request.form.to_dict()
     variables = manuals
 
-    pay_calc, tsp_calc = init_budgets(variables, variables, month)
-    pay_calc, tsp_calc, months = add_months(pay_calc, tsp_calc, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
+    pay, tsp = init_budgets(variables, variables, month)
+    pay, tsp, months = add_months(pay, tsp, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
-    session['pay'] = pay_calc
-    session['tsp'] = tsp_calc
+    session['pay'] = pay
+    session['tsp'] = tsp
     session['headers'] = headers
 
     config_js = {
-        'pay': pay_calc,
-        'tsp': tsp_calc,
+        'pay': pay,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
-        'recommendations': add_recommendations(pay_calc, months),
+        'pay_recommendations': add_pay_recommendations(pay, months),
+        'tsp_recommendations': add_tsp_recommendations(tsp, months),
     }
     context = {
         'config_js': config_js,
-        'pay': pay_calc,
-        'tsp': tsp_calc,
+        'pay': pay,
+        'tsp': tsp,
         'months': months,
         'headers': headers,
         'MODALS': load_json(flask_app.config['MODALS_JSON']),
@@ -301,7 +305,8 @@ def route_update_cell():
     config_js = {
         'pay': pay,
         'tsp': tsp,
-        'recommendations': add_recommendations(pay, months),
+        'pay_recommendations': add_pay_recommendations(pay, months),
+        'tsp_recommendations': add_tsp_recommendations(tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -372,7 +377,8 @@ def route_change_months():
         'pay': pay,
         'tsp': tsp,
         'months': months,
-        'recommendations': add_recommendations(pay, months),
+        'pay_recommendations': add_pay_recommendations(pay, months),
+        'tsp_recommendations': add_tsp_recommendations(tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -411,7 +417,8 @@ def route_insert_row():
         'pay': pay,
         'tsp': tsp,
         'headers': headers,
-        'recommendations': add_recommendations(pay, months),
+        'pay_recommendations': add_pay_recommendations(pay, months),
+        'tsp_recommendations': add_tsp_recommendations(tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -451,7 +458,8 @@ def route_remove_row():
         'tsp': tsp,
         'months': months,
         'headers': headers,
-        'recommendations': add_recommendations(pay, months),
+        'pay_recommendations': add_pay_recommendations(pay, months),
+        'tsp_recommendations': add_tsp_recommendations(tsp, months),
     }
     return render_template('budgets.html', **context)
 

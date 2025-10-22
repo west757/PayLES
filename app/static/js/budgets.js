@@ -298,20 +298,18 @@ function disableDrillsButtons() {
 
 
 function displayRecommendations(budgetName, recommendations) {
-    document.getElementById('modal-dynamic').checked = true;
+    document.getElementById('modal-dynamic-wide').checked = true;
 
-    const titleText = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
-    const badgeId = budgetName === 'pay' ? 'badge-recommendations-pay' : 'badge-recommendations-tsp';
-    
-    const badge = document.getElementById(badgeId);
-    if (badge) {
-        badge.textContent = recommendations.length;
-        badge.style.display = recommendations.length > 0 ? 'inline-block' : 'none';
+    if (budgetName === 'pay') {
+        displayBadge('recommendations-pay', []);
+    } else if (budgetName === 'tsp') {
+        displayBadge('recommendations-tsp', []);
     }
 
-    const content = document.getElementById('modal-content-dynamic');
+    const content = document.getElementById('modal-content-dynamic-wide');
     content.innerHTML = '';
 
+    const titleText = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
     const title = document.createElement('h2');
     title.textContent = titleText;
     content.appendChild(title);
@@ -340,15 +338,31 @@ function getDiscrepancyMessage(header) {
     return messages[header] || null;
 }
 
-function displayDiscrepanciesModal(discrepancies) {
-    const tableContainer = document.getElementById('discrepancies-table-container');
-    const messageContainer = document.getElementById('discrepancies-message-container');
-    const badge = document.getElementById('badge-discrepancies');
+function displayDiscrepancies(discrepancies) {
+    document.getElementById('modal-dynamic-wide').checked = true;
+
+    displayBadge('discrepancies', []);
+
+    const content = document.getElementById('modal-content-dynamic-wide');
+    content.innerHTML = '';
+
+    const titleText = 'Pay Discrepancies';
+    const title = document.createElement('h2');
+    title.textContent = titleText;
+    content.appendChild(title);
+
+    const description = document.createElement('p');
+    description.innerHTML = 'PayLES performs analysis to find any discrepancies between the uploaded LES and calculated values for the first month. Factors that may cause a discrepancy are an LES older than one month, pay errors, outdated data sets used by PayLES, and certain specific individual circumstances.';
+    content.appendChild(description);
+
+    const tableContainer = document.createElement('div');
+    tableContainer.id = 'discrepancies-table-container';
+    content.appendChild(tableContainer);
+    const messageContainer = document.createElement('div');
+    messageContainer.id = 'discrepancies-message-container';
+    content.appendChild(messageContainer);
 
     if (!discrepancies || discrepancies.length === 0) {
-        tableContainer.innerHTML = '<div class="modal-list-text">PayLES has analyzed your budget and found no discrepancies.</div>';
-        messageContainer.innerHTML = '';
-        badge.style.display = 'none';
         return;
     }
 
@@ -372,9 +386,6 @@ function displayDiscrepanciesModal(discrepancies) {
 
     tableHTML += `</table>
         <div class="modal-list-text">PayLES found these discrepancies.</div>`;
-
-    badge.textContent = discrepancies.length;
-    badge.style.display = 'inline-block';
 
     tableContainer.innerHTML = tableHTML;
     messageContainer.innerHTML = messages.join('');

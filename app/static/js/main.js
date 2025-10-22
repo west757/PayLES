@@ -52,7 +52,10 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectModalListeners();
-        displayDiscrepanciesModal(window.CONFIG.discrepancies);
+        //displayDiscrepanciesModal(window.CONFIG.discrepancies);
+        displayBadge('recommendations-pay', window.CONFIG.pay_recommendations);
+        displayBadge('recommendations-tsp', window.CONFIG.tsp_recommendations);
+        displayBadge('discrepancies', window.CONFIG.discrepancies);
     }
 
     highlightChanges('pay');
@@ -145,15 +148,11 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-discrepancies') {
-        document.getElementById('modal-discrepancies').checked = true;
-        const badge = document.getElementById('badge-discrepancies');
-        if (badge) badge.style.display = 'none';
+        displayDiscrepancies(window.CONFIG.discrepancies);
     }
 
     if (e.target && e.target.id === 'button-modal-recommendations-pay') {
-        displayRecommendations('pay', window.CONFIG.recommendations);
-        const badge = document.getElementById('badge-recommendations-pay');
-        if (badge) badge.style.display = 'none';
+        displayRecommendations('pay', window.CONFIG.pay_recommendations);
     }
 
     if (e.target && e.target.id === 'button-modal-guide-tsp') {
@@ -169,9 +168,7 @@ document.addEventListener('click', function(e) {
     }
 
     if (e.target && e.target.id === 'button-modal-recommendations-tsp') {
-        displayRecommendations('tsp', window.CONFIG.recommendations);
-        const badge = document.getElementById('badge-recommendations-tsp');
-        if (badge) badge.style.display = 'none';
+        displayRecommendations('tsp', window.CONFIG.tsp_recommendations);
     }
 
     // build edit modal on cell button click

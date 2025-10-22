@@ -257,7 +257,7 @@ def update_account(budget, header, month=None, prev_month=None, months=None, ini
     return None
 
 
-def add_recommendations(pay, tsp, months):
+def add_pay_recommendations(pay, months):
     recs = {}
 
     # SGLI minimum coverage recommendation
@@ -273,6 +273,67 @@ def add_recommendations(pay, tsp, months):
                 '<b>SGLI Coverage:</b> For month(s): 'f'{", ".join(sgli_months)}, you have no SGLI coverage. PayLES recommends having at least the minimum amount of SGLI coverage, which is a $3.50 monthly premium for $50,000. This also provides Traumatic Injury Protection Coverage (TSGLI). Learn more at <a href="https://www.insurance.va.gov/sgliSite/default.htm" target="_blank">VA SGLI</a>.'
             )
         }
+
+    # negative net pay recommendation
+    negative_net_pay_months = []
+    for month in months:
+        net_pay = next((row[month] for row in pay if row.get('header', '') == 'Net Pay'), 0)
+        if net_pay < 0:
+            negative_net_pay_months.append(month)
+    if negative_net_pay_months:
+        recs['negative_net_pay'] = {
+            'months': negative_net_pay_months,
+            'text': (
+                '<b>Negative Net Pay:</b> For month(s): 'f'{", ".join(negative_net_pay_months)}, you have a negative net pay. PayLES recommends recalculating parts of your pay to avoid a negative net pay as that can potentially incur debts and missed payments for deductions or allotments. Learn more about U.S. military debts at <a href="https://www.dfas.mil/debtandclaims/" target="_blank">DFAS Debts & Claims</a>.'
+            )
+        }
+
+    # state income tax recommendation
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+    home_of_record_row = next((row for row in pay if row.get('header', '') == "Home of Record"), None)
+    mha_row = next((row for row in pay if row.get('header', '') == "Military Housing Area"), None)
+
+    if home_of_record_row and mha_row:
+        taxed_states = {}
+        for month in months:
+            home_of_record = home_of_record_row.get(month)
+
+            if not home_of_record or home_of_record == "Not Found":
+                continue
+            hor_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
+
+            if hor_row.empty:
+                continue
+            income_taxed = hor_row['income_taxed'].values[0].lower()
+
+            if income_taxed in ("none", "exempt"):
+                continue
+            mha_code = mha_row.get(month)
+            mha_state = mha_code[:2] if mha_code and len(mha_code) >= 2 else ""
+
+            if income_taxed == "outside":
+                if mha_state == home_of_record:
+                    taxed_states.setdefault(home_of_record, []).append(month)
+            elif income_taxed == "full":
+                taxed_states.setdefault(home_of_record, []).append(month)
+
+        for hor, taxed_months in taxed_states.items():
+            if taxed_months:
+
+                longname_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == hor]
+                longname = longname_row['longname'].values[0] if not longname_row.empty else hor
+                recs[f'state_tax_{hor}'] = {
+                    'months': taxed_months,
+                    'text': (
+                        f'<b>State Income Tax:</b> For month(s): {", ".join(taxed_months)}, your home of record - {longname} - is taxing your military pay. PayLES recommends changing your home of record, if possible, to a state/territory which either has no state income tax, fully exempts military income, or does not tax military income when stationed outside of the home of record. View the <a href="/static/graphics/military_income_state_taxed_map.png" target="_blank">Military Income State Taxed Map</a>, and learn more at <a href="https://www.military.com/money/personal-finance/state-tax-information.html" target="_blank">Military State Tax Info</a>.'
+                    )
+                }
+
+    return [rec['text'] for rec in recs.values()]
+
+
+def add_tsp_recommendations(tsp, months):
+    recs = {}
 
     # TSP contribution limit recommendation
     #tsp_contribution_limit = flask_app.config['TSP_ELECTIVE_LIMIT']
@@ -322,20 +383,6 @@ def add_recommendations(pay, tsp, months):
     #        )
     #    }
 
-    # negative net pay recommendation
-    negative_net_pay_months = []
-    for month in months:
-        net_pay = next((row[month] for row in pay if row.get('header', '') == 'Net Pay'), 0)
-        if net_pay < 0:
-            negative_net_pay_months.append(month)
-    if negative_net_pay_months:
-        recs['negative_net_pay'] = {
-            'months': negative_net_pay_months,
-            'text': (
-                '<b>Negative Net Pay:</b> For month(s): 'f'{", ".join(negative_net_pay_months)}, you have a negative net pay. PayLES recommends recalculating parts of your pay to avoid a negative net pay as that can potentially incur debts and missed payments for deductions or allotments. Learn more about U.S. military debts at <a href="https://www.dfas.mil/debtandclaims/" target="_blank">DFAS Debts & Claims</a>.'
-            )
-        }
-
     # TSP matching recommendation
     #months_in_service = None
     #for row in pay:
@@ -358,47 +405,5 @@ def add_recommendations(pay, tsp, months):
     #            '<b>TSP Matching:</b> For month(s): 'f'{", ".join(tsp_matching_months)}, you are fully vested in the TSP however are not taking full advantage of the 1%-4% agency matching for TSP contributions. PayLES recommends to have the combined total of your Traditional TSP base rate and Roth TSP base rate to be at least 5% to get the highest agency matching rate. Your current combined rate is {trad_rate + roth_rate}%. Learn more at <a href="https://www.tsp.gov/making-contributions/contribution-types/" target="_blank">TSP Contribution Types</a>.'
     #        )
     #    }
-
-
-    # state income tax recommendation
-    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
-    home_of_record_row = next((row for row in pay if row.get('header', '') == "Home of Record"), None)
-    mha_row = next((row for row in pay if row.get('header', '') == "Military Housing Area"), None)
-
-    if home_of_record_row and mha_row:
-        taxed_states = {}
-        for month in months:
-            home_of_record = home_of_record_row.get(month)
-
-            if not home_of_record or home_of_record == "Not Found":
-                continue
-            hor_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
-
-            if hor_row.empty:
-                continue
-            income_taxed = hor_row['income_taxed'].values[0].lower()
-
-            if income_taxed in ("none", "exempt"):
-                continue
-            mha_code = mha_row.get(month)
-            mha_state = mha_code[:2] if mha_code and len(mha_code) >= 2 else ""
-
-            if income_taxed == "outside":
-                if mha_state == home_of_record:
-                    taxed_states.setdefault(home_of_record, []).append(month)
-            elif income_taxed == "full":
-                taxed_states.setdefault(home_of_record, []).append(month)
-
-        for hor, taxed_months in taxed_states.items():
-            if taxed_months:
-
-                longname_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == hor]
-                longname = longname_row['longname'].values[0] if not longname_row.empty else hor
-                recs[f'state_tax_{hor}'] = {
-                    'months': taxed_months,
-                    'text': (
-                        f'<b>State Income Tax:</b> For month(s): {", ".join(taxed_months)}, your home of record - {longname} - is taxing your military pay. PayLES recommends changing your home of record, if possible, to a state/territory which either has no state income tax, fully exempts military income, or does not tax military income when stationed outside of the home of record. View the <a href="/static/graphics/military_income_state_taxed_map.png" target="_blank">Military Income State Taxed Map</a>, and learn more at <a href="https://www.military.com/money/personal-finance/state-tax-information.html" target="_blank">Military State Tax Info</a>.'
-                    )
-                }
 
     return [rec['text'] for rec in recs.values()]
