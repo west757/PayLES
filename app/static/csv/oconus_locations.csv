@@ -1,0 +1,654 @@
+country,locality,code,cola_index
+Afghanistan,Afghanistan,AF999,None
+Alaska,Anchorage (Incl Eagle River),AK005,132
+Alaska,Barrow,AK013,140
+Alaska,Bethel,AK017,148
+Alaska,Clear AFS,AK020,136
+Alaska,College,AK021,134
+Alaska,Cordova,AK025,148
+Alaska,Delta Junction (Incl Ft. Greely),AK029,136
+Alaska,Eielson AFB,AK040,134
+Alaska,Fairbanks,AK049,134
+Alaska,Homer (incl Anchor Point),AK073,140
+Alaska,Juneau,AK077,138
+Alaska,Kenai (Incl Soldotna),AK081,140
+Alaska,Ketchikan,AK085,134
+Alaska,King Salmon (Incl Bristol Bay Borough),AK309,140
+Alaska,Kodiak,AK089,134
+Alaska,Nome,AK101,140
+Alaska,Petersburg,AK113,140
+Alaska,Seward,AK133,144
+Alaska,Sitka-Mt. Edgecombe,AK145,142
+Alaska,Spruce Cape,AK153,132
+Alaska,Tok,AK162,136
+Alaska,Unalaska,AK163,132
+Alaska,Valdez,AK161,138
+Alaska,Wainwright,AK165,140
+Alaska,Wasilla,AK168,132
+Alaska,Other,AK177,140
+Albania,Albania,AL999,132
+Algeria,Algeria,DZ999,112
+American Samoa,American Samoa,AS001,116
+Angola,Angola,AO999,134
+Antigua and Barbuda,Antigua and Barbuda,AG001,120
+Argentina,Buenos Aires,AR012,132
+Argentina,Other,AR999,132
+Armenia,Armenia,AM999,122
+Australia,Adelaide,AU023,142
+Australia,Alice Springs,AU001,128
+Australia,Brisbane,AU039,132
+Australia,Canberra,AU005,132
+Australia,Darwin,AU037,132
+Australia,Edinburgh,AU051,142
+Australia,Enoggera Barracks,AU053,132
+Australia,Exmouth (incl Harold E. Holt NAVCOMMSTA),AU009,132
+Australia,Fremantle,AU052,134
+Australia,Glenbrook,AU022,132
+Australia,Learmonth,AU010,132
+Australia,Melbourne,AU011,132
+Australia,Narrabri,AU027,132
+Australia,Newcastle,AU035,132
+Australia,Nowra (incl Jervis Bay),AU013,140
+Australia,Perth,AU025,134
+Australia,Queenscliff,AU015,132
+Australia,RAAF Amberley,AU030,132
+Australia,RAAF Tindal,AU100,132
+Australia,RAAF Williamtown,AU060,132
+Australia,Richmond,AU017,132
+Australia,Sydney,AU019,132
+Australia,Other New South Wales (Non-ADF Housing),AU199,132
+Australia,Other Queensland (Non-ADF Housing),AU299,132
+Australia,Other Victoria (Non-ADF Housing),AU399,132
+Australia,Other Western Australia (Non-ADF Housing),AU499,132
+Australia,Other (ADF Housing),AU099,132
+Australia,Other (Non-ADF Housing),AU999,132
+Austria,Innsbruck,AT007,140
+Austria,Salzburg,AT001,140
+Austria,Vienna,AT005,140
+Austria,Other,AT999,140
+Azerbaijan,Azerbaijan,AZ999,138
+"Bahamas, The",Andros Island,BS003,122
+"Bahamas, The",Nassau,BS001,158
+"Bahamas, The",Other,BS999,122
+Bahrain,Bahrain,BH001,128
+Bangladesh,Bangladesh,BD999,110
+Barbados,Barbados,BB001,140
+Belarus,Belarus,BY999,None
+Belgium,Antwerp,BE055,150
+Belgium,Brabant Prov (incl Brussels),BE015,150
+Belgium,Florennes,BE018,150
+Belgium,Hainaut Prov (incl Chievres and SHAPE),BE019,132
+Belgium,Province of Limburg (Kleine Brogel),BE040,132
+Belgium,SHAPE Village Ministry of Finance Housing,BE030,132
+Belgium,Zeebrugge (incl Oostende),BE002,150
+Belgium,Other,BE999,150
+Belize,Belize,BZ001,136
+Benin,Benin,BJ999,116
+Bermuda,Bermuda,BM001,162
+Bolivia,La Paz,BO001,110
+Bolivia,Santa Cruz,BO555,110
+Bolivia,Other,BO999,110
+Bosnia and Herzegovina,Bosnia and Herzegovina,BA999,122
+Botswana,Botswana,BW999,None
+Brazil,Brasilia,BR001,106
+Brazil,Rio de Janeiro (incl Duque de Caxias),BR005,106
+Brazil,Sao Paulo,BR015,108
+Brazil,Other,BR999,None
+Brunei,Brunei,BN999,124
+Bulgaria,Bulgaria,BG999,116
+Burkina Faso,Burkina Faso,BF999,140
+Burma,Burma,MM999,108
+Burundi,Burundi,BI999,122
+Cabo Verde,Cabo Verde,CV999,106
+Cambodia,Cambodia,KH999,110
+Cameroon,Cameroon,CM999,122
+Canada,Argentia,CA003,126
+Canada,Calgary,CA091,130
+Canada,Cold Lake,CA009,118
+Canada,Comox (Incl Nanoose),CA013,134
+Canada,Gagetown,CA044,126
+Canada,Greenwood,CA025,126
+Canada,Halifax/Dartmouth/Shearwater,CA029,126
+Canada,Kingston,CA033,128
+Canada,London,CA036,128
+Canada,Masset,CA037,132
+Canada,Montreal,CA089,128
+Canada,North Bay,CA045,120
+Canada,Ottawa,CA053,128
+Canada,St. Hubert,CA061,126
+Canada,Toronto,CA069,130
+Canada,Trenton,CA073,128
+Canada,Vancouver (BC),CA076,134
+Canada,Victoria (incl Abbottsford and Esquimalt),CA077,132
+Canada,Winnipeg,CA081,118
+Canada,Other,CA999,128
+Cayman Islands,Cayman Islands,KY999,130
+Central African Republic,Central African Republic,CF999,142
+Chad,Chad,TD999,130
+Chile,Iquique,CL005,112
+Chile,Santiago,CL001,112
+Chile,Greater Valparaiso Area,CL004,112
+Chile,Other,CL999,112
+China,Beijing,CN005,138
+China,Shanghai,CN010,136
+China,Other,CN999,106
+Colombia,Bogota,CO001,124
+Colombia,Cartagena,CO003,124
+Colombia,Covenas,CO004,124
+Colombia,Other,CO999,124
+"Congo, Republic of the","Congo, Republic of the",CG999,134
+"Congo, Democratic Republic of the","Congo, Democratic Republic of the",CD999,136
+Costa Rica,San Jose,CR001,134
+Costa Rica,Other,CR999,134
+Cote D'Ivoire,Cote D'Ivoire,CI999,132
+Croatia,Croatia,HR999,122
+Cuba,Havana,CU001,114
+Cuba,NS Guantanamo Bay,CU005,108
+Cuba,Other,CU999,108
+Curacao,Curacao,CW999,130
+Cyprus,Akrotiri,CY002,122
+Cyprus,Nicosia,CY001,126
+Cyprus,Other,CY999,122
+Czech Republic,Prague,CZ001,118
+Czech Republic,Brno,CZ002,170
+Czech Republic,Other,CZ999,126
+Denmark,Aalborg,DK001,166
+Denmark,Copenhagen (Island of Zealand),DK003,166
+Denmark,Karup (incl Baltap and Viborg),DK004,166
+Denmark,Other,DK025,166
+Diego Garcia,Diego Garcia,DG999,122
+Djibouti,Djibouti,DJ999,134
+Dominica,Dominica,DM001,122
+Dominican Republic,Santo Domingo,DO001,104
+Dominican Republic,Other,DO999,104
+Ecuador,Quito,EC005,120
+Ecuador,Other,EC999,120
+Egypt,Abu-Hamed,EG007,None
+Egypt,Alexandria,EG002,None
+Egypt,"Beni Suef (incl Sakara AB, Jiyanklis)",EG003,None
+Egypt,Cairo,EG001,None
+Egypt,Ismailia,EG006,None
+Egypt,Other,EG999,None
+El Salvador,San Salvador,SV555,108
+El Salvador,Other,SV999,108
+Equatorial Guinea,Equatorial Guinea,GQ999,128
+Eritrea,Eritrea,ER999,128
+Estonia,Estonia,EE999,132
+Ethiopia,Ethiopia,ET999,128
+Faroe Islands,Faroe Islands,FO999,182
+Fiji,Suva,FJ001,110
+Fiji,Other,FJ999,110
+Finland,Finland,FI999,144
+France,Aix En Provence,FR015,146
+France,Draguignan,FR004,152
+France,Hyeres,FR025,152
+France,Lorient,FR100,142
+France,Le Luc,FR201,152
+France,Lyon,FR101,146
+France,Marseille,FR555,142
+France,Montpellier,FR009,152
+France,Orleans,FR102,138
+France,Paris (City of and Environs),FR011,152
+France,Toulon (incl St. Mandrier),FR037,142
+France,Toulouse,FR014,152
+France,Lille,FR016,142
+France,Other,FR999,142
+Gabon,Gabon,GA999,132
+Gambia,Gambia,GM998,108
+Georgia,Georgia,GE001,136
+Germany,Ansbach (B),DE228,134
+Germany,Augsburg (Incl Ingolstadt) (B),DE103,146
+Germany,Babenhausen (H),DE301,130
+Germany,Bamberg (B),DE229,122
+Germany,Baumholder (incl Boerfink) (RP),DE603,130
+Germany,Berlin,DE201,154
+Germany,Bonn (incl Koln/Bonn Airport) (NRW),DE501,146
+Germany,Borgholzhausen (NRW),DE503,130
+Germany,Bremerhaven (incl Bremen and Nordholtz),DE203,152
+Germany,Buedingen (incl Gelnhausen) (H),DE307,130
+Germany,"Cologne (incl Dellbrueck, Porz-Wahn) (NRW)",DE169,146
+Germany,Darmstadt (H),DE311,130
+Germany,Dexheim (incl Gonsenheim and Russelsheim) (RP),DE663,130
+Germany,Erding (B),DE165,146
+Germany,Erlensee (H),DE313,130
+Germany,Frankfurt am Main (Inc Rhein Main AB)(H),DE317,148
+Germany,Freiburg (BW),DE067,152
+Germany,Garmisch (B),DE121,128
+Germany,Geilenkirchen (NRW),DE531,146
+Germany,Giebelstadt (B),DE123,130
+Germany,Giessen (H),DE323,130
+Germany,Goettingen (LS),DE224,152
+Germany,Hamburg,DE205,154
+Germany,Hanau (H),DE329,130
+Germany,Hannover (incl Wunstorf) (LS),DE407,152
+Germany,Heidelberg (BW),DE019,130
+Germany,Hohenfels (B),DE230,122
+Germany,Jena (T),DE815,152
+Germany,Jever AB (LS),DE415,152
+Germany,"Kaiserslautern Military Community (Incl Bann, Einsidlerhof, Kaiserslautern, Landstuhl, Miesau,Pirmasens, Ramstein, Ruppertsweiler, Sembach and Zweibruchen) (RP)",DE700,132
+Germany,Kalkar (incl Uedem) (NRW),DE539,154
+Germany,Karlsruhe (incl Ettlingen) (BW),DE027,130
+Germany,Kiel (incl Eckernforde) (SH),DE221,152
+Germany,Kitzengen (incl Wuerzburg) (B),DE129,130
+Germany,Landsberg (B),DE223,146
+Germany,Leipzig (OS),DE157,152
+Germany,Mannheim (incl Sandhofen) (BW),DE039,130
+Germany,"Munchengladbach (incl Grefrath, Rheindahlen, and Herongen) (NRW)",DE549,146
+Germany,Munich (Incl Furstenfeldbruck and Oberpfaffenhofen) (B),DE133,160
+Germany,Nurnberg (B),DE137,130
+Germany,Oberammergau non-MOD (B),DE139,128
+Germany,Oberammergau MOD (B),DE219,128
+Germany,Pfullendorf (incl Grossengstingen) (BW),DE721,160
+Germany,Potsdam,DE816,154
+Germany,Schweinfurt (B),DE227,130
+Germany,Spangdahlem (RP),DE741,126
+Germany,Stuttgart Military Community (BW),DE055,136
+Germany,Tubingen (BW),DE059,130
+Germany,Ulm (incl Neu Ulm) (BW),DE061,130
+Germany,Vilseck/Grafenwoehr (B),DE231,122
+Germany,Wiesbaden (incl Bad Kreuznach and Wackernheim) (H),DE355,140
+Germany,Wilhelmshaven (LS),DE469,152
+Germany,Other Baden-Wuertemberg,DE063,130
+Germany,Other Bavaria,DE153,130
+Germany,Other Hesse,DE359,130
+Germany,Other Lower Saxony,DE425,152
+Germany,Other Mecklenburg-Vorpommern,DE369,152
+Germany,Other North Rhine-Westphalia,DE573,152
+Germany,Other Rhineland-Palatinate,DE655,146
+Germany,Other Saarland,DE207,130
+Germany,Other Saxony,DE939,152
+Germany,Other Schleswig Holstein,DE703,152
+Germany,All Other Landstates,DE999,130
+Ghana,Ghana,GH999,128
+Gibraltar,Gibraltar (MOD Housing),GI001,142
+Gibraltar,Gibraltar (Non-MOD Housing),GI002,142
+Greece,Araxos,GR007,130
+Greece,"Attica Dept (Incl Athens, Elefsis, Hellenikon AB, & Mt. Pateras)",GR003,136
+Greece,Larissa (incl Tirnavos),GR011,130
+Greece,Souda Bay,GR001,130
+Greece,Tanagra,GR015,136
+Greece,Thessaloniki,GR017,136
+Greece,Other,GR999,130
+Greenland,Pituffik SB,GL001,106
+Greenland,Nuuk,GL002,106
+Greenland,Other,GL999,106
+Grenada,Grenada,GD999,126
+Guam,Guam,GU001,122
+Guatemala,Guatemala City,GT001,114
+Guatemala,Other,GT999,114
+Guinea,Guinea,GN999,136
+Guyana,Guyana,GY999,116
+Haiti,Port au Prince,HT001,120
+Haiti,Other,HT999,120
+Hawaii,Hawaii Island,HI001,132
+Hawaii,Kauai,HI003,126
+Hawaii,Maui,HI005,124
+Hawaii,Molokai,HI007,124
+Hawaii,Oahu,HI009,120
+Hawaii,Other Islands,HI999,None
+Honduras,Tegucigalpa,HN001,108
+Honduras,Other,HN999,108
+Hong Kong,Hong Kong,HK001,156
+Hungary,Budapest,HU001,122
+Hungary,Papa AB,HU002,126
+Hungary,Other,HU999,126
+Iceland,Reykjavik,IS005,174
+Iceland,Other,IS999,174
+India,Chennai,IN555,102
+India,Hyderabad,IN556,None
+India,Kolkata,IN557,104
+India,Mumbai,IN050,None
+India,New Delhi,IN001,104
+India,Other,IN999,104
+Indonesia,Jakarta,ID001,108
+Indonesia,Other,ID999,110
+Iran,Iran,IR999,None
+Iraq,Iraq,IQ999,None
+Ireland,Dublin,IE001,144
+Ireland,Other,IE999,144
+Israel,Tel Aviv,IL001,150
+Israel,Jerusalem,IL002,150
+Israel,Other,IL999,150
+Italy,Aviano,IT001,126
+Italy,Bologna,IT005,126
+Italy,Bolzano,IT006,150
+Italy,Brindisi (incl San Vito Dei Normanni),IT007,126
+Italy,Florence,IT022,156
+Italy,Gaeta,IT025,150
+Italy,Ghedi,IT027,126
+Italy,Istrana AB,IT028,122
+Italy,La Maddalena,IT029,148
+Italy,La Spezia (incl Varignano),IT031,140
+Italy,Latina,IT033,126
+Italy,Livorno (incl Camp Darby),IT035,134
+Italy,Milan,IT038,156
+Italy,Naples,IT055,134
+Italy,Parma,IT054,126
+Italy,Cameri AB,IT092,156
+Italy,Pisa,IT059,134
+Italy,Poggio Renatico,IT062,126
+Italy,Rome (incl Ciampino Airport),IT063,156
+Italy,Sanremo,IT090,122
+Italy,Siena,IT064,126
+Italy,Sigonella,IT067,128
+Italy,Solbiate,IT066,156
+Italy,Taranto (incl Grottaglie),IT068,126
+Italy,Trapani,IT070,126
+Italy,Udine,IT072,126
+Italy,Verona,IT071,116
+Italy,Vicenza (incl Longare),IT073,122
+Italy,Other,IT100,150
+Jamaica,Kingston,JM001,122
+Jamaica,Other,JM999,122
+Japan,Atsugi (incl Totsuka) (KA),JP041,108
+Japan,Camp Fuji (SH),JP067,106
+Japan,Camp Zama (KA),JP045,108
+Japan,Eta Jima Island (incl Akizuki) (HI),JP003,106
+Japan,Gifu (GI),JP009,118
+Japan,Hamamatsu (SH),JP011,118
+Japan,Hyakuri AB (IB),JP015,118
+Japan,Iwakuni (YA),JP019,106
+Japan,Kamiseya (KA),JP049,108
+Japan,Kawasaki (KA),JP016,114
+Japan,Kichijoji (KA),JP073,110
+Japan,Komaki (AI),JP022,118
+Japan,Kumamoto,JP018,116
+Japan,Kure (HI),JP021,106
+Japan,Kyoto (KY),JP072,118
+Japan,Misawa (AO),JP023,102
+Japan,Nyutabaru AB (MI),JP029,118
+Japan,Okinawa (OK),JP027,106
+Japan,Osaka-Kobe (OS & HY),JP031,118
+Japan,Sapporo (HK),JP069,118
+Japan,Sasebo (NA),JP035,112
+Japan,Sendai (MG),JP052,116
+Japan,Shariki (AO),JP106,106
+Japan,Tokyo (TO),JP053,116
+Japan,Yokohama (KA),JP057,114
+Japan,Yokosuka (KA),JP061,114
+Japan,Yokota (TO),JP065,110
+Japan,Other Chiba Pref,JP007,110
+Japan,Other Kanagawa Pref,JP998,110
+Japan,Other Kyoto Pref,JP034,122
+Japan,Other Saitama Pref,JP033,110
+Japan,Other Tokyo Pref,JP077,110
+Japan,Other Locations,JP080,106
+Jordan,Amman,JO003,134
+Jordan,Other,JO999,134
+Kazakhstan,Astana,KZ001,104
+Kazakhstan,Other,KZ999,110
+Kenya,Kisumu,KE011,108
+Kenya,Mombasa,KE001,108
+Kenya,Nairobi,KE003,108
+Kenya,Other,KE999,108
+"Korea, South",Camp Yongin,KR078,114
+"Korea, South","United Changwon City (Chinhae, Changwon, Masan)",KR005,108
+"Korea, South",Chunchon,KR007,114
+"Korea, South","Daegu/Waegwan (Incl Camp Carroll, Camp Henry, And Camp Walker)",KR045,112
+"Korea, South",Dongducheon (incl. Camp Casey),KR177,104
+"Korea, South",Inchon,KR010,114
+"Korea, South",Kimhae,KR015,120
+"Korea, South",Kunsan AB,KR070,106
+"Korea, South",Kwanju AB,KR017,106
+"Korea, South",Munsan,KR178,106
+"Korea, South",Osan AB (incl Camp Humphreys),KR025,114
+"Korea, South",Pusan,KR030,120
+"Korea, South",Seoul (K-16Fld/C.Mercer/Site Tango & 33),KR140,110
+"Korea, South",Suwon,KR050,114
+"Korea, South",Taejon,KR047,106
+"Korea, South",Uijungbu,KR176,112
+"Korea, South",USFK Personnel Entitled Seoul Allowances,KR175,110
+"Korea, South",Weonju,KR065,106
+"Korea, South",Other,KR999,112
+Kosovo,Kosovo,XK999,112
+Kuwait,Kuwait,KW999,120
+Kyrgyzstan,Kyrgyzstan,KG999,None
+Laos,Laos,LA999,None
+Latvia,Latvia,LV999,132
+Lebanon,Beirut,LB001,144
+Lebanon,Other,LB999,None
+Lesotho,Lesotho,LS999,None
+Liberia,Liberia,LR999,132
+Libya,Libya,LY999,112
+Lithuania,Lithuania,LT999,120
+Luxembourg,Luxembourg,LU001,140
+North Macedonia,North Macedonia,MK999,112
+Madagascar,Madagascar,MG999,114
+Malawi,Malawi,MW999,122
+Malaysia,Kuala Lumpur,MY001,None
+Malaysia,Other,MY999,None
+Mali,Mali,ML999,130
+Malta,Malta,MT999,122
+Marshall Islands,Majuro,MH003,132
+Marshall Islands,Other,MH999,114
+Mauritania,Mauritania,MR999,122
+Mauritius,Mauritius,MU999,126
+Mexico,Ciudad Juarez,MX555,122
+Mexico,Guadalajara,MX005,122
+Mexico,Hermosillo,MX561,122
+Mexico,Matamoros,MX556,122
+Mexico,Merida,MX557,122
+Mexico,Mexico City,MX455,122
+Mexico,Monterrey,MX500,122
+Mexico,Nogales,MX558,120
+Mexico,Nuevo Laredo,MX559,122
+Mexico,Tijuana,MX560,122
+Mexico,Veracruz,MX015,122
+Mexico,Other,MX999,122
+"Micronesia, Federated States of",Kosrae,FM009,122
+"Micronesia, Federated States of",Moen,FM001,122
+"Micronesia, Federated States of",Pohnpei,FM003,122
+"Micronesia, Federated States of",Truk (Chuuk),FM005,122
+"Micronesia, Federated States of",Yap,FM007,108
+"Micronesia, Federated States of",Other,FM999,None
+Moldova,Moldova,MD999,104
+Mongolia,Mongolia,MN999,120
+Montenegro,Montenegro,ME999,120
+Morocco,Casablanca,MA555,124
+Morocco,Other,MA999,124
+Mozambique,Mozambique,MZ999,112
+Namibia,Namibia,NA999,None
+Nepal,Nepal,NP999,106
+Netherlands,Almelo,NL041,150
+Netherlands,Amsterdam,NL033,150
+Netherlands,Arnhem,NL065,150
+Netherlands,Coevorden,NL035,150
+Netherlands,Delft,NL050,138
+Netherlands,Den Helder,NL001,150
+Netherlands,Doorn,NL003,150
+Netherlands,Eindhoven,NL007,150
+Netherlands,Ermelo,NL100,150
+Netherlands,"Hague, The",NL009,138
+Netherlands,Province of Friesland (incl Leeuwarden),NL070,150
+Netherlands,Province of Limburg,NL015,134
+Netherlands,Rotterdam,NL017,150
+Netherlands,Soesterberg AB,NL021,150
+Netherlands,Utrecht,NL046,150
+Netherlands,Valkenburg (Incl Leiden),NL025,138
+Netherlands,Volkel,NL027,150
+Netherlands,Other,NL999,150
+New Zealand,Christchurch,NZ003,130
+New Zealand,Wellington,NZ006,130
+New Zealand,Other,NZ999,122
+Nicaragua,Nicaragua,NI999,120
+Niger,Niger,NE999,130
+Nigeria,Abuja,NG001,130
+Nigeria,Lagos,NG500,140
+Nigeria,Other,NG999,130
+Northern Mariana Islands,Northern Mariana Islands,MP001,122
+Norway,Bergen,NO016,154
+Norway,Bodo,NO007,154
+Norway,Oslo (incl Kolsas and Osteraas),NO001,154
+Norway,Rygge,NO005,154
+Norway,Stavanger (incl Sola AS),NO021,150
+Norway,Trondheim,NO025,154
+Norway,Other,NO003,150
+Oman,Oman,OM999,124
+Pakistan,Islamabad,PK005,110
+Pakistan,Peshawar,PK001,106
+Pakistan,Other,PK999,110
+Palau,Palau,PW017,118
+Panama,Canal Area/Panama City,PA004,112
+Panama,Other,PA999,112
+Papua New Guinea,Port Moresby,PG555,146
+Papua New Guinea,Other,PG999,146
+Paraguay,Asuncion,PY003,122
+Paraguay,Other,PY999,122
+Peru,Lima,PE005,116
+Peru,Other,PE999,116
+Philippines,Bulacan,PH003,108
+Philippines,Metropolitan Manila (Incl Rizal Prov)(For Members without Rental Advances),PH005,108
+Philippines,Metropolitan Manila (Incl Rizal Prov)(For Members with Rental Advances),PH701,108
+Philippines,Other,PH999,None
+Poland,Elblag,PL004,114
+Poland,Krakow,PL005,114
+Poland,Lask Air Base,PL002,116
+Poland,Poznan,PL010,114
+Poland,Szczecin,PL015,114
+Poland,Warsaw,PL001,114
+Poland,Other,PL999,114
+Portugal,Azores,PT015,110
+Portugal,"Lisbon (Includes Alverca, Cascais, Estoril & Oeiras)",PT002,142
+Portugal,Other,PT999,140
+Puerto Rico,Aguadilla (incl CG AS Borinquen),PR001,118
+Puerto Rico,Arecibo,PR005,118
+Puerto Rico,Caguas,PR015,118
+Puerto Rico,Cayey,PR025,118
+Puerto Rico,Fajardo,PR030,118
+Puerto Rico,Guayama,PR040,118
+Puerto Rico,Guaynabo,PR045,124
+Puerto Rico,Humacao,PR050,118
+Puerto Rico,Isabela,PR053,118
+Puerto Rico,Luquillo,PR055,118
+Puerto Rico,Mayaguez,PR060,118
+Puerto Rico,Ponce (Incl Ft. Allen And Camp Santiago),PR065,118
+Puerto Rico,Roosevelt Roads,PR070,118
+Puerto Rico,Sabana Seca,PR075,124
+Puerto Rico,"San Juan (incl Bayamon, Carolina, and Fort Buchanan)",PR080,124
+Puerto Rico,Vega Baja,PR085,118
+Puerto Rico,Other,PR999,118
+Qatar,Qatar,QA999,132
+Romania,Romania,RO999,108
+Russia,Moscow,RU001,152
+Russia,Saint Petersburg,RU004,148
+Russia,Yekaterinburg,RU555,142
+Russia,Other,RU999,142
+Rwanda,Rwanda,RW999,110
+Saint Helena (incl Ascension Island),Saint Helena (incl Ascension Island),SH999,118
+Saint Kitts and Nevis,Saint Kitts and Nevis,KN999,116
+Saint Lucia,Saint Lucia,LC001,132
+Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,VC999,120
+Samoa,Samoa,WS999,128
+Saudi Arabia,Jeddah,SA003,132
+Saudi Arabia,Other,SA999,126
+Senegal,Senegal,SN999,128
+Serbia,Belgrade,RS060,126
+Serbia,Other,RS999,126
+Seychelles,Seychelles,SC999,158
+Sierra Leone,Sierra Leone,SL999,126
+Singapore,Singapore,SG001,152
+Slovakia,Slovakia,SK999,120
+Slovenia,Slovenia,SI999,138
+Somalia,Somalia,SO999,122
+South Africa,Cape Town,ZA002,102
+South Africa,Johannesburg,ZA005,102
+South Africa,Pretoria,ZA100,102
+South Africa,Other,ZA999,102
+South Sudan,South Sudan,SS999,124
+Spain,Albacete,ES016,126
+Spain,Barcelona,ES008,126
+Spain,Cadiz,ES005,138
+Spain,Canary Islands,ES004,None
+Spain,El Ferrol,ES007,126
+Spain,Estartit,ES009,126
+Spain,Granada,ES014,140
+Spain,Madrid,ES017,126
+Spain,Moron AB,ES018,140
+Spain,Rota,ES019,138
+Spain,San Javier,ES022,126
+Spain,Seville,ES012,140
+Spain,Sonseca,ES023,126
+Spain,Valencia,ES060,144
+Spain,Zaragoza,ES027,126
+Spain,Other,ES999,140
+Sri Lanka,Sri Lanka,LK999,116
+Sudan,Khartoum,SD001,128
+Sudan,Other,SD999,128
+Suriname,Suriname,SR999,128
+Eswatini,Eswatini,SZ999,None
+Sweden,Malmo,SE003,132
+Sweden,Stockholm,SE001,132
+Sweden,Other,SE999,132
+Switzerland,Bern,CH001,190
+Switzerland,Geneva,CH005,178
+Switzerland,Zurich,CH009,178
+Switzerland,Other,CH999,178
+Syria,Syria,SY999,120
+Taiwan,Taiwan,TW999,136
+Tajikistan,Tajikistan,TJ999,104
+Tanzania,Tanzania,TZ999,114
+Thailand,Bangkok (Members Without Rental Advances),TH001,150
+Thailand,Bangkok (Members With Rental Advances),TH075,150
+Thailand,Chiang Mai,TH006,124
+Thailand,Other,TH011,104
+Timor-Leste,Timor-Leste,TL999,116
+Togo,Togo,TG999,132
+Trinidad and Tobago,Port of Spain,TT001,126
+Trinidad and Tobago,Other,TT999,126
+Tunisia,Tunisia,TN999,None
+Turkey,Adana (incl Incirlik AB),TR001,None
+Turkey,Ankara,TR003,106
+Turkey,Istanbul,TR005,118
+Turkey,Izmir,TR007,114
+Turkey,Other,TR999,114
+Turkmenistan,Turkmenistan,TM999,132
+Turks and Caicos Islands,Turks and Caicos Islands,TC999,154
+Uganda,Uganda,UG999,106
+Ukraine,Kiev,UA555,124
+Ukraine,Other,UA999,124
+United Arab Emirates,Abu Dhabi,AE001,130
+United Arab Emirates,Dubai,AE014,134
+United Arab Emirates,Fujairah,AE024,130
+United Arab Emirates,Other,AE999,130
+United Kingdom,Alconbury (E),GB001,128
+United Kingdom,Aldermaston (E),GB011,128
+United Kingdom,Bath (E),GB058,140
+United Kingdom,Cambridge (E),GB153,122
+United Kingdom,"Cheltenham (Incl Bromsgrove, Gloucester, Imjin Barracks And Innsworth) (E)",GB179,130
+United Kingdom,Croughton (E),GB218,120
+United Kingdom,Fairford (E),GB251,126
+United Kingdom,Harrogate/Menwith Hill (E),GB313,130
+United Kingdom,Helston (E),GB318,128
+United Kingdom,High Wycombe/Daws Hill (E),GB319,136
+United Kingdom,Lakenheath/Mildenhall (E),GB352,122
+United Kingdom,"London, Central (E)",GB380,142
+United Kingdom,Oxford (E),GB490,120
+United Kingdom,Plymouth (E),GB496,128
+United Kingdom,Portland (E),GB508,128
+United Kingdom,Portsmouth (E),GB514,128
+United Kingdom,RAF Digby (E),GB865,128
+United Kingdom,RAF Waddington (E),GB597,128
+United Kingdom,Rochester (E),GB517,128
+United Kingdom,Salisbury MOD Housing (E),GB518,130
+United Kingdom,Salisbury Non-MOD Housing (E),GB521,130
+United Kingdom,St Mawgan Non-MOD Housing (E),GB559,118
+United Kingdom,St Mawgan MOD Housing (E),GB497,118
+United Kingdom,Welford (E),GB612,128
+United Kingdom,Yeovilton (E),GB676,128
+United Kingdom,Other England,GB883,128
+United Kingdom,Scotland,GB884,130
+United Kingdom,Wales,GB885,130
+Uruguay,Montevideo,UY003,122
+Uruguay,Other,UY999,122
+Uzbekistan,Uzbekistan,UZ999,126
+Venezuela,Caracas,VE001,134
+Venezuela,Other,VE999,None
+Vietnam,Ho Chi Minh City,VN555,None
+Vietnam,Other,VN999,None
+Virgin Islands,St. Croix,VI001,128
+Virgin Islands,St. Thomas,VI005,138
+Virgin Islands,St. John,VI999,128
+Wake Island,Wake Island,UM001,116
+Yemen,Yemen,YE999,None
+Zambia,Zambia,ZM999,116
+Zimbabwe,Zimbabwe,ZW999,158

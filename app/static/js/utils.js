@@ -128,7 +128,7 @@ function createStandardInput(header, field, value = '') {
         input = document.createElement('select');
         let options = [];
 
-        if (header === 'Year') {
+        if (header === 'Years') {
             const now = new Date();
             const startYear = now.getFullYear();
             const endYear = startYear - 50;
@@ -150,22 +150,25 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Component') {
-            options = window.CONFIG.COMPONENTS_OPTIONS;
+            options = window.CONFIG.COMPONENTS;
             input.classList.add('input-long');
         }
 
         else if (header === 'Grade') {
-            options = window.CONFIG.GRADES_OPTIONS;
+            options = window.CONFIG.GRADES;
             input.classList.add('input-short');
         }
 
-        else if (header === 'OCONUS Locality Code') {
-            options = [];
+        else if (header === 'OCONUS Country') {
+            const uniqueCountries = [
+                ...new Set(window.CONFIG.OCONUS_LOCATIONS.map(loc => loc.country))
+            ];
+            options = uniqueCountries;
             input.classList.add('input-long');
         }
 
         else if (header === 'Home of Record') {
-            options = window.CONFIG.HOME_OF_RECORDS_OPTIONS;
+            options = window.CONFIG.HOME_OF_RECORDS;
             input.classList.add('input-long');
         }
 
@@ -545,4 +548,49 @@ function addModalDynamicInputLine(labelText, input) {
     inputLine.appendChild(label);
     inputLine.appendChild(input);
     return inputLine;
+}
+
+
+
+
+/**
+ * Sets up a locality dropdown that is filtered by the selected country.
+ * @param {string} countryDropdownId - The id of the country <select> element.
+ * @param {string} localityContainerId - The id of the container where the locality dropdown will be rendered.
+ */
+function setOCONUSLocalityDropdown(countryDropdownId, localityContainerId) {
+    const countrySelect = document.getElementById(countryDropdownId);
+    const localityContainer = document.getElementById(localityContainerId);
+
+    // Hide locality dropdown initially
+    localityContainer.style.display = 'none';
+
+    countrySelect.addEventListener('change', function () {
+        const selectedCountry = countrySelect.value;
+        // Filter localities for selected country
+        const localities = window.CONFIG.OCONUS_LOCATIONS
+            .filter(loc => loc.country === selectedCountry)
+            .map(loc => loc.locality);
+
+        // Clear and (re)create locality dropdown
+        localityContainer.innerHTML = '';
+        if (localities.length > 0) {
+            let localityWrapper = document.createElement('div');
+            let localitySelect = document.createElement('select');
+            localitySelect.id = localityContainerId.replace('-location', '-id');
+            localitySelect.name = 'OCONUS Locality';
+            localitySelect.classList.add('input-long');
+            localities.forEach(loc => {
+                let o = document.createElement('option');
+                o.value = loc;
+                o.textContent = loc;
+                localitySelect.appendChild(o);
+            });
+            localityWrapper.appendChild(localitySelect);
+            localityContainer.appendChild(localityWrapper);
+            localityContainer.style.display = '';
+        } else {
+            localityContainer.style.display = 'none';
+        }
+    });
 }

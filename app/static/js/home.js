@@ -5,6 +5,9 @@ function attachManualsListeners() {
         { location: 'manuals-branch-location', header: 'Branch', field: 'select' },
         { location: 'manuals-component-location', header: 'Component', field: 'select' },
         { location: 'manuals-grade-location', header: 'Grade', field: 'select' },
+        { location: 'manuals-zipcode-location', header: 'Zip Code', field: 'string' },
+        { location: 'manuals-oconus-country-location', header: 'OCONUS Country', field: 'select' },
+        { location: 'manuals-oconus-locality-location', header: 'OCONUS Locality', field: 'select' },
         { location: 'manuals-home-of-record-location', header: 'Home of Record', field: 'select' },
         { location: 'manuals-dependents-location', header: 'Dependents', field: 'select' },
         { location: 'manuals-federal-filing-status-location', header: 'Federal Filing Status', field: 'select' },
@@ -22,6 +25,8 @@ function attachManualsListeners() {
         location.innerHTML = '';
         location.appendChild(wrapper);
     });
+
+    setOCONUSLocalityDropdown('manuals-oconus-country', 'manuals-oconus-locality-location');
 }
 
 

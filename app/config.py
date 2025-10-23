@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pathlib import Path
+import numpy as np
 import pandas as pd
 import secrets
 
@@ -82,7 +83,7 @@ class Config:
         "AGR": "Active Guard Reserve",
         "NG": "National Guard",
         "RES": "Traditional Reservist",
-        "IRR": "Individual Ready Reserve",
+        #"IRR": "Individual Ready Reserve",
     }
 
     TAX_FILING_TYPES_DEDUCTIONS = {
@@ -250,6 +251,22 @@ class Config:
             'mha': str, 
             'mha_name': str, 
         }
+    )
+
+    OCONUS_LOCATIONS = pd.read_csv(CSV_FOLDER / "oconus_locations.csv",
+        dtype={
+            'country': str, 
+            'locality': str, 
+            'code': str,
+            'cola_index': str,
+        }
+    )
+    OCONUS_LOCATIONS['cola_index'] = (
+        OCONUS_LOCATIONS['cola_index']
+        .replace(['None', None, 'nan', np.nan], 0)
+        .astype(float)
+        .fillna(0)
+        .astype(int)
     )
 
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
