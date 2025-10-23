@@ -4,10 +4,16 @@ from flask import request, render_template, session, jsonify
 from app import csrf
 
 from app import flask_app
-from app import pay
-from app.pay import (
-    get_pay_variables,
-    compare_pay,
+from app.budgets import (
+    init_budgets,
+    add_months,
+    update_months,
+    remove_months,
+    insert_row,
+    remove_row,
+    update_account,
+    add_pay_recommendations,
+    add_tsp_recommendations,
 )
 from app.forms import (
     FormSingle,
@@ -19,16 +25,10 @@ from app.les import (
     validate_les_age,
     get_les_rect_overlay,
 )
-from app.budgets import (
-    init_budgets,
-    add_months,
-    update_months,
-    remove_months,
-    insert_row,
-    remove_row,
-    update_account,
-    add_pay_recommendations,
-    add_tsp_recommendations,
+from app.pay import (
+    get_pay_variables,
+    formatManuals,
+    compare_pay,
 )
 from app.tsp import (
     get_tsp_variables,
@@ -108,11 +108,10 @@ def route_single():
 
         headers = get_all_headers()
 
-        les_variables = get_pay_variables(les_text)
+        pay_variables = get_pay_variables(les_text)
         tsp_variables = get_tsp_variables(les_text)
-
-        pay, tsp = init_budgets(les_variables, tsp_variables, year, month, les_text=les_text)
-        pay_calc, tsp_calc = init_budgets(les_variables, tsp_variables, year, month)
+        pay, tsp = init_budgets(pay_variables, tsp_variables, year, month, les_text=les_text)
+        pay_calc, tsp_calc = init_budgets(pay_variables, tsp_variables, year, month)
 
         pay, tsp, months = add_months(pay, tsp, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
@@ -186,18 +185,18 @@ def route_joint():
         les_image2, les_text2 = process_les(les_pdf2)
         headers = get_all_headers()
 
-        month1, les_variables1 = get_pay_variables(les_text1)
+        month1, pay_variables1 = get_pay_variables(les_text1)
         tsp_variables1 = get_tsp_variables(les_text1)
 
-        month2, les_variables2 = get_pay_variables(les_text2)
+        month2, pay_variables2 = get_pay_variables(les_text2)
         tsp_variables2 = get_tsp_variables(les_text2)
 
         if month1 != month2:
             return jsonify({'message': "LES months do not match. In order to use joint LES upload, both months must be the same."}), 400
         month = month1
 
-        pay1, tsp1 = init_budgets(les_variables1, tsp_variables1, month, les_text=les_text1)
-        pay2, tsp2 = init_budgets(les_variables2, tsp_variables2, month, les_text=les_text2)
+        pay1, tsp1 = init_budgets(pay_variables1, tsp_variables1, month, les_text=les_text1)
+        pay2, tsp2 = init_budgets(pay_variables2, tsp_variables2, month, les_text=les_text2)
 
         pay1, tsp1, months = add_months(pay1, tsp1, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
         pay2, tsp2, months = add_months(pay2, tsp2, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
@@ -239,13 +238,36 @@ def route_joint():
 @csrf.exempt
 @flask_app.route('/route_manual', methods=['POST'])
 def route_manual():
+    year = flask_app.config['CURRENT_YEAR']
     month = flask_app.config['CURRENT_MONTH']
     headers = get_all_headers()
 
     manuals = request.form.to_dict()
-    variables = manuals
 
-    pay, tsp = init_budgets(variables, variables, month)
+    for key in list(manuals.keys()):
+        print(key, manuals[key])
+
+
+    #Months in Service: 34
+    #Branch: USAF
+    #Component: AD
+    #Grade: O2
+    #Zip Code: 84056
+    #OCONUS Locality Code: NOT FOUND
+    #Home of Record: SD
+    #Dependents: 0
+    #Federal Filing Status: Single
+    #State Filing Status: Single
+    #SGLI Coverage: $50,000
+    #Combat Zone: No
+    #Drills: 0
+
+    pay_variables = formatManuals(manuals, year, month)
+
+    for v in pay_variables:
+        print(f"{v}: {pay_variables[v]}")
+
+    pay, tsp = init_budgets(pay_variables, None, year, month)
     pay, tsp, months = add_months(pay, tsp, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
     session['pay'] = pay

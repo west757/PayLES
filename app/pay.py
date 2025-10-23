@@ -26,7 +26,7 @@ from app.utils import (
 
 
 def get_pay_variables(les_text):
-    les_variables = {}
+    pay_variables = {}
 
     try:
         pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
@@ -42,7 +42,7 @@ def get_pay_variables(les_text):
 
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining months in service from LES text"))
-    les_variables['Months in Service'] = months_in_service
+    pay_variables['Months in Service'] = months_in_service
 
     try:
         text = les_text.get('branch', None)
@@ -60,7 +60,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES branch: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining branch from LES text"))
-    les_variables['Branch'] = branch
+    pay_variables['Branch'] = branch
 
     try:
         text = les_text.get('tpc', None)
@@ -73,7 +73,7 @@ def get_pay_variables(les_text):
             #raise ValueError(f"Invalid LES grade: {grade}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining component from LES text"))
-    les_variables['Component'] = component
+    pay_variables['Component'] = component
 
     try:
         grade = les_text.get('grade', None)
@@ -81,7 +81,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES grade: {grade}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining grade from LES text"))
-    les_variables['Grade'] = grade
+    pay_variables['Grade'] = grade
 
     try:
         zip_code = les_text.get('vha_zip', None)
@@ -89,7 +89,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES zip code: {zip_code}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining zip code from LES text"))
-    les_variables['Zip Code'] = zip_code
+    pay_variables['Zip Code'] = zip_code
 
     try:
         oconus_locality_code = les_text.get('jftr', None)
@@ -98,7 +98,7 @@ def get_pay_variables(les_text):
             #raise ValueError(f"Invalid LES OCONUS locality code: {oconus_locality_code}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining OCONUS locality code from LES text"))
-    les_variables['OCONUS Locality Code'] = oconus_locality_code
+    pay_variables['OCONUS Locality Code'] = oconus_locality_code
 
     try:
         home_of_record = les_text.get('state', None)
@@ -106,7 +106,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES home of record: {home_of_record}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining home of record from LES text"))
-    les_variables['Home of Record'] = home_of_record
+    pay_variables['Home of Record'] = home_of_record
 
     try:
         dependents = les_text.get('dependents', None)
@@ -114,7 +114,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES dependents: {dependents}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining dependents from LES text"))
-    les_variables['Dependents'] = dependents
+    pay_variables['Dependents'] = dependents
 
     try:
         text = les_text.get('federal_filing_status', None)
@@ -128,7 +128,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES federal filing status: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
-    les_variables['Federal Filing Status'] = federal_filing_status
+    pay_variables['Federal Filing Status'] = federal_filing_status
 
     try:
         text = les_text.get('state_filing_status', None)
@@ -140,7 +140,7 @@ def get_pay_variables(les_text):
             raise ValueError(f"Invalid LES state filing status: {text}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
-    les_variables['State Filing Status'] = state_filing_status
+    pay_variables['State Filing Status'] = state_filing_status
 
     try:
         remarks = les_text.get('remarks', "")
@@ -155,17 +155,55 @@ def get_pay_variables(les_text):
             raise ValueError("SGLI coverage amount not found in remarks")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
-    les_variables['SGLI Coverage'] = sgli_coverage
+    pay_variables['SGLI Coverage'] = sgli_coverage
 
-    les_variables['Combat Zone'] = "No"
+    pay_variables['Combat Zone'] = "No"
 
-    les_variables['Drills'] = 0
+    pay_variables['Drills'] = 0
 
-    return les_variables
+    return pay_variables
 
 
-def add_pay_variables(pay, month, variables):
-    for var, val in variables.items():
+def formatManuals(manuals, year, month):
+    pay_variables = {}
+
+    MONTHS_KEYS = list(flask_app.config['MONTHS'].keys())
+    months_in_service = (year - int(manuals['Years'])) * 12 + ((MONTHS_KEYS.index(month) + 1) - (MONTHS_KEYS.index(manuals['Months']) + 1))
+    pay_variables['Months in Service'] = months_in_service
+
+    branch = next((k for k, v in flask_app.config['BRANCHES'].items() if v == manuals['Branch']), None)
+    pay_variables['Branch'] = branch
+
+    component = next((k for k, v in flask_app.config['COMPONENTS'].items() if v == manuals['Component']), None)
+    pay_variables['Component'] = component
+
+    pay_variables['Grade'] = manuals['Grade']
+
+    pay_variables['Zip Code'] = str(manuals.get('Zip Code', '')).zfill(5)
+
+    pay_variables['OCONUS Locality Code'] = "NOT FOUND"
+
+    HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+    home_of_record_row = HOME_OF_RECORDS[HOME_OF_RECORDS['longname'] == manuals['Home of Record']]
+    pay_variables['Home of Record'] = home_of_record_row['abbr'].values[0]
+
+    pay_variables['Dependents'] = int(manuals['Dependents'])
+
+    pay_variables['Federal Filing Status'] = manuals['Federal Filing Status']
+
+    pay_variables['State Filing Status'] = manuals['State Filing Status']
+
+    pay_variables['SGLI Coverage'] = manuals['SGLI Coverage']
+
+    pay_variables['Combat Zone'] = "No"
+
+    pay_variables['Drills'] = int(manuals['Drills'])
+
+    return pay_variables
+
+
+def add_pay_variables(pay, month, pay_variables):
+    for var, val in pay_variables.items():
         row = next((row for row in pay if row.get('header') == var), None)
         if row:
             add_mv_pair(pay, row['header'], month, val)

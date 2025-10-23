@@ -26,7 +26,7 @@ from app.utils import (
 )
 
 
-def init_budgets(les_variables, tsp_variables, year, month, les_text=None):
+def init_budgets(pay_variables, tsp_variables, year, month, les_text=None):
     PARAMS_TEMPLATE = flask_app.config['PARAMS_TEMPLATE']
 
     pay = []
@@ -36,7 +36,7 @@ def init_budgets(les_variables, tsp_variables, year, month, les_text=None):
     add_mv_pair(pay, 'Year', month, year)
 
     if les_text:
-        pay = add_pay_variables(pay, month, les_variables)
+        pay = add_pay_variables(pay, month, pay_variables)
         pay = add_les_pay(pay, month, les_text)
 
         taxable, nontaxable, income = calc_income(pay, month)
@@ -53,7 +53,7 @@ def init_budgets(les_variables, tsp_variables, year, month, les_text=None):
 
         pay = add_ytds(pay, month, les_text)
     else:
-        pay = add_pay_variables(pay, month, les_variables)
+        pay = add_pay_variables(pay, month, pay_variables)
         pay = add_calc_pay(pay, month, sign=1)
 
         taxable, nontaxable, income = calc_income(pay, month)

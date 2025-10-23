@@ -496,9 +496,6 @@ input[type=file] {
     justify-content: center;
 }
 
-
-/* home manual inputs */
-
 #manual-title {
     font-size: 1.15rem;
 }
@@ -537,47 +534,6 @@ input[type=file] {
     vertical-align: middle;
 }
 
-
-
-
-
-
-.manuals-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    justify-content: center;
-    margin: 1rem auto 0 auto;
-    width: 90%;
-}
-
-.manuals-column {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.manuals-row {
-    display: flex;
-    align-items: center;
-}
-
-.manuals-row label {
-    width: 10.5rem;
-    text-align: right;
-    margin-right: 0.75rem;
-    flex-shrink: 0;
-}
-
-.manuals-row-text {
-    justify-content: center;
-}
-
-#manuals-years-months {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-}
-
 #button-single, #button-joint, #button-manuals, #button-example {
     margin: 2rem 0 0 0;
     width: 14rem;
@@ -588,17 +544,6 @@ input[type=file] {
     text-align: left;
     width: 55rem;
 }
-
-/*
-hr {
-    border: none;
-    border-top: 1px solid var(--table_border_color);
-    margin: 16px 0;
-    width: 100%;
-    height: 0;
-    display: block;
-}
-    */
 
 
 /* file drop */

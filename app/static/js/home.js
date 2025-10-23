@@ -103,7 +103,7 @@ function attachDragAndDropListeners() {
 function submitManuals(e) {
     e.preventDefault();
 
-    if (!validateManuals()) return;
+    //if (!validateManuals()) return;
 
     const form = document.getElementById('form-manuals');
     const formData = new FormData(form);
