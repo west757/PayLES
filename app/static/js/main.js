@@ -51,8 +51,7 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     //only runs the first time the pay is loaded
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
-        attachInjectModalListeners();
-        //displayDiscrepanciesModal(window.CONFIG.discrepancies);
+        attachInjectListeners();
         displayBadge('recommendations-pay', window.CONFIG.pay_recommendations);
         displayBadge('recommendations-tsp', window.CONFIG.tsp_recommendations);
         displayBadge('discrepancies', window.CONFIG.discrepancies);

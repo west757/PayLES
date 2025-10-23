@@ -50,66 +50,106 @@
         </div>
 
         <div id="tab-manual" class="tab-content">
-            <div style="font-size: 1.15rem;">Building budget for {{ CURRENT_MONTH_LONG }} {{ CURRENT_YEAR }}</div>
-            <!--
-            <form id="form-initials">
-                <div class="initials-grid">
-                    <div class="initials-column">
-                        <div class="initials-row">
-                            <label for="initials-years-id">Pay Entry Base Date:</label>
-                            <div id="initials-years-months">
-                                <div id="initials-years"></div>
-                                <div id="initials-months"></div>
+            <div id="manual-title">Building budget for {{ CURRENT_MONTH_LONG }} {{ CURRENT_YEAR }}</div>
+            <form id="form-manuals">
+
+                <table id="table-manuals">
+                    <tr>
+                        <td>Pay Entry Base Date:</td>
+                        <td>
+                            <div id="manuals-years-location"></div>
+                            <div id="manuals-months-location"></div>
+                            <span class="tooltip-question tooltip" data-tooltip=
+                            "Pay Entry Base Date (PEBD), used to calculate months in service">
+                            ?</span>
+                        </td>
+                        <td>Home of Record</td>
+                        <td><div id="manuals-home-of-record-location"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Branch:</td>
+                        <td><div id="manuals-branch-location"></div></td>
+                        <td>Dependents:</td>
+                        <td><div id="manuals-dependents-location"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Component:</td>
+                        <td><div id="manuals-component-location"></div></td>
+                        <td>Federal Filing Status:</td>
+                        <td><div id="manuals-federal-filing-status-location"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Grade:</td>
+                        <td><div id="manuals-grade-location"></div></td>
+                        <td>State Filing Status:</td>
+                        <td><div id="manuals-state-filing-status-location"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Drills:</td>
+                        <td><div id="manuals-drills-location"></div></td>
+                        <td>SGLI Coverage:</td>
+                        <td><div id="manuals-sgli-coverage-location"></div></td>
+                    </tr>
+                </table>
+
+                <!--
+                <div class="manuals-grid">
+                    <div class="manuals-column">
+                        <div class="manuals-row">
+                            <label for="manuals-years-id">Pay Entry Base Date:</label>
+                            <div id="manuals-years-months">
+                                <div id="manuals-years"></div>
+                                <div id="manuals-months"></div>
                             </div>
                             <span class="tooltip-question tooltip" data-tooltip=
                             "Pay Entry Base Date (PEBD), used to calculate months in service">
                             ?</span>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-branch">Branch:</label>
-                            <div id="initials-branch"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-branch">Branch:</label>
+                            <div id="manuals-branch"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-component">Component:</label>
-                            <div id="initials-component"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-component">Component:</label>
+                            <div id="manuals-component"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-grade">Grade:</label>
-                            <div id="initials-grade"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-grade">Grade:</label>
+                            <div id="manuals-grade"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-drills">Drills:</label>
-                            <div id="initials-drills"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-drills">Drills:</label>
+                            <div id="manuals-drills"></div>
                         </div>
                     </div>
 
-                    <div class="initials-column">
-                        <div class="initials-row">
-                            <label for="initials-home-of-record">Home of Record:</label>
-                            <div id="initials-home-of-record"></div>
+                    <div class="manuals-column">
+                        <div class="manuals-row">
+                            <label for="manuals-home-of-record">Home of Record:</label>
+                            <div id="manuals-home-of-record"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-zip-code">Zip Code:</label>
-                            <div id="initials-zip-code"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-zip-code">Zip Code:</label>
+                            <div id="manuals-zip-code"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-federal-filing-status">Federal Filing Status:</label>
-                            <div id="initials-federal-filing-status"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-federal-filing-status">Federal Filing Status:</label>
+                            <div id="manuals-federal-filing-status"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-state-filing-status">State Filing Status:</label>
-                            <div id="initials-state-filing-status"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-state-filing-status">State Filing Status:</label>
+                            <div id="manuals-state-filing-status"></div>
                         </div>
-                        <div class="initials-row">
-                            <label for="initials-dependents">Dependents:</label>
-                            <div id="initials-dependents"></div>
+                        <div class="manuals-row">
+                            <label for="manuals-dependents">Dependents:</label>
+                            <div id="manuals-dependents"></div>
                         </div>
                     </div>
                 </div>
+            -->
 
-                <button id="button-initials" class="button-generic button-positive">Submit</button>
+                <button id="button-manuals" class="button-generic button-positive">Submit</button>
             </form>
-        -->
         </div>
 
         <div id="tab-example" class="tab-content">

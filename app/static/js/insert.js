@@ -3,7 +3,7 @@ let selectedMethod = null;
 let selectedRowType = null;
 
 // attach inject modal event listeners
-function attachInjectModalListeners() {
+function attachInjectListeners() {
 
     const injectInputs = [
         { location: 'inject-template-value-location', header: 'Inject Template Value', field: 'float' },

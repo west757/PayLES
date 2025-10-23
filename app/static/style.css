@@ -496,7 +496,67 @@ input[type=file] {
     justify-content: center;
 }
 
-.initials-grid {
+
+/* home manual inputs */
+
+#manual-title {
+    font-size: 1.15rem;
+}
+
+
+
+
+/* --- Manual Inputs Table --- */
+#table-manuals {
+    margin: 2rem auto 0 auto;         /* Center the table */
+    border-collapse: separate;
+    border-spacing: 0.5rem 0.75rem;   /* Space between cells */
+    width: auto;
+    min-width: 48rem;
+    max-width: 100%;
+}
+
+#table-manuals td {
+    vertical-align: middle;
+    padding: 0.25rem 0.5rem;
+}
+
+#table-manuals td:nth-child(1),
+#table-manuals td:nth-child(3) {
+    text-align: right;                /* Right-align label columns */
+    white-space: nowrap;
+    font-weight: bold;
+    width: 12rem;
+}
+
+#table-manuals td:nth-child(2),
+#table-manuals td:nth-child(4) {
+    text-align: left;                 /* Left-align input columns */
+    width: 18rem;
+}
+
+#table-manuals td > div,
+#table-manuals td > span,
+#table-manuals td > input,
+#table-manuals td > select {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#table-manuals .tooltip-question {
+    margin-left: 0.5rem;
+    margin-right: 0;
+    vertical-align: middle;
+}
+
+#table-manuals td > *:not(:last-child) {
+    margin-right: 0.5rem;             /* Space between inline elements */
+}
+
+
+
+
+.manuals-grid {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     justify-content: center;
@@ -504,35 +564,35 @@ input[type=file] {
     width: 90%;
 }
 
-.initials-column {
+.manuals-column {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.initials-row {
+.manuals-row {
     display: flex;
     align-items: center;
 }
 
-.initials-row label {
+.manuals-row label {
     width: 10.5rem;
     text-align: right;
     margin-right: 0.75rem;
     flex-shrink: 0;
 }
 
-.initials-row-text {
+.manuals-row-text {
     justify-content: center;
 }
 
-#initials-years-months {
+#manuals-years-months {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
 }
 
-#button-single, #button-joint, #button-initials, #button-example {
+#button-single, #button-joint, #button-manuals, #button-example {
     margin: 2rem 0 0 0;
     width: 14rem;
 }

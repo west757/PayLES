@@ -11,10 +11,8 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- info for pay
-
-- rework recommendations
-- have recommendations modal be used instead of dynamic, maybe two different ones
+- info column for each pay
+- disallow drills and tsp when not allowed
 
 mid-term:
 - get combat zone from les

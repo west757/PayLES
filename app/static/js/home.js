@@ -1,29 +1,26 @@
-function buildManualInputs() {
-    const manuals = [
-        { container: 'manual-year', field: 'select', rowHeader: 'Year' },
-        { container: 'manual-month', field: 'select', rowHeader: 'Months' },
-        { container: 'manual-branch', field: 'select', rowHeader: 'Branch' },
-        { container: 'manual-component', field: 'select', rowHeader: 'Component' },
-        { container: 'manual-grade', field: 'select', rowHeader: 'Grade' },
-        { container: 'manual-zip-code', field: 'string', rowHeader: 'Zip Code' },
-        { container: 'manual-oconus-locality-code', field: 'string', rowHeader: 'OCONUS Locality Code' },
-        { container: 'manual-home-of-record', field: 'select', rowHeader: 'Home of Record Long' },
-        { container: 'manual-dependents', field: 'select', rowHeader: 'Dependents' },
-        { container: 'manual-federal-filing-status', field: 'select', rowHeader: 'Federal Filing Status' },
-        { container: 'manual-state-filing-status', field: 'select', rowHeader: 'State Filing Status' },
-        { container: 'manual-sgli-coverage', field: 'select', rowHeader: 'SGLI Coverage' },
-        { container: 'manual-combat-zone', field: 'select', rowHeader: 'Combat Zone' },
-        { container: 'manual-drills', field: 'select', rowHeader: 'Drills' },
+function attachManualsListeners() {
+    const manualsInputs = [
+        { location: 'manuals-years-location', header: 'Years', field: 'select' },
+        { location: 'manuals-months-location', header: 'Months', field: 'select' },
+        { location: 'manuals-branch-location', header: 'Branch', field: 'select' },
+        { location: 'manuals-component-location', header: 'Component', field: 'select' },
+        { location: 'manuals-grade-location', header: 'Grade', field: 'select' },
+        { location: 'manuals-home-of-record-location', header: 'Home of Record', field: 'select' },
+        { location: 'manuals-dependents-location', header: 'Dependents', field: 'select' },
+        { location: 'manuals-federal-filing-status-location', header: 'Federal Filing Status', field: 'select' },
+        { location: 'manuals-state-filing-status-location', header: 'State Filing Status', field: 'select' },
+        { location: 'manuals-sgli-coverage-location', header: 'SGLI Coverage', field: 'select' },
+        { location: 'manuals-drills-location', header: 'Drills', field: 'select' },
     ];
 
-    manuals.forEach(manual => {
-        const container = document.getElementById(manual.container);
-        let inputWrapper = createStandardInput(manual.rowHeader, manual.field);
-        const input = inputWrapper.querySelector('input, select');
-        input.id = manual.container + '-id';
-        input.name = manual.rowHeader;
-        container.innerHTML = '';
-        container.appendChild(inputWrapper);
+    manualsInputs.forEach(item => {
+        const location = document.getElementById(item.location);
+        let wrapper = createStandardInput(item.header, item.field);
+        const input = wrapper.querySelector('input, select');
+        input.id = item.location.replace('-location', '');
+        input.name = item.header;
+        location.innerHTML = '';
+        location.appendChild(wrapper);
     });
 }
 
@@ -37,29 +34,25 @@ function attachHomeListeners() {
             tabButtons.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => {
                 c.classList.remove('active');
-                // Remove display block immediately, but allow fade out
+                // remove display block immediately, but allow fade out
                 c.style.display = '';
             });
             btn.classList.add('active');
             const tabId = btn.getAttribute('data-tab');
             const tabContent = document.getElementById(tabId);
 
-            // Show tab and trigger fade in
             tabContent.style.display = 'block';
-            // Force reflow for transition
             void tabContent.offsetWidth;
             tabContent.classList.add('active');
         });
     });
 
-    //buildInitialsInputs();
-
-
-    //const buttonInitials = document.getElementById('button-initials');
-    //buttonInitials.addEventListener('click', submitInitials);
+    attachManualsListeners();
+    const buttonManuals = document.getElementById('button-manuals');
+    buttonManuals.addEventListener('click', submitManuals);
 
     // disable inputs on any home form submit
-    document.querySelectorAll('#form-single, #form-joint, #form-initials, #form-example').forEach(form => {
+    document.querySelectorAll('#form-single, #form-joint, #form-manuals, #form-example').forEach(form => {
         form.addEventListener('submit', function(e) {
             disableInputs();
         });
@@ -102,17 +95,15 @@ function attachDragAndDropListeners() {
 }
 
 
-function submitInitials(e) {
+function submitManuals(e) {
     e.preventDefault();
 
-    if (!validateinitialspayForm()) {
-        return;
-    }
+    if (!validateManuals()) return;
 
-    const form = document.getElementById('form-initials');
+    const form = document.getElementById('form-manuals');
     const formData = new FormData(form);
 
-    htmx.ajax('POST', '/route_initials', {
+    htmx.ajax('POST', '/route_manual', {
         target: '#content',
         swap: 'innerHTML',
         values: Object.fromEntries(formData.entries())
@@ -120,22 +111,22 @@ function submitInitials(e) {
 }
 
 
-function validateinitialspayForm() {
-    const inputIntInitialsZC = document.getElementById('initials-zip-code-id');
-    const inputIntInitialsDeps = document.getElementById('initials-dependents-id');
-    const inputSelectInitialsHor = document.getElementById('initials-home-of-record-id');
+function validateManuals() {
+    const inputIntmanualsZC = document.getElementById('manuals-zip-code-id');
+    const inputIntmanualsDeps = document.getElementById('manuals-dependents-id');
+    const inputSelectmanualsHor = document.getElementById('manuals-home-of-record-id');
 
-    if (!inputIntInitialsZC.value.match(/^\d{5}$/)) {
+    if (!inputIntmanualsZC.value.match(/^\d{5}$/)) {
         showToast('Zip code must be exactly 5 digits.');
         return false;
     }
 
-    if (!inputIntInitialsDeps.value.match(/^\d$/)) {
+    if (!inputIntmanualsDeps.value.match(/^\d$/)) {
         showToast('Dependents must be a single digit (0-9).');
         return false;
     }
 
-    if (inputSelectInitialsHor.value === "Choose an option") {
+    if (inputSelectmanualsHor.value === "Choose an option") {
         showToast('Please choose a home of record.');
         return false;
     }

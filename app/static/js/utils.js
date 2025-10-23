@@ -109,6 +109,14 @@ function displayBadge(badgeName, list) {
 }
 
 
+function openDynamicModal(width = 'short') {
+    document.getElementById('modal-dynamic').checked = true;
+    const modalInner = document.getElementById('modal-inner-dynamic');
+    modalInner.classList.remove('modal-short', 'modal-wide');
+    modalInner.classList.add(width === 'wide' ? 'modal-wide' : 'modal-short');
+}
+
+
 function createStandardInput(header, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';

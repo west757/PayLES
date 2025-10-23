@@ -6,7 +6,7 @@ function budgetUnloadPrompt(e) {
 
 
 function buildEditModal(header, month, field) {
-    document.getElementById('modal-dynamic').checked = true;
+    openDynamicModal('short');
 
     const content = document.getElementById('modal-content-dynamic');
     content.innerHTML = '';
@@ -160,7 +160,7 @@ function boldEditableCells(active) {
 
 
 function buildAccountModal(header) {
-    document.getElementById('modal-dynamic').checked = true;
+    openDynamicModal('short');
 
     if (header === 'Direct Deposit Account') {
         budget = document.getElementById('budget-pay');
@@ -298,7 +298,7 @@ function disableDrillsButtons() {
 
 
 function displayRecommendations(budgetName, recommendations) {
-    document.getElementById('modal-dynamic-wide').checked = true;
+    openDynamicModal('wide');
 
     if (budgetName === 'pay') {
         displayBadge('recommendations-pay', []);
@@ -306,7 +306,7 @@ function displayRecommendations(budgetName, recommendations) {
         displayBadge('recommendations-tsp', []);
     }
 
-    const content = document.getElementById('modal-content-dynamic-wide');
+    const content = document.getElementById('modal-content-dynamic');
     content.innerHTML = '';
 
     const titleText = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
@@ -339,11 +339,11 @@ function getDiscrepancyMessage(header) {
 }
 
 function displayDiscrepancies(discrepancies) {
-    document.getElementById('modal-dynamic-wide').checked = true;
+    openDynamicModal('wide');
 
     displayBadge('discrepancies', []);
 
-    const content = document.getElementById('modal-content-dynamic-wide');
+    const content = document.getElementById('modal-content-dynamic');
     content.innerHTML = '';
 
     const titleText = 'Pay Discrepancies';
