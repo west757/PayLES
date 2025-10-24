@@ -65,7 +65,7 @@ def get_all_headers():
 
 def add_row(pay, header, template=None, metadata=None):
     PAY_METADATA = flask_app.config['PAY_METADATA']
-    PAY_TYPE_ORDER = flask_app.config['PAY_TYPE_ORDER']
+    type_order = list(flask_app.config['TYPE_SIGN'].keys())
 
     if template is not None:
         row_data = template[template['header'] == header]
@@ -77,13 +77,13 @@ def add_row(pay, header, template=None, metadata=None):
     row = {'header': header, **row_metadata}
 
     insert_idx = len(pay)
-    if type and PAY_TYPE_ORDER:
+    if type and type_order:
         same_type_indices = [i for i, r in enumerate(pay) if r.get('type') == type]
         if same_type_indices:
             insert_idx = same_type_indices[-1] + 1
         else:
-            type_pos = PAY_TYPE_ORDER.index(type)
-            later_types = set(PAY_TYPE_ORDER[type_pos + 1:])
+            type_pos = type_order.index(type)
+            later_types = set(type_order[type_pos + 1:])
             next_idx = next((i for i, r in enumerate(pay) if r.get('type') in later_types), None)
             if next_idx is not None:
                 insert_idx = next_idx

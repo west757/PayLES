@@ -17,7 +17,6 @@ def calc_income(pay, month):
         tax = row.get('tax', False)
         type = row.get('type')
 
-        # Combined logic:
         if (
             (type == 'ent' and combat_zone == "Yes") or
             (type == 'ent' and not tax and combat_zone == "No") or

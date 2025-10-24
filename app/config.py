@@ -94,18 +94,18 @@ class Config:
     
     COMBAT_ZONES = ["No", "Yes"]
 
-    # pay type order:
-    # var = variables
-    # ent = entitlements
-    # ded = deductions
-    # alt = allotments
-    # inc = custom income
-    # exp = custom expenses
-    # calc = calculations
-    # ytd = year-to-date
-    # acc = accounts
-    # meta = metadata
-    PAY_TYPE_ORDER = ['var', 'ent', 'ded', 'alt', 'inc', 'exp', 'calc', 'ytd', 'acc', 'meta']
+    TYPE_SIGN = {
+        'var': 0,   # variables
+        'ent': 1,   # entitlements
+        'ded': -1,  # deductions
+        'alt': -1,  # allotments
+        'inc': 1,   # custom income
+        'exp': -1,  # custom expenses
+        'calc': 0,  # calculations
+        'ytd': 0,   # year-to-date
+        'acc': 0,   # accounts
+        'meta': 0,  # metadata
+    }
     PAY_METADATA = [
         'type',
         'field',
@@ -113,27 +113,13 @@ class Config:
         'editable',
         'modal',
     ]
-    TYPE_SIGN = {
-        'var': 0,
-        'ent': 1,
-        'ded': -1,
-        'alt': -1,
-        'inc': 1,
-        'exp': -1,
-        'calc': 0,
-        'ytd': 0,
-        'acc': 0,
-        'meta': 0,
-    }
 
-    # tsp types:
-    # tot = pay total
-    # rate = rates
-    # cont = tsp contribution
-    # calc = tsp calculation
-    # ytd = tsp year-to-date
-    # acc = tsp account
-    TSP_TYPE_ORDER = ['tot', 'rate', 'cont', 'calc', 'ytd', 'acc']
+    TSP_TYPE_ORDER = ['tot',    # pay total
+                      'rate',   # rates
+                      'cont',   # tsp contribution
+                      'calc',   # tsp calculation
+                      'ytd',    # tsp year-to-date
+                      'acc']    # tsp account
     TSP_METADATA = [
         'type',
         'field',
