@@ -53,7 +53,7 @@
             <div id="manual-title">Building budget for {{ CURRENT_MONTH_LONG }} {{ CURRENT_YEAR }}</div>
             <form id="form-manuals">
 
-                <table id="table-manuals">
+                <table class="table-manuals">
                     <tr>
                         <td>Pay Entry Base Date:</td>
                         <td>
@@ -90,6 +90,7 @@
                         <td>SGLI Coverage:</td>
                         <td><div id="manuals-sgli-coverage-location"></div></td>
                     </tr>
+                    <tr class="table-manuals-spacer"><td colspan="4"></td></tr>
                     <tr>
                         <td>Zip Code:</td>
                         <td><div id="manuals-zipcode-location"></div></td>
@@ -100,6 +101,64 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="manuals-dropdown">
+                    <input class="manuals-dropdown-checkbox" id="manuals-dropdown-tsp" type="checkbox">
+                    <label class="manuals-dropdown-label" for="manuals-dropdown-tsp">Thrift Savings Plan (TSP) Inputs</label>
+                    <div class="manuals-dropdown-content">
+                        <table class="table-manuals">
+                            <tr>
+                                <td colspan="2" style="text-align:center;">Traditional TSP</td>
+                                <td colspan="2" style="text-align:center;">Roth TSP</td>
+                            </tr>
+                            <tr>
+                                <td>Base Rate:</td>
+                                <td><div id="manuals-trad-base-rate-location"></div></td>
+                                <td>Base Rate:</td>
+                                <td><div id="manuals-roth-base-rate-location"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Specialty Rate:</td>
+                                <td><div id="manuals-trad-specialty-rate-location"></div></td>
+                                <td>Specialty Rate:</td>
+                                <td><div id="manuals-roth-specialty-rate-location"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Incentive Rate:</td>
+                                <td><div id="manuals-trad-incentive-rate-location"></div></td>
+                                <td>Incentive Rate:</td>
+                                <td><div id="manuals-roth-incentive-rate-location"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Bonus Rate:</td>
+                                <td><div id="manuals-trad-bonus-rate-location"></div></td>
+                                <td>Bonus Rate:</td>
+                                <td><div id="manuals-roth-bonus-rate-location"></div></td>
+                            </tr>
+                            <tr class="table-manuals-spacer"><td colspan="4"></td></tr>
+                            <tr>
+                                <td>YTD Pre-Tax Contribution:</td>
+                                <td><div id="manuals-trad-ytd-location"></div></td>
+                                <td>YTD Post-Tax Contribution:</td>
+                                <td><div id="manuals-roth-ytd-location"></div></td>
+                            </tr>
+                            <tr>
+                                <td>YTD Exempt Contribution:</td>
+                                <td><div id="manuals-trad-exempt-ytd-location"></div></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="table-manuals-spacer"><td colspan="4"></td></tr>
+                            <tr>
+                                <td>YTD Agency Match:</td>
+                                <td><div id="manuals-agency-match-ytd-location"></div></td>
+                                <td>YTD Agency Contribution:</td>
+                                <td><div id="manuals-agency-auto-ytd-location"></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
 
                 <button id="button-manuals" class="button-generic button-positive">Submit</button>
             </form>

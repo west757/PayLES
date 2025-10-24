@@ -14,6 +14,19 @@ function attachManualsListeners() {
         { location: 'manuals-state-filing-status-location', header: 'State Filing Status', field: 'select' },
         { location: 'manuals-sgli-coverage-location', header: 'SGLI Coverage', field: 'select' },
         { location: 'manuals-drills-location', header: 'Drills', field: 'select' },
+        { location: 'manuals-trad-base-rate-location', header: 'Trad TSP Base Rate', field: 'int' },
+        { location: 'manuals-trad-specialty-rate-location', header: 'Trad TSP Specialty Rate', field: 'int' },
+        { location: 'manuals-trad-incentive-rate-location', header: 'Trad TSP Incentive Rate', field: 'int' },
+        { location: 'manuals-trad-bonus-rate-location', header: 'Trad TSP Bonus Rate', field: 'int' },
+        { location: 'manuals-roth-base-rate-location', header: 'Roth TSP Base Rate', field: 'int' },
+        { location: 'manuals-roth-specialty-rate-location', header: 'Roth TSP Specialty Rate', field: 'int' },
+        { location: 'manuals-roth-incentive-rate-location', header: 'Roth TSP Incentive Rate', field: 'int' },
+        { location: 'manuals-roth-bonus-rate-location', header: 'Roth TSP Bonus Rate', field: 'int' },
+        { location: 'manuals-trad-ytd-location', header: 'YTD Trad TSP', field: 'float' },
+        { location: 'manuals-trad-exempt-ytd-location', header: 'YTD Trad TSP Exempt', field: 'float' },
+        { location: 'manuals-roth-ytd-location', header: 'YTD Roth TSP', field: 'float' },
+        { location: 'manuals-agency-match-ytd-location', header: 'YTD Agency Match', field: 'float' },
+        { location: 'manuals-agency-auto-ytd-location', header: 'YTD Agency Auto', field: 'float' },
     ];
 
     manualsInputs.forEach(item => {

@@ -498,41 +498,117 @@ input[type=file] {
 
 #manual-title {
     font-size: 1.15rem;
+    margin: 0 0 2rem 0;
 }
 
-#table-manuals {
+.table-manuals {
     border-collapse: separate;
-    margin: 2rem auto 0 auto;
+    margin: 0 auto;
     max-width: 100%;
     min-width: 48rem;
     width: auto;
 }
 
-#table-manuals td {
+.table-manuals td {
     padding: 0.25rem;
     vertical-align: middle;
 }
 
-#table-manuals td:nth-child(1),
-#table-manuals td:nth-child(3) {
+.table-manuals td:nth-child(1),
+.table-manuals td:nth-child(3) {
     text-align: right;
     white-space: nowrap;
     width: 12rem;
 }
 
-#table-manuals td:nth-child(2),
-#table-manuals td:nth-child(4) {
+.table-manuals td:nth-child(2),
+.table-manuals td:nth-child(4) {
     text-align: left;
     width: 18rem;
 }
 
-#table-manuals td > div,
-#table-manuals td > span,
-#table-manuals td > input,
-#table-manuals td > select {
+.table-manuals td > div,
+.table-manuals td > span,
+.table-manuals td > input,
+.table-manuals td > select {
     display: inline-block;
     vertical-align: middle;
 }
+
+
+
+
+.manuals-dropdown {
+    border-radius: 0.5rem;
+    box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    margin: 2rem 0 0 0;
+    width: 100%;
+}
+
+.manuals-dropdown-label {
+    background-color: var(--secondary_light_accent_color);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1rem 1rem 2rem;
+    font-size: 1.15rem;
+}
+
+.manuals-dropdown-label:hover {
+    background-color: var(--highlight_green_color);
+}
+
+.manuals-dropdown-label::after {
+    content: "\276F";
+    height: 1rem;
+    text-align: center;
+    transition: all 0.35s;
+    width: 1rem;
+}
+
+.manuals-dropdown-content {
+    background-color: var(--primary_light_accent_color);
+    padding: 0 1rem;
+    transition: all 0.35s;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.manuals-dropdown-checkbox {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.manuals-dropdown-checkbox:checked + .manuals-dropdown-label {
+    background-color: var(--highlight_green_color);
+}
+
+.manuals-dropdown-checkbox:checked + .manuals-dropdown-label::after {
+    transform: rotate(90deg);
+}
+
+.manuals-dropdown-checkbox:checked ~ .manuals-dropdown-content {
+    max-height: 100vh;
+    padding: 1rem;
+}
+
+#table-manuals-tsp td, #table-manuals-tsp th {
+    padding: 0.25rem;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.table-manuals-spacer td {
+    height: 1rem;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+
+
 
 #button-single, #button-joint, #button-manuals, #button-example {
     margin: 2rem 0 0 0;

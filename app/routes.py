@@ -26,12 +26,13 @@ from app.les import (
     get_les_rect_overlay,
 )
 from app.pay import (
-    get_pay_variables,
-    formatManuals,
+    get_pay_variables_from_les,
+    get_pay_variables_from_manuals,
     compare_pay,
 )
 from app.tsp import (
-    get_tsp_variables,
+    get_tsp_variables_from_les,
+    get_tsp_variables_from_manuals,
 )
 from app.utils import (
     load_json,
@@ -108,8 +109,8 @@ def route_single():
 
         headers = get_all_headers()
 
-        pay_variables = get_pay_variables(les_text)
-        tsp_variables = get_tsp_variables(les_text)
+        pay_variables = get_pay_variables_from_les(les_text)
+        tsp_variables = get_tsp_variables_from_les(les_text)
         pay, tsp = init_budgets(pay_variables, tsp_variables, year, month, les_text=les_text)
         pay_calc, tsp_calc = init_budgets(pay_variables, tsp_variables, year, month)
 
@@ -185,11 +186,11 @@ def route_joint():
         les_image2, les_text2 = process_les(les_pdf2)
         headers = get_all_headers()
 
-        month1, pay_variables1 = get_pay_variables(les_text1)
-        tsp_variables1 = get_tsp_variables(les_text1)
+        month1, pay_variables1 = get_pay_variables_from_les(les_text1)
+        tsp_variables1 = get_tsp_variables_from_les(les_text1)
 
-        month2, pay_variables2 = get_pay_variables(les_text2)
-        tsp_variables2 = get_tsp_variables(les_text2)
+        month2, pay_variables2 = get_pay_variables_from_les(les_text2)
+        tsp_variables2 = get_tsp_variables_from_les(les_text2)
 
         if month1 != month2:
             return jsonify({'message': "LES months do not match. In order to use joint LES upload, both months must be the same."}), 400
@@ -244,30 +245,13 @@ def route_manual():
 
     manuals = request.form.to_dict()
 
-    for key in list(manuals.keys()):
-        print(key, manuals[key])
+    #for key in list(manuals.keys()):
+    #    print(key, manuals[key])
 
+    pay_variables = get_pay_variables_from_manuals(manuals, year, month)
+    tsp_variables = get_tsp_variables_from_manuals(manuals)
 
-    #Months in Service: 34
-    #Branch: USAF
-    #Component: AD
-    #Grade: O2
-    #Zip Code: 84056
-    #OCONUS Locality Code: NOT FOUND
-    #Home of Record: SD
-    #Dependents: 0
-    #Federal Filing Status: Single
-    #State Filing Status: Single
-    #SGLI Coverage: $50,000
-    #Combat Zone: No
-    #Drills: 0
-
-    pay_variables = formatManuals(manuals, year, month)
-
-    for v in pay_variables:
-        print(f"{v}: {pay_variables[v]}")
-
-    pay, tsp = init_budgets(pay_variables, None, year, month)
+    pay, tsp = init_budgets(pay_variables, tsp_variables, year, month)
     pay, tsp, months = add_months(pay, tsp, month, months_num=flask_app.config['DEFAULT_MONTHS_NUM'], init=True)
 
     session['pay'] = pay

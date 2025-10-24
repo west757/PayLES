@@ -25,7 +25,7 @@ from app.utils import (
 )
 
 
-def get_pay_variables(les_text):
+def get_pay_variables_from_les(les_text):
     pay_variables = {}
 
     try:
@@ -164,7 +164,7 @@ def get_pay_variables(les_text):
     return pay_variables
 
 
-def formatManuals(manuals, year, month):
+def get_pay_variables_from_manuals(manuals, year, month):
     pay_variables = {}
 
     MONTHS_KEYS = list(flask_app.config['MONTHS'].keys())

@@ -7,7 +7,7 @@ from app.utils import (
 )
 
 
-def get_tsp_variables(les_text):
+def get_tsp_variables_from_les(les_text):
     tsp_variables = {}
 
     try:
@@ -133,6 +133,29 @@ def get_tsp_variables(les_text):
     return tsp_variables
 
 
+def get_tsp_variables_from_manuals(manuals):
+    TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
+    tsp_variables = {}
+
+    rate_headers = TSP_TEMPLATE[TSP_TEMPLATE['type'] == 'rate']['header'].tolist()
+    for header in rate_headers:
+        try:
+            value = int(manuals.get(header, 0))
+        except Exception:
+            value = 0
+        tsp_variables[header] = value
+
+    ytd_headers = TSP_TEMPLATE[TSP_TEMPLATE['type'] == 'ytd']['header'].tolist()
+    for header in ytd_headers:
+        try:
+            value = float(manuals.get(header, 0.0))
+        except Exception:
+            value = 0.0
+        tsp_variables[header] = value
+
+    return tsp_variables
+
+
 def init_tsp(tsp_variables, pay, month, les_text=None):
     TSP_TEMPLATE = flask_app.config['TSP_TEMPLATE']
     TSP_METADATA = flask_app.config['TSP_METADATA']
@@ -196,6 +219,8 @@ def init_tsp(tsp_variables, pay, month, les_text=None):
         add_mv_pair(tsp, 'Agency Auto Contribution', month, tsp_contributions['agency_auto_contribution'])
         add_mv_pair(tsp, 'Agency Match Contribution', month, tsp_contributions['agency_match_contribution'])
         add_mv_pair(tsp, 'TSP Contribution Total', month, tsp_contributions['tsp_contribution_total'])
+        ytd_tsp_contribution_total = round(calc_ytd_tsp_contribution_total(tsp, month), 2)
+        add_mv_pair(tsp, 'YTD TSP Contribution Total', month, ytd_tsp_contribution_total)
         add_mv_pair(tsp, 'Elective Deferral Remaining', month, tsp_contributions['elective_remaining'])
         add_mv_pair(tsp, 'Annual Deferral Remaining', month, tsp_contributions['annual_remaining'])
 

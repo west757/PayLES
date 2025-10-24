@@ -13,6 +13,7 @@ short-term:
 - conus cola
 - info column for each pay
 - disallow drills and tsp when not allowed
+- submit TSP rate and rework TSP rate validation
 
 mid-term:
 - get combat zone from les
