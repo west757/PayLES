@@ -12,47 +12,83 @@ function buildEditModal(header, month, field) {
     content.innerHTML = '';
 
     const monthLong = getRowValue('pay', 'Month Long', month);
-    let titleText;
+    let titleText = `${header} - ${monthLong}`;
+    let cancelOnly = false;
+    let message = '';
     const inputLines = document.createElement('div');
     inputLines.id = 'modal-dynamic-input-lines';
 
-    if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
-        titleText = `Location Stationed - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
-        inputLines.appendChild(addModalDynamicInputLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
-
-    } else if (header === 'Home of Record') {
-        titleText = `Home of Record - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine('Home of Record:', createStandardInput('Home of Record', 'select', getRowValue('pay', 'Home of Record Long', month))));
-
-    } else {
-        titleText = `${header} - ${monthLong}`;
-        inputLines.appendChild(addModalDynamicInputLine(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
+    // --- Drills special case ---
+    if (header === 'Drills') {
+        const component = getRowValue('pay', 'Component', month);
+        titleText = `Drills - ${monthLong}`;
+        if (component !== 'NG' && component !== 'RES') {
+            cancelOnly = true;
+            message = 'You are currently not in the National Guard or Reserves component for this month. In order to set the number of drills, you must be in that component.';
+        }
     }
 
+    // --- TSP specialty/incentive/bonus rates special case ---
+    const tspSpecialtyHeaders = [
+        'Trad TSP Specialty Rate', 'Trad TSP Incentive Rate', 'Trad TSP Bonus Rate',
+        'Roth TSP Specialty Rate', 'Roth TSP Incentive Rate', 'Roth TSP Bonus Rate'
+    ];
+    if (tspSpecialtyHeaders.includes(header)) {
+        let baseHeader = header.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
+        const baseRate = parseFloat(getRowValue('tsp', baseHeader, month));
+        titleText = `${header} - ${monthLong}`;
+        if (baseRate === 0) {
+            cancelOnly = true;
+            message = 'You cannot set a TSP specialty/incentive/bonus rate when the Base Rate is 0.';
+        }
+    }
+
+    // --- Title ---
     const title = document.createElement('h2');
     title.textContent = titleText;
     content.appendChild(title);
-    content.appendChild(inputLines);
 
+    // --- Message or Inputs ---
+    if (cancelOnly) {
+        const msg = document.createElement('div');
+        msg.className = 'modal-list-text';
+        msg.textContent = message;
+        content.appendChild(msg);
+    } else {
+        if (header === 'Zip Code' || header === 'OCONUS Locality Code') {
+            title.textContent = `Location Stationed - ${monthLong}`;
+            inputLines.appendChild(addModalDynamicInputLine('Zip Code:', createStandardInput('Zip Code', 'string', getRowValue('pay', 'Zip Code', month))));
+            inputLines.appendChild(addModalDynamicInputLine('OCONUS Locality Code:', createStandardInput('OCONUS Locality Code', 'select', getRowValue('pay', 'OCONUS Locality Code', month))));
+        } else if (header === 'Home of Record') {
+            title.textContent = `Home of Record - ${monthLong}`;
+            inputLines.appendChild(addModalDynamicInputLine('Home of Record:', createStandardInput('Home of Record', 'select', getRowValue('pay', 'Home of Record Long', month))));
+        } else {
+            inputLines.appendChild(addModalDynamicInputLine(header + ':', createStandardInput(header, field, getRowValue('pay', header, month))));
+        }
+        content.appendChild(inputLines);
+    }
+
+    // --- Buttons ---
     const buttons = document.createElement('div');
     buttons.className = 'modal-dynamic-buttons';
 
-    const buttonOnetime = document.createElement('button');
-    buttonOnetime.textContent = 'One-Time';
-    buttonOnetime.classList.add('button-generic', 'button-positive');
-    buttonOnetime.onclick = function() {
-        submitEditModal(header, month, field, repeat=false);
-    };
-    buttons.appendChild(buttonOnetime);
+    if (!cancelOnly) {
+        const buttonOnetime = document.createElement('button');
+        buttonOnetime.textContent = 'One-Time';
+        buttonOnetime.classList.add('button-generic', 'button-positive');
+        buttonOnetime.onclick = function() {
+            submitEditModal(header, month, field, false);
+        };
+        buttons.appendChild(buttonOnetime);
 
-    const buttonRepeat = document.createElement('button');
-    buttonRepeat.textContent = 'Repeat';
-    buttonRepeat.classList.add('button-generic', 'button-positive');
-    buttonRepeat.onclick = function() {
-        submitEditModal(header, month, field, repeat=true);
-    };
-    buttons.appendChild(buttonRepeat);
+        const buttonRepeat = document.createElement('button');
+        buttonRepeat.textContent = 'Repeat';
+        buttonRepeat.classList.add('button-generic', 'button-positive');
+        buttonRepeat.onclick = function() {
+            submitEditModal(header, month, field, true);
+        };
+        buttons.appendChild(buttonRepeat);
+    }
 
     const buttonCancel = document.createElement('button');
     buttonCancel.textContent = 'Cancel';

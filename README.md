@@ -7,13 +7,13 @@ run: python -m app.main
 
 
 short-term:
-- update home and manual input
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
 - info column for each pay
 - disallow drills and tsp when not allowed
 - submit TSP rate and rework TSP rate validation
+- determine if sign is needed as metadata
 
 mid-term:
 - get combat zone from les
