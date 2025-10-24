@@ -108,12 +108,23 @@ class Config:
     PAY_TYPE_ORDER = ['var', 'ent', 'ded', 'alt', 'inc', 'exp', 'calc', 'ytd', 'acc', 'meta']
     PAY_METADATA = [
         'type',
-        'sign',
         'field',
         'tax',
         'editable',
         'modal',
     ]
+    TYPE_SIGN = {
+        'var': 0,
+        'ent': 1,
+        'ded': -1,
+        'alt': -1,
+        'inc': 1,
+        'exp': -1,
+        'calc': 0,
+        'ytd': 0,
+        'acc': 0,
+        'meta': 0,
+    }
 
     # tsp types:
     # tot = pay total
@@ -184,7 +195,6 @@ class Config:
         dtype={
             'header': str,
             'type': str,
-            'sign': int,
             'field': str,
             'tax': bool,
             'editable': bool,
@@ -304,7 +314,6 @@ class Config:
         dtype={
             'header': str,
             'type': str,
-            'sign': int,
             'field': str,
             'tax': bool,
             'editable': bool,

@@ -195,18 +195,18 @@ def calc_state_taxes(pay, month):
     taxable_income = taxable_income * 12
     tax = 0.00
 
-    # Get income_taxed policy for home of record
+    # get income_taxed policy for home of record
     hor_row = HOME_OF_RECORDS[HOME_OF_RECORDS['abbr'] == home_of_record]
     income_taxed = hor_row['income_taxed'].values[0].lower() if not hor_row.empty else "full"
 
-    # Determine if member is living inside or outside their home state
+    # determine if member is living inside or outside their home state
     mha_state = military_housing_area[:2] if military_housing_area and len(military_housing_area) >= 2 else ""
     living_in_state = (mha_state == home_of_record)
 
     if income_taxed == "none":
         taxable_base = 0.0
     elif income_taxed == "exempt":
-        # Only custom income rows (type 'c', sign 1)
+        # only custom income rows
         taxable_base = sum(
             row.get(month, 0.0)
             for row in pay
@@ -214,10 +214,9 @@ def calc_state_taxes(pay, month):
         )
     elif income_taxed == "outside":
         if living_in_state:
-            # Tax all taxable income
             taxable_base = taxable_income
         else:
-            # Only custom income rows (type 'c', sign 1)
+            # only custom income rows
             taxable_base = sum(
                 row.get(month, 0.0)
                 for row in pay

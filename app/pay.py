@@ -294,6 +294,7 @@ def get_home_of_record(home_of_record):
 
 def add_les_pay(pay, month, les_text):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
+    TYPE_SIGN = flask_app.config['TYPE_SIGN']
 
     combined_pay_string = (
         les_text.get('entitlements', '') + ' ' +
@@ -311,7 +312,8 @@ def add_les_pay(pay, month, les_text):
             continue  # skip if not found
 
         header = template_row.iloc[0]['header']
-        sign = template_row.iloc[0]['sign']
+        row_type = template_row.iloc[0]['type']
+        sign = TYPE_SIGN.get(row_type, 1)
         value = round(sign * value, 2)
 
         add_row(pay, header, template=PAY_TEMPLATE)
@@ -345,8 +347,14 @@ def parse_pay_string(pay_string, pay_template):
 def add_calc_pay(pay, month, sign):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
+    TYPE_SIGN = flask_app.config['TYPE_SIGN']
 
-    pay_subset = PAY_TEMPLATE[(PAY_TEMPLATE['sign'] == sign) & (PAY_TEMPLATE['trigger'] != "none")]
+    types = [t for t, s in TYPE_SIGN.items() if s == sign]
+
+    pay_subset = PAY_TEMPLATE[
+        (PAY_TEMPLATE['type'].isin(types)) &
+        (PAY_TEMPLATE['trigger'] != "none")
+    ]
 
     for _, row in pay_subset.iterrows():
         header = row['header']
@@ -419,8 +427,11 @@ def update_variables(pay, month, prev_month, cell=None):
 def update_pays(pay, month, prev_month, sign, cell=None, init=False):
     PAY_TEMPLATE = flask_app.config['PAY_TEMPLATE']
     TRIGGER_CALCULATIONS = flask_app.config['TRIGGER_CALCULATIONS']
+    TYPE_SIGN = flask_app.config['TYPE_SIGN']
 
-    rows = [row for row in pay if row.get('sign') == sign]
+    types = [t for t, s in TYPE_SIGN.items() if s == sign]
+    rows = [row for row in pay if row.get('type') in types]
+
     for row in rows:
         header = row['header']
         prev_value = row.get(prev_month)

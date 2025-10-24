@@ -1,34 +1,34 @@
-﻿header,type,sign,field,tax,editable,modal,tooltip
-Months in Service,var,0,none,False,False,pebd,Number of months creditable towards military service
-Branch,var,0,select,False,True,none,Branch
-Component,var,0,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
-Grade,var,0,select,False,True,basepay,"Grades are designations like E1, W2, O3E, O4, and rank is the full title of the grade"
-Zip Code,var,0,string,False,True,bah,U.S. 5-digit zip code
-OCONUS Locality Code,var,0,select,False,True,cola,Used for determining OHA and OCOLA
-Home of Record,var,0,select,False,True,bah,State or U.S. territory used for computing state taxes
-Dependents,var,0,select,False,True,bah,Number of assigned dependents in DEERS
-Federal Filing Status,var,0,select,False,True,federaltaxes,"Identifies if single, married, or head of household for federal tax filing purposes"
-State Filing Status,var,0,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
-SGLI Coverage,var,0,select,False,True,sgli,SGLI coverage payable
-Combat Zone,var,0,select,False,True,combat,Identifies if in a combat zone during the majority of the month
-Drills,var,0,select,False,True,drillpay,Identifies number of drills participated in
-Taxable Income,calc,0,float,False,False,none,Income that is subject to Federal Income Tax Witholding (FITW)
-Non-Taxable Income,calc,0,float,False,False,none,Income that is not subject to Federal Income Tax Witholding (FITW)
-Total Income,calc,0,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
-Taxes,calc,0,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
-Total Expenses,calc,0,float,False,False,none,"Sum of all negative pay including deductions, allotments, and expenditures"
-Net Pay,calc,0,float,False,False,none,Sum of income and expenses
-Difference,calc,0,float,False,False,none,Difference in net pay from current month to previous month
-YTD Income,ytd,0,float,False,False,none,Total income from the beginning of the year
-YTD Expenses,ytd,0,float,False,False,none,Total expenses from the beginning of the year
-YTD Net Pay,ytd,0,float,False,False,none,Total net pay from the beginning of the year
-Direct Deposit Account,acc,0,float,False,False,none,Individual direct deposit account accumulating all net pay over time
-Year,meta,0,none,False,False,none,none
-Month Long,meta,0,none,False,False,none,none
-Branch Long,meta,0,none,False,False,none,none
-Component Long,meta,0,none,False,False,none,none
-Rank Long,meta,0,none,False,False,none,none
-Military Housing Area Code,meta,0,none,False,False,none,none
-Military Housing Area Long,meta,0,none,False,False,none,none
-OCONUS Locality Code Long,meta,0,none,False,False,none,none
-Home of Record Long,meta,0,none,False,False,none,none
+﻿header,type,field,tax,editable,modal,tooltip
+Months in Service,var,none,False,False,pebd,Number of months creditable towards military service
+Branch,var,select,False,True,none,Branch
+Component,var,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
+Grade,var,select,False,True,basepay,"Grades are designations like E1, W2, O3E, O4, and rank is the full title of the grade"
+Zip Code,var,string,False,True,bah,U.S. 5-digit zip code
+OCONUS Locality Code,var,select,False,True,cola,Used for determining OHA and OCOLA
+Home of Record,var,select,False,True,bah,State or U.S. territory used for computing state taxes
+Dependents,var,select,False,True,bah,Number of assigned dependents in DEERS
+Federal Filing Status,var,select,False,True,federaltaxes,"Identifies if single, married, or head of household for federal tax filing purposes"
+State Filing Status,var,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
+SGLI Coverage,var,select,False,True,sgli,SGLI coverage payable
+Combat Zone,var,select,False,True,combat,Identifies if in a combat zone during the majority of the month
+Drills,var,select,False,True,drillpay,Identifies number of drills participated in
+Taxable Income,calc,float,False,False,none,Income that is subject to Federal Income Tax Witholding (FITW)
+Non-Taxable Income,calc,float,False,False,none,Income that is not subject to Federal Income Tax Witholding (FITW)
+Total Income,calc,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
+Taxes,calc,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
+Total Expenses,calc,float,False,False,none,"Sum of all negative pay including deductions, allotments, and expenditures"
+Net Pay,calc,float,False,False,none,Sum of income and expenses
+Difference,calc,float,False,False,none,Difference in net pay from current month to previous month
+YTD Income,ytd,float,False,False,none,Total income from the beginning of the year
+YTD Expenses,ytd,float,False,False,none,Total expenses from the beginning of the year
+YTD Net Pay,ytd,float,False,False,none,Total net pay from the beginning of the year
+Direct Deposit Account,acc,float,False,False,none,Individual direct deposit account accumulating all net pay over time
+Year,meta,none,False,False,none,none
+Month Long,meta,none,False,False,none,none
+Branch Long,meta,none,False,False,none,none
+Component Long,meta,none,False,False,none,none
+Rank Long,meta,none,False,False,none,none
+Military Housing Area Code,meta,none,False,False,none,none
+Military Housing Area Long,meta,none,False,False,none,none
+OCONUS Locality Code Long,meta,none,False,False,none,none
+Home of Record Long,meta,none,False,False,none,none

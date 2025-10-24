@@ -54,6 +54,7 @@ long-term:
 - better css for border table scroll bar
 - uncomment les age limit check
 - error checking and validation for les variables
+- change main.py from debug when moving to prod
 
 
 3. Security Headers

@@ -180,7 +180,7 @@ def remove_months(pay, tsp, months_num):
 
 
 def insert_row(pay, months, headers, insert):
-    sign = -1 if insert['type'] in ['ded', 'alt', 'exp'] else 1
+    sign = flask_app.config['TYPE_SIGN'][get_row_value(pay, insert['header'], 'type')]
     value = round(sign * float(insert['value']), 2)
 
     if insert['method'] == 'template':
@@ -193,7 +193,6 @@ def insert_row(pay, months, headers, insert):
     elif insert['method'] == 'custom':
         metadata = {}
         metadata['type'] = insert['type']
-        metadata['sign'] = sign
         metadata['field'] = 'float'
         metadata['tax'] = insert['tax']
         metadata['editable'] = True
