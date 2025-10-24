@@ -535,9 +535,6 @@ input[type=file] {
     vertical-align: middle;
 }
 
-
-
-
 .manuals-dropdown {
     border-radius: 0.5rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -606,9 +603,6 @@ input[type=file] {
     background: transparent;
     padding: 0;
 }
-
-
-
 
 #button-single, #button-joint, #button-manuals, #button-example {
     margin: 2rem 0 0 0;
@@ -862,6 +856,14 @@ table.styled tr {
 
 table.styled tr:nth-child(even) {
     background-color: var(--secondary_light_accent_color);
+}
+
+table.styled tr:nth-child(even) td:first-child {
+    background-color: var(--secondary_light_accent_color);
+}
+
+table.styled tr:nth-child(odd) td:first-child {
+    background-color: var(--primary_light_accent_color);
 }
 
 .section-break td {
