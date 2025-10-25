@@ -18,10 +18,7 @@ function buildEditModal(header, month, field) {
     content.appendChild(monthTitle);
 
     const row = getRowValue(header);
-    let type = null;
-    if (row) {
-        type = row.type ? row.type : null;
-    }
+    type = row.type ? row.type : null;
 
     let headerTitleName = header;
     // if row is ent/ded/alt, use tooltip for title
@@ -105,7 +102,12 @@ function buildEditModal(header, month, field) {
 // submit handler for modal edit
 function submitEditModal(header, month, field, repeat) {
     const input = document.querySelector('#modal-content-dynamic input, #modal-content-dynamic select');
-    const value = input.value;
+    let value = input.value;
+
+    // remove leading zeros for int fields
+    if (field === 'int' && value.length > 1) {
+        value = value.replace(/^0+/, '');
+    }
 
     if (!validateBudgetInput(field, header, value, repeat, month)) return;
 
@@ -377,6 +379,7 @@ function getDiscrepancyMessage(header) {
     return messages[header] || null;
 }
 
+
 function displayDiscrepancies(discrepancies) {
     openDynamicModal('wide');
 
@@ -429,7 +432,6 @@ function displayDiscrepancies(discrepancies) {
     tableContainer.innerHTML = tableHTML;
     messageContainer.innerHTML = messages.join('');
 }
-
 
 
 function validateBudgetInput(field, header, value, repeat = false, month = null) {

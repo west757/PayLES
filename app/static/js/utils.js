@@ -360,6 +360,9 @@ function setInputRestriction(field, maxLength = null) {
             if (maxLength && val.length > maxLength) {
                 val = val.slice(0, maxLength);
             }
+            if (val.length > 1) {
+                val = val.replace(/^0+/, '');
+            }
             e.target.value = val;
         };
     }

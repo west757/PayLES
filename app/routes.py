@@ -291,11 +291,11 @@ def route_update_cell():
     cell_repeat = request.form.get('repeat', False).lower() == "true"
 
     cell_field = get_row_value(pay, cell_header, 'field')
-    sign = flask_app.config['TYPE_SIGN'][get_row_value(pay, cell_header, 'type')]
-
+    
     if cell_field == "int":
         cell_value = int(cell_value)
     elif cell_field == "float":
+        sign = flask_app.config['TYPE_SIGN'][get_row_value(pay, cell_header, 'type')]
         cell_value = round((float(cell_value) * sign), 2)
 
     cell = {
