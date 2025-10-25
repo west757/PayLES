@@ -133,8 +133,8 @@ def route_single():
             'months': months,
             'headers': headers,
             'discrepancies': compare_pay(pay, pay_calc, month),
-            'pay_recommendations': add_pay_recommendations(pay, months),
-            'tsp_recommendations': add_tsp_recommendations(tsp, months),
+            'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+            'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
         }
         context = {
             'config_js': config_js,
@@ -216,8 +216,8 @@ def route_joint():
             'tsp2': tsp2,
             'months': months,
             'headers': headers,
-            'pay_recommendations': add_pay_recommendations(pay1, months),
-            'tsp_recommendations': add_tsp_recommendations(tsp1, months),
+            'pay_recommendations': add_pay_recommendations(pay1, tsp1, months),
+            'tsp_recommendations': add_tsp_recommendations(pay1, tsp1, months),
         }
         context = {
             'config_js': config_js,
@@ -264,8 +264,8 @@ def route_manual():
         'tsp': tsp,
         'months': months,
         'headers': headers,
-        'pay_recommendations': add_pay_recommendations(pay, months),
-        'tsp_recommendations': add_tsp_recommendations(tsp, months),
+        'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+        'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -295,8 +295,8 @@ def route_update_cell():
     config_js = {
         'pay': pay,
         'tsp': tsp,
-        'pay_recommendations': add_pay_recommendations(pay, months),
-        'tsp_recommendations': add_tsp_recommendations(tsp, months),
+        'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+        'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -367,8 +367,8 @@ def route_change_months():
         'pay': pay,
         'tsp': tsp,
         'months': months,
-        'pay_recommendations': add_pay_recommendations(pay, months),
-        'tsp_recommendations': add_tsp_recommendations(tsp, months),
+        'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+        'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -407,8 +407,8 @@ def route_insert_row():
         'pay': pay,
         'tsp': tsp,
         'headers': headers,
-        'pay_recommendations': add_pay_recommendations(pay, months),
-        'tsp_recommendations': add_tsp_recommendations(tsp, months),
+        'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+        'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
     }
     context = {
         'config_js': config_js,
@@ -448,8 +448,8 @@ def route_remove_row():
         'tsp': tsp,
         'months': months,
         'headers': headers,
-        'pay_recommendations': add_pay_recommendations(pay, months),
-        'tsp_recommendations': add_tsp_recommendations(tsp, months),
+        'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+        'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
     }
     return render_template('budgets.html', **context)
 

@@ -52,10 +52,11 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.target && evt.target.id === 'content') {
         //window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectListeners();
-        displayBadge('recommendations-pay', window.CONFIG.pay_recommendations);
-        displayBadge('recommendations-tsp', window.CONFIG.tsp_recommendations);
         displayBadge('discrepancies', window.CONFIG.discrepancies);
     }
+
+    displayBadge('recommendations-pay', window.CONFIG.pay_recommendations);
+    displayBadge('recommendations-tsp', window.CONFIG.tsp_recommendations);
 
     highlightChanges('pay');
     highlightChanges('tsp');

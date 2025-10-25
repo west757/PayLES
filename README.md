@@ -10,11 +10,7 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- rework tsp recommendations
-- home of record dropdown not being captured accurately in edit modal
 - recommendations broken
-- screen move on scroll top, only have scroll top when doing update of budget edit modal, not settings
-- recommendations badge not displaying
 - add tsp analysis modal
 
 mid-term:
@@ -31,6 +27,7 @@ mid-term:
 - recommendation for mid-month pay
 - show custom rows checkbox
 - update pay discrepancies
+- rows displayed setting
 
 long-term:
 - leave calculator

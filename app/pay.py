@@ -501,7 +501,7 @@ def compare_pay(pay_les, pay_calc, month):
     return discrepancies
 
 
-def add_pay_recommendations(pay, months):
+def add_pay_recommendations(pay, tsp, months):
     recs = {}
 
     # SGLI minimum coverage recommendation
