@@ -135,11 +135,8 @@ def build_month(pay, tsp, month, prev_month, cell=None, init=False):
 
     trad_tsp_row = get_row_value(pay, 'Traditional TSP')
     roth_tsp_row = get_row_value(pay, 'Roth TSP')
-
-    if trad_tsp_row:
-        trad_tsp_row[month] = -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))
-    if roth_tsp_row:
-        roth_tsp_row[month] = -(get_row_value(tsp, 'Roth TSP Contribution', month))
+    trad_tsp_row[month] = -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month))
+    roth_tsp_row[month] = -(get_row_value(tsp, 'Roth TSP Contribution', month))
 
     pay = update_pays(pay, month, prev_month, sign=-1, cell=cell, init=init)
 

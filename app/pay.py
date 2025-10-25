@@ -302,22 +302,21 @@ def add_les_pay(pay, month, les_text):
         les_text.get('allotments', '')
     )
 
-    # parse all pay items into a dict: {lesname: value}
-    pay_dict = parse_pay_string(combined_pay_string, PAY_TEMPLATE)
+    pays = parse_pay_string(combined_pay_string, PAY_TEMPLATE)
 
-    for lesname, value in pay_dict.items():
-        # find the corresponding row in PAY_TEMPLATE
-        template_row = PAY_TEMPLATE[PAY_TEMPLATE['lesname'] == lesname]
-        if template_row.empty:
-            continue  # skip if not found
+    for _, template_row in PAY_TEMPLATE.iterrows():
+        header = template_row['header']
+        type = template_row['type']
+        sign = TYPE_SIGN[type]
+        lesname = template_row['lesname']
 
-        header = template_row.iloc[0]['header']
-        row_type = template_row.iloc[0]['type']
-        sign = TYPE_SIGN.get(row_type, 1)
-        value = round(sign * value, 2)
-
-        add_row(pay, header, template=PAY_TEMPLATE)
-        add_mv_pair(pay, header, month, value)
+        if lesname in pays.keys():
+            value = round(sign * pays[lesname], 2)
+            add_row(pay, header, template=PAY_TEMPLATE)
+            add_mv_pair(pay, header, month, value)
+        elif header in ("Base Pay", "Traditional TSP", "Roth TSP"):
+            add_row(pay, header, template=PAY_TEMPLATE)
+            add_mv_pair(pay, header, month, 0.0)
 
     return pay
 
@@ -325,7 +324,7 @@ def add_les_pay(pay, month, les_text):
 def parse_pay_string(pay_string, pay_template):
     results = {}
 
-    # build a regex pattern that matches all LESNAMEs as whole words, followed by a number
+    # build a regex pattern that matches all LESNAME as whole words, followed by a number
     # sort by length descending to match longer names first
     lesnames = [row['lesname'] for _, row in pay_template.iterrows() if isinstance(row['lesname'], str) and row['lesname'].strip()]
     lesnames = sorted(lesnames, key=len, reverse=True)
@@ -445,21 +444,6 @@ def update_pays(pay, month, prev_month, sign, cell=None, init=False):
             if onetime:
                 row[month] = 0.00
                 continue
-
-        """ if init:
-            template_row = PAY_TEMPLATE[PAY_TEMPLATE['header'] == header]
-            if template_row.empty:
-                print(f"[update_pays] PAY_TEMPLATE lookup failed for header: '{header}'")
-                # Optionally, raise an error or continue
-                continue
-            try:
-                onetime = template_row.iloc[0].get('onetime', False)
-            except Exception as e:
-                print(f"[update_pays] Exception accessing iloc[0] for header: '{header}': {e}")
-                continue
-            if onetime:
-                row[month] = 0.00
-                continue """
 
         trigger = TRIGGER_CALCULATIONS.get(header)
         function = globals().get(trigger)

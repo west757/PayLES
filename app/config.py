@@ -8,17 +8,16 @@ class Config:
     #configuration settings
     SECRET_KEY = secrets.token_hex(16)
     SESSION_PERMANENT = False
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     SESSION_TYPE = "filesystem"
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     WTF_CSRD_ENABLED = True
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024   #16MB
+    MAX_CONTENT_LENGTH = 1024 * 1024   #1MB
     ALLOWED_EXTENSIONS = {'pdf'}
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version 0.1.0 2025-10-12"
+    VERSION = "Version 0.1.0 2025-10-25"
 
 
     #folders

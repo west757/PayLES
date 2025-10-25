@@ -93,8 +93,6 @@ SGLI Rate,ded,float,False,False,sgli,SGLI Coverage,False,SGLI,SGLI Premium
 Family SGLI,ded,float,False,True,sgli,none,False,SGLI FAM/SPOUSE,SGLI Premium for Spouses/Children
 TSGLI,ded,float,False,True,sgli,none,False,TSGLI,SGLI Premium for Traumatic Brain Injury
 State Taxes,ded,float,True,False,statetaxes,Home of Record,False,STATE TAXES,State Taxes
-Traditional TSP,ded,float,False,False,tsp,none,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
-Roth TSP,ded,float,False,False,tsp,none,False,ROTH TSP,Roth Thrift Savings Plan
 MGIB,ded,float,False,True,mgib,none,False,MGIB,Montgomery G.I. Bill Program
 Debt,ded,float,False,True,debt,none,True,DEBT,Government Debt
 Fine,ded,float,False,True,debt,none,True,FINE,Military Fines
@@ -111,6 +109,8 @@ Split Pay Option,ded,float,False,True,none,none,False,SPO PAYMENT,Split Pay Opti
 AFRH,ded,float,False,True,afrh,none,False,AFRH,Armed Forces Retirement Home
 USN/MC AFRH,ded,float,False,True,afrh,none,False,USN/MC RET HOME,Armed Forces Retirement Home
 USSH AFRH,ded,float,False,True,afrh,none,False,USSH,Armed Forces Retirement Home
+Traditional TSP,ded,float,False,False,tsp,none,False,TRADITIONAL TSP,Traditional Thrift Savings Plan
+Roth TSP,ded,float,False,False,tsp,none,False,ROTH TSP,Roth Thrift Savings Plan
 Bank Account Allot,alt,float,False,True,allotments,none,False,BANK ACCT ALLOT,Bank Account Allotment
 Discretionary Allot,alt,float,False,True,allotments,none,False,DISCRETIONARY ALT,Discretionary Allotment
 Insurance Allot,alt,float,False,True,allotments,none,False,INSURANCE ALLOT,Insurance Allotment

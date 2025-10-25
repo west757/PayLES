@@ -10,7 +10,6 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- recommendations broken
 - add tsp analysis modal
 
 mid-term:
