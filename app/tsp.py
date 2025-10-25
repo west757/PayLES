@@ -374,8 +374,8 @@ def update_tsp(pay, tsp, month, prev_month, cell=None):
             row[month] = prev_value
 
     # rate zeroing
-    trad_tsp_base_rate = get_row_value(tsp, "Trad TSP Base Rate", month)
-    roth_tsp_base_rate = get_row_value(tsp, "Roth TSP Base Rate", month)
+    trad_tsp_base_rate = int(get_row_value(tsp, "Trad TSP Base Rate", month))
+    roth_tsp_base_rate = int(get_row_value(tsp, "Roth TSP Base Rate", month))
     if trad_tsp_base_rate == 0:
         for rate in ["Trad TSP Specialty Rate", "Trad TSP Incentive Rate", "Trad TSP Bonus Rate"]:
             get_row_value(tsp, rate)[month] = 0

@@ -13,7 +13,6 @@ short-term:
 - info column for each pay
 - disallow drills and tsp when not allowed
 - rework tsp recommendations
-- tsp zeroing
 
 mid-term:
 - get combat zone from les

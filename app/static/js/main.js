@@ -62,8 +62,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     toggleRows('variables');
     toggleRows('tsp-rates');
     enableInputs();
-    disableDrillsButtons();
-    disableTSPRateButtons();
 
     document.getElementById('budget-pay').scrollTop = payScrollTop;
     document.getElementById('budget-tsp').scrollTop = tspScrollTop;
