@@ -40,7 +40,6 @@ long-term:
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
 - joint spouse with two LES's
-- see about simplifying recommendations to being inline and using flask g or session variable
 - create unit tests 
 - check mobile use
 - minify style.css and script.js when pushed into a production environment

@@ -91,22 +91,22 @@ document.addEventListener('mousemove', function(e) {
             tooltip = `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
         } 
         else if (row === 'Branch' && value) {
-            tooltip = getRowValue('pay', 'Branch Long', month);
+            tooltip = getRowValue('Branch Long', month);
         }
         else if (row === 'Component' && value) {
-            tooltip = getRowValue('pay', 'Component Long', month);
+            tooltip = getRowValue('Component Long', month);
         }
         else if (row === 'Grade' && value) {
-            tooltip = getRowValue('pay', 'Rank Long', month);
+            tooltip = getRowValue('Rank Long', month);
         }
         else if (row === 'Zip Code' && value) {
-            tooltip = getRowValue('pay', 'Military Housing Area Long', month);
+            tooltip = getRowValue('Military Housing Area Long', month);
         }
         else if (row === 'OCONUS Locality Code' && value) {
-            tooltip = getRowValue('pay', 'OCONUS Locality Code Long', month);
+            tooltip = getRowValue('OCONUS Locality Code Long', month);
         }
         else if (row === 'Home of Record' && value) {
-            tooltip = getRowValue('pay', 'Home of Record Long', month);
+            tooltip = getRowValue('Home of Record Long', month);
         }
 
         if (tooltip) showTooltip(e, tooltip);

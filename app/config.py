@@ -95,16 +95,16 @@ class Config:
     COMBAT_ZONES = ["No", "Yes"]
 
     TYPE_SIGN = {
-        'var': 0,   # variables
+        'var': 1,   # variables
         'ent': 1,   # entitlements
         'ded': -1,  # deductions
         'alt': -1,  # allotments
         'inc': 1,   # custom income
         'exp': -1,  # custom expenses
-        'calc': 0,  # calculations
-        'ytd': 0,   # year-to-date
-        'acc': 0,   # accounts
-        'meta': 0,  # metadata
+        'calc': 1,  # calculations
+        'ytd': 1,   # year-to-date
+        'acc': 1,   # accounts
+        'meta': 1,  # metadata
     }
     PAY_METADATA = [
         'type',

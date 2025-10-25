@@ -78,17 +78,11 @@ function formatValue(value) {
 
 
 // returns either the entire row object or the value for a specific key in the row
-function getRowValue(budgetName, header, key = null) {
-    let budget;
-    if (budgetName === 'pay') {
-        budget = window.CONFIG.pay;
-    } else if (budgetName === 'tsp') {
-        budget = window.CONFIG.tsp;
-    }
-
-    const row = budget.find(r => r.header === header);
+function getRowValue(header, key = null) {
+    const pay = window.CONFIG.pay || [];
+    const tsp = window.CONFIG.tsp || [];
+    let row = pay.find(r => r.header === header) || tsp.find(r => r.header === header);
     if (!row) return null;
-
     if (key !== null) {
         return row.hasOwnProperty(key) ? row[key] : null;
     }
@@ -382,158 +376,6 @@ function setInputRestriction(field, maxLength = null) {
     }
 
     return function(e) {};
-}
-
-
-function validateInput(field, header, value, repeat = false) {
-    if (value === '' || value === null || value === undefined) {
-        showToast('A value must be entered.');
-        return false;
-    }
-
-    if (field === 'int') {
-        if (isNaN(parseInt(value, 10))) {
-            showToast('Value must be a number.');
-            return false;
-        }
-    }
-
-    if (field === 'float') {
-        if (isNaN(parseFloat(value))) {
-            showToast('Value must be a number.');
-            return false;
-        }
-        if (!/^\d{0,6}(\.\d{0,2})?$/.test(value)) {
-            showToast('Value must be a number with up to 6 digits before and 2 digits after the decimal.');
-            return false;
-        }
-        if (value.length > 9) {
-            showToast('Value must be at most 9 characters.');
-            return false;
-        }
-    }
-
-    if (field === 'string') {
-        const invalidChars = /[^A-Za-z0-9_\- ]/;
-        if (invalidChars.test(value)) {
-            showToast('Text contains invalid characters. Only characters allowed are letters, numbers, underscore, hyphen, and space.');
-            return false;
-        }
-    }
-    
-    // this may cause issues if zip code is N/A
-    if (header === 'Zip Code') {
-        if (!/^\d{5}$/.test(value)) {
-            showToast('Zip code must be exactly 5 digits.');
-            return false;
-        }
-    }
-
-    // TSP base rate validation
-    if (header === 'Trad TSP Base Rate') {
-        if (value > window.CONFIG.TRAD_TSP_RATE_MAX) {
-            showToast(`Trad TSP Base Rate cannot be more than ${window.CONFIG.TRAD_TSP_RATE_MAX}.`);
-            return false;
-        }
-
-        const month = currentEdit.month;
-        const rows = [
-            'Trad TSP Specialty Rate',
-            'Trad TSP Incentive Rate',
-            'Trad TSP Bonus Rate'
-        ];
-
-        for (let r of rows) {
-            const v = getRowValue('pay', r, month);
-            if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Trad TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
-                return false;
-            }
-        }
-    }
-
-    if (header === 'Roth TSP Base Rate') {
-        if (value > window.CONFIG.ROTH_TSP_RATE_MAX) {
-            showToast(`Roth TSP Base Rate cannot be more than ${window.CONFIG.ROTH_TSP_RATE_MAX}.`);
-            return false;
-        }
-
-        const month = currentEdit.month;
-        const rows = [
-            'Roth TSP Specialty Rate',
-            'Roth TSP Incentive Rate',
-            'Roth TSP Bonus Rate'
-        ];
-
-        for (let r of rows) {
-            const v = getRowValue('pay', r, month);
-            if (parseInt(v, 10) > 0 && value === 0) {
-                showToast('Cannot set Roth TSP Base Rate to 0 while a specialty/incentive/bonus rate is greater than 0%.');
-                return false;
-            }
-        }
-
-    }
-
-    if (
-        header.includes('Specialty Rate') ||
-        header.includes('Incentive Rate') ||
-        header.includes('Bonus Rate')
-    ) {
-        if (value > 100) {
-            showToast('Specialty/Incentive/Bonus Rate cannot be more than 100%.');
-            return false;
-        }
-        if (header.startsWith('Trad') && getRowValue('tsp', 'Trad TSP Base Rate', currentEdit.month) === 0) {
-            showToast('Cannot set Trad TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
-            return false;
-        }
-        if (header.startsWith('Roth') && getRowValue('tsp', 'Roth TSP Base Rate', currentEdit.month) === 0) {
-            showToast('Cannot set Roth TSP Specialty/Incentive/Bonus Rate if base rate is 0%.');
-            return false;
-        }
-    }
-
-    
-    if (repeat && (header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate'))) {
-        const months = window.CONFIG.months;
-        const startIdx = months.indexOf(currentEdit.month);
-        const baseRow = header.startsWith('Trad') ? 'Trad TSP Base Rate' : 'Roth TSP Base Rate';
-        console.log('Repeat validation:', months.slice(startIdx), baseRow);
-        for (let i = startIdx; i < months.length; i++) { // Only future months
-            const baseRate = getRowValue('tsp', baseRow, months[i]);
-            if (parseInt(baseRate, 10) === 0) {
-                showToast(`Cannot repeat specialty/incentive/bonus rate into months where base rate is 0% (${months[i]}).`);
-                return false;
-            }
-        }
-    }
-
-    if (header.includes('TSP Base Rate') || header.includes('Specialty Rate') || header.includes('Incentive Rate') || header.includes('Bonus Rate')) {
-        const month = currentEdit.month;
-        let tradValue = 0, rothValue = 0;
-
-        if (header.startsWith('Trad')) {
-            tradValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) rothValue = parseInt(getRowValue('tsp', 'Roth TSP Bonus Rate', month), 10);
-        } else if (header.startsWith('Roth')) {
-            rothValue = parseInt(value, 10);
-            if (header.includes('Base Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Base Rate', month), 10);
-            if (header.includes('Specialty Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Specialty Rate', month), 10);
-            if (header.includes('Incentive Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Incentive Rate', month), 10);
-            if (header.includes('Bonus Rate')) tradValue = parseInt(getRowValue('tsp', 'Trad TSP Bonus Rate', month), 10);
-        }
-
-        if ((tradValue + rothValue) > 100) {
-            showToast('Combined Traditional and Roth TSP rates for this type cannot exceed 100%.');
-            return false;
-        }
-    }
-
-    return true;
 }
 
 
