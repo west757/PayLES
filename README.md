@@ -10,9 +10,12 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- info column for each pay
-- disallow drills and tsp when not allowed
 - rework tsp recommendations
+- home of record dropdown not being captured accurately in edit modal
+- recommendations broken
+- screen move on scroll top, only have scroll top when doing update of budget edit modal, not settings
+- recommendations badge not displaying
+- add tsp analysis modal
 
 mid-term:
 - get combat zone from les
@@ -27,6 +30,7 @@ mid-term:
 - add official calculators to resources list
 - recommendation for mid-month pay
 - show custom rows checkbox
+- update pay discrepancies
 
 long-term:
 - leave calculator
@@ -57,15 +61,11 @@ long-term:
 
 3. Security Headers
 
-HTTP headers that instruct browsers to enforce security policies.
-Common headers for Flask apps:
 Content-Security-Policy: restricts sources for scripts, styles, etc.
 X-Frame-Options: prevents clickjacking by disallowing your site in iframes.
 X-Content-Type-Options: nosniff: prevents MIME type sniffing.
 Strict-Transport-Security: enforces HTTPS.
 You can set these headers in Flask using an after_request handler.
-Why it matters:
-Helps prevent XSS, clickjacking, and other browser-based attacks.
 
 -->
 

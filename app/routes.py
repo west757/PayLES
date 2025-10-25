@@ -12,8 +12,6 @@ from app.budgets import (
     insert_row,
     remove_row,
     update_account,
-    add_pay_recommendations,
-    add_tsp_recommendations,
 )
 from app.forms import (
     FormSingle,
@@ -29,10 +27,12 @@ from app.pay import (
     get_pay_variables_from_les,
     get_pay_variables_from_manuals,
     compare_pay,
+    add_pay_recommendations,
 )
 from app.tsp import (
     get_tsp_variables_from_les,
     get_tsp_variables_from_manuals,
+    add_tsp_recommendations,
 )
 from app.utils import (
     load_json,

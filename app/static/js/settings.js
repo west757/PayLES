@@ -245,21 +245,17 @@ function displayRecommendations(budgetName, recommendations) {
     const content = document.getElementById('modal-content-dynamic');
     content.innerHTML = '';
 
-    const titleText = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
     const title = document.createElement('h2');
-    title.textContent = titleText;
+    title.textContent = budgetName === 'pay' ? 'Budget Recommendations' : 'TSP Recommendations';
     content.appendChild(title);
 
     const recommendationsList = document.createElement('div');
     if (recommendations.length > 0) {
-        recommendations.forEach(r => {
-            recommendationsList.className = 'modal-list-text';
-            recommendationsList.textContent = r;
-        });
+        recommendationsList.className = 'modal-list-text';
+        recommendationsList.innerHTML = recommendations.map(r => `<div>${r}</div>`).join('');
     } else {
         recommendationsList.className = 'modal-list-text';
         recommendationsList.textContent = 'No current recommendations.';
-        
     }
     content.appendChild(recommendationsList);
 }
