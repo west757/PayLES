@@ -537,22 +537,6 @@ function validateInput(field, header, value, repeat = false) {
 }
 
 
-function addModalDynamicInputLine(labelText, input) {
-    const inputLine = document.createElement('div');
-    inputLine.className = 'modal-dynamic-input-line';
-
-    const label = document.createElement('div');
-    label.className = 'modal-dynamic-input-label';
-    label.textContent = labelText;
-
-    inputLine.appendChild(label);
-    inputLine.appendChild(input);
-    return inputLine;
-}
-
-
-
-
 /**
  * Sets up a locality dropdown that is filtered by the selected country.
  * @param {string} countryDropdownId - The id of the country <select> element.

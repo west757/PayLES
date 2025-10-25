@@ -13,7 +13,6 @@ short-term:
 - info column for each pay
 - disallow drills and tsp when not allowed
 - submit TSP rate and rework TSP rate validation
-- determine if sign is needed as metadata
 - rework tsp recommendations
 
 mid-term:

@@ -1131,7 +1131,13 @@ table.styled td.cell {
     margin-bottom: 1rem;
 }
 
-/* modal edit */
+.modal-dynamic-body {
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .modal-dynamic-buttons{
     align-items: center;
     display: flex;
@@ -1142,23 +1148,6 @@ table.styled td.cell {
 
 .modal-dynamic-buttons button {
     width: 7rem;
-}
-
-#modal-dynamic-input-lines {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.modal-dynamic-input-line {
-    align-items: center;
-    display: flex;
-}
-
-.modal-dynamic-input-label {
-    font-weight: bold;
-    margin: 0 0.5rem 0 0;
-    text-align: right;
 }
 
 
