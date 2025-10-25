@@ -162,8 +162,11 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Home of Record') {
-            options = window.CONFIG.HOME_OF_RECORDS;
+            options = Object.values(window.CONFIG.HOME_OF_RECORDS);
             input.classList.add('input-long');
+            console.log("original value: " + value);
+            value = window.CONFIG.HOME_OF_RECORDS[value];
+            console.log("mapped value: " + value);
         }
 
         else if (header === 'Dependents') {

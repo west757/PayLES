@@ -162,6 +162,56 @@ def build_month(pay, tsp, month, prev_month, cell=None, init=False):
     return pay, tsp
 
 
+def get_cell_variables(pay, tsp, form):
+    cell_header = form.get('header', '').strip()
+    cell_month = form.get('month', '').strip()
+    cell_value = form.get('value', '')
+    cell_repeat = form.get('repeat', False).lower() == "true"
+
+    row = get_row_value(pay, cell_header)
+    if row is None:
+        row = get_row_value(tsp, cell_header)
+    if row is None:
+        raise ValueError(f"Header '{cell_header}' not found in pay or tsp rows.")
+
+    type = row.get('type', None)
+    field = row.get('field', None)
+    
+    if field == "int":
+        try:
+            cell_value = int(cell_value)
+        except Exception:
+            raise ValueError(f"Value '{cell_value}' could not be converted to int for header '{cell_header}'.")
+        
+    elif field == "float":
+        try:
+            sign = flask_app.config['TYPE_SIGN'][type]
+            cell_value = round(float(cell_value) * sign, 2)
+        except Exception:
+            raise ValueError(f"Value '{cell_value}' could not be converted to float for header '{cell_header}'.")
+        
+    else:
+        if cell_header == "Branch":
+            BRANCHES = flask_app.config['BRANCHES']
+            cell_value = {v: k for k, v in BRANCHES.items()}[cell_value]
+
+        elif cell_header == "Component":
+            COMPONENTS = flask_app.config['COMPONENTS']
+            cell_value = {v: k for k, v in COMPONENTS.items()}[cell_value]
+
+        elif cell_header == "Home of Record":
+            HOME_OF_RECORDS = flask_app.config['HOME_OF_RECORDS']
+            cell_value = dict(zip(HOME_OF_RECORDS['longname'], HOME_OF_RECORDS['abbr']))[cell_value]
+
+    cell = {
+        "header": cell_header,
+        "month": cell_month,
+        "value": cell_value,
+        "repeat": cell_repeat
+    }
+    return cell
+
+
 def remove_months(pay, tsp, months_num):
     months = get_months(pay)
     months_to_remove = months[months_num:]

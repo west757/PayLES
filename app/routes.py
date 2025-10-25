@@ -8,6 +8,7 @@ from app.budgets import (
     init_budgets,
     add_months,
     update_months,
+    get_cell_variables,
     remove_months,
     insert_row,
     remove_row,
@@ -57,7 +58,7 @@ def index():
         'COMPONENTS': list(flask_app.config['COMPONENTS'].values()),
         'GRADES': flask_app.config['GRADES'],
         'OCONUS_LOCATIONS': flask_app.config['OCONUS_LOCATIONS'].to_dict(orient='records'),
-        'HOME_OF_RECORDS': flask_app.config['HOME_OF_RECORDS'].iloc[:, 0].tolist(),
+        'HOME_OF_RECORDS': dict(zip(flask_app.config['HOME_OF_RECORDS']['abbr'], flask_app.config['HOME_OF_RECORDS']['longname'])),
         'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
         'TAX_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
@@ -285,26 +286,7 @@ def route_update_cell():
     months = get_months(pay)
     headers = session.get('headers', [])
 
-    cell_header = request.form.get('header', '')
-    cell_month = request.form.get('month', '')
-    cell_value = request.form.get('value', 0)
-    cell_repeat = request.form.get('repeat', False).lower() == "true"
-
-    cell_field = get_row_value(pay, cell_header, 'field')
-    
-    if cell_field == "int":
-        cell_value = int(cell_value)
-    elif cell_field == "float":
-        sign = flask_app.config['TYPE_SIGN'][get_row_value(pay, cell_header, 'type')]
-        cell_value = round((float(cell_value) * sign), 2)
-
-    cell = {
-        "header": cell_header,
-        "month": cell_month,
-        "value": cell_value,
-        "repeat": cell_repeat
-    }
-
+    cell = get_cell_variables(pay, tsp, request.form)
     pay, tsp = update_months(pay, tsp, months, cell=cell)
 
     session['pay'] = pay
