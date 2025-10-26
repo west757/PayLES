@@ -10,7 +10,7 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- add tsp analysis modal
+- tsp rate calculator modal
 
 mid-term:
 - get combat zone from les
