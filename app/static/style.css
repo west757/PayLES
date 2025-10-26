@@ -1219,6 +1219,7 @@ table.styled td.cell {
    resources
    ========================= */
 
+   /*
 .resources {
     border-radius: 0.5rem;
     box-shadow: 0.25rem 0.5rem 1rem rgba(0, 0, 0, 0.25);
@@ -1242,4 +1243,139 @@ table.styled td.cell {
 .resource:hover {
     background-color: var(--highlight_green_color);
 }
+*/
 
+
+#resources-search-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+#resources-search-bar {
+    width: 320px;
+    max-width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: border 0.2s;
+}
+#resources-search-bar:focus {
+    border: 1.5px solid #0077cc;
+}
+
+#resources-category-filters, #resources-branch-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.resource-rect {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: #f8fafd;
+    border: 1.5px solid #e0e6ef;
+    border-radius: 10px;
+    padding: 1.1rem 1.5rem;
+    cursor: pointer;
+    transition: box-shadow 0.18s, border 0.18s, background 0.18s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    position: relative;
+}
+.resource-rect:hover {
+    background: #eaf4ff;
+    border: 1.5px solid #0077cc;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.10);
+}
+
+.resource-featured-star {
+    color: #f7b500;
+    font-size: 1.3em;
+    margin-right: 0.5em;
+    margin-top: 0.1em;
+    flex-shrink: 0;
+}
+
+.resource-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
+.resource-name {
+    font-weight: 600;
+    font-size: 1.08em;
+    color: #1a2a3a;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.resource-desc {
+    color: #4a5a6a;
+    font-size: 0.98em;
+    margin-top: 0.1em;
+}
+
+.resource-meta {
+    font-size: 0.92em;
+    color: #7a8a9a;
+    margin-top: 0.2em;
+    display: flex;
+    gap: 1.2em;
+    flex-wrap: wrap;
+}
+
+.resource-category-badge {
+    background: #e0e6ef;
+    color: #2a3a4a;
+    border-radius: 6px;
+    padding: 0.1em 0.7em;
+    font-size: 0.92em;
+    margin-right: 0.3em;
+    display: inline-block;
+}
+
+.resource-branch-badge {
+    background: #d1f0e6;
+    color: #1a5a3a;
+    border-radius: 6px;
+    padding: 0.1em 0.7em;
+    font-size: 0.92em;
+    display: inline-block;
+}
+
+/* Checkbox and dropdown filter styles */
+.resources-filter-checkbox {
+    margin-right: 0.3em;
+    accent-color: #0077cc;
+}
+.resources-filter-label {
+    font-size: 0.98em;
+    color: #2a3a4a;
+    margin-right: 0.7em;
+    cursor: pointer;
+}
+
+.resources-filter-dropdown {
+    padding: 0.3em 0.8em;
+    font-size: 1em;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #2a3a4a;
+    outline: none;
+    margin-left: 0.5em;
+}

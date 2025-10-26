@@ -1,19 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div id="resources-container">
-    {% for category in RESOURCES %}
-        <h2 id="{{ category.id }}">{{ category.category }}</h2>
-        <div class="resources">
-            {% for resource in category['items'] %}
-                <a href="{{ resource.url }}" target="_blank">
-                    <div class="resource">
-                        <strong>{{ resource.name }}</strong> - {{ resource.desc }}
-                    </div>
-                </a>
-            {% endfor %}
-        </div>
-    {% endfor %}
+<div id="resources-search-bar-container">
+    <input id="resources-search-bar" type="text" maxlength="40" placeholder="Search a resource name" autocomplete="off" />
+    <div id="resources-category-filters"></div>
+    <div id="resources-branch-filters"></div>
 </div>
+
+<div id="resources-container"></div>
 
 {% endblock %}

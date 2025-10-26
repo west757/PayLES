@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
         attachDragAndDropListeners();
         attachHomeListeners();
     }
+    
+    if (document.getElementById('resources-container') && typeof window.initResourcesPage === 'function') {
+        window.initResourcesPage();
+    }
 });
 
 
