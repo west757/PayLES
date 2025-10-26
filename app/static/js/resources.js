@@ -1,4 +1,3 @@
-
 // --- Resource Metadata ---
 const RESOURCE_CATEGORIES = [
 	{ key: 'General', label: 'General' },
@@ -31,11 +30,11 @@ async function fetchAndFlattenResources() {
     const resp = await fetch('/static/json/resources.json');
     const data = await resp.json();
     // data is already a flat array of resources
-    // Ensure category and branch are arrays, and featured is boolean
+    // Ensure category and branch are strings, and featured is boolean
     let flat = data.map(item => ({
         ...item,
-        category: Array.isArray(item.category) ? item.category : [],
-        branch: Array.isArray(item.branch) ? item.branch : [],
+        category: typeof item.category === 'string' ? item.category : '',
+        branch: typeof item.branch === 'string' ? item.branch : '',
         featured: !!item.featured,
     }));
     // Sort alphabetically by name
@@ -83,8 +82,8 @@ function renderResourceList(resources) {
 	}
 	container.innerHTML = `<div class="resources-list">${resources.map(resource => {
 		const star = resource.featured ? getStarIcon() : '';
-		const cats = (resource.category || []).map(cat => `<span class="resource-category-badge">${cat}</span>`).join('');
-		const branches = (resource.branch || []).map(br => `<span class="resource-branch-badge">${br}</span>`).join('');
+		const cats = resource.category ? `<span class="resource-category-badge">${resource.category}</span>` : '';
+		const branches = resource.branch ? `<span class="resource-branch-badge">${resource.branch}</span>` : '';
 		return `
 			<div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank')" title="${resource.name}">
 				${star}
@@ -103,44 +102,91 @@ window.initResourcesPage = async function initResourcesPage() {
     let searchValue = '';
     let selectedCategories = [];
     let selectedBranches = [];
+    let currentPage = 1;
+    const pageSize = window.MAX_RESOURCES_DISPLAY || 20;
 
-    // Render filters
-    renderCategoryFilters(selectedCategories);
-    renderBranchFilters(selectedBranches);
+    // Render dropdown panels
+    function renderDropdownPanel(panelId, options, selected, type) {
+        const panel = document.getElementById(panelId);
+        panel.innerHTML = options.map(opt => `
+            <label class="resources-filter-label">
+                <input type="checkbox" class="resources-filter-checkbox" value="${opt.key}" ${selected.includes(opt.key) ? 'checked' : ''} data-type="${type}" />
+                ${opt.label}
+            </label>
+        `).join('');
+    }
 
-    // --- Filtering Logic ---
+    // Toggle dropdowns
+    function setupDropdown(btnId, panelId) {
+        const btn = document.getElementById(btnId);
+        const panel = document.getElementById(panelId);
+        btn.addEventListener('click', () => {
+            panel.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!btn.contains(e.target) && !panel.contains(e.target)) {
+                panel.classList.remove('open');
+            }
+        });
+    }
+
+    // Filtering logic (same as before)
     function filterResources() {
         let filtered = allResources;
-        // Search by name
         if (searchValue) {
             const sv = searchValue.toLowerCase();
             filtered = filtered.filter(r => r.name.toLowerCase().includes(sv));
         }
-        // Filter by categories (if any selected)
         if (selectedCategories.length) {
             filtered = filtered.filter(r =>
-                (r.category || []).some(cat => selectedCategories.includes(cat))
+                selectedCategories.includes(r.category)
             );
         }
-        // Filter by branches (if any selected)
         if (selectedBranches.length) {
             filtered = filtered.filter(r =>
-                (r.branch || []).some(br => selectedBranches.includes(br))
+                selectedBranches.includes(r.branch)
             );
         }
-        renderResourceList(filtered);
+        return filtered;
     }
 
-    // --- Event Listeners ---
-    // Search bar
-    const searchBar = document.getElementById('resources-search-bar');
-    searchBar.addEventListener('input', e => {
+    // Pagination logic
+    function renderPagination(total, page) {
+        const container = document.getElementById('resources-pagination');
+        const totalPages = Math.ceil(total / pageSize);
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            container.innerHTML += `<button class="resources-pagination-btn${i === page ? ' active' : ''}" data-page="${i}">${i}</button>`;
+        }
+        container.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentPage = parseInt(btn.getAttribute('data-page'));
+                updateResourceList();
+            });
+        });
+    }
+
+    // Render resource list for current page
+    function updateResourceList() {
+        const filtered = filterResources();
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        renderResourceList(filtered.slice(start, end));
+        renderPagination(filtered.length, currentPage);
+    }
+
+    // Event listeners for search and filters
+    document.getElementById('resources-search-bar').addEventListener('input', e => {
         searchValue = e.target.value.slice(0, 40);
-        filterResources();
+        currentPage = 1;
+        updateResourceList();
     });
 
-    // Category checkboxes
-    document.getElementById('resources-category-filters').addEventListener('change', e => {
+    document.getElementById('categories-dropdown-panel').addEventListener('change', e => {
         if (e.target.classList.contains('resources-filter-checkbox')) {
             const val = e.target.value;
             if (e.target.checked) {
@@ -148,12 +194,12 @@ window.initResourcesPage = async function initResourcesPage() {
             } else {
                 selectedCategories = selectedCategories.filter(c => c !== val);
             }
-            filterResources();
+            currentPage = 1;
+            updateResourceList();
         }
     });
 
-    // Branch checkboxes
-    document.getElementById('resources-branch-filters').addEventListener('change', e => {
+    document.getElementById('branches-dropdown-panel').addEventListener('change', e => {
         if (e.target.classList.contains('resources-filter-checkbox')) {
             const val = e.target.value;
             if (e.target.checked) {
@@ -161,10 +207,15 @@ window.initResourcesPage = async function initResourcesPage() {
             } else {
                 selectedBranches = selectedBranches.filter(b => b !== val);
             }
-            filterResources();
+            currentPage = 1;
+            updateResourceList();
         }
     });
 
     // Initial render
-    filterResources();
+    renderDropdownPanel('categories-dropdown-panel', RESOURCE_CATEGORIES, selectedCategories, 'category');
+    renderDropdownPanel('branches-dropdown-panel', RESOURCE_BRANCHES, selectedBranches, 'branch');
+    setupDropdown('categories-dropdown-btn', 'categories-dropdown-panel');
+    setupDropdown('branches-dropdown-btn', 'branches-dropdown-panel');
+    updateResourceList();
 };

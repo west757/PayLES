@@ -11,30 +11,29 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - tsp rate calculator modal
+- refactor resources
 
 mid-term:
 - get combat zone from les
 - guide modals
-- rework resources 
--   tags for category (general, financial, moving, education, mental health), branch, featured
--   alphabetize, stars for featured ones
--   search bar
 - add pro-rated calculations for rows grade and zip code
-- add loading screen after submitting LES
 - get component from LES, maybe use TPC or PACIDN
-- add official calculators to resources list
 - recommendation for mid-month pay
 - show custom rows checkbox
 - update pay discrepancies
 - rows displayed setting
+- tag for resources which require a CAC
+- when going to a new resource page, go to top
+- number of resources when filtering
+- contact in footer
 
 long-term:
 - leave calculator
-- set initial value for template rows
+- set initial value for template rows (submarine, dive, jump, etc)
 - update readme
 - add comments to code
+- add loading screen after submitting LES
 - import/export for custom rows
-- account for specific pays (submarine, dive, jump, etc)
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)

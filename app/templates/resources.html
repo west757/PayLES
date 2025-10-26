@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div id="resources-search-bar-container">
-    <input id="resources-search-bar" type="text" maxlength="40" placeholder="Search a resource name" autocomplete="off" />
-    <div id="resources-category-filters"></div>
-    <div id="resources-branch-filters"></div>
-</div>
+<div id="page-resources" class="page">
+    <h2>Resource Listing</h2>
+    <div id="resources-filter-bar">
+        <input id="resources-search-bar" ... />
+        <div class="resources-filter-dropdown-container">
+            <button id="categories-dropdown-btn" type="button">Categories</button>
+            <div id="categories-dropdown-panel" class="resources-dropdown-panel"></div>
+        </div>
+        <div class="resources-filter-dropdown-container">
+            <button id="branches-dropdown-btn" type="button">Branches</button>
+            <div id="branches-dropdown-panel" class="resources-dropdown-panel"></div>
+        </div>
+    </div>
+    <div id="resources-container"></div>
+    <div id="resources-pagination"></div>
 
-<div id="resources-container"></div>
+    <p>Is a resource link not working? Or want a resource added? Please contact me.</p>
+</div>
 
 {% endblock %}

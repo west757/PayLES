@@ -29,13 +29,13 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 
 // initial setup when home page is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('home')) {
+    if (document.getElementById('page-home')) {
         getConfigData();
         attachDragAndDropListeners();
         attachHomeListeners();
     }
-    
-    if (document.getElementById('resources-container') && typeof window.initResourcesPage === 'function') {
+
+    if (document.getElementById('page-resources') && typeof window.initResourcesPage === 'function') {
         window.initResourcesPage();
     }
 });
