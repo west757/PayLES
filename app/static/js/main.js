@@ -165,8 +165,8 @@ document.addEventListener('click', function(e) {
         buildAccountModal("TSP Account");
     }
 
-    if (e.target && e.target.id === 'button-modal-tsp-analysis') {
-        document.getElementById('modal-tsp-analysis').checked = true;
+    if (e.target && e.target.id === 'button-modal-tsp-rate-calculator') {
+        openTSPRateCalculator();
     }
 
     if (e.target && e.target.id === 'button-modal-recommendations-tsp') {

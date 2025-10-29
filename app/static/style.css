@@ -909,6 +909,21 @@ table.styled td.cell {
 }
 
 
+.tsp-rate-calc-grayout {
+    background: #e0e0e0 !important;
+    color: #888 !important;
+}
+
+.tsp-rate-calc-note {
+    margin-top: 0.5rem;
+    font-size: 0.95em;
+    color: #666;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+
+
 /* les remarks */
 
 #remarks-container {

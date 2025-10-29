@@ -53,6 +53,7 @@ def index():
         'MAX_ROWS': flask_app.config['MAX_ROWS'],
         'TRAD_TSP_RATE_MAX': flask_app.config['TRAD_TSP_RATE_MAX'],
         'ROTH_TSP_RATE_MAX': flask_app.config['ROTH_TSP_RATE_MAX'],
+        'TSP_ELECTIVE_LIMIT': flask_app.config['TSP_ELECTIVE_LIMIT'],
         'MONTHS': flask_app.config['MONTHS'],
         'BRANCHES': flask_app.config['BRANCHES'],
         'COMPONENTS': list(flask_app.config['COMPONENTS'].values()),
