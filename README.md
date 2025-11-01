@@ -11,6 +11,7 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - tsp rate calculator modal
+- updates
 - refactor resources
 
 mid-term:

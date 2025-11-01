@@ -307,6 +307,7 @@ function openTSPRateCalculator() {
         let percentageOfBasePayRow = '';
         let extrapolated = false;
 
+        // build out each month column
         for (let i = 0; i < MONTHS_SHORT.length; i++) {
             const month = MONTHS_SHORT[i];
             // Grayed out if before or equal to months[1]
