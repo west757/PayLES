@@ -1056,14 +1056,85 @@ table.styled td.cell {
     border: 1px solid black;
 }
 
+
+
+
 .tsp-rate-calc-table td:first-child,
 .tsp-rate-calc-table tr td:first-child {
     width: 26rem;
 }
 .tsp-rate-calc-table td:not(:first-child),
 .tsp-rate-calc-table tr td:not(:first-child) {
-    width: 7rem;
+    width: 10rem;
 }
+
+.tsp-rate-calc-modal-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+}
+
+.tsp-rate-calc-modal-header-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tsp-rate-calc-title {
+    margin-bottom: 0.5rem;
+}
+
+.tsp-rate-calc-desc {
+    margin-bottom: 1rem;
+}
+
+.tsp-rate-calc-goal-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.tsp-rate-calc-update-btn {
+    margin-left: 0.5rem;
+    height: 2rem;
+    font-size: 0.95em;
+}
+
+.tsp-rate-calc-limit {
+    font-size: 0.95em;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+.tsp-rate-calc-ytd {
+    font-size: 0.95em;
+    color: #444;
+    margin-bottom: 1.5rem;
+}
+
+.tsp-rate-calc-modal-header-years {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tsp-rate-calc-year-label {
+    display: flex;
+    align-items: center;
+    color: #000;
+    margin-left: 0.5em;
+}
+
+.tsp-rate-calc-year-label-disabled {
+    color: #aaa;
+}
+
+
+
 
 
 /* account modal grid */
