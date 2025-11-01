@@ -263,128 +263,93 @@ function displayRecommendations(budgetName, recommendations) {
 
 
 
+
 function openTSPRateCalculator() {
     const MONTHS_SHORT = window.CONFIG.MONTHS.map(([short, long]) => short);
     const TSP_ELECTIVE_LIMIT = window.CONFIG.TSP_ELECTIVE_LIMIT;
     const months = window.CONFIG.months;
 
-    // Build a map of {monthShort: year} for all months in the TSP budget
-    let monthYearMap = {};
+    const year = getRowValue("Year", months[1]);
+
+    // Build a list of TSP budget months for this year only
+    let monthsInTSPForYear = [];
     for (let i = 0; i < months.length; i++) {
-        monthYearMap[months[i]] = getRowValue("year", months[i]);
+        if (getRowValue("Year", months[i]) === year) {
+            monthsInTSPForYear.push(months[i]);
+        }
     }
 
-    // Get current year from the first month in the TSP budget
-    const first_month_year = getRowValue("year", months[0]);
-    const next_year = first_month_year + 1;
-    const last_month_year = getRowValue("year", months[months.length - 1]);
-    const enableSecondYear = (last_month_year === next_year);
+    // Find the index of the first and last ediitable month in MONTHS_SHORT
+    const firstEditableMonthIndex = MONTHS_SHORT.indexOf(months[1]);
+    const lastEditableMonthIndex = MONTHS_SHORT.indexOf(monthsInTSPForYear[monthsInTSPForYear.length - 1]);
 
-    // Hardcoded storage variables for each year
-    let goalCurrentYear = parseFloat(localStorage.getItem('tsp_goal_' + first_month_year)) || TSP_ELECTIVE_LIMIT;
-    let goalNextYear = parseFloat(localStorage.getItem('tsp_goal_' + next_year)) || TSP_ELECTIVE_LIMIT;
-    let selectedYear = first_month_year;
+    // set tspGoal from localStorage or default to TSP_ELECTIVE_LIMIT
+    let tspGoal = parseFloat(localStorage.getItem('tsp_goal')) || TSP_ELECTIVE_LIMIT;
 
     openDynamicModal('wide');
     const modalContent = document.getElementById('modal-content-dynamic');
 
     function render() {
-        // Find TSP months for selected year
-        let tspMonthsForYear = months.filter(m => monthYearMap[m] === selectedYear);
-        let firstTspIdx = tspMonthsForYear.length > 0 ? MONTHS_SHORT.indexOf(tspMonthsForYear[0]) : -1;
-        let lastTspIdx = tspMonthsForYear.length > 0 ? MONTHS_SHORT.indexOf(tspMonthsForYear[tspMonthsForYear.length - 1]) : -1;
-
-        // Get YTD contributed for selected year (from first TSP month for year)
-        let ytdContributed = 0;
-        for (let i = 0; i < months.length; i++) {
-            if (monthYearMap[months[i]] === selectedYear) {
-                ytdContributed = getRowValue("YTD TSP Contribution Total", months[i]) || 0;
-                break;
-            }
-        }
-
-        // Use the correct goal variable
-        let goal = (selectedYear === first_month_year) ? goalCurrentYear : goalNextYear;
-        let remainder = Math.max(TSP_ELECTIVE_LIMIT - ytdContributed, 0);
+        let electiveDeferralRemaining = getRowValue("Elective Deferral Remaining", months[0]);
+        let electiveDeferralContribution = Math.max(TSP_ELECTIVE_LIMIT - electiveDeferralRemaining, 0);
 
         // How many months to contribute (not grayed out)
-        let monthsToContribute = 0;
-        for (let i = 0; i < MONTHS_SHORT.length; i++) {
-            if (i > firstTspIdx) monthsToContribute++;
-        }
-        let remainingGoal = Math.max(goal - ytdContributed, 0);
-        let reqContrib = monthsToContribute ? remainingGoal / monthsToContribute : 0;
+        let monthsLeftToContribute = MONTHS_SHORT.length - (firstEditableMonthIndex);
+        let goalRemaining = Math.max(tspGoal - electiveDeferralContribution, 0);
+        let reqContrib = monthsLeftToContribute > 0 ? goalRemaining / monthsLeftToContribute : 0;
 
-        // For extrapolation
-        let lastBasePay = null;
-        if (lastTspIdx >= 0) {
-            // Find the last TSP month for this year and get its base pay
-            let lastTspMonth = MONTHS_SHORT[lastTspIdx];
-            for (let i = 0; i < months.length; i++) {
-                if (months[i] === lastTspMonth && monthYearMap[months[i]] === selectedYear) {
-                    lastBasePay = getRowValue("Base Pay Total", months[i]);
-                    break;
-                }
-            }
-        }
+        // Get last base pay value from the TSP budget for this year
+        let lastBasePayValue = getRowValue("Base Pay Total", monthsInTSPForYear[monthsInTSPForYear.length - 1]);
 
-        // Build table rows
-        let requiredContribRow = '';
+        let monthsRow = '';
+        let minimumContributionRow = '';
         let basePayRow = '';
-        let pctRow = '';
+        let percentageOfBasePayRow = '';
         let extrapolated = false;
 
         for (let i = 0; i < MONTHS_SHORT.length; i++) {
-            let month = MONTHS_SHORT[i];
-            let gray = (i <= firstTspIdx);
-            let extrap = (i > lastTspIdx && lastTspIdx >= 0);
+            const month = MONTHS_SHORT[i];
+            // Grayed out if before or equal to months[1]
+            const gray = i < firstEditableMonthIndex;
+            // Is this an extrapolated month?
+            const extrap = i > lastEditableMonthIndex;
+            if (extrap) extrapolated = true;
+
+            // Month header
+            monthsRow += `<td>${month}${extrap ? '*' : ''}</td>`;
 
             // Required Contribution
-            requiredContribRow += `<td${gray ? ' class="tsp-rate-calc-grayout"' : ''}>`;
-            if (!gray) requiredContribRow += `$${reqContrib.toFixed(2)}`;
-            requiredContribRow += `</td>`;
+            minimumContributionRow += `<td${gray ? ' class="tsp-rate-calc-grayout"' : ''}>`;
+            if (!gray) minimumContributionRow += `$${reqContrib.toFixed(2)}`;
+            minimumContributionRow += `</td>`;
 
             // Base Pay
             let basePay = null;
-            if (i > firstTspIdx && i <= lastTspIdx) {
-                // Use direct value from TSP budget
-                let found = false;
-                for (let j = 0; j < months.length; j++) {
-                    if (months[j] === month && monthYearMap[months[j]] === selectedYear) {
-                        basePay = getRowValue("Base Pay Total", months[j]);
-                        found = true;
-                        break;
-                    }
+            if (!gray && !extrap) {
+                // Use actual value from TSP budget if available for this year
+                if (monthsInTSPForYear.includes(month)) {
+                    basePay = getRowValue("Base Pay Total", month);
                 }
-                if (!found) basePay = null;
-            } else if (extrap && lastBasePay !== null) {
-                basePay = lastBasePay;
-                extrapolated = true;
+            } else if (!gray && extrap) {
+                basePay = lastBasePayValue;
             }
             basePayRow += `<td${gray ? ' class="tsp-rate-calc-grayout"' : ''}>`;
-            if (basePay !== null && !gray) basePayRow += `$${basePay.toFixed(2)}`;
+            if (basePay !== null && basePay !== undefined && !gray) basePayRow += `$${basePay.toFixed(2)}`;
             basePayRow += `</td>`;
 
             // Percentage of Base Pay
             let pct = '';
             if (basePay && !gray) pct = ((reqContrib / basePay) * 100).toFixed(2) + "%";
-            pctRow += `<td${gray ? ' class="tsp-rate-calc-grayout"' : ''}>${pct}</td>`;
-        }
-
-        // Build month header row
-        let monthHeaderRow = '';
-        for (let i = 0; i < MONTHS_SHORT.length; i++) {
-            let extrap = (i > lastTspIdx && lastTspIdx >= 0);
-            monthHeaderRow += `<td>${MONTHS_SHORT[i]}${extrap ? '*' : ''}</td>`;
+            percentageOfBasePayRow += `<td${gray ? ' class="tsp-rate-calc-grayout"' : ''}>${pct}</td>`;
         }
 
         // Build table
         let table = `
             <table class="modal-table tsp-rate-calc-table">
-                <tr><td>Month</td>${monthHeaderRow}</tr>
-                <tr><td>Required Contribution</td>${requiredContribRow}</tr>
+                <tr><td></td>${monthsRow}</tr>
+                <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Base Pay</td>${basePayRow}</tr>
-                <tr><td>Percentage of Base Pay</td>${pctRow}</tr>
+                <tr><td>Percentage of Base Pay</td>${percentageOfBasePayRow}</tr>
             </table>
             ${extrapolated ? `<div class="tsp-rate-calc-note">* extrapolates previous month data</div>` : ''}
         `;
@@ -392,7 +357,7 @@ function openTSPRateCalculator() {
         modalContent.innerHTML = `
             <div class="tsp-rate-calc-modal-header-row">
                 <div class="tsp-rate-calc-modal-header-main">
-                    <h2 class="tsp-rate-calc-title">TSP Rate Calculator</h2>
+                    <h2 class="tsp-rate-calc-title">TSP Rate Calculator for ${year}</h2>
                     <div class="tsp-rate-calc-desc">
                         This calculator determines the expected TSP contribution percentage to achieve a TSP contribution goal.
                     </div>
@@ -405,18 +370,8 @@ function openTSPRateCalculator() {
                         The contribution limit is set to be the elective deferral limit, which is $${TSP_ELECTIVE_LIMIT.toLocaleString()}
                     </div>
                     <div class="tsp-rate-calc-ytd">
-                        You have currently contributed <b>$${ytdContributed.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP. The remainder you can contribute is: <b>$${remainder.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>
+                        You have currently contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP. The remainder you can contribute is: <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>
                     </div>
-                </div>
-                <div class="tsp-rate-calc-modal-header-years">
-                    <label class="tsp-rate-calc-year-label">
-                        <input type="radio" name="tsp-rate-calc-year" value="${first_month_year}" ${selectedYear === first_month_year ? "checked" : ""}>
-                        <span>${first_month_year}</span>
-                    </label>
-                    <label class="tsp-rate-calc-year-label${enableSecondYear ? "" : " tsp-rate-calc-year-label-disabled"}">
-                        <input type="radio" name="tsp-rate-calc-year" value="${next_year}" ${selectedYear === next_year ? "checked" : ""} ${enableSecondYear ? "" : "disabled"}>
-                        <span>${next_year}</span>
-                    </label>
                 </div>
             </div>
             <div id="tsp-rate-calc-table-container">
@@ -426,26 +381,15 @@ function openTSPRateCalculator() {
 
         // Insert standard float input for goal
         const wrapper = document.getElementById('tsp-rate-calc-goal-wrapper');
-        const inputWrapper = createStandardInput('TSP Goal', 'float', goal);
+        const inputWrapper = createStandardInput('TSP Goal', 'float', tspGoal);
         inputWrapper.querySelector('input').id = 'tsp-rate-calc-goal';
         wrapper.appendChild(inputWrapper);
 
-        // Listeners
-        modalContent.querySelectorAll('input[name="tsp-rate-calc-year"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                selectedYear = parseInt(this.value);
-                render();
-            });
-        });
+        // Listener for update button
         modalContent.querySelector('#tsp-rate-calc-update').addEventListener('click', function() {
             let val = parseFloat(modalContent.querySelector('#tsp-rate-calc-goal').value) || 0;
-            if (selectedYear === first_month_year) {
-                goalCurrentYear = val;
-                localStorage.setItem('tsp_goal_' + first_month_year, val);
-            } else {
-                goalNextYear = val;
-                localStorage.setItem('tsp_goal_' + next_year, val);
-            }
+            tspGoal = val;
+            localStorage.setItem('tsp_goal', val);
             render();
         });
     }
