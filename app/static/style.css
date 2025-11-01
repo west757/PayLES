@@ -1009,11 +1009,15 @@ table.styled td.cell {
     z-index: 3002;
 }
 
-.modal-wide {
+.modal-size-wide {
+    width: 96rem;
+}
+
+.modal-size-mid {
     width: 65rem;
 }
 
-.modal-short {
+.modal-size-short {
     width: 26rem;
 }
 

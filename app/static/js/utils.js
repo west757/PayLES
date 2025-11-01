@@ -103,11 +103,17 @@ function displayBadge(badgeName, list) {
 }
 
 
-function openDynamicModal(width = 'short') {
+function openDynamicModal(width = 'mid') {
     document.getElementById('modal-dynamic').checked = true;
     const modalInner = document.getElementById('modal-inner-dynamic');
-    modalInner.classList.remove('modal-short', 'modal-wide');
-    modalInner.classList.add(width === 'wide' ? 'modal-wide' : 'modal-short');
+    modalInner.classList.remove('modal-size-short', 'modal-size-mid', 'modal-size-wide');
+    if (width === 'wide') {
+        modalInner.classList.add('modal-size-wide');
+    } else if (width === 'short') {
+        modalInner.classList.add('modal-size-short');
+    } else {
+        modalInner.classList.add('modal-size-mid');
+    }
 }
 
 
