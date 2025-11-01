@@ -1010,7 +1010,7 @@ table.styled td.cell {
 }
 
 .modal-size-wide {
-    width: 96rem;
+    width: 90rem;
 }
 
 .modal-size-mid {
@@ -1054,6 +1054,15 @@ table.styled td.cell {
 .modal-table td {
     padding: 0.75rem 1rem;
     border: 1px solid black;
+}
+
+.tsp-rate-calc-table td:first-child,
+.tsp-rate-calc-table tr td:first-child {
+    width: 26rem;
+}
+.tsp-rate-calc-table td:not(:first-child),
+.tsp-rate-calc-table tr td:not(:first-child) {
+    width: 7rem;
 }
 
 
