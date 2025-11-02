@@ -268,7 +268,6 @@ function openTSPRateCalculator() {
     const MONTHS_SHORT = window.CONFIG.MONTHS.map(([short, long]) => short);
     const TSP_ELECTIVE_LIMIT = window.CONFIG.TSP_ELECTIVE_LIMIT;
     const months = window.CONFIG.months;
-
     const year = getRowValue("Year", months[1]);
 
     // Build a list of TSP budget months for this year only
@@ -307,7 +306,6 @@ function openTSPRateCalculator() {
         let percentageOfBasePayRow = '';
         let extrapolated = false;
 
-        // build out each month column
         for (let i = 0; i < MONTHS_SHORT.length; i++) {
             const month = MONTHS_SHORT[i];
             // Grayed out if before or equal to months[1]
@@ -360,7 +358,7 @@ function openTSPRateCalculator() {
                 <div class="tsp-rate-calc-modal-header-main">
                     <h2 class="tsp-rate-calc-title">TSP Rate Calculator for ${year}</h2>
                     <div class="tsp-rate-calc-desc">
-                        This calculator determines the expected TSP contribution percentage to achieve a TSP contribution goal.
+                        This calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. The calculator also only takes into account the months remaining in the year where TSP contributions can be made.
                     </div>
                     <div class="tsp-rate-calc-goal-row">
                         <span>Enter TSP Contribution Goal: </span>
