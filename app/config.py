@@ -308,9 +308,10 @@ class Config:
         }
     )
 
+    DISCREPANCIES_JSON = JSON_FOLDER / "discrepancies.json"
     FAQ_JSON = JSON_FOLDER / "faq.json"
-    REMARKS_JSON = JSON_FOLDER / "remarks.json"
     MODALS_JSON = JSON_FOLDER / "modals.json"
+    REMARKS_JSON = JSON_FOLDER / "remarks.json"
     RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
     LES_EXAMPLE = PDF_FOLDER / "les_example.pdf"

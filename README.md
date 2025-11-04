@@ -64,3 +64,6 @@ You can set these headers in Flask using an after_request handler.
 -->
 
 
+PayLES performs analysis to find any discrepancies between the uploaded LES and calculated values for the first month. 
+        Factors that may cause a discrepancy are an LES older than one month, pay errors, outdated data sets used by PayLES, and 
+        certain specific individual circumstances.

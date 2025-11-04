@@ -1,0 +1,42 @@
+{
+    "Base Pay": {
+        "message": "There is a discrepancy with Base Pay. This may be due to an LES older than one month or pay errors.",
+        "url": "",
+        "linkName": ""
+    },
+    "BAS": {
+        "message": "There is a discrepancy with the BAS. This sometimes happens when the BAS dataset has not been recently updated.",
+        "url": "",
+        "linkName": ""
+    },
+    "BAH": {
+        "message": "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
+        "url": "",
+        "linkName": ""
+    },
+    "Federal Taxes": {
+        "message": "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
+        "url": "",
+        "linkName": ""
+    },
+    "FICA - Social Security": {
+        "message": "There is a discrepancy with FICA - Social Security. This may be due to reaching the Social Security wage base limit.",
+        "url": "",
+        "linkName": ""
+    },
+    "FICA - Medicare": {
+        "message": "There is a discrepancy with FICA - Medicare. This may be due to additional Medicare tax withholding for high earners.",
+        "url": "",
+        "linkName": ""
+    },
+    "SGLI Rate": {
+        "message": "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
+        "url": "",
+        "linkName": ""
+    },
+    "State Taxes": {
+        "message": "There is a discrepancy with State Taxes. This may be due to differences in state tax rates or withholding.",
+        "url": "",
+        "linkName": ""
+    }
+}

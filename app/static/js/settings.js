@@ -169,67 +169,83 @@ function exportBudget(budgetName) {
 }
 
 
-function getDiscrepancyMessage(header) {
-    const messages = {
-        'SGLI Rate': "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
-        'BAH': "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
-        'Federal Taxes': "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
-    };
-    return messages[header] || null;
-}
-
-
 function displayDiscrepancies(discrepancies) {
-    openDynamicModal('mid');
+    const discrepancyMetadata = window.CONFIG.DISCREPANCIES || {};
 
+    openDynamicModal('mid');
     displayBadge('discrepancies', []);
 
-    const content = document.getElementById('modal-content-dynamic');
-    content.innerHTML = '';
+    const modalContent = document.getElementById('modal-content-dynamic');
 
-    const titleText = 'Pay Discrepancies';
-    const title = document.createElement('h2');
-    title.textContent = titleText;
-    content.appendChild(title);
+    let html = `
+        <h2>Pay Discrepancies</h2>
+        <div id="discrepancies-description">
+            PayLES performed an analysis to find any discrepancies between the uploaded LES and calculated values for the first month. 
+            The calculated values are based upon variables pulled from the LES, such as rank, years of service, and location. 
+            <br><br>
+            The factors that may cause a discrepancy are outdated data sets used by PayLES, pay errors, or extremely unique individual circumstances.
+            If there are any discrepancies, please review them carefully.
+            PayLES cannot account for every possible pay scenario, so it is important to verify all information.
+            However, the discrepancies can also be an indicator for potential pay issues.
+            If you have any questions, please reach out to your local finance office for further assistance.
+        </div>
+    `;
 
-    const description = document.createElement('p');
-    description.innerHTML = 'PayLES performs analysis to find any discrepancies between the uploaded LES and calculated values for the first month. Factors that may cause a discrepancy are an LES older than one month, pay errors, outdated data sets used by PayLES, and certain specific individual circumstances.';
-    content.appendChild(description);
+    if (discrepancies && discrepancies.length > 0) {
+        let tableRows = discrepancies.map(row => {
+            let meta = discrepancyMetadata[row.header] || {};
+            let difference = (!isNaN(parseFloat(row.les_value)) && !isNaN(parseFloat(row.calc_value)))
+                ? parseFloat(row.les_value) - parseFloat(row.calc_value)
+                : null;
+            let formattedDifference = difference !== null ? formatValue(difference) : '';
+            let officialSource = meta.url && meta.linkName
+                ? `<a href="${meta.url}" target="_blank" rel="noopener noreferrer">${meta.linkName}</a>`
+                : '';
+            return `
+                <tr>
+                    <td>${row.header}</td>
+                    <td>${formatValue(row.les_value)}</td>
+                    <td>${formatValue(row.calc_value)}</td>
+                    <td>${formattedDifference}</td>
+                    <td>${officialSource}</td>
+                </tr>
+            `;
+        }).join('');
 
-    const tableContainer = document.createElement('div');
-    tableContainer.id = 'discrepancies-table-container';
-    content.appendChild(tableContainer);
-    const messageContainer = document.createElement('div');
-    messageContainer.id = 'discrepancies-message-container';
-    content.appendChild(messageContainer);
-
-    if (!discrepancies || discrepancies.length === 0) {
-        return;
+        html += `
+            <div id="discrepancies-table-container">
+                <table class="modal-table">
+                    <tr>
+                        <td></td>
+                        <td>Value from LES</td>
+                        <td>Calculated Value</td>
+                        <td>Difference</td>
+                        <td>Official Source</td>
+                    </tr>
+                    ${tableRows}
+                </table>
+                <div class="modal-list-text">PayLES found these discrepancies.</div>
+            </div>
+        `;
+    } else {
+        html += `
+            <div id="discrepancies-table-container">
+                <div class="modal-list-text">No discrepancies found.</div>
+            </div>
+        `;
     }
 
-    let tableHTML = `<table class="modal-table">
-        <tr>
-            <td>Header</td>
-            <td>Value from LES</td>
-            <td>Calculated Value</td>
-        </tr>`;
-    let messages = [];
+    let messages = '';
+    if (discrepancies && discrepancies.length > 0) {
+        messages = discrepancies.map(row => {
+            let meta = discrepancyMetadata[row.header];
+            return meta && meta.message ? `<div class="modal-list-text">${meta.message}</div>` : '';
+        }).join('');
+    }
 
-    discrepancies.forEach(row => {
-        tableHTML += `<tr>
-            <td>${row.header}</td>
-            <td>${formatValue(row.les_value)}</td>
-            <td>${formatValue(row.calc_value)}</td>
-        </tr>`;
-        const msg = getDiscrepancyMessage(row.header);
-        if (msg) messages.push(`<div class="modal-list-text">${msg}</div>`);
-    });
+    html += `<div id="discrepancies-message-container">${messages}</div>`;
 
-    tableHTML += `</table>
-        <div class="modal-list-text">PayLES found these discrepancies.</div>`;
-
-    tableContainer.innerHTML = tableHTML;
-    messageContainer.innerHTML = messages.join('');
+    modalContent.innerHTML = html;
 }
 
 
@@ -345,9 +361,9 @@ function openTSPRateCalculator() {
             <div>
                 The TSP Rate Calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. 
                 Only months remaining in the year where you can make TSP contributions are taken into account.
-                This calculator's functionality mirrors the <a href="https://www.tsp.gov/making-contributions/how-much-can-i-contribute/#panel-1" target="_blank" rel="noopener noreferrer">official TSP Rate Calculator</a>.
+                This calculator's functionality mirrors the <a href="https://www.tsp.gov/making-contributions/how-much-can-i-contribute/#panel-1" target="_blank" rel="noopener noreferrer">official TSP Contribution Calculator</a>.
                 <br><br>
-                You cannot set a goal higher than the current elective deferral limit, which is <b>$${TSP_ELECTIVE_LIMIT.toLocaleString()}</b>.
+                You cannot set a goal higher than the current yearly elective deferral limit, which is <b>$${TSP_ELECTIVE_LIMIT.toLocaleString()}</b>.
                 <br><br>
                 Additionally, you have already contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP year-to-date, meaning the maximum additional amount you can contribute is <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>.
             </div>
