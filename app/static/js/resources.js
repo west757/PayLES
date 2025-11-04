@@ -85,7 +85,7 @@ function renderResourceList(resources) {
 		const cats = resource.category ? `<span class="resource-category-badge">${resource.category}</span>` : '';
 		const branches = resource.branch ? `<span class="resource-branch-badge">${resource.branch}</span>` : '';
 		return `
-			<div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank')" title="${resource.name}">
+			<div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')" title="${resource.name}">
 				${star}
 				<div class="resource-main">
 					<div class="resource-name">${resource.name}</div>

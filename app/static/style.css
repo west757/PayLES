@@ -8,6 +8,7 @@
     --secondary_light_accent_color: #f1f1f1;
     --input_background_color: #eeeeee;
     --table_border_color: #dddddd;
+    --cell_grayout_color: #e0e0e0;
     --button_disabled_color: #867f7f;
     --cell_disabled_color: #cecdcd;
     --primary_green_accent_color: #0c9a65;
@@ -320,11 +321,11 @@ input[type="text"], select {
 }
 
 .input-adornment-left {
-    margin-right: 0.5em;
+    margin-right: 0.25rem;
 }
 
 .input-adornment-right {
-    margin-left: 0.5em;
+    margin-left: 0.25rem;
 }
 
 
@@ -1042,89 +1043,35 @@ table.styled td.cell {
     border: 1px solid black;
 }
 
-
-
-
 .tsp-rate-calc-table td:first-child,
 .tsp-rate-calc-table tr td:first-child {
-    width: 26rem;
+    width: 30rem;
 }
 .tsp-rate-calc-table td:not(:first-child),
 .tsp-rate-calc-table tr td:not(:first-child) {
-    width: 10rem;
+    width: 7rem;
 }
 
-.tsp-rate-calculator .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
-}
-.tsp-rate-calculator .header-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.tsp-rate-calculator .title { margin-bottom: 0.5rem; }
-.tsp-rate-calculator .desc { margin-bottom: 1rem; }
-.tsp-rate-calculator .goal-row {
-    display: flex;
+.tsp-rate-calculator-goal-container {
     align-items: center;
-    margin-bottom: 0.5rem;
-    gap: 1rem;
-}
-.tsp-rate-calculator .update-btn {
-    margin-left: 0.5rem;
-    height: 2rem;
-    font-size: 0.95em;
-}
-.tsp-rate-calculator .limit {
-    font-size: 0.95em;
-    color: #444;
-    margin-bottom: 0.5rem;
-}
-.tsp-rate-calculator .ytd {
-    font-size: 0.95em;
-    color: #444;
-    margin-bottom: 1.5rem;
-}
-
-.tsp-rate-calc-modal-header-years {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0 1.5rem 0;
 }
 
-.tsp-rate-calc-year-label {
-    display: flex;
-    align-items: center;
-    color: #000;
-    margin-left: 0.5em;
+#button-tsp-rate-calculator-update {
+    height: 2rem;
+    margin: 0 0 0 0.5rem;
 }
-
-.tsp-rate-calc-year-label-disabled {
-    color: #aaa;
-}
-
 
 .tsp-rate-calc-grayout {
-    background: #e0e0e0 !important;
-    color: #888 !important;
+    background: var(--cell_grayout_color);
 }
 
-.tsp-rate-calc-note {
-    margin-top: 0.5rem;
-    font-size: 0.95em;
-    color: #666;
-    text-align: left;
-    padding-left: 1rem;
+#extrapolated-note {
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0 1rem;
 }
-
-
-
-
 
 /* account modal grid */
 .modal-grid {

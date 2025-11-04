@@ -267,7 +267,7 @@ function openTSPRateCalculator() {
     const months = window.CONFIG.months;
     const year = getRowValue("Year", months[1]);
 
-    // Build a list of TSP budget months for this year only
+    // get a list of all months in TSP budget for the first editable month's year
     let monthsInTSPForYear = [];
     for (let i = 0; i < months.length; i++) {
         if (getRowValue("Year", months[i]) === year) {
@@ -275,8 +275,9 @@ function openTSPRateCalculator() {
         }
     }
 
-    // Find the index of the first and last ediitable month in MONTHS_SHORT
+    // first editable month index is used to determine which months earlier in the year are grayed out
     const firstEditableMonthIndex = MONTHS_SHORT.indexOf(months[1]);
+    // last editable month index is used to determine which months later in the year are extrapolated
     const lastEditableMonthIndex = MONTHS_SHORT.indexOf(monthsInTSPForYear[monthsInTSPForYear.length - 1]);
 
     // set tspGoal from localStorage or default to TSP_ELECTIVE_LIMIT
@@ -288,11 +289,8 @@ function openTSPRateCalculator() {
     function render() {
         let electiveDeferralRemaining = getRowValue("Elective Deferral Remaining", months[0]);
         let electiveDeferralContribution = Math.max(TSP_ELECTIVE_LIMIT - electiveDeferralRemaining, 0);
-
-        let goalRemaining = Math.max(tspGoal - electiveDeferralContribution, 0);
-        let minimumContribution = goalRemaining / (MONTHS_SHORT.length - (firstEditableMonthIndex));
-
-        // Get last base pay value from the TSP budget for this year
+        let tspGoalRemaining = Math.max(tspGoal - electiveDeferralContribution, 0);
+        let minimumContribution = tspGoalRemaining / (MONTHS_SHORT.length - (firstEditableMonthIndex));
         let lastBasePayValue = getRowValue("Base Pay Total", monthsInTSPForYear[monthsInTSPForYear.length - 1]);
 
         let monthsRow = '';
@@ -339,29 +337,25 @@ function openTSPRateCalculator() {
                 <tr><td>Base Pay</td>${basePayRow}</tr>
                 <tr><td>Percentage of Base Pay</td>${percentageOfBasePayRow}</tr>
             </table>
-            ${showExtrapolatedNote ? `<div>* extrapolates previous month data</div>` : ''}
+            ${showExtrapolatedNote ? `<div id="extrapolated-note">* extrapolates previous month data</div>` : ''}
         `;
 
         modalContent.innerHTML = `
             <div class="tsp-rate-calculator">
-                <div class="header-row">
-                    <div class="header-main">
-                        <h2 class="title">TSP Rate Calculator for ${year}</h2>
-                        <div class="desc">
-                            This calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. The calculator also only takes into account the months remaining in the year where TSP contributions can be made.
-                        </div>
-                        <div class="goal-row">
-                            <span>Enter TSP Contribution Goal: </span>
-                            <span id="goal-input-wrapper"></span>
-                            <button id="goal-update" class="button-generic button-positive update-btn">Update</button>
-                        </div>
-                        <div class="limit">
-                            The contribution limit is set to be the elective deferral limit, which is $${TSP_ELECTIVE_LIMIT.toLocaleString()}
-                        </div>
-                        <div class="ytd">
-                            You have currently contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP. The remainder you can contribute is: <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>
-                        </div>
-                    </div>
+                <h2>TSP Rate Calculator for ${year}</h2>
+                <div>
+                    The TSP Rate Calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. 
+                    Only months remaining in the year where you can make TSP contributions are taken into account.
+                    This calculator's functionality mirrors the <a href="https://www.tsp.gov/making-contributions/how-much-can-i-contribute/#panel-1" target="_blank" rel="noopener noreferrer">official TSP Rate Calculator</a>.
+                    <br><br>
+                    You cannot set a goal higher than the current elective deferral limit, which is <b>$${TSP_ELECTIVE_LIMIT.toLocaleString()}</b>.
+                    <br><br>
+                    Additionally, you have already contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP year-to-date, meaning the maximum additional amount you can contribute is <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>.
+                </div>
+                <div class="tsp-rate-calculator-goal-container">
+                    <span>Enter TSP Contribution Goal: </span>
+                    <div id="tsp-rate-calculator-goal-location"></div>
+                    <button id="button-tsp-rate-calculator-update" class="button-generic button-positive">Update</button>
                 </div>
                 <div id="table-container">
                     ${table}
@@ -369,30 +363,30 @@ function openTSPRateCalculator() {
             </div>
         `;
 
-        const wrapper = document.getElementById('goal-input-wrapper');
-        const inputWrapper = createStandardInput('TSP Goal', 'float', tspGoal);
-        const input = inputWrapper.querySelector('input');
-        input.id = 'goal-input';
+        const location = document.getElementById('tsp-rate-calculator-goal-location');
+        const wrapper = createStandardInput('TSP Goal', 'float', tspGoal);
+        const input = wrapper.querySelector('input');
+        input.id = 'tsp-rate-calculator-goal';
         input.setAttribute('max', TSP_ELECTIVE_LIMIT);
 
-        // Prevent input above elective limit
+        // prevent input above the elective limit
         input.addEventListener('beforeinput', function(e) {
-            // Only handle insertions
+            // only handle insertions
             if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
                 let current = input.value;
                 const start = input.selectionStart;
                 const end = input.selectionEnd;
-                // Simulate new value after input
+                // simulate new value after input
                 let newValue = current.slice(0, start) + e.data + current.slice(end);
-                // Remove non-numeric except dot
+                // remove non-numeric except dot
                 newValue = newValue.replace(/[^0-9.]/g, '');
-                // Only allow one dot
+                // only allow one dot
                 let parts = newValue.split('.');
                 if (parts.length > 2) {
                     e.preventDefault();
                     return;
                 }
-                // Parse as float
+                // parse as float
                 let floatVal = parseFloat(newValue);
                 if (!isNaN(floatVal) && floatVal > TSP_ELECTIVE_LIMIT) {
                     e.preventDefault();
@@ -401,10 +395,10 @@ function openTSPRateCalculator() {
             }
         });
 
-        wrapper.appendChild(inputWrapper);
+        location.appendChild(wrapper);
 
-        modalContent.querySelector('#goal-update').addEventListener('click', function() {
-            let goal = parseFloat(modalContent.querySelector('#goal-input').value) || 0;
+        modalContent.querySelector('#button-tsp-rate-calculator-update').addEventListener('click', function() {
+            let goal = parseFloat(modalContent.querySelector('#tsp-rate-calculator-goal').value) || 0;
             tspGoal = goal;
             localStorage.setItem('tsp_goal', goal);
             render();

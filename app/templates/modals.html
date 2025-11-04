@@ -29,7 +29,7 @@
             <p>More Resources:</p>
             <ul>
                 {% for resource in modal.resources %}
-                    <li><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></li>
+                    <li><a href="{{ resource.link }}" target="_blank" rel="noopener noreferrer">{{ resource.title }}</a></li>
                 {% endfor %}
             </ul>
         </div>
