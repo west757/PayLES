@@ -10,8 +10,6 @@ short-term:
 - drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
-- tsp rate calculator modal
-- updates
 - refactor resources
 
 mid-term:

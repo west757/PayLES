@@ -307,7 +307,7 @@ function openTSPRateCalculator() {
 
             monthsRow += `<td>${month}${isExtrapolated ? '*' : ''}</td>`;
 
-            minimumContributionRow += `<td${isEmpty ? ' class="tsp-rate-calc-grayout"' : ''}>`;
+            minimumContributionRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
             if (!isEmpty) minimumContributionRow += `$${minimumContribution.toFixed(2)}`;
             minimumContributionRow += `</td>`;
 
@@ -317,7 +317,7 @@ function openTSPRateCalculator() {
             } else if (!isEmpty && isExtrapolated) {
                 basePay = lastBasePayValue;
             }
-            basePayRow += `<td${isEmpty ? ' class="tsp-rate-calc-grayout"' : ''}>`;
+            basePayRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
             if (basePay !== null && basePay !== undefined && !isEmpty) {
                 basePayRow += `$${basePay.toFixed(2)}`;
             }
@@ -327,40 +327,36 @@ function openTSPRateCalculator() {
             if (basePay && !isEmpty) {
                 percentageOfBasePay = ((minimumContribution / basePay) * 100).toFixed(2) + "%";
             }
-            percentageOfBasePayRow += `<td${isEmpty ? ' class="tsp-rate-calc-grayout"' : ''}>${percentageOfBasePay}</td>`;
+            percentageOfBasePayRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>${percentageOfBasePay}</td>`;
         }
 
         let table = `
-            <table class="modal-table tsp-rate-calc-table">
+            <table class="modal-table table-tsp-rate-calculator">
                 <tr><td></td>${monthsRow}</tr>
                 <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Base Pay</td>${basePayRow}</tr>
-                <tr><td>Percentage of Base Pay</td>${percentageOfBasePayRow}</tr>
+                <tr><td>Percent of Base Pay</td>${percentageOfBasePayRow}</tr>
             </table>
             ${showExtrapolatedNote ? `<div id="extrapolated-note">* extrapolates previous month data</div>` : ''}
         `;
 
         modalContent.innerHTML = `
-            <div class="tsp-rate-calculator">
-                <h2>TSP Rate Calculator for ${year}</h2>
-                <div>
-                    The TSP Rate Calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. 
-                    Only months remaining in the year where you can make TSP contributions are taken into account.
-                    This calculator's functionality mirrors the <a href="https://www.tsp.gov/making-contributions/how-much-can-i-contribute/#panel-1" target="_blank" rel="noopener noreferrer">official TSP Rate Calculator</a>.
-                    <br><br>
-                    You cannot set a goal higher than the current elective deferral limit, which is <b>$${TSP_ELECTIVE_LIMIT.toLocaleString()}</b>.
-                    <br><br>
-                    Additionally, you have already contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP year-to-date, meaning the maximum additional amount you can contribute is <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>.
-                </div>
-                <div class="tsp-rate-calculator-goal-container">
-                    <span>Enter TSP Contribution Goal: </span>
-                    <div id="tsp-rate-calculator-goal-location"></div>
-                    <button id="button-tsp-rate-calculator-update" class="button-generic button-positive">Update</button>
-                </div>
-                <div id="table-container">
-                    ${table}
-                </div>
+            <h2>TSP Rate Calculator for ${year}</h2>
+            <div>
+                The TSP Rate Calculator determines the minimum TSP contribution percentage of your base pay to achieve a TSP contribution goal. 
+                Only months remaining in the year where you can make TSP contributions are taken into account.
+                This calculator's functionality mirrors the <a href="https://www.tsp.gov/making-contributions/how-much-can-i-contribute/#panel-1" target="_blank" rel="noopener noreferrer">official TSP Rate Calculator</a>.
+                <br><br>
+                You cannot set a goal higher than the current elective deferral limit, which is <b>$${TSP_ELECTIVE_LIMIT.toLocaleString()}</b>.
+                <br><br>
+                Additionally, you have already contributed <b>$${electiveDeferralContribution.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b> to the TSP year-to-date, meaning the maximum additional amount you can contribute is <b>$${electiveDeferralRemaining.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</b>.
             </div>
+            <div class="tsp-rate-calculator-goal-container">
+                <span>Enter TSP Contribution Goal: </span>
+                <div id="tsp-rate-calculator-goal-location"></div>
+                <button id="button-tsp-rate-calculator-update" class="button-generic button-positive">Update</button>
+            </div>
+            ${table}
         `;
 
         const location = document.getElementById('tsp-rate-calculator-goal-location');
@@ -368,37 +364,14 @@ function openTSPRateCalculator() {
         const input = wrapper.querySelector('input');
         input.id = 'tsp-rate-calculator-goal';
         input.setAttribute('max', TSP_ELECTIVE_LIMIT);
-
-        // prevent input above the elective limit
-        input.addEventListener('beforeinput', function(e) {
-            // only handle insertions
-            if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
-                let current = input.value;
-                const start = input.selectionStart;
-                const end = input.selectionEnd;
-                // simulate new value after input
-                let newValue = current.slice(0, start) + e.data + current.slice(end);
-                // remove non-numeric except dot
-                newValue = newValue.replace(/[^0-9.]/g, '');
-                // only allow one dot
-                let parts = newValue.split('.');
-                if (parts.length > 2) {
-                    e.preventDefault();
-                    return;
-                }
-                // parse as float
-                let floatVal = parseFloat(newValue);
-                if (!isNaN(floatVal) && floatVal > TSP_ELECTIVE_LIMIT) {
-                    e.preventDefault();
-                    showToast(`Cannot enter a value greater than the TSP elective limit ($${TSP_ELECTIVE_LIMIT.toLocaleString()})`);
-                }
-            }
-        });
-
         location.appendChild(wrapper);
 
         modalContent.querySelector('#button-tsp-rate-calculator-update').addEventListener('click', function() {
             let goal = parseFloat(modalContent.querySelector('#tsp-rate-calculator-goal').value) || 0;
+            if (goal > TSP_ELECTIVE_LIMIT) {
+                showToast(`Cannot enter a value greater than the TSP elective limit ($${TSP_ELECTIVE_LIMIT.toLocaleString()})`);
+                return;
+            }
             tspGoal = goal;
             localStorage.setItem('tsp_goal', goal);
             render();

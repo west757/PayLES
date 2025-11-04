@@ -292,8 +292,15 @@ function createStandardInput(header, field, value = '') {
         input.placeholder = '0.00';
 
         input.classList.add('input-mid');
-        input.maxLength = 9;
+
+        if (header === 'TSP Goal') {
+            input.maxLength = 8;
+            input.addEventListener('input', setInputRestriction('float', 5));
+        }
+        else{
+            input.maxLength = 9;
         input.addEventListener('input', setInputRestriction('float', 6));
+        }
 
         const isNegative = value < 0 ? true : false;
         adornment = document.createElement('span');
