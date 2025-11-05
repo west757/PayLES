@@ -21,7 +21,6 @@ mid-term:
 - when going to a new resource page, go to top
 - number of resources when filtering
 - set initial value for template rows (submarine, dive, jump, etc)
-- error checking and validation for les variables
 - joint spouse with two LES's
 
 long-term:
@@ -52,8 +51,8 @@ potential:
 - show custom rows setting
 - import/export for custom rows
 
-3. Security Headers
 
+3. Security Headers
 Content-Security-Policy: restricts sources for scripts, styles, etc.
 X-Frame-Options: prevents clickjacking by disallowing your site in iframes.
 X-Content-Type-Options: nosniff: prevents MIME type sniffing.
@@ -61,8 +60,3 @@ Strict-Transport-Security: enforces HTTPS.
 You can set these headers in Flask using an after_request handler.
 
 -->
-
-
-PayLES performs analysis to find any discrepancies between the uploaded LES and calculated values for the first month. 
-        Factors that may cause a discrepancy are an LES older than one month, pay errors, outdated data sets used by PayLES, and 
-        certain specific individual circumstances.

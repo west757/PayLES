@@ -9,7 +9,7 @@ from app.pay import (
 )
 from app.calculations import (
     calc_income,
-    calc_expenses_net,
+    calc_expenses,
     calc_difference,
     calc_ytds,
 )
@@ -46,10 +46,10 @@ def init_budgets(pay_variables, tsp_variables, year, month, les_text=None):
 
         tsp = init_tsp(tsp_variables, pay, month, les_text)
         
-        taxes, expenses, net_pay = calc_expenses_net(pay, month)
+        taxes, expenses = calc_expenses(pay, month)
         add_mv_pair(pay, 'Taxes', month, taxes)
         add_mv_pair(pay, 'Total Expenses', month, expenses)
-        add_mv_pair(pay, 'Net Pay', month, net_pay)
+        add_mv_pair(pay, 'Net Pay', month, income + expenses)
 
         pay = add_ytds(pay, month, les_text)
     else:
@@ -67,10 +67,10 @@ def init_budgets(pay_variables, tsp_variables, year, month, les_text=None):
         add_mv_pair(pay, 'Traditional TSP', month, -(get_row_value(tsp, 'Trad TSP Contribution', month) + get_row_value(tsp, 'Trad TSP Exempt Contribution', month)))
         add_mv_pair(pay, 'Roth TSP', month, -(get_row_value(tsp, 'Roth TSP Contribution', month)))
 
-        taxes, expenses, net_pay = calc_expenses_net(pay, month)
+        taxes, expenses = calc_expenses(pay, month)
         add_mv_pair(pay, 'Taxes', month, taxes)
         add_mv_pair(pay, 'Total Expenses', month, expenses)
-        add_mv_pair(pay, 'Net Pay', month, net_pay)
+        add_mv_pair(pay, 'Net Pay', month, income + expenses)
 
         ytd_income, ytd_expenses, ytd_net_pay = calc_ytds(pay, month)
         add_mv_pair(pay, 'YTD Income', month, ytd_income)
@@ -140,10 +140,10 @@ def build_month(pay, tsp, month, prev_month, cell=None, init=False):
 
     pay = update_pays(pay, month, prev_month, sign=-1, cell=cell, init=init)
 
-    taxes, expenses, net_pay = calc_expenses_net(pay, month)
+    taxes, expenses = calc_expenses(pay, month)
     add_mv_pair(pay, 'Taxes', month, taxes)
     add_mv_pair(pay, 'Total Expenses', month, expenses)
-    add_mv_pair(pay, 'Net Pay', month, net_pay)
+    add_mv_pair(pay, 'Net Pay', month, income + expenses)
 
     difference = calc_difference(pay, month, prev_month)
     add_mv_pair(pay, 'Difference', month, difference)

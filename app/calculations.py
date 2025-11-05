@@ -6,16 +6,16 @@ from app.utils import (
 
 
 def calc_income(pay, month):
-    taxable = 0.00
-    nontaxable = 0.00
+    taxable = 0.0
+    nontaxable = 0.0
 
     combat_zone = get_row_value(pay, "Combat Zone", month)
 
     income_rows = [row for row in pay if row.get('type') in ['ent', 'inc']]
     for row in income_rows:
-        value = row.get(month, 0.0)
-        tax = row.get('tax', False)
-        type = row.get('type')
+        value = row[month]
+        tax = row['tax']
+        type = row['type']
 
         if (
             (type == 'ent' and combat_zone == "Yes") or
@@ -29,35 +29,24 @@ def calc_income(pay, month):
         ):
             taxable += value
 
-    taxable = round(taxable, 2)
-    nontaxable = round(nontaxable, 2)
-    income = round(taxable + nontaxable, 2)
-
-    return taxable, nontaxable, income
+    return round(taxable, 2), round(nontaxable, 2), round(taxable + nontaxable, 2)
 
 
-def calc_expenses_net(pay, month):
-    taxes = 0.00
-    expenses = 0.00
+def calc_expenses(pay, month):
+    taxes = 0.0
+    expenses = 0.0
 
     expense_rows = [row for row in pay if row.get('type') in ['ded', 'alt', 'exp']]
     for row in expense_rows:
         expenses += row[month]
-        if row.get('tax', False):
+        if row['tax']:
             taxes += row[month]
 
-    income = get_row_value(pay, 'Total Income', month)
-    net_pay = income + expenses
-    expenses = round(expenses, 2)
-    taxes = round(taxes, 2)
-    net_pay = round(net_pay, 2)
-
-    return taxes, expenses, net_pay
+    return round(taxes, 2), round(expenses, 2)
 
 
 def calc_difference(pay, month, prev_month):
-    difference = round(get_row_value(pay, "Net Pay", month) - get_row_value(pay, "Net Pay", prev_month), 2)
-    return difference
+    return round(get_row_value(pay, "Net Pay", month) - get_row_value(pay, "Net Pay", prev_month), 2)
 
 
 def calc_ytds(pay, month, prev_month=None):
@@ -69,11 +58,11 @@ def calc_ytds(pay, month, prev_month=None):
     expenses = get_row_value(pay, 'Total Expenses', month)
     net_pay = get_row_value(pay, 'Net Pay', month)
 
-    ytd_income = income if month == "JAN" else round(ytd_income + income, 2)
-    ytd_expenses = expenses if month == "JAN" else round(ytd_expenses + expenses, 2)
-    ytd_net_pay = net_pay if month == "JAN" else round(ytd_net_pay + net_pay, 2)
+    ytd_income = income if month == "JAN" else ytd_income + income
+    ytd_expenses = expenses if month == "JAN" else ytd_expenses + expenses
+    ytd_net_pay = net_pay if month == "JAN" else ytd_net_pay + net_pay
 
-    return ytd_income, ytd_expenses, ytd_net_pay
+    return round(ytd_income, 2), round(ytd_expenses, 2), round(ytd_net_pay, 2)
 
 
 
@@ -89,13 +78,13 @@ def calc_base_pay(pay, month):
     pay_row = PAY_ACTIVE[PAY_ACTIVE["grade"] == grade]
     month_cols = [int(col) * 12 for col in pay_row.columns[1:]]
 
-    idx = 0
+    index = 0
     for i, m in enumerate(month_cols):
         if months_in_service < m:
-            idx = i - 1 if i > 0 else 0
+            index = i - 1 if i > 0 else 0
             break
 
-    selected_col = pay_row.columns[idx + 1]
+    selected_col = pay_row.columns[index + 1]
 
     base_pay = pay_row[selected_col].iloc[0]
     return round(float(base_pay), 2)
@@ -121,10 +110,7 @@ def calc_bah(pay, month):
     if military_housing_area_code == "Not Found":
         return 0.00
 
-    if dependents > 0:
-        BAH_DF = flask_app.config['BAH_WITH_DEPENDENTS']
-    else:
-        BAH_DF = flask_app.config['BAH_WITHOUT_DEPENDENTS']
+    BAH_DF = flask_app.config['BAH_WITH_DEPENDENTS'] if dependents > 0 else flask_app.config['BAH_WITHOUT_DEPENDENTS']
 
     bah_row = BAH_DF[BAH_DF["mha"] == military_housing_area_code]
     bah = bah_row[grade].values[0]
