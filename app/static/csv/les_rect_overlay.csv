@@ -1,7 +1,7 @@
 header,x1,y1,x2,y2,modal,tooltip
-id,74,126,195,228,none,This field is unused
-grade,990,126,1170,228,basepay,"Grade. Different than rank, which is the title of the grade specific for each branch"
-pay date,1170,126,1380,228,pebd,"Marks the point for calculating length of service, same as Pay Entry Base Date (PEBD)"
+id,74,126,195,228,none,This field is currently unused by DFAS
+grade,990,126,1170,228,basepay,"Service member's grade. Different than rank, which is the title of the grade specific for each branch"
+pay date,1170,126,1380,228,pebd,"Pay Entry Base Date (PEBD), marks the point for calculating length of service. It is typically the same as the Enter Active Duty (EAD) date, however can differ based off of breaks in service or certain National Guard/Reserve months of service stipulations"
 years service,1380,126,1590,228,none,Years of creditable service
 ets,1590,126,1740,228,none,"Expiration Term of Service, same as Expiration of Active Obligated Service (EAOS)"
 branch,1740,126,1920,228,none,Branch of U.S. Military

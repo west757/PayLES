@@ -139,7 +139,7 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Months') {
-            options = Object.keys(window.CONFIG.MONTHS);
+            options = window.CONFIG.MONTHS.map(([key, _]) => key);
             input.classList.add('input-short');
         }
 

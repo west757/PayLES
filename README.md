@@ -11,17 +11,17 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
+- tag for resources which require a CAC
+- when going to a new resource page, go to top
+- number of resources when filtering
 
 mid-term:
 - get combat zone from les
 - determine if user is active duty or national guard
 - guide modals
 - add pro-rated calculations for rows grade and zip code
-- tag for resources which require a CAC
-- when going to a new resource page, go to top
-- number of resources when filtering
 - set initial value for template rows (submarine, dive, jump, etc)
-- joint spouse with two LES's
+- joint spouse with two LES
 
 long-term:
 - leave calculator

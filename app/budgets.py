@@ -107,10 +107,7 @@ def add_months(pay, tsp, month, months_num, init=False):
 def update_months(pay, tsp, months, cell=None):
     # if cell is provided, start from that month and update from there
     # else, start from the second month to update entire budget
-    if cell:
-        start_idx = months.index(cell.get('month'))
-    else:
-        start_idx = 1
+    start_idx = months.index(cell.get('month')) if cell else 1
 
     for i in range(start_idx, len(months)):
         pay, tsp = build_month(pay, tsp, months[i], months[i-1], cell=cell)
@@ -213,14 +210,11 @@ def remove_months(pay, tsp, months_num):
     months = get_months(pay)
     months_to_remove = months[months_num:]
 
-    for row in pay:
-        for month in months_to_remove:
-            if month in row:
-                del row[month]
-    for row in tsp:
-        for month in months_to_remove:
-            if month in row:
-                del row[month]
+    for budget in (pay, tsp):
+        for row in budget:
+            for month in months_to_remove:
+                if month in row:
+                    del row[month]
     months = months[:months_num]
 
     return pay, tsp, months
@@ -266,7 +260,7 @@ def remove_row(pay, headers, header):
     row = get_row_value(pay, header)
     pay = [r for r in pay if r.get('header').lower() != header.lower()]
     
-    if row.get('type') == 'c':
+    if row.get('type') in ['inc', 'exp']:
         headers = [h for h in headers if h.get('header').lower() != header.lower()]
 
     return pay, headers
