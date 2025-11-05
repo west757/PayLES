@@ -11,28 +11,24 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
+- determine if user is active duty or national guard
 
 mid-term:
 - get combat zone from les
 - guide modals
 - add pro-rated calculations for rows grade and zip code
-- get component from LES, maybe use TPC or PACIDN
-- recommendation for mid-month pay
-- show custom rows checkbox
-- rows displayed setting
 - tag for resources which require a CAC
 - when going to a new resource page, go to top
 - number of resources when filtering
-- update discrepancy messages
+- set initial value for template rows (submarine, dive, jump, etc)
+- error checking and validation for les variables
 
 long-term:
 - leave calculator
-- set initial value for template rows (submarine, dive, jump, etc)
-- resolve rounding errors (tsp off by 1 cent)
+- resolve rounding errors (tsp off by 1 cent, or tolerance in discrepancy calculation)
 - update readme
 - add comments to code
 - add loading screen after submitting LES
-- import/export for custom rows
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
@@ -49,9 +45,12 @@ long-term:
 - uncomment prompt when leaving budget page
 - better css for border table scroll bar
 - uncomment les age limit check
-- error checking and validation for les variables
 - change main.py from debug when moving to prod
 
+potential:
+- rows displayed setting
+- show custom rows setting
+- import/export for custom rows
 
 3. Security Headers
 

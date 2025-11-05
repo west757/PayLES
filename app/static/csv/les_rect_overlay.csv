@@ -55,7 +55,7 @@ dependents for jftr,1484,1140,1634,1238,cola,Number of dependents member has to 
 jftr 2,1634,1140,1814,1238,cola,JFTR code based on the location of the members dependents to calculate COLA
 bas type,1814,1140,1994,1238,none,"Basic Allowance of Subsistence (BAS) type, if applicable. B - Separate rations, C - TDY/PCS/Proceed time, H - Rations-in-kind not available, K - Rations under emergency conditions. This field is blank for officers"
 charity ytd,1994,1140,2189,1238,none,Total amount of charitable contributions throughout the calendar year
-tpc,2190,1140,2279,1238,none,This field is currently unused by DFAS
+tpc,2190,1140,2279,1238,none,"Training Program Codes, used to identify duty for Reserve and National Guard Members"
 pacidn,2280,1140,2474,1238,none,Unit Identification Code (UIC). Army use only
 traditional tsp,74,1240,374,1338,tsp,Traditional Thrift Savings Plan (TSP)
 traditional base pay rate,376,1240,614,1338,tsp,Percentage of base pay elected for traditional TSP contribution

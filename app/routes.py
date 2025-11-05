@@ -134,7 +134,7 @@ def route_single():
             'months': months,
             'headers': headers,
             'discrepancies': compare_pay(pay, pay_calc, month),
-            'pay_recommendations': add_pay_recommendations(pay, tsp, months),
+            'pay_recommendations': add_pay_recommendations(pay, tsp, months, les_text=les_text),
             'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
             'DISCREPANCIES': load_json(flask_app.config['DISCREPANCIES_JSON']),
         }

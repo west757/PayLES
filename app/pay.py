@@ -86,7 +86,7 @@ def get_pay_variables_from_les(les_text):
     try:
         zip_code = les_text.get('vha_zip', None)
         if not zip_code or zip_code == "00000":
-            raise ValueError(f"Invalid LES zip code: {zip_code}")
+            zip_code = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining zip code from LES text"))
     pay_variables['Zip Code'] = zip_code
@@ -103,7 +103,7 @@ def get_pay_variables_from_les(les_text):
     try:
         home_of_record = les_text.get('state', None)
         if not home_of_record or home_of_record == "98":
-            raise ValueError(f"Invalid LES home of record: {home_of_record}")
+            home_of_record = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining home of record from LES text"))
     pay_variables['Home of Record'] = home_of_record
@@ -485,8 +485,18 @@ def compare_pay(pay_les, pay_calc, month):
     return discrepancies
 
 
-def add_pay_recommendations(pay, tsp, months):
+def add_pay_recommendations(pay, tsp, months, les_text=None):
     recs = {}
+
+    # mid-month pay recommendation
+    if les_text:
+        if "MID-MONTH-PAY" not in les_text['deductions']:
+            recs['mid_month_pay'] = {
+                'months': months,
+                'text': (
+                    '<b>Mid-Month Pay:</b> You currently do not have mid-month pay. PayLES recommends setting to get mid-month pay to get half of your pay 2 weeks earlier.'
+                )
+            }
 
     # SGLI minimum coverage recommendation
     sgli_months = []

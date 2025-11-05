@@ -5,38 +5,38 @@
         "url": "https://militarypay.defense.gov/Pay/Basic-Pay/"
     },
     "BAS": {
-        "message": "There is a discrepancy with the BAS. This sometimes happens when the BAS dataset has not been recently updated.",
+        "message": "There is a discrepancy with the BAS. This can occur if you have changed from BAS rate I to rate II or vice versa. Please verify your current BAS rate to ensure accuracy.",
         "urlname": "DFAS BAS Chart",
         "url": "https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/bas/"
     },
     "BAH": {
-        "message": "There is a discrepancy with the BAH. This may be due to recent changes in locality rates.",
+        "message": "There is a discrepancy with the BAH. This may be due to recent changes in locality rates. Please verify that the zip code used to determine your BAH rate is correct in addition to the number of dependents you have claimed. Contact your personnel office if you need to update your number of dependents.",
         "urlname": "DTMO BAH Rate Lookup",
         "url": "https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/"
     },
     "Federal Taxes": {
-        "message": "There is a discrepancy with Federal Taxes. This may be due to differences in withholding or filing status.",
+        "message": "There is a discrepancy with Federal Taxes. This may be due to a mismatch between the variables which calculate federal taxes such as filing status, number of dependents, and additional withholdings.",
         "urlname": "IRS Tax Withholding Estimator",
         "url": "https://www.irs.gov/individuals/tax-withholding-estimator"
     },
     "FICA - Social Security": {
-        "message": "There is a discrepancy with FICA - Social Security. This may be due to reaching the Social Security wage base limit.",
+        "message": "There is a discrepancy with FICA - Social Security. This may be due to a difference in base pay between what you currently earned versus what you were expected to earn according to your pay grade and years of service.",
         "urlname": "DFAS FICA Chart",
         "url": "https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/"
     },
     "FICA - Medicare": {
-        "message": "There is a discrepancy with FICA - Medicare. This may be due to additional Medicare tax withholding for high earners.",
+        "message": "There is a discrepancy with FICA - Medicare. This may be due to a difference in base pay between what you currently earned versus what you were expected to earn according to your pay grade and years of service.",
         "urlname": "DFAS FICA Chart",
         "url": "https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/"
     },
     "SGLI Rate": {
-        "message": "There is a discrepancy with the SGLI Rate. This sometimes happens when the SGLI rate dataset has not been recently updated.",
+        "message": "There is a discrepancy with the SGLI Rate. Please ensure that your SGLI coverage amount is correct by checking the official SGLI chart to your  SGLI coverage selection in milConnect.",
         "urlname": "VA SGLI Chart",
         "url": "https://www.va.gov/life-insurance/options-eligibility/sgli/"
     },
     "State Taxes": {
-        "message": "There is a discrepancy with State Taxes. This may be due to differences in state tax rates or withholding.",
-        "urlname": "State-Dependent Resource",
+        "message": "There is a discrepancy with State Taxes. Each state has its own tax rates and rules, so please verify your state's tax information for accuracy.",
+        "urlname": "State Tax Info for Military",
         "url": "https://www.military.com/money/personal-finance/state-tax-information.html"
     }
 }
