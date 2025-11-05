@@ -62,7 +62,7 @@ def index():
         'HOME_OF_RECORDS': dict(zip(flask_app.config['HOME_OF_RECORDS']['abbr'], flask_app.config['HOME_OF_RECORDS']['longname'])),
         'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
         'TAX_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
-        'SGLI_COVERAGES': flask_app.config['SGLI_COVERAGES'],
+        'SGLI_COVERAGES': flask_app.config['SGLI_RATES']['coverage'].tolist(),
         'COMBAT_ZONES': flask_app.config['COMBAT_ZONES'],
         'DRILLS_MAX': flask_app.config['DRILLS_MAX'],
     }

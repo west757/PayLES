@@ -12,120 +12,120 @@ def get_tsp_variables_from_les(les_text):
 
     try:
         trad_tsp_base_rate = les_text.get('trad_tsp_base_rate', None)
-        if trad_tsp_base_rate is None or trad_tsp_base_rate == "" or trad_tsp_base_rate < 0:
-            raise ValueError(f"Invalid LES Trad TSP Base Rate: {trad_tsp_base_rate}")
+        if not trad_tsp_base_rate or trad_tsp_base_rate < 0:
+            trad_tsp_base_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Trad TSP Base Rate from LES text"))
     tsp_variables['Trad TSP Base Rate'] = trad_tsp_base_rate
 
     try:
         trad_tsp_specialty_rate = les_text.get('trad_tsp_specialty_rate', None)
-        if trad_tsp_specialty_rate is None or trad_tsp_specialty_rate == "" or trad_tsp_specialty_rate < 0:
-            raise ValueError(f"Invalid LES Trad TSP Specialty Rate: {trad_tsp_specialty_rate}")
+        if not trad_tsp_specialty_rate or trad_tsp_specialty_rate < 0:
+            trad_tsp_specialty_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Trad TSP Specialty Rate from LES text"))
     tsp_variables['Trad TSP Specialty Rate'] = trad_tsp_specialty_rate
 
     try:
         trad_tsp_incentive_rate = les_text.get('trad_tsp_incentive_rate', None)
-        if trad_tsp_incentive_rate is None or trad_tsp_incentive_rate == "" or trad_tsp_incentive_rate < 0:
-            raise ValueError(f"Invalid LES Trad TSP Incentive Rate: {trad_tsp_incentive_rate}")
+        if not trad_tsp_incentive_rate or trad_tsp_incentive_rate < 0:
+            trad_tsp_incentive_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Trad TSP Incentive Rate from LES text"))
     tsp_variables['Trad TSP Incentive Rate'] = trad_tsp_incentive_rate
 
     try:
         trad_tsp_bonus_rate = les_text.get('trad_tsp_bonus_rate', None)
-        if trad_tsp_bonus_rate is None or trad_tsp_bonus_rate == "" or trad_tsp_bonus_rate < 0:
-            raise ValueError(f"Invalid LES Trad TSP Bonus Rate: {trad_tsp_bonus_rate}")
+        if not trad_tsp_bonus_rate or trad_tsp_bonus_rate < 0:
+            trad_tsp_bonus_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Trad TSP Bonus Rate from LES text"))
     tsp_variables['Trad TSP Bonus Rate'] = trad_tsp_bonus_rate
 
     try:
         roth_tsp_base_rate = les_text.get('roth_tsp_base_rate', None)
-        if roth_tsp_base_rate is None or roth_tsp_base_rate == "" or roth_tsp_base_rate < 0:
-            raise ValueError(f"Invalid LES Roth TSP Base Rate: {roth_tsp_base_rate}")
+        if not roth_tsp_base_rate or roth_tsp_base_rate < 0:
+            roth_tsp_base_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Roth TSP Base Rate from LES text"))
     tsp_variables['Roth TSP Base Rate'] = roth_tsp_base_rate
 
     try:
         roth_tsp_specialty_rate = les_text.get('roth_tsp_specialty_rate', None)
-        if roth_tsp_specialty_rate is None or roth_tsp_specialty_rate == "" or roth_tsp_specialty_rate < 0:
-            raise ValueError(f"Invalid LES Roth TSP Specialty Rate: {roth_tsp_specialty_rate}")
+        if not roth_tsp_specialty_rate or roth_tsp_specialty_rate < 0:
+            roth_tsp_specialty_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Roth TSP Specialty Rate from LES text"))
     tsp_variables['Roth TSP Specialty Rate'] = roth_tsp_specialty_rate
 
     try:
         roth_tsp_incentive_rate = les_text.get('roth_tsp_incentive_rate', None)
-        if roth_tsp_incentive_rate is None or roth_tsp_incentive_rate == "" or roth_tsp_incentive_rate < 0:
-            raise ValueError(f"Invalid LES Roth TSP Incentive Rate: {roth_tsp_incentive_rate}")
+        if not roth_tsp_incentive_rate or roth_tsp_incentive_rate < 0:
+            roth_tsp_incentive_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Roth TSP Incentive Rate from LES text"))
     tsp_variables['Roth TSP Incentive Rate'] = roth_tsp_incentive_rate
 
     try:
         roth_tsp_bonus_rate = les_text.get('roth_tsp_bonus_rate', None)
-        if roth_tsp_bonus_rate is None or roth_tsp_bonus_rate == "" or roth_tsp_bonus_rate < 0:
-            raise ValueError(f"Invalid LES Roth TSP Bonus Rate: {roth_tsp_bonus_rate}")
+        if not roth_tsp_bonus_rate or roth_tsp_bonus_rate < 0:
+            roth_tsp_bonus_rate = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Roth TSP Bonus Rate from LES text"))
     tsp_variables['Roth TSP Bonus Rate'] = roth_tsp_bonus_rate
 
     try:
         tsp_agency_auto = les_text.get('tsp_agency_auto', None)
-        if tsp_agency_auto is None or tsp_agency_auto == "" or tsp_agency_auto < 0:
-            raise ValueError(f"Invalid LES Agency Auto Contribution: {tsp_agency_auto}")
+        if not tsp_agency_auto or tsp_agency_auto < 0:
+            tsp_agency_auto = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Agency Auto Contribution from LES text"))
     tsp_variables['Agency Auto Contribution'] = tsp_agency_auto
 
     try:
         tsp_agency_match = les_text.get('tsp_agency_match', None)
-        if tsp_agency_match is None or tsp_agency_match == "" or tsp_agency_match < 0:
-            raise ValueError(f"Invalid LES Agency Match Contribution: {tsp_agency_match}")
+        if not tsp_agency_match or tsp_agency_match < 0:
+            tsp_agency_match = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining Agency Match Contribution from LES text"))
     tsp_variables['Agency Match Contribution'] = tsp_agency_match
 
     try:
         ytd_trad_tsp = les_text.get('trad_tsp_ytd', None)
-        if ytd_trad_tsp is None or ytd_trad_tsp == "" or ytd_trad_tsp < 0:
-            raise ValueError(f"Invalid LES YTD Trad TSP: {ytd_trad_tsp}")
+        if not ytd_trad_tsp or ytd_trad_tsp < 0:
+            ytd_trad_tsp = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD Trad TSP from LES text"))
     tsp_variables['YTD Trad TSP'] = ytd_trad_tsp
 
     try:
         ytd_trad_tsp_exempt = les_text.get('trad_tsp_exempt_ytd', None)
-        if ytd_trad_tsp_exempt is None or ytd_trad_tsp_exempt == "" or ytd_trad_tsp_exempt < 0:
-            raise ValueError(f"Invalid LES YTD Trad TSP Exempt: {ytd_trad_tsp_exempt}")
+        if not ytd_trad_tsp_exempt or ytd_trad_tsp_exempt < 0:
+            ytd_trad_tsp_exempt = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD Trad TSP Exempt from LES text"))
     tsp_variables['YTD Trad TSP Exempt'] = ytd_trad_tsp_exempt
 
     try:
         ytd_roth_tsp = les_text.get('roth_tsp_ytd', None)
-        if ytd_roth_tsp is None or ytd_roth_tsp == "" or ytd_roth_tsp < 0:
-            raise ValueError(f"Invalid LES YTD Roth TSP: {ytd_roth_tsp}")
+        if not ytd_roth_tsp or ytd_roth_tsp < 0:
+            ytd_roth_tsp = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD Roth TSP from LES text"))
     tsp_variables['YTD Roth TSP'] = ytd_roth_tsp
 
     try:
         tsp_agency_auto_ytd = les_text.get('tsp_agency_auto_ytd', None)
-        if tsp_agency_auto_ytd is None or tsp_agency_auto_ytd == "" or tsp_agency_auto_ytd < 0:
-            raise ValueError(f"Invalid LES YTD Agency Auto Contribution: {tsp_agency_auto_ytd}")
+        if not tsp_agency_auto_ytd or tsp_agency_auto_ytd < 0:
+            tsp_agency_auto_ytd = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD Agency Auto Contribution from LES text"))
     tsp_variables['YTD Agency Auto'] = tsp_agency_auto_ytd
 
     try:
         tsp_agency_match_ytd = les_text.get('tsp_agency_match_ytd', None)
-        if tsp_agency_match_ytd is None or tsp_agency_match_ytd == "" or tsp_agency_match_ytd < 0:
-            raise ValueError(f"Invalid LES YTD Agency Match Contribution: {tsp_agency_match_ytd}")
+        if not tsp_agency_match_ytd or tsp_agency_match_ytd < 0:
+            tsp_agency_match_ytd = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining YTD Agency Match Contribution from LES text"))
     tsp_variables['YTD Agency Match'] = tsp_agency_match_ytd

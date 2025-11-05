@@ -39,7 +39,6 @@ def get_pay_variables_from_les(les_text):
         months_in_service = ((les_date.year - pay_date.year) * 12) + (les_date.month - pay_date.month)
         if months_in_service < 0:
             raise ValueError(f"Months in service calculated as negative, returned {months_in_service}")
-
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining months in service from LES text"))
     pay_variables['Months in Service'] = months_in_service
@@ -57,28 +56,25 @@ def get_pay_variables_from_les(les_text):
         elif text == "USMC":
             branch = "USMC"
         else:
-            raise ValueError(f"Invalid LES branch: {text}")
+            branch = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining branch from LES text"))
     pay_variables['Branch'] = branch
 
     try:
         text = les_text.get('tpc', None)
-        if text == "A":
-            component = "AGR"
-        elif text == "M":
-            component = "USAF"
+        if text in ("A", "C", "M", "N", "O", "T", "U", "X", "Z"):
+            component = "NG"
         else:
             component = "AD"
-            #raise ValueError(f"Invalid LES grade: {grade}")
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining component from LES text"))
     pay_variables['Component'] = component
 
     try:
         grade = les_text.get('grade', None)
-        if not grade:
-            raise ValueError(f"Invalid LES grade: {grade}")
+        if not grade or grade not in flask_app.config['GRADES']:
+            grade = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining grade from LES text"))
     pay_variables['Grade'] = grade
@@ -93,16 +89,15 @@ def get_pay_variables_from_les(les_text):
 
     try:
         oconus_locality_code = les_text.get('jftr', None)
-        if oconus_locality_code is None or oconus_locality_code == "":
-            oconus_locality_code = "N/A"
-            #raise ValueError(f"Invalid LES OCONUS locality code: {oconus_locality_code}")
+        if not oconus_locality_code or oconus_locality_code not in flask_app.config['OCONUS_LOCATIONS']['code'].values:
+            oconus_locality_code = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining OCONUS locality code from LES text"))
     pay_variables['OCONUS Locality Code'] = oconus_locality_code
 
     try:
         home_of_record = les_text.get('state', None)
-        if not home_of_record or home_of_record == "98":
+        if not home_of_record or home_of_record not in flask_app.config['HOME_OF_RECORDS']['abbr'].values:
             home_of_record = "Not Found"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining home of record from LES text"))
@@ -110,34 +105,30 @@ def get_pay_variables_from_les(les_text):
 
     try:
         dependents = les_text.get('dependents', None)
-        if dependents is None or dependents == "" or dependents < 0:
-            raise ValueError(f"Invalid LES dependents: {dependents}")
+        if not dependents or dependents < 0:
+            dependents = 0
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining dependents from LES text"))
     pay_variables['Dependents'] = dependents
 
     try:
         text = les_text.get('federal_filing_status', None)
-        if text == "S":
-            federal_filing_status = "Single"
-        elif text == "M":
+        if text == "M":
             federal_filing_status = "Married"
         elif text == "H":
             federal_filing_status = "Head of Household"
         else:
-            raise ValueError(f"Invalid LES federal filing status: {text}")
+            federal_filing_status = "Single"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining federal filing status from LES text"))
     pay_variables['Federal Filing Status'] = federal_filing_status
 
     try:
         text = les_text.get('state_filing_status', None)
-        if text == "S":
-            state_filing_status = "Single"
-        elif text == "M":
+        if text == "M":
             state_filing_status = "Married"
         else:
-            raise ValueError(f"Invalid LES state filing status: {text}")
+            state_filing_status = "Single"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining state filing status from LES text"))
     pay_variables['State Filing Status'] = state_filing_status
@@ -145,14 +136,13 @@ def get_pay_variables_from_les(les_text):
     try:
         remarks = les_text.get('remarks', "")
         # search for SGLI coverage amount in the remarks string
-        match = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
-        if match:
-            sgli_coverage = f"${match.group(1)}"
-            # validate against allowed coverages
-            if sgli_coverage not in flask_app.config['SGLI_COVERAGES']:
-                raise ValueError(f"SGLI coverage '{sgli_coverage}' not in allowed coverages")
+        foundString = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
+        if foundString:
+            sgli_coverage = f"${foundString.group(1)}"
+            if sgli_coverage not in flask_app.config['SGLI_RATES']['coverage'].values:
+                sgli_coverage = "$0"
         else:
-            raise ValueError("SGLI coverage amount not found in remarks")
+            sgli_coverage = "$0"
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining SGLI coverage from LES remarks"))
     pay_variables['SGLI Coverage'] = sgli_coverage

@@ -11,10 +11,10 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
-- determine if user is active duty or national guard
 
 mid-term:
 - get combat zone from les
+- determine if user is active duty or national guard
 - guide modals
 - add pro-rated calculations for rows grade and zip code
 - tag for resources which require a CAC
@@ -22,6 +22,7 @@ mid-term:
 - number of resources when filtering
 - set initial value for template rows (submarine, dive, jump, etc)
 - error checking and validation for les variables
+- joint spouse with two LES's
 
 long-term:
 - leave calculator
@@ -32,7 +33,6 @@ long-term:
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
-- joint spouse with two LES's
 - create unit tests 
 - check mobile use
 - minify style.css and script.js when pushed into a production environment

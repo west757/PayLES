@@ -273,7 +273,6 @@ class Config:
             'total': float,
         },
     )
-    SGLI_COVERAGES = SGLI_RATES['coverage'].tolist()
 
     STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
         dtype={
