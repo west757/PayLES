@@ -55,26 +55,26 @@ dependents for jftr,1484,1140,1634,1238,cola,Number of dependents member has to 
 jftr 2,1634,1140,1814,1238,cola,JFTR code based on the location of the members dependents to calculate COLA
 bas type,1814,1140,1994,1238,none,"Basic Allowance of Subsistence (BAS) type, if applicable. B - Separate rations, C - TDY/PCS/Proceed time, H - Rations-in-kind not available, K - Rations under emergency conditions. This field is blank for officers"
 charity ytd,1994,1140,2189,1238,none,Total amount of charitable contributions throughout the calendar year
-tpc,2190,1140,2279,1238,none,This field is unused
+tpc,2190,1140,2279,1238,none,This field is currently unused by DFAS
 pacidn,2280,1140,2474,1238,none,Unit Identification Code (UIC). Army use only
 traditional tsp,74,1240,374,1338,tsp,Traditional Thrift Savings Plan (TSP)
 traditional base pay rate,376,1240,614,1338,tsp,Percentage of base pay elected for traditional TSP contribution
-traditional base pay current,614,1240,914,1338,tsp,This field is unused
+traditional base pay current,614,1240,914,1338,tsp,This field is currently unused by DFAS
 traditional special pay rate,914,1240,1169,1338,tsp,Percentage of specialty pay elected for traditional TSP contribution
-traditional special pay current,1170,1240,1454,1338,tsp,This field is unused
+traditional special pay current,1170,1240,1454,1338,tsp,This field is currently unused by DFAS
 traditional incentive pay rate,1454,1240,1664,1338,tsp,Percentage of incentive pay elected for traditional TSP contribution
-traditional incentive pay current,1664,1240,1919,1338,tsp,This field is unused
+traditional incentive pay current,1664,1240,1919,1338,tsp,This field is currently unused by DFAS
 traditional bonus pay rate,1920,1240,2174,1338,tsp,Percentage of bonus pay elected for traditional TSP contribution
-traditional bonus pay current,2174,1240,2474,1338,tsp,This field is unused
+traditional bonus pay current,2174,1240,2474,1338,tsp,This field is currently unused by DFAS
 roth tsp,74,1340,374,1438,tsp,Roth Thrift Savings Plan (TSP)
 roth base pay rate,376,1340,614,1438,tsp,Percentage of base pay elected for roth TSP contributions
-roth base pay current,614,1340,914,1438,tsp,This field is unused
+roth base pay current,614,1340,914,1438,tsp,This field is currently unused by DFAS
 roth special pay rate,914,1340,1169,1438,tsp,Percentage of specialty pay elected for roth TSP contribution
-roth special pay current,1170,1340,1454,1438,tsp,This field is unused
+roth special pay current,1170,1340,1454,1438,tsp,This field is currently unused by DFAS
 roth incentive pay rate,1454,1340,1664,1438,tsp,Percentage of incentive pay elected for roth TSP contribution
-roth incentive pay current,1664,1340,1919,1438,tsp,This field is unused
+roth incentive pay current,1664,1340,1919,1438,tsp,This field is currently unused by DFAS
 roth bonus pay rate,1920,1340,2174,1438,tsp,Percentage of bonus pay elected for roth TSP contribution
-roth bonus pay current,2174,1340,2474,1438,tsp,This field is unused
+roth bonus pay current,2174,1340,2474,1438,tsp,This field is currently unused by DFAS
 contributions total,74,1440,374,1538,tsp,Contributions total
 ytd deductions,376,1440,695,1538,tsp,Amount of YTD TSP contributions (combined Traditional and Roth)
 ytd tsp deferred,696,1440,1013,1538,tsp,Amount of YTD TSP contributions deferred for tax purposes. Typically same as total Traditional TSP contributions unless contributions were made in a combat zone

@@ -125,14 +125,19 @@ footer {
     width: 100%;
 }
 
+footer a {
+    color: var(--light_text_color);
+    text-decoration: underline;
+}
+
 #footer-left {
     padding: 0.35rem 0 0.35rem 1.5rem;
     text-align: left;
 }
 
-#footer-left a {
-    color: var(--light_text_color);
-    text-decoration: underline;
+#footer-center {
+    padding: 0.35rem 0 0.35rem 0;
+    text-align: center;
 }
 
 #footer-right {
@@ -912,6 +917,10 @@ table.styled td.cell {
 
 
 /* les remarks */
+
+#les-title {
+    text-align: center;
+}
 
 #remarks-container {
     text-align: center;

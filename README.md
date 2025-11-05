@@ -19,18 +19,16 @@ mid-term:
 - get component from LES, maybe use TPC or PACIDN
 - recommendation for mid-month pay
 - show custom rows checkbox
-- update pay discrepancies
 - rows displayed setting
 - tag for resources which require a CAC
 - when going to a new resource page, go to top
 - number of resources when filtering
-- contact in footer
-- add "uploaded LES" text above les image
-- change "this field is unused" to "this field is currently unused by DFAS"
+- update discrepancy messages
 
 long-term:
 - leave calculator
 - set initial value for template rows (submarine, dive, jump, etc)
+- resolve rounding errors (tsp off by 1 cent)
 - update readme
 - add comments to code
 - add loading screen after submitting LES

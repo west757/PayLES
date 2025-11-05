@@ -17,7 +17,7 @@ class Config:
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version 0.1.0 2025-10-25"
+    VERSION = "Version 0.1.0 2025-11-04"
 
 
     #folders
