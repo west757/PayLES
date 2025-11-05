@@ -25,6 +25,8 @@ mid-term:
 - when going to a new resource page, go to top
 - number of resources when filtering
 - contact in footer
+- add "uploaded LES" text above les image
+- change "this field is unused" to "this field is currently unused by DFAS"
 
 long-term:
 - leave calculator

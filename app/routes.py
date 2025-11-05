@@ -136,6 +136,7 @@ def route_single():
             'discrepancies': compare_pay(pay, pay_calc, month),
             'pay_recommendations': add_pay_recommendations(pay, tsp, months),
             'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),
+            'DISCREPANCIES': load_json(flask_app.config['DISCREPANCIES_JSON']),
         }
         context = {
             'config_js': config_js,
@@ -146,7 +147,6 @@ def route_single():
             'show_guide_buttons': show_guide_buttons,
             'les_image': les_image,
             'les_rect_overlay': get_les_rect_overlay(),
-            'DISCREPANCIES': load_json(flask_app.config['DISCREPANCIES_JSON']),
             'REMARKS': load_json(flask_app.config['REMARKS_JSON']),
             'MODALS': load_json(flask_app.config['MODALS_JSON']),
         }

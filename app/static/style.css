@@ -1065,8 +1065,6 @@ table.styled td.cell {
     margin: 0 0 0 0.5rem;
 }
 
-
-
 .cell-grayout {
     background: var(--cell_grayout_color);
 }
@@ -1191,6 +1189,10 @@ table.styled td.cell {
 
 .modal-dynamic-buttons button {
     width: 7rem;
+}
+
+#discrepancies-table-container {
+    margin: 1.5rem 0 1.5rem 0;
 }
 
 

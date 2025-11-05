@@ -180,13 +180,13 @@ function displayDiscrepancies(discrepancies) {
     let html = `
         <h2>Pay Discrepancies</h2>
         <div id="discrepancies-description">
-            PayLES performed an analysis to find any discrepancies between the uploaded LES and calculated values for the first month. 
-            The calculated values are based upon variables pulled from the LES, such as rank, years of service, and location. 
+            PayLES conducts an analysis to find any discrepancies between the uploaded LES and program-calculated values. 
+            The calculated values are derived from variables pulled from the LES, such as rank, years of service, and location. 
             <br><br>
-            The factors that may cause a discrepancy are outdated data sets used by PayLES, pay errors, or extremely unique individual circumstances.
+            The factors that may cause discrepancies are outdated data sets used by PayLES, pay errors, or extremely unique individual circumstances.
             If there are any discrepancies, please review them carefully.
-            PayLES cannot account for every possible pay scenario, so it is important to verify all information.
-            However, the discrepancies can also be an indicator for potential pay issues.
+            PayLES cannot account for every possible pay scenario so it is important to verify all information.
+            However, any discrepancy may also be an indicator for potential pay issues.
             If you have any questions, please reach out to your local finance office for further assistance.
         </div>
     `;
@@ -198,9 +198,7 @@ function displayDiscrepancies(discrepancies) {
                 ? parseFloat(row.les_value) - parseFloat(row.calc_value)
                 : null;
             let formattedDifference = difference !== null ? formatValue(difference) : '';
-            let officialSource = meta.url && meta.linkName
-                ? `<a href="${meta.url}" target="_blank" rel="noopener noreferrer">${meta.linkName}</a>`
-                : '';
+            let officialSource = `<a href="${meta.url}" target="_blank" rel="noopener noreferrer">${meta.urlname}</a>`;
             return `
                 <tr>
                     <td>${row.header}</td>
@@ -224,7 +222,6 @@ function displayDiscrepancies(discrepancies) {
                     </tr>
                     ${tableRows}
                 </table>
-                <div class="modal-list-text">PayLES found these discrepancies.</div>
             </div>
         `;
     } else {
@@ -236,7 +233,7 @@ function displayDiscrepancies(discrepancies) {
     }
 
     let messages = '';
-    if (discrepancies && discrepancies.length > 0) {
+    if (discrepancies.length > 0) {
         messages = discrepancies.map(row => {
             let meta = discrepancyMetadata[row.header];
             return meta && meta.message ? `<div class="modal-list-text">${meta.message}</div>` : '';
