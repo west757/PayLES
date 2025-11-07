@@ -1462,3 +1462,21 @@ table.styled td.cell {
     background: #eaf4ff;
     border: 1.5px solid #0077cc;
 }
+
+.resource-cac-badge {
+    background: #ffe6c1;
+    color: #a15c00;
+    border-radius: 6px;
+    padding: 0.1em 0.7em;
+    font-size: 0.92em;
+    display: inline-block;
+    margin-left: 0.3em;
+}
+
+.resources-count {
+    font-size: 1em;
+    color: #2a3a4a;
+    margin-left: 1.2em;
+    font-weight: 500;
+    vertical-align: middle;
+}

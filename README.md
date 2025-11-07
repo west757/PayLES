@@ -28,7 +28,6 @@ long-term:
 - resolve rounding errors (tsp off by 1 cent, or tolerance in discrepancy calculation)
 - update readme
 - add comments to code
-- add loading screen after submitting LES
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
@@ -50,6 +49,7 @@ potential:
 - rows displayed setting
 - show custom rows setting
 - import/export for custom rows
+- add loading screen after submitting LES
 
 
 3. Security Headers

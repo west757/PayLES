@@ -5,7 +5,8 @@
         "desc": "search over 50,000 DoD policy documents",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "CitiManager",
@@ -13,7 +14,8 @@
         "desc": "official site for CitiManager DoD GTC cards, providing resources for managing Citi accounts and services",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "DAF E-Learning",
@@ -21,7 +23,8 @@
         "desc": "official site for DAF E-Learning, providing online training and education resources",
         "category": "Education",
         "branch": "U.S. Air Force",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Defense Acquisition University (DAU)",
@@ -29,7 +32,8 @@
         "desc": "official site for DAU, providing training and resources for defense acquisition professionals",
         "category": "Education",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": true
     },
     {
         "name": "Defense Finance Accounting Service (DFAS)",
@@ -37,7 +41,8 @@
         "desc": "official site for military pay information, including pay tables and entitlements",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Defense Personal Property System (DPPS)",
@@ -45,7 +50,8 @@
         "desc": "official site for military personal property relocation information, including moving allowances and benefits",
         "category": "PCS/Moving",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Defense Travel Management Office (DTMO)",
@@ -53,7 +59,8 @@
         "desc": "official site for military travel information, including travel allowances and benefits",
         "category": "PCS/Moving",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Defense Travel System (DTS)",
@@ -61,7 +68,8 @@
         "desc": "official site for the Defense Travel System, providing information on travel policies and procedures",
         "category": "Travel",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Digital University",
@@ -69,7 +77,8 @@
         "desc": "official site for Digital University, providing online training and education resources for Air Force members",
         "category": "Education",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "DoD SAFE",
@@ -77,7 +86,8 @@
         "desc": "official site for the DoD Secure Access File Exchange, providing a secure way to share files",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "DOTS Web Transfer Portal",
@@ -85,7 +95,8 @@
         "desc": "official site for securely transferring files to higher classification domains (NIPR -> SIPR)",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Executive Services Directory (ESD)",
@@ -93,7 +104,8 @@
         "desc": "official site for the Executive Services Directorate",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "GigEagle",
@@ -101,7 +113,8 @@
         "desc": "official site for the GigEagle program, providing resources for military families",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "H&R Block Military Tax Services",
@@ -109,7 +122,8 @@
         "desc": "official site for H&R Block's military tax services, providing resources and support for military members",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Health.mil Psychological Health Resource Center",
@@ -117,7 +131,8 @@
         "desc": "official site for military mental health and psychological health information",
         "category": "Health",
         "branch": "DoD",
-        "featured": true
+        "featured": true,
+        "cac": false
     },
     {
         "name": "Homes.mil",
@@ -125,7 +140,8 @@
         "desc": "official site for military housing information, including resources for finding and securing housing",
         "category": "PCS/Moving",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Human Performance Resources",
@@ -133,7 +149,8 @@
         "desc": "official site for Human Performance Resources, providing a wide range of resources for military members",
         "category": "Health",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "ID Card Office Online",
@@ -141,7 +158,8 @@
         "desc": "official site for the ID Card Office, providing information on ID cards and related services",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Intelink",
@@ -149,7 +167,8 @@
         "desc": "official site for the Intelink collaboration platform",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "IRS Military Site",
@@ -157,7 +176,8 @@
         "desc": "official IRS site for military tax information, including deductions and credits",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Joint Knowledge Online (JKO)",
@@ -165,7 +185,8 @@
         "desc": "official site for training and educational resources for the joint force",
         "category": "Education",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "LeaveWeb",
@@ -173,7 +194,8 @@
         "desc": "official site for managing leave requests and balances",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Military Money Manual",
@@ -181,7 +203,8 @@
         "desc": "provides independent financial education and resources for military members and their families",
         "category": "Financial",
         "branch": "Non-DoD",
-        "featured": true
+        "featured": true,
+        "cac": false
     },
     {
         "name": "Military OneSource",
@@ -189,7 +212,8 @@
         "desc": "official site for military members and families, providing a wide range of resources and support services",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Military.com",
@@ -197,7 +221,8 @@
         "desc": "provides news, benefits information, and resources for military members and their families",
         "category": "General",
         "branch": "Non-DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "MilitaryPay",
@@ -205,7 +230,8 @@
         "desc": "official site for military pay information, including basic pay, allowances, and benefits",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "milConnect",
@@ -213,7 +239,8 @@
         "desc": "official site for military members and families to access benefits and services",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "MHS Genesis",
@@ -221,7 +248,8 @@
         "desc": "official site for MHS Genesis, providing a wide range of health care resources for military members",
         "category": "Health",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "MyPay",
@@ -229,7 +257,8 @@
         "desc": "official online pay management system for military members, retirees, and their families",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "NIPRGPT",
@@ -237,7 +266,8 @@
         "desc": "official site for the DoD AI chat platform",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "O'Reilly Textbooks",
@@ -245,7 +275,8 @@
         "desc": "official site for O'Reilly Media, providing a wide range of textbooks and online resources for military members",
         "category": "Education",
         "branch": "Non-DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "OPM - Military Leave",
@@ -253,7 +284,8 @@
         "desc": "official Office of Personnel Management site for military leave policies and information",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Outlook Webmail",
@@ -261,7 +293,8 @@
         "desc": "official site for Outlook Webmail, providing access to military email accounts",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "SGLI",
@@ -269,7 +302,8 @@
         "desc": "official site for Servicemembers' Group Life Insurance, providing information on coverage and benefits",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "The Military Wallet",
@@ -277,7 +311,8 @@
         "desc": "provides independent financial resources and tools for military members and their families",
         "category": "Financial",
         "branch": "Non-DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Thrift Savings Plan (TSP)",
@@ -285,7 +320,8 @@
         "desc": "official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services",
         "category": "Financial",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "Transition Assistance Program (TAP)",
@@ -293,7 +329,8 @@
         "desc": "official site for the Transition Assistance Program, providing resources for transitioning service members",
         "category": "General",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "TRICARE",
@@ -301,7 +338,8 @@
         "desc": "official site for TRICARE, providing health care resources for military members",
         "category": "Health",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "U.S. Armed Forces Legal Assistance",
@@ -309,7 +347,8 @@
         "desc": "official site for the U.S. Armed Forces Legal Assistance, providing legal resources for service members",
         "category": "Legal",
         "branch": "DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     },
     {
         "name": "VA Education Benefits",
@@ -317,6 +356,7 @@
         "desc": "official site for military education information, including GI Bill benefits and resources",
         "category": "Education",
         "branch": "Non-DoD",
-        "featured": false
+        "featured": false,
+        "cac": false
     }
 ]

@@ -73,28 +73,28 @@ function renderBranchFilters(selected) {
 	});
 }
 
-// --- Render Resource List ---
 function renderResourceList(resources) {
-	const container = document.getElementById('resources-container');
-	if (!resources.length) {
-		container.innerHTML = '<div style="margin:2em 0;color:#888;">No resources found.</div>';
-		return;
-	}
-	container.innerHTML = `<div class="resources-list">${resources.map(resource => {
-		const star = resource.featured ? getStarIcon() : '';
-		const cats = resource.category ? `<span class="resource-category-badge">${resource.category}</span>` : '';
-		const branches = resource.branch ? `<span class="resource-branch-badge">${resource.branch}</span>` : '';
-		return `
-			<div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')" title="${resource.name}">
-				${star}
-				<div class="resource-main">
-					<div class="resource-name">${resource.name}</div>
-					<div class="resource-desc">${resource.desc || ''}</div>
-					<div class="resource-meta">${cats}${branches}</div>
-				</div>
-			</div>
-		`;
-	}).join('')}</div>`;
+    const container = document.getElementById('resources-container');
+    if (!resources.length) {
+        container.innerHTML = '<div style="margin:2em 0;color:#888;">No resources found.</div>';
+        return;
+    }
+    container.innerHTML = `<div class="resources-list">${resources.map(resource => {
+        const star = resource.featured ? getStarIcon() : '';
+        const cats = resource.category ? `<span class="resource-category-badge">${resource.category}</span>` : '';
+        const branches = resource.branch ? `<span class="resource-branch-badge">${resource.branch}</span>` : '';
+        const cac = resource.cac ? `<span class="resource-cac-badge">CAC Required</span>` : '';
+        return `
+            <div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')" title="${resource.name}">
+                ${star}
+                <div class="resource-main">
+                    <div class="resource-name">${resource.name}</div>
+                    <div class="resource-desc">${resource.desc || ''}</div>
+                    <div class="resource-meta">${cats}${branches}${cac}</div>
+                </div>
+            </div>
+        `;
+    }).join('')}</div>`;
 }
 
 window.initResourcesPage = async function initResourcesPage() {
@@ -150,7 +150,6 @@ window.initResourcesPage = async function initResourcesPage() {
         return filtered;
     }
 
-    // Pagination logic
     function renderPagination(total, page) {
         const container = document.getElementById('resources-pagination');
         const totalPages = Math.ceil(total / pageSize);
@@ -166,6 +165,11 @@ window.initResourcesPage = async function initResourcesPage() {
             btn.addEventListener('click', () => {
                 currentPage = parseInt(btn.getAttribute('data-page'));
                 updateResourceList();
+                // Scroll to top of the resources page
+                const pageContainer = document.getElementById('page-resources');
+                if (pageContainer) {
+                    pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
     }
@@ -177,6 +181,9 @@ window.initResourcesPage = async function initResourcesPage() {
         const end = start + pageSize;
         renderResourceList(filtered.slice(start, end));
         renderPagination(filtered.length, currentPage);
+        // Update resource count
+        const countSpan = document.getElementById('resources-count');
+        countSpan.textContent = `${filtered.length} Resource${filtered.length === 1 ? '' : 's'}`;
     }
 
     // Event listeners for search and filters
