@@ -20,7 +20,7 @@ const RESOURCE_BRANCHES = [
     { key: 'Non-DoD', label: 'Non-DoD' },
 ];
 
-// --- Utility: Star Icon SVG ---
+
 function getStarIcon() {
 	return `<span class="resource-featured-star" title="Featured Resource">★</span>`;
 }
@@ -86,9 +86,11 @@ function renderResourceList(resources) {
         const cac = resource.cac ? `<span class="resource-cac-badge">CAC Required</span>` : '';
         return `
             <div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')" title="${resource.name}">
-                ${star}
                 <div class="resource-main">
-                    <div class="resource-name">${resource.name}</div>
+                    <div class="resource-name">
+                        ${star}
+                        ${resource.name}
+                    </div>
                     <div class="resource-desc">${resource.desc || ''}</div>
                     <div class="resource-meta">${cats}${branches}${cac}</div>
                 </div>

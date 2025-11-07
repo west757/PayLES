@@ -1329,10 +1329,13 @@ table.styled td.cell {
 
 .resource-featured-star {
     color: #f7b500;
-    font-size: 1.3em;
-    margin-right: 0.5em;
-    margin-top: 0.1em;
+    font-size: 1.1em;
+    margin-left: 0.3em;
+    margin-right: 0;
+    margin-top: 0;
     flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .resource-main {
@@ -1406,8 +1409,6 @@ table.styled td.cell {
     outline: none;
     margin-left: 0.5em;
 }
-
-
 
 #resources-filter-bar {
     display: flex;

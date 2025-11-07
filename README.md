@@ -11,9 +11,6 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
-- tag for resources which require a CAC
-- when going to a new resource page, go to top
-- number of resources when filtering
 
 mid-term:
 - get combat zone from les
