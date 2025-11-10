@@ -45,10 +45,10 @@ class Config:
     }
     DEFAULT_MONTHS_NUM = 6
     MAX_ROWS = 99
+
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
     LES_AGE_LIMIT = 2   #months
-    MAX_RESOURCES_DISPLAY = 20
 
     FICA_SOCIALSECURITY_TAX_RATE = 0.062
     FICA_MEDICARE_TAX_RATE = 0.0145
@@ -68,6 +68,29 @@ class Config:
         4: 0.035,
         5: 0.04,
     }
+
+    MAX_RESOURCES_DISPLAY = 20
+    MAX_RESOURCES_SEARCH_LENGTH = 40
+    RESOURCE_CATEGORIES = [
+        'General',
+        'Financial',
+        'PCS/Moving',
+        'Travel',
+        'Education',
+        'Health',
+        'Legal',
+        'Resource List',
+        'Calculator'
+    ]
+    RESOURCE_BRANCHES = [
+        'DoD',
+        'U.S. Army',
+        'U.S. Air Force',
+        'U.S. Space Force',
+        'U.S. Navy',
+        'U.S. Marine Corps',
+        'Non-DoD'
+    ]
 
     BRANCHES = {
         "USA": "U.S. Army",

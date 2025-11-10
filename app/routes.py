@@ -473,6 +473,9 @@ def resources():
     config_js = {
         'RESOURCES': load_json(flask_app.config['RESOURCES_JSON']),
         'MAX_RESOURCES_DISPLAY': flask_app.config['MAX_RESOURCES_DISPLAY'],
+        'MAX_RESOURCES_SEARCH_LENGTH': flask_app.config['MAX_RESOURCES_SEARCH_LENGTH'],
+        'RESOURCE_CATEGORIES': flask_app.config['RESOURCE_CATEGORIES'],
+        'RESOURCE_BRANCHES': flask_app.config['RESOURCE_BRANCHES'],
     }
     context = {
         'config_js': config_js,

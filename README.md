@@ -20,6 +20,7 @@ mid-term:
 - add pro-rated calculations for rows grade and zip code
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
+- config for icons
 
 long-term:
 - leave calculator

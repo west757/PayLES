@@ -1,61 +1,3 @@
-const RESOURCE_CATEGORIES = [
-    'General',
-    'Financial',
-    'PCS/Moving',
-    'Travel',
-    'Education',
-    'Health',
-    'Legal',
-    'Resource List',
-    'Calculator'
-];
-const RESOURCE_BRANCHES = [
-    'DoD',
-    'U.S. Army',
-    'U.S. Air Force',
-    'U.S. Space Force',
-    'U.S. Navy',
-    'U.S. Marine Corps',
-    'Non-DoD'
-];
-
-
-function getStarIcon() {
-	return `<span class="resource-featured-star" title="Featured Resource">★</span>`;
-}
-
-
-function renderCategoryFilters(selected) {
-    const container = document.getElementById('resources-category-filters');
-    container.innerHTML = '';
-    RESOURCE_CATEGORIES.forEach(cat => {
-        const id = `cat-filter-${cat.replace(/\s/g, '-')}`;
-        const checked = selected.includes(cat) ? 'checked' : '';
-        container.innerHTML += `
-            <label class="resources-filter-label" for="${id}">
-                <input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${cat}" ${checked} />
-                ${cat}
-            </label>
-        `;
-    });
-}
-
-
-function renderBranchFilters(selected) {
-    const container = document.getElementById('resources-branch-filters');
-    container.innerHTML = '';
-    RESOURCE_BRANCHES.forEach(branch => {
-        const id = `branch-filter-${branch.replace(/\s/g, '-')}`;
-        const checked = selected.includes(branch) ? 'checked' : '';
-        container.innerHTML += `
-            <label class="resources-filter-label" for="${id}">
-                <input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${branch}" ${checked} />
-                ${branch}
-            </label>
-        `;
-    });
-}
-
 function renderResourceList(resources) {
     const container = document.getElementById('resources-listing');
     if (!resources.length) {
@@ -63,7 +5,7 @@ function renderResourceList(resources) {
         return;
     }
     container.innerHTML = `<div class="resources-list">${resources.map(resource => {
-        const star = resource.featured ? getStarIcon() : '';
+        const star = resource.featured ? `<span class="resource-featured-star" title="Featured Resource">★</span>` : '';
         const cats = resource.category ? `<span class="resource-category-badge">${resource.category}</span>` : '';
         const branches = resource.branch ? `<span class="resource-branch-badge">${resource.branch}</span>` : '';
         const cac = resource.cac ? `<span class="resource-cac-badge">CAC Required</span>` : '';
@@ -86,13 +28,12 @@ function renderResourceList(resources) {
 function initResourcesPage() {
     let RESOURCES = window.CONFIG.RESOURCES;
     const MAX_RESOURCES_DISPLAY = window.CONFIG.MAX_RESOURCES_DISPLAY;
-    let searchValue = '';
+    let searchString = '';
     let selectedCategories = [];
     let selectedBranches = [];
     let currentPage = 1;
     
 
-    // Render dropdown panels
     function renderDropdownPanel(panelId, options, selected, type) {
         const panel = document.getElementById(panelId);
         panel.innerHTML = options.map(opt => `
@@ -103,7 +44,7 @@ function initResourcesPage() {
         `).join('');
     }
 
-    // Toggle dropdowns
+
     function setupDropdown(btnId, panelId) {
         const btn = document.getElementById(btnId);
         const panel = document.getElementById(panelId);
@@ -117,11 +58,11 @@ function initResourcesPage() {
         });
     }
 
-    // Filtering logic (same as before)
+
     function filterResources() {
         let filtered = RESOURCES;
-        if (searchValue) {
-            const sv = searchValue.toLowerCase();
+        if (searchString) {
+            const sv = searchString.toLowerCase();
             filtered = filtered.filter(r => r.name.toLowerCase().includes(sv));
         }
         if (selectedCategories.length) {
@@ -136,6 +77,7 @@ function initResourcesPage() {
         }
         return filtered;
     }
+
 
     function renderPagination(total, page) {
         const container = document.getElementById('resources-pagination');
@@ -161,7 +103,7 @@ function initResourcesPage() {
         });
     }
 
-    // Render resource list for current page
+
     function updateResourceList() {
         const filtered = filterResources();
         const start = (currentPage - 1) * MAX_RESOURCES_DISPLAY;
@@ -173,9 +115,9 @@ function initResourcesPage() {
         countSpan.textContent = `${filtered.length} Resource${filtered.length === 1 ? '' : 's'}`;
     }
 
-    // Event listeners for search and filters
+
     document.getElementById('resources-filter-search').addEventListener('input', e => {
-        searchValue = e.target.value.slice(0, 40);
+        searchString = e.target.value.slice(0, window.CONFIG.MAX_RESOURCES_SEARCH_LENGTH);
         currentPage = 1;
         updateResourceList();
     });
@@ -206,8 +148,8 @@ function initResourcesPage() {
         }
     });
 
-    renderDropdownPanel('resources-filter-categories', RESOURCE_CATEGORIES, selectedCategories, 'category');
-    renderDropdownPanel('resources-filter-branches', RESOURCE_BRANCHES, selectedBranches, 'branch');
+    renderDropdownPanel('resources-filter-categories', window.CONFIG.RESOURCE_CATEGORIES, selectedCategories, 'category');
+    renderDropdownPanel('resources-filter-branches', window.CONFIG.RESOURCE_BRANCHES, selectedBranches, 'branch');
     setupDropdown('button-resources-filter-categories', 'resources-filter-categories');
     setupDropdown('button-resources-filter-branches', 'resources-filter-branches');
     updateResourceList();

@@ -27,7 +27,7 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 });
 
 
-// initial setup when home page is loaded
+// initial setup when a page is loaded
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('page-home')) {
         getConfigData();
@@ -38,10 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         getConfigData();
         initResourcesPage();
     }
-
-    //if (document.getElementById('page-resources') && typeof window.initResourcesPage === 'function') {
-    //    window.initResourcesPage();
-    //}
 });
 
 
