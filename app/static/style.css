@@ -1352,13 +1352,21 @@ table.styled td.cell {
 
 
 
+.resources-filter-panel-label {
+    font-size: 0.98em;
+    color: #2a3a4a;
+    margin-right: 0.7em;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 0.5em 0;
+    padding: 0.2em 0;
+}
 
-
-#resources-category-filters, #resources-branch-filters {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+.resources-filter-panel-checkbox {
+    margin-right: 0.3em;
+    accent-color: #0077cc;
 }
 
 .resources-list {
@@ -1386,7 +1394,13 @@ table.styled td.cell {
     box-shadow: 0 2px 8px rgba(0,123,255,0.10);
 }
 
-.resource-featured-star {
+.resource-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
+.resource-star {
     color: #f7b500;
     font-size: 1.1em;
     margin-left: 0.3em;
@@ -1397,13 +1411,7 @@ table.styled td.cell {
     vertical-align: middle;
 }
 
-.resource-main {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2em;
-}
-
-.resource-name {
+.resource-header {
     font-weight: 600;
     font-size: 1.08em;
     color: #1a2a3a;
@@ -1412,13 +1420,13 @@ table.styled td.cell {
     gap: 0.4em;
 }
 
-.resource-desc {
+.resource-description {
     color: #4a5a6a;
     font-size: 0.98em;
     margin-top: 0.1em;
 }
 
-.resource-meta {
+.resource-tag-container {
     font-size: 0.92em;
     color: #7a8a9a;
     margin-top: 0.2em;
@@ -1427,7 +1435,11 @@ table.styled td.cell {
     flex-wrap: wrap;
 }
 
-.resource-category-badge {
+.resource-tag {
+
+}
+
+.resource-tag-category {
     background: #e0e6ef;
     color: #2a3a4a;
     border-radius: 6px;
@@ -1437,7 +1449,7 @@ table.styled td.cell {
     display: inline-block;
 }
 
-.resource-branch-badge {
+.resource-tag-branch {
     background: #d1f0e6;
     color: #1a5a3a;
     border-radius: 6px;
@@ -1446,38 +1458,7 @@ table.styled td.cell {
     display: inline-block;
 }
 
-/* Checkbox and dropdown filter styles */
-.resources-filter-checkbox {
-    margin-right: 0.3em;
-    accent-color: #0077cc;
-}
-.resources-filter-label {
-    font-size: 0.98em;
-    color: #2a3a4a;
-    margin-right: 0.7em;
-    cursor: pointer;
-}
-
-.resources-filter-dropdown {
-    padding: 0.3em 0.8em;
-    font-size: 1em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
-    color: #2a3a4a;
-    outline: none;
-    margin-left: 0.5em;
-}
-
-
-
-
-
-
-
-
-
-.resource-cac-badge {
+.resource-tag-cac {
     background: #ffe6c1;
     color: #a15c00;
     border-radius: 6px;
