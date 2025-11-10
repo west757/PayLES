@@ -36,11 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if(document.getElementById('page-resources')) {
         getConfigData();
+        initResourcesPage();
     }
 
-    if (document.getElementById('page-resources') && typeof window.initResourcesPage === 'function') {
-        window.initResourcesPage();
-    }
+    //if (document.getElementById('page-resources') && typeof window.initResourcesPage === 'function') {
+    //    window.initResourcesPage();
+    //}
 });
 
 

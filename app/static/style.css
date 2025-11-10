@@ -1300,10 +1300,6 @@ table.styled td.cell {
     position: relative;
 }
 
-
-
-
-
 .resources-filter-panel {
     display: none;
     position: absolute;
@@ -1322,6 +1318,37 @@ table.styled td.cell {
     display: block;
 }
 
+#resources-count {
+    font-size: 1em;
+    color: #2a3a4a;
+    margin-left: 1.2em;
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+#resources-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0 0 0;
+}
+
+.button-resources-pagination {
+    background: #f8fafd;
+    border: 1px solid #e0e6ef;
+    border-radius: 6px;
+    padding: 0.4em 1em;
+    cursor: pointer;
+    font-size: 1em;
+    color: #1a2a3a;
+    transition: background 0.15s, border 0.15s;
+}
+
+.button-resources-pagination.active,
+.button-resources-pagination:hover {
+    background: #eaf4ff;
+    border: 1.5px solid #0077cc;
+}
 
 
 
@@ -1448,28 +1475,7 @@ table.styled td.cell {
 
 
 
-#resources-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin: 2rem 0 0 0;
-}
 
-.resources-pagination-btn {
-    background: #f8fafd;
-    border: 1px solid #e0e6ef;
-    border-radius: 6px;
-    padding: 0.4em 1em;
-    cursor: pointer;
-    font-size: 1em;
-    color: #1a2a3a;
-    transition: background 0.15s, border 0.15s;
-}
-.resources-pagination-btn.active,
-.resources-pagination-btn:hover {
-    background: #eaf4ff;
-    border: 1.5px solid #0077cc;
-}
 
 .resource-cac-badge {
     background: #ffe6c1;
@@ -1481,10 +1487,3 @@ table.styled td.cell {
     margin-left: 0.3em;
 }
 
-.resources-count {
-    font-size: 1em;
-    color: #2a3a4a;
-    margin-left: 1.2em;
-    font-weight: 500;
-    vertical-align: middle;
-}

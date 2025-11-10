@@ -57,7 +57,7 @@ function renderBranchFilters(selected) {
 }
 
 function renderResourceList(resources) {
-    const container = document.getElementById('resources-container');
+    const container = document.getElementById('resources-listing');
     if (!resources.length) {
         container.innerHTML = '<div style="margin:2em 0;color:#888;">No resources found.</div>';
         return;
@@ -83,13 +83,14 @@ function renderResourceList(resources) {
 }
 
 
-window.initResourcesPage = async function initResourcesPage() {
+function initResourcesPage() {
     let RESOURCES = window.CONFIG.RESOURCES;
+    const MAX_RESOURCES_DISPLAY = window.CONFIG.MAX_RESOURCES_DISPLAY;
     let searchValue = '';
     let selectedCategories = [];
     let selectedBranches = [];
     let currentPage = 1;
-    const pageSize = window.MAX_RESOURCES_DISPLAY || 20;
+    
 
     // Render dropdown panels
     function renderDropdownPanel(panelId, options, selected, type) {
@@ -138,14 +139,14 @@ window.initResourcesPage = async function initResourcesPage() {
 
     function renderPagination(total, page) {
         const container = document.getElementById('resources-pagination');
-        const totalPages = Math.ceil(total / pageSize);
+        const totalPages = Math.ceil(total / MAX_RESOURCES_DISPLAY);
         if (totalPages <= 1) {
             container.innerHTML = '';
             return;
         }
         container.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
-            container.innerHTML += `<button class="resources-pagination-btn${i === page ? ' active' : ''}" data-page="${i}">${i}</button>`;
+            container.innerHTML += `<button class="button-resources-pagination ${i === page ? ' active' : ''}" data-page="${i}">${i}</button>`;
         }
         container.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -163,8 +164,8 @@ window.initResourcesPage = async function initResourcesPage() {
     // Render resource list for current page
     function updateResourceList() {
         const filtered = filterResources();
-        const start = (currentPage - 1) * pageSize;
-        const end = start + pageSize;
+        const start = (currentPage - 1) * MAX_RESOURCES_DISPLAY;
+        const end = start + MAX_RESOURCES_DISPLAY;
         renderResourceList(filtered.slice(start, end));
         renderPagination(filtered.length, currentPage);
         // Update resource count
