@@ -1273,13 +1273,12 @@ table.styled td.cell {
    resources
    ========================= */
 
-#resources-filters {
+#resources-controls {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
     justify-content: left;
-    margin: 0 0 0.5rem 0;
 }
 
 #resources-filter-search {
@@ -1319,13 +1318,32 @@ table.styled td.cell {
     display: block;
 }
 
+.resources-filter-cac-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.resources-filter-cac-checkbox {
+    accent-color: #0077cc;
+    margin-right: 0.3em;
+}
+
+#resources-export-btn {
+    margin-left: 1em;
+    margin-right: 1em;
+    height: 2.5rem;
+}
+
 #resources-count {
     color: #2a3a4a;
     font-size: 1em;
     font-weight: 500;
     text-align: right;
     vertical-align: middle;
-    width: 8rem;
 }
 
 .resources-filter-panel-label {
@@ -1451,28 +1469,6 @@ table.styled td.cell {
 }
 
 
-/* No CAC Required filter styling */
-.resources-filter-cac-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    font-size: 1em;
-    margin-right: 1em;
-    cursor: pointer;
-    user-select: none;
-}
-
-.resources-filter-cac-checkbox {
-    accent-color: #0077cc;
-    margin-right: 0.3em;
-}
-
-/* Export button styling (inherits .button-generic) */
-#resources-export-btn {
-    margin-left: 1em;
-    margin-right: 1em;
-    height: 2.5rem;
-}
 
 /* Bookmark button styling */
 .resource-bookmark-btn {

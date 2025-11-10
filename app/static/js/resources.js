@@ -8,6 +8,7 @@ function initResourcesPage() {
     let currentPage = 1;
     let lastFilteredResources = [];
 
+
     function populateFilterPanel(panelID, options, type) {
         const panel = document.getElementById(panelID);
         panel.innerHTML = options.map(opt => `
@@ -17,6 +18,7 @@ function initResourcesPage() {
             </label>
         `).join('');
     }
+
 
     function addFilterButtonEventListener(buttonID, panelID) {
         const button = document.getElementById(buttonID);
@@ -32,6 +34,7 @@ function initResourcesPage() {
             }
         });
     }
+
 
     function updateResourceList() {
         let filteredResources = RESOURCES;
@@ -101,10 +104,12 @@ function initResourcesPage() {
         countSpan.textContent = `${filteredResources.length} Result${filteredResources.length === 1 ? '' : 's'}`;
     }
 
+
     // Utility for escaping quotes in attribute values
     function escapeForAttr(str) {
         return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
+
 
     // Download .url file for bookmark
     window.downloadBookmark = function(name, url, btnId) {
@@ -126,6 +131,7 @@ function initResourcesPage() {
         }
     };
 
+    
     // Export filtered resources as CSV
     function exportResourcesAsCSV(resources) {
         if (!resources.length) return;

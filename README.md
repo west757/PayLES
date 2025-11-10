@@ -13,6 +13,7 @@ short-term:
 - refactor resources
 - move javascript functions inside encapsulated functions
 - restrict search input
+- different colors for tag content
 
 mid-term:
 - get combat zone from les
@@ -23,8 +24,6 @@ mid-term:
 - joint spouse with two LES
 - config for icons
 - minimize formatting (when shrinking window)
-- export resources
-- cac required checkbox
 
 long-term:
 - leave calculator
