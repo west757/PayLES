@@ -11,6 +11,7 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
+- move javascript functions inside encapsulated functions
 
 mid-term:
 - get combat zone from les

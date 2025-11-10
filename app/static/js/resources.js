@@ -173,13 +173,13 @@ window.initResourcesPage = async function initResourcesPage() {
     }
 
     // Event listeners for search and filters
-    document.getElementById('resources-search-bar').addEventListener('input', e => {
+    document.getElementById('resources-filter-search').addEventListener('input', e => {
         searchValue = e.target.value.slice(0, 40);
         currentPage = 1;
         updateResourceList();
     });
 
-    document.getElementById('categories-dropdown-panel').addEventListener('change', e => {
+    document.getElementById('resources-filter-categories').addEventListener('change', e => {
         if (e.target.classList.contains('resources-filter-checkbox')) {
             const val = e.target.value;
             if (e.target.checked) {
@@ -192,7 +192,7 @@ window.initResourcesPage = async function initResourcesPage() {
         }
     });
 
-    document.getElementById('branches-dropdown-panel').addEventListener('change', e => {
+    document.getElementById('resources-filter-branches').addEventListener('change', e => {
         if (e.target.classList.contains('resources-filter-checkbox')) {
             const val = e.target.value;
             if (e.target.checked) {
@@ -205,9 +205,9 @@ window.initResourcesPage = async function initResourcesPage() {
         }
     });
 
-    renderDropdownPanel('categories-dropdown-panel', RESOURCE_CATEGORIES, selectedCategories, 'category');
-    renderDropdownPanel('branches-dropdown-panel', RESOURCE_BRANCHES, selectedBranches, 'branch');
-    setupDropdown('categories-dropdown-btn', 'categories-dropdown-panel');
-    setupDropdown('branches-dropdown-btn', 'branches-dropdown-panel');
+    renderDropdownPanel('resources-filter-categories', RESOURCE_CATEGORIES, selectedCategories, 'category');
+    renderDropdownPanel('resources-filter-branches', RESOURCE_BRANCHES, selectedBranches, 'branch');
+    setupDropdown('button-resources-filter-categories', 'resources-filter-categories');
+    setupDropdown('button-resources-filter-branches', 'resources-filter-branches');
     updateResourceList();
 };

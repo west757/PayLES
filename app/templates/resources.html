@@ -7,18 +7,23 @@
 
 <div id="page-resources" class="page">
     <h2>Resource Listing</h2>
-    <div id="resources-filter-bar">
-        <input id="resources-search-bar" ... />
-        <div class="resources-filter-dropdown-container">
-            <button id="categories-dropdown-btn" type="button">Categories</button>
-            <div id="categories-dropdown-panel" class="resources-dropdown-panel"></div>
+
+    <div id="resources-filters">
+        <input id="resources-filter-search"></input>
+
+        <div class="resources-filter-panel-container">
+            <button id="button-resources-filter-categories" type="button">Categories</button>
+            <div id="resources-filter-categories" class="resources-filter-panel"></div>
         </div>
+
+        <div class="resources-filter-panel-container">
+            <button id="button-resources-filter-branches" type="button">Branches</button>
+            <div id="resources-filter-branches" class="resources-filter-panel"></div>
+        </div>
+
         <span id="resources-count" class="resources-count"></span>
-        <div class="resources-filter-dropdown-container">
-            <button id="branches-dropdown-btn" type="button">Branches</button>
-            <div id="branches-dropdown-panel" class="resources-dropdown-panel"></div>
-        </div>
     </div>
+
     <div id="resources-container"></div>
     <div id="resources-pagination"></div>
 
