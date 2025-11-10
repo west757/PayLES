@@ -288,6 +288,17 @@ class Config:
         .astype(int)
     )
 
+    RESOURCES = pd.read_csv(CSV_FOLDER / "resources.csv",
+        dtype={
+            'name': str,
+            'description': str,
+            'category': str,
+            'branch': str,
+            'cac': bool,
+            'url': str,
+        }
+    )
+
     SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
         dtype={
             'coverage': str,
@@ -334,6 +345,5 @@ class Config:
     FAQ_JSON = JSON_FOLDER / "faq.json"
     MODALS_JSON = JSON_FOLDER / "modals.json"
     REMARKS_JSON = JSON_FOLDER / "remarks.json"
-    RESOURCES_JSON = JSON_FOLDER / "resources.json"
 
     LES_EXAMPLE = PDF_FOLDER / "les_example.pdf"

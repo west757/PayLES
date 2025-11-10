@@ -1,0 +1,41 @@
+name,description,category,branch,cac,url
+Advana Gamechanger,"search over 50,000 DoD policy documents",General,DoD,false,https://gamechanger.advana.data.mil/#/gamechanger
+CitiManager,"official site for CitiManager DoD GTC cards, providing resources for managing Citi accounts and services",Financial,DoD,false,https://home.cards.citidirect.com/CommercialCard/login
+DAF E-Learning,"official site for DAF E-Learning, providing online training and education resources",Education,U.S. Air Force,false,https://usaf.percipio.com/login?state=%2F#/
+Defense Acquisition University (DAU),"official site for DAU, providing training and resources for defense acquisition professionals",Education,DoD,true,https://www.dau.edu
+Defense Finance Accounting Service (DFAS),"official site for military pay information, including pay tables and entitlements",Financial,DoD,false,https://www.dfas.mil/
+Defense Personal Property System (DPPS),"official site for military personal property relocation information, including moving allowances and benefits",PCS/Moving,DoD,false,https://dps.move.mil/cust/standard/user/home.xhtml
+Defense Travel Management Office (DTMO),"official site for military travel information, including travel allowances and benefits",PCS/Moving,DoD,false,https://www.defensetravel.dod.mil/
+Defense Travel System (DTS),"official site for the Defense Travel System, providing information on travel policies and procedures",Travel,DoD,false,https://www.defensetravel.dod.mil/
+Digital University,"official site for Digital University, providing online training and education resources for Air Force members",Education,DoD,false,https://digitalu.af.mil/app
+DoD SAFE,"official site for the DoD Secure Access File Exchange, providing a secure way to share files",General,DoD,false,https://safe.apps.mil/
+DOTS Web Transfer Portal,official site for securely transferring files to higher classification domains (NIPR -> SIPR),General,DoD,false,https://dots.dodiis.mil/webtransfer/#/
+Executive Services Directory (ESD),official site for the Executive Services Directorate,General,DoD,false,https://www.esd.whs.mil/
+GigEagle,"official site for the GigEagle program, providing resources for military families",General,DoD,false,https://gigeagle.mil/
+H&R Block Military Tax Services,"official site for H&R Block's military tax services, providing resources and support for military members",Financial,DoD,false,https://www.hrblock.com/tax-center/lifestyle/military/
+Health.mil Psychological Health Resource Center,official site for military mental health and psychological health information,Health,DoD,false,https://www.health.mil/Military-Health-Topics/Centers-of-Excellence/Psychological-Health-Center-of-Excellence/Psychological-Health-Resource-Center
+Homes.mil,"official site for military housing information, including resources for finding and securing housing",PCS/Moving,DoD,false,https://www.homes.mil/
+Human Performance Resources,"official site for Human Performance Resources, providing a wide range of resources for military members",Health,DoD,false,https://www.hprc-online.org/
+ID Card Office Online,"official site for the ID Card Office, providing information on ID cards and related services",General,DoD,false,https://idco.dmdc.osd.mil/idco/
+Intelink,official site for the Intelink collaboration platform,General,DoD,false,https://www.intelink.gov/
+IRS Military Site,"official IRS site for military tax information, including deductions and credits",Financial,DoD,false,https://www.irs.gov/individuals/military
+Joint Knowledge Online (JKO),official site for training and educational resources for the joint force,Education,DoD,false,https://www.jcs.mil/JKO/
+LeaveWeb,official site for managing leave requests and balances,General,DoD,false,https://leave.af.mil/profile/%23%7BtabId%7D
+Military Money Manual,provides independent financial education and resources for military members and their families,Financial,Non-DoD,false,https://militarymoneymanual.com/
+Military OneSource,"official site for military members and families, providing a wide range of resources and support services",General,DoD,false,https://www.militaryonesource.mil/
+Military.com,"provides news, benefits information, and resources for military members and their families",General,Non-DoD,false,https://www.military.com/
+MilitaryPay,"official site for military pay information, including basic pay, allowances, and benefits",Financial,DoD,false,https://militarypay.defense.gov/
+milConnect,official site for military members and families to access benefits and services,General,DoD,false,https://milconnect.dmdc.osd.mil/milconnect/
+MHS Genesis,"official site for MHS Genesis, providing a wide range of health care resources for military members",Health,DoD,false,https://my.mhsgenesis.health.mil/pages/home
+MyPay,"official online pay management system for military members, retirees, and their families",Financial,DoD,false,https://mypay.dfas.mil/#/
+NIPRGPT,official site for the DoD AI chat platform,General,DoD,false,https://niprgpt.mil/storefront
+O'Reilly Textbooks,"official site for O'Reilly Media, providing a wide range of textbooks and online resources for military members",Education,Non-DoD,false,https://www.oreilly.com/
+OPM - Military Leave,official Office of Personnel Management site for military leave policies and information,General,DoD,false,https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/
+Outlook Webmail,"official site for Outlook Webmail, providing access to military email accounts",General,DoD,false,https://webmail.apps.mil/mail/
+SGLI,"official site for Servicemembers' Group Life Insurance, providing information on coverage and benefits",General,DoD,false,https://www.va.gov/life-insurance/options-eligibility/sgli/
+The Military Wallet,provides independent financial resources and tools for military members and their families,Financial,Non-DoD,false,https://themilitarywallet.com/
+Thrift Savings Plan (TSP),"official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services",Financial,DoD,false,https://www.tsp.gov/
+Transition Assistance Program (TAP),"official site for the Transition Assistance Program, providing resources for transitioning service members",General,DoD,false,https://www.dodtap.mil/dodtap/app/home
+TRICARE,"official site for TRICARE, providing health care resources for military members",Health,DoD,false,https://www.tricare.mil/
+U.S. Armed Forces Legal Assistance,"official site for the U.S. Armed Forces Legal Assistance, providing legal resources for service members",Legal,DoD,false,https://legalassistance.law.af.mil/
+VA Education Benefits,"official site for military education information, including GI Bill benefits and resources",Education,Non-DoD,false,https://www.va.gov/education/

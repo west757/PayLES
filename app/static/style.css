@@ -1450,3 +1450,67 @@ table.styled td.cell {
     border: 1.5px solid #0077cc;
 }
 
+
+/* No CAC Required filter styling */
+.resources-filter-cac-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1em;
+    margin-right: 1em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.resources-filter-cac-checkbox {
+    accent-color: #0077cc;
+    margin-right: 0.3em;
+}
+
+/* Export button styling (inherits .button-generic) */
+#resources-export-btn {
+    margin-left: 1em;
+    margin-right: 1em;
+    height: 2.5rem;
+}
+
+/* Bookmark button styling */
+.resource-bookmark-btn {
+    margin-left: auto;
+    background: #f8fafd;
+    border: 1px solid #e0e6ef;
+    border-radius: 6px;
+    padding: 0.3em 1em;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: #1a2a3a;
+    transition: background 0.15s, border 0.15s;
+    align-self: center;
+    margin-top: 0.2em;
+}
+
+.resource-bookmark-btn:hover {
+    background: #eaf4ff;
+    border: 1.5px solid #0077cc;
+}
+
+/* Tooltip for bookmark */
+.resource-bookmark-tooltip {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 2.2em;
+    background: #222;
+    color: #fff;
+    padding: 0.4em 0.8em;
+    border-radius: 6px;
+    font-size: 0.95em;
+    z-index: 100;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.resource-bookmark-btn:focus + .resource-bookmark-tooltip,
+.resource-bookmark-btn:hover + .resource-bookmark-tooltip {
+    display: block;
+}

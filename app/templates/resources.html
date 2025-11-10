@@ -6,10 +6,10 @@
 </script>
 
 <div id="page-resources" class="page">
+    <h2>Resource Search</h2>
+    
     <div id="resources-filters">
-        <h2>Resource Search</h2>
-
-        <input id="resources-filter-search"></input>
+        <input id="resources-filter-search" type="text" placeholder="Search resources..." />
 
         <div class="resources-filter-panel-container">
             <button id="button-resources-filter-categories" type="button">Category</button>
@@ -20,6 +20,13 @@
             <button id="button-resources-filter-branches" type="button">Branch</button>
             <div id="resources-filter-branches" class="resources-filter-panel"></div>
         </div>
+
+        <label class="resources-filter-panel-label resources-filter-cac-label">
+            <input type="checkbox" id="resources-filter-no-cac" class="resources-filter-cac-checkbox" />
+            No CAC Required
+        </label>
+
+        <button id="resources-export-btn" class="button-generic" type="button">Export as CSV</button>
 
         <span id="resources-count"></span>
     </div>
