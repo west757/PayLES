@@ -157,7 +157,7 @@ footer a {
 .page {
     margin: 0 auto 3rem auto;
     max-width: 60%;
-    min-width: 50rem;
+    min-width: 66rem;
 }
 
 /* error page */
@@ -1274,24 +1274,25 @@ table.styled td.cell {
    ========================= */
 
 #resources-filters {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    display: flex;
     flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: left;
+    margin: 0 0 0.5rem 0;
 }
 
 #resources-filter-search {
-    width: 320px;
-    max-width: 100%;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 1rem;
+    max-width: 100%;
     outline: none;
+    padding: 0.5rem 1rem;
     transition: border 0.2s;
+    width: 24rem;
 }
+
 #resources-filter-search:focus {
     border: 1.5px solid #0077cc;
 }
@@ -1301,17 +1302,17 @@ table.styled td.cell {
 }
 
 .resources-filter-panel {
-    display: none;
-    position: absolute;
-    top: 110%;
-    left: 0;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    padding: 1rem;
-    z-index: 10;
+    display: none;
+    left: 0;
     min-width: 180px;
+    padding: 1rem;
+    position: absolute;
+    top: 110%;
+    z-index: 10;
 }
 
 .resources-filter-panel.open {
@@ -1319,28 +1320,29 @@ table.styled td.cell {
 }
 
 #resources-count {
-    font-size: 1em;
     color: #2a3a4a;
-    margin-left: 1.2em;
+    font-size: 1em;
     font-weight: 500;
+    text-align: right;
     vertical-align: middle;
+    width: 8rem;
 }
 
 .resources-filter-panel-label {
-    font-size: 0.98em;
     color: #2a3a4a;
-    margin-right: 0.7em;
     cursor: pointer;
     display: block;
-    width: 100%;
-    text-align: left;
-    margin: 0 0 0.5em 0;
+    font-size: 0.98em;
     padding: 0.2em 0;
+    margin: 0 0 0.5em 0;
+    margin-right: 0.7em;
+    text-align: left;
+    width: 100%;
 }
 
 .resources-filter-panel-checkbox {
-    margin-right: 0.3em;
     accent-color: #0077cc;
+    margin-right: 0.3em;
 }
 
 .resources-list {

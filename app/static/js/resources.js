@@ -95,7 +95,7 @@ function initResourcesPage() {
         }
 
         const countSpan = document.getElementById('resources-count');
-        countSpan.textContent = `${filteredResources.length} Resource${filteredResources.length === 1 ? '' : 's'}`;
+        countSpan.textContent = `${filteredResources.length} Result${filteredResources.length === 1 ? '' : 's'}`;
     }
 
 

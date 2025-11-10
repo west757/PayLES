@@ -12,6 +12,7 @@ short-term:
 - conus cola
 - refactor resources
 - move javascript functions inside encapsulated functions
+- restrict search input
 
 mid-term:
 - get combat zone from les
@@ -21,6 +22,9 @@ mid-term:
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
 - config for icons
+- minimize formatting (when shrinking window)
+- export resources
+- cac required checkbox
 
 long-term:
 - leave calculator
