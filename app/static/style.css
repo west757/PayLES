@@ -1410,18 +1410,18 @@ table.styled td.cell {
 }
 
 .resource-tag-category {
-    background: #e0e6ef;
-    color: #2a3a4a;
+    background: #d9e7c2;
+    color: #264611;
 }
 
 .resource-tag-branch {
-    background: #d1f0e6;
-    color: #1a5a3a;
+    background: #c7cce0;
+    color: #071b53;
 }
 
 .resource-tag-cac {
-    background: #ffe6c1;
-    color: #a15c00;
+    background: #e9c2b8;
+    color: #a11800;
 }
 
 #resources-pagination {
