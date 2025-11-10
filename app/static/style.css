@@ -1326,6 +1326,104 @@ table.styled td.cell {
     vertical-align: middle;
 }
 
+.resources-filter-panel-label {
+    font-size: 0.98em;
+    color: #2a3a4a;
+    margin-right: 0.7em;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 0.5em 0;
+    padding: 0.2em 0;
+}
+
+.resources-filter-panel-checkbox {
+    margin-right: 0.3em;
+    accent-color: #0077cc;
+}
+
+.resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.resource {
+    align-items: flex-start;
+    background: var(--primary_light_accent_color);
+    border: 1.5px solid var(--secondary_light_accent_color);;
+    border-radius: 10px;
+    box-shadow: 0.1rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
+    position: relative;
+    transition: box-shadow 0.18s, border 0.18s, background 0.18s;
+}
+
+.resource:hover {
+    /*
+    background: #eaf4ff;
+    border: 1.5px solid #0077cc;
+    */
+    background: #eafffa;
+    border: 1.5px solid var(--primary_green_accent_color);
+    box-shadow: 0.1rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+}
+
+.resource-star {
+    color: #f7b500;
+    font-size: 1.1em;
+    margin-left: 0.3em;
+    margin-right: 0;
+    margin-top: 0;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.resource-header {
+    align-items: center;
+    display: flex;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.resource-description {
+    color: #4a5a6a;
+}
+
+.resource-tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.resource-tag {
+    border-radius: 1rem;
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 0.1rem 0.75rem;
+}
+
+.resource-tag-category {
+    background: #e0e6ef;
+    color: #2a3a4a;
+}
+
+.resource-tag-branch {
+    background: #d1f0e6;
+    color: #1a5a3a;
+}
+
+.resource-tag-cac {
+    background: #ffe6c1;
+    color: #a15c00;
+}
+
 #resources-pagination {
     display: flex;
     justify-content: center;
@@ -1348,123 +1446,5 @@ table.styled td.cell {
 .button-resources-pagination:hover {
     background: #eaf4ff;
     border: 1.5px solid #0077cc;
-}
-
-
-
-.resources-filter-panel-label {
-    font-size: 0.98em;
-    color: #2a3a4a;
-    margin-right: 0.7em;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    text-align: left;
-    margin: 0 0 0.5em 0;
-    padding: 0.2em 0;
-}
-
-.resources-filter-panel-checkbox {
-    margin-right: 0.3em;
-    accent-color: #0077cc;
-}
-
-.resources-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.resource-rect {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    background: #f8fafd;
-    border: 1.5px solid #e0e6ef;
-    border-radius: 10px;
-    padding: 1.1rem 1.5rem;
-    cursor: pointer;
-    transition: box-shadow 0.18s, border 0.18s, background 0.18s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-    position: relative;
-}
-.resource-rect:hover {
-    background: #eaf4ff;
-    border: 1.5px solid #0077cc;
-    box-shadow: 0 2px 8px rgba(0,123,255,0.10);
-}
-
-.resource-main {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2em;
-}
-
-.resource-star {
-    color: #f7b500;
-    font-size: 1.1em;
-    margin-left: 0.3em;
-    margin-right: 0;
-    margin-top: 0;
-    flex-shrink: 0;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.resource-header {
-    font-weight: 600;
-    font-size: 1.08em;
-    color: #1a2a3a;
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-}
-
-.resource-description {
-    color: #4a5a6a;
-    font-size: 0.98em;
-    margin-top: 0.1em;
-}
-
-.resource-tag-container {
-    font-size: 0.92em;
-    color: #7a8a9a;
-    margin-top: 0.2em;
-    display: flex;
-    gap: 1.2em;
-    flex-wrap: wrap;
-}
-
-.resource-tag {
-
-}
-
-.resource-tag-category {
-    background: #e0e6ef;
-    color: #2a3a4a;
-    border-radius: 6px;
-    padding: 0.1em 0.7em;
-    font-size: 0.92em;
-    margin-right: 0.3em;
-    display: inline-block;
-}
-
-.resource-tag-branch {
-    background: #d1f0e6;
-    color: #1a5a3a;
-    border-radius: 6px;
-    padding: 0.1em 0.7em;
-    font-size: 0.92em;
-    display: inline-block;
-}
-
-.resource-tag-cac {
-    background: #ffe6c1;
-    color: #a15c00;
-    border-radius: 6px;
-    padding: 0.1em 0.7em;
-    font-size: 0.92em;
-    display: inline-block;
-    margin-left: 0.3em;
 }
 

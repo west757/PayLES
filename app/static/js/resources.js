@@ -48,7 +48,7 @@ function initResourcesPage() {
             filteredResources = filteredResources.filter(r => selectedBranches.includes(r.branch));
         }
 
-        const resourcesListing = document.getElementById('resources-listing');
+        const resourcesListing = document.getElementById('resources-list-container');
         if (!filteredResources.length) {
             resourcesListing.innerHTML = 'No resources found matching current filters.';
         } else {
@@ -59,15 +59,13 @@ function initResourcesPage() {
                 const cac_tag = resource.cac ? `<span class="resource-tag resource-tag-cac">CAC Required</span>` : '';
 
                 return `
-                    <div class="resource-rect" tabindex="0" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')" title="${resource.name}">
-                        <div class="resource-main">
-                            <div class="resource-header">
-                                ${star}
-                                ${resource.name}
-                            </div>
-                            <div class="resource-description">${resource.desc}</div>
-                            <div class="resource-tag-container">${category_tag}${branch_tag}${cac_tag}</div>
+                    <div class="resource" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')">
+                        <div class="resource-header">
+                            ${star}
+                            ${resource.name}
                         </div>
+                        <div class="resource-description">${resource.desc}</div>
+                        <div class="resource-tag-container">${category_tag}${branch_tag}${cac_tag}</div>
                     </div>
                 `;
             }).join('')}</div>`;
@@ -75,22 +73,23 @@ function initResourcesPage() {
 
         const paginationContainer = document.getElementById('resources-pagination');
         const totalPages = Math.ceil(filteredResources.length / MAX_RESOURCES_DISPLAY);
+
         if (totalPages <= 1) {
             paginationContainer.innerHTML = '';
         } else {
             paginationContainer.innerHTML = '';
+            
             for (let i = 1; i <= totalPages; i++) {
                 paginationContainer.innerHTML += `<button class="button-resources-pagination${i === currentPage ? ' active' : ''}" data-page="${i}">${i}</button>`;
             }
-            paginationContainer.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentPage = parseInt(btn.getAttribute('data-page'));
+
+            paginationContainer.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentPage = parseInt(button.getAttribute('data-page'));
                     updateResourceList();
-                    // Scroll to top of the resources page
+
                     const pageContainer = document.getElementById('page-resources');
-                    if (pageContainer) {
-                        pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                    pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
             });
         }
