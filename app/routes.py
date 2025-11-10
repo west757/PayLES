@@ -470,8 +470,11 @@ def faq():
 
 @flask_app.route('/resources')
 def resources():
-    context = {
+    config_js = {
         'RESOURCES': load_json(flask_app.config['RESOURCES_JSON']),
+    }
+    context = {
+        'config_js': config_js,
     }
     return render_template('resources.html', **context)
 

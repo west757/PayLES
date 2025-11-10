@@ -1,23 +1,22 @@
-// --- Resource Metadata ---
 const RESOURCE_CATEGORIES = [
-	{ key: 'General', label: 'General' },
-	{ key: 'Financial', label: 'Financial' },
-	{ key: 'PCS/Moving', label: 'PCS/Moving' },
-	{ key: 'Travel', label: 'Travel' },
-	{ key: 'Education', label: 'Education' },
-	{ key: 'Health', label: 'Health' },
-    { key: 'Legal', label: 'Legal' },
-	{ key: 'Resource List', label: 'Resource List' },
-	{ key: 'Calculator', label: 'Calculator' },
+    'General',
+    'Financial',
+    'PCS/Moving',
+    'Travel',
+    'Education',
+    'Health',
+    'Legal',
+    'Resource List',
+    'Calculator'
 ];
 const RESOURCE_BRANCHES = [
-	{ key: 'DoD', label: 'DoD' },
-    { key: 'U.S. Army', label: 'U.S. Army' },
-	{ key: 'U.S. Air Force', label: 'U.S. Air Force' },
-	{ key: 'U.S. Space Force', label: 'U.S. Space Force' },
-	{ key: 'U.S. Navy', label: 'U.S. Navy' },
-	{ key: 'U.S. Marine Corps', label: 'U.S. Marine Corps' },
-    { key: 'Non-DoD', label: 'Non-DoD' },
+    'DoD',
+    'U.S. Army',
+    'U.S. Air Force',
+    'U.S. Space Force',
+    'U.S. Navy',
+    'U.S. Marine Corps',
+    'Non-DoD'
 ];
 
 
@@ -25,52 +24,36 @@ function getStarIcon() {
 	return `<span class="resource-featured-star" title="Featured Resource">★</span>`;
 }
 
-async function fetchAndFlattenResources() {
-    // Fetch the JSON file
-    const resp = await fetch('/static/json/resources.json');
-    const data = await resp.json();
-    // data is already a flat array of resources
-    // Ensure category and branch are strings, and featured is boolean
-    let flat = data.map(item => ({
-        ...item,
-        category: typeof item.category === 'string' ? item.category : '',
-        branch: typeof item.branch === 'string' ? item.branch : '',
-        featured: !!item.featured,
-    }));
-    // Sort alphabetically by name
-    flat.sort((a, b) => a.name.localeCompare(b.name));
-    return flat;
+
+function renderCategoryFilters(selected) {
+    const container = document.getElementById('resources-category-filters');
+    container.innerHTML = '';
+    RESOURCE_CATEGORIES.forEach(cat => {
+        const id = `cat-filter-${cat.replace(/\s/g, '-')}`;
+        const checked = selected.includes(cat) ? 'checked' : '';
+        container.innerHTML += `
+            <label class="resources-filter-label" for="${id}">
+                <input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${cat}" ${checked} />
+                ${cat}
+            </label>
+        `;
+    });
 }
 
-// --- Render Category and Branch Filters ---
-function renderCategoryFilters(selected) {
-	const container = document.getElementById('resources-category-filters');
-	container.innerHTML = '';
-	RESOURCE_CATEGORIES.forEach(cat => {
-		const id = `cat-filter-${cat.key}`;
-		const checked = selected.includes(cat.key) ? 'checked' : '';
-		container.innerHTML += `
-			<label class="resources-filter-label" for="${id}">
-				<input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${cat.key}" ${checked} />
-				${cat.label}
-			</label>
-		`;
-	});
-}
 
 function renderBranchFilters(selected) {
-	const container = document.getElementById('resources-branch-filters');
-	container.innerHTML = '';
-	RESOURCE_BRANCHES.forEach(branch => {
-		const id = `branch-filter-${branch.key.replace(/\s/g, '-')}`;
-		const checked = selected.includes(branch.key) ? 'checked' : '';
-		container.innerHTML += `
-			<label class="resources-filter-label" for="${id}">
-				<input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${branch.key}" ${checked} />
-				${branch.label}
-			</label>
-		`;
-	});
+    const container = document.getElementById('resources-branch-filters');
+    container.innerHTML = '';
+    RESOURCE_BRANCHES.forEach(branch => {
+        const id = `branch-filter-${branch.replace(/\s/g, '-')}`;
+        const checked = selected.includes(branch) ? 'checked' : '';
+        container.innerHTML += `
+            <label class="resources-filter-label" for="${id}">
+                <input type="checkbox" class="resources-filter-checkbox" id="${id}" value="${branch}" ${checked} />
+                ${branch}
+            </label>
+        `;
+    });
 }
 
 function renderResourceList(resources) {
@@ -99,8 +82,9 @@ function renderResourceList(resources) {
     }).join('')}</div>`;
 }
 
+
 window.initResourcesPage = async function initResourcesPage() {
-    let allResources = await fetchAndFlattenResources();
+    let RESOURCES = window.CONFIG.RESOURCES;
     let searchValue = '';
     let selectedCategories = [];
     let selectedBranches = [];
@@ -112,8 +96,8 @@ window.initResourcesPage = async function initResourcesPage() {
         const panel = document.getElementById(panelId);
         panel.innerHTML = options.map(opt => `
             <label class="resources-filter-label">
-                <input type="checkbox" class="resources-filter-checkbox" value="${opt.key}" ${selected.includes(opt.key) ? 'checked' : ''} data-type="${type}" />
-                ${opt.label}
+                <input type="checkbox" class="resources-filter-checkbox" value="${opt}" ${selected.includes(opt) ? 'checked' : ''} data-type="${type}" />
+                ${opt}
             </label>
         `).join('');
     }
@@ -134,7 +118,7 @@ window.initResourcesPage = async function initResourcesPage() {
 
     // Filtering logic (same as before)
     function filterResources() {
-        let filtered = allResources;
+        let filtered = RESOURCES;
         if (searchValue) {
             const sv = searchValue.toLowerCase();
             filtered = filtered.filter(r => r.name.toLowerCase().includes(sv));
@@ -221,7 +205,6 @@ window.initResourcesPage = async function initResourcesPage() {
         }
     });
 
-    // Initial render
     renderDropdownPanel('categories-dropdown-panel', RESOURCE_CATEGORIES, selectedCategories, 'category');
     renderDropdownPanel('branches-dropdown-panel', RESOURCE_BRANCHES, selectedBranches, 'branch');
     setupDropdown('categories-dropdown-btn', 'categories-dropdown-panel');

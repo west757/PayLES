@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script id="config-data" type="application/json">
+    {{ config_js|tojson }}
+</script>
+
 <div id="page-resources" class="page">
     <h2>Resource Listing</h2>
     <div id="resources-filter-bar">

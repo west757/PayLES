@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
         attachDragAndDropListeners();
         attachHomeListeners();
     }
+    if(document.getElementById('page-resources')) {
+        getConfigData();
+    }
 
     if (document.getElementById('page-resources') && typeof window.initResourcesPage === 'function') {
         window.initResourcesPage();
