@@ -6,14 +6,14 @@ function initResourcesPage() {
     let selectedBranches = [];
     let noCACRequired = false;
     let currentPage = 1;
-    let lastFilteredResources = [];
+    let exportResources = [];
 
 
     function populateFilterPanel(panelID, options, type) {
         const panel = document.getElementById(panelID);
         panel.innerHTML = options.map(opt => `
             <label class="resources-filter-panel-label">
-                <input class="resources-filter-panel-checkbox" type="checkbox" value="${opt}" data-type="${type}" />
+                <input class="resources-filter-panel-checkbox styled" type="checkbox" value="${opt}" data-type="${type}" />
                 ${opt}
             </label>
         `).join('');
@@ -52,26 +52,21 @@ function initResourcesPage() {
             filteredResources = filteredResources.filter(r => !r.cac);
         }
 
-        lastFilteredResources = filteredResources; // for export
+        exportResources = filteredResources;
 
         const resourcesListing = document.getElementById('resources-list-container');
         if (!filteredResources.length) {
             resourcesListing.innerHTML = 'No resources found matching current filters.';
         } else {
             resourcesListing.innerHTML = `<div class="resources-list">${filteredResources.slice((currentPage - 1) * MAX_RESOURCES_DISPLAY, currentPage * MAX_RESOURCES_DISPLAY).map((resource, idx) => {
-                const star = resource.featured ? `<span class="resource-star" title="Featured Resource">★</span>` : '';
                 const category_tag = resource.category ? `<span class="resource-tag resource-tag-category">${resource.category}</span>` : '';
                 const branch_tag = resource.branch ? `<span class="resource-tag resource-tag-branch">${resource.branch}</span>` : '';
                 const cac_tag = resource.cac ? `<span class="resource-tag resource-tag-cac">CAC Required</span>` : '';
-                // Bookmark button and tooltip
-                const bookmarkBtnId = `bookmark-btn-${currentPage}-${idx}`;
+
                 return `
                     <div class="resource" tabindex="0" style="position:relative;" onclick="window.open('${resource.url}','_blank', 'noopener noreferrer')">
                         <div class="resource-header">
-                            ${star}
                             ${resource.name}
-                            <button type="button" class="resource-bookmark-btn" id="${bookmarkBtnId}" tabindex="0" onclick="event.stopPropagation(); downloadBookmark('${escapeForAttr(resource.name)}', '${escapeForAttr(resource.url)}', '${bookmarkBtnId}')">Bookmark</button>
-                            <span class="resource-bookmark-tooltip" id="${bookmarkBtnId}-tooltip">Press Ctrl+D to instantly bookmark this page</span>
                         </div>
                         <div class="resource-description">${resource.description || ''}</div>
                         <div class="resource-tag-container">${category_tag}${branch_tag}${cac_tag}</div>
@@ -105,39 +100,11 @@ function initResourcesPage() {
     }
 
 
-    // Utility for escaping quotes in attribute values
-    function escapeForAttr(str) {
-        return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    }
-
-
-    // Download .url file for bookmark
-    window.downloadBookmark = function(name, url, btnId) {
-        const content = `[InternetShortcut]\nURL=${url}\n`;
-        const blob = new Blob([content], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${name}.url`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(a.href), 100);
-
-        // Show tooltip
-        const tooltip = document.getElementById(btnId + '-tooltip');
-        if (tooltip) {
-            tooltip.style.display = 'block';
-            setTimeout(() => { tooltip.style.display = 'none'; }, 2500);
-        }
-    };
-
-    
-    // Export filtered resources as CSV
     function exportResourcesAsCSV(resources) {
         if (!resources.length) return;
         const headers = Object.keys(resources[0]);
         const csvRows = [
-            headers.join(','), // header row
+            headers.join(','),
             ...resources.map(r => headers.map(h => `"${(r[h] ?? '').toString().replace(/"/g, '""')}"`).join(','))
         ];
         const csvContent = csvRows.join('\r\n');
@@ -192,8 +159,8 @@ function initResourcesPage() {
         updateResourceList();
     });
 
-    document.getElementById('resources-export-btn').addEventListener('click', () => {
-        exportResourcesAsCSV(lastFilteredResources);
+    document.getElementById('button-resources-export').addEventListener('click', () => {
+        exportResourcesAsCSV(exportResources);
     });
 
 

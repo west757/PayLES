@@ -9,24 +9,24 @@
     <h2>Resource Search</h2>
 
     <div id="resources-controls">
-        <input id="resources-filter-search" type="text" placeholder="Search resources..." />
+        <input id="resources-filter-search" type="text" placeholder="Search resources" />
 
         <div class="resources-filter-panel-container">
-            <button id="button-resources-filter-categories" type="button">Category</button>
+            <button id="button-resources-filter-categories" class="button-generic button-positive" type="button">Category</button>
             <div id="resources-filter-categories" class="resources-filter-panel"></div>
         </div>
 
         <div class="resources-filter-panel-container">
-            <button id="button-resources-filter-branches" type="button">Branch</button>
+            <button id="button-resources-filter-branches" class="button-generic button-positive" type="button">Branch</button>
             <div id="resources-filter-branches" class="resources-filter-panel"></div>
         </div>
 
         <label class="resources-filter-cac-label">
-            <input type="checkbox" id="resources-filter-no-cac" class="resources-filter-cac-checkbox" />
+            <input id="resources-filter-no-cac" class="styled" type="checkbox"/>
             No CAC Required
         </label>
 
-        <button id="resources-export-btn" class="button-generic button-positive" type="button">Export as CSV</button>
+        <button id="button-resources-export" class="button-generic button-positive" type="button">Export as CSV</button>
 
         <span id="resources-count"></span>
     </div>

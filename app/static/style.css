@@ -1277,23 +1277,23 @@ table.styled td.cell {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1rem;
     justify-content: left;
+    margin: 0 0 2rem 0;
 }
 
 #resources-filter-search {
     border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
+    border-radius: 0.5rem;
     max-width: 100%;
     outline: none;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     transition: border 0.2s;
     width: 24rem;
 }
 
 #resources-filter-search:focus {
-    border: 1.5px solid #0077cc;
+    border: 1.5px solid var(--primary_green_accent_color);
 }
 
 .resources-filter-panel-container {
@@ -1306,61 +1306,39 @@ table.styled td.cell {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     display: none;
+    flex-direction: column;
+    gap: 0.75rem;
     left: 0;
-    min-width: 180px;
-    padding: 1rem;
+    width: 12rem;
+    padding: 0.75rem;
     position: absolute;
     top: 110%;
     z-index: 10;
 }
 
 .resources-filter-panel.open {
-    display: block;
-}
-
-.resources-filter-cac-label {
     display: flex;
-    align-items: center;
-    gap: 0.5em;
-    font-size: 1em;
-    cursor: pointer;
-    user-select: none;
-}
-
-.resources-filter-cac-checkbox {
-    accent-color: #0077cc;
-    margin-right: 0.3em;
-}
-
-#resources-export-btn {
-    margin-left: 1em;
-    margin-right: 1em;
-    height: 2.5rem;
-}
-
-#resources-count {
-    color: #2a3a4a;
-    font-size: 1em;
-    font-weight: 500;
-    text-align: right;
-    vertical-align: middle;
 }
 
 .resources-filter-panel-label {
     color: #2a3a4a;
     cursor: pointer;
     display: block;
-    font-size: 0.98em;
-    padding: 0.2em 0;
-    margin: 0 0 0.5em 0;
-    margin-right: 0.7em;
     text-align: left;
     width: 100%;
 }
 
-.resources-filter-panel-checkbox {
-    accent-color: #0077cc;
-    margin-right: 0.3em;
+.resources-filter-cac-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+    user-select: none;
+}
+
+#resources-count {
+    text-align: right;
+    vertical-align: middle;
 }
 
 .resources-list {
@@ -1392,17 +1370,6 @@ table.styled td.cell {
     background: #eafffa;
     border: 1.5px solid var(--primary_green_accent_color);
     box-shadow: 0.1rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
-}
-
-.resource-star {
-    color: #f7b500;
-    font-size: 1.1em;
-    margin-left: 0.3em;
-    margin-right: 0;
-    margin-top: 0;
-    flex-shrink: 0;
-    display: inline-block;
-    vertical-align: middle;
 }
 
 .resource-header {
@@ -1466,47 +1433,4 @@ table.styled td.cell {
 .button-resources-pagination:hover {
     background: #eaf4ff;
     border: 1.5px solid #0077cc;
-}
-
-
-
-/* Bookmark button styling */
-.resource-bookmark-btn {
-    margin-left: auto;
-    background: #f8fafd;
-    border: 1px solid #e0e6ef;
-    border-radius: 6px;
-    padding: 0.3em 1em;
-    cursor: pointer;
-    font-size: 0.95em;
-    color: #1a2a3a;
-    transition: background 0.15s, border 0.15s;
-    align-self: center;
-    margin-top: 0.2em;
-}
-
-.resource-bookmark-btn:hover {
-    background: #eaf4ff;
-    border: 1.5px solid #0077cc;
-}
-
-/* Tooltip for bookmark */
-.resource-bookmark-tooltip {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 2.2em;
-    background: #222;
-    color: #fff;
-    padding: 0.4em 0.8em;
-    border-radius: 6px;
-    font-size: 0.95em;
-    z-index: 100;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-
-.resource-bookmark-btn:focus + .resource-bookmark-tooltip,
-.resource-bookmark-btn:hover + .resource-bookmark-tooltip {
-    display: block;
 }
