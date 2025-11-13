@@ -11,9 +11,7 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
-- move javascript functions inside encapsulated functions
 - restrict search input
-- different colors for tag content
 
 mid-term:
 - get combat zone from les
@@ -65,6 +63,7 @@ You can set these headers in Flask using an after_request handler.
 
 
 Sort Order
+- different colors for tag content
 Setting: Sort resources by Name, Category, Branch, or CAC Required.
 UI: Dropdown or radio buttons.
 Why: Lets users quickly find resources in their preferred order.

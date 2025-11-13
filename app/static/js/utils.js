@@ -320,11 +320,15 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-mid');
             input.placeholder = '12345';
             input.maxLength = 5;
-            input.addEventListener('input', setInputRestriction('text', 5));
+            input.addEventListener('input', setInputRestriction('string', 5));
         }
-        else {
+        else if (header === 'Resource Search') {
+            input.placeholder = 'Search resources';
+            input.maxLength = 40;
+            input.addEventListener('input', setInputRestriction('string', 40));
+        } else {
             input.classList.add('input-long');
-            input.addEventListener('input', setInputRestriction('text', 20));
+            input.addEventListener('input', setInputRestriction('string', 20));
         }
 
         wrapper.appendChild(input);

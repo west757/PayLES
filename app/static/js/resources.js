@@ -121,11 +121,17 @@ function initResourcesPage() {
     }
 
 
-    document.getElementById('resources-filter-search').addEventListener('input', e => {
+    const searchInputWrapper = createStandardInput('Resource Search', 'string', '');
+    const searchInput = searchInputWrapper.querySelector('input');
+    searchInput.id = 'resources-filter-search';
+    document.getElementById('resources-search-input-location').appendChild(searchInputWrapper);
+
+    searchInput.addEventListener('input', e => {
         searchString = e.target.value.slice(0, window.CONFIG.MAX_RESOURCES_SEARCH_LENGTH);
         currentPage = 1;
         updateResourceList();
     });
+
 
     document.getElementById('resources-filter-categories').addEventListener('change', e => {
         if (e.target.classList.contains('resources-filter-panel-checkbox')) {
