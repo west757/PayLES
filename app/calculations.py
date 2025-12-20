@@ -65,11 +65,6 @@ def calc_ytds(pay, month, prev_month=None):
     return round(ytd_income, 2), round(ytd_expenses, 2), round(ytd_net_pay, 2)
 
 
-
-# =========================
-# calculate special rows
-# =========================
-
 def calc_base_pay(pay, month):
     PAY_ACTIVE = flask_app.config['PAY_ACTIVE']
     grade = get_row_value(pay, "Grade", month)
