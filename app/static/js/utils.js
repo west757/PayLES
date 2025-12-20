@@ -199,12 +199,6 @@ function createStandardInput(header, field, value = '') {
             input.classList.add('input-short');
         }
 
-        else if (header === 'Drills') {
-            const max = window.CONFIG.DRILLS_MAX;
-            options = Array.from({length: max + 1}, (_, i) => i);
-            input.classList.add('input-short');
-        }
-
         options.forEach(opt => {
             let o = document.createElement('option');
             o.value = opt;
@@ -222,67 +216,50 @@ function createStandardInput(header, field, value = '') {
         input.type = 'text';
         input.value = value;
 
-        if (header && header.toLowerCase().includes('tsp')) {
+        let maxValue = null;
+        let maxLength = null;
+
+        if (header === 'Zip Code') {
+            input.classList.add('input-mid');
+            maxValue = 99999;
+            maxLength = 5;
+            input.placeholder = '12345';
+        } else if (header === 'Drills') {
             input.classList.add('input-short');
-            
-            // determine max value and maxLength
-            let maxVal = 100;
-            let maxLength = 3;
+            maxValue = window.CONFIG.DRILLS_MAX;
+            maxLength = 2;
+            input.placeholder = '0-' + maxValue;
+        } else if (header.toLowerCase().includes('tsp')) {
+            input.classList.add('input-short');
+            maxValue = 100;
+            maxLength = 3;
             if (header.toLowerCase().includes('base')) {
                 if (header.toLowerCase().includes('trad')) {
-                    maxVal = window.CONFIG.TRAD_TSP_RATE_MAX;
+                    maxValue = window.CONFIG.TRAD_TSP_RATE_MAX;
                 } else if (header.toLowerCase().includes('roth')) {
-                    maxVal = window.CONFIG.ROTH_TSP_RATE_MAX;
+                    maxValue = window.CONFIG.ROTH_TSP_RATE_MAX;
                 }
                 maxLength = 2;
             }
-            input.placeholder = '0-' + maxVal;
-            input.maxLength = maxLength;
+            input.placeholder = '0-' + maxValue;
+        }
 
-            // add beforeinput restriction for TSP fields
-            input.addEventListener('beforeinput', function(e) {
-                if (e.inputType === 'insertText') {
-                    if (!/^[0-9]$/.test(e.data)) {
-                        e.preventDefault();
-                        return;
-                    }
-                    // simulate the value after input
-                    let newValue = input.value;
-                    const start = input.selectionStart;
-                    const end = input.selectionEnd;
-                    newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
+        if (maxLength !== null) input.maxLength = maxLength;
 
-                    // prevent exceeding maxLength
-                    if (newValue.length > maxLength) {
-                        e.preventDefault();
-                        return;
-                    }
-                    // prevent exceeding maxVal
-                    if (newValue && parseInt(newValue, 10) > maxVal) {
-                        e.preventDefault();
-                        return;
-                    }
-                }
-            });
+        // attach both input and beforeinput handlers
+        const handlers = setInputRestriction('int', maxLength, maxValue);
+        if (handlers.input) input.addEventListener('input', handlers.input);
+        if (handlers.beforeinput) input.addEventListener('beforeinput', handlers.beforeinput);
 
-            input.addEventListener('input', function(e) {
-                let val = e.target.value.replace(/\D/g, '');
-                if (maxLength && val.length > maxLength) {
-                    val = val.slice(0, maxLength);
-                }
-                if (val && parseInt(val, 10) > maxVal) {
-                    val = maxVal.toString();
-                }
-                e.target.value = val;
-            });
+        wrapper.appendChild(input);
 
-            wrapper.appendChild(input);
+        if (header.toLowerCase().includes('tsp')) {
             adornment = document.createElement('span');
             adornment.textContent = '%';
             adornment.className = 'input-adornment-right';
             wrapper.appendChild(adornment);
-            return wrapper;
-        } 
+        }
+        return wrapper;
     }
 
     else if (field === 'float') {
@@ -316,13 +293,7 @@ function createStandardInput(header, field, value = '') {
         input.type = 'text';
         input.value = value;
 
-        if (header === 'Zip Code') {
-            input.classList.add('input-mid');
-            input.placeholder = '12345';
-            input.maxLength = 5;
-            input.addEventListener('input', setInputRestriction('string', 5));
-        }
-        else if (header === 'Resource Search') {
+        if (header === 'Resource Search') {
             input.placeholder = 'Search resources';
             input.maxLength = 40;
             input.addEventListener('input', setInputRestriction('string', 40));
@@ -337,7 +308,7 @@ function createStandardInput(header, field, value = '') {
 }
 
 
-function setInputRestriction(field, maxLength = null) {
+function setInputRestriction(field, maxLength = null, maxValue = null) {
     // input restrictions for float inputs
     if (field === 'float') {
         return function(e) {
@@ -373,7 +344,8 @@ function setInputRestriction(field, maxLength = null) {
 
     // input restrictions for int inputs
     if (field === 'int') {
-        return function(e) {
+        // input event handler
+        function inputHandler(e) {
             let val = e.target.value.replace(/\D/g, '');
             if (maxLength && val.length > maxLength) {
                 val = val.slice(0, maxLength);
@@ -381,8 +353,36 @@ function setInputRestriction(field, maxLength = null) {
             if (val.length > 1) {
                 val = val.replace(/^0+/, '');
             }
+            if (maxValue !== null && val && parseInt(val, 10) > maxValue) {
+                val = maxValue.toString();
+            }
             e.target.value = val;
-        };
+        }
+
+        // beforeinput event handler
+        function beforeInputHandler(e) {
+            if (e.inputType === 'insertText') {
+                if (!/^[0-9]$/.test(e.data)) {
+                    e.preventDefault();
+                    return;
+                }
+                let input = e.target;
+                let newValue = input.value;
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                newValue = newValue.slice(0, start) + e.data + newValue.slice(end);
+
+                if (maxLength && newValue.length > maxLength) {
+                    e.preventDefault();
+                    return;
+                }
+                if (maxValue !== null && newValue && parseInt(newValue, 10) > maxValue) {
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+        return { input: inputHandler, beforeinput: beforeInputHandler };
     }
 
     // input restrictions for string inputs
