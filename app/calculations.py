@@ -82,6 +82,11 @@ def calc_base_pay(pay, month):
     selected_col = pay_row.columns[index + 1]
 
     base_pay = pay_row[selected_col].iloc[0]
+
+    if get_row_value(pay, "Component", month) in ("NG", "RES"):
+        drills = get_row_value(pay, "Drills", month)
+        base_pay = (float(base_pay) / 30.0) * drills
+
     return round(float(base_pay), 2)
 
 

@@ -8,7 +8,6 @@ run: python -m app.main
 
 short-term:
 - drill pay calculation (divide monthly total by 30)
-- change drill dropdown to number input (0-30)
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
