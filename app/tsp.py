@@ -270,7 +270,7 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
     roth_incentive_rate = float(get_row_value(tsp, "Roth TSP Incentive Rate", month))
     roth_bonus_rate = float(get_row_value(tsp, "Roth TSP Bonus Rate", month))
 
-    if prev_month:
+    if prev_month and month != "JAN":
         prev_elective_remaining = get_row_value(tsp, "Elective Deferral Remaining", prev_month)
         prev_annual_remaining = get_row_value(tsp, "Annual Deferral Remaining", prev_month)
     else:

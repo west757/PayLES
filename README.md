@@ -44,6 +44,7 @@ long-term:
 - better css for border table scroll bar
 - uncomment les age limit check
 - change main.py from debug when moving to prod
+- save LES to accounts for historical records
 
 potential:
 - rows displayed setting
