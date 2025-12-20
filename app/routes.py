@@ -55,7 +55,7 @@ def index():
         'TSP_ELECTIVE_LIMIT': flask_app.config['TSP_ELECTIVE_LIMIT'],
         'MONTHS': list(flask_app.config['MONTHS'].items()),
         'BRANCHES': flask_app.config['BRANCHES'],
-        'COMPONENTS': list(flask_app.config['COMPONENTS'].values()),
+        'COMPONENTS': flask_app.config['COMPONENTS'],
         'GRADES': flask_app.config['GRADES'],
         'OCONUS_LOCATIONS': flask_app.config['OCONUS_LOCATIONS'].to_dict(orient='records'),
         'HOME_OF_RECORDS': dict(zip(flask_app.config['HOME_OF_RECORDS']['abbr'], flask_app.config['HOME_OF_RECORDS']['longname'])),

@@ -150,8 +150,9 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Component') {
-            options = window.CONFIG.COMPONENTS;
+            options = Object.values(window.CONFIG.COMPONENTS);
             input.classList.add('input-long');
+            value = window.CONFIG.COMPONENTS[value];
         }
 
         else if (header === 'Grade') {

@@ -7,10 +7,10 @@ run: python -m app.main
 
 
 short-term:
-- drill pay calculation (divide monthly total by 30)
 - oconus cola and oha calculations
 - conus cola
 - refactor resources
+- default for OCONUS locations in dropdown
 
 mid-term:
 - get combat zone from les
@@ -21,6 +21,7 @@ mid-term:
 - joint spouse with two LES
 - config for icons
 - minimize formatting (when shrinking window)
+- emergency fund goal calculator
 
 long-term:
 - leave calculator
