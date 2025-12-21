@@ -382,7 +382,7 @@ def add_ytds(pay, month, les_text):
         raise Exception(get_error_context(e, "Error determining YTD deductions from LES text"))
     add_mv_pair(pay, 'YTD Expenses', month, round(-ytd_deductions, 2))
 
-    add_mv_pair(pay, 'YTD Net Pay', month, round(ytd_entitlements + ytd_deductions, 2))
+    add_mv_pair(pay, 'YTD Net Pay', month, round(ytd_entitlements - ytd_deductions, 2))
 
     return pay
 

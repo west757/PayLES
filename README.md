@@ -11,18 +11,15 @@ short-term:
 - conus cola
 - refactor resources
 - default for OCONUS locations in dropdown
-- reset drills to 0 if user goes from NG and RES to AD
 
 mid-term:
-- get combat zone from les
+- determine if user is in combat zone
 - determine if user is active duty or national guard
 - guide modals
 - add pro-rated calculations for rows grade and zip code
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
-- config for icons
 - minimize formatting (when shrinking window)
-- emergency fund goal calculator
 
 long-term:
 - leave calculator
@@ -46,6 +43,7 @@ long-term:
 - uncomment les age limit check
 - change main.py from debug when moving to prod
 - save LES to accounts for historical records
+- emergency fund goal calculator
 
 potential:
 - rows displayed setting
