@@ -409,6 +409,10 @@ def update_variables(pay, month, prev_month, cell=None):
         else:
             row[month] = prev_value
 
+    # set drills to 0 if component is not NG or RES
+    if get_row_value(pay, "Component")[month] not in ("NG", "RES"):
+        get_row_value(pay, "Drills")[month] = 0
+
     pay = set_variable_longs(pay, month)
     return pay
 

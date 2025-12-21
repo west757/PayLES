@@ -5,7 +5,7 @@ function attachManualsListeners() {
         { location: 'manuals-branch-location', header: 'Branch', field: 'select' },
         { location: 'manuals-component-location', header: 'Component', field: 'select' },
         { location: 'manuals-grade-location', header: 'Grade', field: 'select' },
-        { location: 'manuals-zipcode-location', header: 'Zip Code', field: 'string' },
+        { location: 'manuals-zipcode-location', header: 'Zip Code', field: 'int' },
         { location: 'manuals-oconus-country-location', header: 'OCONUS Country', field: 'select' },
         { location: 'manuals-oconus-locality-location', header: 'OCONUS Locality', field: 'select' },
         { location: 'manuals-home-of-record-location', header: 'Home of Record', field: 'select' },
@@ -13,7 +13,7 @@ function attachManualsListeners() {
         { location: 'manuals-federal-filing-status-location', header: 'Federal Filing Status', field: 'select' },
         { location: 'manuals-state-filing-status-location', header: 'State Filing Status', field: 'select' },
         { location: 'manuals-sgli-coverage-location', header: 'SGLI Coverage', field: 'select' },
-        { location: 'manuals-drills-location', header: 'Drills', field: 'select' },
+        { location: 'manuals-drills-location', header: 'Drills', field: 'int' },
         { location: 'manuals-trad-base-rate-location', header: 'Trad TSP Base Rate', field: 'int' },
         { location: 'manuals-trad-specialty-rate-location', header: 'Trad TSP Specialty Rate', field: 'int' },
         { location: 'manuals-trad-incentive-rate-location', header: 'Trad TSP Incentive Rate', field: 'int' },
@@ -40,6 +40,25 @@ function attachManualsListeners() {
     });
 
     setOCONUSLocalityDropdown('manuals-oconus-country', 'manuals-oconus-locality-location');
+
+    const componentSelect = document.getElementById('manuals-component');
+    const drillsInput = document.getElementById('manuals-drills');
+    const drillsWrapper = drillsInput.closest('.input-wrapper');
+
+    function updateDrillsInput() {
+        const val = componentSelect.value;
+        const enabled = (val === 'National Guard' || val === 'Traditional Reservist');
+        drillsInput.disabled = !enabled;
+        if (enabled) {
+            drillsWrapper.classList.remove('input-disabled');
+        } else {
+            drillsWrapper.classList.add('input-disabled');
+            drillsInput.value = '';
+        }
+    }
+
+    componentSelect.addEventListener('change', updateDrillsInput);
+    updateDrillsInput();
 }
 
 

@@ -333,6 +333,11 @@ input[type="text"], select {
     margin-left: 0.25rem;
 }
 
+.input-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 
 /* dropdowns */
 

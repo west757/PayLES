@@ -11,6 +11,7 @@ short-term:
 - conus cola
 - refactor resources
 - default for OCONUS locations in dropdown
+- reset drills to 0 if user goes from NG and RES to AD
 
 mid-term:
 - get combat zone from les
