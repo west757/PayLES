@@ -14,7 +14,7 @@ function initResourcesPage() {
         panel.innerHTML = options.map(opt => `
             <label class="resources-filter-panel-label">
                 <input class="resources-filter-panel-checkbox styled" type="checkbox" value="${opt}" data-type="${type}" />
-                ${opt}
+                <p>${opt}</p>
             </label>
         `).join('');
     }

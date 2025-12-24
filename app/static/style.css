@@ -382,7 +382,7 @@ input[type="checkbox"].styled {
     border-radius: 0.25rem;
     box-shadow: 1px 1px 2px var(--secondary_dark_accent_color);
     height: 1.25rem;
-    margin: -0.5rem 0 -0.5rem 0;
+    margin: 0rem;
     width: 1.25rem;
 }
 
@@ -773,8 +773,8 @@ input[type=file] {
 
 .checkbox-row label {
     text-align: right;
+    margin: 0 0.25rem 0 0;
     min-width: 9rem;
-    margin-right: 0.25rem;
 }
 
 .export-row {
@@ -1312,10 +1312,10 @@ table.styled td.cell {
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     display: none;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
     left: 0;
     width: 12rem;
-    padding: 0.75rem;
+    padding: 0.85rem;
     position: absolute;
     top: 110%;
     z-index: 10;
@@ -1326,11 +1326,18 @@ table.styled td.cell {
 }
 
 .resources-filter-panel-label {
+    align-items: center;
     color: #2a3a4a;
     cursor: pointer;
-    display: block;
+    display: flex;
+    gap: 0.5rem;
     text-align: left;
     width: 100%;
+}
+
+.resources-filter-panel p {
+    margin: 0;
+    flex: 1;
 }
 
 .resources-filter-cac-label {
@@ -1354,8 +1361,8 @@ table.styled td.cell {
 
 .resource {
     align-items: flex-start;
-    background: var(--primary_light_accent_color);
-    border: 1.5px solid var(--secondary_light_accent_color);;
+    background: #f8fafd;
+    border: 1.5px solid #e0e6ef;
     border-radius: 10px;
     box-shadow: 0.1rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
     cursor: pointer;
@@ -1368,12 +1375,8 @@ table.styled td.cell {
 }
 
 .resource:hover {
-    /*
     background: #eaf4ff;
     border: 1.5px solid #0077cc;
-    */
-    background: #eafffa;
-    border: 1.5px solid var(--primary_green_accent_color);
     box-shadow: 0.1rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
 }
 

@@ -20,6 +20,7 @@ mid-term:
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
 - minimize formatting (when shrinking window)
+- color code rows
 
 long-term:
 - leave calculator
