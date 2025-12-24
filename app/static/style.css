@@ -54,6 +54,7 @@ body {
 #header-nav {
     background-color: var(--primary_dark_accent_color);
     display: flex;
+    flex-wrap: nowrap;
     height: 6rem;
     justify-content: space-between;
     width: 100%;
@@ -80,15 +81,18 @@ header {
 
 nav {
     height: inherit;
+    white-space: nowrap;
 }
 
 nav ul {
     display: inline-block;
+    flex-wrap: nowrap;
     height: inherit;
     list-style: none;
     margin: 0;
     padding: 0;
     position: relative;
+    white-space: nowrap;
 }
 
 nav li {

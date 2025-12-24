@@ -2,7 +2,7 @@
 {% macro format_cell(row, month) %}
     {% set cell_val = row[month] %}
     {% if row.field != 'float' %}
-        {% if row.type == 'r' %}
+        {% if row.type == 'rate' %}
             {{ cell_val }}%
         {% else %}
             {{ cell_val }}

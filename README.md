@@ -9,7 +9,6 @@ run: python -m app.main
 short-term:
 - oconus cola and oha calculations
 - conus cola
-- refactor resources
 - default for OCONUS locations in dropdown
 
 mid-term:
@@ -19,7 +18,6 @@ mid-term:
 - add pro-rated calculations for rows grade and zip code
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
-- minimize formatting (when shrinking window)
 - color code rows
 
 long-term:
