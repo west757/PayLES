@@ -8,7 +8,7 @@
 <div id="page-resources" class="page">
     <h2>Resource Search</h2>
 
-    <div id="resources-controls">
+    <div id="resources-controls-top">
         <div id="resources-search-input-location"></div>
 
         <div class="resources-filter-panel-container">
@@ -26,13 +26,15 @@
             No CAC Required
         </label>
 
-        <button id="button-resources-export" class="button-generic button-positive" type="button">Export as CSV</button>
-
         <span id="resources-count"></span>
     </div>
 
     <div id="resources-list-container"></div>
-    <div id="resources-pagination"></div>
+
+    <div id="resources-controls-bottom">
+        <div id="resources-pagination"></div>
+        <button id="button-resources-export" class="button-generic button-positive" type="button">Export Results as CSV</button>
+    </div>
 </div>
 
 {% endblock %}

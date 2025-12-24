@@ -122,6 +122,7 @@ footer {
     font-size: 0.75rem;
     justify-content: space-between;
     margin-top: auto;
+    padding: 0.35rem 1.5rem;
     width: 100%;
 }
 
@@ -131,17 +132,15 @@ footer a {
 }
 
 #footer-left {
-    padding: 0.35rem 0 0.35rem 1.5rem;
     text-align: left;
 }
 
 #footer-center {
-    padding: 0.35rem 0 0.35rem 0;
+    margin: 0 1.5rem 0 0;
     text-align: center;
 }
 
 #footer-right {
-    padding: 0.35rem 1.5rem 0.35rem 0;
     text-align: right;
 }
 
@@ -1278,13 +1277,14 @@ table.styled td.cell {
    resources
    ========================= */
 
-#resources-controls {
+#resources-controls-top {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: left;
+    gap: 2rem;
+    justify-content: flex-start;
     margin: 0 0 2rem 0;
+    position: relative;
 }
 
 #resources-filter-search {
@@ -1303,6 +1303,10 @@ table.styled td.cell {
 
 .resources-filter-panel-container {
     position: relative;
+}
+
+#button-resources-filter-categories, #button-resources-filter-branches {
+    width: 7rem;
 }
 
 .resources-filter-panel {
@@ -1350,7 +1354,8 @@ table.styled td.cell {
 
 #resources-count {
     text-align: right;
-    vertical-align: middle;
+    margin-left: auto;
+    min-width: 8rem;
 }
 
 .resources-list {
@@ -1422,8 +1427,9 @@ table.styled td.cell {
 #resources-pagination {
     display: flex;
     justify-content: center;
+    flex: 1;
     gap: 0.5rem;
-    margin: 2rem 0 0 0;
+    margin: 0 0 0 13rem;
 }
 
 .button-resources-pagination {
@@ -1441,4 +1447,17 @@ table.styled td.cell {
 .button-resources-pagination:hover {
     background: #eaf4ff;
     border: 1.5px solid #0077cc;
+}
+
+#resources-controls-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0 0 0;
+    width: 100%;
+}
+
+#button-resources-export {
+    margin-left: auto;
+    width: 13rem;
 }
