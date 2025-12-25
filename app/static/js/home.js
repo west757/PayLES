@@ -165,10 +165,10 @@ function validateManuals() {
         return false;
     }
 
-    if (document.getElementById('manuals-home-of-record').value === "Choose an option") {
-        showToast('Please choose a home of record.');
-        return false;
-    }
+    //if (document.getElementById('manuals-home-of-record').value === "Choose an option") {
+    //    showToast('Please choose a home of record.');
+    //    return false;
+    //}
 
     return true;
 }

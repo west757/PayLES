@@ -169,9 +169,9 @@ function createStandardInput(header, field, value = '') {
         }
 
         else if (header === 'Home of Record') {
-            options = Object.values(window.CONFIG.HOME_OF_RECORDS);
+            options = Object.keys(window.CONFIG.HOME_OF_RECORDS);
             input.classList.add('input-long');
-            value = window.CONFIG.HOME_OF_RECORDS[value];
+            value = options.find(key => window.CONFIG.HOME_OF_RECORDS[key] === value);
         }
 
         else if (header === 'Dependents') {

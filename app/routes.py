@@ -58,7 +58,7 @@ def index():
         'COMPONENTS': flask_app.config['COMPONENTS'],
         'GRADES': flask_app.config['GRADES'],
         'OCONUS_LOCATIONS': flask_app.config['OCONUS_LOCATIONS'].to_dict(orient='records'),
-        'HOME_OF_RECORDS': dict(zip(flask_app.config['HOME_OF_RECORDS']['abbr'], flask_app.config['HOME_OF_RECORDS']['longname'])),
+        'HOME_OF_RECORDS': dict(zip(flask_app.config['HOME_OF_RECORDS']['longname'], flask_app.config['HOME_OF_RECORDS']['abbr'])),
         'DEPENDENTS_MAX': flask_app.config['DEPENDENTS_MAX'],
         'TAX_FILING_STATUSES': list(flask_app.config['TAX_FILING_TYPES_DEDUCTIONS'].keys()),
         'SGLI_COVERAGES': flask_app.config['SGLI_RATES']['coverage'].tolist(),
