@@ -1,12 +1,15 @@
 [
     {
-        "text": "If TSP election amount exceeds net amount due, TSP will not be deducted.<br> &emsp; - The current contribution limit for the TSP is $23,500 per year. Once the limit is reached, no additional TSP deductions will occur."
+        "text": "Print or save your LES - MyPay access is limited to 12 months."
     },
     {
-        "text": "You are the best manager of your pay. Preclude overpayment or underpayment of your pay by reviewing your LES every month. Visit your local finance office for any updates required.<br> &emsp; - Army: S1 Shop<br> &emsp; - Air Force: Customer Support Section (CSS)<br> &emsp; - Navy: Personnel Support Detachment (PSD)<br> &emsp; - Marines: S8 Shop<br> &emsp; - Space Force: Customer Support Section (CSS)"
+        "text": "You are the best manager of your pay. Preclude overpayment or underpayment of your pay by reviewing your LES every month. Visit your local finance office for any updates required."
     },
     {
         "text": "Make sure to use your benefit: you can save an average of 25% on your grocery bill by shopping at the Commissary, in-store and online at Commissary Click2Go! Visit <a href=\"https://www.corp.commissaries.com\" target=\"_blank\">corp.commissaries.com</a>."
+    },
+    {
+        "text": "If TSP election amount exceeds net amount due, TSP will not be deducted."
     },
     {
         "text": "If eligible, you may have been automatically enrolled in the airborne hazards and open burn pit registry. Visit <a href=\"https://www.health.mil/ahburnpitregistry\" target=\"_blank\">health.mil/ahburnpitregistry</a> to learn more."
@@ -22,8 +25,5 @@
     },
     {
         "text": "Receive your 1095 and W2 statements faster and more secure by logging onto MyPay at <a href=\"https://mypay.dfas.mil\" target=\"_blank\">mypay.dfas.mil</a> and selecting the turn on/off hardcopy 1095 and W2 option to elect electronic only."
-    },
-    {
-        "text": "Print or save your LES - MyPay access is limited to 12 months."
     }
 ]

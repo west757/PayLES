@@ -10,6 +10,7 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - default for OCONUS locations in dropdown
+- submit manuals for drills crashes
 
 mid-term:
 - determine if user is in combat zone
@@ -19,7 +20,6 @@ mid-term:
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
 - color code rows
-- have deposit account show up with bank from les remarks
 
 long-term:
 - leave calculator

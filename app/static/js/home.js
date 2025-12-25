@@ -135,7 +135,7 @@ function attachDragAndDropListeners() {
 function submitManuals(e) {
     e.preventDefault();
 
-    //if (!validateManuals()) return;
+    if (!validateManuals()) return;
 
     const form = document.getElementById('form-manuals');
     const formData = new FormData(form);
@@ -149,21 +149,23 @@ function submitManuals(e) {
 
 
 function validateManuals() {
-    const inputIntmanualsZC = document.getElementById('manuals-zip-code-id');
-    const inputIntmanualsDeps = document.getElementById('manuals-dependents-id');
-    const inputSelectmanualsHor = document.getElementById('manuals-home-of-record-id');
-
-    if (!inputIntmanualsZC.value.match(/^\d{5}$/)) {
+    if (!document.getElementById('manuals-zipcode').value.match(/^\d{5}$/)) {
         showToast('Zip code must be exactly 5 digits.');
         return false;
     }
 
-    if (!inputIntmanualsDeps.value.match(/^\d$/)) {
-        showToast('Dependents must be a single digit (0-9).');
+    const drillsValue = document.getElementById('manuals-drills').value;
+    if (!drillsValue.match(/^\d+$/)) {
+        showToast('Drills must be a number.');
+        return false;
+    }
+    const drillsNum = parseInt(drillsValue, 10);
+    if (drillsNum < 0 || drillsNum > 30) {
+        showToast('Drills must be between 0 and 30.');
         return false;
     }
 
-    if (inputSelectmanualsHor.value === "Choose an option") {
+    if (document.getElementById('manuals-home-of-record').value === "Choose an option") {
         showToast('Please choose a home of record.');
         return false;
     }
