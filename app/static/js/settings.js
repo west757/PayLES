@@ -90,10 +90,22 @@ function buildAccountModal(header) {
     const body = document.createElement('div');
     body.className = 'modal-dynamic-body';
 
+    const inputRow = document.createElement('div');
+    inputRow.className = 'account-row-initial';
     const inputLabel = document.createElement('p');
     inputLabel.textContent = 'Initial Value:';
-    body.appendChild(inputLabel);
-    body.appendChild(createStandardInput('Initial Value', 'float', initial));
+
+    inputRow.appendChild(inputLabel);
+    inputRow.appendChild(createStandardInput('Initial Value', 'float', initial));
+    body.appendChild(inputRow);
+
+    bank = window.CONFIG.bank || null;
+    if (header === 'Direct Deposit Account' && bank && bank.trim() !== "") {
+        const bankRow = document.createElement('div');
+        bankRow.className = 'account-row-bank';
+        bankRow.textContent = `Bank: ${bank}`;
+        body.appendChild(bankRow);
+    }
 
     content.appendChild(body);
 

@@ -13,7 +13,7 @@ function buildEditModal(header, month, field) {
 
     const monthLong = getRowValue('Month Long', month);
     const monthTitle = document.createElement('h2');
-    monthTitle.textContent = monthLong;
+    monthTitle.textContent = `Editing for ${monthLong}`;
     monthTitle.style.textAlign = 'center';
     content.appendChild(monthTitle);
 

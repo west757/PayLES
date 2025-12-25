@@ -27,6 +27,7 @@ from app.utils import (
 
 def get_pay_variables_from_les(les_text):
     pay_variables = {}
+    remarks = les_text.get('remarks', "")
 
     try:
         pay_date = datetime.strptime(les_text.get('pay_date', None), '%y%m%d')
@@ -134,11 +135,10 @@ def get_pay_variables_from_les(les_text):
     pay_variables['State Filing Status'] = state_filing_status
 
     try:
-        remarks = les_text.get('remarks', "")
         # search for SGLI coverage amount in the remarks string
-        foundString = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
-        if foundString:
-            sgli_coverage = f"${foundString.group(1)}"
+        sgli_string_search = re.search(r"SGLI COVERAGE AMOUNT IS\s*\$([\d,]+)", remarks, re.IGNORECASE)
+        if sgli_string_search:
+            sgli_coverage = f"${sgli_string_search.group(1)}"
             if sgli_coverage not in flask_app.config['SGLI_RATES']['coverage'].values:
                 sgli_coverage = "$0"
         else:
@@ -151,7 +151,18 @@ def get_pay_variables_from_les(les_text):
 
     pay_variables['Drills'] = 0
 
-    return pay_variables
+    try:
+        bank_string_search = re.search(r"BANK\s+([A-Z\s]+)", remarks)
+        if bank_string_search:
+            bank_raw = bank_string_search.group(1).strip()
+            # normalize bank name capitalization
+            bank = ' '.join(word.capitalize() for word in bank_raw.split())
+        else:
+            bank = "Not Found"
+    except Exception as e:
+        raise Exception(get_error_context(e, "Error determining bank from LES remarks"))
+
+    return pay_variables, bank
 
 
 def get_pay_variables_from_manuals(manuals, year, month):

@@ -110,7 +110,7 @@ def route_single():
 
         headers = get_all_headers()
 
-        pay_variables = get_pay_variables_from_les(les_text)
+        pay_variables, bank = get_pay_variables_from_les(les_text)
         tsp_variables = get_tsp_variables_from_les(les_text)
         pay, tsp = init_budgets(pay_variables, tsp_variables, year, month, les_text=les_text)
         pay_calc, tsp_calc = init_budgets(pay_variables, tsp_variables, year, month)
@@ -132,6 +132,7 @@ def route_single():
             'tsp': tsp,
             'months': months,
             'headers': headers,
+            'bank': bank,
             'discrepancies': compare_pay(pay, pay_calc, month),
             'pay_recommendations': add_pay_recommendations(pay, tsp, months, les_text=les_text),
             'tsp_recommendations': add_tsp_recommendations(pay, tsp, months),

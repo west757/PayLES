@@ -1004,7 +1004,10 @@ table.styled td.cell {
     height: fit-content;
     left: 0;
     margin: auto;
-    overflow: auto;
+    max-height: 90vh;
+    overscroll-behavior: contain;
+    overflow-x: hidden;
+    overflow-y: auto; 
     padding: 0 2rem 0.75rem 2rem;
     position: absolute;
     right: 0;
@@ -1089,6 +1092,20 @@ table.styled td.cell {
 #extrapolated-note {
     font-size: 0.9rem;
     margin: 0.5rem 0 0 1rem;
+}
+
+.account-row-initial {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.account-row-initial p {
+    margin: 0;
+}
+
+.account-row-bank {
+    margin: 1rem 0 0 0;
 }
 
 /* account modal grid */
