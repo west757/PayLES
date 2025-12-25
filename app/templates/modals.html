@@ -44,7 +44,54 @@
     <div class="modal-inner modal-size-mid">
         <button class="button-modal-close" type="button">✖</button>
         <h2>PayLES Budget Guide</h2>
-        <p>This guide provides an overview of the PayLES budget process, including key terms and concepts.</p>
+        <div class="faqs" id="guide-pay-dropdowns">
+            <div class="faq">
+                <input class="faq-checkbox" id="guide-pay-dropdown-overview" type="checkbox">
+                <label class="faq-label" for="guide-pay-dropdown-overview">Overview</label>
+                <div class="faq-content">
+                    Your budget is displayed in a table format with the left most column being the row headers which describe the item, whether an income, expense, variable, or calculation. All further columns are the months for the budget, starting from the current month and extending up to 12 months into the future. Each cell within the table represents the value for that specific row and month. To adjust the budget, click on an editable cell to input a new value. Editable cells are indicated by a light background color and a border when hovered over.
+                    <br><br>
+                    Upon opening an editable cell you will be presented with the input options and editing buttons. After making your input, to save a change click either the one-time or repeat buttons. The one-time button will apply the change only to the selected month, while the repeat button will apply the change to the selected month and all future months in the budget. To cancel any changes, click the cancel button or click outside of the input area.
+                    <br><br>
+                    The budget is divided into several sections to help organization and usability. The first section are the variables, which are hidden by default. Variables are used in calculations throughout the budget and can be adjusted to see how they impact your overall financial situation. Next are the entitlement, deduction, and allotment rows, which are all pulled directly from your LES. Any custom rows that are added will appear after the last allotment row. Finally, there are summary rows that provide totals and net values for easy reference. These provide a breakdown into taxable and non-taxable income, total taxes, net pay, difference between the current month and previous month, year-to-date totals, and the direct deposit account in which the net pay is deposited.
+                </div>
+            </div>
+            <div class="faq">
+                <input class="faq-checkbox" id="guide-pay-dropdown-custom-rows" type="checkbox">
+                <label class="faq-label" for="guide-pay-dropdown-custom-rows">Custom Rows</label>
+                <div class="faq-content">
+                    Custom rows allow you to add additional income or expense items to your budget that are not found within the uploaded LES. This feature is useful for tracking future financial situations or one-time expenses. Custom rows can either be created from a template or fully customized. Custom rows can also be removed after being added to your budget. 
+                    <br><br>
+                    Template rows are pre-defined types which are able to be present on an LES. They are divided into three categories where they would appear on your LES: entitlements (positive income), deductions, and allotments (both negative income). After selecting a template row type, a dropdown will appear of all possible LES items that fit that category. If there is an intitial value associated with the template type, such as a clothing allowance always being $400, that value will be pre-filled but can be adjusted before adding the row to your budget.
+                    <br><br>
+                    Fully customized rows allow you to create any type of income or expense item you wish. You can define the row header, initial value, and whether the row is taxable or not. This option provides maximum flexibility and suggested examples are provided.
+                </div>
+            </div>
+            <div class="faq">
+                <input class="faq-checkbox" id="guide-pay-dropdown-direct-deposit" type="checkbox">
+                <label class="faq-label" for="guide-pay-dropdown-direct-deposit">Direct Deposit Account</label>
+                <div class="faq-content">
+                    The Direct Deposit Account is the bank account where your net pay is deposited. The bank used for the account is found on your LES within the remarks section. Within PayLES, the account is shown as a reference for your budgeting purposes. The direct deposit account is always set to have a default of $0, however the initial value can be changed to better reflect your actual direct deposit amount. 
+                    <br><br>
+                    PayLES does not have any ability to connect to banking institutions or make changes to your direct deposit information. To change your direct deposit account, you will need to visit <a href="https://www.dfas.mil/mypay" target="_blank" rel="noopener noreferrer">MyPay</a> and update your bank information there. This calculator only shows the account as a reference.
+                </div>
+            </div>
+            <div class="faq">
+                <input class="faq-checkbox" id="guide-pay-dropdown-discrepancies" type="checkbox">
+                <label class="faq-label" for="guide-pay-dropdown-discrepancies">Pay Discrepancies</label>
+                <div class="faq-content">
+                    PayLES conducts an analysis to find any discrepancies between the uploaded LES and program-calculated values. The calculated values are derived from variables pulled from the LES, such as rank, years of service, and location.<br><br>
+                    The factors that may cause discrepancies are outdated data sets used by PayLES, pay errors, or extremely unique individual circumstances. If there are any discrepancies, please review them carefully. PayLES cannot account for every possible pay scenario so it is important to verify all information. However, any discrepancy may also be an indicator for potential pay issues. If you have any questions, please reach out to your local finance office for further assistance. 
+                </div>
+            </div>
+            <div class="faq">
+                <input class="faq-checkbox" id="guide-pay-dropdown-recommendations" type="checkbox">
+                <label class="faq-label" for="guide-pay-dropdown-recommendations">Recommendations</label>
+                <div class="faq-content">
+                    PayLES provides personalized recommendations based on your budget and financial situation. These recommendations may include suggestions for increasing savings, reducing expenses, or optimizing your budget for better financial health.
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

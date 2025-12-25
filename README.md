@@ -19,6 +19,7 @@ mid-term:
 - set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
 - color code rows
+- have deposit account show up with bank from les remarks
 
 long-term:
 - leave calculator
