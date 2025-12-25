@@ -10,6 +10,8 @@
 <div id="page-home" class="page">
     <div id="welcome">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
+        <br><br>
+        Notice: PayLES is currently under active development. Please report any bugs or issues via <a href="https://github.com/west757/PayLES" target="_blank" rel="noopener noreferrer">GitHub</a>.
     </div>
 
     <div id="tab-container">
@@ -33,6 +35,8 @@
         </div>
 
         <div id="tab-joint" class="tab-content">
+            Joint LES Upload is in development and not currently functional. Please check back later!
+            <br><br>
             <form id="form-joint" hx-post="/route_joint" hx-swap="innerHTML" enctype="multipart/form-data" method="POST">
                 {{ form_joint.hidden_tag() }}
                 <div id="tab-joint-row">

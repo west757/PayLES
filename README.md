@@ -10,11 +10,11 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - default for OCONUS locations in dropdown
+- add pro-rated calculations for rows grade and zip code
 
 mid-term:
 - determine if user is in combat zone
 - determine if user is active duty or national guard
-- add pro-rated calculations for rows grade and zip code
 - joint spouse with two LES
 - guide in all settings?
 - reports and graphs and pie chart
