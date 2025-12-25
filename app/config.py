@@ -221,7 +221,6 @@ class Config:
     PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
         dtype=dtype_pay_active
     )
-    PAY_DRILL = pd.read_csv(CSV_FOLDER / "pay_drill_2025.csv")
 
     FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
         dtype={

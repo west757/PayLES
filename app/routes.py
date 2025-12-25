@@ -145,6 +145,7 @@ def route_single():
             'months': months,
             'headers': headers,
             'show_guide_buttons': show_guide_buttons,
+            'show_pay_discrepancies': True,
             'les_image': les_image,
             'les_rect_overlay': get_les_rect_overlay(),
             'REMARKS': load_json(flask_app.config['REMARKS_JSON']),

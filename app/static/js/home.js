@@ -53,7 +53,7 @@ function attachManualsListeners() {
             drillsWrapper.classList.remove('input-disabled');
         } else {
             drillsWrapper.classList.add('input-disabled');
-            drillsInput.value = '';
+            drillsInput.value = '0';
         }
     }
 
@@ -137,6 +137,10 @@ function submitManuals(e) {
 
     if (!validateManuals()) return;
 
+    // enable drills input before submitting so value is included
+    const drillsInput = document.getElementById('manuals-drills');
+    drillsInput.disabled = false;
+
     const form = document.getElementById('form-manuals');
     const formData = new FormData(form);
 
@@ -154,21 +158,19 @@ function validateManuals() {
         return false;
     }
 
-    const drillsValue = document.getElementById('manuals-drills').value;
-    if (!drillsValue.match(/^\d+$/)) {
-        showToast('Drills must be a number.');
-        return false;
+    const drillsInput = document.getElementById('manuals-drills');
+    if (!drillsInput.disabled) {
+        const drillsValue = drillsInput.value;
+        if (!drillsValue.match(/^\d+$/)) {
+            showToast('Drills must be a number.');
+            return false;
+        }
+        const drillsNum = parseInt(drillsValue, 10);
+        if (drillsNum < 0 || drillsNum > 30) {
+            showToast('Drills must be between 0 and 30.');
+            return false;
+        }
     }
-    const drillsNum = parseInt(drillsValue, 10);
-    if (drillsNum < 0 || drillsNum > 30) {
-        showToast('Drills must be between 0 and 30.');
-        return false;
-    }
-
-    //if (document.getElementById('manuals-home-of-record').value === "Choose an option") {
-    //    showToast('Please choose a home of record.');
-    //    return false;
-    //}
 
     return true;
 }

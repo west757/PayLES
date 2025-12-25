@@ -10,16 +10,14 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - default for OCONUS locations in dropdown
-- submit manuals for drills crashes
 
 mid-term:
 - determine if user is in combat zone
 - determine if user is active duty or national guard
-- guide modals
 - add pro-rated calculations for rows grade and zip code
-- set initial value for template rows (submarine, dive, jump, etc)
 - joint spouse with two LES
-- color code rows
+- guide in all settings?
+- reports and graphs and pie chart
 
 long-term:
 - leave calculator
@@ -50,6 +48,7 @@ potential:
 - show custom rows setting
 - import/export for custom rows
 - add loading screen after submitting LES
+- color code rows
 
 
 3. Security Headers
