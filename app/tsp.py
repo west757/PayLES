@@ -324,13 +324,13 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
         agency_match_final = min(agency_match_contribution, annual_remaining)
         annual_remaining -= agency_match_final
 
-    trad_final = min(trad_final, annual_remaining)
+    trad_final = round_up_cents(min(trad_final, annual_remaining))
     annual_remaining -= trad_final
 
-    trad_exempt_final = min(trad_tsp_exempt_contribution, annual_remaining)
+    trad_exempt_final = round_up_cents(min(trad_tsp_exempt_contribution, annual_remaining))
     annual_remaining -= trad_exempt_final
 
-    roth_final = min(roth_final, annual_remaining)
+    roth_final = round_up_cents(min(roth_final, annual_remaining))
     annual_remaining -= roth_final
 
     tsp_contribution_total = trad_final + trad_exempt_final + roth_final + agency_auto_final + agency_match_final
@@ -343,7 +343,7 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
         "agency_match_contribution": round_up_cents(agency_match_final),
         "tsp_contribution_total": round_up_cents(tsp_contribution_total),
         "elective_remaining": round_up_cents(elective_remaining),
-        "annual_remaining": round_up_cents(annual_remaining)
+        "annual_remaining": round_up_cents(annual_remaining),
     }
 
 

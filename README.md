@@ -11,20 +11,18 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
-- move branch into component
-- hide drills row
 
 mid-term:
 - determine if user is in combat zone
 - determine if user is active duty or national guard
 - joint spouse with two LES
-- guide in all settings?
 - reports and graphs and pie chart
 - resources list filtering for resources
+- move branch into component
+- hide drills row
 
 long-term:
 - leave calculator
-- resolve rounding errors (tsp off by 1 cent, or tolerance in discrepancy calculation)
 - update readme
 - add comments to code
 - update modal content

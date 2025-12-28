@@ -221,7 +221,7 @@ def remove_months(pay, tsp, months_num):
 
 
 def insert_row(pay, months, headers, insert):
-    sign = flask_app.config['TYPE_SIGN'][get_row_value(pay, insert['header'], 'type')]
+    sign = flask_app.config['TYPE_SIGN'][insert['type']]
     value = round(sign * float(insert['value']), 2)
 
     if insert['method'] == 'template':
