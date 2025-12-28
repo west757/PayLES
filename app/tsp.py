@@ -1,6 +1,7 @@
 from app import flask_app
 from app.utils import (
     get_error_context,
+    round_up_cents,
     add_mv_pair,
     get_row_value,
     sum_rows_via_modal,
@@ -335,14 +336,14 @@ def calc_tsp_contributions(tsp, month, combat_zone, prev_month=None):
     tsp_contribution_total = trad_final + trad_exempt_final + roth_final + agency_auto_final + agency_match_final
 
     return {
-        "trad_tsp_contribution": round(trad_final, 2),
-        "trad_tsp_exempt_contribution": round(trad_exempt_final, 2),
-        "roth_tsp_contribution": round(roth_final, 2),
-        "agency_auto_contribution": round(agency_auto_final, 2),
-        "agency_match_contribution": round(agency_match_final, 2),
-        "tsp_contribution_total": round(tsp_contribution_total, 2),
-        "elective_remaining": round(elective_remaining, 2),
-        "annual_remaining": round(annual_remaining, 2)
+        "trad_tsp_contribution": round_up_cents(trad_final),
+        "trad_tsp_exempt_contribution": round_up_cents(trad_exempt_final),
+        "roth_tsp_contribution": round_up_cents(roth_final),
+        "agency_auto_contribution": round_up_cents(agency_auto_final),
+        "agency_match_contribution": round_up_cents(agency_match_final),
+        "tsp_contribution_total": round_up_cents(tsp_contribution_total),
+        "elective_remaining": round_up_cents(elective_remaining),
+        "annual_remaining": round_up_cents(annual_remaining)
     }
 
 

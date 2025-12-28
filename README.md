@@ -11,6 +11,8 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
+- move branch into component
+- hide drills row
 
 mid-term:
 - determine if user is in combat zone
@@ -18,6 +20,7 @@ mid-term:
 - joint spouse with two LES
 - guide in all settings?
 - reports and graphs and pie chart
+- resources list filtering for resources
 
 long-term:
 - leave calculator
@@ -70,5 +73,23 @@ You can set these headers in Flask using an after_request handler.
 - toggle between list view and grid view
 - favorites (if accounts)
 - resource type filter (website, document, tool)
+
+
+
+Stationed Duty Location:
+
+Country:
+choose US or non US
+
+US:
+enter zip code
+if zip code alaska/hawaii, bring up locality dropdown
+- displays zip code, tooltip is mha name
+
+Non-US:
+choose Locality
+- displays locality code, tooltip is country - locality
+enter rent
+enter roommates
 
 -->

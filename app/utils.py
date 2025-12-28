@@ -3,6 +3,7 @@ import numpy as np
 import traceback
 
 from app import flask_app
+from decimal import Decimal, ROUND_HALF_UP
 
 
 def load_json(path):
@@ -47,6 +48,10 @@ def get_error_context(exc, custom_message=""):
         "error_type": exc_type,
         "error_message": error_message,
     }
+
+
+def round_up_cents(value):
+    return float(Decimal(str(value)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP))
 
 
 def validate_file(file):
