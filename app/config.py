@@ -200,6 +200,28 @@ class Config:
         dtype=dtype_bah
     )
 
+    dtype_conus_cola_with_dependents = {'grade': str}
+    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
+        dtype_conus_cola_with_dependents[str(i)] = int
+    CONUS_COLA_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_with_dependents_2025.csv",
+        dtype=dtype_conus_cola_with_dependents
+    )
+
+    dtype_conus_cola_without_dependents = {'grade': str}
+    for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
+        dtype_conus_cola_without_dependents[str(i)] = int
+    CONUS_COLA_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_without_dependents_2025.csv",
+        dtype=dtype_conus_cola_without_dependents
+    )
+
+    CONUS_COLA_ZIPCODES = pd.read_csv(CSV_FOLDER / "conus_cola_zipcodes.csv",
+        dtype={
+            'zipcode': str,
+            'index': int,
+            'mha_name': str,
+        }
+    )
+
     PAY_TEMPLATE = pd.read_csv(CSV_FOLDER / "pay_template.csv",
         dtype={
             'header': str,

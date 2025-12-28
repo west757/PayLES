@@ -70,14 +70,13 @@ You can set these headers in Flask using an after_request handler.
 
 - toggle between list view and grid view
 - favorites (if accounts)
-- resource type filter (website, document, tool)
 
 
 
 Stationed Duty Location:
 
 Country:
-choose US or non US
+choose country
 
 US:
 enter zip code
