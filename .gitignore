@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# flask_session - Flask session folder and files
+flask_session/
+
+# vs - Visual Studio Code workspace settings
+.vs/

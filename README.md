@@ -1,50 +1,67 @@
-PayLES
-PayLES is a web application designed to help military personnel calculate and manage their Leave and Earnings Statement (LES), including budgeting, allowances, and other financial planning tools.
+# PayLES
 
-Features
-LES calculations for CONUS and OCONUS locations
-Budgeting tools and calculators
-Support for various allowances (COLA, OHA, etc.)
-Pro-rated calculations for grade and zip code
-User-friendly interface with dropdowns and tooltips
-Security headers for improved safety
-Planned features: combat zone detection, joint spouse support, reports, graphs, and more
-Getting Started
-Prerequisites
-Python 3.8+
-Flask and required dependencies (see requirements.txt)
-Installation
-Clone the repository:
-Navigate to the project directory:
-Install dependencies:
-Running the Application
-From the project root, run:
+**PayLES** is a web application designed to help military personnel calculate and manage their Leave and Earnings Statement (LES), including budgeting, allowances, and other financial planning tools.
+
+## Features
+
+- LES calculations for CONUS and OCONUS locations
+- Budgeting tools and calculators
+- Support for various allowances (COLA, OHA, etc.)
+- Pro-rated calculations for grade and zip code
+- User-friendly interface with dropdowns and tooltips
+- Security headers for improved safety
+- **Planned features:** combat zone detection, joint spouse support, reports, graphs, and more
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.8+
+- Flask and required dependencies (see `requirements.txt`)
+
+### Installation
+
+```sh
+git clone https://github.com/west757/PayLES.git
+cd PayLES
+pip install -r requirements.txt
+```
+
+### Running the Application
+
+```sh
+python -m app.main
+```
 
 The application will start a local Flask server.
 
-Project Structure
-app - Main application code
-main.py - Entry point
-routes.py - Flask routes
-forms.py, budgets.py, calculations.py, etc. - Core modules
-static/ - Static files (CSS, JS)
-templates/ - HTML templates
-requirements.txt - Python dependencies
-README.md - Project documentation
+## Project Structure
 
+```
+app/                # Main application code
+  main.py           # Entry point
+  routes.py         # Flask routes
+  forms.py, budgets.py, calculations.py, etc. # Core modules
+  static/           # Static files (CSS, JS)
+  templates/        # HTML templates
+requirements.txt    # Python dependencies
+README.md           # Project documentation
+```
 
-Roadmap
+## Roadmap
+
 See the README for short-term, mid-term, and long-term goals, including new features, improvements, and potential ideas.
 
-Contributing
+## Contributing
+
 Contributions are welcome! Please submit issues or pull requests via GitHub.
 
-License
+## License
+
 This project is licensed under the MIT License.
 
-<!--
-PayLES readme
 
+<!--
 to run:
 navigate to: \Documents\Github\Payles
 run: python -m app.main
@@ -55,6 +72,7 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
+- change session_type or remove it in config
 
 mid-term:
 - determine if user is in combat zone
