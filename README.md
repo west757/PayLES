@@ -1,3 +1,47 @@
+PayLES
+PayLES is a web application designed to help military personnel calculate and manage their Leave and Earnings Statement (LES), including budgeting, allowances, and other financial planning tools.
+
+Features
+LES calculations for CONUS and OCONUS locations
+Budgeting tools and calculators
+Support for various allowances (COLA, OHA, etc.)
+Pro-rated calculations for grade and zip code
+User-friendly interface with dropdowns and tooltips
+Security headers for improved safety
+Planned features: combat zone detection, joint spouse support, reports, graphs, and more
+Getting Started
+Prerequisites
+Python 3.8+
+Flask and required dependencies (see requirements.txt)
+Installation
+Clone the repository:
+Navigate to the project directory:
+Install dependencies:
+Running the Application
+From the project root, run:
+
+The application will start a local Flask server.
+
+Project Structure
+app - Main application code
+main.py - Entry point
+routes.py - Flask routes
+forms.py, budgets.py, calculations.py, etc. - Core modules
+static/ - Static files (CSS, JS)
+templates/ - HTML templates
+requirements.txt - Python dependencies
+README.md - Project documentation
+
+
+Roadmap
+See the README for short-term, mid-term, and long-term goals, including new features, improvements, and potential ideas.
+
+Contributing
+Contributions are welcome! Please submit issues or pull requests via GitHub.
+
+License
+This project is licensed under the MIT License.
+
 <!--
 PayLES readme
 
