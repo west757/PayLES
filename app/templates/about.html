@@ -4,89 +4,59 @@
 <div id="page-about" class="page">
     <h2>About PayLES</h2>
     <p>
-        PayLES is a free and open-source web application which provides United States military service members a fast, easy to use,
-        and secure way to view and understand their current finances, and adjust their future finances according to their 
-        monthly pay document, a Leave and Earnings Statement (LES). PayLES stands for "Program analyzing your LES". Users 
-        upload their latest LES and PayLES will parse and display the information in a user-friendly format. PayLES then performs 
-        calculations to summarize the current pay, and forecast the future pay up to the next 12 months. Furthermore, users 
-        have multiple options to adjust their future pay based off anticipated changes in future months such as promotions, 
-        moves, changing dependents and tax filing status, and more. 
-    </p>
-    <p>
-        An LES is a static document provided at the end of every month to all military service members. It contains 
-        information for the month including various entitlements such as base pay and basic allowance for housing (BAH), 
-        deductions such as federal/state taxes and SGLI, and allotments (payments made directly to other entities). It then 
-        summarizes these, showing how much the individual made over the month. It includes additional variables such as the 
-        number of dependents and tax filing status, which PayLES utilizes to make the budget personalized to each individual user. 
-    </p>
-    <p>
-        PayLES is designed to work for all service members in the DoD. It is not service-specific, and accounts for 
-        service-specific pays included in the LES such as special pays, allowances, and deductions. It works independent of 
-        the service member's branch of service, status (Active Duty, Reserve, National Guard), rank, job, or other factors.  
-        It is designed to be a single application for all service members to analyze their finances, regardless of their situation.
-    </p>
-    <p>
-        The developer, an active duty Officer in the United States Air Force, had the idea for this project while enrolled 
-        in an applied project course at Arizona State University (ASU) in early 2025. The program first started off as a simple LES 
-        reader with basic calculations for some variables. However, as the project progressed and more background
-        research was conducted, it became clear that there was a real-world capability gap for a comprehensive application which
-        could provide personalized, summarized, and accurate financial analysis for service members. No such application existed, 
-        all other applications were spread across multiple websites either only calculating a single factor (such as BAH rates),
-        or for specific hypothetical situations not personalized to the individual user. The project quickly grew into a 
-        full-fledged application with development continuing to this day in the developers spare time.
-    </p>
-    <p>
-        PayLES is built using Python and the Flask web framework for the backend data parsing. HTML, CSS, and JavaScript are used 
-        for the frontend graphical user interface. This allows PayLES to be a fast, lightweight, and responsive web application
-        which can be accessed on any modern web browser. The application also prioritizes non-functional attributes including 
-        security, usability, and performance.
-    </p>
-    <p>
-        PayLES is purely intended for educational and budgetary purposes to help service members analyze their current and 
-        future finances. There are no advertisements, signups, or user accounts required. It is completely free and open source,
-        all code and datasets are publicly available on GitHub.
-    </p>
+        PayLES (Program analyzing your Leave & Earnings Statement) is a free and open-source web application designed to help United States service members easily understand and manage their military finances. By uploading their monthly Leave & Earnings Statement (LES), users can quickly view a clear summary of their current pay and forecast their finances for the next 12 months. PayLES provides personalized insights and allows users to adjust future pay scenarios based on anticipated changes such as promotions, relocations, changes in dependents, tax status, and more. A Traditional Savings Plan (TSP) calculator is also available, aiding users in planning their pay allocations towards retirement. The platform is secure, user-friendly, and aims to empower service members to make informed financial decisions.
 
+    </p>
+    <p>
+        An LES is a document provided to all U.S. service members at the end of every month which summarizes their pay for that period. It details entitlements like base pay and Basic Allowance for Housing (BAH), as well as deductions such as federal and state taxes or SGLI, and any direct payments to other entities. An LES also includes variables like the number of dependents and tax filing status, which PayLES uses to tailor financial analysis to each user's unique situation.
+
+    </p>
+    <p>
+        PayLES is designed to serve all Department of Defense service members, regardless of branch, status (Active Duty, Reserve, National Guard), rank, or job. It recognizes and incorporates service-specific pays, allowances, and deductions found in an LES, ensuring comprehensive coverage. The application aims to be a universal tool for analyzing military finances, adaptable to any service member's circumstances.
+
+    </p>
+    <p>
+        The project was initiated by an active duty United States Air Force Officer while attending an applied project course at Arizona State University (ASU) in early 2025. Originally conceived as a simple LES reader with basic calculations, the project evolved into a robust financial analysis tool after identifying a significant need for a comprehensive, personalized solution. Unlike existing tools, which are often fragmented or limited in scope, PayLES consolidates essential financial analysis features into a single, user-focused application. Development continues as a passion project in the developer's spare time.
+
+    </p>
+    <p>
+        PayLES is built with Python and the Flask web framework for backend data processing, while HTML, CSS, and JavaScript power the frontend interface. This technology stack ensures the application is fast, lightweight, and responsive, accessible from any modern web browser. Render, a web hosting company, is used to deploy the application with a custom domain name provided by Cloudflare.
+
+    </p>
+    <p>
+        PayLES is intended solely for educational and budgeting purposes, helping service members analyze their current and future finances. The application is completely free, open source, and requires no advertisements, signups, or user accounts. All code and datasets are publicly available on GitHub.
+
+    </p>
 
     <h2>The "Why"</h2>
     <p>
-        According to Brendan Duebner in his March 2022 paper 
-        <em> <a href="/static/pdf/A Military Solution to a Military Problem - Brendan Duebner.pdf" target="_blank" rel="noopener noreferrer">
-            A Military Solution to a Military Problem - Personal Finance Issues in the United States Armed Forces</a></em>, 
-        he conducted an analysis of personal finances for military service 
-        members and found many members are not financially secure and struggle with basic finances. This is especially 
-        true for junior service members, who are typically young, inexperienced, right out of high school, and 
-        particularly exposed to financial struggles.
+        According to Brendan Duebner in his March 2022 paper <em> <a href="/static/pdf/A Military Solution to a Military Problem - Brendan Duebner.pdf" target="_blank" rel="noopener noreferrer">A Military Solution to a Military Problem - Personal Finance Issues in the United States Armed Forces</a></em>, he conducted an analysis of personal finances for military service members and found many members are not financially secure and struggle with basic finances. This is especially true for junior service members, who are typically young, inexperienced, right out of high school, and particularly exposed to financial struggles.
     </p>
     <p>
-        He found that approximately 60 percent of families in the military could not meet three months' worth of living 
-        expenses with their savings. This was also shown by another study by Blue Star Family, which found that 62 
-        percent of military families are stressed about their financial situation. If a major life event or stressor occurs 
-        in those families' lives, then they could be susceptible to various problems. This includes mental health issues, 
-        going without basic necessities, and even lead to coercion or financial blackmail. These findings have been corroborated
-        by multiple other studies and reports, all coming to the conclusion that financial insecurity is a major problem 
-        in the military.
+        He found that approximately 60 percent of families in the military could not meet three months' worth of living expenses with their savings. This was also shown by another study by Blue Star Family, which found that 62 percent of military families are stressed about their financial situation. If a major life event or stressor occurs in those families' lives, then they could be susceptible to various problems. This includes going without basic necessities, worsening mental health, and even lead to coercion or financial blackmail. These findings have been corroborated by multiple other studies and reports, all coming to the conclusion that financial insecurity is a major problem in the military.
     </p>
     <p>
-        By providing service members an easy to use tool which can accurately budget out future months of finances, it will 
-        provide direct benefits by providing users an understanding of their finances. This understanding can lead to reducing 
-        stress, anxiety, and financial vulnerability. It also allows service members to work on building savings, which are 
-        necessary to reduce living paycheck to paycheck. Second and third-order effects are an increase in military readiness 
-        having service members who are financially, mentally, and morally healthy.
+        By providing service members an easy to use tool which can accurately budget out future months of finances, PayLES provides direct benefits by providing users an increased understanding of their finances. This understanding can lead to reducing stress, anxiety, and financial vulnerability. It also allows service members to work on building savings, which are necessary to reduce living paycheck to paycheck. Second and third-order effects are an increase in military readiness having service members who are financially, mentally, and morally healthy.
     </p>
-    <p>
-        The goal of PayLES is to have service members "pay less" by providing an understanding of their finances and enabling 
-        them to make safe and informed decisions about their future finances.
-    </p>
+
+    <div id="page-faq" class="page">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faqs">
+            {% for faq in FAQS %}
+            <div class="faq">
+                <input class="faq-checkbox" id="faq{{ loop.index }}" type="checkbox">
+                <label class="faq-label" for="faq{{ loop.index }}">{{ faq.label|safe }}</label>
+                <div class="faq-content">
+                    {{ faq.content|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
     <h2>Acknowledgements</h2>
     <p>
-        I would first like to thank Professor Ahmad for his support as my advisor at ASU. His understanding and guidance 
-        were instrumental in helping me successfully build this project. I also am extremely grateful to all the individuals 
-        who helped in the testing of the program and for providing valuable feedback. Without all the time and effort spent on 
-        making sure the program worked correctly for a variety of different scenarios, PayLES would not be where it is today. 
-        And finally, thank you to all the countless developers of the various libraries and datasets that were made freely 
-        available for use in this project.
+        I would like to thank all of the individuals who helped support me during the development of this project. Your encouragement and assistance were invaluable. I would also like to express my gratitude to Professor Ahmad and Professor Green at Arizona State University for their guidance and support throughout this endeavor. And finally, thank you to the open-source community for providing the tools and resources that made this project possible.
     </p>
 </div>
 

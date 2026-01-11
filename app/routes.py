@@ -459,7 +459,10 @@ def route_remove_row():
 
 @flask_app.route('/about')
 def about():
-    return render_template('about.html')
+    context = {
+        'FAQS': load_json(flask_app.config['FAQ_JSON']),
+    }
+    return render_template('about.html', **context)
 
 
 @flask_app.route('/faq')

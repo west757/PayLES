@@ -1,6 +1,6 @@
 # PayLES - Program analyzing your Leave & Earnings Statement (LES)
 
-**PayLES** is a web application designed to help military personnel calculate and manage their Leave and Earnings Statement (LES), including budgeting, allowances, and other financial planning tools.
+**PayLES** (Program analyzing your Leave & Earnings Statement) is a free and open-source web application designed to help United States service members easily understand and manage their military finances. By uploading their monthly Leave and Earnings Statement (LES), users can quickly view a clear summary of their current pay and forecast their finances for the next 12 months. PayLES provides personalized insights and allows users to adjust future pay scenarios based on anticipated changes such as promotions, relocations, changes in dependents, tax status, and more. A Traditional Savings Plan (TSP) calculator is also available, aiding users in planning their pay allocations towards retirement. The platform is secure, user-friendly, and aims to empower service members to make informed financial decisions.
 
 ## Features
 
