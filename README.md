@@ -1,4 +1,4 @@
-# PayLES
+# PayLES - Program analyzing your Leave & Earnings Statement (LES)
 
 **PayLES** is a web application designed to help military personnel calculate and manage their Leave and Earnings Statement (LES), including budgeting, allowances, and other financial planning tools.
 
