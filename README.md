@@ -1,60 +1,16 @@
 # PayLES - Program analyzing your Leave & Earnings Statement (LES)
 
+**PayLES** is currently live at [payles.app](https://payles.app)!
+
 **PayLES** (Program analyzing your Leave & Earnings Statement) is a free and open-source web application designed to help United States service members easily understand and manage their military finances. By uploading their monthly Leave and Earnings Statement (LES), users can quickly view a clear summary of their current pay and forecast their finances for the next 12 months. PayLES provides personalized insights and allows users to adjust future pay scenarios based on anticipated changes such as promotions, relocations, changes in dependents, tax status, and more. A Traditional Savings Plan (TSP) calculator is also available, aiding users in planning their pay allocations towards retirement. The platform is secure, user-friendly, and aims to empower service members to make informed financial decisions.
 
-## Features
+PayLES is designed to serve all Department of Defense service members, regardless of branch, status (Active Duty, Reserve, National Guard), rank, or job. It recognizes and incorporates service-specific pays, allowances, and deductions found in an LES, ensuring comprehensive coverage. The application aims to be a universal tool for analyzing military finances, adaptable to any service member's circumstances.
 
-- LES calculations for CONUS and OCONUS locations
-- Budgeting tools and calculators
-- Support for various allowances (COLA, OHA, etc.)
-- Pro-rated calculations for grade and zip code
-- User-friendly interface with dropdowns and tooltips
-- Security headers for improved safety
-- **Planned features:** combat zone detection, joint spouse support, reports, graphs, and more
+PayLES is intended solely for educational and budgeting purposes, helping service members analyze their current and future finances. The application is completely free, open source, and requires no advertisements, signups, or user accounts. All code and datasets are publicly available on GitHub.
 
-## Getting Started
+For additional information and FAQ, please visit the about & FAQ page at [payles.app](https://payles.app).
 
-### Prerequisites
-
-- Python 3.8+
-- Flask and required dependencies (see `requirements.txt`)
-
-### Installation
-
-```sh
-git clone https://github.com/west757/PayLES.git
-cd PayLES
-pip install -r requirements.txt
-```
-
-### Running the Application
-
-```sh
-python -m app.main
-```
-
-The application will start a local Flask server.
-
-## Project Structure
-
-```
-app/                # Main application code
-  main.py           # Entry point
-  routes.py         # Flask routes
-  forms.py, budgets.py, calculations.py, etc. # Core modules
-  static/           # Static files (CSS, JS)
-  templates/        # HTML templates
-requirements.txt    # Python dependencies
-README.md           # Project documentation
-```
-
-## Roadmap
-
-See the README for short-term, mid-term, and long-term goals, including new features, improvements, and potential ideas.
-
-## Contributing
-
-Contributions are welcome! Please submit issues or pull requests via GitHub.
+Please note, PayLES is currently still in active development.
 
 ## License
 
@@ -73,7 +29,6 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
-- change session_type or remove it in config
 
 mid-term:
 - determine if user is in combat zone
@@ -110,14 +65,6 @@ potential:
 - import/export for custom rows
 - add loading screen after submitting LES
 - color code rows
-
-
-3. Security Headers
-Content-Security-Policy: restricts sources for scripts, styles, etc.
-X-Frame-Options: prevents clickjacking by disallowing your site in iframes.
-X-Content-Type-Options: nosniff: prevents MIME type sniffing.
-Strict-Transport-Security: enforces HTTPS.
-You can set these headers in Flask using an after_request handler.
 
 
 - different colors for tag content

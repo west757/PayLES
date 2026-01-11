@@ -183,9 +183,10 @@ def validate_les_age(les_text):
     except Exception as e:
         raise Exception(get_error_context(e, "Error determining year from LES text"))
 
+    # calculates how old the LES is in months, and if greater than the age limit, prevents further processing
     months_number_map = {k: i+1 for i, k in enumerate(MONTHS.keys())}
     delta_months = (CURRENT_YEAR - year) * 12 + (months_number_map.get(CURRENT_MONTH) - months_number_map.get(month))
-    #if delta_months > LES_AGE_LIMIT:
-    #    return False, f"The LES you submitted is more than {LES_AGE_LIMIT} months old. Please upload a recent LES.", year, month
+    if delta_months > LES_AGE_LIMIT:
+        return False, f"The LES you submitted is more than {LES_AGE_LIMIT} months old. Please upload a recent LES.", year, month
 
     return True, "", year, month

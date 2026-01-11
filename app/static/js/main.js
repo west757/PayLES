@@ -54,7 +54,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
     //only runs the first time the pay is loaded
     if (evt.target && evt.target.id === 'content') {
-        //window.addEventListener('beforeunload', budgetUnloadPrompt);
+        // prompts the user if they try to leave the page with unsaved changes
+        window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectListeners();
         displayBadge('discrepancies', window.CONFIG.discrepancies);
     }
