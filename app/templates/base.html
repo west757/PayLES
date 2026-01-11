@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PayLES</title>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='graphics/favicon.ico') }}">
+        <link rel="stylesheet" href="/static/normalize.css">
         <link rel="stylesheet" href="/static/style.css">
         <script src="{{ url_for('static', filename='libraries/htmx.min.js') }}"></script>
         <script src="{{ url_for('static', filename='libraries/xlsx.full.min.js') }}"></script>
@@ -24,8 +25,7 @@
             <nav>
                 <ul>
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('about_faq') }}">About & FAQ</a></li>
                     <li><a href="{{ url_for('resources') }}">Resources</a></li>
                     <!--<li><a href="{{ url_for('leave') }}">Leave Calculator</a></li>-->
                     <li><a href="https://github.com/west757/PayLES" target="_blank" rel="noopener noreferrer">GitHub</a></li>
@@ -45,7 +45,7 @@
                 &copy; 2025 PayLES - <a href="https://github.com/west757/PayLES/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
             </div>
             <div id="footer-center">
-                <a href="https://github.com/west757" target="_blank" rel="noopener noreferrer">Contact</a>
+                <a href="mailto:payles.contact@pm.me">payles.contact@pm.me</a>
             </div>
             <div id="footer-right">
                 {{ config['VERSION'] }}

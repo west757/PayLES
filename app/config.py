@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ class Config:
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version 0.1.0 2025-12-21"
+    VERSION = "Version 1.0.0 2026-01-11"
 
 
     #folders
@@ -48,7 +48,7 @@ class Config:
 
     LES_IMAGE_SCALE = 0.42
     LES_COORD_SCALE = 0.24
-    LES_AGE_LIMIT = 2   #months
+    LES_AGE_LIMIT = 3   #months
 
     FICA_SOCIALSECURITY_TAX_RATE = 0.062
     FICA_MEDICARE_TAX_RATE = 0.0145

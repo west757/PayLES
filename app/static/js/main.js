@@ -29,6 +29,11 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 
 // initial setup when a page is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // show toast if screen is too small, notifying user site is not optimized for mobile use
+    if (window.innerWidth < 600) {
+        showToast("This site is not designed for mobile devices. For best results, use a desktop or tablet.");
+    }
+
     if (document.getElementById('page-home')) {
         getConfigData();
         attachDragAndDropListeners();
@@ -54,7 +59,8 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
 
     //only runs the first time the pay is loaded
     if (evt.target && evt.target.id === 'content') {
-        //window.addEventListener('beforeunload', budgetUnloadPrompt);
+        // prompts the user if they try to leave the page with unsaved changes
+        window.addEventListener('beforeunload', budgetUnloadPrompt);
         attachInjectListeners();
         displayBadge('discrepancies', window.CONFIG.discrepancies);
     }

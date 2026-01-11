@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page">
+    <h2>About PayLES</h2>
+    <p>
+        PayLES (Program analyzing your Leave & Earnings Statement) is a free and open-source web application designed to help United States service members easily understand and manage their military finances. By uploading their monthly Leave & Earnings Statement (LES), users can quickly view a clear summary of their current pay and forecast their finances for the next 12 months. PayLES provides personalized insights and allows users to adjust future pay scenarios based on anticipated changes such as promotions, relocations, changes in dependents, tax status, and more. A Traditional Savings Plan (TSP) calculator is also available, aiding users in planning their pay allocations towards retirement. The platform is secure, user-friendly, and aims to empower service members to make informed financial decisions.
+
+    </p>
+    <p>
+        PayLES is designed to serve all Department of War service members, regardless of branch, status (Active Duty, Reserve, National Guard), rank, or job. It recognizes and incorporates service-specific pays, allowances, and deductions found in an LES, ensuring comprehensive coverage. The application aims to be a universal tool for analyzing military finances, adaptable to any service member's circumstances.
+
+    </p>
+    <p>
+        PayLES is intended solely for educational and budgeting purposes, helping service members analyze their current and future finances. The application is completely free, open source, and requires no advertisements, signups, or user accounts. All code and datasets are publicly available on GitHub.
+    </p>
+
+    <h2>The "Why"</h2>
+    <p>
+        According to Brendan Duebner in his March 2022 paper <em> <a href="/static/pdf/A Military Solution to a Military Problem - Brendan Duebner.pdf" target="_blank" rel="noopener noreferrer">A Military Solution to a Military Problem - Personal Finance Issues in the United States Armed Forces</a></em>, he conducted an analysis of personal finances for military service members and found many members are not financially secure and struggle with basic finances. This is especially true for junior service members, who are typically young, inexperienced, right out of high school, and particularly exposed to financial struggles.
+    </p>
+    <p>
+        He found that approximately 60 percent of families in the military could not meet three months' worth of living expenses with their savings. This was also shown by another study by Blue Star Family, which found that 62 percent of military families are stressed about their financial situation. If a major life event or stressor occurs in those families' lives, then they could be susceptible to various problems. This includes going without basic necessities, worsening mental health, and even lead to coercion or financial blackmail. These findings have been corroborated by multiple other studies and reports, all coming to the conclusion that financial insecurity is a major problem in the military.
+    </p>
+    <p>
+        By providing service members an easy to use tool which can accurately budget out future months of finances, PayLES provides direct benefits by providing users an increased understanding of their finances. This understanding can lead to reducing stress, anxiety, and financial vulnerability. It also allows service members to work on building savings, which are necessary to reduce living paycheck to paycheck. Second and third-order effects are an increase in military readiness having service members who are financially, mentally, and morally healthy.
+    </p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faqs">
+        {% for faq in FAQS %}
+        <div class="faq">
+            <input class="faq-checkbox" id="faq{{ loop.index }}" type="checkbox">
+            <label class="faq-label" for="faq{{ loop.index }}">{{ faq.label|safe }}</label>
+            <div class="faq-content">
+                {{ faq.content|safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>Acknowledgements</h2>
+    <p>
+        I would like to thank all of the individuals who helped support me during the development of this project. Your encouragement and assistance were invaluable. I would also like to express my gratitude to Professor Ahmad and Professor Green at Arizona State University for their guidance and support throughout this endeavor. And finally, thank you to the open-source community for providing the tools and resources that made this project possible.
+    </p>
+</div>
+
+{% endblock %}
