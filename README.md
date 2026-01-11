@@ -62,9 +62,10 @@ This project is licensed under the MIT License.
 
 
 <!--
-to run:
-navigate to: \Documents\Github\Payles
-run: python -m app.main
+Changes from Dev to Prod:
+- main.py: comment out debug run, change to prod run
+- les.py: uncomment LES age check
+- main.js: uncomment budgetUnloadPrompt
 
 
 short-term:
@@ -99,10 +100,7 @@ long-term:
 - reddit account
 - merch (patch, coin)
 - add in recommendation for type of bank
-- uncomment prompt when leaving budget page
 - better css for border table scroll bar
-- uncomment les age limit check
-- change main.py from debug when moving to prod
 - save LES to accounts for historical records
 - emergency fund goal calculator
 
