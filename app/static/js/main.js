@@ -29,6 +29,11 @@ document.body.addEventListener('htmx:responseError', function(evt) {
 
 // initial setup when a page is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // show toast if screen is too small, notifying user site is not optimized for mobile use
+    if (window.innerWidth < 600) {
+        showToast("This site is not designed for mobile devices. For best results, use a desktop or tablet.");
+    }
+
     if (document.getElementById('page-home')) {
         getConfigData();
         attachDragAndDropListeners();

@@ -8,7 +8,7 @@ PayLES is designed to serve all Department of Defense service members, regardles
 
 PayLES is intended solely for educational and budgeting purposes, helping service members analyze their current and future finances. The application is completely free, open source, and requires no advertisements, signups, or user accounts. All code and datasets are publicly available on GitHub.
 
-For additional information and FAQ, please visit the about & FAQ page at [payles.app](https://payles.app).
+For additional information, please visit the About & FAQ page at [payles.app](https://payles.app).
 
 Please note, PayLES is currently still in active development.
 
@@ -20,8 +20,6 @@ This project is licensed under the MIT License.
 <!--
 Changes from Dev to Prod:
 - main.py: comment out debug run, change to prod run
-- les.py: uncomment LES age check
-- main.js: uncomment budgetUnloadPrompt
 
 
 short-term:
@@ -41,13 +39,11 @@ mid-term:
 
 long-term:
 - leave calculator
-- update readme
 - add comments to code
 - update modal content
 - pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
 - create unit tests 
-- check mobile use
 - minify style.css and script.js when pushed into a production environment
 - normalize css: https://necolas.github.io/normalize.css/
 - use python cProfile or line_profiler to find bottlenecks
