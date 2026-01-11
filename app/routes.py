@@ -457,20 +457,12 @@ def route_remove_row():
     return render_template('budgets.html', **context)
 
 
-@flask_app.route('/about')
-def about():
+@flask_app.route('/about_faq')
+def about_faq():
     context = {
         'FAQS': load_json(flask_app.config['FAQ_JSON']),
     }
-    return render_template('about.html', **context)
-
-
-@flask_app.route('/faq')
-def faq():
-    context = {
-        'FAQS': load_json(flask_app.config['FAQ_JSON']),
-    }
-    return render_template('faq.html', **context)
+    return render_template('about_faq.html', **context)
 
 
 @flask_app.route('/resources')
