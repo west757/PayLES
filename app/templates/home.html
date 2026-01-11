@@ -10,8 +10,10 @@
 <div id="page-home" class="page">
     <div id="welcome">
         Welcome to PayLES, the program analyzing your U.S. Military Leave & Earnings Statement (LES)
+        <!--
         <br><br>
         Notice: PayLES is currently under active development. Please report any bugs or issues via <a href="https://github.com/west757/PayLES" target="_blank" rel="noopener noreferrer">GitHub</a>.
+        -->
     </div>
 
     <div id="tab-container">
@@ -175,7 +177,7 @@
         <div id="tab-example" class="tab-content">
             PayLES is designed to build a personalized budget directly from your latest LES. For the best experience, please go to <a href="https://mypay.dfas.mil" target="_blank" rel="noopener noreferrer">MyPay.mil</a> to download your LES as a pdf and upload it under the Single LES tab. If you do not have access to an LES or would just like to see what PayLES is capable of, please explore with the example LES below.
             <br /><br />
-            For more information, please check out the <a href="/about">About</a> and <a href="/faq">FAQ</a> pages.
+            For more information, please check out the <a href="/about_faq">About & FAQ</a> page.
             
             <form id="form-example" hx-post="/route_single" hx-swap="innerHTML" method="POST">
                 {{ form_single.hidden_tag() }}
