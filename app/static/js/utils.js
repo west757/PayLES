@@ -90,6 +90,7 @@ function getRowValue(header, key = null) {
 }
 
 
+// displays badge with count of items in list, or hides badge if list is empty
 function displayBadge(badgeName, list) {
     const badge = document.getElementById(`badge-${badgeName}`);
     if (!badge) return;
@@ -103,6 +104,7 @@ function displayBadge(badgeName, list) {
 }
 
 
+// opens dynamic modal and sets width class based on parameter
 function openDynamicModal(width = 'mid') {
     document.getElementById('modal-dynamic').checked = true;
     const modalInner = document.getElementById('modal-inner-dynamic');
@@ -117,6 +119,7 @@ function openDynamicModal(width = 'mid') {
 }
 
 
+// creates and returns an input element based on the header and field type, with appropriate classes and restrictions
 function createStandardInput(header, field, value = '') {
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
@@ -351,9 +354,7 @@ function setInputRestriction(field, maxLength = null, maxValue = null) {
             if (maxLength && val.length > maxLength) {
                 val = val.slice(0, maxLength);
             }
-            if (val.length > 1) {
-                val = val.replace(/^0+/, '');
-            }
+
             if (maxValue !== null && val && parseInt(val, 10) > maxValue) {
                 val = maxValue.toString();
             }

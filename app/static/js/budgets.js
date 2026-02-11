@@ -105,7 +105,7 @@ function submitEditModal(header, month, field, repeat) {
     let value = input.value;
 
     // remove leading zeros for int fields
-    if (field === 'int' && value.length > 1) {
+    if (field === 'int' && value.length > 1 && header !== 'Zip Code') {
         value = value.replace(/^0+/, '');
     }
 

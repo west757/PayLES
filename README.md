@@ -27,6 +27,7 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
+- zip code not accepting leading zeros
 
 mid-term:
 - determine if user is in combat zone
@@ -78,5 +79,10 @@ choose Locality
 - displays locality code, tooltip is country - locality
 enter rent
 enter roommates
+
+
+
+test run command:
+python -m main
 
 -->
