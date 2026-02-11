@@ -5,7 +5,7 @@
     },
     {
         "label": "LES documents have personal information, how does PayLES handle this?",
-        "content": "PayLES does not read any Personally Identifiable Information (PII) data, name and SSN, from the LES. All data read in is captured only from specific bounding boxes on the LES which are described in the les_rectangles.csv file. Additionally, the pdf is converted into a png image for display on the page with box modal overlays. During this conversion, the name and SSN have whiteout applied over them, and the png is flattened to ensure that the data cannot be extracted."
+        "content": "PayLES does not read any Personally Identifiable Information (PII) data, name and SSN, from the LES. All data read is captured only from specific bounding boxes on the LES which are described in the les_rectangles.csv file. Additionally, the pdf is converted into a png image for display on the page with box modal overlays. During this conversion, the name and SSN have whiteout applied over them, and the png is flattened to ensure that the data cannot be extracted."
     },
     {
         "label": "Is PayLES secure?",
@@ -25,7 +25,7 @@
     },
     {
         "label": "What was PayLES developed with?",
-        "content": "PayLES is built with Python and the Flask web framework for backend data processing, while HTML, CSS, and JavaScript power the frontend interface. This technology stack ensures the application is fast, lightweight, and responsive, accessible from any modern web browser. Render, a web hosting company, is used to deploy the application with a custom domain name provided by Cloudflare."
+        "content": "PayLES is built with Python and the Flask web framework for backend data processing, while HTML, CSS, and JavaScript power the frontend interface. This technology stack ensures the application is fast, lightweight, and responsive, accessible from any modern web browser. Render, a web hosting company, is used to deploy the application with a custom domain name and SSL certificate provided by Cloudflare."
     },
     {
         "label": "Was any AI used to make PayLES?",
@@ -33,7 +33,7 @@
     },
     {
         "label": "What is the future roadmap for PayLES?",
-        "content": "The current focus is on improving the user experience by ensuring high accuracy, expanding the amount of unique use cases captured, and maintaining up to date datasets. For the long-term, the developer would like to explore the possibility of having PayLES become an official DoD application. The goal of this would be to increase accessibility, availability, and accuracy of the program, especially if it was able to be supported by DFAS or another organization.<br><br> There are currently no plans to incorporate mobile support, whether through mobile browsing or an app. Having user accounts that save the budget allowing for convenient future access is also not being considered at this time. The scope is also going to remain focused on military pay, and not expand so far into personal budgeting such as tracking individual expenses over a monthly period."
+        "content": "The current focus is on improving the user experience by ensuring high accuracy, expanding the amount of unique use cases captured, and maintaining up to date datasets. For the long-term, the developer would like to explore the possibility of having PayLES become an official DoW application. The goal of this would be to increase accessibility, availability, and accuracy of the program, especially if it was able to be supported by DFAS or another organization.<br><br> There are currently no plans to incorporate mobile support, whether through mobile browsing or an app. Having user accounts that save the budget allowing for convenient future access is also not being considered at this time. The scope is also going to remain focused on military pay, and not expand so far into personal budgeting such as tracking individual expenses over a monthly period."
     },
     {
         "label": "Who developed PayLES?",
