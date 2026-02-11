@@ -50,16 +50,18 @@ class Config:
     LES_COORD_SCALE = 0.24
     LES_AGE_LIMIT = 3   #months
 
-    FICA_SOCIALSECURITY_TAX_RATE = 0.062
-    FICA_MEDICARE_TAX_RATE = 0.0145
-    BAS_AMOUNT = [465.77, 320.78]
+    FICA_SOCIALSECURITY_TAX_RATE = 0.062 # 2026 rate
+    FICA_MEDICARE_TAX_RATE = 0.0145 # 2026 rate
+    BAS_AMOUNT = [476.95, 328.48]  # 2026 rates for enlisted and officers
     DEPENDENTS_MAX = 5
     DRILLS_MAX = 30
 
-    TRAD_TSP_RATE_MAX = 84
-    ROTH_TSP_RATE_MAX = 60
-    TSP_ELECTIVE_LIMIT = 23500.00
-    TSP_ANNUAL_LIMIT = 70000.00
+    TRAD_TSP_RATE_MAX = 84 # 2025 max
+    ROTH_TSP_RATE_MAX = 60 # 2025 max
+    TSP_ELECTIVE_LIMIT = 24500.00 # 2026 limit for under 50 with catch-up contributions
+    TSP_ANNUAL_LIMIT = 72000.00 # 2026 total limit for employee + employer contributions
+    TSP_CATCH_UP_LIMIT = 8000.00 # 2026 catch-up contribution limit for age 50 and over
+    TSP_HIGHER_CATCH_UP_LIMIT = 11250.00 # 2026 limit for employees ages 60-63
     TSP_AGENCY_AUTO_RATE = 0.01
     TSP_AGENCY_MATCH_RATE = {
         1: 0.01,
@@ -193,24 +195,24 @@ class Config:
     dtype_bah = {'mha': str}
     for grade in GRADES:
         dtype_bah[grade] = int
-    BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents_2025.csv",
+    BAH_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_with_dependents.csv",   # 2025 rates
         dtype=dtype_bah
     )
-    BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents_2025.csv",
+    BAH_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "bah_without_dependents.csv",     # 2025 rates
         dtype=dtype_bah
     )
 
     dtype_conus_cola_with_dependents = {'grade': str}
     for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
         dtype_conus_cola_with_dependents[str(i)] = int
-    CONUS_COLA_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_with_dependents_2025.csv",
+    CONUS_COLA_WITH_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_with_dependents.csv",     # 2025 rates
         dtype=dtype_conus_cola_with_dependents
     )
 
     dtype_conus_cola_without_dependents = {'grade': str}
     for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
         dtype_conus_cola_without_dependents[str(i)] = int
-    CONUS_COLA_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_without_dependents_2025.csv",
+    CONUS_COLA_WITHOUT_DEPENDENTS = pd.read_csv(CSV_FOLDER / "conus_cola_without_dependents.csv",   # 2025 rates
         dtype=dtype_conus_cola_without_dependents
     )
 
@@ -240,11 +242,11 @@ class Config:
     dtype_pay_active = {'grade': str}
     for i in [0, 2, 3, 4] + list(range(6, 41, 2)):
         dtype_pay_active[str(i)] = float
-    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active_2025.csv",
+    PAY_ACTIVE = pd.read_csv(CSV_FOLDER / "pay_active.csv",     # 2026 rates
         dtype=dtype_pay_active
     )
 
-    FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates_2024.csv",
+    FEDERAL_TAX_RATES = pd.read_csv(CSV_FOLDER / "federal_tax_rates.csv",   # 2025 rates
         dtype={
             'status': str, 
             'bracket': int,
@@ -320,7 +322,7 @@ class Config:
         }
     )
 
-    SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates_2025.csv",
+    SGLI_RATES = pd.read_csv(CSV_FOLDER / "sgli_rates.csv",   # 2026 rates
         dtype={
             'coverage': str,
             'premium': float,
@@ -329,7 +331,7 @@ class Config:
         },
     )
 
-    STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates_2025.csv",
+    STATE_TAX_RATES = pd.read_csv(CSV_FOLDER / "state_tax_rates.csv",   # 2026 rates
         dtype={
             'state': str,
             'single_bracket': int,
