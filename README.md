@@ -79,4 +79,9 @@ choose Locality
 enter rent
 enter roommates
 
+
+
+test run command:
+python -m main
+
 -->

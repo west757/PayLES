@@ -61,7 +61,14 @@ function buildEditModal(header, month, field) {
     }
 
     if (!cancelOnly) {
-        body.appendChild(createStandardInput(header, field, getRowValue(header, month)));
+        let inputValue = getRowValue(header, month);
+        
+        // pad zip code with leading zeros for modal input
+        if (header === 'Zip Code') {
+            inputValue = String(inputValue).padStart(5, '0');
+        }
+            
+        body.appendChild(createStandardInput(header, field, inputValue));
     }
 
     content.appendChild(body);
@@ -105,7 +112,7 @@ function submitEditModal(header, month, field, repeat) {
     let value = input.value;
 
     // remove leading zeros for int fields
-    if (field === 'int' && value.length > 1) {
+    if (field === 'int' && value.length > 1 && header !== 'Zip Code') {
         value = value.replace(/^0+/, '');
     }
 

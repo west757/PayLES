@@ -1,0 +1,22 @@
+﻿status,bracket,rate
+Single,0,0.1
+Single,11925,0.12
+Single,48475,0.22
+Single,103350,0.24
+Single,197300,0.32
+Single,250525,0.35
+Single,626350,0.37
+Married,0,0.1
+Married,23850,0.12
+Married,96950,0.22
+Married,206700,0.24
+Married,394600,0.32
+Married,501050,0.35
+Married,751600,0.37
+Head of Household,0,0.1
+Head of Household,17000,0.12
+Head of Household,64850,0.22
+Head of Household,103350,0.24
+Head of Household,197300,0.32
+Head of Household,250500,0.35
+Head of Household,626350,0.37

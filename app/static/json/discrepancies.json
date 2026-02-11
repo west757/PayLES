@@ -1,21 +1,21 @@
 {
     "Base Pay": {
-        "message": "There is a discrepancy with Base Pay. This is often attributed to a change in grade or years of service that occured during the month. However, it can sometimes be due to an inaccurate Pay Entry Base Date (PEBD) which is used to calculate years of service.",
+        "message": "There is a discrepancy with Base Pay. This is often attributed to a change in grade or years of service that occured during the month. However, it can sometimes be due to an inaccurate Pay Entry Base Date (PEBD) which is used to calculate years of service. Please verify that your PEBD is correct and that any recent changes in rank or years of service are accurately reflected in PayLES.",
         "urlname": "DoD Basic Pay Charts",
         "url": "https://militarypay.defense.gov/Pay/Basic-Pay/"
     },
     "BAS": {
-        "message": "There is a discrepancy with the BAS. This can occur if you have changed from BAS rate I to rate II or vice versa. Please verify your current BAS rate to ensure accuracy.",
+        "message": "There is a discrepancy with the BAS. This can occur if you have changed from BAS rate I to rate II or vice versa. Please verify your current BAS rate matches your grade and meal assignment to ensure accuracy.",
         "urlname": "DFAS BAS Chart",
         "url": "https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/bas/"
     },
     "BAH": {
-        "message": "There is a discrepancy with the BAH. This may be due to recent changes in locality rates. Please verify that the zip code used to determine your BAH rate is correct in addition to the number of dependents you have claimed. Contact your personnel office if you need to update your number of dependents.",
+        "message": "There is a discrepancy with the BAH. This may be due to recent changes in locality rates. Please verify that the zip code used to determine your BAH rate is correct in addition to the number of dependents you have claimed.",
         "urlname": "DTMO BAH Rate Lookup",
         "url": "https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/"
     },
     "Federal Taxes": {
-        "message": "There is a discrepancy with Federal Taxes. This may be due to a mismatch between the variables which calculate federal taxes such as filing status, number of dependents, and additional withholdings.",
+        "message": "There is an expected discrepancy with Federal Taxes. This is because PayLES calculates federal taxes based on an annualized amount while official military pay reflects taxes based on the IRS payroll withholding method described in <a href=\"/static/pdf/IRS_Publication_15-T.pdf\" target=\"_blank\">IRS Publication 15-T</a>. This difference is because it is incredibly challenging to accurately predict federal tax withholdings on a monthly basis, especially when trying to account for additional factors such as multiple jobs, other income, and dependents. PayLES strives to achieve an accurate estimate per month and calculates federal tax greater than what you may see on your LES. This slight overestimate is safe and sufficient for most users, however if you would like to more accurately determine your expected federal tax amount please use the IRS Tax Withholding Estimator.",
         "urlname": "IRS Tax Withholding Estimator",
         "url": "https://www.irs.gov/individuals/tax-withholding-estimator"
     },
@@ -30,7 +30,7 @@
         "url": "https://www.dfas.mil/MilitaryMembers/payentitlements/Pay-Tables/FICA/"
     },
     "SGLI Rate": {
-        "message": "There is a discrepancy with the SGLI Rate. Please ensure that your SGLI coverage amount is correct by checking the official SGLI chart to your  SGLI coverage selection in milConnect.",
+        "message": "There is a discrepancy with the SGLI Rate. Please ensure that your SGLI coverage amount is correct by checking the official SGLI chart to your SGLI coverage selection in milConnect.",
         "urlname": "VA SGLI Chart",
         "url": "https://www.va.gov/life-insurance/options-eligibility/sgli/"
     },

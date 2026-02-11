@@ -1,7 +1,9 @@
 <!-- cell formatting macro -->
 {% macro format_cell(row, month) %}
     {% set cell_val = row[month] %}
-    {% if row.field != 'float' %}
+    {% if row.header == 'Zip Code' %}
+        {{ "%05d"|format(cell_val) }}
+    {% elif row.field != 'float' %}
         {% if row.type == 'rate' %}
             {{ cell_val }}%
         {% else %}

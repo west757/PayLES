@@ -151,36 +151,6 @@ function submitAccountModal(header) {
 }
 
 
-// export budget to xlsx or csv using SheetJS
-function exportBudget(budgetName) {
-    let filename;
-
-    if (budgetName === 'pay') {
-        var budget = document.getElementById('budget-pay-table');
-        var filetype = document.getElementById('dropdown-export-pay').value;
-        filename = 'PayLES_Budget';
-    } else if (budgetName === 'tsp') {
-        var budget = document.getElementById('budget-tsp-table');
-        var filetype = document.getElementById('dropdown-export-tsp').value;
-        filename = 'PayLES_TSP_Budget';
-    }
-
-    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
-
-    var clone = budget.cloneNode(true);
-
-    // exclude remove row buttons from export
-    clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
-
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
-    if (filetype === 'xlsx') {
-        XLSX.writeFile(workbook, fullFilename);
-    } else {
-        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
-    }
-}
-
-
 function displayDiscrepancies(discrepancies) {
     const discrepancyMetadata = window.CONFIG.DISCREPANCIES || {};
 
@@ -192,14 +162,9 @@ function displayDiscrepancies(discrepancies) {
     let html = `
         <h2>Pay Discrepancies</h2>
         <div id="discrepancies-description">
-            PayLES conducts an analysis to find any discrepancies between the uploaded LES and program-calculated values. 
-            The calculated values are derived from variables pulled from the LES, such as rank, years of service, and location. 
+            PayLES conducts an analysis to find any discrepancies between the uploaded LES and program-calculated values for the first month. The calculated values are derived from variables pulled from the LES such as rank, years of service, and stationed location. 
             <br><br>
-            The factors that may cause discrepancies are outdated data sets used by PayLES, pay errors, or extremely unique individual circumstances.
-            If there are any discrepancies, please review them carefully.
-            PayLES cannot account for every possible pay scenario so it is important to verify all information.
-            However, any discrepancy may also be an indicator for potential pay issues.
-            If you have any questions, please reach out to your local finance office for further assistance.
+            Discrepancies are not always indicative of errors. Examples could include PayLES accidentally using outdated data sets or expected discrepancies with calculating federal income tax. However, other factors that may cause discrepancies could reveal pay errors. If there are any discrepancies, please review them carefully. PayLES cannot account for every possible pay scenario so it is important to verify all information. If you have any questions, please reach out to your local finance office for further assistance.
         </div>
     `;
 
@@ -404,4 +369,34 @@ function openTSPRateCalculator() {
     }
 
     render();
+}
+
+
+// export budget to xlsx or csv using SheetJS
+function exportBudget(budgetName) {
+    let filename;
+
+    if (budgetName === 'pay') {
+        var budget = document.getElementById('budget-pay-table');
+        var filetype = document.getElementById('dropdown-export-pay').value;
+        filename = 'PayLES_Budget';
+    } else if (budgetName === 'tsp') {
+        var budget = document.getElementById('budget-tsp-table');
+        var filetype = document.getElementById('dropdown-export-tsp').value;
+        filename = 'PayLES_TSP_Budget';
+    }
+
+    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+
+    var clone = budget.cloneNode(true);
+
+    // exclude remove row buttons from export
+    clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+
+    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
+    if (filetype === 'xlsx') {
+        XLSX.writeFile(workbook, fullFilename);
+    } else {
+        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
+    }
 }
