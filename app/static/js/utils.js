@@ -354,7 +354,6 @@ function setInputRestriction(field, maxLength = null, maxValue = null) {
             if (maxLength && val.length > maxLength) {
                 val = val.slice(0, maxLength);
             }
-
             if (maxValue !== null && val && parseInt(val, 10) > maxValue) {
                 val = maxValue.toString();
             }
