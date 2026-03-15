@@ -29,6 +29,7 @@ short-term:
 - max TSP rate for specialty/incentive/bonus pay for roth tsp
 
 - emergency fund goal calculator
+- formatting for exported excel and csv
 
 mid-term:
 - joint spouse with two LES

@@ -373,30 +373,131 @@ function openTSPRateCalculator() {
 
 
 // export budget to xlsx or csv using SheetJS
+// export budget to xlsx, csv, or pdf
 function exportBudget(budgetName) {
-    let filename;
+    let filename, budget, filetype;
 
+    let title;
     if (budgetName === 'pay') {
-        var budget = document.getElementById('budget-pay-table');
-        var filetype = document.getElementById('dropdown-export-pay').value;
+        budget = document.getElementById('budget-pay-table');
+        filetype = document.getElementById('dropdown-export-pay').value;
         filename = 'PayLES_Budget';
+        title = 'PayLES Budget';
     } else if (budgetName === 'tsp') {
-        var budget = document.getElementById('budget-tsp-table');
-        var filetype = document.getElementById('dropdown-export-tsp').value;
+        budget = document.getElementById('budget-tsp-table');
+        filetype = document.getElementById('dropdown-export-tsp').value;
         filename = 'PayLES_TSP_Budget';
+        title = 'PayLES TSP Budget';
     }
 
-    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+    if (filetype === 'pdf') {
+        let clone = budget.cloneNode(true);
+        clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+        let tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        tempDiv.appendChild(clone);
+        document.body.appendChild(tempDiv);
 
-    var clone = budget.cloneNode(true);
+        html2canvas(clone, { backgroundColor: "#fff", scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new window.jspdf.jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'a4'
+            });
 
-    // exclude remove row buttons from export
-    clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+            const marginX = 38;
+            const marginY = 38;
+            const pageWidth = pdf.internal.pageSize.getWidth() - marginX * 2;
+            const pageHeight = pdf.internal.pageSize.getHeight() - marginY * 2;
 
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
-    if (filetype === 'xlsx') {
-        XLSX.writeFile(workbook, fullFilename);
+            // Title and date
+            const dateStr = "Generated on " + new Date().toLocaleDateString();
+            const titleFontSize = 16;
+            const dateFontSize = 12;
+            const titleY = marginY - 10;
+            // Calculate width for right-aligned date
+            pdf.setFontSize(dateFontSize);
+            const dateWidth = pdf.getTextWidth(dateStr);
+            const dateX = pdf.internal.pageSize.getWidth() - marginX - dateWidth;
+
+            // Calculate image scaling
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pageWidth / imgWidth, 1); // Don't upscale
+            const scaledWidth = imgWidth * ratio;
+            const scaledHeight = imgHeight * ratio;
+
+            let pageNum = 0;
+
+            // If the image fits on one page
+            if (scaledHeight <= pageHeight) {
+                pdf.setFontSize(titleFontSize);
+                pdf.text(title, marginX, titleY);
+                pdf.setFontSize(dateFontSize);
+                pdf.text(dateStr, dateX, titleY);
+                // Table image below the title/date
+                const tableY = marginY + 10;
+                pdf.addImage(
+                    imgData,
+                    'PNG',
+                    marginX,
+                    tableY,
+                    scaledWidth,
+                    scaledHeight
+                );
+            } else {
+                // Multi-page logic
+                let pageCanvas = document.createElement('canvas');
+                let pageCtx = pageCanvas.getContext('2d');
+                pageCanvas.width = imgWidth;
+                pageCanvas.height = Math.floor(pageHeight / ratio);
+
+                let renderedHeight = 0;
+                while (renderedHeight < imgHeight) {
+                    // Clear and draw the current slice
+                    pageCtx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+                    pageCtx.drawImage(
+                        canvas,
+                        0, renderedHeight,
+                        imgWidth, pageCanvas.height,
+                        0, 0,
+                        imgWidth, pageCanvas.height
+                    );
+                    let pageImgData = pageCanvas.toDataURL('image/png');
+                    if (pageNum > 0) pdf.addPage();
+                    pdf.setFontSize(titleFontSize);
+                    pdf.text(title, marginX, titleY);
+                    pdf.setFontSize(dateFontSize);
+                    pdf.text(dateStr, dateX, titleY);
+                    // Table image below the title/date
+                    const tableY = marginY + 10;
+                    pdf.addImage(
+                        pageImgData,
+                        'PNG',
+                        marginX,
+                        tableY,
+                        scaledWidth,
+                        pageHeight
+                    );
+                    renderedHeight += pageCanvas.height;
+                    pageNum++;
+                }
+            }
+
+            pdf.save(filename + '.pdf');
+            document.body.removeChild(tempDiv);
+        });
     } else {
-        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
+        let fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+        let clone = budget.cloneNode(true);
+        clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+        let workbook = XLSX.utils.table_to_book(clone, { sheet: filename, raw: true });
+        if (filetype === 'xlsx') {
+            XLSX.writeFile(workbook, fullFilename);
+        } else {
+            XLSX.writeFile(workbook, fullFilename, { bookType: 'csv' });
+        }
     }
 }
