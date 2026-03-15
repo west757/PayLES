@@ -85,13 +85,14 @@ class Config:
         'Calculator'
     ]
     RESOURCE_BRANCHES = [
-        'DoD',
+        'DoW',
         'U.S. Army',
         'U.S. Air Force',
         'U.S. Space Force',
         'U.S. Navy',
         'U.S. Marine Corps',
-        'Non-DoD'
+        #'U.S. Coast Guard',
+        'Non-DoW'
     ]
 
     BRANCHES = {

@@ -27,7 +27,6 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - max TSP rate for specialty/incentive/bonus pay for roth tsp
-- add more resources
 
 mid-term:
 - joint spouse with two LES
