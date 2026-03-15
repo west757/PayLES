@@ -1,22 +1,22 @@
 ﻿header,type,field,tax,editable,modal,tooltip
-Months in Service,var,none,False,False,pebd,Number of months creditable towards military service
-Branch,var,select,False,True,none,Branch
-Component,var,select,False,True,components,"Identifies component of the military (Active Duty, Reserves, or National Guard)"
-Grade,var,select,False,True,basepay,"Grades are designations like E1, W2, O3E, O4, and rank is the full title of the grade"
-Zip Code,var,int,False,True,bah,U.S. 5-digit zip code
-OCONUS Locality Code,var,select,False,True,cola,Used for determining OHA and OCOLA
-Home of Record,var,select,False,True,bah,State or U.S. territory used for computing state taxes
-Dependents,var,select,False,True,bah,Number of assigned dependents in DEERS
+Months in Service,var,none,False,False,pebd,Number of months creditable towards military service calculated from the Pay Entry Base Date (PEBD)
+Branch,var,select,False,True,none,"U.S. Military branch - Army, Air Force, Navy, Marines, Space Force"
+Component,var,select,False,True,components,"U.S. Military component - Active Duty, Reserves, or National Guard"
+Grade,var,select,False,True,basepay,"Grades are designations such as E1, W2, O3E, O4, whereas rank is the full title of the grade"
+Zip Code,var,int,False,True,bah,U.S. 5-digit zip code which identifies specific geographic locations for mail delivery
+OCONUS Locality Code,var,select,False,True,cola,Used for determining Outside the Continental U.S. (OCONUS) calculations such as OHA and OCOLA
+Home of Record,var,select,False,True,bah,State or U.S. Territory used for computing state taxes
+Dependents,var,select,False,True,bah,Number of assigned dependents in DEERS used to determine BAH rates
 Federal Filing Status,var,select,False,True,federaltaxes,"Identifies if single, married, or head of household for federal tax filing purposes"
 State Filing Status,var,select,False,True,statetaxes,Identifies if single or married for state tax filing purposes
 SGLI Coverage,var,select,False,True,sgli,SGLI coverage payable
 Combat Zone,var,select,False,True,combat,Identifies if in a combat zone during the majority of the month
-Drills,var,int,False,True,drillpay,Identifies number of drills participated in
+Drills,var,int,False,True,drillpay,Identifies number of drills participated in if the member is in the National Guard or Reserve component
 Taxable Income,calc,float,False,False,none,Income that is subject to Federal Income Tax Witholding (FITW)
 Non-Taxable Income,calc,float,False,False,none,Income that is not subject to Federal Income Tax Witholding (FITW)
 Total Income,calc,float,False,False,none,"Sum of all positive pay, also known as ""Gross Pay"""
 Taxes,calc,float,False,False,none,"Sum of all taxes including Federal, State, and FICA taxes"
-Total Expenses,calc,float,False,False,none,"Sum of all negative pay including deductions, allotments, and expenditures"
+Total Expenses,calc,float,False,False,none,Sum of all negative payments including deductions and allotments
 Net Pay,calc,float,False,False,none,Sum of income and expenses
 Difference,calc,float,False,False,none,Difference in net pay from current month to previous month
 YTD Income,ytd,float,False,False,none,Total income from the beginning of the year
