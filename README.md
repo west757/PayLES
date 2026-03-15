@@ -26,7 +26,6 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - default for OCONUS locations in dropdown
-- add pro-rated calculations for rows grade and zip code
 - max TSP rate for specialty/incentive/bonus pay for roth tsp
 - add more resources
 
@@ -35,6 +34,7 @@ mid-term:
 - reports and graphs and pie chart
 - resources list filtering for resources
 - hide drills row
+- add pro-rated calculations for rows grade and zip code
 
 long-term:
 - leave calculator
