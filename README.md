@@ -27,14 +27,13 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - add pro-rated calculations for rows grade and zip code
+- max TSP rate for specialty/incentive/bonus pay for roth tsp
+- add more resources
 
 mid-term:
-- determine if user is in combat zone
-- determine if user is active duty or national guard
 - joint spouse with two LES
 - reports and graphs and pie chart
 - resources list filtering for resources
-- move branch into component
 - hide drills row
 
 long-term:
@@ -60,6 +59,13 @@ potential:
 - import/export for custom rows
 - add loading screen after submitting LES
 - color code rows
+- move branch into component
+
+
+assistance needed:
+- determining if a user is in a combat zone from their uploaded LES
+- determining if a user is active duty or national guard/reserves from uploaded LES, and if so how many drills they've completed
+- coast guard LES
 
 
 
