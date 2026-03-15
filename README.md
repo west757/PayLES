@@ -12,6 +12,8 @@ For additional information, please visit the About & FAQ page at [payles.app/abo
 
 Please be aware, PayLES is currently in active development and frequent changes are being made that may impact existing functionality.
 
+To contact the developer, please email: [payles.contact@pm.me](mailto:payles.contact@pm.me).
+
 ## License
 
 This project is licensed under the MIT License.
@@ -27,26 +29,26 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - max TSP rate for specialty/incentive/bonus pay for roth tsp
-
 - emergency fund goal calculator
-- formatting for exported excel and csv
+
 
 mid-term:
 - joint spouse with two LES
-- reports and graphs and pie chart
 - hide drills row
 - add pro-rated calculations for rows grade and zip code
+
 
 long-term:
 - leave calculator
 - add comments and refactor code
-- pdf export option (borb)
 - confirm carrying over debt to/from months on les (amount forward, carry forward)
 - create unit tests 
 - instructions for self-host
 - reddit account
 - merch (patch, coin)
 - better css for border table scroll bar
+- reports and graphs and pie chart
+
 
 potential:
 - rows displayed setting
@@ -80,10 +82,5 @@ choose Locality
 - displays locality code, tooltip is country - locality
 enter rent
 enter roommates
-
-
-
-test run command:
-python -m main
 
 -->
