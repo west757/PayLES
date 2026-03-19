@@ -283,6 +283,9 @@ function openEFundCalculator() {
                 `}
             </div>
             <div style="margin-top:1.5em;">${table}</div>
+            <div style="margin-top:1em;">
+                Note: The emergency fund amount does not take into account any interest accrued on the saved value. PayLES recommends keeping your emergency fund in a <a href="https://themilitarywallet.com/the-best-online-high-yield-savings-accounts/" target="_blank" rel="noopener noreferrer">High-Yield Savings Account (HYSA)</a> which provide greater average returns around 3.5% (depending on the bank) while still having the money easily accessible.
+            </div>
         `;
 
         // Attach input handlers

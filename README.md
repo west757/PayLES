@@ -30,7 +30,7 @@ short-term:
 - conus cola
 - default for OCONUS locations in dropdown
 - max TSP rate for specialty/incentive/bonus pay for roth tsp
-- emergency fund goal calculator
+- emergency fund goal calculator added to guide
 
 
 mid-term:
