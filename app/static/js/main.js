@@ -155,6 +155,10 @@ document.addEventListener('click', function(e) {
         buildAccountModal("Direct Deposit Account")
     }
 
+    if (e.target && e.target.id === 'button-modal-efund-calculator') {
+        openEFundCalculator();
+    }
+
     if (e.target && e.target.id === 'button-modal-discrepancies') {
         displayDiscrepancies(window.CONFIG.discrepancies);
     }

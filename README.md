@@ -22,6 +22,7 @@ This project is licensed under the MIT License.
 <!--
 Changes from Dev to Prod:
 - main.py: comment out debug run, change to prod run
+- config.py: update version date
 
 
 short-term:
