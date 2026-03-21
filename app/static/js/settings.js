@@ -168,87 +168,85 @@ function openEFundCalculator() {
     let efundGoal = parseFloat(localStorage.getItem('efund_goal')) || defaultGoal;
     let efundInitialAmount = parseFloat(localStorage.getItem('efund_initial_amount')) || 0;
     let mode = localStorage.getItem('efund_mode') || 'months'; // 'months' or 'contribution'
-    let monthlyContribution = parseFloat(localStorage.getItem('efund_contribution')) || '';
+    let monthlyContribution = parseFloat(localStorage.getItem('efund_contribution')) || 0;
     let monthsToGoal = parseInt(localStorage.getItem('efund_months')) || Math.min(6, months.length);
 
     openDynamicModal('wide');
     const modalContent = document.getElementById('modal-content-dynamic');
 
     function render() {
-        let tableMonths = months.map(m => m);
+        let monthsRow = '';
+        let netPayRow = '';
+        let monthlyContributionRow = '';
+        let percentOfNetPayRow = '';
+        let efundAmountRow = '';
 
-        function buildNetPayRow() {
-            let rowHtml = '';
-            for (let i = 0; i < tableMonths.length; i++) {
-                let val = getRowValue('Net Pay', tableMonths[i]);
-                rowHtml += `<td>${val !== null ? formatValue(val) : ''}</td>`;
-            }
-            return rowHtml;
-        }
-
-        let monthlyContributionRow = [];
-        let percentOfNetPayRow = [];
-        let efundAmountRow = [];
         let efundAmount = efundInitialAmount;
-        let monthsNeeded = 0;
-        let contributionAmount = 0;
+        let totalContributed = 0;
         let goalRemaining = Math.max(efundGoal - efundInitialAmount, 0);
 
-        // calculate months needed or contribution amount based on mode
+        // Calculate contribution per month and months needed based on mode
+        let contributionAmount = 0;
+        let monthsNeeded = 0;
+        let monthsToUse = months.length;
+
         if (mode === 'months') {
-            monthsNeeded = monthsToGoal;
-            contributionAmount = monthsToGoal > 0 ? goalRemaining / monthsToGoal : 0;
-        } else {
-            contributionAmount = parseFloat(monthlyContribution) || 0;
-            monthsNeeded = contributionAmount > 0 ? Math.ceil(goalRemaining / contributionAmount) : 0;
+            monthsToUse = monthsToGoal;
+            contributionAmount = monthsToUse > 0 ? goalRemaining / monthsToUse : 0;
+            monthsNeeded = monthsToUse;
+        } else if (mode === 'contribution') {
+            contributionAmount = monthlyContribution;
+            monthsNeeded = (contributionAmount > 0) ? Math.ceil(goalRemaining / contributionAmount) : 0;
+            monthsToUse = months.length;
         }
 
-        // build monthly contribution row and emergency fund amount row
-        for (let i = 0; i < tableMonths.length; i++) {
-            if (efundAmount >= efundGoal) {
-                // if goal is already reached, contribution is 0
-                monthlyContributionRow.push(0);
-            } else {
-                // contribute either the set contribution amount or the remaining amount to reach the goal, whichever is smaller
-                let toAdd = Math.min(contributionAmount, efundGoal - efundAmount);
-                monthlyContributionRow.push(toAdd);
-                efundAmount += toAdd;
+        for (let i = 0; i < months.length; i++) {
+            const month = months[i];
+            monthsRow += `<td>${month}</td>`;
+
+            const netPay = getRowValue('Net Pay', month);
+            netPayRow += `<td>${formatValue(netPay)}</td>`;
+
+            // calculate contribution for this month
+            let contribution = 0;
+            if (goalRemaining <= 0) {
+                contribution = 0;
+            } else if (mode === 'months') {
+                if (i < monthsToUse) {
+                    contribution = Math.min(contributionAmount, goalRemaining - totalContributed);
+                } else {
+                    contribution = 0;
+                }
+            } else if (mode === 'contribution') {
+                if (totalContributed < goalRemaining) {
+                    contribution = Math.min(contributionAmount, goalRemaining - totalContributed);
+                } else {
+                    contribution = 0;
+                }
             }
-            efundAmountRow.push(efundAmount);
-        }
 
-        // build percent of net pay row by calculating percent of net pay to achieve goal
-        for (let i = 0; i < tableMonths.length; i++) {
-            let netPay = getRowValue('Net Pay', tableMonths[i]);
-            let percent = ((monthlyContributionRow[i] / netPay) * 100).toFixed(2) + '%';
-            percentOfNetPayRow.push(percent);
+            monthlyContributionRow += `<td>${formatValue(contribution)}</td>`;
+
+            let percent = (netPay && contribution) ? ((contribution / netPay) * 100).toFixed(1) + '%' : '0%';
+            percentOfNetPayRow += `<td>${percent}</td>`;
+
+            efundAmount += contribution;
+            efundAmountRow += `<td>${formatValue(efundAmount)}</td>`;
+
+            totalContributed += contribution;
         }
 
         let table = `
             <table class="modal-table">
-                <tr>
-                    <td></td>
-                    ${tableMonths.map(m => `<td>${m}</td>`).join('')}
-                </tr>
-                <tr>
-                    <td>Net Pay</td>
-                    ${buildNetPayRow()}
-                </tr>
-                <tr>
-                    <td>Monthly Contribution</td>
-                    ${monthlyContributionRow.map((v) => `<td>${formatValue(v)}</td>`).join('')}
-                </tr>
-                <tr>
-                    <td>% of Net Pay</td>
-                    ${percentOfNetPayRow.map((v) => `<td>${v ? v : '0%'}</td>`).join('')}
-                </tr>
-                <tr>
-                    <td>Emergency Fund Amount</td>
-                    ${efundAmountRow.map((v) => `<td>${formatValue(v)}</td>`).join('')}
-                </tr>
+                <tr><td></td>${monthsRow}</tr>
+                <tr><td>Net Pay</td>${netPayRow}</tr>
+                <tr><td>Monthly Contribution</td>${monthlyContributionRow}</tr>
+                <tr><td>Percent of Net Pay</td>${percentOfNetPayRow}</tr>
+                <tr><td>Emergency Fund Amount</td>${efundAmountRow}</tr>
             </table>
         `;
 
+        // Modal content
         modalContent.innerHTML = `
             <h2>Emergency Fund Calculator</h2>
             <div>
@@ -279,7 +277,7 @@ function openEFundCalculator() {
                     ` : `
                         <label>Number of Months: </label>
                         <select id="efund-months" style="width:60px;">
-                            ${Array.from({length: Math.max(1, tableMonths.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
+                            ${Array.from({length: Math.max(1, months.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
                         </select>
                         <span>You need to contribute <b>${formatValue(contributionAmount)}</b> per month to reach your goal.</span>
                     `}
@@ -338,7 +336,7 @@ function openEFundCalculator() {
             document.getElementById('efund-contribution-location').appendChild(contribInputWrapper);
 
             contribInput.addEventListener('change', function() {
-                monthlyContribution = parseFloat(this.value) || '';
+                monthlyContribution = parseFloat(this.value) || 0;
                 localStorage.setItem('efund_contribution', monthlyContribution);
                 render();
             });
