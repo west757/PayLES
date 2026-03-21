@@ -151,8 +151,6 @@ function submitAccountModal(header) {
 }
 
 
-
-
 function openEFundCalculator() {
     const months = window.CONFIG.months;
 
@@ -185,7 +183,7 @@ function openEFundCalculator() {
         let totalContributed = 0;
         let goalRemaining = Math.max(efundGoal - efundInitialAmount, 0);
 
-        // Calculate contribution per month and months needed based on mode
+        // calculate contribution per month and months needed based on mode
         let contributionAmount = 0;
         let monthsNeeded = 0;
         let monthsToUse = months.length;
@@ -246,7 +244,6 @@ function openEFundCalculator() {
             </table>
         `;
 
-        // Modal content
         modalContent.innerHTML = `
             <h2>Emergency Fund Calculator</h2>
             <div>
@@ -255,46 +252,47 @@ function openEFundCalculator() {
                 The default goal is your average monthly expenses amount, <b>${formatValue(averageMonthlyExpense)}</b>, multiplied by six. PayLES recommends having an emergency fund of six months worth of expenses, but you can adjust the goal to your desired amount.
             </div>
             <div id="efund-goal-inputs">
-                <div>
+                <div class="efund-goal-row">
                     <label>Emergency Fund Goal: </label>
-                    <div id="efund-goal-location" style="display:inline-block;"></div>
+                    <div id="efund-goal-location"></div>
                 </div>
-                <div>
-                    <label>Current Fund Amount: </label>
-                    <div id="efund-current-location" style="display:inline-block;"></div>
+                <div class="efund-goal-row">
+                    <label>Initial Emergency Fund Amount: </label>
+                    <div id="efund-initial-location"></div>
                 </div>
             </div>
             <div id="efund-mode-container">
                 <div id="efund-mode-options">
+                    <label><input type="radio" name="efund-mode" value="months" ${mode === 'months' ? 'checked' : ''}> Set Number of Months</label>
                     <label><input type="radio" name="efund-mode" value="contribution" ${mode === 'contribution' ? 'checked' : ''}> Set Monthly Contribution</label>
-                    <label style="margin-left:2em;"><input type="radio" name="efund-mode" value="months" ${mode === 'months' ? 'checked' : ''}> Set Number of Months</label>
                 </div>
                 <div id="efund-mode-inputs">
-                    ${mode === 'contribution' ? `
-                        <label>Monthly Contribution: </label>
-                        <span id="efund-contribution-location"></span>
-                        <span>It will take <b>${contributionAmount > 0 ? monthsNeeded : ''}</b> months to reach your goal.</span>
-                    ` : `
-                        <label>Number of Months: </label>
-                        <select id="efund-months" style="width:60px;">
-                            ${Array.from({length: Math.max(1, months.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
-                        </select>
+                    ${mode === 'months' ? `
+                        <div class="efund-mode-input-row">
+                            <label>Number of Months: </label>
+                            <select id="efund-months">
+                                ${Array.from({length: Math.max(1, months.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
+                            </select>
+                        </div>
                         <span>You need to contribute <b>${formatValue(contributionAmount)}</b> per month to reach your goal.</span>
+                    ` : `
+                        <div class="efund-mode-input-row">
+                            <label>Monthly Contribution: </label>
+                            <span id="efund-contribution-location"></span>
+                        </div>
+                        <span>It will take <b>${contributionAmount > 0 ? monthsNeeded : '0'}</b> months to reach your goal.</span>
                     `}
                 </div>
             </div>
             ${table}
-            <div>
+            <div id="efund-note">
                 Note: The emergency fund amount does not take into account any interest accrued on the saved value. PayLES recommends keeping your emergency fund in a <a href="https://themilitarywallet.com/the-best-online-high-yield-savings-accounts/" target="_blank" rel="noopener noreferrer">High-Yield Savings Account (HYSA)</a> which provide greater average returns, around 3.5% depending on the bank, while still having the money easily accessible.
             </div>
         `;
 
-        // Attach input handlers
         const goalInputWrapper = createStandardInput('Emergency Fund Goal', 'float', efundGoal);
         const goalInput = goalInputWrapper.querySelector('input');
         goalInput.id = 'efund-goal';
-        goalInput.min = 1;
-        goalInput.style.width = '120px';
         document.getElementById('efund-goal-location').appendChild(goalInputWrapper);
 
         goalInput.addEventListener('change', function() {
@@ -303,21 +301,17 @@ function openEFundCalculator() {
             render();
         });
 
-        // Current emergency fund input
-        const currentInputWrapper = createStandardInput('Current Emergency Fund Amount', 'float', efundInitialAmount);
-        const currentInput = currentInputWrapper.querySelector('input');
-        currentInput.id = 'efund-current-amount';
-        currentInput.min = 0;
-        currentInput.style.width = '120px';
-        document.getElementById('efund-current-location').appendChild(currentInputWrapper);
+        const efundInitialInputWrapper = createStandardInput('Initial Emergency Fund Amount', 'float', efundInitialAmount);
+        const efundInitialInput = efundInitialInputWrapper.querySelector('input');
+        efundInitialInput.id = 'efund-initial-amount';
+        document.getElementById('efund-initial-location').appendChild(efundInitialInputWrapper);
 
-        currentInput.addEventListener('change', function() {
+        efundInitialInput.addEventListener('change', function() {
             efundInitialAmount = parseFloat(this.value) || 0;
             localStorage.setItem('efund_initial_amount', efundInitialAmount);
             render();
         });
 
-        // Radio buttons
         Array.from(modalContent.querySelectorAll('input[name="efund-mode"]')).forEach(radio => {
             radio.addEventListener('change', function() {
                 mode = this.value;
@@ -326,23 +320,19 @@ function openEFundCalculator() {
             });
         });
 
-        // Monthly contribution input (standard input)
         if (mode === 'contribution') {
-            const contribInputWrapper = createStandardInput('Monthly Contribution', 'float', monthlyContribution);
-            const contribInput = contribInputWrapper.querySelector('input');
-            contribInput.id = 'efund-contribution';
-            contribInput.min = 1;
-            contribInput.style.width = '100px';
-            document.getElementById('efund-contribution-location').appendChild(contribInputWrapper);
+            const contributionAmountInputWrapper = createStandardInput('Monthly Contribution', 'float', monthlyContribution);
+            const contributionAmountInput = contributionAmountInputWrapper.querySelector('input');
+            contributionAmountInput.id = 'efund-contribution';
+            document.getElementById('efund-contribution-location').appendChild(contributionAmountInputWrapper);
 
-            contribInput.addEventListener('change', function() {
+            contributionAmountInput.addEventListener('change', function() {
                 monthlyContribution = parseFloat(this.value) || 0;
                 localStorage.setItem('efund_contribution', monthlyContribution);
                 render();
             });
         }
 
-        // Months dropdown
         const monthsInput = modalContent.querySelector('#efund-months');
         if (monthsInput) {
             monthsInput.addEventListener('change', function() {
@@ -355,10 +345,6 @@ function openEFundCalculator() {
 
     render();
 }
-
-
-
-
 
 
 function displayDiscrepancies(discrepancies) {
@@ -507,10 +493,6 @@ function openTSPRateCalculator() {
 
             monthsRow += `<td>${month}${isExtrapolated ? '*' : ''}</td>`;
 
-            minimumContributionRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
-            if (!isEmpty) minimumContributionRow += `$${minimumContribution.toFixed(2)}`;
-            minimumContributionRow += `</td>`;
-
             let basePay = null;
             if (!isEmpty && !isExtrapolated) {
                 basePay = getRowValue("Base Pay Total", month);
@@ -523,6 +505,10 @@ function openTSPRateCalculator() {
             }
             basePayRow += `</td>`;
 
+            minimumContributionRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
+            if (!isEmpty) minimumContributionRow += `$${minimumContribution.toFixed(2)}`;
+            minimumContributionRow += `</td>`;
+
             let percentageOfBasePay = '';
             if (basePay && !isEmpty) {
                 percentageOfBasePay = ((minimumContribution / basePay) * 100).toFixed(2) + "%";
@@ -533,8 +519,8 @@ function openTSPRateCalculator() {
         let table = `
             <table class="modal-table" id="table-tsp-rate-calculator">
                 <tr><td></td>${monthsRow}</tr>
-                <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Base Pay</td>${basePayRow}</tr>
+                <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Percent of Base Pay</td>${percentageOfBasePayRow}</tr>
             </table>
             ${showExtrapolatedNote ? `<div id="extrapolated-note">* extrapolates previous month data</div>` : ''}
@@ -559,12 +545,11 @@ function openTSPRateCalculator() {
             ${table}
         `;
 
-        const location = document.getElementById('tsp-rate-calculator-goal-location');
         const wrapper = createStandardInput('TSP Goal', 'float', tspGoal);
         const input = wrapper.querySelector('input');
         input.id = 'tsp-rate-calculator-goal';
         input.setAttribute('max', TSP_ELECTIVE_LIMIT);
-        location.appendChild(wrapper);
+        document.getElementById('tsp-rate-calculator-goal-location').appendChild(wrapper);
 
         modalContent.querySelector('#button-tsp-rate-calculator-update').addEventListener('click', function() {
             let goal = parseFloat(modalContent.querySelector('#tsp-rate-calculator-goal').value) || 0;

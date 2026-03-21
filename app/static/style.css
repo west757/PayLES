@@ -1063,65 +1063,61 @@ table.styled td.cell {
     border: 1px solid black;
 }
 
+#efund-goal-inputs {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  margin: 1.5rem 0;
+}
 
-
-.efund-goal-inputs {
+.efund-goal-row {
   display: flex;
   align-items: center;
-  gap: 1em;
-  margin-bottom: 1em;
 }
 
-.efund-goal-spacer {
-  width: 2em;
+#efund-goal-location,
+#efund-current-location {
+  display: inline-block;
 }
 
-.efund-mode-container {
+#efund-mode-container {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 2em;
-  margin-bottom: 1em;
+  gap: 2rem;
+  margin: 0 0 1.5rem 0;
 }
 
-.efund-mode-radio-group {
+#efund-mode-options {
   display: flex;
   flex-direction: column;
-  gap: 0.75em;
-  min-width: 180px;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 14rem;
 }
 
-.efund-mode-inputs {
+#efund-mode-inputs {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  min-height: 4.5em;
-  width: 100%;
+  gap: 0.8rem;
+  margin: -0.35rem 0 0 0;
+  min-width: 14rem;
 }
 
-.efund-mode-panel {
-  display: none;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.efund-mode-panel.active {
-  display: flex;
-}
-
-.efund-mode-row {
+.efund-mode-input-row {
   display: flex;
   align-items: center;
   gap: 0.5em;
 }
 
-.efund-mode-text {
-  margin-top: 0.25em;
-  font-size: 0.95em;
-  color: var(--secondary_dark_accent_color, #999);
+#efund-months {
+    width: 2.75rem;
 }
 
-
+#efund-note {
+    margin: 1.25rem 0 0.5rem 0;
+}
 
 #table-tsp-rate-calculator td:first-child,
 #table-tsp-rate-calculator tr td:first-child {
