@@ -102,7 +102,7 @@ function initResourcesPage() {
 
     function exportResourcesAsCSV(resources) {
         if (!resources.length) return;
-        const headers = Object.keys(resources[0]);
+        const headers = ['name', 'description', 'category', 'branch', 'cac', 'url'];
         const csvRows = [
             headers.join(','),
             ...resources.map(r => headers.map(h => `"${(r[h] ?? '').toString().replace(/"/g, '""')}"`).join(','))
@@ -113,7 +113,7 @@ function initResourcesPage() {
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'resources_export.csv';
+        a.download = 'PayLES_Resources.csv';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

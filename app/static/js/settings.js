@@ -151,6 +151,202 @@ function submitAccountModal(header) {
 }
 
 
+function openEFundCalculator() {
+    const months = window.CONFIG.months;
+
+    // calculate average monthly expense and default goal
+    let totalExpenses = 0;
+    for (let i = 0; i < months.length; i++) {
+        totalExpenses += getRowValue('Total Expenses', months[i]);
+    }
+    let averageMonthlyExpense = Math.abs(totalExpenses / months.length);
+    let defaultGoal = Number((averageMonthlyExpense * 6).toFixed(2));
+
+    // get values from localStorage or set defaults
+    let efundGoal = parseFloat(localStorage.getItem('efund_goal')) || defaultGoal;
+    let efundInitialAmount = parseFloat(localStorage.getItem('efund_initial_amount')) || 0;
+    let mode = localStorage.getItem('efund_mode') || 'months'; // 'months' or 'contribution'
+    let monthlyContribution = parseFloat(localStorage.getItem('efund_contribution')) || 0;
+    let monthsToGoal = parseInt(localStorage.getItem('efund_months')) || Math.min(6, months.length);
+
+    openDynamicModal('wide');
+    const modalContent = document.getElementById('modal-content-dynamic');
+
+    function render() {
+        let monthsRow = '';
+        let netPayRow = '';
+        let monthlyContributionRow = '';
+        let percentOfNetPayRow = '';
+        let efundAmountRow = '';
+
+        let efundAmount = efundInitialAmount;
+        let totalContributed = 0;
+        let goalRemaining = Math.max(efundGoal - efundInitialAmount, 0);
+
+        // calculate contribution per month and months needed based on mode
+        let contributionAmount = 0;
+        let monthsNeeded = 0;
+        let monthsToUse = months.length;
+
+        if (mode === 'months') {
+            monthsToUse = monthsToGoal;
+            contributionAmount = monthsToUse > 0 ? goalRemaining / monthsToUse : 0;
+            monthsNeeded = monthsToUse;
+        } else if (mode === 'contribution') {
+            contributionAmount = monthlyContribution;
+            monthsNeeded = (contributionAmount > 0) ? Math.ceil(goalRemaining / contributionAmount) : 0;
+            monthsToUse = months.length;
+        }
+
+        for (let i = 0; i < months.length; i++) {
+            const month = months[i];
+            monthsRow += `<td>${month}</td>`;
+
+            const netPay = getRowValue('Net Pay', month);
+            netPayRow += `<td>${formatValue(netPay)}</td>`;
+
+            // calculate contribution for this month
+            let contribution = 0;
+            if (goalRemaining <= 0) {
+                contribution = 0;
+            } else if (mode === 'months') {
+                if (i < monthsToUse) {
+                    contribution = Math.min(contributionAmount, goalRemaining - totalContributed);
+                } else {
+                    contribution = 0;
+                }
+            } else if (mode === 'contribution') {
+                if (totalContributed < goalRemaining) {
+                    contribution = Math.min(contributionAmount, goalRemaining - totalContributed);
+                } else {
+                    contribution = 0;
+                }
+            }
+
+            monthlyContributionRow += `<td>${formatValue(contribution)}</td>`;
+
+            let percent = (netPay && contribution) ? ((contribution / netPay) * 100).toFixed(1) + '%' : '0%';
+            percentOfNetPayRow += `<td>${percent}</td>`;
+
+            efundAmount += contribution;
+            efundAmountRow += `<td>${formatValue(efundAmount)}</td>`;
+
+            totalContributed += contribution;
+        }
+
+        let table = `
+            <table class="modal-table">
+                <tr><td></td>${monthsRow}</tr>
+                <tr><td>Net Pay</td>${netPayRow}</tr>
+                <tr><td>Monthly Contribution</td>${monthlyContributionRow}</tr>
+                <tr><td>Percent of Net Pay</td>${percentOfNetPayRow}</tr>
+                <tr><td>Emergency Fund Amount</td>${efundAmountRow}</tr>
+            </table>
+        `;
+
+        modalContent.innerHTML = `
+            <h2>Emergency Fund Calculator</h2>
+            <div>
+                The Emergency Fund Calculator helps you plan to reach your emergency fund goal by either setting a monthly contribution amount or selecting a target number of months to achieve the goal by. To account for more months in the calculation table, please increase the number of months displayed in the settings.
+                <br><br>
+                The default goal is your average monthly expenses amount, <b>${formatValue(averageMonthlyExpense)}</b>, multiplied by six. PayLES recommends having an emergency fund of six months worth of expenses, but you can adjust the goal to your desired amount.
+            </div>
+            <div id="efund-goal-inputs">
+                <div class="efund-goal-row">
+                    <label>Emergency Fund Goal: </label>
+                    <div id="efund-goal-location"></div>
+                </div>
+                <div class="efund-goal-row">
+                    <label>Initial Emergency Fund Amount: </label>
+                    <div id="efund-initial-location"></div>
+                </div>
+            </div>
+            <div id="efund-mode-container">
+                <div id="efund-mode-options">
+                    <label><input type="radio" name="efund-mode" value="months" ${mode === 'months' ? 'checked' : ''}> Set Number of Months</label>
+                    <label><input type="radio" name="efund-mode" value="contribution" ${mode === 'contribution' ? 'checked' : ''}> Set Monthly Contribution</label>
+                </div>
+                <div id="efund-mode-inputs">
+                    ${mode === 'months' ? `
+                        <div class="efund-mode-input-row">
+                            <label>Number of Months: </label>
+                            <select id="efund-months">
+                                ${Array.from({length: Math.max(1, months.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
+                            </select>
+                        </div>
+                        <span>You need to contribute <b>${formatValue(contributionAmount)}</b> per month to reach your goal.</span>
+                    ` : `
+                        <div class="efund-mode-input-row">
+                            <label>Monthly Contribution: </label>
+                            <span id="efund-contribution-location"></span>
+                        </div>
+                        <span>It will take <b>${contributionAmount > 0 ? monthsNeeded : '0'}</b> months to reach your goal.</span>
+                    `}
+                </div>
+            </div>
+            ${table}
+            <div id="efund-note">
+                Note: The emergency fund amount does not take into account any interest accrued on the saved value. PayLES recommends keeping your emergency fund in a <a href="https://themilitarywallet.com/the-best-online-high-yield-savings-accounts/" target="_blank" rel="noopener noreferrer">High-Yield Savings Account (HYSA)</a> which provide greater average returns, around 3.5% depending on the bank, while still having the money easily accessible.
+            </div>
+        `;
+
+        const goalInputWrapper = createStandardInput('Emergency Fund Goal', 'float', efundGoal);
+        const goalInput = goalInputWrapper.querySelector('input');
+        goalInput.id = 'efund-goal';
+        document.getElementById('efund-goal-location').appendChild(goalInputWrapper);
+
+        goalInput.addEventListener('change', function() {
+            efundGoal = parseFloat(goalInput.value) || 0;
+            localStorage.setItem('efund_goal', efundGoal);
+            render();
+        });
+
+        const efundInitialInputWrapper = createStandardInput('Initial Emergency Fund Amount', 'float', efundInitialAmount);
+        const efundInitialInput = efundInitialInputWrapper.querySelector('input');
+        efundInitialInput.id = 'efund-initial-amount';
+        document.getElementById('efund-initial-location').appendChild(efundInitialInputWrapper);
+
+        efundInitialInput.addEventListener('change', function() {
+            efundInitialAmount = parseFloat(this.value) || 0;
+            localStorage.setItem('efund_initial_amount', efundInitialAmount);
+            render();
+        });
+
+        Array.from(modalContent.querySelectorAll('input[name="efund-mode"]')).forEach(radio => {
+            radio.addEventListener('change', function() {
+                mode = this.value;
+                localStorage.setItem('efund_mode', mode);
+                render();
+            });
+        });
+
+        if (mode === 'contribution') {
+            const contributionAmountInputWrapper = createStandardInput('Monthly Contribution', 'float', monthlyContribution);
+            const contributionAmountInput = contributionAmountInputWrapper.querySelector('input');
+            contributionAmountInput.id = 'efund-contribution';
+            document.getElementById('efund-contribution-location').appendChild(contributionAmountInputWrapper);
+
+            contributionAmountInput.addEventListener('change', function() {
+                monthlyContribution = parseFloat(this.value) || 0;
+                localStorage.setItem('efund_contribution', monthlyContribution);
+                render();
+            });
+        }
+
+        const monthsInput = modalContent.querySelector('#efund-months');
+        if (monthsInput) {
+            monthsInput.addEventListener('change', function() {
+                monthsToGoal = parseInt(this.value) || 2;
+                localStorage.setItem('efund_months', monthsToGoal);
+                render();
+            });
+        }
+    }
+
+    render();
+}
+
+
 function displayDiscrepancies(discrepancies) {
     const discrepancyMetadata = window.CONFIG.DISCREPANCIES || {};
 
@@ -297,10 +493,6 @@ function openTSPRateCalculator() {
 
             monthsRow += `<td>${month}${isExtrapolated ? '*' : ''}</td>`;
 
-            minimumContributionRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
-            if (!isEmpty) minimumContributionRow += `$${minimumContribution.toFixed(2)}`;
-            minimumContributionRow += `</td>`;
-
             let basePay = null;
             if (!isEmpty && !isExtrapolated) {
                 basePay = getRowValue("Base Pay Total", month);
@@ -313,6 +505,10 @@ function openTSPRateCalculator() {
             }
             basePayRow += `</td>`;
 
+            minimumContributionRow += `<td${isEmpty ? ' class="cell-grayout"' : ''}>`;
+            if (!isEmpty) minimumContributionRow += `$${minimumContribution.toFixed(2)}`;
+            minimumContributionRow += `</td>`;
+
             let percentageOfBasePay = '';
             if (basePay && !isEmpty) {
                 percentageOfBasePay = ((minimumContribution / basePay) * 100).toFixed(2) + "%";
@@ -321,10 +517,10 @@ function openTSPRateCalculator() {
         }
 
         let table = `
-            <table class="modal-table table-tsp-rate-calculator">
+            <table class="modal-table" id="table-tsp-rate-calculator">
                 <tr><td></td>${monthsRow}</tr>
-                <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Base Pay</td>${basePayRow}</tr>
+                <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Percent of Base Pay</td>${percentageOfBasePayRow}</tr>
             </table>
             ${showExtrapolatedNote ? `<div id="extrapolated-note">* extrapolates previous month data</div>` : ''}
@@ -349,12 +545,11 @@ function openTSPRateCalculator() {
             ${table}
         `;
 
-        const location = document.getElementById('tsp-rate-calculator-goal-location');
         const wrapper = createStandardInput('TSP Goal', 'float', tspGoal);
         const input = wrapper.querySelector('input');
         input.id = 'tsp-rate-calculator-goal';
         input.setAttribute('max', TSP_ELECTIVE_LIMIT);
-        location.appendChild(wrapper);
+        document.getElementById('tsp-rate-calculator-goal-location').appendChild(wrapper);
 
         modalContent.querySelector('#button-tsp-rate-calculator-update').addEventListener('click', function() {
             let goal = parseFloat(modalContent.querySelector('#tsp-rate-calculator-goal').value) || 0;
@@ -373,30 +568,131 @@ function openTSPRateCalculator() {
 
 
 // export budget to xlsx or csv using SheetJS
+// export budget to xlsx, csv, or pdf
 function exportBudget(budgetName) {
-    let filename;
+    let filename, budget, filetype;
 
+    let title;
     if (budgetName === 'pay') {
-        var budget = document.getElementById('budget-pay-table');
-        var filetype = document.getElementById('dropdown-export-pay').value;
+        budget = document.getElementById('budget-pay-table');
+        filetype = document.getElementById('dropdown-export-pay').value;
         filename = 'PayLES_Budget';
+        title = 'PayLES Budget';
     } else if (budgetName === 'tsp') {
-        var budget = document.getElementById('budget-tsp-table');
-        var filetype = document.getElementById('dropdown-export-tsp').value;
+        budget = document.getElementById('budget-tsp-table');
+        filetype = document.getElementById('dropdown-export-tsp').value;
         filename = 'PayLES_TSP_Budget';
+        title = 'PayLES TSP Budget';
     }
 
-    var fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+    if (filetype === 'pdf') {
+        let clone = budget.cloneNode(true);
+        clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+        let tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        tempDiv.appendChild(clone);
+        document.body.appendChild(tempDiv);
 
-    var clone = budget.cloneNode(true);
+        html2canvas(clone, { backgroundColor: "#fff", scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new window.jspdf.jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'a4'
+            });
 
-    // exclude remove row buttons from export
-    clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+            const marginX = 38;
+            const marginY = 38;
+            const pageWidth = pdf.internal.pageSize.getWidth() - marginX * 2;
+            const pageHeight = pdf.internal.pageSize.getHeight() - marginY * 2;
 
-    var workbook = XLSX.utils.table_to_book(clone, {sheet: filename, raw: true});
-    if (filetype === 'xlsx') {
-        XLSX.writeFile(workbook, fullFilename);
+            // Title and date
+            const dateStr = "Generated on " + new Date().toLocaleDateString();
+            const titleFontSize = 16;
+            const dateFontSize = 12;
+            const titleY = marginY - 10;
+            // Calculate width for right-aligned date
+            pdf.setFontSize(dateFontSize);
+            const dateWidth = pdf.getTextWidth(dateStr);
+            const dateX = pdf.internal.pageSize.getWidth() - marginX - dateWidth;
+
+            // Calculate image scaling
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pageWidth / imgWidth, 1); // Don't upscale
+            const scaledWidth = imgWidth * ratio;
+            const scaledHeight = imgHeight * ratio;
+
+            let pageNum = 0;
+
+            // If the image fits on one page
+            if (scaledHeight <= pageHeight) {
+                pdf.setFontSize(titleFontSize);
+                pdf.text(title, marginX, titleY);
+                pdf.setFontSize(dateFontSize);
+                pdf.text(dateStr, dateX, titleY);
+                // Table image below the title/date
+                const tableY = marginY + 10;
+                pdf.addImage(
+                    imgData,
+                    'PNG',
+                    marginX,
+                    tableY,
+                    scaledWidth,
+                    scaledHeight
+                );
+            } else {
+                // Multi-page logic
+                let pageCanvas = document.createElement('canvas');
+                let pageCtx = pageCanvas.getContext('2d');
+                pageCanvas.width = imgWidth;
+                pageCanvas.height = Math.floor(pageHeight / ratio);
+
+                let renderedHeight = 0;
+                while (renderedHeight < imgHeight) {
+                    // Clear and draw the current slice
+                    pageCtx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+                    pageCtx.drawImage(
+                        canvas,
+                        0, renderedHeight,
+                        imgWidth, pageCanvas.height,
+                        0, 0,
+                        imgWidth, pageCanvas.height
+                    );
+                    let pageImgData = pageCanvas.toDataURL('image/png');
+                    if (pageNum > 0) pdf.addPage();
+                    pdf.setFontSize(titleFontSize);
+                    pdf.text(title, marginX, titleY);
+                    pdf.setFontSize(dateFontSize);
+                    pdf.text(dateStr, dateX, titleY);
+                    // Table image below the title/date
+                    const tableY = marginY + 10;
+                    pdf.addImage(
+                        pageImgData,
+                        'PNG',
+                        marginX,
+                        tableY,
+                        scaledWidth,
+                        pageHeight
+                    );
+                    renderedHeight += pageCanvas.height;
+                    pageNum++;
+                }
+            }
+
+            pdf.save(filename + '.pdf');
+            document.body.removeChild(tempDiv);
+        });
     } else {
-        XLSX.writeFile(workbook, fullFilename, {bookType: 'csv'});
+        let fullFilename = filetype === 'xlsx' ? filename + '.xlsx' : filename + '.csv';
+        let clone = budget.cloneNode(true);
+        clone.querySelectorAll('.button-remove-row').forEach(btn => btn.remove());
+        let workbook = XLSX.utils.table_to_book(clone, { sheet: filename, raw: true });
+        if (filetype === 'xlsx') {
+            XLSX.writeFile(workbook, fullFilename);
+        } else {
+            XLSX.writeFile(workbook, fullFilename, { bookType: 'csv' });
+        }
     }
 }

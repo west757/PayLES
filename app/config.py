@@ -17,7 +17,7 @@ class Config:
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version Release: 2026-02-10"
+    VERSION = "Version Release: 2026-03-21"
 
 
     #folders
@@ -85,13 +85,14 @@ class Config:
         'Calculator'
     ]
     RESOURCE_BRANCHES = [
-        'DoD',
+        'DoW',
         'U.S. Army',
         'U.S. Air Force',
         'U.S. Space Force',
         'U.S. Navy',
         'U.S. Marine Corps',
-        'Non-DoD'
+        #'U.S. Coast Guard',
+        'Non-DoW'
     ]
 
     BRANCHES = {

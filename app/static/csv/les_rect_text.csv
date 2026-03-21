@@ -78,5 +78,5 @@ leave_paid,2170,1584,2293,1635,float
 leave_use_lose,2325,1584,2459,1635,float
 ytd_entitlements,800,1724,1042,1770,float
 ytd_deductions,1358,1722,1600,1768,float
-remarks1,115,1781,1060,2415,string
-remarks2,1061,1781,2236,2415,string
+remarks1,115,1781,1060,2530,string
+remarks2,1061,1781,2236,2530,string

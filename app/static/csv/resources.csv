@@ -1,53 +1,58 @@
 name,description,category,branch,cac,url
-Advana,"DoW's enterprise data and analytics environment, provides more than 400 DoW business systems, tools, and services",General,DoD,true,https://advana.data.mil/
+Advana,"DoW's enterprise data and analytics environment, provides more than 400 DoW business systems, tools, and services",General,DoW,true,https://advana.data.mil/
 Air Force Dashboard,USAF dashboard containing links for multiple USAF pages,Resources,U.S. Air Force,true,https://af.okta.mil/app.UserHome?session_hint=AUTHENTICATED
 Air Force Virtual Education Center (AFVEC),"Air Force dashboard for Skillbridge, TA funding requests, CCAF, educational counseling, and more resources",Education,U.S. Air Force,true,https://afvec.us.af.mil/afvec/dashboard/
-Chief Digital and Artificial Intelligence Office (CDAO),"Accelerating DoW adoption of data, analytics, and artificial intelligence with multiple initiatives",General,DoD,false,https://ai.mil/#
-CitiManager,managing Government Travel Cards (GTC) and accessing Citi accounts and services,Financial,DoD,false,https://home.cards.citidirect.com/CommercialCard/login
-Consumer Financial Protection Bureau - Military,"Helps servicemembers and veterans navigate financial challenges, provide resources, and monitor complaints",Financial,Non-DoD,false,https://temp.com
+Chief Digital and Artificial Intelligence Office (CDAO),"Accelerating DoW adoption of data, analytics, and artificial intelligence with multiple initiatives",General,DoW,false,https://ai.mil/#
+CitiManager,Manage Government Travel Cards (GTC) and accessing Citi accounts and services,Financial,DoW,false,https://home.cards.citidirect.com/CommercialCard/login
+Consumer Financial Protection Bureau - Military,"Helps servicemembers and veterans navigate financial challenges, provide resources, and monitor complaints",Financial,Non-DoW,false,https://temp.com
 DAF E-Learning - Percipio,"USAF Service members online training, education resources, certifications, and skills",Education,U.S. Air Force,true,https://usaf.percipio.com/login?state=%2F#/
 DAF Resilience,"Comprehensive Airman Fitness, leadership resources, Airmen's Time, and ways to become more involved (Master Resilience Trainer)",Health,U.S. Air Force,false,https://resilience.af.mil/Resilience/
-DOTS Web Transfer Portal,securely transfer files to higher classification domains (NIPR -> SIPR),General,DoD,false,https://dots.dodiis.mil/webtransfer/#/
-Defense Acquisition University (DAU),online training and resources for defense acquisition professionals,Education,DoD,true,https://www.dau.edu
-Defense Finance Accounting Service (DFAS),"military pay information, including pay tables and entitlements",Financial,DoD,false,https://www.dfas.mil/
-Defense Personal Property System (DPPS),"military personal property relocation information, including moving allowances and benefits",PCS/Moving,DoD,false,https://dps.move.mil/cust/standard/user/home.xhtml
-Defense Travel Management Office (DTMO),"military travel information, including travel allowances and benefits",PCS/Moving,DoD,false,https://www.defensetravel.dod.mil/
-Defense Travel System (DTS),"information on travel policies and procedures, used to submit travel documents and vouchers for TDY and other travel",Travel,DoD,false,https://www.defensetravel.dod.mil/
-Digital University,"USAF Service members online training, education resources, certifications, and skills",Education,DoD,false,https://digitalu.af.mil/app
-DoD Secure Access File Exchange (SAFE),secure way to share files to/from DoD and Non-DoD emails,General,DoD,false,https://safe.apps.mil/
-Executive Services Directory (ESD),official site for the Executive Services Directorate,General,DoD,false,https://www.esd.whs.mil/
-GAMECHANGER,"search over 50,000 DoD policy documents",General,DoD,true,https://gamechanger.advana.data.mil/#/gamechanger
-GenAI,DoW's premier AI model platform on an accredited IL5 environment,General,DoD,true,https://genai.mil/
-GigEagle,resources for Service members and families on jobs and career success,General,DoD,false,https://gigeagle.mil/
-H&R Block Military Tax Services,tax filing and assistance for Service members and their families,Financial,DoD,false,https://www.hrblock.com/tax-center/lifestyle/military/
-Health.mil Psychological Health Resource Center,military mental health and psychological health information,Health,DoD,false,https://www.health.mil/Military-Health-Topics/Centers-of-Excellence/Psychological-Health-Center-of-Excellence/Psychological-Health-Resource-Center
-Homes.mil,resources for finding and securing housing,PCS/Moving,DoD,false,https://www.homes.mil/
-Human Performance Resources,"resources for Service members on improving their health, fitness, nutrition, and mindset",Health,DoD,false,https://www.hprc-online.org/
-ID Card Office Online,information on ID cards and related services,General,DoD,false,https://idco.dmdc.osd.mil/idco/
-IRS Military Site,"IRS site for military tax information, including deductions and credits",Financial,DoD,false,https://www.irs.gov/individuals/military
-Intelink,Intelink collaboration platform used by the intelligence community,General,DoD,false,https://www.intelink.gov/
-Joint Knowledge Online (JKO),joint force education and training resources,Education,DoD,false,https://www.jcs.mil/JKO/
-LeaveWeb,"manage leave requests, balances, and supervisor approval",General,DoD,false,https://leave.af.mil/profile/%23%7BtabId%7D
-MHS Genesis,health care resources for military members,Health,DoD,false,https://my.mhsgenesis.health.mil/pages/home
-MilConnect,military members and families to access benefits and services,General,DoD,false,https://milconnect.dmdc.osd.mil/milconnect/
-Military Compensation and Financial Readiness,provides resources and services for Service members and their families,Financial,DoD,false,https://militarypay.defense.gov/
-Military Money Manual,provides independent financial education and resources for military members and their families,Financial,Non-DoD,false,https://militarymoneymanual.com/
-Military OneSource,wide range of resources and support services for Service members,General,DoD,false,https://www.militaryonesource.mil/
-Military.com,"provides news, benefits information, and resources for military members and their families",General,Non-DoD,false,https://www.military.com/
-MilitaryPay,"military pay information, including basic pay, allowances, and benefits",Financial,DoD,false,https://militarypay.defense.gov/
-MyIMR,"Displays individual medical readiness status and instructions for profiles, PHAQ, DrHA, and more",Health,DHA,true,https://asimsimr.health.mil/imr/MyImr.aspx
-MyPay,"pay management system for military members, retirees, and their families",Financial,DoD,true,https://mypay.dfas.mil/#/
+DOTS Web Transfer Portal,Securely transfer files to higher classification domains (NIPR -> SIPR),General,DoW,false,https://dots.dodiis.mil/webtransfer/#/
+Defense Acquisition University (DAU),Online training and resources for defense acquisition professionals,Education,DoW,true,https://www.dau.edu
+Defense Finance Accounting Service (DFAS),Military pay information including pay tables and entitlements,Financial,DoW,false,https://www.dfas.mil/
+Defense Personal Property System (DPPS),"Military personal property relocation information, including moving allowances and benefits",PCS/Moving,DoW,false,https://dps.move.mil/cust/standard/user/home.xhtml
+Defense Travel Management Office (DTMO),"Military travel information, including travel allowances and benefits",PCS/Moving,DoW,false,https://www.defensetravel.dod.mil/
+Defense Travel System (DTS),"Information on travel policies and procedures, used to submit travel documents and vouchers for TDY and other travel",Travel,DoW,false,https://www.defensetravel.dod.mil/
+Digital University,"USAF Service members online training, education resources, certifications, and skills",Education,DoW,false,https://digitalu.af.mil/app
+DoD Secure Access File Exchange (SAFE),Secure way to share files to/from DoD and Non-DoD emails,General,DoW,false,https://safe.apps.mil/
+Executive Services Directory (ESD),Information regarding the Executive Services Directorate,General,DoW,false,https://www.esd.whs.mil/
+GAMECHANGER,"Search over 50,000 DoD policy documents",General,DoW,true,https://gamechanger.advana.data.mil/#/gamechanger
+GenAI,DoW's premier AI model platform on an accredited IL5 environment,General,DoW,true,https://genai.mil/
+GigEagle,Resources for Service members and families on jobs and career success,General,DoW,false,https://gigeagle.mil/
+H&R Block Military Tax Services,Tax filing and assistance for Service members and their families,Financial,DoW,false,https://www.hrblock.com/tax-center/lifestyle/military/
+Health.mil Psychological Health Resource Center,Military mental health and psychological health information,Health,DoW,false,https://www.health.mil/Military-Health-Topics/Centers-of-Excellence/Psychological-Health-Center-of-Excellence/Psychological-Health-Resource-Center
+Homes.mil,Resources for finding and securing housing both on-base and off-base,PCS/Moving,DoW,false,https://www.homes.mil/
+Human Performance Resources,"Resources for Service members on improving their health, fitness, nutrition, and mindset",Health,DoW,false,https://www.hprc-online.org/
+ID Card Office Online,Information on ID cards and related services,General,DoW,false,https://idco.dmdc.osd.mil/idco/
+IRS Military Site,"IRS site for military tax information, including deductions and credits",Financial,DoW,false,https://www.irs.gov/individuals/military
+Intelink,Intelink collaboration platform used by the intelligence community,General,DoW,false,https://www.intelink.gov/
+Joint Knowledge Online (JKO),Joint force education and training resources,Education,DoW,false,https://www.jcs.mil/JKO/
+LeaveWeb,"Manage leave requests, balances, and supervisor approval",General,DoW,false,https://leave.af.mil/profile/%23%7BtabId%7D
+MHS Genesis,"Health care resources for military members and allows for making appointments, filling prescriptions, and viewing medical history",Health,DoW,false,https://my.mhsgenesis.health.mil/pages/home
+MilConnect,Military members and families to access benefits and services,General,DoW,false,https://milconnect.dmdc.osd.mil/milconnect/
+Military Compensation and Financial Readiness,Provides resources and services for Service members and their families,Financial,DoW,false,https://militarypay.defense.gov/
+Military Money Manual,Provides independent financial education and resources for military members and their families,Financial,Non-DoW,false,https://militarymoneymanual.com/
+Military OneSource,Wide range of resources and support services for Service members,General,DoW,false,https://www.militaryonesource.mil/
+Military.com,"Provides news, benefits information, and resources for military members and their families",General,Non-DoW,false,https://www.military.com/
+MilitaryPay,"Military pay information including basic pay, allowances, and benefits",Financial,DoW,false,https://militarypay.defense.gov/
+MyIMR,"Displays individual medical readiness status and instructions for profiles, PHAQ, DrHA, and more",Health,DoW,true,https://asimsimr.health.mil/imr/MyImr.aspx
+MyPay,"Pay management system for military members, retirees, and their families",Financial,DoW,true,https://mypay.dfas.mil/#/
 MyVector,"Air Force career dashboard with development plans, bullet trackers, financial readiness, skills training, and more resources",General,U.S. Air Force,true,https://myvector.us.af.mil/myvector/Home/Dashboard/
-O'Reilly Textbooks,O'Reilly Media providing a wide range of textbooks and online resources for military members,Education,Non-DoD,false,https://www.oreilly.com/
-OPM - Military Leave,military leave policies and information,General,DoD,false,https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/
-Outlook Webmail,access to military email accounts,General,DoD,true,https://webmail.apps.mil/mail/
-Regular Military Compensation (RMC) Calculator,"calculates the basic level of compensation service members receive (income, tax advantages, and benefits)",Calculator,DoD,false,https://militarypay.defense.gov/Calculators/RMC-Calculator/
-Servicemembers Group Life Insurance (SGLI),managing SGLI coverage and educational resources,General,DoD,false,https://www.va.gov/life-insurance/options-eligibility/sgli/
-TRICARE,"official site for TRICARE, providing health care resources for military members",Health,DoD,false,https://www.tricare.mil/
-The Military Wallet,independent financial resources and tools for military members and their families,Financial,Non-DoD,false,https://themilitarywallet.com/
-Thrift Savings Plan (TSP),"official site for the Thrift Savings Plan, a retirement savings plan for members of the uniformed services",Financial,DoD,false,https://www.tsp.gov/
-Transition Assistance Program (TAP),"official site for the Transition Assistance Program, providing resources for transitioning service members",General,DoD,false,https://www.dodtap.mil/dodtap/app/home
-U.S. Armed Forces Legal Assistance,"official site for the U.S. Armed Forces Legal Assistance, providing legal resources for service members",Legal,DoD,false,https://legalassistance.law.af.mil/
-U.S. Citizen and Immigration Services - Military,Contains immigration information and links to resources specifically for members of the military and their families,Education,Non-DoD,false,https://uscis.gov/military/military
-USAF Links,quick links page focused on USAF web pages,Resources,U.S. Air Force,false,https://aflinks.us/
-VA Education Benefits,"official site for military education information, including GI Bill benefits and resources",Education,Non-DoD,false,https://www.va.gov/education/
+Navy Federal Credit Union,"Financial institution dedicated to service members, veterans, and families with military-specific banking services and incentives",Financial,Non-DoW,false,https://www.navyfederal.org/
+O'Reilly Textbooks,O'Reilly Media providing a wide range of textbooks and online resources for military members,Education,Non-DoW,false,https://www.oreilly.com/
+OPM - Military Leave,Military leave policies and information,General,DoW,false,https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/military-leave/
+Outlook Webmail,Access to government NIPR email accounts,General,DoW,true,https://webmail.apps.mil/mail/
+Pentagon Federal Credit Union,"Financial institution dedicated to service members, veterans, and families with military-specific banking services and incentives",Financial,Non-DoW,false,https://www.penfed.org/
+Regular Military Compensation (RMC) Calculator,"Calculates the basic level of compensation service members receive (income, tax advantages, and benefits)",Calculator,DoW,false,https://militarypay.defense.gov/Calculators/RMC-Calculator/
+Servicemembers Civil Relief Act,"Provides financial and legal protections for military members such as reduced interest rates, eviction prevention, voting rights, and more",General,DoW,false,https://scra.dmdc.osd.mil/scra/#/
+Servicemembers Group Life Insurance (SGLI),Managing SGLI coverage and educational resources,General,DoW,false,https://www.va.gov/life-insurance/options-eligibility/sgli/
+TRICARE,Provides health care resources for military members,Health,DoW,false,https://www.tricare.mil/
+The Military Wallet,Independent financial resources and tools for military members and their families,Financial,Non-DoW,false,https://themilitarywallet.com/
+Thrift Savings Plan (TSP),Manage the TSP retirement savings plan for members of the uniformed services,Financial,DoW,false,https://www.tsp.gov/
+Transition Assistance Program (TAP),Manage the Transition Assistance Program which provide resources for separating service members,General,DoW,false,https://www.dodtap.mil/dodtap/app/home
+U.S. Armed Forces Legal Assistance,Provides legal resources and UCMJ information for service members,Legal,DoW,false,https://legalassistance.law.af.mil/
+U.S. Citizen and Immigration Services - Military,Contains immigration information and links to resources specifically for members of the military and their families,Education,Non-DoW,false,https://uscis.gov/military/military
+USAA,"Financial group serving military members and their families with services including banking, insurance, and loans",Financial,Non-DoW,false,https://www.usaa.com/
+USAF Links,Quick links page focused on USAF web pages,Resources,U.S. Air Force,false,https://aflinks.us/
+VA Education Benefits,"Military education information, including GI Bill benefits and resources",Education,Non-DoW,false,https://www.va.gov/education/
+GoVA,Financial education resources for military families with available scholarships,Financial,Non-DoW,false,https://mygova.com/

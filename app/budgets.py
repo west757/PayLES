@@ -173,9 +173,7 @@ def get_cell_variables(pay, tsp, form):
     
     if field == "int":
         try:
-            print(f"Attempting to convert value '{cell_value}' to int for header '{cell_header}'")
             cell_value = int(cell_value)
-            print(f"Successfully converted value to int: {cell_value}")
         except Exception:
             raise ValueError(f"Value '{cell_value}' could not be converted to int for header '{cell_header}'.")
         
