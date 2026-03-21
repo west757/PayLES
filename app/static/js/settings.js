@@ -154,21 +154,20 @@ function submitAccountModal(header) {
 
 
 function openEFundCalculator() {
-    const MONTHS_SHORT = window.CONFIG.MONTHS.map(([short, long]) => short);
     const months = window.CONFIG.months;
 
-    // Calculate average monthly expense and default goal
+    // calculate average monthly expense and default goal
     let totalExpenses = 0;
     for (let i = 0; i < months.length; i++) {
         totalExpenses += getRowValue('Total Expenses', months[i]);
     }
-    let avgMonthlyExpense = months.length ? Math.abs(totalExpenses / months.length) : 0;
-    let defaultGoal = Number((avgMonthlyExpense * 6).toFixed(2));
+    let averageMonthlyExpense = Math.abs(totalExpenses / months.length);
+    let defaultGoal = Number((averageMonthlyExpense * 6).toFixed(2));
 
-    // Modal state
+    // get values from localStorage or set defaults
     let efundGoal = parseFloat(localStorage.getItem('efund_goal')) || defaultGoal;
-    let efundCurrentAmount = parseFloat(localStorage.getItem('efund_current_amount')) || 0;
-    let mode = localStorage.getItem('efund_mode') || 'contribution'; // 'contribution' or 'months'
+    let efundInitialAmount = parseFloat(localStorage.getItem('efund_initial_amount')) || 0;
+    let mode = localStorage.getItem('efund_mode') || 'months'; // 'months' or 'contribution'
     let monthlyContribution = parseFloat(localStorage.getItem('efund_contribution')) || '';
     let monthsToGoal = parseInt(localStorage.getItem('efund_months')) || Math.min(6, months.length);
 
@@ -178,7 +177,6 @@ function openEFundCalculator() {
     function render() {
         let tableMonths = months.map(m => m);
 
-        // Net Pay row: direct from budget
         function buildNetPayRow() {
             let rowHtml = '';
             for (let i = 0; i < tableMonths.length; i++) {
@@ -188,44 +186,46 @@ function openEFundCalculator() {
             return rowHtml;
         }
 
-        // Monthly contribution, percent, and emergency fund amount rows
-        let contribArr = [];
-        let percentArr = [];
-        let efundArr = [];
-        let runningTotal = efundCurrentAmount;
+        let monthlyContributionRow = [];
+        let percentOfNetPayRow = [];
+        let efundAmountRow = [];
+        let efundAmount = efundInitialAmount;
         let monthsNeeded = 0;
-        let contribValue = 0;
-        let goalRemaining = Math.max(efundGoal - efundCurrentAmount, 0);
+        let contributionAmount = 0;
+        let goalRemaining = Math.max(efundGoal - efundInitialAmount, 0);
 
-        if (mode === 'contribution') {
-            contribValue = parseFloat(monthlyContribution) || 0;
-            monthsNeeded = contribValue > 0 ? Math.ceil(goalRemaining / contribValue) : 0;
-        } else {
+        // calculate months needed or contribution amount based on mode
+        if (mode === 'months') {
             monthsNeeded = monthsToGoal;
-            contribValue = monthsToGoal > 0 ? goalRemaining / monthsToGoal : 0;
+            contributionAmount = monthsToGoal > 0 ? goalRemaining / monthsToGoal : 0;
+        } else {
+            contributionAmount = parseFloat(monthlyContribution) || 0;
+            monthsNeeded = contributionAmount > 0 ? Math.ceil(goalRemaining / contributionAmount) : 0;
         }
 
+        // build monthly contribution row and emergency fund amount row
         for (let i = 0; i < tableMonths.length; i++) {
-            if (runningTotal >= efundGoal) {
-                contribArr.push(0);
+            if (efundAmount >= efundGoal) {
+                // if goal is already reached, contribution is 0
+                monthlyContributionRow.push(0);
             } else {
-                let toAdd = Math.min(contribValue, efundGoal - runningTotal);
-                contribArr.push(toAdd);
-                runningTotal += toAdd;
+                // contribute either the set contribution amount or the remaining amount to reach the goal, whichever is smaller
+                let toAdd = Math.min(contributionAmount, efundGoal - efundAmount);
+                monthlyContributionRow.push(toAdd);
+                efundAmount += toAdd;
             }
-            efundArr.push(runningTotal);
+            efundAmountRow.push(efundAmount);
         }
 
-        // Calculate percent of net pay
+        // build percent of net pay row by calculating percent of net pay to achieve goal
         for (let i = 0; i < tableMonths.length; i++) {
-            let net = getRowValue('Net Pay', tableMonths[i]);
-            let percent = (net && contribArr[i]) ? ((contribArr[i] / net) * 100).toFixed(2) + '%' : '';
-            percentArr.push(percent);
+            let netPay = getRowValue('Net Pay', tableMonths[i]);
+            let percent = ((monthlyContributionRow[i] / netPay) * 100).toFixed(2) + '%';
+            percentOfNetPayRow.push(percent);
         }
 
-        // Table HTML
         let table = `
-            <table class="modal-table table-efund-calculator">
+            <table class="modal-table">
                 <tr>
                     <td></td>
                     ${tableMonths.map(m => `<td>${m}</td>`).join('')}
@@ -236,55 +236,58 @@ function openEFundCalculator() {
                 </tr>
                 <tr>
                     <td>Monthly Contribution</td>
-                    ${contribArr.map((v) => `<td>${v ? formatValue(v) : ''}</td>`).join('')}
+                    ${monthlyContributionRow.map((v) => `<td>${formatValue(v)}</td>`).join('')}
                 </tr>
                 <tr>
                     <td>% of Net Pay</td>
-                    ${percentArr.map((v) => `<td>${v}</td>`).join('')}
+                    ${percentOfNetPayRow.map((v) => `<td>${v ? v : '0%'}</td>`).join('')}
                 </tr>
                 <tr>
                     <td>Emergency Fund Amount</td>
-                    ${efundArr.map((v) => `<td>${formatValue(v)}</td>`).join('')}
+                    ${efundAmountRow.map((v) => `<td>${formatValue(v)}</td>`).join('')}
                 </tr>
             </table>
         `;
 
-        // Modal HTML
         modalContent.innerHTML = `
             <h2>Emergency Fund Calculator</h2>
             <div>
-                The Emergency Fund Calculator helps you plan to reach your emergency fund goal by either setting a monthly contribution amount or selecting a target number of months. To account for more months in the calculation table, please increase the number of months the budget displays in the settings.
+                The Emergency Fund Calculator helps you plan to reach your emergency fund goal by either setting a monthly contribution amount or selecting a target number of months to achieve the goal by. To account for more months in the calculation table, please increase the number of months displayed in the settings.
                 <br><br>
-                The default goal is your average monthly expenses amount, <b>${formatValue(avgMonthlyExpense)}</b>, multiplied by 6. PayLES recommends having an emergency fund of 6 months worth of expenses, but you can adjust the goal to your desired amount.
+                The default goal is your average monthly expenses amount, <b>${formatValue(averageMonthlyExpense)}</b>, multiplied by six. PayLES recommends having an emergency fund of six months worth of expenses, but you can adjust the goal to your desired amount.
             </div>
-            <div class="efund-goal-container" style="margin-top:1em;">
-                <label>Emergency Fund Goal: </label>
-                <div id="efund-goal-location" style="display:inline-block;"></div>
+            <div id="efund-goal-inputs">
+                <div>
+                    <label>Emergency Fund Goal: </label>
+                    <div id="efund-goal-location" style="display:inline-block;"></div>
+                </div>
+                <div>
+                    <label>Current Fund Amount: </label>
+                    <div id="efund-current-location" style="display:inline-block;"></div>
+                </div>
             </div>
-            <div class="efund-current-container" style="margin-top:0.5em;">
-                <label>Current Fund Amount: </label>
-                <div id="efund-current-location" style="display:inline-block;"></div>
+            <div id="efund-mode-container">
+                <div id="efund-mode-options">
+                    <label><input type="radio" name="efund-mode" value="contribution" ${mode === 'contribution' ? 'checked' : ''}> Set Monthly Contribution</label>
+                    <label style="margin-left:2em;"><input type="radio" name="efund-mode" value="months" ${mode === 'months' ? 'checked' : ''}> Set Number of Months</label>
+                </div>
+                <div id="efund-mode-inputs">
+                    ${mode === 'contribution' ? `
+                        <label>Monthly Contribution: </label>
+                        <span id="efund-contribution-location"></span>
+                        <span>It will take <b>${contributionAmount > 0 ? monthsNeeded : ''}</b> months to reach your goal.</span>
+                    ` : `
+                        <label>Number of Months: </label>
+                        <select id="efund-months" style="width:60px;">
+                            ${Array.from({length: Math.max(1, tableMonths.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
+                        </select>
+                        <span>You need to contribute <b>${formatValue(contributionAmount)}</b> per month to reach your goal.</span>
+                    `}
+                </div>
             </div>
-            <div style="margin-top:1em;">
-                <label><input type="radio" name="efund-mode" value="contribution" ${mode === 'contribution' ? 'checked' : ''}> Set Monthly Contribution</label>
-                <label style="margin-left:2em;"><input type="radio" name="efund-mode" value="months" ${mode === 'months' ? 'checked' : ''}> Set Number of Months</label>
-            </div>
-            <div id="efund-mode-inputs" style="margin-top:0.5em;">
-                ${mode === 'contribution' ? `
-                    <label>Monthly Contribution: </label>
-                    <span id="efund-contribution-location"></span>
-                    <span style="margin-left:1em;">It will take <b>${contribValue > 0 ? monthsNeeded : ''}</b> months to reach your goal.</span>
-                ` : `
-                    <label>Number of Months: </label>
-                    <select id="efund-months" style="width:60px;">
-                        ${Array.from({length: Math.max(1, tableMonths.length - 1)}, (_, i) => i + 2).map(n => `<option value="${n}" ${monthsToGoal == n ? 'selected' : ''}>${n}</option>`).join('')}
-                    </select>
-                    <span style="margin-left:1em;">You need to contribute <b>${formatValue(contribValue)}</b> per month to reach your goal.</span>
-                `}
-            </div>
-            <div style="margin-top:1.5em;">${table}</div>
-            <div style="margin-top:1em;">
-                Note: The emergency fund amount does not take into account any interest accrued on the saved value. PayLES recommends keeping your emergency fund in a <a href="https://themilitarywallet.com/the-best-online-high-yield-savings-accounts/" target="_blank" rel="noopener noreferrer">High-Yield Savings Account (HYSA)</a> which provide greater average returns around 3.5% (depending on the bank) while still having the money easily accessible.
+            ${table}
+            <div>
+                Note: The emergency fund amount does not take into account any interest accrued on the saved value. PayLES recommends keeping your emergency fund in a <a href="https://themilitarywallet.com/the-best-online-high-yield-savings-accounts/" target="_blank" rel="noopener noreferrer">High-Yield Savings Account (HYSA)</a> which provide greater average returns, around 3.5% depending on the bank, while still having the money easily accessible.
             </div>
         `;
 
@@ -303,7 +306,7 @@ function openEFundCalculator() {
         });
 
         // Current emergency fund input
-        const currentInputWrapper = createStandardInput('Current Emergency Fund Amount', 'float', efundCurrentAmount);
+        const currentInputWrapper = createStandardInput('Current Emergency Fund Amount', 'float', efundInitialAmount);
         const currentInput = currentInputWrapper.querySelector('input');
         currentInput.id = 'efund-current-amount';
         currentInput.min = 0;
@@ -311,8 +314,8 @@ function openEFundCalculator() {
         document.getElementById('efund-current-location').appendChild(currentInputWrapper);
 
         currentInput.addEventListener('change', function() {
-            efundCurrentAmount = parseFloat(this.value) || 0;
-            localStorage.setItem('efund_current_amount', efundCurrentAmount);
+            efundInitialAmount = parseFloat(this.value) || 0;
+            localStorage.setItem('efund_initial_amount', efundInitialAmount);
             render();
         });
 
@@ -354,6 +357,7 @@ function openEFundCalculator() {
 
     render();
 }
+
 
 
 
@@ -529,7 +533,7 @@ function openTSPRateCalculator() {
         }
 
         let table = `
-            <table class="modal-table table-tsp-rate-calculator">
+            <table class="modal-table" id="table-tsp-rate-calculator">
                 <tr><td></td>${monthsRow}</tr>
                 <tr><td>Minimum Contribution</td>${minimumContributionRow}</tr>
                 <tr><td>Base Pay</td>${basePayRow}</tr>

@@ -1063,12 +1063,72 @@ table.styled td.cell {
     border: 1px solid black;
 }
 
-.table-tsp-rate-calculator td:first-child,
-.table-tsp-rate-calculator tr td:first-child {
+
+
+.efund-goal-inputs {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.efund-goal-spacer {
+  width: 2em;
+}
+
+.efund-mode-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2em;
+  margin-bottom: 1em;
+}
+
+.efund-mode-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  min-width: 180px;
+}
+
+.efund-mode-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 4.5em;
+  width: 100%;
+}
+
+.efund-mode-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.efund-mode-panel.active {
+  display: flex;
+}
+
+.efund-mode-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.efund-mode-text {
+  margin-top: 0.25em;
+  font-size: 0.95em;
+  color: var(--secondary_dark_accent_color, #999);
+}
+
+
+
+#table-tsp-rate-calculator td:first-child,
+#table-tsp-rate-calculator tr td:first-child {
     padding: 0.75rem 1rem;
 }
-.table-tsp-rate-calculator td:not(:first-child),
-.table-tsp-rate-calculator tr td:not(:first-child) {
+#table-tsp-rate-calculator td:not(:first-child),
+#table-tsp-rate-calculator tr td:not(:first-child) {
     padding: 0.75rem 0.25rem;
     width: 6rem;
 }
