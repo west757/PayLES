@@ -17,7 +17,7 @@ class Config:
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version Release: 2026-03-18"
+    VERSION = "Version Release: 2026-03-21"
 
 
     #folders
@@ -371,5 +371,3 @@ class Config:
     REMARKS_JSON = JSON_FOLDER / "remarks.json"
 
     LES_EXAMPLE = PDF_FOLDER / "les_example.pdf"
-
-
