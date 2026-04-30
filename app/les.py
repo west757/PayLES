@@ -13,7 +13,7 @@ from app.utils import (
 def validate_les(file):
     with pdfplumber.open(file) as les_pdf:
         # check bounding box of the LES title to verify the pdf is an LES
-        title_crop = les_pdf.pages[0].crop((18, 18, 593, 29))
+        title_crop = les_pdf.pages[0].crop((17, 17, 593, 29))
         title_text = title_crop.extract_text_simple()
 
         if title_text == "DEFENSE FINANCE AND ACCOUNTING SERVICE MILITARY LEAVE AND EARNINGS STATEMENT":

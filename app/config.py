@@ -17,7 +17,7 @@ class Config:
     CURRENT_YEAR = datetime.now().year
     CURRENT_MONTH = datetime.now().strftime('%b').upper()
     CURRENT_MONTH_LONG = datetime.now().strftime('%B')  
-    VERSION = "Version Release: 2026-03-21"
+    VERSION = "Version Release: 2026-04-29"
 
 
     #folders
@@ -57,7 +57,9 @@ class Config:
     DRILLS_MAX = 30
 
     TRAD_TSP_RATE_MAX = 84 # 2025 max
+    TRAD_TSP_SIB_RATE_MAX = 100 # 2025 max for traditional TSP special/incentive/bonus pay
     ROTH_TSP_RATE_MAX = 60 # 2025 max
+    ROTH_TSP_SIB_RATE_MAX = 65 # 2025 max for Roth TSP special/incentive/bonus pay
     TSP_ELECTIVE_LIMIT = 24500.00 # 2026 limit for under 50 with catch-up contributions
     TSP_ANNUAL_LIMIT = 72000.00 # 2026 total limit for employee + employer contributions
     TSP_CATCH_UP_LIMIT = 8000.00 # 2026 catch-up contribution limit for age 50 and over

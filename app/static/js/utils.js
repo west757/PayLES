@@ -235,16 +235,18 @@ function createStandardInput(header, field, value = '') {
             input.placeholder = '0-' + maxValue;
         } else if (header.toLowerCase().includes('tsp')) {
             input.classList.add('input-short');
-            maxValue = 100;
-            maxLength = 3;
-            if (header.toLowerCase().includes('base')) {
-                if (header.toLowerCase().includes('trad')) {
-                    maxValue = window.CONFIG.TRAD_TSP_RATE_MAX;
-                } else if (header.toLowerCase().includes('roth')) {
-                    maxValue = window.CONFIG.ROTH_TSP_RATE_MAX;
-                }
-                maxLength = 2;
-            }
+            const tspRateMaxMap = {
+                "Trad TSP Base Rate": window.CONFIG.TRAD_TSP_RATE_MAX,
+                "Trad TSP Specialty Rate": window.CONFIG.TRAD_TSP_SIB_RATE_MAX,
+                "Trad TSP Incentive Rate": window.CONFIG.TRAD_TSP_SIB_RATE_MAX,
+                "Trad TSP Bonus Rate": window.CONFIG.TRAD_TSP_SIB_RATE_MAX,
+                "Roth TSP Base Rate": window.CONFIG.ROTH_TSP_RATE_MAX,
+                "Roth TSP Specialty Rate": window.CONFIG.ROTH_TSP_SIB_RATE_MAX,
+                "Roth TSP Incentive Rate": window.CONFIG.ROTH_TSP_SIB_RATE_MAX,
+                "Roth TSP Bonus Rate": window.CONFIG.ROTH_TSP_SIB_RATE_MAX,
+            };
+            maxValue = tspRateMaxMap[header];
+            maxLength = 2;
             input.placeholder = '0-' + maxValue;
         }
 

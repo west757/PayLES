@@ -29,7 +29,6 @@ short-term:
 - oconus cola and oha calculations
 - conus cola
 - default for OCONUS locations in dropdown
-- max TSP rate for specialty/incentive/bonus pay for roth tsp
 
 
 mid-term:
